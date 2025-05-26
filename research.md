@@ -3,77 +3,94 @@
 ## Modules
 
 A minimum of 7 major modules is required to get a 100% grade.
-
+For bonuses, we need 9,5 modules
 Two minor modules count as one major module.
 
 ### Web
 
+- Build a backend
+
 - **MAJOR**
-  - Use a framework to build the backend
-  - Use a framework or toolkit to build the frontend
-  - Store the results tournament in the blockchain
+  - ✅ Use a framework to build the backend
+      - CCAS : fastify + node.js
+  - ✅ Use a framework or toolkit to build the frontend
+      - CCAS : tailwind CSS
   
 - **MINOR**
-  - Use a database for the backend (is there any other way ?)
+  - ✅ Use a database for the backend (is there any other way ?)
+      - CAS: SQL lite
 
 ### User management
 
 - **MAJOR**
-  - Standard User Management, authentication, user persistence across tournaments
-  - Implement remote authentication
+  - ✅ Standard User Management, authentication, user persistence across tournaments
+      - Co
+  - ❓Implement remote authentication
+      - A
 
 ### Gameplay and user experience
 
 - **MAJOR**
-  - Remote players
-  - Multiplayer
-  - Add another game with user history and matchmaking
-  - Live chat
+  - ✅ Remote players
+    - Ch
+  - Add another game with user history and matchmaking ~ 
+  - ❓Live chat
 
 - **MINOR**
-  - Game customization options (paddle speed ? arena skins ? bonuses ?)
+  - ✅ Game customization options (paddle speed ? arena skins ? bonuses ?)
+    
 
 ## AI-Algo
   
 - **MAJOR**
-  - AI opponent
-  - User and game state dashboards (depends on USER MANAGEMENT)
+  - ✅ AI opponent
+    - Co
+  - ✅ User and game state dashboards (depends on USER MANAGEMENT)
+    - S
 
 ### Cybersec
 
 - **MAJOR**
-  - Implement WAF/ModSecurity with hardened configuration & HashiCorp Vault for secret management
-  - Implement 2FA & JWT
+  - ✅ Implement WAF/ModSecurity with hardened configuration & HashiCorp Vault for secret management
+    - ChAS
+  - ❓Implement 2FA & JWT
+    - Ch
+
+- **MINOR**
+  - ✅ GDPR compliance
+    - AS
 
 ### Devops
 
 - **MAJOR**
-  - Infrastructure setup for log management
-  - Backend as microservices
+  - ✅ Infrastructure setup for log management
+    - Co
+  - ✅ Backend as microservices
+    - Ch
 
 - **MINOR**
-  - Monitoring system
-
-### Graphics
-
-- **MAJOR**
-  - 3D rendering for Pong 😴
+  - ✅ Monitoring system
+    - S
 
 ### Accessibility
 
 - **MINOR**
-  - Support on all devices
-  - Expand browser compatibility
-  - Multiple language support
-  - Accessibility features for visually impaired users
-  - Server-side rendering integration
+  -❓Expand browser compatibility
+    - A
+  - ✅ Multiple language support
+    - A
+  - ✅ Accessibility features for visually impaired users
+    - Co
+  - ✅ Server-side rendering integration
+    - CoChS
 
 ### Server-side pong
 
 - **MAJOR**
-  - Implement an API for server-side pong
-  - Enable pong gameplay via CLI against web users with API integration
-    - What tf does that mean ?
+  - ✅ Implement an API for server-side pong
+    - CoA
+  - ✅ Enable pong gameplay via CLI against web users with API integration
+    - ChS
 
 ## Research
 
