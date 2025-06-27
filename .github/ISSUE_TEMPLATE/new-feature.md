@@ -2,7 +2,7 @@
 name: New feature
 about: Describe a feature that needs to be implemented
 title: New feature
-labels: Feature
+labels: ''
 assignees: ''
 
 ---
