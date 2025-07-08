@@ -1,5 +1,33 @@
 # Subject understanding and research outline
 
+## Constraints
+
+- MUST use Docker
+- MUST be be launched with a single commmand
+- The website MUST be a single page application
+- MUST be compatible with last stable Mozilla Firefox. CAN be compatible with other browsers.
+
+## Features
+
+- MUST include a live Pong game.
+- Users MUST be able to play pong with another user on the same keyboard.
+- Players MUST be able to plays against one another. A tournament system SHOULD be avaible.
+  - A tournament consists of multiple players taking turns at playing against one another.
+  - It MUST clearly display the current players
+  - It MUST clearly display the order the matches will take place.
+- There MUST be a registration system. The players MUST input aliases at the start of the tournament. If the USER MANAGEMENT module is not implemented, aliases WILL reset at the start of a new tournament.
+- There MUST be a matchmaking system for the tournament. It will organize the tournament and announce the next game.
+- All players, including bots, MUST have the same paddle speed.
+
+## Security
+
+- If using a database, all passwords MUST be hashed.
+- The website MUST be protected against SQL injections and XSS attacks
+- HTTPS MUST be enabled whenever applicable
+- All user input MUST be sanitized
+- The site MUST be secure.
+- All credential MUST NOT be publicly stored
+
 ## Modules
 
 A minimum of 7 major modules is required to get a 100% grade.
@@ -110,31 +138,3 @@ Two minor modules count as one major module.
 - Webapp monitoring system
 - Server-side rendering
 - Implementing an API
-
-## Constraints
-
-- MUST use Docker
-- MUST be be launched with a single commmand
-- The website MUST be a single page application
-- MUST be compatible with last stable Mozilla Firefox. CAN be compatible with other browsers.
-
-## Features
-
-- MUST include a live Pong game.
-- Users MUST be able to play pong with another user on the same keyboard.
-- Players MUST be able to plays against one another. A tournament system SHOULD be avaible.
-  - A tournament consists of multiple players taking turns at playing against one another.
-  - It MUST clearly display the current players
-  - It MUST clearly display the order the matches will take place.
-- There MUST be a registration system. The players MUST input aliases at the start of the tournament. If the USER MANAGEMENT module is not implemented, aliases WILL reset at the start of a new tournament.
-- There MUST be a matchmaking system for the tournament. It will organize the tournament and announce the next game.
-- All players, including bots, MUST have the same paddle speed.
-
-## Security
-
-- If using a database, all passwords MUST be hashed.
-- The website MUST be protected against SQL injections and XSS attacks
-- HTTPS MUST be enabled whenever applicable
-- All user input MUST be sanitized
-- The site MUST be secure.
-- All credential MUST NOT be publicly stored
