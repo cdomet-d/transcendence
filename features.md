@@ -40,7 +40,7 @@ Anymous accounts are allowed and treated like deleted users.
 
 ### Features
 
-- Authentication
+- Log in
 - Log out
 - Add friend
 - Delete friend
@@ -49,6 +49,7 @@ Anymous accounts are allowed and treated like deleted users.
 - Delete account
 - See user profile
 - Update user information
+- Search user
 
 ### DB structure
 
