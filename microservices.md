@@ -64,6 +64,6 @@ server --> search(Search) --> userDB
 server --> matchmaking(Matchmaking)
 server --> game(Gameplay)
 server --> stats(Dashboard) --> statisticDB
-server --> accessibility(Accessibility)
+server --> accessibility(Accessibility) --> accessiblity DB 
 server --> logger(Monitoring system) --> loggerDB
 ```
