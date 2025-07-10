@@ -95,3 +95,28 @@ Anymous accounts are allowed and treated like deleted users.
 - Matchmaking loading screen
 - Bracket page
 - Match page
+
+## User statistics
+
+- On user profile
+  - Overall games dashboard
+    - Nombre de matchs joues
+    - Ratio win/loss
+    - Average match time
+    - Current win streak
+    - Longest win streak
+    - Fatest ball speed
+    - Bonus used
+    - Longest ball passes without missing
+  - Game history
+    - List of all passed matches
+      - Opponent
+      - Outcome
+      - Date & hour
+      - Duree du match
+
+## Game customisation
+
+- Remove time limit
+- Set starting ball speed
+- 

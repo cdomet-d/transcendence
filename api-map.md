@@ -29,11 +29,15 @@ auth -- PUT --> /logout
 auth -- POST --> /create
 
 settings("/settings")
+gamehistory("/gamehistory")
+userstats("/userstats")
 
-rest -- GET --> user 
+rest -- GET --> user
 user -- GET --> account
 user -- GET --> friends
 account -- GET --> settings
+account -- GET --> gamehistory
+account -- GET --> userstats
 
 settings -- PUT --> /username
 settings -- PUT --> /password
@@ -47,14 +51,14 @@ friends --> :userId -- POST --> accept
 
 %% websockets
 game("/game")
-leaderboards("/leaderboards")
+generalleaderboard("/generalleaderboard")
 
 tournament(/tournament)
 challenge(/challenge)
 
 websocket -- GET --> game
-websocket -- GET --> leaderboards -- GET --> ::userId
 
 game -- POST --> tournament
 game -- POST --> challenge
+game -- POST --> generalleaderboard
 ```
