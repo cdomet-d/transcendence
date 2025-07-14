@@ -4,6 +4,6 @@ FROM nginx:1.28.0-alpine3.21
 # COPY nginx.conf /etc/nginx/nginx.conf
 
 # For basic static html usage
-COPY ./htmltry/index.html /usr/share/nginx/html/index.html
+COPY html/index.html /usr/share/nginx/html/index.html
 
 CMD ["nginx", "-g", "daemon off;"]
