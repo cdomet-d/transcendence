@@ -6,8 +6,6 @@ services:
       dockerfile: Dockerfile
     image: nginx:0.0.1
     container_name: nginx
-    volumes:
-     - ./templates:/etc/nginx/templates
     ports:
      - "8443:443"
     secrets:
@@ -16,9 +14,15 @@ services:
     environment:
      - NGINX_HOST=bigt.com
      - NGINX_PORT=443
+    volumes:
+     - ./nginx/html:/usr/share/nginx/html
   
 secrets:
   ssl-key.pem:
-    file: ./.secrets/ssl-key.pem
+    file: /home/cdomet-d/Documents/CommonCore/transcendence/.secrets/ssl-key.pem
   ssl-cert.pem:
-    file: ./.secrets/ssl-cert.pem
+    file: /home/cdomet-d/Documents/CommonCore/transcendence/.secrets/ssl-cert.pem
+
+volumes:
+  static-nginx:
+    name: static-nginx

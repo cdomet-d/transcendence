@@ -1,9 +1,6 @@
 FROM nginx:1.28.0-alpine3.21
 
-# Changed nginx conf if needed later on
-# COPY ./conf/default.conf /etc/nginx/nginx.conf
-
-# For basic static html usage
-COPY ./htmltry/index.html /usr/share/nginx/html/index.html
+# Import nginx default configuration for localhost:8443
+COPY ./conf/default.conf /etc/nginx/conf.d/default.conf
 
 CMD ["nginx", "-g", "daemon off;"]
