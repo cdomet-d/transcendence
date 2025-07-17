@@ -1,6 +1,6 @@
 #!/bin/sh
 #genlog.sh
 
-mkdir -p ./logs
+mkdir -p ./_logs
 
-docker compose logs nginx >./logs/check-nginx.log
+docker compose logs nginx >./_logs/check-nginx.log

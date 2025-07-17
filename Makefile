@@ -11,12 +11,11 @@ reback: fclean backup
 
 clean: stop
 	@printf "$(BG)\n%-8s$(RE) %s\n" "[INFO]" "Removing stale logs..."
-	@rm -rf ./logs
+	@rm -rf ./_logs
 	@docker system prune -f
 
 fclean: clean
 	@docker system prune -a -f
-	@docker volume rm db-data wp-data || true
 
 run: stop all
 	@docker compose up -d

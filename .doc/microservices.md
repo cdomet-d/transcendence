@@ -64,6 +64,30 @@ server --> search(Search) --> userDB
 server --> matchmaking(Matchmaking)
 server --> game(Gameplay)
 server --> stats(Dashboard) --> statisticDB
-server --> accessibility(Accessibility) --> accessiblity DB 
+server --> accessibility(Accessibility) --> accessiblityDB 
 server --> logger(Monitoring system) --> loggerDB
 ```
+
+## Ports
+
+./services
+./services/nginx
+EXPOSE 443
+./services/accessibility
+EXPOSE 1313
+./services/account
+EXPOSE 1414
+./services/dashboards
+EXPOSE 1515
+./services/friends
+EXPOSE 1616
+./services/matchmaking
+EXPOSE 1818
+./services/monitoring
+EXPOSE 1919
+./services/pong
+EXPOSE 2020
+./services/search
+EXPOSE 2626
+./services/ssr
+EXPOSE 3838
