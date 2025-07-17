@@ -1,0 +1,48 @@
+User arrives on main page:
+
+they come across PLAY button
+
+once pressed
+
+they can choose between:
+
+- Play as guest
+- Log into their existing account
+- Create an account
+
+if playing as guest, they have to enter a nickname and are then sent to main game page
+if logging with their account, they are sent on logging page
+	(add forgot my password option and such)
+if creating an account, they are sent on create account page
+
+Once on the main game page:
+
+They can choose between:
+
+- Tournament:
+	- 16 players
+		- Enter server queue
+	- 8 players
+		- Enter server queue
+	- 4 players
+		- Enter server queue
+	- Custom sized tournament (aka private tournament where they can invite friends)
+		- Custom tournament page
+			- Specify how many players, game modifiers if any, public or private tournament (can anyone join)
+
+- Quick match (1vs1):
+	- Challenge a friend
+	- Play with someone at random
+		- Enter 1vs1 queue
+
+- Leaderboard:
+	- general leaderboard with various stats of best players, best scores, etc.
+
+- Search bar:
+	- where they can search for a user in particular and access that user's profile
+
+- Profile button:
+	- sends them to their own profile where they can edit:
+		- their personal info
+		- access their own dashboard
+		- access account settings (more 'serious' account edit features such as: delete account, etc.)
