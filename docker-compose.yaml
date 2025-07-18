@@ -1,4 +1,13 @@
 services:
+  web:
+    build:
+      context: ./services/web
+      dockerfile: Dockerfile
+    image: web:0.0.1
+    container_name: web
+    restart: unless-stopped
+    networks:
+     - transcendence
   nginx:
     build:
       context: ./services/nginx/
