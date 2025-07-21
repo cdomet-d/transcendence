@@ -6,6 +6,8 @@ services:
     image: web:0.0.1
     container_name: web
     restart: unless-stopped
+    volumes:
+     - ./web/html:/usr/web/html
     networks:
      - transcendence
   nginx:
@@ -22,8 +24,6 @@ services:
     environment:
      - NGINX_HOST=bigt.com
      - NGINX_PORT=443
-    volumes:
-     - ./nginx/html:/usr/share/nginx/html
     restart: unless-stopped
     networks:
      - transcendence

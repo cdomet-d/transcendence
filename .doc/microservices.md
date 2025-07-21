@@ -34,60 +34,20 @@ Cybersec is handled into each container
 
 - Monitoring system
 
-```mermaid
----
-config:
-  layout: elk
-  elk:
-    mergeEdges: true
-    nodePlacementStrategy: BRANDES_KOEPF
----
-graph TD;
+## Visualisation
 
-client
-API(API GATEWAY)
-server[NGINX]
-ssr[SSR]
-remotep[Remote players]
-
-client --> API
-
-API --> server
-
-userDB(user-db)
-statisticDB(stats-db)
-loggerDB(logger-db)
-
-server --> account(Account Management) --> userDB
-server --> friends(Friends Management) --> userDB
-server --> search(Search) --> userDB
-server --> matchmaking(Matchmaking)
-server --> game(Gameplay)
-server --> stats(Dashboard) --> statisticDB
-server --> accessibility(Accessibility) --> accessiblityDB 
-server --> logger(Monitoring system) --> loggerDB
-```
+![Microservice map](assets/microservices.png)
 
 ## Ports
 
-./services
-./services/nginx
-EXPOSE 443
-./services/accessibility
-EXPOSE 1313
-./services/account
-EXPOSE 1414
-./services/dashboards
-EXPOSE 1515
-./services/friends
-EXPOSE 1616
-./services/matchmaking
-EXPOSE 1818
-./services/monitoring
-EXPOSE 1919
-./services/pong
-EXPOSE 2020
-./services/search
-EXPOSE 2626
-./services/ssr
-EXPOSE 3838
+- ./services/nginx: 443
+- ./services/web: 1212
+- ./services/accessibility: 1313
+- ./services/account: 1414
+- ./services/dashboards: 1515
+- ./services/friends: 1616
+- ./services/matchmaking: 1818
+- ./services/monitoring: 1919
+- ./services/pong: 2020
+- ./services/search: 2626
+- ./services/ssr: 3838
