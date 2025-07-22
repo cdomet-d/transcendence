@@ -1,5 +1,7 @@
-FROM alpine@sha256:a8560b36e8b8210634f77d9f7f9efd7ffa463e380b75e2e74aff4511df3ef88c
+FROM nginx:1.28.0-alpine3.21
 
-COPY ./conf/default.conf /etc/nginx/conf.d/defaul.conf
+COPY ./conf/default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 443
+
+CMD ["nginx", "-g", "daemon off;"]
