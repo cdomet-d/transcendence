@@ -1,24 +1,28 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+import { Router } from './router.class.ts';
+import { routes } from './routes.ts';
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+const main = document.getElementById('app');
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+const router = new Router(routes);
+
+function handleNavigation(path) {
+    const matched = routes.find(route => route.path === path);
+    if (matched) {
+        matched.callback(main);
+    } else {
+        main.innerHTML = 'Not found!';
+    }
+}
+
+document.addEventListener('click', (e) => {
+    const link = (e.target as HTMLElement).closest('[data-link]');
+    if (link) {
+        e.preventDefault();
+        const path = link.getAttribute('href');
+        window.history.pushState({}, '', path);
+        handleNavigation(path);
+    }
+});
+
+window.addEventListener('popstate', () => handleNavigation(window.location.pathname));
+window.addEventListener('DOMContentLoaded', () => handleNavigation(window.location.pathname));

@@ -10,7 +10,7 @@ document.querySelector<HTMLDivElement>('#header')!.innerHTML = `
 
   <!-- Center/Left Search + Leaderboard -->
   <div class="flex flex-1 items-center justify-center relative max-w-xl ml-12 mr-4">
-    <input
+    <input id="search-bar"
       type="search"
       placeholder="Search someone's profile..."
       class="w-72 px-4 py-2 rounded-full bg-amber-50 text-gray-800 focus:outline-none shadow"
