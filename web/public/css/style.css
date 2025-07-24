@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#background-canvas {
+  position: fixed;    /* Fix to viewport, so it stays on screen */
+  top: 0;
+  left: 0;
+  width: 100vw;       /* Full viewport width */
+  height: 100vh;      /* Full viewport height */
+  z-index: -1;        /* Place behind all other page content */
+  display: block;     /* Remove inline default */
+  pointer-events: none; /* Prevent canvas from blocking mouse/touch events */
+}
