@@ -1,0 +1,114 @@
+services:
+  web:
+    build:
+      context: ./services/web
+      dockerfile: Dockerfile
+    image: web:0.0.1
+    container_name: web
+    restart: unless-stopped
+    networks:
+     - transcendence
+  nginx:
+    build:
+      context: ./services/nginx/
+      dockerfile: Dockerfile
+    image: nginx:0.0.1
+    container_name: nginx
+    ports:
+     - "8443:443"
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    environment:
+     - NGINX_HOST=bigt.com
+     - NGINX_PORT=443
+    restart: unless-stopped
+    networks:
+     - transcendence
+  accessibility:
+    build:
+      context: ./services/accessibility
+      dockerfile: Dockerfile
+    image: accessibility:0.0.1
+    container_name: accessibility
+    restart: unless-stopped
+    networks:
+     - transcendence
+  account:
+    build:
+      context: ./services/account
+      dockerfile: Dockerfile
+    image: account:0.0.1
+    container_name: account
+    restart: unless-stopped
+    networks:
+     - transcendence
+  dashboard:
+    build:
+      context: ./services/dashboards
+      dockerfile: Dockerfile
+    image: dashboard:0.0.1
+    container_name: dashboard
+    restart: unless-stopped
+    networks:
+     - transcendence
+  friends:
+    build:
+      context: ./services/friends
+      dockerfile: Dockerfile
+    image: friends:0.0.1
+    container_name: friends
+    restart: unless-stopped
+    networks:
+     - transcendence
+  matchmaking:
+    build:
+      context: ./services/matchmaking
+      dockerfile: Dockerfile
+    image: matchmaking:0.0.1
+    container_name: matchmaking
+    restart: unless-stopped
+    networks:
+     - transcendence
+  monitoring:
+    build:
+      context: ./services/monitoring
+      dockerfile: Dockerfile
+    image: monitoring:0.0.1
+    container_name: monitoring
+    restart: unless-stopped
+    networks:
+     - transcendence
+  pong:
+    build:
+      context: ./services/pong
+      dockerfile: Dockerfile
+    image: pong:0.0.1
+    container_name: pong
+    restart: unless-stopped
+    networks:
+     - transcendence
+  search:
+    build:
+      context: ./services/search
+      dockerfile: Dockerfile
+    image: search:0.0.1
+    container_name: search
+    restart: unless-stopped
+    networks:
+     - transcendence
+
+secrets:
+  ssl-key.pem:
+    file: /home/cdomet-d/Documents/CommonCore/transcendence/.secrets/ssl-key.pem
+  ssl-cert.pem:
+    file: /home/cdomet-d/Documents/CommonCore/transcendence/.secrets/ssl-cert.pem
+
+volumes:
+  static-nginx:
+    name: static-nginx
+
+networks:
+  transcendence:
+    driver: bridge
+    name: transcendence
