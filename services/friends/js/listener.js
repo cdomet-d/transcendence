@@ -4,8 +4,8 @@ import http from 'http';
 const server = http.createServer((req, res) => {
 	res.statusCode = 200;
 	res.setHeader('Content-Type', 'text/plain');
-	res.end('Account Microservice Listener');
+	res.end('Friendship Microservice Listener');
 })
 
-console.log('Account Microservice listening on 1414')
-server.listen(1414);
+console.log('Friendship Microservice listening on 1616')
+server.listen(1616);

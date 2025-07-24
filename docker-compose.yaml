@@ -6,8 +6,6 @@ services:
     image: web:0.0.1
     container_name: web
     restart: unless-stopped
-    volumes:
-     - ./web/html:/usr/web/html
     networks:
      - transcendence
   nginx:

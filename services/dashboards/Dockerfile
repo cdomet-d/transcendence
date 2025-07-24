@@ -1,3 +1,11 @@
-FROM alpine@sha256:a8560b36e8b8210634f77d9f7f9efd7ffa463e380b75e2e74aff4511df3ef88c
+FROM node:alpine3.22@sha256:820e86612c21d0636580206d802a726f2595366e1b867e564cbc652024151e8a
+
+RUN mkdir -p /usr/src/app && chown -R 1000:1000 /usr/src/app
+
+COPY ./js /usr/src/app
+
+WORKDIR /usr/src/app
 
 EXPOSE 1515
+
+CMD ["node", "listener.js"]
