@@ -1,3 +1,5 @@
-.
+_logs/
+.secrets/
+*.pem
 pnpm-lock.yaml
 node_modules
