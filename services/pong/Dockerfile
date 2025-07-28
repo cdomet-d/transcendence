@@ -8,4 +8,4 @@ WORKDIR /usr/src/app
 
 EXPOSE 2020
 
-CMD ["node", "listener.js"]
+CMD ["node", "webSocketServer/server.js"]
