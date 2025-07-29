@@ -1,3 +1,5 @@
-.
+_logs/
+.secrets/
+*.pem
 web/node_modules/
 web/dist/

@@ -34,36 +34,20 @@ Cybersec is handled into each container
 
 - Monitoring system
 
-```mermaid
----
-config:
-  layout: elk
-  elk:
-    mergeEdges: true
-    nodePlacementStrategy: BRANDES_KOEPF
----
-graph TD;
+## Visualisation
 
-client
-API(API GATEWAY)
-server[NGINX]
-ssr[SSR]
-remotep[Remote players]
+![Microservice map](assets/microservices.png)
 
-client --> API
+## Ports
 
-API --> server
-
-userDB(user-db)
-statisticDB(stats-db)
-loggerDB(logger-db)
-
-server --> account(Account Management) --> userDB
-server --> friends(Friends Management) --> userDB
-server --> search(Search) --> userDB
-server --> matchmaking(Matchmaking)
-server --> game(Gameplay)
-server --> stats(Dashboard) --> statisticDB
-server --> accessibility(Accessibility) --> accessiblity DB 
-server --> logger(Monitoring system) --> loggerDB
-```
+- ./services/nginx: 443
+- ./services/web: 1212
+- ./services/accessibility: 1313
+- ./services/account: 1414
+- ./services/dashboards: 1515
+- ./services/friends: 1616
+- ./services/matchmaking: 1818
+- ./services/monitoring: 1919
+- ./services/pong: 2020
+- ./services/search: 2626
+- ./services/ssr: 3838
