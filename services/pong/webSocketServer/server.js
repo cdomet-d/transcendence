@@ -1,5 +1,6 @@
 import Fastify from 'fastify'
 import fs from 'fs';
+import WebSocket from 'ws';
 // importe la fonction constructeur Fastify depuis le module fastify.
 // ici c'est seulement l'objet en lui meme qui est appelé, cad sa référence
 // mais la fonction n'est pas executé
@@ -11,25 +12,22 @@ const fastify = Fastify({
 // elle retourne une instance du server fastify (un objet)
 // et le configure pour activer le logger pino
 
-fastify.get('/', function (request, reply) {
+fastify.get('/api/game/match', function (request, reply) {
   const stream = fs.createReadStream('app/wsReply.js');
   reply.header('Content-Type', 'application/javascript');
   reply.send(stream);
 })
 
-// Run the server!
 fastify.listen({ port: 2020 }, function (err, address) {
   if (err) {
     fastify.log.error(err);
     process.exit(1);
   }
-  // Server is now listening on ${address}
 })
 
-const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: 2020 }); //probleme: peut pas avoir le meme port que le server http fastify
+const wsserver = new WebSocket.Server({ port: 2222 });
 
-wss.on('connection', function connection(ws) {
+wsserver.on('connection', function connection(ws) {
   console.log('Client connecté');
 
   ws.on('message', function incoming(message) {
