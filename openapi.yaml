@@ -1,0 +1,22 @@
+openapi: 3.0.1
+info:
+  title: BigTeam API
+  description: Documentation for the RESTful section the BigTeam's Transcendance project
+
+servers:
+  - url: https://localhost:8443
+    description: Our lone server, we don't really need a production server
+
+path:
+  /users/{id}:
+    get:
+      summary: Display user profile by id.
+      parameters:
+        - name: id
+          in: path
+          required:true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns user details.

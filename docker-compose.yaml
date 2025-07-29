@@ -104,10 +104,6 @@ secrets:
   ssl-cert.pem:
     file: /home/cdomet-d/Documents/CommonCore/transcendence/.secrets/ssl-cert.pem
 
-volumes:
-  static-nginx:
-    name: static-nginx
-
 networks:
   transcendence:
     driver: bridge
