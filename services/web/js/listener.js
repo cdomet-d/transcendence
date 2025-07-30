@@ -1,4 +1,3 @@
-
 import http from 'http';
 
 const server = http.createServer((req, res) => {
@@ -15,4 +14,3 @@ const server = http.createServer((req, res) => {
 
 console.log('Web Microservice listening on 1212')
 server.listen(1212);
-
