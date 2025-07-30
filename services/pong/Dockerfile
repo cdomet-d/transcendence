@@ -6,6 +6,9 @@ COPY ./js /usr/src/app
 
 WORKDIR /usr/src/app
 
+#RUN npm ou pnpm init -> creates package.json
+#RUN npm ou pnpm i fastify -> installs fastify module
+
 EXPOSE 2020
 
 CMD ["node", "webSocketServer/server.js"]

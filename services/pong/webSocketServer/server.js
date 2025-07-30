@@ -1,6 +1,6 @@
 import Fastify from 'fastify'
 import fs from 'fs';
-import WebSocket from 'ws';
+// import WebSocket from 'ws';
 // importe la fonction constructeur Fastify depuis le module fastify.
 // ici c'est seulement l'objet en lui meme qui est appelé, cad sa référence
 // mais la fonction n'est pas executé
@@ -25,13 +25,14 @@ fastify.listen({ port: 2020 }, function (err, address) {
   }
 })
 
-const wsserver = new WebSocket.Server({ port: 2222 });
+// const wsserver = new WebSocket.Server({ port: 2222 });
 
-wsserver.on('connection', function connection(ws) {
-  console.log('Client connecté');
+// wsserver.on('connection', function connection(ws) {
+//   console.log('Client connecté');
 
-  ws.on('message', function incoming(message) {
-    console.log('Reçu du client:', message);
-    ws.send(`Réponse du serveur : ${message}`);
-  });
-});
+//   ws.on('message', function incoming(message) {
+//     console.log('Reçu du client:', message);
+//     ws.send(`Réponse du serveur : ${message}`);
+//   });
+// });
+
