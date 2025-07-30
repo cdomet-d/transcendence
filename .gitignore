@@ -1,5 +1,5 @@
 _logs/
 .secrets/
 *.pem
-package-lock.json
 node_modules
+.env
