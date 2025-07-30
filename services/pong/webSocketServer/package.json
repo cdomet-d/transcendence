@@ -1,17 +1,17 @@
 {
-  "name": "transcendence",
+  "name": "pong",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.13.1",
+  "description": "",
+  "type": "module",
   "dependencies": {
     "fastify": "^5.4.0"
-  },
-  "type": "module"
+  }
 }
