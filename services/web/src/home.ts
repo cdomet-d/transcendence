@@ -1,5 +1,3 @@
-import './style.css';
-
 const main = document.getElementById('app')!;
 
 export function renderHome(main: HTMLElement | null): void {

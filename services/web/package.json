@@ -1,11 +1,11 @@
 {
   "name": "transcendence",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "src/main.ts",
   "scripts": {
 	"build": "tsc",
     "start": "node dist/main.js",
-    "dev": "ts-node main.ts",
+    "dev": "tsx src/main.ts",
     "test": "test"
   },
     "devDependencies": {
