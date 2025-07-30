@@ -1,3 +1,4 @@
 _logs/
 .secrets/
 *.pem
+api-visualizer

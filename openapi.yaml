@@ -1,22 +1,107 @@
-openapi: 3.0.1
+openapi: 3.1.1
+
 info:
   title: BigTeam API
   description: Documentation for the RESTful section the BigTeam's Transcendance project
+  version: 1.0.0
 
 servers:
   - url: https://localhost:8443
-    description: Our lone server, we don't really need a production server
+    description: Our lone server, we don't really need a production one
 
-path:
+paths:
   /users/{id}:
     get:
       summary: Display user profile by id.
       parameters:
         - name: id
           in: path
-          required:true
+          required: true
           schema:
             type: string
       responses:
         '200':
-          description: Returns user details.
+          description: Returns a user's profile (profile card, match history, game_stats)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/user'
+                  - $ref: '#/components/schemas/game_history'
+                  - $ref: '#/components/schemas/game_stats'
+
+components:
+  schemas:
+    duration:
+      type: object
+      description: start and end times of a match in ISO 8601 format 
+      properties:
+        begin_at:
+          type: string
+          format: date-time
+          description: ISO 8601 date at which the game started
+        end_at: 
+          type: string
+          format: date-time
+          description: ISO 8601 date at which the game ended
+      example:
+        begin_at: 2025-07-30T12:46:48Z
+        end_at: 2025-07-30T12:47:13Z
+      required:
+        - begin_at
+        - end_at
+    score:
+      type: object
+      description: a map of player names to their scores.
+      additionalProperties:
+        type: number
+        description: the mapped user's score in numeric value
+      example:
+        lunaticBaboon: 5
+        evilGoose: 2
+      required:
+        - additionalProperties
+    match:
+      type: object
+      description: a single match
+      properties:
+        winner:
+          type: string
+          description: winner for the specified match
+        loser:
+          type: string
+          description: looser for the specified match
+        duration:
+          $ref: '#/components/schemas/duration'
+        score: 
+          $ref: '#/components/schemas/score'
+    game_history:
+      type: array
+      properties:
+        match:
+          $ref: '#/components/schemas/match'
+    game_stats:
+      type: object
+      # properties:
+        # ...
+    avatar:
+      type: string
+      format: binary
+      description: a binary representation of the user's avatar
+    user:
+      type: object
+      properties:
+        nickname:
+          type: string
+          description: the user's chosen nickname
+        rank:
+          type: string
+          description: the user's rank in competitive pong games
+        avatar:
+          $ref: '#/components/schemas/avatar'
+        profile_color:
+          type: string
+          description: the user's profile main color scheme
+        online: 
+          type: boolean
+          description: indicates wether the user is currently online
