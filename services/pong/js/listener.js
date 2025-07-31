@@ -1,16 +1,18 @@
 
 import http from 'http';
-import fs from 'fs';
+import fs from 'fs/promises';
 const port = process.env.PORT;
 //va recupérer la valeur de PORT dans le fichier .env
 //pour qu'à l'exec ça fonctionne il faut faire "node --env-file=.env listener.js"
 
-const server = http.createServer((req, res) => {
-	console.log(req.url);
-	console.log(req.method);
+const server = http.createServer(async (req, res) => {
+	// console.log(req.url);
+	// console.log(req.method);
+	const payload = await fs.readFile("index.html");
 	res.statusCode = 200;
 	res.setHeader('Content-Type', 'text/html');
-	res.end('<h1>Pong Microservice Listener</h1>');
+	res.write(payload);
+	res.end();
 })
 
 server.listen(port, () => {
