@@ -14,3 +14,6 @@ const server = http.createServer((req, res) => {
 
 console.log('Web Microservice listening on 1212')
 server.listen(1212);
+
+
+//servir le http server ici pour mettre l'entrypoint sur listener.js
