@@ -6,10 +6,13 @@ const main = document.getElementById('app');
 const router = new Router(routes);
 
 function handleNavigation(path) {
+    // if (path === '/game')
+
     const matched = routes.find(route => route.path === path);
     if (matched) {
         matched.callback(main);
-    } else {
+    }
+    else {
         main.innerHTML = 'Not found!';
     }
 }

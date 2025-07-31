@@ -1,6 +1,8 @@
 import './style.css'
 
-document.querySelector<HTMLDivElement>('#header')!.innerHTML = `
+export function renderHeader() {
+  const headerDiv = document.querySelector<HTMLDivElement>('#header')!;
+  headerDiv.innerHTML = `
 <header class="w-full bg-amber-200 text-white px-4 py-2 flex items-center justify-between shadow">
   <!-- Logo and Site Title -->
   <div class="flex items-center space-x-3 flex-shrink-0">
@@ -33,3 +35,9 @@ document.querySelector<HTMLDivElement>('#header')!.innerHTML = `
 </header>
 
 `
+}
+
+export function clearHeader() {
+  const headerDiv = document.querySelector<HTMLDivElement>('#header')!;
+  headerDiv.innerHTML = '';
+}
