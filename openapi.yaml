@@ -20,36 +20,39 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Returns a user's profile (profile card, match history, game_stats)
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/user'
-                  - $ref: '#/components/schemas/game_history'
-                  - $ref: '#/components/schemas/game_stats'
-
+                $ref: "#/components/schemas/profile"
 components:
   schemas:
     duration:
       type: object
-      description: start and end times of a match in ISO 8601 format 
+      description: start and end times of a match in ISO 8601 format
       properties:
         begin_at:
           type: string
           format: date-time
           description: ISO 8601 date at which the game started
-        end_at: 
+        end_at:
           type: string
           format: date-time
           description: ISO 8601 date at which the game ended
+        sec_duration:
+          type: number
+          format: interger
+          description: a match duration in seconds
       example:
         begin_at: 2025-07-30T12:46:48Z
         end_at: 2025-07-30T12:47:13Z
+        sec_duration: 25
       required:
         - begin_at
         - end_at
+        - sec_duration
+
     score:
       type: object
       description: a map of player names to their scores.
@@ -61,6 +64,7 @@ components:
         evilGoose: 2
       required:
         - additionalProperties
+
     match:
       type: object
       description: a single match
@@ -72,24 +76,81 @@ components:
           type: string
           description: looser for the specified match
         duration:
-          $ref: '#/components/schemas/duration'
-        score: 
-          $ref: '#/components/schemas/score'
+          $ref: "#/components/schemas/duration"
+        score:
+          $ref: "#/components/schemas/score"
+      required:
+        - winner
+        - loser
+        - duration
+        - score
+
+    tournament:
+      type: object
+      description: a tournament object with associated matches and outcomes
+      properties:
+        matches:
+          type: array
+          description: an array containing the tournament's matches
+          items:
+            $ref: "#/components/schemas/match"
+      required:
+        - matches
+
     game_history:
       type: array
-      properties:
-        match:
-          $ref: '#/components/schemas/match'
+      description: an array of the user's matches
+      items:
+        $ref: "#/components/schemas/match"
+
     game_stats:
       type: object
-      # properties:
-        # ...
+      description: precomputed stats about the user's game history
+      properties:
+        total_games:
+          type: number
+          format: interger
+          description: the total number of matches the user ever played
+        total_win:
+          type: number
+          format: interger
+          description: the total number of matches the user ever won
+        total_loss:
+          type: number
+          format: interger
+          description: the total number of matches the user ever lost
+        longest_pass:
+          type: number
+          format: interger
+          description: longest exchange without dropping the ball or scoring a goal
+        winstreak:
+          type: number
+          format: interger
+          description: most matches won in a row
+        longest_match:
+          $ref: "#/components/schemas/duration"
+        shortest_match:
+          $ref: "#/components/schemas/duration"
+        nemesis:
+          $ref: "#/components/schemas/user"
+      required:
+        - total_games
+        - total_wins
+        - total_losses
+        - longest_pass
+        - winstreak
+        - longest_match
+        - shortest_match
+        - nemesis
+
     avatar:
       type: string
       format: binary
       description: a binary representation of the user's avatar
+
     user:
       type: object
+      description: a succint user's profile card
       properties:
         nickname:
           type: string
@@ -98,10 +159,21 @@ components:
           type: string
           description: the user's rank in competitive pong games
         avatar:
-          $ref: '#/components/schemas/avatar'
+          $ref: "#/components/schemas/avatar"
         profile_color:
           type: string
           description: the user's profile main color scheme
-        online: 
+        online:
           type: boolean
           description: indicates wether the user is currently online
+
+    profile:
+      type: object
+      description: a user's profile
+      properties:
+        user:
+          $ref: "#/components/schemas/user"
+        game_history:
+          $ref: "#/components/schemas/game_history"
+        game_stats:
+          $ref: "#/components/schemas/game_stats"
