@@ -1,15 +1,25 @@
 import { Router } from './router.class.ts';
 import { routes } from './routes.ts';
+import { renderHeader } from './header.ts'
 
 const main = document.getElementById('app');
 
 const router = new Router(routes);
 
 function handleNavigation(path) {
+    const header = document.getElementById('header');
+
+    if (path === '/game') {
+        renderHeader();
+    } else {
+        header.innerHTML = '';
+    }
+
     const matched = routes.find(route => route.path === path);
     if (matched) {
         matched.callback(main);
-    } else {
+    }
+    else {
         main.innerHTML = 'Not found!';
     }
 }
