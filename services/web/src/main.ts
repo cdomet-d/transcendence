@@ -1,19 +1,32 @@
 import { Router } from './router.class.js';
 import { routes } from './routes.js';
+import { renderHeader } from './header.js'
 
 const main = document.getElementById('app');
 const router = new Router(routes);
 
 function handleNavigation(path: string): void {
+    if (!main) return;
+    
+    const header = document.getElementById('header');
+    
+    if (path === '/game') {
+        renderHeader();
+    } else {
+        // Vérification que header n'est pas null
+        if (header) {
+            header.innerHTML = '';
+        }
+    }
+
     const matched = routes.find(route => route.path === path);
     if (matched) {
         matched.callback(main);
     } else {
-        if (main) {
-            main.innerHTML = 'Not found!';
-        }
+        main.innerHTML = 'Not found!';
     }
 }
+
 
 document.addEventListener('click', (e: Event) => {
     const link = (e.target as HTMLElement).closest('[data-link]');

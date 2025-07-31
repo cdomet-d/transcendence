@@ -1,3 +1,6 @@
+import { render404 } from './404.js';
+import { renderHeader, clearHeader } from './header.js';
+
 interface Route {
     path: string;
     callback: (main: HTMLElement | null) => void;
@@ -24,11 +27,30 @@ export class Router {
     }
     
     _loadRoute(path: string): void {
+        const main = document.getElementById('app');
+        const headerDiv = document.getElementById('header');
+
+        console.log('Loading route:', path);
+
+        if (!main || !headerDiv) return;
+
         const matchedRoute = this._matchUrlToRoute(path);
         if (!matchedRoute) {
-            throw new Error('Route not found');
+            // throw new Error('Route not found');
+            render404(main);
+            return;
         }
-        const main = document.getElementById('app');
+
+        console.log('Matched route:', matchedRoute.path);
+
+        if (matchedRoute.path === '/game') {
+            renderHeader();
+            headerDiv.style.display = 'block';
+        }
+        else {
+            clearHeader();
+            headerDiv.style.display = 'none';
+        }
         matchedRoute.callback(main);
     }
     
