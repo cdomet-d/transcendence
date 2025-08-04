@@ -1,10 +1,15 @@
 import { render404 } from './404.ts';
 import { renderHeader, clearHeader } from './header.ts';
 
+interface routeInterface {
+    path: string;
+    callback: () => void;
+}
+
 export class Router {
     _routes: Array<{ path: string, callback: Function }>;
 
-    constructor(routes) {
+    constructor(routes: routeInterface[]) {
         this._routes = routes;
         this._loadInitialRoute();
     }
@@ -34,11 +39,13 @@ export class Router {
             return;
         }
 
-        if (matchedRoute.path === '/game') {
-            renderHeader();
-        }
-        else {
+        // TODO try to load header once and change display instead of function calling everytime
+        if (matchedRoute.path === '/') {
+            // header.style.display = "hidden";
             clearHeader();
+        } else {
+            // header.style.display = "block";
+            renderHeader();
         }
         matchedRoute.callback(main);
     }
