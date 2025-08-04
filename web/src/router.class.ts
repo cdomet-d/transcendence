@@ -2,10 +2,10 @@ import { render404 } from './404.ts';
 import { renderHeader, clearHeader } from './header.ts';
 
 export class Router {
-    routes: Array<{ path: string, callback: Function }>;
+    _routes: Array<{ path: string, callback: Function }>;
 
     constructor(routes) {
-        this.routes = routes;
+        this._routes = routes;
         this._loadInitialRoute();
     }
 
@@ -14,7 +14,7 @@ export class Router {
     }
 
     _matchUrlToRoute(path) {
-        return this.routes.find(route => route.path === path);
+        return this._routes.find(route => route.path === path);
     }
 
     _loadInitialRoute() {
@@ -23,11 +23,9 @@ export class Router {
 
     _loadRoute(path) {
         const main = document.getElementById('app');
-        const headerDiv = document.getElementById('header');
+        const header = document.getElementById('header');
 
-        console.log('Loading route:', path);
-
-        if (!main || !headerDiv) return;
+        if (!main || !header) return;
 
         const matchedRoute = this._matchUrlToRoute(path);
         if (!matchedRoute) {
@@ -36,15 +34,11 @@ export class Router {
             return;
         }
 
-        console.log('Matched route:', matchedRoute.path);
-
         if (matchedRoute.path === '/game') {
             renderHeader();
-            headerDiv.style.display = 'block';
         }
         else {
             clearHeader();
-            headerDiv.style.display = 'none';
         }
         matchedRoute.callback(main);
     }

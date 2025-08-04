@@ -1,27 +1,14 @@
 import { Router } from './router.class.ts';
 import { routes } from './routes.ts';
-import { renderHeader } from './header.ts'
 
 const main = document.getElementById('app');
 
 const router = new Router(routes);
 
-function handleNavigation(path) {
-    const header = document.getElementById('header');
-
-    if (path === '/game') {
-        renderHeader();
-    } else {
-        header.innerHTML = '';
-    }
-
-    const matched = routes.find(route => route.path === path);
-    if (matched) {
-        matched.callback(main);
-    }
-    else {
-        main.innerHTML = 'Not found!';
-    }
+function normalizePath(path) {
+    if (path == "/")
+        return path;
+    return path.replace(/\/+$/, '');
 }
 
 document.addEventListener('click', (e) => {
@@ -30,9 +17,12 @@ document.addEventListener('click', (e) => {
         e.preventDefault();
         const path = link.getAttribute('href');
         window.history.pushState({}, '', path);
-        handleNavigation(path);
+        const cleanPath = normalizePath(path);
+        router.navigateTo(cleanPath);
     }
 });
 
-window.addEventListener('popstate', () => handleNavigation(window.location.pathname));
-window.addEventListener('DOMContentLoaded', () => handleNavigation(window.location.pathname));
+window.addEventListener('popstate', () => {
+    const cleanPath = normalizePath(window.location.pathname);
+    router._loadRoute(cleanPath);
+});
