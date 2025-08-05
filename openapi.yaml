@@ -13,6 +13,8 @@ paths:
   /users/{id}:
     get:
       summary: Display user profile by id.
+      tags:
+       - users
       parameters:
         - name: id
           in: path
@@ -26,6 +28,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/profile"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
 components:
   schemas:
     duration:
@@ -166,6 +174,12 @@ components:
         online:
           type: boolean
           description: indicates wether the user is currently online
+      required:
+        - nickname
+        - rank
+        - avatar
+        - profile_color
+        - online
 
     profile:
       type: object
@@ -177,3 +191,28 @@ components:
           $ref: "#/components/schemas/game_history"
         game_stats:
           $ref: "#/components/schemas/game_stats"
+      required:
+        - user
+        - game_history
+        - game_stats
+    
+    error:
+      type: object
+      properties:
+        code:
+          type: number
+          format: interger
+          description: the value of the error code
+        message:
+          type: string
+          description: a human-readable message describing the error
+        details:
+          type: string
+          description: more information on the error
+      example:
+       code: 404
+       message: User does not exist
+       description: Requested bad user %id%
+      required:
+       - code
+       - message
