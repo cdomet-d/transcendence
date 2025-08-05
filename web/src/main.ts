@@ -1,8 +1,6 @@
 import { Router } from './router.class.ts';
 import { routes } from './routes.ts';
 
-const main = document.getElementById('app');
-
 const router = new Router(routes);
 
 function normalizePath(path) {
@@ -18,7 +16,7 @@ document.addEventListener('click', (e) => {
         const path = link.getAttribute('href');
         window.history.pushState({}, '', path);
         const cleanPath = normalizePath(path);
-        router.navigateTo(cleanPath);
+        router._loadRoute(cleanPath);
     }
 });
 

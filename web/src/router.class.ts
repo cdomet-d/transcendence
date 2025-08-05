@@ -3,7 +3,7 @@ import { renderHeader, clearHeader } from './header.ts';
 
 interface routeInterface {
     path: string;
-    callback: () => void;
+    callback: (main: any) => void;
 }
 
 export class Router {
@@ -48,10 +48,5 @@ export class Router {
             renderHeader();
         }
         matchedRoute.callback(main);
-    }
-
-    navigateTo(path) {
-        window.history.pushState({}, '', path);
-        this._loadRoute(path);
     }
 }
