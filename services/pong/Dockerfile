@@ -1,4 +1,4 @@
-FROM node:alpine3.22@sha256:820e86612c21d0636580206d802a726f2595366e1b867e564cbc652024151e8a
+FROM node:20-alpine3.22
 
 RUN mkdir -p /usr/src/app && chown -R 1000:1000 /usr/src/app
 
@@ -12,8 +12,8 @@ WORKDIR /usr/src/app
 #RUN npm ou pnpm install -> looks at the dependencies in package.json and installs them all
 
 COPY webSocketServer ./
+RUN npm i @fastify/websocket
 RUN npm install
-#npm i @fastify/websocket
 
 EXPOSE 2020
 

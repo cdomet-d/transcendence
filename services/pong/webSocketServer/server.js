@@ -15,9 +15,9 @@ function checkProxy(address, hop) {
 }
 
 const options = {
-  logger: true,
-  https: true,
-  trustProxy: checkProxy
+  logger: true
+  // https: true,
+  // trustProxy: checkProxy
   //connectionTimeout
   //forceCloseConnections
   //pluginTimeout
