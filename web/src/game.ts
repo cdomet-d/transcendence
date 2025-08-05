@@ -10,7 +10,7 @@ export function renderGame(main) {
         <button id="btn-right" class="rounded bg-amber-400 px-4 py-2 text-white">RIGHT</button>
       </div>
       <a
-        href="/"
+        href="/central"
         data-link
         id="back-btn"
         class="mt-4 py-3 px-8 rounded-full border-1 border-black bg-gradient-to-br from-[#ffcc00] to-[#ea9800] shadow-md hover:scale-105 transition-all text-white text-lg font-semibold"
