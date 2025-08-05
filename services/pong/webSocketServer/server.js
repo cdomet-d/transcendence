@@ -3,6 +3,7 @@ import Fastify from 'fastify'
 // ici c'est seulement l'objet en lui meme qui est appelé, cad sa référence
 // mais la fonction n'est pas executé
 import fs from 'fs/promises';
+import websocket from '@fastify/websocket'
 const port = process.env.PORT;
 //"node --env-file=.env server.js"
 
@@ -27,17 +28,18 @@ const fastifyServer = Fastify(options)
 // elle retourne une instance du server fastify (un objet)
 // elle prend un argument: un objet 'options'
 
+fastifyServer.register(websocket);
+
 /*creer les routes avec leur handlers, hooks, decorators, plugins*/
 const opts = {
   schema: {
     //TODO: get coralie's json object
-  }
+  },
+  websocket: true
 }
 
-function handler(req, rep) {
-  // const stream = fs.createReadStream('app/wsReply.js');
-  // rep.header('Content-Type', 'application/javascript');
-  // rep.send(stream);
+function handler(socket, rep) {
+  fastifyServer.log.info('websocket connexion worked')
 }
 
 fastifyServer.get('/game/match', opts, handler)
