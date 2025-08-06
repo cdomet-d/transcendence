@@ -12,7 +12,6 @@ WORKDIR /usr/src/app
 #RUN npm ou pnpm install -> looks at the dependencies in package.json and installs them all
 
 COPY webSocketServer ./
-RUN npm i @fastify/websocket
 RUN npm install
 
 EXPOSE 2020
