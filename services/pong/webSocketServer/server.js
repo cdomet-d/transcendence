@@ -57,8 +57,6 @@ serv.route({
 });
 
 /*lancer le server*/
-serv.listen({ port: port }, catchError)
-
 function catchError(err, address) {
   if (err) {
     serv.log.error(err);
@@ -66,4 +64,14 @@ function catchError(err, address) {
   }
   console.log(`Pong Microservice listening on ${port} at ${address}`);
 }
-//fonction hoistee avec sa propre portee de this a l'oppose d'une fonction flechee
+
+serv.listen({ port: port }, catchError)
+
+process.on('SIGINT', () => {
+  console.log('Received SIGINT. Gracefully shutting down...');
+  serv.close().then(() => {
+    console.log('successfully closed!')
+  }, (err) => {
+    console.log('an error happened', err)
+  });
+});
