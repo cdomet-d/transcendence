@@ -49,9 +49,10 @@ serv.route({
   method: 'GET',
   url: '/game/match',
   handler: upgrade,
-  wsHandler: (connection, req) => {
-    connection.socket.send('connexion WebSocket ok');
-  },
+  wsHandler: (socket, req) => {
+    socket.on('message', (message) => {
+      socket.send('hi from server')})
+    },
   websocket: true
 });
 
