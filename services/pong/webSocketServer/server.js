@@ -42,7 +42,7 @@ serv.register(websocket);
 
 /*creer les routes avec leur handlers, hooks, decorators, plugins*/
 async function upgrade(req, rep) {
-  const script = await fs.readFile('app/index.html');
+  const script = await fs.readFile('frontend/index.html');
   rep.header('Content-Type', 'text/html');
   rep.send(script);
 }
