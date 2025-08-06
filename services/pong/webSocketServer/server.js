@@ -22,8 +22,8 @@ function checkProxy(address, hop) {
 
 const options = {
   logger: true,
-  https: true,
-  trustProxy: checkProxy
+  // https: true,
+  // trustProxy: checkProxy
   //connectionTimeout
   //forceCloseConnections
   //pluginTimeout
@@ -50,7 +50,6 @@ serv.route({
   url: '/game/match',
   handler: upgrade,
   wsHandler: (connection, req) => {
-    // Ce bloc est utilisé si la connexion est un WebSocket
     connection.socket.send('connexion WebSocket ok');
   },
   websocket: true
