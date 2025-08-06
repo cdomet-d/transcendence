@@ -1,0 +1,31 @@
+{"level":30,"time":1754499650949,"pid":1,"hostname":"d1f10d55a5b9","msg":"Server listening at http://[::1]:2020"}
+{"level":30,"time":1754499650957,"pid":1,"hostname":"d1f10d55a5b9","msg":"Server listening at http://127.0.0.1:2020"}
+{"level":30,"time":1754500029192,"pid":1,"hostname":"733fa5c49b69","msg":"Server listening at http://[::1]:2020"}
+{"level":30,"time":1754500029195,"pid":1,"hostname":"733fa5c49b69","msg":"Server listening at http://127.0.0.1:2020"}
+{"level":30,"time":1754500381136,"pid":1,"hostname":"a4d003782edf","msg":"Server listening at http://127.0.0.1:2020"}
+{"level":30,"time":1754500381137,"pid":1,"hostname":"a4d003782edf","msg":"Server listening at http://172.18.0.3:2020"}
+{"level":30,"time":1754500407364,"pid":1,"hostname":"a4d003782edf","reqId":"req-1","req":{"method":"GET","url":"/game/match","host":"pong:2020","remoteAddress":"172.18.0.2","remotePort":32832},"msg":"incoming request"}
+{"level":30,"time":1754500407366,"pid":1,"hostname":"a4d003782edf","reqId":"req-1","msg":"Route GET:/game/match not found"}
+{"level":30,"time":1754500407396,"pid":1,"hostname":"a4d003782edf","reqId":"req-1","res":{"statusCode":404},"responseTime":31.012281000148505,"msg":"request completed"}
+{"level":30,"time":1754500453233,"pid":1,"hostname":"8177f3cf02a4","msg":"Server listening at http://127.0.0.1:2020"}
+{"level":30,"time":1754500453233,"pid":1,"hostname":"8177f3cf02a4","msg":"Server listening at http://172.18.0.3:2020"}
+{"level":30,"time":1754500458499,"pid":1,"hostname":"8177f3cf02a4","reqId":"req-1","req":{"method":"GET","url":"/game/match","host":"pong:2020","remoteAddress":"172.18.0.2","remotePort":45990},"msg":"incoming request"}
+{"level":30,"time":1754500458520,"pid":1,"hostname":"8177f3cf02a4","reqId":"req-1","res":{"statusCode":200},"responseTime":18.41202099993825,"msg":"request completed"}
+{"level":30,"time":1754500527546,"pid":1,"hostname":"0c4629dd49dc","msg":"Server listening at http://127.0.0.1:2020"}
+{"level":30,"time":1754500527547,"pid":1,"hostname":"0c4629dd49dc","msg":"Server listening at http://172.18.0.2:2020"}
+{"level":30,"time":1754500544797,"pid":1,"hostname":"0c4629dd49dc","reqId":"req-1","req":{"method":"GET","url":"/game/match","host":"pong:2020","remoteAddress":"172.18.0.3","remotePort":59542},"msg":"incoming request"}
+{"level":30,"time":1754500544826,"pid":1,"hostname":"0c4629dd49dc","reqId":"req-1","res":{"statusCode":200},"responseTime":24.20554900029674,"msg":"request completed"}
+{"level":30,"time":1754500748197,"pid":1,"hostname":"10e76b68c572","msg":"Server listening at http://127.0.0.1:2020"}
+{"level":30,"time":1754500748197,"pid":1,"hostname":"10e76b68c572","msg":"Server listening at http://172.18.0.2:2020"}
+{"level":30,"time":1754500748198,"pid":1,"hostname":"10e76b68c572","msg":"Pong Microservice listening on 2020 at http://127.0.0.1:2020"}
+{"level":30,"time":1754500756203,"pid":1,"hostname":"10e76b68c572","reqId":"req-1","req":{"method":"GET","url":"/game/match","host":"pong:2020","remoteAddress":"172.18.0.3","remotePort":58626},"msg":"incoming request"}
+{"level":30,"time":1754500756234,"pid":1,"hostname":"10e76b68c572","reqId":"req-1","res":{"statusCode":200},"responseTime":30.52080800011754,"msg":"request completed"}
+{"level":30,"time":1754500989725,"pid":1,"hostname":"65189410a761","msg":"Server listening at http://127.0.0.1:2020"}
+{"level":30,"time":1754500989725,"pid":1,"hostname":"65189410a761","msg":"Server listening at http://172.18.0.3:2020"}
+{"level":30,"time":1754500989725,"pid":1,"hostname":"65189410a761","msg":"Pong Microservice listening on 2020 at http://127.0.0.1:2020"}
+{"level":30,"time":1754501036254,"pid":1,"hostname":"a0ef5311f4a4","msg":"Server listening at http://127.0.0.1:2020"}
+{"level":30,"time":1754501036254,"pid":1,"hostname":"a0ef5311f4a4","msg":"Server listening at http://172.18.0.3:2020"}
+{"level":30,"time":1754501036255,"pid":1,"hostname":"a0ef5311f4a4","msg":"Pong Microservice listening on 2020 at http://127.0.0.1:2020"}
+{"level":30,"time":1754501886450,"pid":1,"hostname":"3a134a38df6d","msg":"Server listening at http://127.0.0.1:2020"}
+{"level":30,"time":1754501886451,"pid":1,"hostname":"3a134a38df6d","msg":"Server listening at http://172.18.0.2:2020"}
+{"level":30,"time":1754501886451,"pid":1,"hostname":"3a134a38df6d","msg":"Pong Microservice listening on 2020 at http://127.0.0.1:2020"}

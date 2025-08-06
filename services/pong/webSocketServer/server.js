@@ -21,9 +21,11 @@ function checkProxy(address, hop) {
 }
 
 const options = {
-  logger: true,
+  logger: {
+     file: '/usr/src/app/server.log' 
+  },
+  trustProxy: checkProxy
   // https: true,
-  // trustProxy: checkProxy
   //connectionTimeout
   //forceCloseConnections
   //pluginTimeout
@@ -47,11 +49,13 @@ async function upgrade(req, rep) {
 
 serv.route({
   method: 'GET',
-  url: '/pong',
+  url: '/game/match',
   handler: upgrade,
   wsHandler: (socket, req) => {
-    socket.on('message', (message) => {
-      socket.send('hi from server')})
+      socket.on('message', (message) => {
+          socket.send('hi from server')
+          serv.log.info("websocket connection workd")
+        })
     },
   websocket: true
 });
@@ -62,16 +66,17 @@ function catchError(err, address) {
     serv.log.error(err);
     process.exit(1);
   }
-  console.log(`Pong Microservice listening on ${port} at ${address}`);
+  serv.log.info(`Pong Microservice listening on ${port} at ${address}`);
 }
 
-serv.listen({ port: port }, catchError)
+serv.listen({ port: port, host: '0.0.0.0' }, catchError)
 
 process.on('SIGINT', () => {
-  console.log('Received SIGINT. Gracefully shutting down...');
+  serv.log.info('Received SIGINT. Gracefully shutting down...');
   serv.close().then(() => {
-    console.log('successfully closed!')
+    serv.log.info('successfully closed!')
   }, (err) => {
-    console.log('an error happened', err)
+    serv.log.error('an error happened', err)
   });
 });
+
