@@ -1,11 +1,17 @@
+'use strict'
+
 import Fastify from 'fastify'
-// importe la fonction constructeur Fastify depuis le module fastify.
-// ici c'est seulement l'objet en lui meme qui est appelé, cad sa référence
-// mais la fonction n'est pas executé
 import fs from 'fs/promises';
 import websocket from '@fastify/websocket'
+import path from 'path'
+import fastifyStatic from '@fastify/static';
+import { fileURLToPath } from 'url';
+
 const port = process.env.PORT;
 //"node --env-file=.env server.js"
+
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 /* creer le server */
 function checkProxy(address, hop) {
@@ -15,59 +21,49 @@ function checkProxy(address, hop) {
 }
 
 const options = {
-  logger: true
-  // https: true,
-  // trustProxy: checkProxy
+  logger: true,
+  https: true,
+  trustProxy: checkProxy
   //connectionTimeout
   //forceCloseConnections
   //pluginTimeout
 }
 
-const fastifyServer = Fastify(options)
-// cette fois la fonction constructeur Fastify est executée grace aux parenthèses
-// elle retourne une instance du server fastify (un objet)
-// elle prend un argument: un objet 'options'
+const serv = Fastify(options)
 
-fastifyServer.register(websocket);
+serv.register(websocket);
+
+// serv.register(fastifyStatic, {
+//   root: path.join(__dirname, 'app'),
+//   prefix: '/app/',
+// });
 
 /*creer les routes avec leur handlers, hooks, decorators, plugins*/
-const opts = {
-  schema: {
-    //TODO: get coralie's json object
+async function upgrade(req, rep) {
+  const script = await fs.readFile('app/index.html');
+  rep.header('Content-Type', 'text/html');
+  rep.send(script);
+}
+
+serv.route({
+  method: 'GET',
+  url: '/game/match',
+  handler: upgrade,
+  wsHandler: (connection, req) => {
+    // Ce bloc est utilisé si la connexion est un WebSocket
+    connection.socket.send('connexion WebSocket ok');
   },
   websocket: true
-}
-
-function handler(socket, rep) {
-  fastifyServer.log.info('websocket connexion worked')
-}
-
-fastifyServer.get('/game/match', opts, handler)
-//lorsque le server recoit une requete GET avec l'url /game/match la fonction handler sera execute
+});
 
 /*lancer le server*/
-fastifyServer.listen({ port: port }, catchError)
+serv.listen({ port: port }, catchError)
 
 function catchError(err, address) {
   if (err) {
-    fastifyServer.log.error(err);
+    serv.log.error(err);
     process.exit(1);
   }
-  fastifyServer.log.info(`Pong Microservice listening on ${port} at ${address}`);
+  console.log(`Pong Microservice listening on ${port} at ${address}`);
 }
 //fonction hoistee avec sa propre portee de this a l'oppose d'une fonction flechee
-
-/*
-server steps:
-- creer un socket non-blocant, associe a localhost, 
-  qui ecoute des demandes de connexion sur des routes specifiques
-  et qui suis le protocol https et wss
-- creer les routes
-- lancer le server (tourne tant qu'il est pas arrete par un ctrl C)
-- a chaque evenement sur la socket server: 
-  soit accepter le client, soit analyser la requete wss
-- pour accepter client: verifier la route, 
-  renvoyer un javascript qui sera executer dans le navigateur du client 
-  pour faire une demande de connexion en websocket, 
-  accepter la requete et maintenir une connexion bidirectionnelle avec le client
-*/
