@@ -100,9 +100,9 @@ services:
 
 secrets:
   ssl-key.pem:
-    file: /home/cdomet-d/Documents/CommonCore/transcendence/.secrets/ssl-key.pem
+    file: .secrets/ssl-key.pem
   ssl-cert.pem:
-    file: /home/cdomet-d/Documents/CommonCore/transcendence/.secrets/ssl-cert.pem
+    file: .secrets/ssl-cert.pem
 
 volumes:
   static-nginx:
