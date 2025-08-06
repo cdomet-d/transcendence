@@ -1,13 +1,14 @@
 
 import http from 'http';
 import fs from 'fs/promises';
-const port = process.env.PORT;
+const port = 2020;//process.env.PORT;
 //va recupérer la valeur de PORT dans le fichier .env
 //pour qu'à l'exec ça fonctionne il faut faire "node --env-file=.env listener.js"
 
 const server = http.createServer(async (req, res) => {
-	// console.log(req.url);
-	// console.log(req.method);
+	console.log(req.url);
+	console.log(req.method);
+	//TODO:l'ecrire dans un fichier qui est dans un volume
 	const payload = await fs.readFile("index.html");
 	res.statusCode = 200;
 	res.setHeader('Content-Type', 'text/html');
