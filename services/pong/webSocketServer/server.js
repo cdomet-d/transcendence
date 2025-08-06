@@ -47,7 +47,7 @@ async function upgrade(req, rep) {
 
 serv.route({
   method: 'GET',
-  url: '/game/match',
+  url: '/pong',
   handler: upgrade,
   wsHandler: (socket, req) => {
     socket.on('message', (message) => {
