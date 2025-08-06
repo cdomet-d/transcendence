@@ -21,6 +21,7 @@ paths:
           required: true
           schema:
             type: string
+          example: angryGoose_208
       responses:
         "200":
           description: Returns a user's profile (profile card, match history, game_stats)
@@ -29,11 +30,20 @@ paths:
               schema:
                 $ref: "#/components/schemas/profile"
         "400":
-          description: Bad Request
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          description: Method is not allowed
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/error"
+
 components:
   schemas:
     duration:
@@ -50,7 +60,7 @@ components:
           description: ISO 8601 date at which the game ended
         sec_duration:
           type: number
-          format: interger
+          format: integer
           description: a match duration in seconds
       example:
         begin_at: 2025-07-30T12:46:48Z
@@ -60,7 +70,6 @@ components:
         - begin_at
         - end_at
         - sec_duration
-
     score:
       type: object
       description: a map of player names to their scores.
@@ -70,9 +79,6 @@ components:
       example:
         lunaticBaboon: 5
         evilGoose: 2
-      required:
-        - additionalProperties
-
     match:
       type: object
       description: a single match
@@ -92,7 +98,16 @@ components:
         - loser
         - duration
         - score
-
+      example:
+        winner: lunaticBaboon
+        loser: evilGoose
+        duration:
+          begin_at: 2025-07-30T12:46:48Z
+          end_at: 2025-07-30T12:47:13Z
+          sec_duration: 25
+        score:
+          lunaticBaboon: 5
+          evilGoose: 2
     tournament:
       type: object
       description: a tournament object with associated matches and outcomes
@@ -104,36 +119,73 @@ components:
             $ref: "#/components/schemas/match"
       required:
         - matches
-
+      example:
+        matches:
+          - winner: lunaticBaboon
+            loser: evilGoose
+            duration:
+              begin_at: 2025-07-30T12:46:48Z
+              end_at: 2025-07-30T12:47:13Z
+              sec_duration: 25
+            score:
+              lunaticBaboon: 5
+              evilGoose: 2
+          - winner: wiseCassowary
+            loser: sleepyLynx
+            duration:
+              begin_at: 2025-07-29T15:30:01Z
+              end_at: 2025-07-29T15:32:44Z
+              sec_duration: 163
+            score:
+              wiseCassowary: 10
+              sleepyLynx: 8
     game_history:
       type: array
       description: an array of the user's matches
       items:
         $ref: "#/components/schemas/match"
-
+      example:
+        - winner: lunaticBaboon
+          loser: evilGoose
+          duration:
+            begin_at: 2025-07-30T12:46:48Z
+            end_at: 2025-07-30T12:47:13Z
+            sec_duration: 25
+          score:
+            lunaticBaboon: 5
+            evilGoose: 2
+        - winner: lunaticBaboon
+          loser: sleepyLynx
+          duration:
+            begin_at: 2025-07-28T10:11:43Z
+            end_at: 2025-07-28T10:15:00Z
+            sec_duration: 197
+          score:
+            lunaticBaboon: 8
+            sleepyLynx: 3
     game_stats:
       type: object
       description: precomputed stats about the user's game history
       properties:
         total_games:
           type: number
-          format: interger
+          format: integer
           description: the total number of matches the user ever played
         total_win:
           type: number
-          format: interger
+          format: integer
           description: the total number of matches the user ever won
         total_loss:
           type: number
-          format: interger
+          format: integer
           description: the total number of matches the user ever lost
         longest_pass:
           type: number
-          format: interger
+          format: integer
           description: longest exchange without dropping the ball or scoring a goal
         winstreak:
           type: number
-          format: interger
+          format: integer
           description: most matches won in a row
         longest_match:
           $ref: "#/components/schemas/duration"
@@ -143,19 +195,38 @@ components:
           $ref: "#/components/schemas/user"
       required:
         - total_games
-        - total_wins
-        - total_losses
+        - total_win
+        - total_loss
         - longest_pass
         - winstreak
         - longest_match
         - shortest_match
         - nemesis
-
+      example:
+        total_games: 32
+        total_win: 20
+        total_loss: 12
+        longest_pass: 25
+        winstreak: 5
+        longest_match:
+          begin_at: 2025-07-21T17:00:00Z
+          end_at: 2025-07-21T17:20:34Z
+          sec_duration: 1234
+        shortest_match:
+          begin_at: 2025-07-22T12:05:07Z
+          end_at: 2025-07-22T12:08:00Z
+          sec_duration: 173
+        nemesis:
+          nickname: evilGoose
+          rank: Silver
+          avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+          profile_color: "#ffbe5e"
+          online: false
     avatar:
       type: string
       format: binary
       description: a binary representation of the user's avatar
-
+      example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
     user:
       type: object
       description: a succint user's profile card
@@ -180,7 +251,12 @@ components:
         - avatar
         - profile_color
         - online
-
+      example:
+        nickname: lunaticBaboon
+        rank: Gold
+        avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+        profile_color: "#7ecee9"
+        online: true
     profile:
       type: object
       description: a user's profile
@@ -195,13 +271,50 @@ components:
         - user
         - game_history
         - game_stats
-    
+      example:
+        user:
+          nickname: lunaticBaboon
+          rank: Gold
+          avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+          profile_color: "#7ecee9"
+          online: true
+        game_history:
+          - winner: lunaticBaboon
+            loser: evilGoose
+            duration:
+              begin_at: 2025-07-30T12:46:48Z
+              end_at: 2025-07-30T12:47:13Z
+              sec_duration: 25
+            score:
+              lunaticBaboon: 5
+              evilGoose: 2
+        game_stats:
+          total_games: 32
+          total_win: 20
+          total_loss: 12
+          longest_pass: 25
+          winstreak: 5
+          longest_match:
+            begin_at: 2025-07-21T17:00:00Z
+            end_at: 2025-07-21T17:20:34Z
+            sec_duration: 1234
+          shortest_match:
+            begin_at: 2025-07-22T12:05:07Z
+            end_at: 2025-07-22T12:08:00Z
+            sec_duration: 173
+          nemesis:
+            nickname: evilGoose
+            rank: Silver
+            avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+            profile_color: "#ffbe5e"
+            online: false
+
     error:
       type: object
       properties:
         code:
           type: number
-          format: interger
+          format: integer
           description: the value of the error code
         message:
           type: string
@@ -210,9 +323,41 @@ components:
           type: string
           description: more information on the error
       example:
-       code: 404
-       message: User does not exist
-       description: Requested bad user %id%
+        code: 404
+        message: User does not exist
+        details: Requested bad user 'angryGoose_314'
       required:
-       - code
-       - message
+        - code
+        - message
+        
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+    MethodNotAllowed:
+      description: Unsupported request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
