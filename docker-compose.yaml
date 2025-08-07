@@ -90,6 +90,9 @@ services:
      - transcendence
     volumes:
       - pong:/usr/src/app
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
   # search:
   #   build:
   #     context: ./services/search
