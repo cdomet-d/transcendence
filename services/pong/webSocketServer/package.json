@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start:dev": "nodemon --exec 'node --env-file=.env' server.js"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +13,7 @@
   "dependencies": {
     "@fastify/static": "^8.2.0",
     "@fastify/websocket": "^11.2.0",
-    "fastify": "^5.4.0"
+    "fastify": "^5.4.0",
+    "nodemon": "^3.1.10"
   }
 }

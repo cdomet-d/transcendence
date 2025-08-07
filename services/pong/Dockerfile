@@ -16,5 +16,5 @@ ENTRYPOINT ["empty-logs.sh"]
 
 EXPOSE 2020
 
-CMD ["node", "--env-file=.env", "server.js"]
+CMD ["npm", "run", "start:dev"]
 # CMD ["node", "listener.js"]
