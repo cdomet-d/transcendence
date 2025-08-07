@@ -12,7 +12,11 @@ servers:
 paths:
   /users/{id}:
     get:
-      summary: Display user profile by id.
+      summary: get user's profile by ID
+      description: | 
+        Returns the public profile informations for the user specified by ID.
+        
+        All users may access other users public profiles.
       tags:
        - users
       parameters:
@@ -21,14 +25,48 @@ paths:
           required: true
           schema:
             type: string
-          example: angryGoose_208
+          example: angryGoose
+      responses:
+        "200":
+          description: |
+            Returns a user's profile (profile card, match history, game_stats) to be rendered for the UI
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/profile"
+        # "400":
+        #   $ref: "#/components/responses/BadRequest"
+        # "401":
+        #   $ref: "#/components/responses/Unauthorized"
+        # "403":
+        #   $ref: "#/components/responses/Forbidden"
+        # "404":
+        #   $ref: "#/components/responses/NotFound"
+        # "405":
+        #   $ref: "#/components/responses/MethodNotAllowed"
+  /user/{id}/settings:
+    get:
+      summary: get user's settings by ID
+      description: |
+        Returns the settings for the user specified by ID. 
+
+        It will always return the settings for the user that is currently logged.
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: angryGoose
       responses:
         "200":
           description: Returns a user's profile (profile card, match history, game_stats)
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/profile"
+                $ref: "#/components/schemas/settings"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -38,14 +76,100 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
         "405":
-          description: Method is not allowed
+          $ref: "#/components/responses/MethodNotAllowed"
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - users
+      summary: update user's personnal information by ID
+      description: |
+        Sends a request to the user database to update given informations.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: angryGoose
+      requestBody:
+        required: true
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/settingsPatch'
+      responses:
+        "200":
+          description: returns confirmation of the updated informations
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error"
+                $ref: "#/components/schemas/settings"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
+    avatar:
+      type: string
+      format: binary
+      description: a binary representation of the user's avatar
+      example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+    biography:
+      type: string
+      description: the user's chosen biography
+      maxLength: 180
+      example: '¯\_(ツ)_/¯'
+    profile_color:
+      type: string
+      description: the user's profile main color scheme
+      example: ff69b4
+    joined_on:
+      type: string
+      format: date-time
+      description: date of the user's profile creation
+      example: 2025-08-07T13:00:00Z
+    password:
+      description: |
+        the user's password. It must be at least 12 characters long, and contain:
+        - at least one **uppercase letter** [A-Z]
+        - at least one **lowercase letter** [a-z]
+        - at least one **digit** [0 - 9]
+        - at least one **special characters** [@ $ ! % * ? &]
+      type: string
+      format: password
+      minLength: 12
+      pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$
+    nickname:
+      description: the user's chosen nickname
+      example: "angryGoose"
+      maxLength: 12
+      minLength: 4
+      type: string
+    winner:
+      type: string
+      description: winner for the specified match
+      example: "winningWolf"
+    loser:
+      type: string
+      description: looser for the specified match
+      example: "looserLoon"
+    status:
+      type: boolean
+      description: indicates whether the user is currently online
     duration:
       type: object
       description: start and end times of a match in ISO 8601 format
@@ -54,18 +178,17 @@ components:
           type: string
           format: date-time
           description: ISO 8601 date at which the game started
+          example: 2025-07-30T12:46:48Z
         end_at:
           type: string
           format: date-time
           description: ISO 8601 date at which the game ended
+          example: 2025-07-30T12:47:13Z
         sec_duration:
           type: number
           format: integer
           description: a match duration in seconds
-      example:
-        begin_at: 2025-07-30T12:46:48Z
-        end_at: 2025-07-30T12:47:13Z
-        sec_duration: 25
+          example: 25
       required:
         - begin_at
         - end_at
@@ -77,18 +200,16 @@ components:
         type: number
         description: the mapped user's score in numeric value
       example:
-        lunaticBaboon: 5
-        evilGoose: 2
+        winningWolf: 5
+        looserLoon: 2
     match:
       type: object
       description: a single match
       properties:
         winner:
-          type: string
-          description: winner for the specified match
+          $ref: "#/components/schemas/winner"
         loser:
-          type: string
-          description: looser for the specified match
+          $ref: "#/components/schemas/loser"
         duration:
           $ref: "#/components/schemas/duration"
         score:
@@ -98,16 +219,6 @@ components:
         - loser
         - duration
         - score
-      example:
-        winner: lunaticBaboon
-        loser: evilGoose
-        duration:
-          begin_at: 2025-07-30T12:46:48Z
-          end_at: 2025-07-30T12:47:13Z
-          sec_duration: 25
-        score:
-          lunaticBaboon: 5
-          evilGoose: 2
     tournament:
       type: object
       description: a tournament object with associated matches and outcomes
@@ -119,50 +230,11 @@ components:
             $ref: "#/components/schemas/match"
       required:
         - matches
-      example:
-        matches:
-          - winner: lunaticBaboon
-            loser: evilGoose
-            duration:
-              begin_at: 2025-07-30T12:46:48Z
-              end_at: 2025-07-30T12:47:13Z
-              sec_duration: 25
-            score:
-              lunaticBaboon: 5
-              evilGoose: 2
-          - winner: wiseCassowary
-            loser: sleepyLynx
-            duration:
-              begin_at: 2025-07-29T15:30:01Z
-              end_at: 2025-07-29T15:32:44Z
-              sec_duration: 163
-            score:
-              wiseCassowary: 10
-              sleepyLynx: 8
     game_history:
       type: array
       description: an array of the user's matches
       items:
         $ref: "#/components/schemas/match"
-      example:
-        - winner: lunaticBaboon
-          loser: evilGoose
-          duration:
-            begin_at: 2025-07-30T12:46:48Z
-            end_at: 2025-07-30T12:47:13Z
-            sec_duration: 25
-          score:
-            lunaticBaboon: 5
-            evilGoose: 2
-        - winner: lunaticBaboon
-          loser: sleepyLynx
-          duration:
-            begin_at: 2025-07-28T10:11:43Z
-            end_at: 2025-07-28T10:15:00Z
-            sec_duration: 197
-          score:
-            lunaticBaboon: 8
-            sleepyLynx: 3
     game_stats:
       type: object
       description: precomputed stats about the user's game history
@@ -171,22 +243,27 @@ components:
           type: number
           format: integer
           description: the total number of matches the user ever played
+          example: 32
         total_win:
           type: number
           format: integer
           description: the total number of matches the user ever won
+          example: 20
         total_loss:
           type: number
           format: integer
           description: the total number of matches the user ever lost
+          example: 12
         longest_pass:
           type: number
           format: integer
           description: longest exchange without dropping the ball or scoring a goal
+          example: 25
         winstreak:
           type: number
           format: integer
           description: most matches won in a row
+          example: 10
         longest_match:
           $ref: "#/components/schemas/duration"
         shortest_match:
@@ -202,61 +279,32 @@ components:
         - longest_match
         - shortest_match
         - nemesis
-      example:
-        total_games: 32
-        total_win: 20
-        total_loss: 12
-        longest_pass: 25
-        winstreak: 5
-        longest_match:
-          begin_at: 2025-07-21T17:00:00Z
-          end_at: 2025-07-21T17:20:34Z
-          sec_duration: 1234
-        shortest_match:
-          begin_at: 2025-07-22T12:05:07Z
-          end_at: 2025-07-22T12:08:00Z
-          sec_duration: 173
-        nemesis:
-          nickname: evilGoose
-          rank: Silver
-          avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
-          profile_color: "#ffbe5e"
-          online: false
-    avatar:
-      type: string
-      format: binary
-      description: a binary representation of the user's avatar
-      example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
     user:
       type: object
       description: a succint user's profile card
       properties:
         nickname:
-          type: string
-          description: the user's chosen nickname
+          $ref: "#/components/schemas/nickname"
+        avatar:
+          $ref: "#/components/schemas/avatar"
+        status:
+          $ref: "#/components/schemas/status"
+        biography:
+          $ref: "#/components/schemas/biography"
+        profile_color:
+          $ref: "#/components/schemas/profile_color"
+        joined_on:
+          $ref: "#/components/schemas/joined_on"
         rank:
           type: string
           description: the user's rank in competitive pong games
-        avatar:
-          $ref: "#/components/schemas/avatar"
-        profile_color:
-          type: string
-          description: the user's profile main color scheme
-        online:
-          type: boolean
-          description: indicates wether the user is currently online
+          example: Gold
       required:
-        - nickname
-        - rank
         - avatar
+        - nickname
         - profile_color
-        - online
-      example:
-        nickname: lunaticBaboon
-        rank: Gold
-        avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
-        profile_color: "#7ecee9"
-        online: true
+        - rank
+        - status
     profile:
       type: object
       description: a user's profile
@@ -271,44 +319,42 @@ components:
         - user
         - game_history
         - game_stats
-      example:
-        user:
-          nickname: lunaticBaboon
-          rank: Gold
-          avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
-          profile_color: "#7ecee9"
-          online: true
-        game_history:
-          - winner: lunaticBaboon
-            loser: evilGoose
-            duration:
-              begin_at: 2025-07-30T12:46:48Z
-              end_at: 2025-07-30T12:47:13Z
-              sec_duration: 25
-            score:
-              lunaticBaboon: 5
-              evilGoose: 2
-        game_stats:
-          total_games: 32
-          total_win: 20
-          total_loss: 12
-          longest_pass: 25
-          winstreak: 5
-          longest_match:
-            begin_at: 2025-07-21T17:00:00Z
-            end_at: 2025-07-21T17:20:34Z
-            sec_duration: 1234
-          shortest_match:
-            begin_at: 2025-07-22T12:05:07Z
-            end_at: 2025-07-22T12:08:00Z
-            sec_duration: 173
-          nemesis:
-            nickname: evilGoose
-            rank: Silver
-            avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
-            profile_color: "#ffbe5e"
-            online: false
 
+    settings:
+      type: object
+      description: the user's personnal informations
+      properties:
+        nickname:
+          $ref: "#/components/schemas/nickname"
+        avatar:
+          $ref: "#/components/schemas/avatar"
+        biography:
+          $ref: "#/components/schemas/biography"
+        profile_color:
+          $ref: "#/components/schemas/profile_color"
+        email:
+          type: string
+          format: email
+      required:
+        - nickname
+        - avatar
+        - email
+    settingsPatch:
+      type: object
+      description: the user's personnal informations
+      properties:
+        nickname:
+
+          $ref: "#/components/schemas/nickname"
+        avatar:
+          $ref: "#/components/schemas/avatar"
+        biography:
+          $ref: "#/components/schemas/biography"
+        profile_color:
+          $ref: "#/components/schemas/profile_color"
+        email:
+          type: string
+          format: email
     error:
       type: object
       properties:
@@ -322,13 +368,13 @@ components:
         details:
           type: string
           description: more information on the error
+      required:
+        - code
+        - message
       example:
         code: 404
         message: User does not exist
         details: Requested bad user 'angryGoose_314'
-      required:
-        - code
-        - message
         
   responses:
     BadRequest:
