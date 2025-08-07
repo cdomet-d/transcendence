@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start:dev": "nodemon --exec 'node --env-file=.env' server.js"
+    "start": "nodemon --exec 'node --env-file=.env' server.js"
   },
   "keywords": [],
   "author": "",
