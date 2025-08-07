@@ -1,4 +1,4 @@
-const ws = new WebSocket('ws://localhost:8443/game/match');
+const ws = new WebSocket('wss://localhost:8443/game/match');
 
 ws.onopen = () => {
     console.log("WebSocket connection established!")
