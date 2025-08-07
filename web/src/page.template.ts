@@ -1,9 +1,21 @@
+type NavButton = {
+  href: string;
+  label: string;
+};
+
 export function renderPageTemplate(main, {
   title,
-  nextButtons = [],           // <-- ARRAY of next button objects
+  nextButtons = [],
   backHref,
   showBack = true,
   homeHref = "/"
+}: {
+    title: string;
+    nextButtons?: NavButton[];
+    backHref?: string;
+    showBack?: boolean;
+    homeHref?: string;
+
 }) {
   main.innerHTML = `
     <div class="pt-12 text-center text-2xl font-bold">${title}</div>

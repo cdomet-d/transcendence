@@ -3,24 +3,24 @@ import { routes } from './routes.ts';
 
 const router = new Router(routes);
 
-function normalizePath(path) {
+function sanitisePath(path: string) {
     if (path == "/")
         return path;
     return path.replace(/\/+$/, '');
 }
 
-document.addEventListener('click', (e) => {
-    const link = (e.target as HTMLElement).closest('[data-link]');
+document.addEventListener('click', (event) => {
+    const link = (event.target as HTMLElement).closest('[data-link]');
     if (link) {
-        e.preventDefault();
+        event.preventDefault();
         const path = link.getAttribute('href');
         window.history.pushState({}, '', path);
-        const cleanPath = normalizePath(path);
+        const cleanPath = sanitisePath(path);
         router._loadRoute(cleanPath);
     }
 });
 
 window.addEventListener('popstate', () => {
-    const cleanPath = normalizePath(window.location.pathname);
+    const cleanPath = sanitisePath(window.location.pathname);
     router._loadRoute(cleanPath);
 });

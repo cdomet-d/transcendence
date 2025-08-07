@@ -3,3 +3,5 @@ _logs/
 *.pem
 web/node_modules/
 web/dist/
+.gitignore
+.notes/
