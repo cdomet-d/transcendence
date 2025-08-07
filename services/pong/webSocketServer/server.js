@@ -3,10 +3,10 @@
 import Fastify from 'fastify'
 import fsp from 'fs/promises';
 import fs from 'fs';
-import websocket from '@fastify/websocket'
 import path from 'path'
-import fastifyStatic from '@fastify/static';
 import { fileURLToPath } from 'url';
+import websocket from '@fastify/websocket'
+import fastifyStatic from '@fastify/static';
 
 const port = process.env.PORT;
 const __filename = fileURLToPath(import.meta.url);
@@ -35,12 +35,13 @@ const options = {
 
 const serv = Fastify(options)
 
-serv
+await serv
   .register(websocket)
   .register(fastifyStatic, {
       root: path.join(__dirname, 'frontend'),
       prefix: '/game/match/',
     });
+
 
 /*creer les routes avec leur handlers, hooks, decorators, plugins*/
 async function upgrade(req, rep) {
@@ -49,44 +50,46 @@ async function upgrade(req, rep) {
   rep.send(script);
 }
 
-serv.route({
-  method: 'GET',
-  url: '/game/match',
-  handler: upgrade,
-  wsHandler: (socket, req) => {
-      socket.on('message', (message) => {
-          socket.send('hi from server')
-          serv.log.info("websocket connection worked")
-        })
-    },
-  websocket: true
-});
+const wshandler = (socket, req) => {
+  serv.log.info('WebSocket connection established');
+  socket.on('message', (message) => {
+      socket.send('hi from server');
+      serv.log.info(`client sent: ${message}`);
+    });
+}
 
-serv.addHook('onRequest', async (request, reply) => {
-  serv.log.info(`new request from ${request.url}`);
-});
+// serv.register(async function () {
+  serv.route({
+    method: 'GET',
+    url: '/game/match',
+    handler: upgrade,
+    wsHandler: wshandler
+  });
+// });
 
+await serv.ready();
+
+// serv.addHook('onRequest', async (request, reply) => {
+//   serv.log.info(`new request from ${request.url}`);
+// });
 
 /*lancer le server*/
+serv.listen({ port: port, host: '0.0.0.0' }, catchError)
+
 function catchError(err, address) {
   if (err) {
     serv.log.error(err);
     process.exit(1);
   }
   serv.log.info(`Pong Microservice listening on ${port} at ${address}`);
-  // serv.log.info(`dirname: ${__dirname}`);
-  // serv.log.info(`filename: ${__filename}`);
-  // serv.log.info(`url: ${import.meta.url}`);
 }
 
-serv.listen({ port: port, host: '0.0.0.0' }, catchError)
-
-process.on('SIGINT', () => {
-  serv.log.info('Received SIGINT. Gracefully shutting down...');
-  serv.close().then(() => {
-    serv.log.info('successfully closed!')
-  }, (err) => {
-    serv.log.error('an error happened', err)
-  });
-});
+// process.on('SIGINT', () => {
+//   serv.log.info('Received SIGINT. Gracefully shutting down...');
+//   serv.close().then(() => {
+//     serv.log.info('successfully closed!')
+//   }, (err) => {
+//     serv.log.error('an error happened', err)
+//   });
+// });
 
