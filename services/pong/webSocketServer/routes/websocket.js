@@ -1,4 +1,4 @@
-import {upgrade, wshandler} from '../controllers/websocket.js'
+import {upgrade, wshandler} from '../handlers/websocket.js'
 
 const opts = {
     schema: {}, //TODO: get coralie's json object
@@ -11,4 +11,4 @@ function wsRoute(serv, options, done) {
     done();
 }
 
-export default wsRoute;
+export {wsRoute};
