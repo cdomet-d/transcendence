@@ -3,7 +3,7 @@ import fs from 'fs';
 
 async function getNginxIP() {
   try {
-    const result = await dns.lookup(process.env.NGINXIP || 'nginx');
+    const result = await dns.lookup(process.env.NGINXIP);
     return result.address;
   } catch (err) {
     return null;
