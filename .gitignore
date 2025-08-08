@@ -3,3 +3,4 @@ _logs/
 *.pem
 node_modules
 .env
+server.log
