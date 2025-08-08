@@ -34,16 +34,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/profile"
-        # "400":
-        #   $ref: "#/components/responses/BadRequest"
-        # "401":
-        #   $ref: "#/components/responses/Unauthorized"
-        # "403":
-        #   $ref: "#/components/responses/Forbidden"
-        # "404":
-        #   $ref: "#/components/responses/NotFound"
-        # "405":
-        #   $ref: "#/components/responses/MethodNotAllowed"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+
   /user/{id}/settings:
     get:
       summary: get user's settings by ID
@@ -85,6 +86,8 @@ paths:
       summary: update user's personnal information by ID
       description: |
         Sends a request to the user database to update given informations.
+
+        Informations can be modified individually or in batches. 
       parameters:
         - name: id
           in: path
@@ -115,6 +118,32 @@ paths:
           $ref: "#/components/responses/NotFound"
         "405":
           $ref: "#/components/responses/MethodNotAllowed"
+  /register:
+    post:
+      tags: 
+        - auth
+      summary: register a new user
+      description: | 
+        Sends a post request to create a new persistent or temporary user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create_account'
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
 
 components:
   securitySchemes:
@@ -128,6 +157,10 @@ components:
       format: binary
       description: a binary representation of the user's avatar
       example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+    email:
+      type: string
+      format: email
+      example: ja.pankraz@oxenfurt.re.edu
     biography:
       type: string
       description: the user's chosen biography
@@ -153,9 +186,10 @@ components:
       format: password
       minLength: 12
       pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$
+      example: $FillinglessPie1249%
     nickname:
       description: the user's chosen nickname
-      example: "angryGoose"
+      example: "Dandelion"
       maxLength: 12
       minLength: 4
       type: string
@@ -333,8 +367,7 @@ components:
         profile_color:
           $ref: "#/components/schemas/profile_color"
         email:
-          type: string
-          format: email
+          $ref: "#/components/schemas/email"
       required:
         - nickname
         - avatar
@@ -344,7 +377,6 @@ components:
       description: the user's personnal informations
       properties:
         nickname:
-
           $ref: "#/components/schemas/nickname"
         avatar:
           $ref: "#/components/schemas/avatar"
@@ -352,9 +384,20 @@ components:
           $ref: "#/components/schemas/biography"
         profile_color:
           $ref: "#/components/schemas/profile_color"
+        password:
+          $ref: "#/components/schemas/password"
         email:
-          type: string
-          format: email
+          $ref: "#/components/schemas/email"
+    create_account:
+      type: object
+      description: the registering user informations to validate.
+      properties:
+        nickname:
+          $ref: "#/components/schemas/nickname"
+        email:
+          $ref: "#/components/schemas/email"
+        password:
+          $ref: "#/components/schemas/password"
     error:
       type: object
       properties:
@@ -375,8 +418,31 @@ components:
         code: 404
         message: User does not exist
         details: Requested bad user 'angryGoose_314'
+    success:
+      type: object
+      properties:
+        code:
+          type: number
+          format: integer
+          description: the value of the success code
+        message: 
+          type: string
+          description: validation of the operation's success
+      required:
+        - code
+        - message
+      example:
+        code: 200
+        message: created user Dandelion successfully
         
   responses:
+    Success:
+      description: Operation successful
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/success'
+
     BadRequest:
       description: Bad Request
       content:
