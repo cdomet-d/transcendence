@@ -1,0 +1,10 @@
+{"level":30,"time":1754651385218,"pid":42,"hostname":"0024e1894bcf","msg":"Server listening at https://127.0.0.1:2020"}
+{"level":30,"time":1754651385218,"pid":42,"hostname":"0024e1894bcf","msg":"Server listening at https://172.18.0.3:2020"}
+{"level":30,"time":1754651385219,"pid":42,"hostname":"0024e1894bcf","msg":"Pong Microservice listening on 2020 at https://127.0.0.1:2020"}
+{"level":30,"time":1754651405733,"pid":42,"hostname":"0024e1894bcf","reqId":"req-1","req":{"method":"GET","url":"/game/match","host":"localhost","remoteAddress":"172.18.0.1","remotePort":46596},"msg":"incoming request"}
+{"level":30,"time":1754651405800,"pid":42,"hostname":"0024e1894bcf","reqId":"req-1","res":{"statusCode":200},"responseTime":37.30830700008664,"msg":"request completed"}
+{"level":30,"time":1754651406487,"pid":42,"hostname":"0024e1894bcf","reqId":"req-2","req":{"method":"GET","url":"/game/match/wsreply.js","host":"localhost","remoteAddress":"172.18.0.1","remotePort":46610},"msg":"incoming request"}
+{"level":30,"time":1754651406535,"pid":42,"hostname":"0024e1894bcf","reqId":"req-2","res":{"statusCode":200},"responseTime":45.42818799999077,"msg":"request completed"}
+{"level":30,"time":1754651406716,"pid":42,"hostname":"0024e1894bcf","reqId":"req-3","req":{"method":"GET","url":"/game/match","host":"localhost","remoteAddress":"172.18.0.1","remotePort":46616},"msg":"incoming request"}
+{"level":30,"time":1754651406738,"pid":42,"hostname":"0024e1894bcf","msg":"WebSocket connection established"}
+{"level":30,"time":1754651406808,"pid":42,"hostname":"0024e1894bcf","msg":"client sent: hey server"}

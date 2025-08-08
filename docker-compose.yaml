@@ -95,6 +95,7 @@ services:
       - ssl-cert.pem
     environment:
       - NGINXIP=nginx
+      - PORT=2020
   # search:
   #   build:
   #     context: ./services/search
@@ -118,7 +119,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/csweeting/Documents/transcendence/services/pong/webSocketServer
+      device: /home/csweeting/Documents/transcendence/services/pong/js
       o: bind
 
 networks:
