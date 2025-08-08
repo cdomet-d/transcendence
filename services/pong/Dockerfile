@@ -4,17 +4,12 @@ RUN mkdir -p /usr/src/app && chown -R 1000:1000 /usr/src/app
 
 WORKDIR /usr/src/app
 
-# COPY ./js ./
-
 RUN mkdir /usr/src/.script
 
-COPY script/empty-logs.sh /usr/local/bin/ 
+COPY script/pong.sh /usr/local/bin/ 
 
-RUN chmod +x /usr/local/bin/empty-logs.sh
-
-ENTRYPOINT ["empty-logs.sh"]
+RUN chmod +x /usr/local/bin/pong.sh
 
 EXPOSE 2020
 
-CMD ["npm", "start"]
-# CMD ["node", "listener.js"]
+CMD ["pong.sh"]
