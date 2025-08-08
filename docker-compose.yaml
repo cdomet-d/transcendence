@@ -93,6 +93,8 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
+    environment:
+      - NGINXIP=nginx
   # search:
   #   build:
   #     context: ./services/search
