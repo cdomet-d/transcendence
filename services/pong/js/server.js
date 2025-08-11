@@ -21,24 +21,20 @@ const __dirname = path.dirname(__filename);
 //init server
 const serv = Fastify(options)
 
-//add plugins and routes
-const chargePlugins = async () => {
-  try {
-    await serv
-          .register(websocket)
+//add plugins
+await serv.register(websocket)
           .register(fastifyStatic, {
               root: path.join(__dirname, 'frontend'),
               prefix: '/game/match/',
-            });
-  } catch (err) {
-    serv.log.error(err);
-    process.exit(1);
-  }
+            })
+          .register(wsRoute);
+
+try {
+  await serv.ready();
+} catch (err) {
+  serv.log.error(err);
+  process.exit(1);
 }
-
-await chargePlugins();
-
-serv.register(wsRoute);
 
 //run server
 serv.listen({ port: port, host: '0.0.0.0' })
