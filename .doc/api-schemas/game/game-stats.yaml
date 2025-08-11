@@ -1,0 +1,49 @@
+game_history:
+  description: an array of the user's matches
+  items:
+    $ref: "#/components/schemas/match"
+  type: array
+game_stats:
+  description: precomputed stats about the user's game history
+  properties:
+    longest_match:
+      $ref: "#/components/schemas/duration"
+    longest_pass:
+      description: longest exchange without dropping the ball or scoring a goal
+      example: 25
+      format: integer
+      type: number
+    nemesis:
+      $ref: "#/components/schemas/user"
+    shortest_match:
+      $ref: "#/components/schemas/duration"
+    total_games:
+      description: the total number of matches the user ever played
+      example: 32
+      format: integer
+      type: number
+    total_loss:
+      description: the total number of matches the user ever lost
+      example: 12
+      format: integer
+      type: number
+    total_win:
+      description: the total number of matches the user ever won
+      example: 20
+      format: integer
+      type: number
+    winstreak:
+      description: most matches won in a row
+      example: 10
+      format: integer
+      type: number
+  required:
+    - total_games
+    - total_win
+    - total_loss
+    - longest_pass
+    - winstreak
+    - longest_match
+    - shortest_match
+    - nemesis
+  type: object

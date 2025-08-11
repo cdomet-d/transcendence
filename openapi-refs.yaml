@@ -1,0 +1,34 @@
+components:
+  schemas:
+    avatar:
+      $ref: './.doc/api-schemas/users/profile.yaml#/avatar'
+    biography:
+      $ref: './.doc/api-schemas/users/profile.yaml#/biography'
+    email:
+      $ref: './.doc/api-schemas/users/profile.yaml#/email'
+    joined_on:
+      $ref: './.doc/api-schemas/users/profile.yaml#/joined_on'
+    nickname:
+      $ref: './.doc/api-schemas/users/profile.yaml#/nickname'
+    profile_color:
+      $ref: './.doc/api-schemas/users/profile.yaml#/profile_color'
+    password:
+      $ref: './.doc/api-schemas/auth.yaml#/password'
+    credentials:
+      $ref: './.doc/api-schemas/auth.yaml#/credentials'
+    winner:
+    loser:
+    status:
+    duration:
+    score:
+    match:
+    tournament:
+    game_history:
+    game_stats:
+    user:
+      $ref: './.doc/api-schemas/users/profile.yaml#/user'
+    profile:
+    settings:
+    settingsPatch:
+    error:
+    success:

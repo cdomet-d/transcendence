@@ -1,0 +1,34 @@
+settings:
+  description: the user's personnal informations
+  properties:
+    avatar:
+      $ref: "#/components/schemas/avatar"
+    biography:
+      $ref: "#/components/schemas/biography"
+    email:
+      $ref: "#/components/schemas/email"
+    nickname:
+      $ref: "#/components/schemas/nickname"
+    profile_color:
+      $ref: "#/components/schemas/profile_color"
+  required:
+    - nickname
+    - avatar
+    - email
+  type: object
+settingsPatch:
+  description: the user's personnal informations
+  properties:
+    avatar:
+      $ref: "#/components/schemas/avatar"
+    biography:
+      $ref: "#/components/schemas/biography"
+    email:
+      $ref: "#/components/schemas/email"
+    nickname:
+      $ref: "#/components/schemas/nickname"
+    password:
+      $ref: "#/components/schemas/password"
+    profile_color:
+      $ref: "#/components/schemas/profile_color"
+  type: object
