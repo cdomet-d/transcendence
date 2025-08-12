@@ -1,4 +1,4 @@
-openapi: 3.1.1
+openapi: 3.1.0
 
 info:
   title: BigTeam API
@@ -157,12 +157,15 @@ paths:
               $ref: "#/components/schemas/credentials"
       responses:
         "200":
-          $ref: "#/components/responses/Success"
+          description: a JWT token response
+          content:
+            application/jwt:
+              schema:
+                $ref: "#/components/schemas/sessionToken"
         "400":
           $ref: "#/components/responses/BadRequest"
         "404":
           $ref: "#/components/responses/NotFound"
-
 
 components:
   securitySchemes:
@@ -172,8 +175,31 @@ components:
       bearerFormat: JWT
 
   schemas:
-    # user schemas
-    # plain
+    sessionToken:
+      type: object
+      description: a JWT representation of a user session
+      properties:
+        expires_in:
+          description: time until expiration of the current session in seconds
+          type: number
+          format: integer
+          example: 3600
+        access_token:
+          description: the access token
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          type: string
+        token_type:
+          type: string
+          description: the type of token
+          enum:
+            - Bearer
+            - Refresh
+          example: "bearer"
+      required:
+        - access_token
+        - token_type
+        - expires_in
+
     avatar:
       description: a binary representation of the user's avatar
       example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
@@ -184,162 +210,96 @@ components:
       example: '¯\_(ツ)_/¯'
       maxLength: 180
       type: string
-    email:
-      example: ja.pankraz@oxenfurt.re.edu
-      format: email
-      type: string
-    joined_on:
-      description: date of the user's profile creation
-      example: 2025-08-07T13:00:00Z
-      format: date-time
-      type: string
-    nickname:
-      description: the user's chosen nickname
-      example: "Dandelion"
-      maxLength: 12
-      minLength: 4
-      type: string
-    profile_color:
-      description: the user's profile main color scheme
-      example: ff69b4
-      type: string
-
-    # auth schemas
-    # plain
-    password:
-      description: |
-        the user's password. It must be at least 12 characters long, and contain:
-        - at least one **uppercase letter** [A-Z]
-        - at least one **lowercase letter** [a-z]
-        - at least one **digit** [0 - 9]
-        - at least one **special characters** [@ $ ! % * ? &]
-      type: string
-      format: password
-      minLength: 12
-      pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$
-      example: $FillinglessPie1249%
-    # composite
     credentials:
-      type: object
       description: the registering user informations to validate.
       properties:
         nickname:
           $ref: "#/components/schemas/nickname"
         password:
           $ref: "#/components/schemas/password"
-
-    # game schemas
-    winner:
-      type: string
-      description: winner for the specified match
-      example: "winningWolf"
-    loser:
-      type: string
-      description: looser for the specified match
-      example: "looserLoon"
-    status:
-      type: boolean
-      description: indicates whether the user is currently online
-    duration:
       type: object
+    duration:
       description: start and end times of a match in ISO 8601 format
       properties:
         begin_at:
-          type: string
-          format: date-time
           description: ISO 8601 date at which the game started
           example: 2025-07-30T12:46:48Z
-        end_at:
-          type: string
           format: date-time
+          type: string
+        end_at:
           description: ISO 8601 date at which the game ended
           example: 2025-07-30T12:47:13Z
+          format: date-time
+          type: string
         sec_duration:
-          type: number
-          format: integer
           description: a match duration in seconds
           example: 25
+          format: integer
+          type: number
       required:
         - begin_at
         - end_at
         - sec_duration
-    score:
       type: object
-      description: a map of player names to their scores.
-      additionalProperties:
-        type: number
-        description: the mapped user's score in numeric value
-      example:
-        winningWolf: 5
-        looserLoon: 2
-    match:
-      type: object
-      description: a single match
+    email:
+      example: ja.pankraz@oxenfurt.re.edu
+      format: email
+      type: string
+    error:
       properties:
-        winner:
-          $ref: "#/components/schemas/winner"
-        loser:
-          $ref: "#/components/schemas/loser"
-        duration:
-          $ref: "#/components/schemas/duration"
-        score:
-          $ref: "#/components/schemas/score"
+        code:
+          description: the value of the error code
+          format: integer
+          type: number
+        details:
+          description: more information on the error
+          type: string
+        message:
+          description: a human-readable message describing the error
+          type: string
       required:
-        - winner
-        - loser
-        - duration
-        - score
-    tournament:
+        - code
+        - message
       type: object
-      description: a tournament object with associated matches and outcomes
-      properties:
-        matches:
-          type: array
-          description: an array containing the tournament's matches
-          items:
-            $ref: "#/components/schemas/match"
-      required:
-        - matches
     game_history:
-      type: array
       description: an array of the user's matches
       items:
         $ref: "#/components/schemas/match"
+      type: array
     game_stats:
-      type: object
       description: precomputed stats about the user's game history
       properties:
-        total_games:
-          type: number
-          format: integer
-          description: the total number of matches the user ever played
-          example: 32
-        total_win:
-          type: number
-          format: integer
-          description: the total number of matches the user ever won
-          example: 20
-        total_loss:
-          type: number
-          format: integer
-          description: the total number of matches the user ever lost
-          example: 12
-        longest_pass:
-          type: number
-          format: integer
-          description: longest exchange without dropping the ball or scoring a goal
-          example: 25
-        winstreak:
-          type: number
-          format: integer
-          description: most matches won in a row
-          example: 10
         longest_match:
           $ref: "#/components/schemas/duration"
-        shortest_match:
-          $ref: "#/components/schemas/duration"
+        longest_pass:
+          description: longest exchange without dropping the ball or scoring a goal
+          example: 25
+          format: integer
+          type: number
         nemesis:
           $ref: "#/components/schemas/user"
+        shortest_match:
+          $ref: "#/components/schemas/duration"
+        total_games:
+          description: the total number of matches the user ever played
+          example: 32
+          format: integer
+          type: number
+        total_loss:
+          description: the total number of matches the user ever lost
+          example: 12
+          format: integer
+          type: number
+        total_win:
+          description: the total number of matches the user ever won
+          example: 20
+          format: integer
+          type: number
+        winstreak:
+          description: most matches won in a row
+          example: 10
+          format: integer
+          type: number
       required:
         - total_games
         - total_win
@@ -349,118 +309,169 @@ components:
         - longest_match
         - shortest_match
         - nemesis
-    user:
       type: object
-      description: a succint user's profile card
+    joined_on:
+      description: date of the user's profile creation
+      example: 2025-08-07T13:00:00Z
+      format: date-time
+      type: string
+    loser:
+      description: looser for the specified match
+      example: "looserLoon"
+      type: string
+    match:
+      description: a single match
       properties:
-        nickname:
-          $ref: "#/components/schemas/nickname"
+        duration:
+          $ref: "#/components/schemas/duration"
+        loser:
+          $ref: "#/components/schemas/loser"
+        score:
+          $ref: "#/components/schemas/score"
+        winner:
+          $ref: "#/components/schemas/winner"
+      required:
+        - winner
+        - loser
+        - duration
+        - score
+      type: object
+    nickname:
+      description: the user's chosen nickname
+      example: "Dandelion"
+      maxLength: 12
+      minLength: 4
+      type: string
+    password:
+      description: |
+        the user's password. It must be at least 12 characters long, and contain:
+        - at least one **uppercase letter** [A-Z]
+        - at least one **lowercase letter** [a-z]
+        - at least one **digit** [0 - 9]
+        - at least one **special characters** [@ $ ! % * ? &]
+      example: $FillinglessPie1249%
+      format: password
+      minLength: 12
+      pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$
+      type: string
+    profile:
+      description: a user's profile
+      properties:
+        game_history:
+          $ref: "#/components/schemas/game_history"
+        game_stats:
+          $ref: "#/components/schemas/game_stats"
+        user:
+          $ref: "#/components/schemas/user"
+      required:
+        - user
+        - game_history
+        - game_stats
+      type: object
+    profile_color:
+      description: the user's profile main color scheme
+      example: ff69b4
+      type: string
+    score:
+      additionalProperties:
+        description: the mapped user's score in numeric value
+        type: number
+      description: a map of player names to their scores.
+      example:
+        looserLoon: 2
+        winningWolf: 5
+      type: object
+    settings:
+      description: the user's personnal informations
+      properties:
         avatar:
           $ref: "#/components/schemas/avatar"
-        status:
-          $ref: "#/components/schemas/status"
         biography:
           $ref: "#/components/schemas/biography"
+        email:
+          $ref: "#/components/schemas/email"
+        nickname:
+          $ref: "#/components/schemas/nickname"
         profile_color:
           $ref: "#/components/schemas/profile_color"
+      required:
+        - nickname
+        - avatar
+        - email
+      type: object
+    settingsPatch:
+      description: the user's personnal informations
+      properties:
+        avatar:
+          $ref: "#/components/schemas/avatar"
+        biography:
+          $ref: "#/components/schemas/biography"
+        email:
+          $ref: "#/components/schemas/email"
+        nickname:
+          $ref: "#/components/schemas/nickname"
+        password:
+          $ref: "#/components/schemas/password"
+        profile_color:
+          $ref: "#/components/schemas/profile_color"
+      type: object
+    status:
+      description: indicates whether the user is currently online
+      type: boolean
+    success:
+      properties:
+        code:
+          description: the value of the success code
+          format: integer
+          type: number
+        message:
+          description: validation of the operation's success
+          type: string
+      required:
+        - code
+        - message
+      type: object
+    tournament:
+      description: a tournament object with associated matches and outcomes
+      properties:
+        matches:
+          description: an array containing the tournament's matches
+          items:
+            $ref: "#/components/schemas/match"
+          type: array
+      required:
+        - matches
+      type: object
+    user:
+      description: a succint user's profile card
+      properties:
+        avatar:
+          $ref: "#/components/schemas/avatar"
+        biography:
+          $ref: "#/components/schemas/biography"
         joined_on:
           $ref: "#/components/schemas/joined_on"
+        nickname:
+          $ref: "#/components/schemas/nickname"
+        profile_color:
+          $ref: "#/components/schemas/profile_color"
         rank:
-          type: string
           description: the user's rank in competitive pong games
           example: Gold
+          type: string
+        status:
+          $ref: "#/components/schemas/status"
       required:
         - avatar
         - nickname
         - profile_color
         - rank
         - status
-    profile:
       type: object
-      description: a user's profile
-      properties:
-        user:
-          $ref: "#/components/schemas/user"
-        game_history:
-          $ref: "#/components/schemas/game_history"
-        game_stats:
-          $ref: "#/components/schemas/game_stats"
-      required:
-        - user
-        - game_history
-        - game_stats
-
-    settings:
-      type: object
-      description: the user's personnal informations
-      properties:
-        nickname:
-          $ref: "#/components/schemas/nickname"
-        avatar:
-          $ref: "#/components/schemas/avatar"
-        biography:
-          $ref: "#/components/schemas/biography"
-        profile_color:
-          $ref: "#/components/schemas/profile_color"
-        email:
-          $ref: "#/components/schemas/email"
-      required:
-        - nickname
-        - avatar
-        - email
-    settingsPatch:
-      type: object
-      description: the user's personnal informations
-      properties:
-        nickname:
-          $ref: "#/components/schemas/nickname"
-        avatar:
-          $ref: "#/components/schemas/avatar"
-        biography:
-          $ref: "#/components/schemas/biography"
-        profile_color:
-          $ref: "#/components/schemas/profile_color"
-        password:
-          $ref: "#/components/schemas/password"
-        email:
-          $ref: "#/components/schemas/email"
-
-    error:
-      type: object
-      properties:
-        code:
-          type: number
-          format: integer
-          description: the value of the error code
-        message:
-          type: string
-          description: a human-readable message describing the error
-        details:
-          type: string
-          description: more information on the error
-      required:
-        - code
-        - message
-      example:
-        code: 404
-        message: User does not exist
-        details: Requested bad user 'angryGoose_314'
-    success:
-      type: object
-      properties:
-        code:
-          type: number
-          format: integer
-          description: the value of the success code
-        message:
-          type: string
-          description: validation of the operation's success
-      required:
-        - code
-        - message
-      example:
-        code: 200
-        message: created user Dandelion successfully
+    winner:
+      description: winner for the specified match
+      example: "winningWolf"
+      type: string
 
   responses:
     Success:
@@ -469,6 +480,9 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/success"
+          example: 
+            code: 200
+            message: Operation successful!
 
     BadRequest:
       description: Bad Request
@@ -476,27 +490,42 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/error"
+          example:
+            code: 400
+            message: Malformed parameters could not be processed
     Unauthorized:
       description: Unauthorized (should redirect on login screen)
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/error"
+          example:
+            code: 401
+            message: You are not authorized to access this ressource; try login in.
     Forbidden:
       description: Forbidden
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/error"
+          example:
+            code: 403
+            message: You are not authorized to access this ressource
     NotFound:
       description: Not Found
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/error"
+          example:
+            code: 404
+            message: User 'angryGoose_314' does not exist
     MethodNotAllowed:
       description: Unsupported request
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/error"
+          example:
+            code: 405
+            message: This operation is not allowed on this ressource
