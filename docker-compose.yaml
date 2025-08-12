@@ -88,6 +88,14 @@ services:
     restart: unless-stopped
     networks:
      - transcendence
+    volumes:
+      - pong:/usr/src/app
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    environment:
+      - NGINXIP=nginx
+      - PORT=2020
   search:
     build:
       context: ./services/search
@@ -100,13 +108,19 @@ services:
 
 secrets:
   ssl-key.pem:
-    file: /home/cdomet-d/Documents/CommonCore/transcendence/.secrets/ssl-key.pem
+    file: .secrets/ssl-key.pem
   ssl-cert.pem:
-    file: /home/cdomet-d/Documents/CommonCore/transcendence/.secrets/ssl-cert.pem
+    file: .secrets/ssl-cert.pem
 
 volumes:
   static-nginx:
     name: static-nginx
+  pong:
+    driver: local
+    driver_opts:
+      type: none
+      device: services/pong/js
+      o: bind
 
 networks:
   transcendence:
