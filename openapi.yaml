@@ -1,205 +1,60 @@
-openapi: 3.1.0
-
-info:
-  title: BigTeam API
-  description: Documentation for the RESTful section the BigTeam's Transcendance project
-  version: 1.0.0
-
-servers:
-  - url: https://localhost:8443
-    description: Our lone server, we don't really need a production one
-
-paths:
-  /users/{id}:
-    get:
-      summary: get user's profile by ID
-      description: |
-        Returns the public profile informations for the user specified by ID.
-
-        All users may access other users public profiles.
-      tags:
-        - users
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-          example: angryGoose
-      responses:
-        "200":
-          description: |
-            Returns a user's profile (profile card, match history, game_stats) to be rendered for the UI
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/profile"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "405":
-          $ref: "#/components/responses/MethodNotAllowed"
-
-  /user/{id}/settings:
-    get:
-      summary: get user's settings by ID
-      description: |
-        Returns the settings for the user specified by ID. 
-
-        It will always return the settings for the user that is currently logged.
-      tags:
-        - users
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-          example: angryGoose
-      responses:
-        "200":
-          description: Returns a user's profile (profile card, match history, game_stats)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/settings"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "405":
-          $ref: "#/components/responses/MethodNotAllowed"
-    patch:
-      security:
-        - bearerAuth: []
-      tags:
-        - users
-      summary: update user's personnal information by ID
-      description: |
-        Sends a request to the user database to update given informations.
-
-        Informations can be modified individually or in batches.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-          example: angryGoose
-      requestBody:
-        required: true
-        content:
-          application/json-patch+json:
-            schema:
-              $ref: "#/components/schemas/settingsPatch"
-      responses:
-        "200":
-          description: returns confirmation of the updated informations
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/settings"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "405":
-          $ref: "#/components/responses/MethodNotAllowed"
-  /register:
-    post:
-      tags:
-        - auth
-      summary: register a new user
-      description: |
-        Sends a post request to create a new persistent or temporary user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/credentials"
-      responses:
-        "200":
-          $ref: "#/components/responses/Success"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-  /sessions:
-    post:
-      tags:
-        - auth
-      summary: create a new user session
-      description: |
-        Allows the user to log to the app by creating a new session
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/credentials"
-      responses:
-        "200":
-          description: a JWT token response
-          content:
-            application/jwt:
-              schema:
-                $ref: "#/components/schemas/sessionToken"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "404":
-          $ref: "#/components/responses/NotFound"
-
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-
+  responses:
+    BadRequest:
+      content:
+        application/json:
+          example:
+            code: 400
+            message: Malformed parameters could not be processed
+          schema:
+            $ref: "#/components/schemas/error"
+      description: Bad Request
+    Forbidden:
+      content:
+        application/json:
+          example:
+            code: 403
+            message: You are not authorized to access this ressource
+          schema:
+            $ref: "#/components/schemas/error"
+      description: Forbidden
+    MethodNotAllowed:
+      content:
+        application/json:
+          example:
+            code: 405
+            message: This operation is not allowed on this ressource
+          schema:
+            $ref: "#/components/schemas/error"
+      description: Unsupported request
+    NotFound:
+      content:
+        application/json:
+          example:
+            code: 404
+            message: User 'angryGoose_314' does not exist
+          schema:
+            $ref: "#/components/schemas/error"
+      description: Not Found
+    Success:
+      content:
+        application/json:
+          example:
+            code: 200
+            message: Operation successful!
+          schema:
+            $ref: "#/components/schemas/success"
+      description: Operation successful
+    Unauthorized:
+      content:
+        application/json:
+          example:
+            code: 401
+            message: You are not authorized to access this ressource; try login in.
+          schema:
+            $ref: "#/components/schemas/error"
+      description: Unauthorized (should redirect on login screen)
   schemas:
-    sessionToken:
-      type: object
-      description: a JWT representation of a user session
-      properties:
-        expires_in:
-          description: time until expiration of the current session in seconds
-          type: number
-          format: integer
-          example: 3600
-        access_token:
-          description: the access token
-          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-          type: string
-        token_type:
-          type: string
-          description: the type of token
-          enum:
-            - Bearer
-            - Refresh
-          example: "bearer"
-      required:
-        - access_token
-        - token_type
-        - expires_in
-
     avatar:
       description: a binary representation of the user's avatar
       example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
@@ -381,6 +236,34 @@ components:
         looserLoon: 2
         winningWolf: 5
       type: object
+    sessionToken:
+      description: a JWT representation of a user session
+      properties:
+        expiresAt:
+          description: absolute time at which the token will become obsolete
+          example: 2025-07-30T12:46:48Z
+          format: date-time
+          type: string
+        expiresIn:
+          description: time until expiration of the current session in seconds
+          example: 3600
+          format: integer
+          type: number
+        refreshToken:
+          $ref: "#/components/schemas/token"
+          description: |
+            Refresh token to handle seamless user sessions.
+        sessionId:
+          $ref: "#/components/schemas/token"
+          description: |
+            The Bearer token associated to the current session.
+            It is stored as a cookie in the browser, and internally handled for CLI users.
+
+      required:
+        - sessionId
+        - tokenType
+        - expiresIn
+      type: object
     settings:
       description: the user's personnal informations
       properties:
@@ -431,6 +314,19 @@ components:
         - code
         - message
       type: object
+
+    token:
+      description: JWT for session management.
+      properties:
+        type:
+          enum:
+            - Bearer
+            - Refresh
+          example: "bearer || refresh"
+        value:
+          example: "iVBORw0KGgoAAAANSUhEUgAA... token"
+          type: string
+      type: object
     tournament:
       description: a tournament object with associated matches and outcomes
       properties:
@@ -472,60 +368,187 @@ components:
       description: winner for the specified match
       example: "winningWolf"
       type: string
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http
 
-  responses:
-    Success:
-      description: Operation successful
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/success"
-          example: 
-            code: 200
-            message: Operation successful!
+info:
+  description: Documentation for the RESTful section the BigTeam's Transcendance project
+  title: BigTeam API
+  version: 1.0.0
+openapi: 3.1.0
 
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
+paths:
+  /register:
+    post:
+      description: |
+        Sends a post request to create a new persistent or temporary user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/credentials"
+        required: true
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      summary: register a new user
+      tags:
+        - auth
+  /sessions:
+    delete:
+      description: |
+        Allows the user to log out from the app by destroying their token
+      summary: destroy a user's session
+      tags:
+        - auth
+    post:
+      description: |
+        Allows the user to log to the app by creating a new session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/credentials"
+        required: true
+      responses:
+        "200":
+          content:
+            application/jwt:
+              schema:
+                $ref: "#/components/schemas/sessionToken"
+          description: a JWT token response
+          # headers:
+          #   Set-Cookie:
+          #     description: |
+          #       Session cookie containing the session token.
+          #       Security attributes include: HTTP Only, Secure, Same-Site            
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      summary: create a new user session
+      tags:
+        - auth
+
+  /user/{id}/settings:
+    get:
+      description: |
+        Returns the settings for the user specified by ID. 
+
+        It will always return the settings for the user that is currently logged.
+      parameters:
+        - example: angryGoose
+          in: path
+          name: id
+          required: true
           schema:
-            $ref: "#/components/schemas/error"
-          example:
-            code: 400
-            message: Malformed parameters could not be processed
-    Unauthorized:
-      description: Unauthorized (should redirect on login screen)
-      content:
-        application/json:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settings"
+          description: Returns a user's profile (profile card, match history, game_stats)
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+      summary: get user's settings by ID
+      tags:
+        - users
+    patch:
+      description: |
+        Sends a request to the user database to update given informations.
+
+        Informations can be modified individually or in batches.
+      parameters:
+        - example: angryGoose
+          in: path
+          name: id
+          required: true
           schema:
-            $ref: "#/components/schemas/error"
-          example:
-            code: 401
-            message: You are not authorized to access this ressource; try login in.
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
+            type: string
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: "#/components/schemas/settingsPatch"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settings"
+          description: returns confirmation of the updated informations
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+      security:
+        - bearerAuth: []
+      summary: update user's personnal information by ID
+      tags:
+        - users
+  /users/{id}:
+    get:
+      description: |
+        Returns the public profile informations for the user specified by ID.
+
+        All users may access other users public profiles.
+      parameters:
+        - example: angryGoose
+          in: path
+          name: id
+          required: true
           schema:
-            $ref: "#/components/schemas/error"
-          example:
-            code: 403
-            message: You are not authorized to access this ressource
-    NotFound:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/error"
-          example:
-            code: 404
-            message: User 'angryGoose_314' does not exist
-    MethodNotAllowed:
-      description: Unsupported request
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/error"
-          example:
-            code: 405
-            message: This operation is not allowed on this ressource
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/profile"
+          description: |
+            Returns a user's profile (profile card, match history, game_stats) to be rendered for the UI
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+      summary: get user's profile by ID
+      tags:
+        - users
+
+servers:
+  - description: Our lone server, we don't really need a production one
+    url: https://localhost:8443
