@@ -42,7 +42,7 @@ components:
           example:
             code: 200
           schema:
-            $ref: "#/components/schemas/success" 
+            $ref: "#/components/schemas/success"
       description: Signals the operation was successful
 
     Unauthorized:
@@ -365,11 +365,17 @@ components:
       description: winner for the specified match
       example: "winningWolf"
       type: string
+
   securitySchemes:
     bearerAuth:
       bearerFormat: JWT
       scheme: bearer
       type: http
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: jwt
+
 info:
   description: Documentation for the RESTful section the BigTeam's Transcendance project
   title: BigTeam API
@@ -377,32 +383,21 @@ info:
 openapi: 3.1.0
 
 paths:
-  /account:
-    delete:
+  /user/friends:
+    get:
       description: |
-        Deletes an user account and all associated information
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/credentials"
-        required: true
-      responses:
-        "200":
-          $ref: "#/components/responses/Success"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
+        Return an object containing the validated friends of the user identified by their token.
+      summary: returns a user's friend list
+      tags:
+        - friends
       security:
         - bearerAuth: []
-      summary: deletes an user account
-      tags:
-        - account management
+        - cookieAuth: []
+    # post:
+
+    # patch:
+
+  /account:
     post:
       description: |
         Creates a new persistent or temporary user
@@ -423,36 +418,13 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
-      summary: register a new user
+      summary: registers a new user
       tags:
         - account management
-  /sessions:
     delete:
       description: |
-        Allows the user to log out from the app by destroying their token.
-        The sessionID must be passed through secure HTTP cookie.
-      parameters:
-        - description: Session cookie containing the session informations
-          in: cookie
-          name: sessionId
-          required: true
-          schema:
-            type: string
-      responses:
-        "204":
-          $ref: "#/components/responses/Success"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "404":
-          $ref: "#/components/responses/NotFound"
-      security:
-        - bearerAuth: []
-      summary: destroy a user's session (log out)
-      tags:
-        - authentication
-    post:
-      description: |
-        Allows the user to log to the app by creating a new session
+        Deletes an user account and all associated information. <br>
+        The server will determine the account to be deleted based on the user ID contained in the JWT.
       requestBody:
         content:
           application/json:
@@ -461,45 +433,74 @@ paths:
         required: true
       responses:
         "200":
-          content:
-            application/jwt:
-              schema:
-                $ref: "#/components/schemas/sessionToken"
-          description: | 
-            Upon success, server sends a JWT Token containing the session information.
-            
-            It is stored automatically in a secure cookie when using a browser,
-            and is also included in the response body for CLI users. 
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      summary: deletes an authenticated user account
+      tags:
+        - account management
+
+  /auth/browser:
+    post:
+      description: |
+        Allows browser based users to authenticate using JWT<br>
+        It is stored in a HTTPOnly, Secure, Same-Site cookie.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/credentials"
+        required: true
+      responses:
+        "204":
+          description: |
+            Upon success, server sends a JWT Token to the client. <br>
+            It is stored automatically in a secure cookie (HTTP Only, Secure, Same-Site)
           headers:
             Set-Cookie:
               description: |
-                Session cookie containing the session token.
+                Session cookie containing the session token. <br>
                 Security attributes include: HTTP Only, Secure, Same-Site
-              example: sessionId=abc123; Path=/; HttpOnly; Secure; SameSite=Strict
+              example: jwt=abc123; Path=/; HttpOnly; Secure; SameSite=Strict
               schema:
                 type: string
         "400":
           $ref: "#/components/responses/BadRequest"
         "404":
           $ref: "#/components/responses/NotFound"
-      summary: create a user session (log in)
+      summary: generates an authentication token for browser users
       tags:
         - authentication
+  /auth/cli:
+    post:
+      tags:
+        - authentication
+      description: |
+        Allows CLI based users to authenticate using a JWT. <br>
+        The JWT must be handled manually on the client side.
+      summary: generates an authentication token for CLI users
+  
+  # /jwt/invalidate:
+  # deletes a client's JWT from the browser
 
-  /user/{id}/settings:
+  # /jwt/refresh
+  # refreshes the user's session using the JWT refresh token.
+  /user/settings:
     get:
       description: |
-        Returns the settings for the user specified by ID.
+        Returns the settings for the user, as identified by their token.
         A user will only be able to access their own setting, never that of another user.
-      parameters:
-        - example: angryGoose
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
       responses:
-        "204":
+        "200":
           content:
             application/json:
               schema:
@@ -515,21 +516,16 @@ paths:
           $ref: "#/components/responses/NotFound"
         "405":
           $ref: "#/components/responses/MethodNotAllowed"
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
       summary: get user's settings by ID
       tags:
         - users
     patch:
       description: |
-        Sends a request to the user database to update given informations.
-
+        Sends a request to the user database to update given informations. <br>
         Informations can be modified individually or in batches.
-      parameters:
-        - example: angryGoose
-          in: path
-          name: id
-          required: true
-          schema:
-            type: string
       requestBody:
         content:
           application/json-patch+json:
