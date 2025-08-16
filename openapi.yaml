@@ -50,7 +50,7 @@ components:
         application/json:
           example:
             code: 401
-            message: You are not authorized to access this ressource; try login in.
+            message: You are not authorized to access this ressource.
           schema:
             $ref: "#/components/schemas/error"
       description: Unauthorized (should redirect on login screen)
@@ -68,10 +68,10 @@ components:
     credentials:
       description: the registering user informations to validate.
       properties:
-        nickname:
-          $ref: "#/components/schemas/nickname"
         password:
           $ref: "#/components/schemas/password"
+        username:
+          $ref: "#/components/schemas/username"
       type: object
     duration:
       description: start and end times of a match in ISO 8601 format
@@ -170,9 +170,122 @@ components:
       example: 2025-08-07T13:00:00Z
       format: date-time
       type: string
+
+    jwtAccessPayload:
+      description: the body of the application's JWT.
+      properties:
+        aud:
+          description: the services this token grants access to
+          example: bigteam-api
+          type: string
+        expAt:
+          description: absolute time at which the token will become obsolete
+          example: 2025-07-30T12:46:48Z
+          format: date-time
+          type: string
+        expIn:
+          description: time until expiration of the current session in seconds
+          example: 3600
+          format: integer
+          type: number
+        iat:
+          description: timestamp at which the token was issued.
+          example: 2025-07-30T12:46:48Z
+          format: date-time
+          type: string
+        iss:
+          description: the URI describing the issuer of the token
+          example: https://localhost:8443
+          type: string
+        jti:
+          description: unique identifier for the current token.
+          format: UUID
+          type: string
+        role:
+          description: |
+            Describes the token's owner role within the application. <br>
+            Roles can be: admin, user, guest.
+          enum:
+            - admin
+            - user
+            - guest
+          type: string
+        scope:
+          description: The token holder's permissions on the application data, as determined by their role
+          items:
+            enum:
+              - write:any
+              - delete:any
+              - write:own
+              - write:any
+            type: string
+          type: array
+        sub:
+          description: the subject of the JWT; here, the user's ID (pseudo-randmoly generated)
+          example: 9874563210
+          format: integer
+          type: number
+      required:
+        - aud
+        - expAt
+        - expIn
+        - iat
+        - iss
+        - jti
+        - role
+        - scope
+        - sub
+      type: object
+
+    jwtCliBundle:
+      description: |
+        Bundle containing the access and refresh tokens for CLI users.
+      properties:
+        accessToken:
+          description: the signed access JWT
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0...
+          type: string
+        refreshToken:
+          description: the signed refresh JWT
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0...
+          type: string
+      type: object
+
+    jwtRefresh:
+      description: a refresh token. It expires and requires the user to resend credentials every 6 hours.
+      properties:
+        aud:
+          description: the services this token grants access to
+          example: bigteam-api
+          type: string
+        expAt:
+          description: absolute time at which the token will become obsolete
+          example: 2025-07-30T12:46:48Z
+          format: date-time
+          type: string
+        expIn:
+          description: time until expiration of the current session in seconds
+          example: 21600
+          format: integer
+          type: number
+        iat:
+          description: timestamp at which the token was issued.
+          example: 2025-07-30T12:46:48Z
+          format: date-time
+          type: string
+        iss:
+          description: the URI describing the issuer of the token
+          example: https://localhost:8443
+          type: string
+        jti:
+          description: unique identifier for the current token.
+          format: UUID
+          type: string
+      type: object
+
     loser:
-      description: looser for the specified match
-      example: "looserLoon"
+      description: loser for the specified match
+      example: "loserLoon"
       type: string
     match:
       description: a single match
@@ -191,12 +304,7 @@ components:
         - duration
         - score
       type: object
-    nickname:
-      description: the user's chosen nickname
-      example: "Dandelion"
-      maxLength: 12
-      minLength: 4
-      type: string
+
     password:
       description: |
         the user's password. It must be at least 12 characters long, and contain:
@@ -209,6 +317,7 @@ components:
       minLength: 12
       pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{12,}$
       type: string
+
     profile:
       description: a user's profile
       properties:
@@ -223,47 +332,22 @@ components:
         - game_history
         - game_stats
       type: object
+
     profile_color:
       description: the user's profile main color scheme
       example: ff69b4
       type: string
+
     score:
       additionalProperties:
         description: the mapped user's score in numeric value
         type: number
       description: a map of player names to their scores.
       example:
-        looserLoon: 2
+        loserLoon: 2
         winningWolf: 5
       type: object
-    sessionToken:
-      description: a JWT representation of a user session
-      properties:
-        expiresAt:
-          description: absolute time at which the token will become obsolete
-          example: 2025-07-30T12:46:48Z
-          format: date-time
-          type: string
-        expiresIn:
-          description: time until expiration of the current session in seconds
-          example: 3600
-          format: integer
-          type: number
-        refreshToken:
-          $ref: "#/components/schemas/token"
-          description: |
-            Refresh token to handle seamless user sessions.
-        sessionId:
-          $ref: "#/components/schemas/token"
-          description: |
-            The Bearer token associated to the current session.
-            It is stored as a cookie in the browser, and internally handled for CLI users.
 
-      required:
-        - sessionId
-        - tokenType
-        - expiresIn
-      type: object
     settings:
       description: the user's personnal informations
       properties:
@@ -273,15 +357,16 @@ components:
           $ref: "#/components/schemas/biography"
         email:
           $ref: "#/components/schemas/email"
-        nickname:
-          $ref: "#/components/schemas/nickname"
         profile_color:
           $ref: "#/components/schemas/profile_color"
+        username:
+          $ref: "#/components/schemas/username"
       required:
-        - nickname
+        - username
         - avatar
         - email
       type: object
+
     settingsPatch:
       description: the user's personnal informations
       properties:
@@ -291,16 +376,18 @@ components:
           $ref: "#/components/schemas/biography"
         email:
           $ref: "#/components/schemas/email"
-        nickname:
-          $ref: "#/components/schemas/nickname"
         password:
           $ref: "#/components/schemas/password"
         profile_color:
           $ref: "#/components/schemas/profile_color"
+        username:
+          $ref: "#/components/schemas/username"
       type: object
+
     status:
       description: indicates whether the user is currently online
       type: boolean
+
     success:
       description: signals the operation's success
       properties:
@@ -312,18 +399,6 @@ components:
         - code
       type: object
 
-    token:
-      description: JWT for session management.
-      properties:
-        type:
-          enum:
-            - Bearer
-            - Refresh
-          example: "bearer || refresh"
-        value:
-          example: "iVBORw0KGgoAAAANSUhEUgAA... token"
-          type: string
-      type: object
     tournament:
       description: a tournament object with associated matches and outcomes
       properties:
@@ -335,6 +410,7 @@ components:
       required:
         - matches
       type: object
+
     user:
       description: a succint user's profile card
       properties:
@@ -344,8 +420,6 @@ components:
           $ref: "#/components/schemas/biography"
         joined_on:
           $ref: "#/components/schemas/joined_on"
-        nickname:
-          $ref: "#/components/schemas/nickname"
         profile_color:
           $ref: "#/components/schemas/profile_color"
         rank:
@@ -354,13 +428,25 @@ components:
           type: string
         status:
           $ref: "#/components/schemas/status"
+        username:
+          $ref: "#/components/schemas/username"
       required:
         - avatar
-        - nickname
+        - username
         - profile_color
         - rank
         - status
       type: object
+    username:
+      description: |
+        the user's chosen username, used as an identifier within the system. <br>
+        It is an alphanumeric string comprised between 4 and 18 characters.
+      example: "Dandelion"
+      maxLength: 18
+      minLength: 4
+      pattern: "^[a-zA-Z0-9]{4,18}$"
+      type: string
+
     winner:
       description: winner for the specified match
       example: "winningWolf"
@@ -372,9 +458,9 @@ components:
       scheme: bearer
       type: http
     cookieAuth:
-      type: apiKey
       in: cookie
       name: jwt
+      type: apiKey
 
 info:
   description: Documentation for the RESTful section the BigTeam's Transcendance project
@@ -383,44 +469,7 @@ info:
 openapi: 3.1.0
 
 paths:
-  /user/friends:
-    get:
-      description: |
-        Return an object containing the validated friends of the user identified by their token.
-      summary: returns a user's friend list
-      tags:
-        - friends
-      security:
-        - bearerAuth: []
-        - cookieAuth: []
-    # post:
-
-    # patch:
-
   /account:
-    post:
-      description: |
-        Creates a new persistent or temporary user
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/credentials"
-        required: true
-      responses:
-        "201":
-          $ref: "#/components/responses/Success"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-      summary: registers a new user
-      tags:
-        - account management
     delete:
       description: |
         Deletes an user account and all associated information. <br>
@@ -448,6 +497,29 @@ paths:
       summary: deletes an authenticated user account
       tags:
         - account management
+    post:
+      description: |
+        Creates a new persistent or temporary user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/credentials"
+        required: true
+      responses:
+        "201":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      summary: registers a new user
+      tags:
+        - account management
 
   /auth/browser:
     post:
@@ -463,37 +535,116 @@ paths:
       responses:
         "204":
           description: |
-            Upon success, server sends a JWT Token to the client. <br>
+            Upon success, server sends a JWT to the client. <br>
             It is stored automatically in a secure cookie (HTTP Only, Secure, Same-Site)
           headers:
             Set-Cookie:
               description: |
-                Session cookie containing the session token. <br>
+                Cookie containing the access token and the refresh token. <br>
                 Security attributes include: HTTP Only, Secure, Same-Site
-              example: jwt=abc123; Path=/; HttpOnly; Secure; SameSite=Strict
+              examples:
+                accessToken:
+                  value: jwt=abc123; Path=/; HttpOnly; Secure; SameSite=Strict
+                refreshToken:
+                  value: jwt=abc123; Path=/; HttpOnly; Secure; SameSite=Strict
               schema:
                 type: string
         "400":
           $ref: "#/components/responses/BadRequest"
-        "404":
-          $ref: "#/components/responses/NotFound"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
       summary: generates an authentication token for browser users
       tags:
         - authentication
+
   /auth/cli:
     post:
-      tags:
-        - authentication
       description: |
         Allows CLI based users to authenticate using a JWT. <br>
-        The JWT must be handled manually on the client side.
+        The JWT is handled by the CLI logic and stored in memory.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/credentials"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/jwtCliBundle"
+          description: the encoded tokens to be decoded by the CLI.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
       summary: generates an authentication token for CLI users
-  
-  # /jwt/invalidate:
-  # deletes a client's JWT from the browser
+      tags:
+        - authentication
 
-  # /jwt/refresh
-  # refreshes the user's session using the JWT refresh token.
+  /auth/logout:
+    delete:
+      summary: removes the user cookie containing the JWT, allowing them to logout.
+      tags:
+        - authentication
+    securitySchemes:
+      - bearerAuth: []
+      - cookieAuth: []
+
+  /auth/refresh:
+    post:
+      description: |
+        Uses the user's refresh token to reissue a valid access token. <br>
+        The refresh token is embedded in the request's header and must be resolved from it.
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/jwtCliBundle"
+          description: |
+            returns fresh access & refresh tokens if the user's refresh token was found to be valid. <br>
+            Handled manually by the CLI logic, as in POST /auth/cli.
+        "204":
+          description: |
+            returns fresh access & refresh tokens if the user's refresh token was found to be valid. <br>
+            They are set as cookies for a browser-facing user. <br>
+            The security specs are identical to the ones issues in POST /auth/browser
+          headers:
+            Set-Cookie:
+              description: the new access token to be set as a cookie in the user's browser.
+              examples:
+                accessToken:
+                  value: "xxxxxxxx.yyyyyyyy.zzzzzzzzz"
+                refreshToken:
+                  value: "xxxxxxxx.yyyyyyyy.zzzzzzzzz"
+              schema:
+                type: string
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      summary: refreshes the user's session using the JWT refresh token.
+      tags:
+        - authentication
+
+  /user/friends:
+    get:
+      description: |
+        Return an object containing the validated friends of the user identified by their token.
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      summary: returns a user's friend list
+      tags:
+        - friends
+    # post:
+    # patch:
+
   /user/settings:
     get:
       description: |
@@ -551,18 +702,21 @@ paths:
       summary: update user's personnal information by ID
       tags:
         - users
-  /users/{id}:
+  /users/{username}:
     get:
       description: |
-        Returns the public profile informations for the user specified by ID.
+        Returns the public profile informations for the user specified by username.
 
         All users may access other users public profiles.
       parameters:
-        - example: angryGoose
+        - description: |
+            the sought user's username. <br> It is an alphanumeric string of 4 to 18 characters.
+          example: angryGoose
           in: path
-          name: id
+          name: username
           required: true
           schema:
+            pattern: "^[a-zA-Z0-9]{4,20}$"
             type: string
       responses:
         "200":
@@ -582,10 +736,19 @@ paths:
           $ref: "#/components/responses/NotFound"
         "405":
           $ref: "#/components/responses/MethodNotAllowed"
-      summary: get user's profile by ID
+      summary: get user's profile by username.
       tags:
         - users
 
 servers:
   - description: Our lone server, we don't really need a production one
     url: https://localhost:8443
+tags:
+  - description: endpoints relative to user authentication.
+    name: authentication
+  - description: endpoints relative to account management.
+    name: account management
+  - description: endpoints relative to friend management.
+    name: friends
+  - description: endpoints relative to user profile and settings management and user UI.
+    name: users
