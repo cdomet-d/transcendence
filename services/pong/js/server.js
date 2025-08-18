@@ -11,7 +11,7 @@ import fastifyStatic from '@fastify/static';
 
 // Local modules
 import { wsRoute } from './routes/websocket.js';
-import { options } from './servconf.js'
+import { options } from './serv.conf.js'
 /***********************************************/
 
 const port = process.env.PORT;
