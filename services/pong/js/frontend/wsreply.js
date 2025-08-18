@@ -1,10 +1,19 @@
-const ws = new WebSocket('wss://localhost:8443/game/match');
+function wsRequest() {
+    const ws = new WebSocket('wss://localhost:8443/game/match');
 
-ws.onopen = () => {
-    console.log("WebSocket connection established!")
-    ws.send("hey server");
+    ws.onerror = (err) => {
+        console.log("error:", err);
+        exit(1);
+    }
+
+    ws.onopen = () => {
+        console.log("WebSocket connection established!")
+        ws.send("hey server");
+    }
+
+    ws.onmessage = (event) => {
+        console.log("message from server:", event.data);
+    }
 }
 
-ws.onmessage = (event) => {
-    console.log("message from server:", event.data);
-}
+export { wsRequest }
