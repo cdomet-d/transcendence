@@ -1,20 +1,20 @@
 services:
-  frontend:
-    build:
-      context: ./services/frontend
-      dockerfile: Dockerfile
-    image: frontend:0.0.1
-    container_name: frontend
-    ports:
-      - "1212:1212"
-      - "5173:5173"
-    volumes:
-      - ./services/frontend/web:/usr/src/app
-    command:
-      sh -c "npm install && npm run dev"
-    restart: unless-stopped
-    networks:
-     - transcendence
+  # frontend:
+  #   build:
+  #     context: ./services/frontend
+  #     dockerfile: Dockerfile
+  #   image: frontend:0.0.1
+  #   container_name: frontend
+  #   ports:
+  #     - "1212:1212"
+  #     - "5173:5173"
+  #   volumes:
+  #     - ./services/frontend/web:/usr/src/app
+  #   command:
+  #     sh -c "npm install && npm run dev"
+  #   restart: unless-stopped
+  #   networks:
+  #    - transcendence
   nginx:
     build:
       context: ./services/nginx/
