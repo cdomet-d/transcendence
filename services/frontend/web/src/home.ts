@@ -23,15 +23,12 @@ export function renderHome(main: HTMLElement) {
     </div>
   `;
 
-init();
-
-const languageSwitchBtn = document.getElementById('language-switch');
-if (languageSwitchBtn) {
-  languageSwitchBtn.addEventListener('click', () => {
-    const newLang = currentLang === 'en' ? 'fr' : 'en';
-    changeLanguage(newLang);
-    renderHome(main); // Re-render with updated language text
-  });
-}
-
+  const languageSwitchBtn = document.getElementById('language-switch');
+  if (languageSwitchBtn) {
+    languageSwitchBtn.addEventListener('click', () => {
+      const newLang = currentLang === 'en' ? 'fr' : 'en';
+      changeLanguage(newLang);
+      renderHome(main); // Re-render with updated language and recreate listener
+    });
+  }
 }
