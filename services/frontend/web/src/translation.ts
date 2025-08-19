@@ -14,7 +14,7 @@ const savedLang = localStorage.getItem('selectedLanguage');
   if (savedLang && resources[savedLang]) {
     currentLang = savedLang;
   } else {
-    currentLang = 'en'; // default to English
+    currentLang = 'en';
   }
   translation = resources[currentLang];
 }

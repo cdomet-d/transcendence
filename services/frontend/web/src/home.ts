@@ -35,12 +35,10 @@ function setupLanguageDropdown(main: HTMLElement) {
 
   if (!switchBtn || !options) return;
 
-  // Toggle dropdown visibility on button click
   switchBtn.addEventListener('click', () => {
     options.classList.toggle('hidden');
   });
 
-  // When option clicked, change language and rerender home
   options.querySelectorAll('.dropdown-item').forEach(item => {
     item.addEventListener('click', () => {
       const lang = (item as HTMLElement).dataset.lang;
@@ -52,7 +50,6 @@ function setupLanguageDropdown(main: HTMLElement) {
     });
   });
 
-  // Close dropdown if clicking outside
   document.addEventListener('click', (e) => {
     if (!main.contains(e.target as Node)) {
       options.classList.add('hidden');
