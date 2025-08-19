@@ -5,8 +5,9 @@ export let currentLang: string = "en";
 
 import en from './assets/locales/en.json';
 import fr from './assets/locales/fr.json';
+import es from './assets/locales/es.json';
 
-const resources: Record<string, TranlationMap> = { en ,fr };
+const resources: Record<string, TranlationMap> = { en ,fr, es };
 
 export function init() {
 const savedLang = localStorage.getItem('selectedLanguage');
