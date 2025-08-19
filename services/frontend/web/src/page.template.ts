@@ -3,7 +3,7 @@ type NavButton = {
   label: string;
 };
 
-export function renderPageTemplate(main, {
+export function renderPageTemplate(main: HTMLElement, {
   title,
   nextButtons = [],
   backHref,

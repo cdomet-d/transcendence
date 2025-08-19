@@ -1,7 +1,7 @@
 import './style.css'
 import { renderPageTemplate } from './page.template'
 
-export function renderProfile(main) {
+export function renderProfile(main: HTMLElement) {
   renderPageTemplate(main, {
     title: "PROFILE",
     nextButtons: [

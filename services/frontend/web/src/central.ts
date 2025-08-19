@@ -1,7 +1,7 @@
 import './style.css'
 import { renderPageTemplate } from './page.template'
 
-export function renderCentral(main) {
+export function renderCentral(main: HTMLElement) {
   renderPageTemplate(main, {
 	title: "CENTRAL",
 	nextButtons: [

@@ -1,5 +1,5 @@
 import './style.css';
-import { t, changeLanguage, init} from './translation';
+import { t, changeLanguage } from './translation';
 import { currentLang } from './translation';
 
 export function renderHome(main: HTMLElement) {
