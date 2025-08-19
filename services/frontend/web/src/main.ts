@@ -14,9 +14,11 @@ document.addEventListener('click', (event) => {
     if (link) {
         event.preventDefault();
         const path = link.getAttribute('href');
-        window.history.pushState({}, '', path);
-        const cleanPath = sanitisePath(path);
-        router._loadRoute(cleanPath);
+		if (path !== null) {
+	        window.history.pushState({}, '', path);
+	        const cleanPath = sanitisePath(path);
+			router._loadRoute(cleanPath);
+		}
     }
 });
 
