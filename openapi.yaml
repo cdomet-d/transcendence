@@ -661,7 +661,7 @@ components:
       in: cookie
       name: jwt
       type: apiKey
-
+    
 info:
   contact:
     email: cdomet-d@student.42lyon.fr
@@ -676,7 +676,7 @@ info:
 openapi: 3.1.0
 
 paths:
-  /account:
+  /api/account:
     delete:
       description: |
         Deletes an user account and all associated information. <br>
@@ -725,7 +725,7 @@ paths:
       tags:
         - account management
 
-  /auth/browser:
+  /api/auth/browser:
     post:
       description: |
         Allows browser based users to authenticate using JWT<br>
@@ -766,7 +766,7 @@ paths:
       tags:
         - authentication
 
-  /auth/cli:
+  /api/auth/cli:
     post:
       description: |
         Allows CLI based users to authenticate using a JWT. <br>
@@ -794,7 +794,7 @@ paths:
       tags:
         - authentication
 
-  /auth/logout:
+  /api/auth/logout:
     delete:
       operationId: userLogout
       responses:
@@ -811,7 +811,7 @@ paths:
       tags:
         - authentication
 
-  /auth/refresh:
+  /api/auth/refresh:
     post:
       description: |
         Uses the user's refresh token to reissue a valid access token. <br>
@@ -854,7 +854,7 @@ paths:
       tags:
         - authentication
 
-  /user/friends:
+  /api/user/friends:
     get:
       description: |
         Return an object containing the friend list of the user identified by their token.
@@ -881,7 +881,7 @@ paths:
       tags:
         - friends
 
-  /user/friends-request/{username}:
+  /api/user/friends/request/{username}:
     post:
       description: |
         Creates a new friend request by posting a new, unvalidated entry to another user friend's list. <br>
@@ -901,7 +901,7 @@ paths:
         - friends
     # delete:
 
-  /user/friends-requests:
+  /api/user/friends/request:
     get:
       description: |
         Return an object containing the pending friend requests of the user, identified by their token.
@@ -928,7 +928,7 @@ paths:
       tags:
         - friends
 
-  /user/settings:
+  /api/account/settings:
     get:
       description: |
         Returns the settings for the user, as identified by their token.
@@ -990,7 +990,7 @@ paths:
       tags:
         - users
 
-  /users/friend-request/{requestId}:
+  /api/user/friends/request/{requestId}:
     patch:
       description: |
         Patches the existing friend request by updating the request status. <br>
@@ -1018,7 +1018,7 @@ paths:
       tags:
         - friends
 
-  /users/{username}:
+  /api/users/{username}:
     get:
       description: |
         Returns the public profile informations for the user specified by username.
