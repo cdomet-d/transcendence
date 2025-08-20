@@ -3,8 +3,8 @@ import { wsRequest } from './wsreply.js'
 wsRequest();
 
 const canvas = document.getElementById("canvas");
-canvas.width = 500;
-canvas.height = 300;
+canvas.width = 600;
+canvas.height = 400;
 
 if (canvas.getContext('2d')) {
     const ctx = canvas.getContext('2d');
