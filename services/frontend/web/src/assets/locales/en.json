@@ -1,3 +1,9 @@
 {
-	"play": "play"
+	"Play": "Play",
+	"Central": "central",
+	"Tournament": "Tournament",
+	"Profile": "Profile",
+	"Quick Match": "Quick Match",
+	"Game": "Game",
+	"Leaderboard": "Leaderboard"
 }

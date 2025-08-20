@@ -1,3 +1,6 @@
+import { t, currentLang, changeLanguage } from './translation.ts' 
+import { renderCentral } from './central.ts';
+
 type NavButton = {
   href: string;
   label: string;
@@ -18,6 +21,16 @@ export function renderPageTemplate(main: HTMLElement, {
 
 }) {
   main.innerHTML = `
+   <div class="dropdown">
+		  <button id="language-switch" class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-black font-semibold">
+			${t(currentLang)}  <!-- Show current language name -->
+		  </button>
+		  <div id="language-options" class="dropdown-content hidden absolute bg-white border rounded shadow-md mt-1">
+			<div class="dropdown-item px-4 py-2 hover:bg-gray-200 cursor-pointer" data-lang="en">English</div>
+			<div class="dropdown-item px-4 py-2 hover:bg-gray-200 cursor-pointer" data-lang="fr">Français</div>
+			<div class="dropdown-item px-4 py-2 hover:bg-gray-200 cursor-pointer" data-lang="es">Español</div>
+		  </div>
+		</div>
     <div class="pt-12 text-center text-2xl font-bold">${title}</div>
     <div class="flex justify-center mt-32 gap-8">
       ${nextButtons.map(btn => `
@@ -51,4 +64,35 @@ export function renderPageTemplate(main: HTMLElement, {
       </a>
     </div>
   `;
+
+  
+  function setupLanguageDropdown(main: HTMLElement) {
+	const switchBtn = document.getElementById('language-switch');
+	const options = document.getElementById('language-options');
+  
+	if (!switchBtn || !options) return;
+  
+	switchBtn.addEventListener('click', () => {
+	  options.classList.toggle('hidden');
+	});
+  
+	options.querySelectorAll('.dropdown-item').forEach(item => {
+	  item.addEventListener('click', () => {
+		const lang = (item as HTMLElement).dataset.lang;
+		if (lang && lang !== currentLang) {
+		  changeLanguage(lang);
+		  options.classList.add('hidden');
+		  renderCentral(main);
+		}
+	  });
+	});
+  
+	document.addEventListener('click', (e) => {
+	  if (!main.contains(e.target as Node)) {
+		options.classList.add('hidden');
+	  }
+	});
+  }
+  
+  setupLanguageDropdown(main);
 }

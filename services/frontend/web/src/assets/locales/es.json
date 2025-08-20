@@ -1,3 +1,9 @@
 {
-	"play": "jugar"
+	"Play": "Jugar",
+	"Central": "central",
+	"Tournament": "Torneo",
+	"Profile": "Perfil",
+	"Quick Match": "Parte Rápida",
+	"Game": "Juego",
+	"Leaderboard": "Junta de líderes"
 }
