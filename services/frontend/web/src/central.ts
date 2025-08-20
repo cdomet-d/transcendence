@@ -1,6 +1,7 @@
 import './style.css'
 import { renderPageTemplate } from './page.template'
 import { t } from './translation.ts'
+import { renderLanguageDropdownButton } from './languageDropdownButton'
 
 export function renderCentral(main: HTMLElement) {
   renderPageTemplate(main, {
@@ -16,4 +17,8 @@ export function renderCentral(main: HTMLElement) {
 	showBack: true,
 	homeHref: "/"
   });
+  	const langDropdown = document.getElementById('lang-dropdown-container');
+  if (langDropdown) {
+	renderLanguageDropdownButton(langDropdown, () => renderCentral(main));
+  }
 }
