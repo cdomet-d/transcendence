@@ -512,8 +512,8 @@ components:
       description: A timestamp.
       example: 2025-08-19T15:58:46.000Z
       format: date-time
-      type: string
       maxLength: 32
+      type: string
 
     tournament:
       description: a tournament object with associated matches and outcomes
@@ -604,29 +604,29 @@ components:
 
     userArray:
       description: an array of a user's friends.
-      examples:
-        - - avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
-            biography: ¯\_(ツ)_/¯
-            friendship:
-              friendsSince: "2025-08-19T15:58:46.000Z"
-              isBlocked: false
-              isFriend: true
-            joinedOn: "2025-08-19T15:58:46.000Z"
-            profileColor: ff69b4
-            rank: Gold
-            status: true
-            username: Dandelion
-          - avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEREffq..."
-            biography: Mh.
-            friendship:
-              friendsSince: "2025-08-19T15:58:46.000Z"
-              isBlocked: false
-              isFriend: true
-            joinedOn: "2025-04-07T13:00:00Z"
-            profileColor: ffd700
-            rank: Platinum
-            status: true
-            username: winningWolf
+      example:
+        - avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+          biography: ¯\_(ツ)_/¯
+          friendship:
+            friendsSince: "2025-08-19T15:58:46.000Z"
+            isBlocked: false
+            isFriend: true
+          joinedOn: "2025-08-19T15:58:46.000Z"
+          profileColor: ff69b4
+          rank: Gold
+          status: true
+          username: Dandelion
+        - avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEREffq..."
+          biography: Mh.
+          friendship:
+            friendsSince: "2025-08-19T15:58:46.000Z"
+            isBlocked: false
+            isFriend: true
+          joinedOn: "2025-04-07T13:00:00Z"
+          profileColor: ffd700
+          rank: Platinum
+          status: true
+          username: winningWolf
       items:
         $ref: "#/components/schemas/user"
       maxItems: 2048
@@ -661,7 +661,7 @@ components:
       in: cookie
       name: jwt
       type: apiKey
-    
+
 info:
   contact:
     email: cdomet-d@student.42lyon.fr
@@ -724,6 +724,68 @@ paths:
       summary: registers a new user
       tags:
         - account management
+
+  /api/account/settings:
+    get:
+      description: |
+        Returns the settings for the user, as identified by their token.
+        A user will only be able to access their own setting, never that of another user.
+      operationId: getUserSettings
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settings"
+          description: Returns a user's profile (profile card, match history, gameStats)
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      summary: get user's settings by ID
+      tags:
+        - users
+    patch:
+      description: |
+        Sends a request to the user database to update given informations. <br>
+        Informations can be modified individually or in batches.
+      operationId: updateUserSettings
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: "#/components/schemas/settingsPatch"
+        description: |
+          A json patch document listing changes to apply to the user's settings.
+        required: true
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+          description: returns confirmation of the updated informations
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+      security:
+        - bearerAuth: []
+      summary: update user's personnal information by ID
+      tags:
+        - users
 
   /api/auth/browser:
     post:
@@ -854,54 +916,7 @@ paths:
       tags:
         - authentication
 
-  /api/user/friends:
-    get:
-      description: |
-        Return an object containing the friend list of the user identified by their token.
-      operationId: getFriendList
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/userArray"
-          description: On success, returns an array of the profile cards of all the user's friends.
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-      security:
-        - bearerAuth: []
-        - cookieAuth: []
-      summary: returns a user's friend list
-      tags:
-        - friends
-
-  /api/user/friends/request/{username}:
-    post:
-      description: |
-        Creates a new friend request by posting a new, unvalidated entry to another user friend's list. <br>
-        The request waits in the other user's friend list with an unvalidated status until confirmed or deleted by the target user.
-      operationId: requestFriendship
-      parameters:
-        - description: the username of the target of the friend request
-          in: path
-          name: username
-          required: true
-          schema:
-            pattern: "^[a-zA-Z0-9]{4,18}$"
-            type: string
-            maxLength: 18
-      summary: sends a friend request to {username}.
-      tags:
-        - friends
-    # delete:
-
-  /api/user/friends/request:
+  /api/user/friend-requests:
     get:
       description: |
         Return an object containing the pending friend requests of the user, identified by their token.
@@ -924,73 +939,11 @@ paths:
       security:
         - bearerAuth: []
         - cookieAuth: []
-      summary: returns a user's prending friend requests
+      summary: returns a user's pending friend requests
       tags:
         - friends
 
-  /api/account/settings:
-    get:
-      description: |
-        Returns the settings for the user, as identified by their token.
-        A user will only be able to access their own setting, never that of another user.
-      operationId: getUserSettings
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/settings"
-          description: Returns a user's profile (profile card, match history, gameStats)
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "405":
-          $ref: "#/components/responses/MethodNotAllowed"
-      security:
-        - bearerAuth: []
-        - cookieAuth: []
-      summary: get user's settings by ID
-      tags:
-        - users
-    patch:
-      description: |
-        Sends a request to the user database to update given informations. <br>
-        Informations can be modified individually or in batches.
-      operationId: updateUserSettings
-      requestBody:
-        content:
-          application/json-patch+json:
-            schema:
-              $ref: "#/components/schemas/settingsPatch"
-        description: |
-          A json patch document listing changes to apply to the user's settings.
-        required: true
-      responses:
-        "200":
-          $ref: "#/components/responses/Success"
-          description: returns confirmation of the updated informations
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "405":
-          $ref: "#/components/responses/MethodNotAllowed"
-      security:
-        - bearerAuth: []
-      summary: update user's personnal information by ID
-      tags:
-        - users
-
-  /api/user/friends/request/{requestId}:
+  /api/user/friend-requests/{requestId}:
     patch:
       description: |
         Patches the existing friend request by updating the request status. <br>
@@ -1011,10 +964,116 @@ paths:
         description: |
           a json-patch file updating the status of the friend request to either true or false.
           description: the json patch document instructing how to update to request (isFriend == true || isFriend == false)
+      responses:
+        "201":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
       security:
         - bearerAuth: []
         - cookieAuth: []
       summary: accepts a friend request
+      tags:
+        - friends
+
+  /api/user/friends:
+    get:
+      description: |
+        Returns the settings for the user, as identified by their token.
+        A user will only be able to access their own settings, never that of another user.
+      operationId: getUserSettings
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/userArray"
+          description: On success, returns an array of the profile cards of all the user's friends.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      summary: returns a user's friend list
+      tags:
+        - friends
+
+  /api/user/friends-requests/{username}:
+    post:
+      description: |
+        Creates a new friend request by posting a new, unvalidated entry to another user friend's list. <br>
+        The request waits in the other user's friend list with an unvalidated status until confirmed or deleted by the target user.
+      operationId: requestFriendship
+      parameters:
+        - description: the username of the target of the friend request
+          in: path
+          name: username
+          required: true
+          schema:
+            maxLength: 18
+            pattern: "^[a-zA-Z0-9]{4,18}$"
+            type: string
+      responses:
+        "202":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      summary: sends a friend request to {username}.
+      tags:
+        - friends
+
+  /api/user/friends/{username}:
+    delete:
+      description: |
+        Remove friend identified by {username} from the authenticated user's friend list.
+      operationId: removeFriend
+      parameters:
+        - description: the username of the friend to remove
+          in: path
+          name: username
+          required: true
+          schema:
+            maxLength: 18
+            pattern: "^[a-zA-Z0-9]{4,18}$"
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      summary: removes {username} as a friend
       tags:
         - friends
 
@@ -1033,9 +1092,9 @@ paths:
           name: username
           required: true
           schema:
+            maxLength: 18
             pattern: "^[a-zA-Z0-9]{4,18}$"
             type: string
-            maxLength: 18
       responses:
         "200":
           content:
