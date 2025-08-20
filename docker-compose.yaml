@@ -9,9 +9,7 @@ services:
       - "1212:1212"
       - "5173:5173"
     volumes:
-      - ./services/frontend/web:/usr/src/app
-    command:
-      sh -c "npm install && npm run dev"
+      - ./services/frontend/web:/app
     restart: unless-stopped
     networks:
      - transcendence
@@ -115,9 +113,9 @@ services:
 
 secrets:
   ssl-key.pem:
-    file: .secrets/ssl-key.pem
+    file: /home/saperrie/BigT/.secrets/ssl-key.pem
   ssl-cert.pem:
-    file: .secrets/ssl-cert.pem
+    file: /home/saperrie/BigT/.secrets/ssl-cert.pem
 
 volumes:
   static-nginx:
