@@ -1,4 +1,8 @@
 components:
+  headers:
+    X-Content-Type-Options:
+      description: prevents MIME-type sniffing. 
+    
   responses:
     BadRequest:
       content:
