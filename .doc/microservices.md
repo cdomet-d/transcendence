@@ -41,7 +41,7 @@ Cybersec is handled into each container
 ## Ports
 
 - ./services/nginx: 443
-- ./services/web: 1212
+- ./services/frontend: 1212
 - ./services/accessibility: 1313
 - ./services/account: 1414
 - ./services/dashboards: 1515
@@ -49,5 +49,6 @@ Cybersec is handled into each container
 - ./services/matchmaking: 1818
 - ./services/monitoring: 1919
 - ./services/pong: 2020
-- ./services/search: 2626
+- ./services/users: 2626
 - ./services/ssr: 3838
+- ./services/auth : 3939
