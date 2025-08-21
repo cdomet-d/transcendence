@@ -6,9 +6,9 @@ networks:
 
 secrets:
   ssl-cert.pem:
-    file: .secrets/ssl-cert.pem
+    file: ${TSECRETS}/ssl-cert.pem
   ssl-key.pem:
-    file: .secrets/ssl-key.pem
+    file: ${TSECRETS}/ssl-key.pem
 
 services:
   accessibility:
@@ -64,8 +64,8 @@ services:
     image: frontend:0.0.1
     networks:
       - transcendence
-    ports:
-      - "5173:5173"
+    # ports:
+    #   - "5173:5173"
     restart: unless-stopped
     volumes:
       - ./services/frontend/web:/app
