@@ -7,7 +7,6 @@ WORKDIR /usr/src/app
 COPY ./web/package*.json ./
 
 RUN npm install
-RUN npm install i18next --save
 EXPOSE 1212
 
 # Vite default port
