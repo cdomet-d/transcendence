@@ -1,10 +1,10 @@
 _logs/
 .secrets/
 *.pem
-web/node_modules/
+services/frontend/web/node_modules/
 web/dist/
 .gitignore
 .notes/
-node_modules
+node_modules/
 .env
 server.log
