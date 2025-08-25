@@ -1,7 +1,7 @@
 import './style.css'
 import { renderPageTemplate } from './page.template'
 
-export function renderLeaderboard(main) {
+export function renderLeaderboard(main: HTMLElement) {
 	renderPageTemplate(main, {
 		title: "LEADERBOARD",
 		nextButtons: [

@@ -1,5 +1,6 @@
 import { render404 } from './404.ts';
 import { renderHeader, clearHeader } from './header.ts';
+import { init } from './translation.ts'
 
 interface routeInterface {
     path: string;
@@ -18,7 +19,7 @@ export class Router {
         return window.location.pathname;
     }
 
-    _matchUrlToRoute(path) {
+    _matchUrlToRoute(path: string) {
         return this._routes.find(route => route.path === path);
     }
 
@@ -26,7 +27,7 @@ export class Router {
         this._loadRoute(this._getCurrentURL());
     }
 
-    _loadRoute(path) {
+    _loadRoute(path: string) {
         const main = document.getElementById('app');
         const header = document.getElementById('header');
 
@@ -47,6 +48,7 @@ export class Router {
             // header.style.display = "block";
             renderHeader();
         }
+		init();
         matchedRoute.callback(main);
     }
 }

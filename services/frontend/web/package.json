@@ -12,7 +12,8 @@
     "@tailwindcss/vite": "^4.1.11",
     "tailwindcss": "^4.1.11",
     "typescript": "~5.8.3",
-    "vite": "^7.0.4"
+    "vite": "^7.0.4",
+	"i18next": "^22.5.1"
   },
   "main": "index.js",
   "author": "",
