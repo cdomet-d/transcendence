@@ -1,8 +1,31 @@
 components:
   headers:
+    Set-Cookie:
+      description: |
+        Cookie containing the access token and the refresh token. <br>
+        Security attributes include: HTTP Only, Secure, Same-Site
+      examples:
+        accessToken:
+          value: jwt=abc123; Path=/; HttpOnly; Secure; SameSite=Strict
+        refreshToken:
+          value: jwt=abc123; Path=/; HttpOnly; Secure; SameSite=Strict
+      schema:
+        format: plaintext
+        maxLength: 128
+        type: string
+  parameters:
     X-Content-Type-Options:
-      description: prevents MIME-type sniffing. 
-    
+      name: X-Content-Type-Options
+      in: header
+      description: security header to prevent MIME-type sniffing and MIME confusion attacks.
+      schema:
+        type: string  
+        enum:
+          - nosniff
+        maxLength: 32
+        format: plaintext
+        example: nosniff
+
   responses:
     BadRequest:
       content:
@@ -699,6 +722,13 @@ paths:
       security:
         - cookieAuth: []
         - bearerAuth: []
+      parameters:
+        - name: X-Content-Type-Options
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/parameters/X-Content-Type-Options'
+
       summary: deletes an authenticated user account
       tags:
         - account management
@@ -811,18 +841,7 @@ paths:
             It is stored automatically in a secure cookie (HTTP Only, Secure, Same-Site)
           headers:
             Set-Cookie:
-              description: |
-                Cookie containing the access token and the refresh token. <br>
-                Security attributes include: HTTP Only, Secure, Same-Site
-              examples:
-                accessToken:
-                  value: jwt=abc123; Path=/; HttpOnly; Secure; SameSite=Strict
-                refreshToken:
-                  value: jwt=abc123; Path=/; HttpOnly; Secure; SameSite=Strict
-              schema:
-                format: plaintext
-                maxLength: 128
-                type: string
+              $ref: "#/components/headers/Set-Cookie"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -898,16 +917,7 @@ paths:
             The security specs are identical to the ones issues in POST /auth/browser
           headers:
             Set-Cookie:
-              description: the new access token to be set as a cookie in the user's browser.
-              examples:
-                accessToken:
-                  value: "xxxxxxxx.yyyyyyyy.zzzzzzzzz"
-                refreshToken:
-                  value: "xxxxxxxx.yyyyyyyy.zzzzzzzzz"
-              schema:
-                format: plaintext
-                maxLength: 128
-                type: string
+              $ref: "#/components/headers/Set-Cookie"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
