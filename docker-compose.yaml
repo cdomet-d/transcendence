@@ -1,135 +1,138 @@
-services:
-  frontend:
-    build:
-      context: ./services/frontend
-      dockerfile: Dockerfile
-    image: frontend:0.0.1
-    container_name: frontend
-    ports:
-      - "1212:1212"
-      - "5173:5173"
-    volumes:
-      - ./services/frontend/web:/usr/src/app
-    command:
-      sh -c "npm install && npm run dev"
-    restart: unless-stopped
-    networks:
-     - transcendence
-  nginx:
-    build:
-      context: ./services/nginx/
-      dockerfile: Dockerfile
-    image: nginx:0.0.1
-    container_name: nginx
-    ports:
-     - "8443:443"
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    environment:
-     - NGINX_HOST=bigt.com
-     - NGINX_PORT=443
-    restart: unless-stopped
-    networks:
-     - transcendence
-  accessibility:
-    build:
-      context: ./services/accessibility
-      dockerfile: Dockerfile
-    image: accessibility:0.0.1
-    container_name: accessibility
-    restart: unless-stopped
-    networks:
-     - transcendence
-  account:
-    build:
-      context: ./services/account
-      dockerfile: Dockerfile
-    image: account:0.0.1
-    container_name: account
-    restart: unless-stopped
-    networks:
-     - transcendence
-  dashboard:
-    build:
-      context: ./services/dashboards
-      dockerfile: Dockerfile
-    image: dashboard:0.0.1
-    container_name: dashboard
-    restart: unless-stopped
-    networks:
-     - transcendence
-  friends:
-    build:
-      context: ./services/friends
-      dockerfile: Dockerfile
-    image: friends:0.0.1
-    container_name: friends
-    restart: unless-stopped
-    networks:
-     - transcendence
-  matchmaking:
-    build:
-      context: ./services/matchmaking
-      dockerfile: Dockerfile
-    image: matchmaking:0.0.1
-    container_name: matchmaking
-    restart: unless-stopped
-    networks:
-     - transcendence
-  monitoring:
-    build:
-      context: ./services/monitoring
-      dockerfile: Dockerfile
-    image: monitoring:0.0.1
-    container_name: monitoring
-    restart: unless-stopped
-    networks:
-     - transcendence
-  pong:
-    build:
-      context: ./services/pong
-      dockerfile: Dockerfile
-    image: pong:0.0.1
-    container_name: pong
-    restart: unless-stopped
-    networks:
-     - transcendence
-    volumes:
-      - pong:/usr/src/app
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    environment:
-      - NGINXIP=nginx
-      - PORT=2020
-  search:
-    build:
-      context: ./services/search
-      dockerfile: Dockerfile
-    image: search:0.0.1
-    container_name: search
-    restart: unless-stopped
-    networks:
-     - transcendence
-
-secrets:
-  ssl-key.pem:
-    file: .secrets/ssl-key.pem
-  ssl-cert.pem:
-    file: .secrets/ssl-cert.pem
-
-volumes:
-  static-nginx:
-    name: static-nginx
-  pong:
-    driver: local
-    driver_opts:
-      type: none
-      device: services/pong/js
-      o: bind
 
 networks:
   transcendence:
     driver: bridge
     name: transcendence
+
+secrets:
+  ssl-cert.pem:
+    file: ${TSECRETS}/ssl-cert.pem
+  ssl-key.pem:
+    file: ${TSECRETS}/ssl-key.pem
+
+services:
+  accessibility:
+    build:
+      context: ./services/accessibility
+      dockerfile: Dockerfile
+    container_name: accessibility
+    image: accessibility:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+  account:
+    build:
+      context: ./services/account
+      dockerfile: Dockerfile
+    container_name: account
+    image: account:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+  auth:
+    build:
+      context: ./services/auth
+      dockerfile: Dockerfile
+    container_name: auth
+    image: auth:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+  dashboard:
+    build:
+      context: ./services/dashboards
+      dockerfile: Dockerfile
+    container_name: dashboard
+    image: dashboard:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+  friends:
+    build:
+      context: ./services/friends
+      dockerfile: Dockerfile
+    container_name: friends
+    image: friends:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+  frontend:
+    build:
+      context: ./services/frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    image: frontend:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+    volumes:
+      - ./services/frontend/web:/app
+  matchmaking:
+    build:
+      context: ./services/matchmaking
+      dockerfile: Dockerfile
+    container_name: matchmaking
+    image: matchmaking:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+  monitoring:
+    build:
+      context: ./services/monitoring
+      dockerfile: Dockerfile
+    container_name: monitoring
+    image: monitoring:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+  nginx:
+    build:
+      context: ./services/nginx/
+      dockerfile: Dockerfile
+    container_name: nginx
+    environment:
+      - NGINX_HOST=bigt.com
+      - NGINX_PORT=443
+    image: nginx:0.0.1
+    networks:
+      - transcendence
+    ports:
+      - "8443:443"
+    restart: unless-stopped
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+  pong:
+    build:
+      context: ./services/pong
+      dockerfile: Dockerfile
+    container_name: pong
+    environment:
+      - NGINXIP=nginx
+      - PORT=2020
+    image: pong:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - pong:/usr/src/app
+  users:
+    build:
+      context: ./services/users
+      dockerfile: Dockerfile
+    container_name: users
+    image: users:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+
+volumes:
+  pong:
+    driver: local
+    driver_opts:
+      device: services/pong/js
+      o: bind
+      type: none
