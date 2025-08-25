@@ -1,4 +1,4 @@
-export function renderGame(main) {
+export function renderGame(main: HTMLElement) {
   main.innerHTML = `
     <div class="min-h-screen flex flex-col items-center justify-center bg-white">
       <h1 class="text-4xl font-bold mb-6">Game Screen</h1>

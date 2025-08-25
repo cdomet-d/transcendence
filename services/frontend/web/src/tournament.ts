@@ -1,7 +1,7 @@
 import './style.css'
 import { renderPageTemplate } from './page.template'
 
-export function renderTournament(main) {
+export function renderTournament(main: HTMLElement) {
 	renderPageTemplate(main, {
 		title: "TOURNAMENT",
 		nextButtons: [

@@ -3,7 +3,7 @@ type NavButton = {
   label: string;
 };
 
-export function renderPageTemplate(main, {
+export function renderPageTemplate(main: HTMLElement, {
   title,
   nextButtons = [],
   backHref,
@@ -18,6 +18,7 @@ export function renderPageTemplate(main, {
 
 }) {
   main.innerHTML = `
+	<div class="top-center-button" id="lang-dropdown-container"></div>
     <div class="pt-12 text-center text-2xl font-bold">${title}</div>
     <div class="flex justify-center mt-32 gap-8">
       ${nextButtons.map(btn => `
