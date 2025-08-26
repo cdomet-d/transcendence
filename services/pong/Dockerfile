@@ -4,7 +4,7 @@ RUN mkdir -p /usr/src/app && chown -R 1000:1000 /usr/src/app
 
 WORKDIR /usr/src/app
 
-COPY script/pong.sh /usr/local/bin/ 
+COPY tools/pong.sh /usr/local/bin/ 
 
 RUN chmod +x /usr/local/bin/pong.sh
 
