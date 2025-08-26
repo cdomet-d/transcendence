@@ -1,21 +1,20 @@
-import dns from 'dns/promises';
+import dns from 'dns';
 import fs from 'fs';
 
-async function getNginxIP(): Promise<string | null> {
-  try {
-    const ip: string | undefined = process.env.NGINXIP;
-    if (ip === undefined)
-      throw new Error('NGINXIP is undefined');;
-    const result = await dns.lookup(ip);
-    return result.address;
-  } catch (err) {
-    return null;
-  }
+function getNginxIP(): string | null {
+  const ip: string | undefined = process.env.NGINXIP;
+  if (ip === undefined)
+    throw new Error('NGINXIP is undefined');
+  dns.lookup(ip, (err, address) => {
+    if (err) 
+      throw new Error('failed to resolve nginx IP address');
+    return address;
+  });
+  return null;
 }
 
-const nginxIP = await getNginxIP();
-
 function checkProxy(address: string, hop: number): boolean {
+  const nginxIP = getNginxIP();
   if (address === nginxIP && hop === 1)
     return true;
   return false;
