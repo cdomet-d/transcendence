@@ -56,17 +56,17 @@ services:
   #   networks:
   #     - transcendence
   #   restart: unless-stopped
-  frontend:
-    build:
-      context: ./services/frontend
-      dockerfile: Dockerfile
-    container_name: frontend
-    image: frontend:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    volumes:
-      - ./services/frontend/web:/app
+  # frontend:
+  #   build:
+  #     context: ./services/frontend
+  #     dockerfile: Dockerfile
+  #   container_name: frontend
+  #   image: frontend:0.0.1
+  #   networks:
+  #     - transcendence
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./services/frontend/web:/app
   # matchmaking:
   #   build:
   #     context: ./services/matchmaking
@@ -102,23 +102,23 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
-  # pong:
-  #   build:
-  #     context: ./services/pong
-  #     dockerfile: Dockerfile
-  #   container_name: pong
-  #   environment:
-  #     - NGINXIP=nginx
-  #     - PORT=2020
-  #   image: pong:0.0.1
-  #   networks:
-  #     - transcendence
-  #   restart: unless-stopped
-  #   secrets:
-  #     - ssl-key.pem
-  #     - ssl-cert.pem
-  #   volumes:
-  #     - ./services/pong/api:/usr/src/app
+  pong:
+    build:
+      context: ./services/pong
+      dockerfile: Dockerfile
+    container_name: pong
+    environment:
+      - NGINXIP=nginx
+      - PORT=2020
+    image: pong:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/pong/api:/usr/src/app
   # users:
   #   build:
   #     context: ./services/users
