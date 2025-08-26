@@ -3,7 +3,7 @@ function wsRequest() {
 
     ws.onerror = (err) => {
         console.log("error:", err);
-        exit(1);
+        process.exit(1);
     }
 
     ws.onopen = () => {
