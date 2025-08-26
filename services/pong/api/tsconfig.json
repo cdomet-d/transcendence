@@ -8,9 +8,9 @@
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
-    "target": "es2024",
+    "target": "es2022",
     "types": ["node"],
-    "lib": ["esnext"],
+    "lib": ["esnext", "DOM"],
 
     // Other Outputs
     // "sourceMap": true,
@@ -33,7 +33,7 @@
     "strict": true,
     "verbatimModuleSyntax": true,
     // "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
+    // "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
   },
