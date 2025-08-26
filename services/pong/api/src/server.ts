@@ -10,8 +10,8 @@ import websocket from '@fastify/websocket'
 import fastifyStatic from '@fastify/static';
 
 // Local modules
-import { wsRoute } from './routes/websocket.ts';
-import { options } from './serv.conf.ts'
+import { wsRoute } from './routes/websocket.js';
+import { options } from './serv.conf.js'
 /***********************************************/
 
 const port = process.env.PORT;

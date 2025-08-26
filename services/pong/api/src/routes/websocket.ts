@@ -1,4 +1,4 @@
-import {upgrade, wshandler} from '../handlers/websocket.ts'
+import {upgrade, wshandler} from '../handlers/websocket.js'
 
 const opts = {
     schema: {}, //TODO: get coralie's json object
