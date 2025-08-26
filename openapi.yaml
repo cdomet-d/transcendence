@@ -13,18 +13,6 @@ components:
         format: plaintext
         maxLength: 128
         type: string
-  parameters:
-    X-Content-Type-Options:
-      name: X-Content-Type-Options
-      in: header
-      description: security header to prevent MIME-type sniffing and MIME confusion attacks.
-      schema:
-        type: string  
-        enum:
-          - nosniff
-        maxLength: 32
-        format: plaintext
-        example: nosniff
 
   responses:
     BadRequest:
@@ -722,13 +710,6 @@ paths:
       security:
         - cookieAuth: []
         - bearerAuth: []
-      parameters:
-        - name: X-Content-Type-Options
-          in: header
-          required: true
-          schema:
-            $ref: '#/components/parameters/X-Content-Type-Options'
-
       summary: deletes an authenticated user account
       tags:
         - account management
