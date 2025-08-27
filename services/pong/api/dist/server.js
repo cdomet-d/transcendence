@@ -12,7 +12,7 @@ import { wsRoute } from './routes/websocket.js';
 import { options } from './serv.conf.js';
 /***********************************************/
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+export const __dirname = path.dirname(__filename);
 //init server
 try {
     const serv = Fastify(options);
@@ -28,7 +28,7 @@ catch (err) {
 function addPlugins(serv) {
     serv.register(websocket);
     serv.register(fastifyStatic, {
-        root: path.join(__dirname, 'frontend'),
+        root: path.join(__dirname, 'public'),
         prefix: '/game/match/',
     });
     serv.register(wsRoute);

@@ -14,7 +14,7 @@ import { options } from './serv.conf.js'
 /***********************************************/
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+export const __dirname = path.dirname(__filename);
 
 //init server
 try {
@@ -31,7 +31,7 @@ try {
 function addPlugins(serv: FastifyInstance) {
   serv.register(websocket);
   serv.register(fastifyStatic, {
-        root: path.join(__dirname, 'frontend'),
+        root: path.join(__dirname, 'public'),
         prefix: '/game/match/',
       });
   serv.register(wsRoute);

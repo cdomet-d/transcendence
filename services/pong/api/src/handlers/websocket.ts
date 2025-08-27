@@ -1,11 +1,20 @@
 import fsp from 'fs/promises';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
+import { resolve } from 'path';
+import { __dirname } from '../server.js';
 
 async function upgrade(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-  const script = await fsp.readFile('frontend/index.html');
-  rep.header('Content-Type', 'text/html');
-  rep.send(script);
+  try {
+    const filePath = resolve(__dirname, '../../public/index.html');
+    const script = await fsp.readFile(filePath);
+    rep.header('Content-Type', 'text/html');
+     rep.send(script);
+  }
+  catch (err) {
+    const error = err as NodeJS.ErrnoException;
+    rep.code(500).send(error.message);
+  }
 }
 
 function wshandler(socket: WebSocket, req: FastifyRequest): void {

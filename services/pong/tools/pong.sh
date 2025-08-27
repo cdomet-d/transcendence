@@ -4,6 +4,6 @@
 
 npm install
 
-npx tsc
+# npx tsc
 
 npm start

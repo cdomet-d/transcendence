@@ -1,8 +1,17 @@
 import fsp from 'fs/promises';
+import { resolve } from 'path';
+import { __dirname } from '../server.js';
 async function upgrade(req, rep) {
-    const script = await fsp.readFile('frontend/index.html');
-    rep.header('Content-Type', 'text/html');
-    rep.send(script);
+    try {
+        const filePath = resolve(__dirname, '../../public/index.html');
+        const script = await fsp.readFile(filePath);
+        rep.header('Content-Type', 'text/html');
+        rep.send(script);
+    }
+    catch (err) {
+        const error = err;
+        rep.code(500).send(error.message);
+    }
 }
 function wshandler(socket, req) {
     req.server.log.info('WebSocket connection established');
