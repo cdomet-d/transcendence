@@ -1,10 +1,7 @@
 import fsp from 'fs/promises';
-import { resolve } from 'path';
-import { __dirname } from '../server.js';
 async function upgrade(req, rep) {
     try {
-        const filePath = resolve(__dirname, '../../public/index.html');
-        const script = await fsp.readFile(filePath);
+        const script = await fsp.readFile("/usr/src/app/static/index.html");
         rep.header('Content-Type', 'text/html');
         rep.send(script);
     }

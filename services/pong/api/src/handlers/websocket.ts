@@ -1,15 +1,12 @@
 import fsp from 'fs/promises';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
-import { resolve } from 'path';
-import { __dirname } from '../server.js';
 
 async function upgrade(req: FastifyRequest, rep: FastifyReply): Promise<void> {
   try {
-    const filePath = resolve(__dirname, '../../public/index.html');
-    const script = await fsp.readFile(filePath);
+    const script = await fsp.readFile("/usr/src/app/static/index.html");
     rep.header('Content-Type', 'text/html');
-     rep.send(script);
+    rep.send(script);
   }
   catch (err) {
     const error = err as NodeJS.ErrnoException;
