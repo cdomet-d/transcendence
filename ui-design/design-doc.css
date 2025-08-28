@@ -1,0 +1,41 @@
+@font-face {
+	font-family: titles;
+	src: url(./assets/fonts/rainyhearts.ttf);
+}
+
+h1, h2, h3 {
+	font-family: titles;
+	padding: 0.2em;
+	border-bottom: black solid 0.4vh;
+	border-right: black solid 0.5vh;
+}
+
+p {
+	font-family: Arial, Helvetica, sans-serif;
+	color:#372a25;
+	font-size: large;
+}
+
+.palette {
+	justify-content: center;
+	margin: 8pt;
+}
+
+.palette > div {
+	width: auto;
+	height: 4vh;
+	line-height: 3.4em;
+	margin: 0.4vh;
+	margin-left: 2cqi;
+}
+
+.palette > div > p {
+	margin-left: 2cqi;
+}
+
+.card {
+	padding-left: 5%;
+	padding-right: 5%;
+	padding-top: 2%;
+	padding-bottom: 2%;
+}
