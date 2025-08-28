@@ -1,5 +1,8 @@
 import { wsRequest } from './wsreply.js'
 
+const WIDTH = 480;
+const HEIGHT = 270;
+
 wsRequest();
 
 // const body = document.body as HTMLElement;
@@ -13,31 +16,33 @@ const h1 = document.querySelector('h1') as HTMLElement;
 h1.className = "text-4xl font-bold mb-6";
 // "m-2.5 p-2.5 bg-beige";
 
-const buttons = document.getElementById("buttons") as HTMLElement;
-buttons.className = "flex space-x-4 mb-8";
-buttons.innerHTML = `
-<button id="btn-up" class="rounded bg-amber-400 px-4 py-2 text-white">UP</button>
-<button id="btn-down" class="rounded bg-amber-400 px-4 py-2 text-white">DOWN</button>
-<button id="btn-left" class="rounded bg-amber-400 px-4 py-2 text-white">LEFT</button>
-<button id="btn-right" class="rounded bg-amber-400 px-4 py-2 text-white">RIGHT</button>
-`
-
-const backLink = document.querySelector('a') as HTMLElement;
-backLink.className = "mt-4 py-3 px-8 rounded-full border-1 border-black bg-gradient-to-br from-[#ffcc00] to-[#ea9800] shadow-md hover:scale-105 transition-all text-white text-lg font-semibold"
+// const backLink = document.querySelector('a') as HTMLElement;
+// backLink.className = "mt-4 py-3 px-8 rounded-full border-1 border-black bg-gradient-to-br from-[#ffcc00] to-[#ea9800] shadow-md hover:scale-105 transition-all text-white text-lg font-semibold"
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 canvas.className = "border mb-6";
 // "bg-aliceblue border-4 border-[#8ec7fc] rounded-[20px] m-12";
 
-canvas.width = 480;
-canvas.height = 270;
+canvas.width = WIDTH;
+canvas.height = HEIGHT;
 
-if (canvas.getContext('2d')) {
-    const ctx = canvas.getContext('2d');
-}
-else {
+const ctx = canvas.getContext('2d');
+
+if (ctx === null) {
     console.log("error: context not supported");
     process.exit(1);
 }
+
+ctx.fillRect(10, 108, 10, 54);
+ctx.fillRect(460, 108, 10, 54);
+
+ctx.beginPath();
+ctx.moveTo(WIDTH / 2, 0);
+ctx.lineTo(WIDTH / 2, HEIGHT);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.arc(WIDTH / 2, HEIGHT / 2, 10, 0, Math.PI * 2, false);
+ctx.fill();
 
 // window.addEventListener("load", );
