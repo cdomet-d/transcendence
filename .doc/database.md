@@ -35,23 +35,23 @@
 
 ## Executives decisions :
 
-* A tournament or a regualr 2-players game will be considered the same way database wise to avoid haviong repeting tables.
+* A tournament or a regualr 2-players game will be considered the same way database wise to avoid having repeting tables.
 
 ## Tables
 
-Do I need a user_ID and a user_profile_ID ? If yes, what would be the difference between the two in terms of definition and usage ?
+Do I need a user_ID and a userProfile_ID ? If yes, what would be the difference between the two in terms of definition and usage ?
 
-* User_info : Primary key : User_ID
+* userInfo : Primary key : User_ID
 	* User_ID
 	* Password
+	* Email
 	* Last_connexion
 	* Username
-	* Email
 	* Is_connected
 	* Register_date
 
-* User_profile : Primary key : User_ID
-	* Foreign key: User_info.User_ID
+* userProfile : Primary key : User_ID
+	* Foreign key: userInfo.User_ID
 	* Avatar
 	* Bio
 	* Profile color
@@ -65,26 +65,25 @@ Do I need a user_ID and a user_profile_ID ? If yes, what would be the difference
 * Pending_friend_list : Primary key : ?
 	--> composite key to guarantee the uniqueness of a request ?
 
-* User stats : Primary key : User_ID
-	* User_ID : Foreign key: User_info.User_ID
-	* Nb_match_won
-	* Nb_match_lost
-	* Winstreak
+* userStats : Primary key : User_ID
+	* User_ID : Foreign key: userInfo.User_ID
 	* Longuest_match
 	* Shorest_match
-	* Average_match_duration ?
+	* Nb_match_won
+	* Nb_match_lost
+	* winstreak
+	* averageMatchDuration ?
 
-* Game_info : Primary key : game_ID
+* gameInfo : Primary key : game_ID
 	* game_ID
 	* duration
 	* creation_date
-	* start_time
-	* winner_ID : Foreign key : User_info.User_ID
-	* host_ID : Foreign key : User_info.User_ID
+	* winner_ID : Foreign key : userInfo.User_ID
+	* host_ID : Foreign key : userInfo.User_ID
 
 * Game_room : Primary key : gameRoom_ID
 	* gameRoom_ID
-	* winner_ID  : Foreign key : User_info.User_ID
+	* winner_ID  : Foreign key : userInfo.User_ID
 	* Nb_players
 
 
@@ -92,4 +91,4 @@ Do I need a user_ID and a user_profile_ID ? If yes, what would be the difference
 
 * Game_room table will probably need addition depending on which matchmaking algorithm we choose to implement
 * Still working on composite key for friends, blocked and pending lists
-* I saw a different ID for the profile and the actual user in nmilan's databas eand I'm missing to see the point there, so still WIP
+* I saw a different ID for the profile and the actual user in nmilan's database and I'm missing to see the point there, so still WIP
