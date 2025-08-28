@@ -1,16 +1,14 @@
-const { connect } = require('nats');
+require('dotenv').config();
+
+const { connect, StringCodec } = require('nats');
 
 (async () => {
-  const nc = await connect({ servers: "nats://nats-server:4222" });
-  const js = nc.jetstream();
+  const nc = await connect({ servers: "nats://nats-server:4222" , token: process.env.NATS_SERVER_TOKEN });
+  const sc = StringCodec();
 
-  try {
-    await js.addStream({ name: 'mystream', subjects: ['my-subject'] });
-  } catch (err) {
-  }
+  nc.publish('my-subject', sc.encode('Hello from MM!'));
+  console.log(`Published message to 'my-subject'`);
 
-  const ack = await js.publish('my-subject', Buffer.from('Hello from MM!'));
-  console.log(`Published with sequence: ${ack.seq}`);
-
+  await nc.flush();
   await nc.drain();
 })();

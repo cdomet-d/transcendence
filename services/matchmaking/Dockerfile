@@ -11,7 +11,7 @@ EXPOSE 1818
 # --------------- NATS
 WORKDIR /app
 
-RUN npm install nats
+RUN npm install nats dotenv
 
 COPY ./entrypoint/publisher.js ./
 

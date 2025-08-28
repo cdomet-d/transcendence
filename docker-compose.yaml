@@ -72,11 +72,13 @@ services:
       dockerfile: Dockerfile
     container_name: matchmaking
     image: matchmaking:0.0.1
+    environment:
+      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
     networks:
       - transcendence
     restart: unless-stopped
     depends_on:
-      - nats
+      - nats-server
   monitoring:
     build:
       context: ./services/monitoring
@@ -86,12 +88,14 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
-  nats:
+  nats-server:
     build:
       context: ./services/NATS
       dockerfile: Dockerfile
-    container_name: nats
+    container_name: nats-server
     image: nats:0.0.1
+    environment:
+      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
     networks:
       - transcendence
     ports:
@@ -122,6 +126,7 @@ services:
     environment:
       - NGINXIP=nginx
       - PORT=2020
+      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
     image: pong:0.0.1
     networks:
       - transcendence
@@ -132,7 +137,7 @@ services:
     volumes:
       - pong:/usr/src/app
     depends_on:
-      - nats
+      - nats-server
   users:
     build:
       context: ./services/users

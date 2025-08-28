@@ -1,15 +1,18 @@
-const { connect } = require('nats');
+require('dotenv').config();
+
+const { connect, StringCodec } = require('nats');
 
 (async () => {
-  const nc = await connect({ servers: "nats://nats-server:4222" });
-  const js = nc.jetstream();
+  const nc = await connect({ servers: "nats://nats-server:4222" , token: process.env.NATS_SERVER_TOKEN});
 
-  const sub = await js.subscribe('my-subject');
+  const sc = StringCodec();
+
+  const sub = nc.subscribe('my-subject');
   (async () => {
     for await (const msg of sub) {
-      console.log(`Received message: ${msg.data.toString()}`);
-      msg.ack();
+      console.log(`Received message: ${sc.decode(msg.data)}`);
     }
   })();
 
+  console.log(`Listening for messages on "my-subject"...`);
 })();

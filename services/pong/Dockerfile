@@ -13,7 +13,7 @@ EXPOSE 2020
 # --------------- NATS
 WORKDIR /app
 
-RUN npm install nats
+RUN npm install nats dotenv
 
 COPY ./entrypoint/subscriber.js ./
 
