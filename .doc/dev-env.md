@@ -25,3 +25,4 @@ tailwindcss peut etre utilisé de différentes manières : https://tailwindcss.c
 Avec le CLI de tailwindcss:\
 cmd pour compiler un fichier css : **npx @tailwindcss/cli -i ./static/style-src.css -o ./static/style-dist.css** \
 (npx permet d'executer un paquet node.js)
+cette commande va recupérer tout le tailwind css dans nos fichiers et générer du css standard dans *./static/style-dist.css*
