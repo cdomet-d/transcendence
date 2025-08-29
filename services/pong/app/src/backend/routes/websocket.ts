@@ -2,7 +2,7 @@ import {upgrade, wshandler} from '../handlers/websocket.js'
 import type { FastifyPluginCallback } from 'fastify';
 
 const opts = {
-    schema: {}, //TODO: get coralie's json object
+    schema: {},
     handler: upgrade,
     wsHandler: wshandler,
 }
