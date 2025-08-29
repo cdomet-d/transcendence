@@ -13,7 +13,7 @@ let leftPad: paddelPos = {x: 10, y: 108};
 let rightPad: paddelPos = {x: 460, y: 108};
 
 function paddlePos(socket: WebSocket, message: string) {
-    const key: string = message.slice(0, 5);
+    const key: string = message.slice(5, message.length);
     if (key === "ArrowUp") {
         up(rightPad, socket);
     }
@@ -31,13 +31,13 @@ function paddlePos(socket: WebSocket, message: string) {
 function up(pad: paddelPos, socket: WebSocket) {
     if (pad.y - padSpeed > 0)
         pad.y -= padSpeed;
-    socket.send(pad.y);
+    socket.send(pad.y.toString());
 }
 
 function down(pad: paddelPos, socket: WebSocket) {
     if (pad.y + padSpeed < (HEIGHT - 54))
         pad.y += padSpeed;
-    socket.send(pad.y);
+    socket.send(pad.y.toString());
 }
 
 export { paddlePos };

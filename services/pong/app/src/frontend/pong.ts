@@ -70,15 +70,15 @@ function createKeyDownEvent(ctx: CanvasRenderingContext2D, ws: WebSocket) {
 		if (event.key === "w")
 			updatePaddlePos(leftPad, "Pad: w", ws, ctx);
 		if (event.key === "s")
-		   updatePaddlePos(leftPad, "Pad: s", ws, ctx);
+		    updatePaddlePos(leftPad, "Pad: s", ws, ctx);
 	}
 }
 
 function updatePaddlePos(pad: paddelPos, key: string, ws: WebSocket, ctx: CanvasRenderingContext2D) {
 	ws.send(key);
 	ws.onmessage = (event) => {
-		const newPos: number = event.data;
-		ctx.clearRect(rightPad.x, rightPad.y, 10, 54);
+		const newPos: number = Number(event.data);
+		ctx.clearRect(pad.x, pad.y, 10, 54);
 		pad.y = newPos;
 		renderGame(ctx);
 	};
