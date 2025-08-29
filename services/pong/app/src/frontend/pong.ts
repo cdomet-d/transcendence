@@ -45,10 +45,10 @@ function drawBall(ctx: CanvasRenderingContext2D) {
 }
 
 function keyEventHandler(event: KeyboardEvent): void {
-    if (event.key === "ArrowUp")
-        ;        
-    if (event.key === "ArrowDown")
-        ;
+    // if (event.key === "ArrowUp")
+    //     ;        
+    // if (event.key === "ArrowDown")
+    //     ;
 }
 
 interface paddelPos {
@@ -57,9 +57,9 @@ interface paddelPos {
 }
 
 function renderGame(ctx: CanvasRenderingContext2D) {
-    let leftPad :paddelPos = {10, 108};
+    // let leftPad :paddelPos = {10 108};
     drawMiddleLine(ctx);
-    drawMiddleLine(ctx);
+    drawPaddle(ctx, 0 , 0);
     drawBall(ctx);
 }
 

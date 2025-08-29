@@ -1,6 +1,6 @@
 #!/bin/sh
 
-> /usr/src/app/server.log
+> /usr/app/server.log
 
 npm install
 

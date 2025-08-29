@@ -4,7 +4,7 @@ import type { WebSocket } from '@fastify/websocket';
 
 async function upgrade(req: FastifyRequest, rep: FastifyReply): Promise<void> {
   try {
-    const script = await fsp.readFile("/usr/src/app/static/index.html");
+    const script = await fsp.readFile("/usr/app/static/index.html");
     rep.header('Content-Type', 'text/html');
     rep.send(script);
   }

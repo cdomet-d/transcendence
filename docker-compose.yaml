@@ -118,7 +118,7 @@ services:
       - ssl-key.pem
       - ssl-cert.pem
     volumes:
-      - ./services/pong/api:/usr/src/app
+      - ./services/pong/app:/usr/app
   # users:
   #   build:
   #     context: ./services/users

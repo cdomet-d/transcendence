@@ -22,7 +22,7 @@ function checkProxy(address: string, hop: number): boolean {
 
 const options = {
   logger: {
-    file: '/usr/src/app/server.log'
+    file: '/usr/app/server.log'
   },
   trustProxy: checkProxy,
   https: {
