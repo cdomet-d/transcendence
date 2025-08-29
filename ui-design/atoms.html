@@ -8,21 +8,69 @@
 <body>
 	<div class="card">
 		<h1> Atoms element designs </h1>
-
-		<h2> Palette </h2>
-
 		<div class="palette">
+			<h1> Spacings and sizes </h1>
+			<h2> Spacings (paddings, margins) </h2>
+			<p> Spacing determines the neutral space between elements. It's controlled through margins and padding. Our
+				spacing is determined by increments of 0.4. We start at 0.4, then increment by that value. </p>
+			<p> Spacing variables are defined as follow:</p>
+			<ul>
+				<li>--space-xs: 0.4rem;</li>
+				<li>--space-s: 0.8rem;</li>
+				<li>--space-sm: 1.2rem;</li>
+				<li>--space-m: 1.6rem;</li>
+				<li>--space-ml: 2.0rem;</li>
+				<li>--space-l: 2.4rem; </li>
+			</ul>
+
+			<p> The above values are css variables that can be applied in place of a "hardcoded" value, like so: </p>
+			<p> Do:</p>
+			<ul>
+				<li>border-bottom: #fed68d solid var(--space-xs);</li>
+				<li>border-right: #fed68d solid var(--space-xs);</li>
+			</ul>
+			<p> Don't:</p>
+			<ul>
+				<li>border-bottom: #fed68d solid 8px; </li>
+				<li>border-right: #fed68d solid 8px;</li>
+			</ul>
+			<p> Spacing and margins are better applied on the <bold> parent </bold> element of a item, to ensure that
+				formatting is coming from the outside in.</p>
+
+			<h2> Sizes </h2>
+			<p> Sizing is relative to the height and width of things (titles, buttons, colored elements...). </p>
+			<p> We apply the same unit grid to sizing than we did to spacing, meaning that our increment value is 0.4;
+				the difference is that the base value is 16px (the industry standard).</p>
+			<p> All sizing MUST be defined using <code> rem </code>, which are a responsive unit based on the root font
+				size (16px). This allows us to maintain consistent, harmonious and responsive sizing accross the app.
+			</p>
+
+			<p> Sizing variables are defined as follow:</p>
+			<ul>
+				<li>--xxl: 6rem </li>
+				<li>--xl: 5rem </li>
+				<li>--l: 4rem </li>
+				<li>--m: 3rem </li>
+				<li>--regular: 1rem </li>
+			</ul>
+		</div>
+		<div class="palette">
+			<h1> Colors </h1>
+			<h2> Palette </h2>
 			<p> HEX: fff8ea // RGB: [ 255 248 234 ] </p>
 			<div style="background-color: #fff8ea;"></div>
-			<div style="background: linear-gradient(90deg,rgba(255, 248, 234, 1) 0%,rgba(255, 248, 234, 0) 100%);"></div>
+			<div style="background: linear-gradient(90deg,rgba(255, 248, 234, 1) 0%,rgba(255, 248, 234, 0) 100%);">
+			</div>
 
 			<p> HEX: ffe999 // RGB: [ 255 233 153 ] </p>
 			<div style="background-color: #ffe999;"></div>
-			<div style="background: linear-gradient(90deg,rgba(255, 233, 153, 1) 0%,rgba(255, 233, 153, 0) 100%);"></div>
+			<div style="background: linear-gradient(90deg,rgba(255, 233, 153, 1) 0%,rgba(255, 233, 153, 0) 100%);">
+			</div>
 
 			<p> HEX: fed68d // RGB: [ 254 214 141 ] </p>
 			<div style="background-color: #fed68d;"></div>
-			<div style="background: linear-gradient(90deg,rgba(254, 214, 141, 1) 0%,rgba(254, 214, 141, 0) 100%);"></div>
+			<div style="background: linear-gradient(90deg,rgba(254, 214, 141, 1) 0%,rgba(254, 214, 141, 0) 100%);">
+			</div>
 
 			<p> HEX: 835441 // RGB: [ 131 84 65 ] </p>
 			<div style="background-color: #835441;"></div>
@@ -32,10 +80,8 @@
 			<div style="background-color: #372a25;"></div>
 			<div style="background: linear-gradient(90deg,rgba(55, 42, 37, 1) 0%,rgba(55, 42, 37, 0) 100%);"></div>
 		</div>
-
-		<h2> Accessible color combinations </h2>
-
 		<div class="palette">
+			<h2> Accessible color combinations </h2>
 			<div style="background-color: #fff8ea;">
 				<p style="color:#372a25;"> Text: 372a25 </p>
 			</div>
@@ -62,17 +108,128 @@
 			</div>
 		</div>
 
-		<h2> Textual elements </h2>
-		<h3> Fonts </h3>
-		<div class="fonts">
-			<h1 style="font-family: titles;""> Rainyhearts | Color: 372a25 </h1>
-			<h2> Rainyhearts | Color: 372a25 </h2>
-			<h3> Rainyhearts | Color: 372a25 </h3>
+		<h1> Typography </h1>
+		<div class="block">
+			<h2> Fonts </h2>
+			<p> The chosen fonts for the app are:</p>
+			<ul>
+				<li>Titles: Rainyhearts</li>
+				<li> Body: Franklin Gothic Medium', 'Arial Narrow </li>
+			</ul>
+
+			<p>All titles have the following attributes: </p>
+			<ul>
+				<li>margin: 0px 0px 0px 0px</li>
+				<li>padding: var(--space-s) 0px var(--space-s) 0px</li>
+			</ul>
+			<p> Notes </p>
+			<ul>
+				<li> Gradient represent the elements' inherited padding </li>
+				<li> The border is the total size of the element (line height + padding) </li>
+			</ul>
+
+			<div>
+				<h3> h1 </h3>
+				<p> font-family: rainyhearts // color: var(--light-txt-coffee) // font-size: var(--xxl) // line-height:
+					130% // border: none </p>
+			</div>
+
+			<div class="content">
+				<div class="container">
+					<div class="padding"> </div>
+					<h1> This is an example title</h1>
+					<div class="padding"></div>
+				</div>
+			</div>
+
+			<div>
+				<h3> h2 </h3>
+				<p> font-family: rainyhearts // color: var(--light-txt-coffee) // font-size: var(--xl) // line-height:
+					110% // border: none </p>
+			</div>
+
+			<div class="content">
+				<div class="container">
+					<div class="padding"> </div>
+					<h2> This is an example title</h2>
+					<div class="padding"></div>
+				</div>
+			</div>
+
+			<div>
+				<h3> h3 </h3>
+				<p>font-family: rainyhearts // color: var(--light-txt-coffee) // font-size: var(--l)// line-height:
+					110%//
+					border: none</p>
+			</div>
+			<div class="content">
+				<div class="container">
+					<div class="padding"> </div>
+					<h3> This is an example title </h3>
+					<div class="padding"></div>
+				</div>
+			</div>
+			<div>
+				<h3> h4 </h3>
+				<p>font-family: rainyhearts // color: var(--light-txt-coffee) // font-size: var(--l)// line-height:
+					110%//
+					border: none</p>
+			</div>
+
+			<div class="content">
+				<div class="container">
+					<div class="padding"> </div>
+					<h4> This is an example title </h4>
+					<div class="padding"></div>
+				</div>
+			</div>
+
+			<div>
+				<h3> body paragraph </h3>
+				<p>font-family: 'Franklin Gothic Medium', 'Arial Narrow' // color: var(--light-txt-coffee) // font-size:
+					var(--regular) // line-height:
+					140% // border: none</p>
+			</div>
+			<div class="content">
+				<div class="container">
+					<p>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla egestas laoreet dui, at rutrum
+						sapien tristique eget. Pellentesque viverra sed enim eget auctor. Nulla facilisi. Donec sit amet
+						porttitor urna, ut scelerisque magna. Duis viverra congue molestie. Nam cursus mauris lectus, ut
+						auctor tellus ornare ac. Nam vel mauris erat. Quisque orci mi, ornare sed justo id, volutpat
+						egestas tellus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur
+						ridiculus mus. Proin dignissim dui a placerat sagittis. Pellentesque venenatis id mi quis
+						tempor. Pellentesque pretium volutpat nunc eget consectetur. Vestibulum consequat nibh eu ornare
+						vestibulum. Nullam lacinia porttitor condimentum. Morbi vel feugiat enim.
+					</p>
+					<div class="p-padding"> </div>
+				</div>
+				<div class="container">
+					<p>
+						Etiam dui est, consequat eu sodales ac, elementum nec nisl. Sed bibendum nisi ac libero
+						hendrerit, id tempor mauris facilisis. Etiam ac quam vel sem placerat accumsan. Duis iaculis
+						lectus quis molestie porttitor. Fusce sodales id mi ac dapibus. Maecenas tristique sem quis ex
+						imperdiet, vel convallis ligula tempus. Vivamus mauris erat, aliquam dapibus leo quis, cursus
+						auctor enim. Vestibulum posuere metus pellentesque, aliquam mauris et, finibus felis. Quisque
+						pellentesque ligula non scelerisque sagittis. In consequat tortor mauris, non semper quam mattis
+						non. Sed et aliquam quam. Etiam ullamcorper dui non neque congue, vitae molestie tortor maximus.
+					</p>
+					<div class="p-padding"></div>
+				</div>
+			</div>
 		</div>
 
+		<h1> Inputs </h1>
+		<div class="block">
+
+			<h2> Text input </h2>
+			<input type="radio"> </input>
+			<input type="checkbox"> </input>
+			<input type="text" value="search"> </input>
+			<input type="submit" value="submit"> </input>
+			<input type="button" value="button"> </input>
+		</div>
 	</div>
-
-
 </body>
 
 </html>

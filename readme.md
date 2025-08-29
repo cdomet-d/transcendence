@@ -9,6 +9,7 @@
 	- [API](#api)
 	- [Friendships](#friendships)
 	- [Tools](#tools)
+	- [Front-End theory](#front-end-theory)
 	- [Design Systems for Front-End](#design-systems-for-front-end)
 		- [Design Foundations](#design-foundations)
 		- [Libraries](#libraries)
@@ -63,6 +64,11 @@
 
 - [JSON/YAML Vizualizer](https://todiagram.com/)
   - Useful to vizualise API objects.
+
+## Front-End theory
+
+- [The DOM API](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model)
+  - Dynamically generate and manipulate objects rendered to the client's screen
 
 ## Design Systems for Front-End
 

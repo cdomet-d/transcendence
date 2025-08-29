@@ -1,41 +1,207 @@
 @font-face {
-	font-family: titles;
+	font-family: rainyhearts;
 	src: url(./assets/fonts/rainyhearts.ttf);
 }
 
-h1, h2, h3 {
-	font-family: titles;
-	padding: 0.2em;
-	border-bottom: black solid 0.4vh;
-	border-right: black solid 0.5vh;
+:root {
+	font-size: 100%;
+	font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	font-weight: 50;
+
+	/* Sizing */
+	--xxl: 6rem;
+	--xl: 5rem;
+	--l: 4rem;
+	--m: 3rem;
+	--s: 2rem;
+	--xs: 1.6rem;
+	--regular: 1rem;
+
+	/* Spacing */
+	--space-xs: 0.4rem;
+	--space-s: 0.8rem;
+	--space-sm: 1.2rem;
+	--space-m: 1.6rem;
+	--space-ml: 2.0rem;
+	--space-l: 2.4rem;
+	--space-xl: 3.2rem;
+
+	/* Light theme */
+	--light-bg: #fff8ea;
+	--light-txt-neutral: #372a25;
+	--light-txt-coffee: #835441 ;
+	
+	/* Dark Theme */
+	--dark-bg-coffee: #835441;
+	--dark-coffee-txt: #fff8ea;
+	
+	--dark-bg-deep: #372a25 ;
+	--dark-deep-txt-orange: #fed68d;
+	--dark-deep-txt: #fff8ea;
+
+	/* Accent colors */
+	--yellow-accent: #ffe999;
+	--orange-accent: #fed68d;
+	margin: var(--space-m)
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0px 0px 0px 0px;
+	padding: var(--space-s) 0px var(--space-s) 0px;
+}
+
+h1 {
+	border-bottom: var(--orange-accent) solid var(--space-xs);
+	border-right: var(--orange-accent) solid var(--space-xs);
 }
 
 p {
-	font-family: Arial, Helvetica, sans-serif;
+	font-size: var(--regular);
+	margin: 0px 0px var(--space-xs) 0px;
+	line-height: var(--space-sm);
+}
+
+ul {
+	font-size: var(--regular);
+	margin: 0px var(--space-xs) var(--space-xs) 0px;
+	line-height: var(--space-sm);
+}
+
+label {
+	font-family: rainyhearts;
+	font-variant-caps: all-small-caps;
+	font-size: var(--s);
+	line-height: var(--space-m);
 	color:#372a25;
-	font-size: large;
 }
 
-.palette {
-	justify-content: center;
-	margin: 8pt;
-}
-
-.palette > div {
-	width: auto;
-	height: 4vh;
-	line-height: 3.4em;
-	margin: 0.4vh;
-	margin-left: 2cqi;
-}
-
-.palette > div > p {
-	margin-left: 2cqi;
+input[type="text"] {
+	font-size: var(--m);
+	font-family: rainyhearts;
+	color: var(--light-txt-coffee);
+	font-variant-caps:all-petite-caps;
+	background-color: var(--light-bg);
+	height: var(--xs);
+	padding: var(--xs) var(--xs) var(--xs) var(--xs);
+	border:none;
+	border-bottom: #835441 solid 3px;
+	border-right: #835441 solid 4px;
 }
 
 .card {
-	padding-left: 5%;
-	padding-right: 5%;
-	padding-top: 2%;
-	padding-bottom: 2%;
+	width: auto;
+	display: grid;
+	grid-template-columns: auto;
+	gap: var(--space-m);
+	overflow: hidden;
+}
+
+.palette {
+	box-sizing: border-box;
+	display: grid;
+	gap: var(--space-xs);
+	grid-template-columns: subgrid;
+	justify-content: start;
+	padding: var(--space-s);
+}
+
+.palette div {
+	margin-left: var(--space-m);
+	height: var(--space-ml);
+	width: auto;
+}
+
+.palette>div>p {
+	margin-left: var(--space-s);
+	line-height: var(--space-ml);
+}
+
+.palette p {
+	margin-left: var(--space-s);
+}
+
+.block {
+	display: grid;
+	grid-template-columns: subgrid;
+	justify-content: start;
+	padding: var(--space-xs);
+	gap: var(--space-xs);
+}
+
+.block p {
+	margin-left: var(--space-s);
+}
+
+.content {
+	display: grid;
+	grid-template-columns: subgrid;
+	justify-content: start;
+	padding: var(--space-xs);
+	gap: var(--space-xs);
+	color: var(--light-txt-neutral);
+}
+
+.content .padding {
+	height: var(--space-s);
+	width:auto;
+	background: radial-gradient(circle,rgba(255, 233, 153, 0.38) 0%, rgba(131, 84, 65, 1) 100%);
+}
+
+.content .p-padding {
+	height: var(--space-xs);
+	width:auto;
+	background: radial-gradient(circle,rgba(255, 233, 153, 0.38) 0%, rgba(131, 84, 65, 1) 100%);
+}
+
+.content .container {
+	outline: #372a25 solid 1px;
+	height: fit-content;
+}
+
+.content p {
+	padding: 0px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
+	line-height: 140%;
+	font-size: var(--regular);
+	font-family: rainyhearts;
+}
+.content h1 {
+	padding: 0px 0px 0px 0px;
+
+	font-family: rainyhearts;
+	color: var(--light-txt-coffee);
+	font-size: var(--xxl);
+	line-height: 130%;
+	border: none;
+}
+
+.content h2 {
+	padding: 0px 0px 0px 0px;
+
+	font-family: rainyhearts;
+	color: var(--light-txt-coffee);
+	font-size: var(--xl);
+	line-height: 110%;
+	border: none;
+}
+
+.content h3 {
+	font-family: rainyhearts;
+	color: var(--light-txt-coffee);
+	font-size: var(--l);
+	line-height: 110%;
+	border: none;
+}
+
+.content h4 {
+	font-family: rainyhearts;
+	color: var(--light-txt-coffee);
+	font-size: var(--m);
+	line-height: 100%;
+	border: none;
 }
