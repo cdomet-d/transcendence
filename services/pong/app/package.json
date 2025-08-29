@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "build:css": "npx @tailwindcss/cli -i ./static/style-src.css -o ./static/style-dist.css",
     "watch:css": "npx @tailwindcss/cli -i ./static/style-src.css -o ./static/style-dist.css --watch",
     "start": "concurrently \"npm run watch:css\" \"nodemon\""
   },
