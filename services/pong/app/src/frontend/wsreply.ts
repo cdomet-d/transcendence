@@ -1,3 +1,5 @@
+import { pong } from './pong.js'
+
 function wsRequest() {
     const ws = new WebSocket('wss://localhost:8443/game/match');
 
@@ -8,12 +10,11 @@ function wsRequest() {
 
     ws.onopen = () => {
         console.log("WebSocket connection established!")
-        ws.send("hey server");
-    }
-
-    ws.onmessage = (event) => {
-        console.log("message from server:", event.data);
+        ws.onmessage = (event) => {
+            console.log("message from server:", event.data);
+        }
+        pong(ws);
     }
 }
 
-export { wsRequest }
+wsRequest();
