@@ -80,7 +80,7 @@ function updatePaddlePos(pad: paddelPos, key: string, ws: WebSocket, ctx: Canvas
 		const newPos: number = Number(event.data);
 		ctx.clearRect(pad.x, pad.y, 10, 54);
 		pad.y = newPos;
-		renderGame(ctx);
+		drawPaddle(ctx);
 	};
 }
 
