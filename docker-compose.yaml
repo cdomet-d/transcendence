@@ -118,7 +118,7 @@ services:
       - ssl-key.pem
       - ssl-cert.pem
     volumes:
-      - pong:/usr/src/app
+      - ./services/pong/app:/usr/app
   users:
     build:
       context: ./services/users
@@ -129,10 +129,3 @@ services:
       - transcendence
     restart: unless-stopped
 
-volumes:
-  pong:
-    driver: local
-    driver_opts:
-      device: services/pong/js
-      o: bind
-      type: none
