@@ -7,12 +7,12 @@ const { connect, StringCodec } = require('nats');
 
   const sc = StringCodec();
 
-  const sub = nc.subscribe('my-subject');
+  const sub = nc.subscribe('matchmaking.ready');
   (async () => {
     for await (const msg of sub) {
       console.log(`Received message: ${sc.decode(msg.data)}`);
     }
   })();
 
-  console.log(`Listening for messages on "my-subject"...`);
+  console.log(`Listening for messages on "matchmaking.ready"...`);
 })();

@@ -8,14 +8,6 @@ WORKDIR /usr/src/app
 
 EXPOSE 1818
 
-# --------------- NATS
-WORKDIR /app
-
 RUN npm install nats dotenv
-
-COPY ./entrypoint/publisher.js ./
-
-ENTRYPOINT [ "node", "publisher.js" ]
-# --------------- NATS
 
 CMD ["node", "listener.js"]

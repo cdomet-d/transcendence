@@ -1,5 +1,6 @@
 
 import http from 'http';
+import { launchMM } from './publisher.js';
 
 const server = http.createServer((req, res) => {
 	res.statusCode = 200;
@@ -9,3 +10,5 @@ const server = http.createServer((req, res) => {
 
 console.log('Matchmaking Microservice listening on 1818')
 server.listen(1818);
+
+launchMM();

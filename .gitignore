@@ -8,3 +8,4 @@ web/dist/
 node_modules/
 .env
 server.log
+package*.json

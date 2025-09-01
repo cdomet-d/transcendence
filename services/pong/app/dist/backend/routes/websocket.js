@@ -1,0 +1,11 @@
+import { upgrade, wshandler } from '../handlers/websocket.js';
+const opts = {
+    schema: {},
+    handler: upgrade,
+    wsHandler: wshandler,
+};
+const wsRoute = function (serv, options, done) {
+    serv.get('/game/match', opts);
+    done();
+};
+export { wsRoute };
