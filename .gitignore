@@ -8,4 +8,6 @@ web/dist/
 node_modules/
 .env
 server.log
+services/pong/app/dist/
+services/pong/app/static/style-dist.css
 package*.json
