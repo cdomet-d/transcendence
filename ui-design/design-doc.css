@@ -27,6 +27,7 @@
 	--space-xl: 3.2rem;
 
 	/* Light theme */
+	--ultra-light-bg: #fffcf7;
 	--light-bg: #fff8ea;
 	--light-txt-neutral: #372a25;
 	--light-txt-coffee: #835441;
@@ -43,6 +44,7 @@
 	--yellow-accent: #ffe999;
 	--orange-accent: #fed68d;
 	--watered-down-coffee: #d5b6aa;
+	--deep-red: #c32f27;
 
 	margin: var(--space-m)
 }
@@ -64,7 +66,7 @@ h1 {
 
 p {
 	font-size: var(--regular);
-	margin: 0px 0px var(--space-xs) 0px;
+	margin: 0.2rem 0px 0.2rem 0px;
 	line-height: var(--space-sm);
 }
 
@@ -82,70 +84,152 @@ label {
 	color: #372a25;
 }
 
-.input-default {
+input:focus {
+	outline: none;
+}
+
+.input-inactive {
+	box-sizing: border-box;
+	background-color: var(--ultra-light-bg);
+	border-radius: 5px;
 	border: none;
+	box-shadow: 2px 2px 2px var(--watered-down-coffee);
 	color: var(--light-txt-coffee);
 	font-family: rainyhearts;
 	font-size: var(--s);
 	font-weight: bolder;
 	height: var(--m);
 	padding-left: var(--regular);
-	box-shadow: 3px 3px 5px var(--watered-down-coffee);
-	border-radius: 5px;
 }
 
-.input-select {
+.input-active {
+	box-sizing: border-box;
+	background-color: var(--ultra-light-bg);
 	border-radius: 5px;
 	border: none;
-	box-shadow: 3px 3px 5px var(--watered-down-coffee);
+	box-shadow: 1px 1px 2px var(--watered-down-coffee) inset;
 	color: var(--light-txt-coffee);
 	font-family: rainyhearts;
 	font-size: var(--s);
 	font-weight: bolder;
 	height: var(--m);
-	outline: 2px solid var(--watered-down-coffee);
+	outline: 1px solid var(--watered-down-coffee);
 	padding-left: var(--regular);
 }
 
-input[type="button"] {
+.input-focus,
+.input-focus:focus {
+	box-sizing: border-box;
+	background-color: var(--ultra-light-bg);
+	border-radius: 5px;
 	border: none;
+	box-shadow: 1px 1px 2px var(--watered-down-coffee) inset;
 	color: var(--light-txt-coffee);
-	background-color: white;
 	font-family: rainyhearts;
 	font-size: var(--s);
 	font-weight: bolder;
 	height: var(--m);
-	box-shadow: 3px 3px 5px var(--watered-down-coffee);
+	outline: 1px solid var(--watered-down-coffee);
+	padding-left: var(--regular);
+}
+
+.input-focus:focus {
+	outline: 1px solid var(--watered-down-coffee);
+}
+
+.input-disabled {
+	box-sizing: border-box;
+	background-color: var(--ultra-light-bg);
 	border-radius: 5px;
-}
-
-input[type="button"]:hover {
-	background: linear-gradient(90deg, rgba(254, 214, 141, 0.50) 0%, rgba(255, 255, 255, 1) 70%);
-	color: var(--light-txt-coffee);
-}
-
-input[type="submit"] {
 	border: none;
-	color: var(--light-txt-coffee);
-	background-color: white;
+	box-shadow: 1px 1px 2px var(--watered-down-coffee) inset;
+	color: var(--watered-down-coffee);
 	font-family: rainyhearts;
 	font-size: var(--s);
 	font-weight: bolder;
 	height: var(--m);
-	box-shadow: 3px 3px 5px var(--watered-down-coffee);
-	border-radius: 5px;
+	padding-left: var(--regular);
 }
 
-input[type="submit"]:hover {
+.input-error, .input-error:focus {
+	box-sizing: border-box;
+	background-color: var(--ultra-light-bg);
+	border-radius: 5px;
+	border:none;
+	box-shadow: 1px 1px 2px var(--deep-red) inset;
+	color: var(--deep-red);
+	font-family: rainyhearts;
+	font-size: var(--s);
+	font-weight: bolder;
+	height: var(--m);
+	outline: var(--deep-red) 1px solid;	
+	padding-left: var(--regular);
+}
+
+.button-inactive {
+	box-sizing: border-box;
+	background-color: var(--ultra-light-bg);
+	border-radius: 5px;
+	border: none;
+	box-shadow: 2px 2px 2px var(--watered-down-coffee);
+	color: var(--light-txt-coffee);
+	font-family: rainyhearts;
+	font-size: var(--s);
+	font-weight: bolder;
+	height: var(--m);
+	padding-left: var(--regular);
+}
+
+.button-hover {
+	box-sizing: border-box;
+	background-color: var(--ultra-light-bg);
+	border-radius: 5px;
+	border: none;
+	box-shadow: 2px 2px 2px var(--watered-down-coffee);
+	color: var(--light-txt-coffee);
+	font-family: rainyhearts;
+	font-size: var(--s);
+	font-weight: bolder;
+	height: var(--m);
+	padding-left: var(--regular);
 	background: linear-gradient(90deg, rgba(254, 214, 141, 0.50) 0%, rgba(255, 255, 255, 1) 70%);
 	color: var(--light-txt-coffee);
+}
+
+.button-active {
+	box-sizing: border-box;
+	background-color: var(--ultra-light-bg);
+	border-radius: 5px;
+	border: none;
+	box-shadow: 2px 2px 2px var(--watered-down-coffee) inset;
+	color: var(--light-txt-coffee);
+	font-family: rainyhearts;
+	font-size: var(--s);
+	font-weight: bolder;
+	height: var(--m);
+	padding-left: var(--regular);
+	background-color: var(--ultra-light-bg);
+	color: var(--light-txt-coffee);
+}
+
+.button-disabled {
+	box-sizing: border-box;
+	background-color: var(--ultra-light-bg);
+	border-radius: 5px;
+	border: none;
+	box-shadow: 1px 1px 2px var(--watered-down-coffee) inset;
+	color: var(--watered-down-coffee);
+	font-family: rainyhearts;
+	font-size: var(--s);
+	font-weight: bolder;
+	height: var(--m);
+	padding-left: var(--regular);
 }
 
 input[type="radio"] {
 	/* background: linear-gradient(90deg, rgba(254, 214, 141, 0.50) 0%, rgba(255, 255, 255, 1) 70%); */
 	background-color: var(--light-txt-coffee);
 }
-
 
 .card {
 	width: auto;
