@@ -5,7 +5,7 @@
 
 :root {
 	font-size: 100%;
-	font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 	font-weight: 50;
 
 	/* Sizing */
@@ -29,19 +29,21 @@
 	/* Light theme */
 	--light-bg: #fff8ea;
 	--light-txt-neutral: #372a25;
-	--light-txt-coffee: #835441 ;
-	
+	--light-txt-coffee: #835441;
+
 	/* Dark Theme */
 	--dark-bg-coffee: #835441;
 	--dark-coffee-txt: #fff8ea;
-	
-	--dark-bg-deep: #372a25 ;
+
+	--dark-bg-deep: #372a25;
 	--dark-deep-txt-orange: #fed68d;
 	--dark-deep-txt: #fff8ea;
 
 	/* Accent colors */
 	--yellow-accent: #ffe999;
 	--orange-accent: #fed68d;
+	--watered-down-coffee: #d5b6aa;
+
 	margin: var(--space-m)
 }
 
@@ -77,21 +79,73 @@ label {
 	font-variant-caps: all-small-caps;
 	font-size: var(--s);
 	line-height: var(--space-m);
-	color:#372a25;
+	color: #372a25;
 }
 
-input[type="text"] {
-	font-size: var(--m);
-	font-family: rainyhearts;
+.input-default {
+	border: none;
 	color: var(--light-txt-coffee);
-	font-variant-caps:all-petite-caps;
-	background-color: var(--light-bg);
-	height: var(--xs);
-	padding: var(--xs) var(--xs) var(--xs) var(--xs);
-	border:none;
-	border-bottom: #835441 solid 3px;
-	border-right: #835441 solid 4px;
+	font-family: rainyhearts;
+	font-size: var(--s);
+	font-weight: bolder;
+	height: var(--m);
+	padding-left: var(--regular);
+	box-shadow: 3px 3px 5px var(--watered-down-coffee);
+	border-radius: 5px;
 }
+
+.input-select {
+	border-radius: 5px;
+	border: none;
+	box-shadow: 3px 3px 5px var(--watered-down-coffee);
+	color: var(--light-txt-coffee);
+	font-family: rainyhearts;
+	font-size: var(--s);
+	font-weight: bolder;
+	height: var(--m);
+	outline: 2px solid var(--watered-down-coffee);
+	padding-left: var(--regular);
+}
+
+input[type="button"] {
+	border: none;
+	color: var(--light-txt-coffee);
+	background-color: white;
+	font-family: rainyhearts;
+	font-size: var(--s);
+	font-weight: bolder;
+	height: var(--m);
+	box-shadow: 3px 3px 5px var(--watered-down-coffee);
+	border-radius: 5px;
+}
+
+input[type="button"]:hover {
+	background: linear-gradient(90deg, rgba(254, 214, 141, 0.50) 0%, rgba(255, 255, 255, 1) 70%);
+	color: var(--light-txt-coffee);
+}
+
+input[type="submit"] {
+	border: none;
+	color: var(--light-txt-coffee);
+	background-color: white;
+	font-family: rainyhearts;
+	font-size: var(--s);
+	font-weight: bolder;
+	height: var(--m);
+	box-shadow: 3px 3px 5px var(--watered-down-coffee);
+	border-radius: 5px;
+}
+
+input[type="submit"]:hover {
+	background: linear-gradient(90deg, rgba(254, 214, 141, 0.50) 0%, rgba(255, 255, 255, 1) 70%);
+	color: var(--light-txt-coffee);
+}
+
+input[type="radio"] {
+	/* background: linear-gradient(90deg, rgba(254, 214, 141, 0.50) 0%, rgba(255, 255, 255, 1) 70%); */
+	background-color: var(--light-txt-coffee);
+}
+
 
 .card {
 	width: auto;
@@ -114,6 +168,7 @@ input[type="text"] {
 	margin-left: var(--space-m);
 	height: var(--space-ml);
 	width: auto;
+	box-shadow: 3x 3px var(--watered-down-coffee);
 }
 
 .palette>div>p {
@@ -130,7 +185,7 @@ input[type="text"] {
 	grid-template-columns: subgrid;
 	justify-content: start;
 	padding: var(--space-xs);
-	gap: var(--space-xs);
+	gap: var(--space-s);
 }
 
 .block p {
@@ -148,17 +203,18 @@ input[type="text"] {
 
 .content .padding {
 	height: var(--space-s);
-	width:auto;
-	background: radial-gradient(circle,rgba(255, 233, 153, 0.38) 0%, rgba(131, 84, 65, 1) 100%);
+	width: auto;
+	background: radial-gradient(circle, rgba(255, 233, 153, 0.38) 0%, rgba(131, 84, 65, 1) 100%);
 }
 
 .content .p-padding {
 	height: var(--space-xs);
-	width:auto;
-	background: radial-gradient(circle,rgba(255, 233, 153, 0.38) 0%, rgba(131, 84, 65, 1) 100%);
+	width: auto;
+	background: radial-gradient(circle, rgba(255, 233, 153, 0.38) 0%, rgba(131, 84, 65, 1) 100%);
 }
 
 .content .container {
+	font-size: 16px;
 	outline: #372a25 solid 1px;
 	height: fit-content;
 }
@@ -170,6 +226,7 @@ input[type="text"] {
 	font-size: var(--regular);
 	font-family: rainyhearts;
 }
+
 .content h1 {
 	padding: 0px 0px 0px 0px;
 
