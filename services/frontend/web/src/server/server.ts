@@ -22,7 +22,7 @@ function addPlugins(serv: FastifyInstance) {
 				"/app/static/",
 				"/app/images/",
 				"/app/dist/",
-				"/app/dist/backend/",
+				"/app/dist/pong/",
 			],
 		})
 		.register(mainRoute);
