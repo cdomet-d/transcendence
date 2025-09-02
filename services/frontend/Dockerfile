@@ -1,16 +1,22 @@
-FROM node:alpine3.22@sha256:820e86612c21d0636580206d802a726f2595366e1b867e564cbc652024151e8a
+FROM node:20-alpine3.22@sha256:820e86612c21d0636580206d802a726f2595366e1b867e564cbc652024151e8a
 
 RUN mkdir -p /app && chown -R 1000:1000 /app
 
 WORKDIR /app
 
-COPY ./web/package-lock.json ./web/package.json ./
-COPY ./web/vite.config.ts ./web/tsconfig.json ./web/index.html ./web/listener.js
-COPY ./web/src/ src/
-COPY ./web/public/ public/
+# COPY ./web/package-lock.json ./web/package.json ./
+# COPY ./web/vite.config.ts ./web/tsconfig.json ./web/index.html ./web/listener.js
+# COPY ./web/src/ src/
+# COPY ./web/public/ public/
 
-RUN npm install
+# RUN npm install
 
-EXPOSE 5173
+# EXPOSE 5173
 
-CMD ["npx", "vite"]
+# CMD ["npm", "run", "build"]
+
+COPY ./tools/front.sh /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/front.sh
+
+CMD ["front.sh"]
