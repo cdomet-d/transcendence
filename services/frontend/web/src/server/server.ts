@@ -1,26 +1,11 @@
 import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
 import fastifyStatic from '@fastify/static'
-import path from 'path'
-import { fileURLToPath } from 'url';
-import { matchRoute } from './route.pong.js';
-import { mainRoute } from './route.main.js';
-
-const __filename = fileURLToPath(import.meta.url);
-export const __dirname = path.dirname(__filename);
+import { mainRoute } from './route.js';
 
 try {
 	const serv: FastifyInstance = Fastify({logger: {file: "/app/server.log"}});
-	serv.register(fastifyStatic, {
-			root: [
-				"/app/static/",
-				"/app/images/",
-				"/app/dist/",
-				"/app/dist/backend/",
-			],
-		})
-		.register(matchRoute)
-		.register(mainRoute);
+	addPlugins(serv);
 	await serv.ready();
 	serv.listen({ port: 1212, host: '0.0.0.0' }).then(() => {
 		serv.log.info("serv run");
@@ -31,20 +16,14 @@ catch (err) {
 	process.exit(1);
 }
 
-// import http from 'http';
-
-// const server = http.createServer((req, res) => {
-// 	res.statusCode = 200;
-// 	res.setHeader('Content-Type', 'text/plain');
-// 	res.end('Web Microservice Listener\nCurrent supported routes:\n \
-// 	/user/account\n \
-// 	/user/friends\n \
-// 	/user/search\n \
-// 	/game/tournament\n \
-// 	/game/leaderboard\n \
-// 	/game/match');
-// })
-
-// console.log('Web Microservice listening on 1212')
-// server.listen(1212);
-
+function addPlugins(serv: FastifyInstance) {
+	serv.register(fastifyStatic, {
+			root: [
+				"/app/static/",
+				"/app/images/",
+				"/app/dist/",
+				"/app/dist/backend/",
+			],
+		})
+		.register(mainRoute);
+}

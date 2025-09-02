@@ -1,8 +1,7 @@
 import { pong } from './pong.js'
 
-function wsRequest() {
+function wsRequest(main: HTMLElement) {
     const ws = new WebSocket('wss://localhost:8443/api/game/match');
-    // const ws = new WebSocket('ws://localhost:2020/game/match');
 
     ws.onerror = (err) => {
         console.log("error:", err);
@@ -14,8 +13,8 @@ function wsRequest() {
         ws.onmessage = (event) => {
             console.log("message from server:", event.data);
         }
-        pong(ws);
+        pong(ws, main);
     }
 }
 
-wsRequest();
+export { wsRequest };

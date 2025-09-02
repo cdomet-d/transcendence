@@ -16,6 +16,13 @@ async function handler(req: FastifyRequest, rep: FastifyReply) {
 
 const mainRoute: FastifyPluginCallback = function (serv, options, done) {
     serv.get('/', handler);
+    serv.get('/account', handler);
+    serv.get('/auth', handler);
+    serv.get('/user/friends', handler);
+    serv.get('/users', handler);
+    serv.get('/game/leaderboard', handler);
+    serv.get('/game/tournament', handler);
+    serv.get('/game/match', handler);
     done();
 }
 

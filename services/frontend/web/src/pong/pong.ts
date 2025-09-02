@@ -9,7 +9,15 @@ interface paddelPos {
 let leftPad: paddelPos = {x: 10, y: 108};
 let rightPad: paddelPos = {x: 460, y: 108};
 
-function pong(ws: WebSocket) {
+function pong(ws: WebSocket, main: HTMLElement) {
+	main.innerHTML = `
+	<div id="game">
+      <h1>Game Screen</h1>
+      <canvas id="canvas">
+        pong game <!-- fallback if unable to be displayed -->
+      </canvas>
+    </div>
+	`;
 	const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 	styleGame(canvas);
 
