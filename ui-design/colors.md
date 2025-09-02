@@ -75,3 +75,57 @@
 		900: '#ded2cd' } 
 }
 ```
+
+
+
+
+/* CSS HSL
+--aquamarine: hsla(162, 95%, 74%, 1);
+--harvest-gold: hsla(41, 98%, 45%, 1);
+--harvest-gold-2: hsla(43, 93%, 48%, 1);
+--dark-pastel-green: hsla(130, 98%, 38%, 1);
+--royal-blue-traditional: hsla(218, 98%, 22%, 1);
+--light-cyan: hsla(196, 96%, 91%, 1);
+
+/* SCSS HEX */
+$aquamarine: #7FFCD7ff;
+$harvest-gold: #E39C02ff;
+$harvest-gold-2: #EBAB09ff;
+$dark-pastel-green: #02C222ff;
+$royal-blue-traditional: #012A6Fff;
+$light-cyan: #D0F2FEff;
+
+/* SCSS HSL */
+$aquamarine: hsla(162, 95%, 74%, 1);
+$harvest-gold: hsla(41, 98%, 45%, 1);
+$harvest-gold-2: hsla(43, 93%, 48%, 1);
+$dark-pastel-green: hsla(130, 98%, 38%, 1);
+$royal-blue-traditional: hsla(218, 98%, 22%, 1);
+$light-cyan: hsla(196, 96%, 91%, 1);
+
+/* SCSS RGB */
+$aquamarine: rgba(127, 252, 215, 1);
+$harvest-gold: rgba(227, 156, 2, 1);
+$harvest-gold-2: rgba(235, 171, 9, 1);
+$dark-pastel-green: rgba(2, 194, 34, 1);
+$royal-blue-traditional: rgba(1, 42, 111, 1);
+$light-cyan: rgba(208, 242, 254, 1);
+
+/* SCSS Gradient */
+$gradient-top: linear-gradient(0deg, #7FFCD7ff, #E39C02ff, #EBAB09ff, #02C222ff, #012A6Fff, #D0F2FEff);
+$gradient-right: linear-gradient(90deg, #7FFCD7ff, #E39C02ff, #EBAB09ff, #02C222ff, #012A6Fff, #D0F2FEff);
+$gradient-bottom: linear-gradient(180deg, #7FFCD7ff, #E39C02ff, #EBAB09ff, #02C222ff, #012A6Fff, #D0F2FEff);
+$gradient-left: linear-gradient(270deg, #7FFCD7ff, #E39C02ff, #EBAB09ff, #02C222ff, #012A6Fff, #D0F2FEff);
+$gradient-top-right: linear-gradient(45deg, #7FFCD7ff, #E39C02ff, #EBAB09ff, #02C222ff, #012A6Fff, #D0F2FEff);
+$gradient-bottom-right: linear-gradient(135deg, #7FFCD7ff, #E39C02ff, #EBAB09ff, #02C222ff, #012A6Fff, #D0F2FEff);
+$gradient-top-left: linear-gradient(225deg, #7FFCD7ff, #E39C02ff, #EBAB09ff, #02C222ff, #012A6Fff, #D0F2FEff);
+$gradient-bottom-left: linear-gradient(315deg, #7FFCD7ff, #E39C02ff, #EBAB09ff, #02C222ff, #012A6Fff, #D0F2FEff);
+$gradient-radial: radial-gradient(#7FFCD7ff, #E39C02ff, #EBAB09ff, #02C222ff, #012A6Fff, #D0F2FEff); */
+
+/* CSS HEX */
+--aquamarine: #7FFCD7ff;
+--harvest-gold: #E39C02ff;
+--harvest-gold-2: #EBAB09ff;
+--dark-pastel-green: #02C222ff;
+--royal-blue-traditional: #012A6Fff;
+--light-cyan: #D0F2FEff;

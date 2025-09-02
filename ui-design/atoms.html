@@ -26,13 +26,13 @@
 			<p> The above values are css variables that can be applied in place of a "hardcoded" value, like so: </p>
 			<p> Do:</p>
 			<ul>
-				<li>border-bottom: #fed68d solid var(--space-xs);</li>
-				<li>border-right: #fed68d solid var(--space-xs);</li>
+				<li>border-bottom: #a74500 solid var(--space-xs);</li>
+				<li>border-right: #a74500 solid var(--space-xs);</li>
 			</ul>
 			<p> Don't:</p>
 			<ul>
-				<li>border-bottom: #fed68d solid 8px; </li>
-				<li>border-right: #fed68d solid 8px;</li>
+				<li>border-bottom: #a74500 solid 8px; </li>
+				<li>border-right: #a74500 solid 8px;</li>
 			</ul>
 			<p> Spacing and margins are better applied on the <bold> parent </bold> element of a item, to ensure that
 				formatting is coming from the outside in.</p>
@@ -57,75 +57,85 @@
 		<div class="palette">
 			<h1> Colors </h1>
 			<h2> Palette </h2>
-			<p> HEX: fff8ea // RGB: [ 255 248 234 ] </p>
-			<div style="background-color: #fff8ea;"></div>
-			<div style="background: linear-gradient(90deg,rgba(255, 248, 234, 1) 0%,rgba(255, 248, 234, 0) 100%);">
+			<h3> Backgrounds </h3>
+			<p> HEX: #fffcf7 // RGB: [255, 252, 247] </p>
+			<div style="background-color: #fffcf7;"></div>
+			<div style="background: linear-gradient(90deg, #fffcf7 0%, #fffcf700 100%);"></div>
+			<p> HEX: #93eaeb // RGB: [147, 234, 235] </p>
+			<div style="background-color: #93eaeb;"></div>
+			<div style="background: linear-gradient(90deg, #93eaeb 0%, #93eaeb00 100%);"></div>
+			<p> HEX: #0e4a4b // RGB: [14, 74, 75] </p>
+			<div style="background-color: #0e4a4b;"></div>
+			<div style="background: linear-gradient(90deg, #0e4a4b 0%, #0e4a4b00 100%);"></div>
+			<h4> Gradients </h4>
+			<div class="body-background"
+				style="background: repeating-linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(9, 78, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);">
 			</div>
 
-			<p> HEX: ffe999 // RGB: [ 255 233 153 ] </p>
-			<div style="background-color: #ffe999;"></div>
-			<div style="background: linear-gradient(90deg,rgba(255, 233, 153, 1) 0%,rgba(255, 233, 153, 0) 100%);">
-			</div>
+			<h3> Accents & Titles </h3>
+			<p> HEX: #f8ca53 // RGB: [248, 202, 83] </p>
+			<div style="background-color: #f8ca53;"></div>
+			<div style="background: linear-gradient(90deg, #f8ca53 0%, #f8ca5300 100%);"></div>
+			<p> HEX: #a74500 // RGB: [167, 69, 0] </p>
+			<div style="background-color: #a74500;"></div>
+			<div style="background: linear-gradient(90deg, #a74500 0%, #a7450000 100%);"></div>
 
-			<p> HEX: fed68d // RGB: [ 254 214 141 ] </p>
-			<div style="background-color: #fed68d;"></div>
-			<div style="background: linear-gradient(90deg,rgba(254, 214, 141, 1) 0%,rgba(254, 214, 141, 0) 100%);">
-			</div>
-
-			<p> HEX: 835441 // RGB: [ 131 84 65 ] </p>
+			<h3> Typography </h3>
+			<p> HEX: #835441 // RGB: [131, 84, 65] </p>
 			<div style="background-color: #835441;"></div>
-			<div style="background: linear-gradient(90deg,rgba(131, 84, 65, 1) 0%,rgba(131, 84, 64, 0) 100%);"></div>
-
-			<p> HEX: 372a25 // RGB: [ 55 42 37 ] </p>
+			<div style="background: linear-gradient(90deg, #835441 0%, #83544100 100%);"></div>
+			<p> HEX: #372a25 // RGB: [55, 42, 37] </p>
 			<div style="background-color: #372a25;"></div>
-			<div style="background: linear-gradient(90deg,rgba(55, 42, 37, 1) 0%,rgba(55, 42, 37, 0) 100%);"></div>
+			<div style="background: linear-gradient(90deg, #372a25 0%, #372a2500 100%);"></div>
 		</div>
+
+
 		<div class="palette">
 			<h2> Accessible color combinations </h2>
-			<div style="background-color: #fff8ea;">
-				<p style="color:#372a25;"> Text: 372a25 </p>
+			<div style="background-color: #fffcf7;">
+				<p style="color:#835441;"> Background: #fffcf7 | Text: #835441 </p>
 			</div>
-			<div style="background-color: #fff8ea;">
-				<p style="color:#835441;"> Text: 835441 </p>
-			</div>
-			<div style="background-color: #ffe999;">
-				<p style="color:#372a25;"> Text: 372a25 </p>
+			<div style="background-color: #fffcf7;">
+				<p style="color:#372a25;"> Background: #fffcf7 | Text: #372a25 </p>
 			</div>
 
-			<div style="background-color: #fed68d;">
-				<p> Text: 372a25 </p>
+			<div style="background-color: #f8ca53;">
+				<p style="color:#372a25;"> Background: #f8ca53 | Text: #372a25 </p>
+			</div>
+
+			<div style="background-color: #a74500;">
+				<p style="color:#fffcf7;"> Background: #372a25 | Text: #fffcf7 </p>
+			</div>
+
+			<div style="background-color: #0e4a4b;">
+				<p style="color:#fffcf7;"> Background: #0e4a4b | Text: #fffcf7 </p>
 			</div>
 
 			<div style="background-color: #835441;">
-				<p style="color:#fff8ea;"> Text: fff8ea </p>
+				<p style="color:#fffcf7;"> Background: #835441 | Text: #fffcf7 </p>
 			</div>
 
 			<div style="background-color: #372a25;">
-				<p style="color:#fed68d;"> Text: fed68d </p>
+				<p style="color:#fffcf7;"> Background: #372a25 | Text: #fffcf7 </p>
 			</div>
-			<div style="background-color: #372a25;">
-				<p style="color:#fff8ea;"> Text: fff8ea </p>
+
+			<h3> Acceptable for large elements (> 24px) </h3>
+			<div style="background-color: #0e4a4b;">
+				<p style="color:#f8ca53;"> Background: #0e4a4b | Text: #f8ca53 </p>
 			</div>
 		</div>
 
 		<h1> Typography </h1>
 		<div class="block">
 			<h2> Fonts </h2>
-			<p> The chosen fonts for the app are:</p>
-			<ul>
-				<li>Titles: Rainyhearts</li>
-				<li> Body: Franklin Gothic Medium', 'Arial Narrow </li>
-			</ul>
+			<p> The font used here is PixelOperator by <a href="https://www.dafont.com/fr/profile.php?user=340815">
+					Jayvee Enaguas </a> downloaded on <a href="https://www.dafont.com/fr/pixel-operator.font">
+					Dafont</a>. </p>
 
 			<p>All titles have the following attributes: </p>
 			<ul>
 				<li>margin: 0px 0px 0px 0px</li>
 				<li>padding: var(--space-s) 0px var(--space-s) 0px</li>
-			</ul>
-			<p> Notes </p>
-			<ul>
-				<li> Gradient represent the elements' inherited padding </li>
-				<li> The border is the total size of the element (line height + padding) </li>
 			</ul>
 
 			<div>
@@ -135,11 +145,7 @@
 			</div>
 
 			<div class="content">
-				<div class="container">
-					<div class="padding"> </div>
-					<h1> This is an example title</h1>
-					<div class="padding"></div>
-				</div>
+				<h1> This is an example title</h1>
 			</div>
 
 			<div>
@@ -149,11 +155,7 @@
 			</div>
 
 			<div class="content">
-				<div class="container">
-					<div class="padding"> </div>
-					<h2> This is an example title</h2>
-					<div class="padding"></div>
-				</div>
+				<h2> This is an example title</h2>
 			</div>
 
 			<div>
@@ -163,11 +165,7 @@
 					border: none</p>
 			</div>
 			<div class="content">
-				<div class="container">
-					<div class="padding"> </div>
-					<h3> This is an example title </h3>
-					<div class="padding"></div>
-				</div>
+				<h3> This is an example title </h3>
 			</div>
 			<div>
 				<h3> h4 </h3>
@@ -177,11 +175,7 @@
 			</div>
 
 			<div class="content">
-				<div class="container">
-					<div class="padding"> </div>
-					<h4> This is an example title </h4>
-					<div class="padding"></div>
-				</div>
+				<h4> This is an example title </h4>
 			</div>
 
 			<div>
@@ -190,72 +184,82 @@
 					var(--regular) // line-height: 140%</p>
 			</div>
 			<div class="content">
-				<div class="container">
-					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla egestas laoreet dui, at rutrum
-						sapien tristique eget. Pellentesque viverra sed enim eget auctor. Nulla facilisi. Donec sit amet
-						porttitor urna, ut scelerisque magna. Duis viverra congue molestie. Nam cursus mauris lectus, ut
-						auctor tellus ornare ac. Nam vel mauris erat. Quisque orci mi, ornare sed justo id, volutpat
-						egestas tellus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur
-						ridiculus mus. Proin dignissim dui a placerat sagittis. Pellentesque venenatis id mi quis
-						tempor. Pellentesque pretium volutpat nunc eget consectetur. Vestibulum consequat nibh eu ornare
-						vestibulum. Nullam lacinia porttitor condimentum. Morbi vel feugiat enim.
-					</p>
-					<div class="p-padding"> </div>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla egestas laoreet dui, at rutrum
+					sapien tristique eget. Pellentesque viverra sed enim eget auctor. Nulla facilisi. Donec sit amet
+					porttitor urna, ut scelerisque magna. Duis viverra congue molestie. Nam cursus mauris lectus, ut
+					auctor tellus ornare ac. Nam vel mauris erat. Quisque orci mi, ornare sed justo id, volutpat
+					egestas tellus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur
+					ridiculus mus. Proin dignissim dui a placerat sagittis. Pellentesque venenatis id mi quis
+					tempor. Pellentesque pretium volutpat nunc eget consectetur. Vestibulum consequat nibh eu ornare
+					vestibulum. Nullam lacinia porttitor condimentum. Morbi vel feugiat enim.
+				</p>
+			</div>
+
+			<div>
+				<h3> links </h3>
+			</div>
+
+			<div class="content">
+				<span> Default state:
+					<a class="a-default" href="https://kristinevike.com" target="_blank"> This is a link </a>
+				</span>
+				<span> Hover state:
+					<a class="a-hover" href="https://kristinevike.com" target="_blank"> This is a link </a>
+				</span>
+				<span> Focus state:
+					<a class="a-focus" href="https://kristinevike.com" target="_blank"> This is a link </a>
+				</span>
+				<span> Active state:
+					<a class="a-focus" href="https://kristinevike.com" target="_blank"> This is a link </a>
+				</span>
+
+				<a class="a-visited-default" href="https://kristinevike.com" target="_blank"> This is a link </a>
+			</div>
+
+			<h1> Inputs </h1>
+			<div class="block">
+
+				<input type="radio"> </input>
+				<input type="checkbox"> </input>
+				<h2> Input fields </h2>
+				<div class="content">
+					<span>
+						<label class="label-inactive" for="Inactive">Inactive</label>
+						<input id="Inactive" class="input-inactive" type="text" value="Label"
+							placeholder="search a user..."> </input>
+						<label class="label-focus" for="Focus">Focus</label>
+						<input id="Focus" class="input-focus" type="text" value="Label" placeholder="search a user...">
+						</input>
+						<label class="label-active" for="Active">Active</label>
+						<input id="Active" class="input-active" type="text" value="Label"
+							placeholder="search a user..."> </input>
+						<label class="label-disabled" for="Disabled">Disabled</label>
+						<input id="Disabled" class="input-disabled" type="text" value="Label"
+							placeholder="search a user..." disabled>
+						</input>
+						<label class="label-error" for="Error">Error</label>
+						<input class="input-error" type="text" value="Label" placeholder="%saperrie..."> </input>
+
+					</span>
 				</div>
-				<div class="container">
-					<p>
-						Etiam dui est, consequat eu sodales ac, elementum nec nisl. Sed bibendum nisi ac libero
-						hendrerit, id tempor mauris facilisis. Etiam ac quam vel sem placerat accumsan. Duis iaculis
-						lectus quis molestie porttitor. Fusce sodales id mi ac dapibus. Maecenas tristique sem quis ex
-						imperdiet, vel convallis ligula tempus. Vivamus mauris erat, aliquam dapibus leo quis, cursus
-						auctor enim. Vestibulum posuere metus pellentesque, aliquam mauris et, finibus felis. Quisque
-						pellentesque ligula non scelerisque sagittis. In consequat tortor mauris, non semper quam mattis
-						non. Sed et aliquam quam. Etiam ullamcorper dui non neque congue, vitae molestie tortor maximus.
-					</p>
-					<div class="p-padding"></div>
+				<div class="content">
+					<h2> Buttons</h2>
+					<p> Inactive </p>
+					<input class="button-inactive" type="submit" value="submit"> </input>
+					<input class="button-inactive" type="button" value="button"> </input>
+					<p> Hover </p>
+					<input class="button-hover" type="submit" value="submit"> </input>
+					<input class="button-hover" type="button" value="button"> </input>
+					<p> Active </p>
+					<input class="button-active" type="submit" value="submit"> </input>
+					<input class="button-active" type="button" value="button"> </input>
+					<p> Disabled </p>
+					<input class="button-disabled" type="submit" value="submit" disabled> </input>
+					<input class="button-disabled" type="button" value="button" disabled> </input>
 				</div>
 			</div>
 		</div>
-
-		<h1> Inputs </h1>
-		<div class="block">
-
-			<h2> Text input </h2>
-			<input type="radio"> </input>
-			<input type="checkbox"> </input>
-
-			<div class="block">
-				<h2> Input field </h2>
-				<p> Inactive </p>
-				<input class="input-inactive" type="text" value="Label" placeholder="search a user..."> </input>
-				<p> Focused </p>
-				<input class="input-focus" type="text" value="Label" placeholder="search a user..."> </input>
-				<p> Active </p>
-				<input class="input-active" type="text" value="Label" placeholder="search a user..."> </input>
-				<p> Disabled </p>
-				<input class="input-disabled" type="text" value="Label" placeholder="search a user..." disabled>
-				</input>
-				<p> Error </p>
-				<input class="input-error" type="text" value="Label" placeholder="search a user..."> </input>
-			</div>
-			<div class="block">
-				<h2> Buttons</h2>
-				<p> Inactive </p>
-				<input class="button-inactive" type="submit" value="submit"> </input>
-				<input class="button-inactive" type="button" value="button"> </input>
-				<p> Hover </p>
-				<input class="button-hover" type="submit" value="submit"> </input>
-				<input class="button-hover" type="button" value="button"> </input>
-				<p> Active </p>
-				<input class="button-active" type="submit" value="submit"> </input>
-				<input class="button-active" type="button" value="button"> </input>
-				<p> Disabled </p>
-				<input class="button-disabled" type="submit" value="submit" disabled> </input>
-				<input class="button-disabled" type="button" value="button" disabled> </input>
-			</div>
-		</div>
-	</div>
 </body>
 
 </html>
