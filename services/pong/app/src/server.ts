@@ -30,13 +30,13 @@ try {
 //add plugins
 function addPlugins(serv: FastifyInstance) {
 	serv.register(websocket);
-	serv.register(fastifyStatic, {
-				root: [
-					'/usr/app/static/',
-					'/usr/app/dist/frontend/'
-				],
-				prefix: '/game/match/',
-			});
+	// serv.register(fastifyStatic, {
+	// 			root: [
+	// 				'/usr/app/static/',
+	// 				'/usr/app/dist/frontend/'
+	// 			],
+	// 			prefix: '/game/match/',
+	// 		});
 	serv.register(wsRoute);
 }
 
