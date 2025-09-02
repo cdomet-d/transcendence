@@ -7,11 +7,11 @@ export function renderCentral(main: HTMLElement) {
   renderPageTemplate(main, {
 	title: t('CENTRAL'),
 	nextButtons: [
-	  { href: "/tournament", label: t('Tournament') },
+	  { href: "/game/tournament", label: t('Tournament') },
 	  { href: "/quickMatch", label: t('Quick Match') },
-	  { href: "/profile", label: t('Profile') },
-	  { href: "/leaderboard", label: t('Leaderboard') },
-	  { href: "/game", label: t('Game') },
+	  { href: "/account", label: t('Profile') },
+	  { href: "/game/leaderboard", label: t('Leaderboard') },
+	  { href: "/game/match", label: t('Game') },
 	],
 	backHref: "/",
 	showBack: true,

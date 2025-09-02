@@ -18,39 +18,39 @@ import { options } from './serv.conf.js'
 
 //init server
 try {
-  const serv: FastifyInstance = Fastify(options);
-  addPlugins(serv);
-  await serv.ready();
-  runServ(serv);
+	const serv: FastifyInstance = Fastify(options);
+	addPlugins(serv);
+	await serv.ready();
+	runServ(serv);
 } catch (err) {
-  console.error('server error:', err);
-  process.exit(1);
+	console.error('server error:', err);
+	process.exit(1);
 }
 
 //add plugins
 function addPlugins(serv: FastifyInstance) {
-  serv.register(websocket);
-  serv.register(fastifyStatic, {
-        root: [
-          '/usr/app/static/',
-          '/usr/app/dist/frontend/'
-        ],
-        prefix: '/game/match/',
-      });
-  serv.register(wsRoute);
+	serv.register(websocket);
+	serv.register(fastifyStatic, {
+				root: [
+					'/usr/app/static/',
+					'/usr/app/dist/frontend/'
+				],
+				prefix: '/game/match/',
+			});
+	serv.register(wsRoute);
 }
 
 //run server
 function runServ(serv: FastifyInstance): void {
-  const port: number = Number(process.env.PORT);
-  if (Number.isNaN(port)) {
-    throw new Error("Invalid port");
-  }
+	const port: number = Number(process.env.PORT);
+	if (Number.isNaN(port)) {
+		throw new Error("Invalid port");
+	}
 
-  serv.listen({ port: port, host: '0.0.0.0' })
-      .then((address) => {
-        serv.log.info(`Pong Microservice listening on ${port} at ${address}`);
-      })
-      .catch((err) => { throw err; });
+	serv.listen({ port: port, host: '0.0.0.0' })
+			.then((address) => {
+				serv.log.info(`Pong Microservice listening on ${port} at ${address}`);
+			})
+			.catch((err) => { throw err; });
 }
 
