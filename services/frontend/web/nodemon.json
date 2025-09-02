@@ -1,0 +1,6 @@
+{
+  "watch": ["src"],
+  "ext": "ts",
+  "ignore": ["dist"],
+  "exec": "npx @tailwindcss/cli -i ./static/style-src.css -o ./static/style-dist.css && tsc && node dist/backend/server.js"
+}
