@@ -1,11 +1,10 @@
-import {upgrade, wshandler} from '../handlers/websocket.js'
+import { wshandler } from '../handlers/websocket.js'
 import type { FastifyPluginCallback } from 'fastify';
 
-const opts = {
-    schema: {},
-    // handler: upgrade,
-    wsHandler: wshandler,
-}
+// const opts = {
+//     schema: {},
+//     wsHandler: wshandler,
+// }
 
 const wsRoute: FastifyPluginCallback = function (serv, options, done) {
     serv.get('/api/game/match', { websocket: true }, wshandler);
