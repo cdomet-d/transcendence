@@ -5,7 +5,7 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 
 async function handler(req: FastifyRequest, rep: FastifyReply) {
     try {
-		const script = await fsp.readFile("/app/static/game.html");
+		const script = await fsp.readFile("/app/static/index.html");
 		rep.header('Content-Type', 'text/html');
 		rep.send(script);
 	}

@@ -14,10 +14,9 @@ try {
 	serv.register(fastifyStatic, {
 			root: [
 				"/app/static/",
+				"/app/images/",
 				"/app/dist/",
-				"/app/dist/images/",
 				"/app/dist/backend/",
-				"/app/images/"
 			],
 		})
 		.register(matchRoute)
