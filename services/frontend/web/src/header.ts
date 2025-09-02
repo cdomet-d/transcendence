@@ -1,4 +1,4 @@
-import './style.css'
+
 
 export function renderHeader() {
   document.getElementById('header')!.innerHTML = `

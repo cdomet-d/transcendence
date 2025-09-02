@@ -1,7 +1,7 @@
-import './style.css'
-import { renderPageTemplate } from './page.template'
-import { t } from './translation.ts'
-import { renderLanguageDropdownButton } from './languageDropdownButton'
+
+import { renderPageTemplate } from './page.template.js'
+import { t } from './translation.js'
+import { renderLanguageDropdownButton } from './languageDropdownButton.js'
 
 export function renderCentral(main: HTMLElement) {
   renderPageTemplate(main, {

@@ -1,6 +1,6 @@
-import './style.css';
-import { t } from './translation';
-import { renderLanguageDropdownButton } from './languageDropdownButton'
+;
+import { t } from './translation.js';
+import { renderLanguageDropdownButton } from './languageDropdownButton.js'
 
 export function renderHome(main: HTMLElement) {
   main.innerHTML = `

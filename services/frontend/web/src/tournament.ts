@@ -1,5 +1,5 @@
-import './style.css'
-import { renderPageTemplate } from './page.template'
+
+import { renderPageTemplate } from './page.template.js'
 
 export function renderTournament(main: HTMLElement) {
 	renderPageTemplate(main, {
