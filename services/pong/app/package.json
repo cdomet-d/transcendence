@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "watch:css": "npx @tailwindcss/cli -i ./static/style-src.css -o ./static/style-dist.css --watch",
-    "start": "concurrently \"npm run watch:css\" \"nodemon\""
+    "start": "nodemon"
   },
   "keywords": [],
   "author": "",
