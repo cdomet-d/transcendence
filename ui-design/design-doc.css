@@ -8,6 +8,7 @@
 	font-family: PixelOperator;
 	font-weight: 50;
 	background-color: var(--white);
+	background: repeating-linear-gradient(180deg, var(--gradient1) 0%, var(--gradient2), var(--gradient3), var(--gradient4) 100%);
 
 	/* Sizing */
 	--xxl: 6rem;
@@ -27,11 +28,13 @@
 	--space-l: 2.4rem;
 	--space-xl: 3.2rem;
 
-	/* Light theme */
-	--white: #fff8ea;
+	/* Colors */
+	--white: #fffcf7;
 	--black: #372a25;
-	--blue-deep: #0E4A4B;
-	--blue-light: #93EAEB;
+	--gradient1: #131254;
+	--gradient2: #0f88fa;
+	--gradient3: #64e6e8;
+	--gradient4: #d1ffda;
 
 	--deep-red: #bc3908;
 	--orange-accent: #a74500;
@@ -52,31 +55,33 @@
 }
 
 .block {
+	background-color: var(--white);
+	border-radius: 15px;
 	box-sizing: border-box;
 	display: grid;
 	gap: var(--space-s);
 	grid-template-columns: subgrid;
-	padding: var(--space-xs);
-	width: 100%;
+	margin: 0px var(--space-ml) 0px var(--space-ml);
+	padding: var(--space-ml);
 }
 
 .block-two-col {
+	background-color: var(--white);
+	border-radius: 15px;
 	box-sizing: border-box;
 	display: grid;
 	gap: var(--space-s);
 	grid-template-columns: 0.5fr 1fr;
-	padding: var(--space-xs);
-	width: 100%;
+	margin: 0px var(--space-ml) 0px var(--space-ml);
+	padding: var(--space-ml);
 }
 
-.form {
-	background: repeating-linear-gradient(180deg, #131254, #0f88fa, #64e6e8, #d1ffda);
+.form, .form-background {
 	box-sizing: border-box;
 	display: grid;
 	gap: var(--space-m);
 	grid-template-columns: subgrid;
-	padding: var(--space-m);
-	width: 100%;
+	padding: var(--space-sm);
 }
 
 h1,
@@ -97,6 +102,7 @@ span {
 	font-size: var(--regular);
 	line-height: var(--space-sm);
 	font-family: PixelOperator;
+	color: var(--black);
 }
 
 ul {
@@ -104,24 +110,18 @@ ul {
 	padding: 0px 0px 0px 0px;
 	font-size: var(--regular);
 	line-height: var(--space-sm);
-	list-style: disc;
+	color: var(--black);
 }
 
 li {
 	margin: 0px 0px 0px 0px;
-	padding: 0px 0px 0px var(--space-s);
+	padding: 0px 0px 0px var(--space-m);
+	list-style: none;
 }
 
 .blockcode {
 	border: var(--coffee) 1px solid;
 	padding: var(--space-s);
-}
-
-.form-background {
-	background-color: var(--white);
-	padding: var(--space-ml);
-	margin: var(--space-ml);
-	border-radius: 15px;
 }
 
 .form-group {
@@ -198,9 +198,7 @@ input[type=submit] {
 }
 
 .button-default {
-	border: none;
-	border-bottom: #b6652b solid 1px;
-	border-right: #b6652b solid 1px;
+	border: #b6652b solid 1px;
 	background-color: var(--white);
 	box-shadow:
 		0.2px 0.2px var(--yellow-accent),
@@ -246,8 +244,7 @@ input[type=submit] {
 	border-bottom: #b6652b solid 1px;
 	border-right: #b6652b solid 1px;
 	background-color: var(--white);
-	transition: box-shadow 
-		0.2px 0.2px var(--yellow-accent),
+	transition: box-shadow 0.2px 0.2px var(--yellow-accent),
 		0.4px 0.4px var(--yellow-accent),
 		0.6px 0.6px var(--yellow-accent),
 		0.8px 0.8px var(--yellow-accent),
@@ -321,7 +318,6 @@ input[type=submit] {
 }
 
 .title-1 {
-	background: repeating-linear-gradient(180deg, rgb(45, 41, 125) 0%, rgba(9, 78, 121, 1) 50%, rgba(0, 212, 255, 1) 100%);
 	color: var(--yellow-accent);
 	font-family: PixelOperator;
 	text-align: center;
@@ -378,7 +374,6 @@ input[type=submit] {
 }
 
 .title-2 {
-	background: repeating-linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(9, 78, 121, 1) 50%, rgba(0, 212, 255, 1) 100%);
 	color: var(--yellow-accent);
 	font-family: PixelOperator;
 	text-align: center;
@@ -435,7 +430,6 @@ input[type=submit] {
 }
 
 .title-3 {
-	background: repeating-linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(9, 78, 121, 1) 50%, rgba(0, 212, 255, 1) 100%);
 	color: var(--yellow-accent);
 	font-family: PixelOperator;
 	text-align: center;
@@ -492,7 +486,6 @@ input[type=submit] {
 }
 
 .title-4 {
-	background: repeating-linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(9, 78, 121, 1) 50%, rgba(0, 212, 255, 1) 100%);
 	color: var(--yellow-accent);
 	text-align: center;
 	text-shadow:
@@ -542,7 +535,6 @@ input[type=submit] {
 		-8.6px -4.3px var(--orange-accent),
 		-8.8px -4.4px var(--orange-accent),
 		-9.0px -4.5px var(--orange-accent);
-
 
 	font-size: var(--m);
 	line-height: 100%;

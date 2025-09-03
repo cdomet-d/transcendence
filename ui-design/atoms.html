@@ -7,9 +7,9 @@
 
 <body>
 	<div class="card">
-		<h1> Atoms element designs </h1>
+		<h1 class="title-1"> Atoms element designs </h1>
+		<h1 class="title-1"> Spacings and sizes </h1>
 		<div class="block">
-			<h1> Spacings and sizes </h1>
 			<h2> Spacings (paddings, margins) </h2>
 			<p> Spacing determines the neutral space between elements. It's controlled through margins and padding. Our
 				spacing is determined by increments of 0.4. We start at 0.4, then increment by that value. </p>
@@ -60,10 +60,9 @@
 				--regular: 1rem <br>
 			</code>
 		</div>
+		<h1 class="title-1"> Palette </h1>
 		<div class="block">
-			<h1> Colors </h1>
-			<h2> Palette </h2>
-			<h3> Backgrounds </h3>
+			<h2> Backgrounds </h2>
 			<p> HEX: #fffcf7 // RGB: [255, 252, 247] </p>
 			<div class="swatch" style="background-color: #fffcf7;"></div>
 			<div class="swatch" style="background: linear-gradient(90deg, #fffcf7 0%, #fffcf700 100%);"></div>
@@ -74,8 +73,8 @@
 			<div class="swatch" style="background-color: #0e4a4b;"></div>
 			<div class="swatch" style="background: linear-gradient(90deg, #0e4a4b 0%, #0e4a4b00 100%);"></div>
 			<h4> Gradients </h4>
-			<div class="body-background" class="swatch"
-				style="background: repeating-linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(9, 78, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);">
+			<div class="swatch"
+				style="background: repeating-linear-gradient(90deg, var(--gradient1) 0%, var(--gradient2), var(--gradient3), var(--gradient4) 100%);">
 			</div>
 
 			<h3> Accents & Titles </h3>
@@ -134,7 +133,7 @@
 			</div>
 		</div>
 
-		<h1> Typography </h1>
+		<h1 class="title-1"> Typography </h1>
 		<div class="block">
 			<h2> Fonts </h2>
 			<p> The font used here is PixelOperator by <a class="a-default"
@@ -175,22 +174,32 @@
 			</code>
 			<p>They vary through line height and font size, which are described for each below. </p>
 
+		</div>
+		<div class="block">
 			<h3> HTML - h1 </h3>
 			<p> font-size: var(--xxl) // line-height: 130% </p>
-			<h1 class="title-1"> This is an example title</h1>
+		</div>
+		<h1 class="title-1"> This is an example title</h1>
 
+		<div class="block">
 			<h3> HTML - h2 </h3>
 			<p> font-size: var(--xl) // line-height: 110% </p>
-			<h2 class="title-2"> This is an example title</h2>
+		</div>
+		<h2 class="title-2"> This is an example title</h2>
 
+		<div class="block">
 			<h3> HTML - h3 </h3>
 			<p> font-size: var(--l) // line-height: 110% </p>
-			<h3 class="title-3"> This is an example title </h3>
+		</div>
+		<h3 class="title-3"> This is an example title </h3>
 
+		<div class="block">
 			<h3> HTML - h4 </h3>
 			<p> font-size: var(--m) // line-height: 100% </p>
-			<h4 class="title-4"> This is an example title </h4>
+		</div>
+		<h4 class="title-4"> This is an example title </h4>
 
+		<div class="block">
 			<h3> body paragraph </h3>
 			<p> margin: 0px 0px 0px 0px // font-size: var(--regular) // line-height: var(--space-sm) // font-family:
 				PixelOperator;</p>
@@ -224,60 +233,66 @@
 			<a class="a-visit" href="https://profile.intra.42.fr/users/saperrie" target="_blank"> This is a link </a>
 		</div>
 
-		<h1> Inputs </h1>
-		<input type="radio"> </input>
-		<input type="checkbox"> </input>
+		<h1 class="title-1"> Inputs </h1>
 		<div class="block">
+			<input type="radio"> </input>
+			<input type="checkbox"> </input>
 			<div class="form">
 				<h2> Input fields </h2>
-				<div class="form-group">
-					<label class="label-inactive" for="Inactive">Inactive</label>
-					<input id="Inactive" class="input-inactive" type="text" value="Label"
-						placeholder="search a user...">
-					</input>
-				</div>
+				<div class="form-background">
+					<div class="form-group">
+						<label class="label-inactive" for="Inactive">Inactive</label>
+						<input id="Inactive" class="input-inactive" type="text" value="Label"
+							placeholder="search a user...">
+						</input>
+					</div>
 
-				<div class="form-group">
-					<label class="label-focus" for="Focus">Focus</label>
-					<input id="Focus" class="input-focus" type="text" value="Label" placeholder="search a user...">
-					</input>
-				</div>
+					<div class="form-group">
+						<label class="label-focus" for="Focus">Focus</label>
+						<input id="Focus" class="input-focus" type="text" value="Label" placeholder="search a user...">
+						</input>
+					</div>
 
-				<div class="form-group">
-					<label class="label-active" for="Active">Active</label>
-					<input id="Active" class="input-active" type="text" value="Label" placeholder="search a user...">
-					</input>
-				</div>
-				<div class="form-group">
-					<label class="label-disabled" for="Disabled">Disabled</label>
-					<input id="Disabled" class="input-disabled" type="text" value="Label" placeholder="search a user..."
-						disabled>
-					</input>
-				</div>
+					<div class="form-group">
+						<label class="label-active" for="Active">Active</label>
+						<input id="Active" class="input-active" type="text" value="Label"
+							placeholder="search a user...">
+						</input>
+					</div>
+					<div class="form-group">
+						<label class="label-disabled" for="Disabled">Disabled</label>
+						<input id="Disabled" class="input-disabled" type="text" value="Label"
+							placeholder="search a user..." disabled>
+						</input>
+					</div>
 
-				<div class="form-group">
-					<label class="label-error" for="Error">Error</label>
-					<input class="input-error" type="text" value="Label" placeholder="%saperrie..."> </input>
+					<div class="form-group">
+						<label class="label-error" for="Error">Error</label>
+						<input class="input-error" type="text" value="Label" placeholder="%saperrie..."> </input>
+					</div>
 				</div>
-			</div>
-			<div class="form">
-				<h2> Buttons</h2>
-				<span> Inactive </span>
-				<input class="button-default" type="submit" value="submit"> </input>
-				<input class="button-default" type="button" value="button"> </input>
-				<span> Hover </span>
-				<input class="button-hover" type="submit" value="submit"> </input>
-				<input class="button-hover" type="button" value="button"> </input>
-				<span> Active </span>
-				<input class="button-active" type="submit" value="submit"> </input>
-				<input class="button-active" type="button" value="button"> </input>
-				<span> Disabled </span>
-				<input class="button-disabled" type="submit" value="submit" disabled> </input>
-				<input class="button-disabled" type="button" value="button" disabled> </input>
 			</div>
 		</div>
+		<div class="block">
+			<div class="form">
+				<h2> Buttons</h2>
+				<div class="form-background">
+					<span> Inactive </span>
+					<input class="button-default" type="submit" value="submit"> </input>
+					<input class="button-default" type="button" value="button"> </input>
+					<span> Hover </span>
+					<input class="button-hover" type="submit" value="submit"> </input>
+					<input class="button-hover" type="button" value="button"> </input>
+					<span> Active </span>
+					<input class="button-active" type="submit" value="submit"> </input>
+					<input class="button-active" type="button" value="button"> </input>
+					<span> Disabled </span>
+					<input class="button-disabled" type="submit" value="submit" disabled> </input>
+					<input class="button-disabled" type="button" value="button" disabled> </input>
+				</div>
+			</div>
 
-	</div>
+		</div>
 	</div>
 </body>
 
