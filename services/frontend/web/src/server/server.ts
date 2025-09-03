@@ -29,7 +29,7 @@ function addPlugins(serv: FastifyInstance) {
 		})
 		.register(servRoutes)
 		.register(fastifyVite, {
-			root: import.meta.dirname, // where to look for vite.config.js
+			root: "/app",
 			dev: process.argv.includes('--dev'),
 			spa: true
 		});
