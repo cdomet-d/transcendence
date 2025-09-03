@@ -8,7 +8,7 @@
 <body>
 	<div class="card">
 		<h1> Atoms element designs </h1>
-		<div class="palette">
+		<div class="block">
 			<h1> Spacings and sizes </h1>
 			<h2> Spacings (paddings, margins) </h2>
 			<p> Spacing determines the neutral space between elements. It's controlled through margins and padding. Our
@@ -35,8 +35,14 @@
 				<li>border-right: #a74500 solid 8px;</li>
 			</ul>
 			<p> Spacing and margins are better applied on the <bold> parent </bold> element of a item, to ensure that
-				formatting is coming from the outside in.</p>
-
+				formatting is coming from the outside in. This is achieved by using the `grid` layout, as such: </p>
+			<code class="blockcode">
+					display: grid; <br>
+					grid-template-columns: auto; <br>
+					gap: var(--space-m); <br>
+			</code>
+			<p> This formats content in a way that keeps spacing coherent and even accross all elements. It can be
+				manipulated to add more columns, retaining a regular gap.</p>
 			<h2> Sizes </h2>
 			<p> Sizing is relative to the height and width of things (titles, buttons, colored elements...). </p>
 			<p> We apply the same unit grid to sizing than we did to spacing, meaning that our increment value is 0.4;
@@ -46,81 +52,84 @@
 			</p>
 
 			<p> Sizing variables are defined as follow:</p>
-			<ul>
-				<li>--xxl: 6rem </li>
-				<li>--xl: 5rem </li>
-				<li>--l: 4rem </li>
-				<li>--m: 3rem </li>
-				<li>--regular: 1rem </li>
-			</ul>
+			<code class="blockcode">
+				--xxl: 6rem <br>
+				--xl: 5rem <br>
+				--l: 4rem <br>
+				--m: 3rem <br>
+				--regular: 1rem <br>
+			</code>
 		</div>
-		<div class="palette">
+		<div class="block">
 			<h1> Colors </h1>
 			<h2> Palette </h2>
 			<h3> Backgrounds </h3>
 			<p> HEX: #fffcf7 // RGB: [255, 252, 247] </p>
-			<div style="background-color: #fffcf7;"></div>
-			<div style="background: linear-gradient(90deg, #fffcf7 0%, #fffcf700 100%);"></div>
+			<div class="swatch" style="background-color: #fffcf7;"></div>
+			<div class="swatch" style="background: linear-gradient(90deg, #fffcf7 0%, #fffcf700 100%);"></div>
 			<p> HEX: #93eaeb // RGB: [147, 234, 235] </p>
-			<div style="background-color: #93eaeb;"></div>
-			<div style="background: linear-gradient(90deg, #93eaeb 0%, #93eaeb00 100%);"></div>
+			<div class="swatch" style="background-color: #93eaeb;"></div>
+			<div class="swatch" style="background: linear-gradient(90deg, #93eaeb 0%, #93eaeb00 100%);"></div>
 			<p> HEX: #0e4a4b // RGB: [14, 74, 75] </p>
-			<div style="background-color: #0e4a4b;"></div>
-			<div style="background: linear-gradient(90deg, #0e4a4b 0%, #0e4a4b00 100%);"></div>
+			<div class="swatch" style="background-color: #0e4a4b;"></div>
+			<div class="swatch" style="background: linear-gradient(90deg, #0e4a4b 0%, #0e4a4b00 100%);"></div>
 			<h4> Gradients </h4>
-			<div class="body-background"
+			<div class="body-background" class="swatch"
 				style="background: repeating-linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(9, 78, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);">
 			</div>
 
 			<h3> Accents & Titles </h3>
 			<p> HEX: #f8ca53 // RGB: [248, 202, 83] </p>
-			<div style="background-color: #f8ca53;"></div>
-			<div style="background: linear-gradient(90deg, #f8ca53 0%, #f8ca5300 100%);"></div>
+			<div class="swatch" style="background-color: #f8ca53;"></div>
+			<div class="swatch" style="background: linear-gradient(90deg, #f8ca53 0%, #f8ca5300 100%);"></div>
 			<p> HEX: #a74500 // RGB: [167, 69, 0] </p>
-			<div style="background-color: #a74500;"></div>
-			<div style="background: linear-gradient(90deg, #a74500 0%, #a7450000 100%);"></div>
+			<div class="swatch" style="background-color: #a74500;"></div>
+			<div class="swatch" style="background: linear-gradient(90deg, #a74500 0%, #a7450000 100%);"></div>
 
 			<h3> Typography </h3>
 			<p> HEX: #835441 // RGB: [131, 84, 65] </p>
-			<div style="background-color: #835441;"></div>
-			<div style="background: linear-gradient(90deg, #835441 0%, #83544100 100%);"></div>
+			<div class="swatch" style="background-color: #835441;"></div>
+			<div class="swatch" style="background: linear-gradient(90deg, #835441 0%, #83544100 100%);"></div>
 			<p> HEX: #372a25 // RGB: [55, 42, 37] </p>
-			<div style="background-color: #372a25;"></div>
-			<div style="background: linear-gradient(90deg, #372a25 0%, #372a2500 100%);"></div>
+			<div class="swatch" style="background-color: #372a25;"></div>
+			<div class="swatch" style="background: linear-gradient(90deg, #372a25 0%, #372a2500 100%);"></div>
 		</div>
 
 
-		<div class="palette">
+		<div class="block">
 			<h2> Accessible color combinations </h2>
-			<div style="background-color: #fffcf7;">
-				<p style="color:#835441;"> Background: #fffcf7 | Text: #835441 </p>
-			</div>
-			<div style="background-color: #fffcf7;">
+			<div class="swatch" style="background-color: #fffcf7;">
 				<p style="color:#372a25;"> Background: #fffcf7 | Text: #372a25 </p>
 			</div>
+			<div class="swatch" style="background-color: #fffcf7;">
+				<p style="color:#835441;"> Background: #fffcf7 | Text: #835441 </p>
+			</div>
+			<div class="swatch" style="background-color: #fffcf7;">
+				<p style="color:#a74500;"> Background: #fffcf7 | Text: #a74500 </p>
+			</div>
 
-			<div style="background-color: #f8ca53;">
+			<div class="swatch" style="background-color: #f8ca53;">
 				<p style="color:#372a25;"> Background: #f8ca53 | Text: #372a25 </p>
 			</div>
 
-			<div style="background-color: #a74500;">
+			<div class="swatch" style="background-color: #a74500;">
 				<p style="color:#fffcf7;"> Background: #372a25 | Text: #fffcf7 </p>
 			</div>
 
-			<div style="background-color: #0e4a4b;">
+			<div class="swatch" style="background-color: #0e4a4b;">
 				<p style="color:#fffcf7;"> Background: #0e4a4b | Text: #fffcf7 </p>
 			</div>
 
-			<div style="background-color: #835441;">
+			<div class="swatch" style="background-color: #835441;">
 				<p style="color:#fffcf7;"> Background: #835441 | Text: #fffcf7 </p>
 			</div>
 
-			<div style="background-color: #372a25;">
+			<div class="swatch" style="background-color: #372a25;">
 				<p style="color:#fffcf7;"> Background: #372a25 | Text: #fffcf7 </p>
 			</div>
 
 			<h3> Acceptable for large elements (> 24px) </h3>
-			<div style="background-color: #0e4a4b;">
+			<div class="swatch" style="background-color: #0e4a4b;">
 				<p style="color:#f8ca53;"> Background: #0e4a4b | Text: #f8ca53 </p>
 			</div>
 		</div>
@@ -128,147 +137,148 @@
 		<h1> Typography </h1>
 		<div class="block">
 			<h2> Fonts </h2>
-			<p> The font used here is PixelOperator by <a href="https://www.dafont.com/fr/profile.php?user=340815">
-					Jayvee Enaguas </a> downloaded on <a href="https://www.dafont.com/fr/pixel-operator.font">
+			<p> The font used here is PixelOperator by <a class="a-default"
+					href="https://www.dafont.com/fr/profile.php?user=340815">
+					Jayvee Enaguas </a> downloaded on <a class="a-default"
+					href="https://www.dafont.com/fr/pixel-operator.font">
 					Dafont</a>. </p>
 
-			<p>All titles have the following attributes: </p>
-			<ul>
-				<li>margin: 0px 0px 0px 0px</li>
-				<li>padding: var(--space-s) 0px var(--space-s) 0px</li>
-			</ul>
+			<p> Most spacing is handled through the grid attribute with spacings defined earlier; </p>
+			<p>All titles share the following attributes: </p>
+			<code class="blockcode">
+				margin: 0px 0px 0px 0px<br>
+				padding: var(--space-s) 0px var(--space-s) 0px<br>
+				background: repeating-linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(9, 78, 121, 1) 50%, rgba(0,
+					212, 255, 1) 100%);<br>
+				color: var(--yellow-accent);<br>
+				font-family: PixelOperator;<br>
+				text-align: center;<br> <br>
+				# Forms the orange perspective <br>
+				text-shadow: <br>-0.0px -0.0px var(--orange-accent),<br> -0.2px -0.1px var(--orange-accent),<br> -0.4px -0.2px
+					var(--orange-accent),<br> -0.6px -0.3px var(--orange-accent),<br> -0.8px -0.4px var(--orange-accent),<br> -1.0px
+					-0.5px var(--orange-accent),<br> -1.2px -0.6px var(--orange-accent),<br> -1.4px -0.7px var(--orange-accent),<br>
+					-1.6px -0.8px var(--orange-accent),<br> -1.8px -0.9px var(--orange-accent),<br> -2.0px -1.0px
+					var(--orange-accent),<br> -2.2px -1.1px var(--orange-accent),<br> -2.4px -1.2px var(--orange-accent),<br> -2.6px
+					-1.3px var(--orange-accent),<br> -2.8px -1.4px var(--orange-accent),<br> -3.0px -1.5px var(--orange-accent),<br>
+					-3.2px -1.6px var(--orange-accent),<br> -3.4px -1.7px var(--orange-accent),<br> -3.6px -1.8px
+					var(--orange-accent),<br> -3.8px -1.9px var(--orange-accent),<br> -4.0px -2.0px var(--orange-accent),<br> -4.2px
+					-2.1px var(--orange-accent),<br> -4.4px -2.2px var(--orange-accent),<br> -4.6px -2.3px var(--orange-accent),<br>
+					-4.8px -2.4px var(--orange-accent),<br> -5.0px -2.5px var(--orange-accent),<br> -5.2px -2.6px
+					var(--orange-accent),<br> -5.4px -2.7px var(--orange-accent),<br> -5.6px -2.8px var(--orange-accent),<br> -5.8px
+					-2.9px var(--orange-accent),<br> -6.0px -3.0px var(--orange-accent),<br> -6.2px -3.1px var(--orange-accent),<br>
+					-6.4px -3.2px var(--orange-accent),<br> -6.6px -3.3px var(--orange-accent),<br> -6.8px -3.4px
+					var(--orange-accent),<br> -7.0px -3.5px var(--orange-accent),<br> -7.2px -3.6px var(--orange-accent),<br> -7.4px
+					-3.7px var(--orange-accent),<br> -7.6px -3.8px var(--orange-accent),<br> -7.8px -3.9px var(--orange-accent),<br>
+					-8.0px -4.0px var(--orange-accent),<br> -8.2px -4.1px var(--orange-accent),<br> -8.4px -4.2px
+					var(--orange-accent),<br> -8.6px -4.3px var(--orange-accent),<br> -8.8px -4.4px var(--orange-accent),<br> -9.0px
+					-4.5px var(--orange-accent);
+			</code>
+			<p>They vary through line height and font size, which are described for each below. </p>
 
-			<div>
-				<h3> h1 </h3>
-				<p> font-family: rainyhearts // color: var(--light-txt-coffee) // font-size: var(--xxl) // line-height:
-					130% </p>
-			</div>
+			<h3> HTML - h1 </h3>
+			<p> font-size: var(--xxl) // line-height: 130% </p>
+			<h1 class="title-1"> This is an example title</h1>
 
-			<div class="content">
-				<h1> This is an example title</h1>
-			</div>
+			<h3> HTML - h2 </h3>
+			<p> font-size: var(--xl) // line-height: 110% </p>
+			<h2 class="title-2"> This is an example title</h2>
 
-			<div>
-				<h3> h2 </h3>
-				<p> font-family: rainyhearts // color: var(--light-txt-coffee) // font-size: var(--xl) // line-height:
-					110% </p>
-			</div>
+			<h3> HTML - h3 </h3>
+			<p> font-size: var(--l) // line-height: 110% </p>
+			<h3 class="title-3"> This is an example title </h3>
 
-			<div class="content">
-				<h2> This is an example title</h2>
-			</div>
+			<h3> HTML - h4 </h3>
+			<p> font-size: var(--m) // line-height: 100% </p>
+			<h4 class="title-4"> This is an example title </h4>
 
-			<div>
-				<h3> h3 </h3>
-				<p>font-family: rainyhearts // color: var(--light-txt-coffee) // font-size: var(--l)// line-height:
-					110%//
-					border: none</p>
-			</div>
-			<div class="content">
-				<h3> This is an example title </h3>
-			</div>
-			<div>
-				<h3> h4 </h3>
-				<p>font-family: rainyhearts // color: var(--light-txt-coffee) // font-size: var(--l)// line-height:
-					110%//
-					border: none</p>
-			</div>
+			<h3> body paragraph </h3>
+			<p> margin: 0px 0px 0px 0px // font-size: var(--regular) // line-height: var(--space-sm) // font-family:
+				PixelOperator;</p>
+			<p>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla egestas laoreet dui, at rutrum
+				sapien tristique eget. Pellentesque viverra sed enim eget auctor. Nulla facilisi. Donec sit amet
+				porttitor urna, ut scelerisque magna. Duis viverra congue molestie. Nam cursus mauris lectus, ut
+				auctor tellus ornare ac. Nam vel mauris erat. Quisque orci mi, ornare sed justo id, volutpat
+				egestas tellus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur
+				ridiculus mus. Proin dignissim dui a placerat sagittis. Pellentesque venenatis id mi quis
+				tempor. Pellentesque pretium volutpat nunc eget consectetur. Vestibulum consequat nibh eu ornare
+				vestibulum. Nullam lacinia porttitor condimentum. Morbi vel feugiat enim.
+			</p>
+		</div>
 
-			<div class="content">
-				<h4> This is an example title </h4>
-			</div>
+		<h3> links </h3>
+		<div class="block-two-col">
+			<span> Default state: </span>
+			<a class="a-default" href="https://profile.intra.42.fr/users/aljulien" target="_blank"> This is a link </a>
+			<span> Hover state:
+			</span>
+			<a class="a-hover" href="https://profile.intra.42.fr/users/cdomet-d" target="_blank"> This is a link </a>
+			<span> Focus state:
+			</span>
+			<a class="a-focus" href="https://profile.intra.42.fr/users/csweetin" target="_blank"> This is a link </a>
+			<span> Active state:
+			</span>
+			<a class="a-focus" href="https://profile.intra.42.fr/users/saperrie" target="_blank"> This is a link </a>
+			<span> Visited state:
+			</span>
+			<a class="a-visit" href="https://profile.intra.42.fr/users/saperrie" target="_blank"> This is a link </a>
+		</div>
 
-			<div>
-				<h3> body paragraph </h3>
-				<p>font-family: rainyhearts // color: var(--light-txt-coffee) // font-size:
-					var(--regular) // line-height: 140%</p>
-			</div>
-			<div class="content">
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla egestas laoreet dui, at rutrum
-					sapien tristique eget. Pellentesque viverra sed enim eget auctor. Nulla facilisi. Donec sit amet
-					porttitor urna, ut scelerisque magna. Duis viverra congue molestie. Nam cursus mauris lectus, ut
-					auctor tellus ornare ac. Nam vel mauris erat. Quisque orci mi, ornare sed justo id, volutpat
-					egestas tellus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur
-					ridiculus mus. Proin dignissim dui a placerat sagittis. Pellentesque venenatis id mi quis
-					tempor. Pellentesque pretium volutpat nunc eget consectetur. Vestibulum consequat nibh eu ornare
-					vestibulum. Nullam lacinia porttitor condimentum. Morbi vel feugiat enim.
-				</p>
-			</div>
-
-			<div>
-				<h3> links </h3>
-			</div>
-
-			<div class="content">
-				<span> Default state:
-					<a class="a-default" href="https://kristinevike.com" target="_blank"> This is a link </a>
-				</span>
-				<span> Hover state:
-					<a class="a-hover" href="https://kristinevike.com" target="_blank"> This is a link </a>
-				</span>
-				<span> Focus state:
-					<a class="a-focus" href="https://kristinevike.com" target="_blank"> This is a link </a>
-				</span>
-				<span> Active state:
-					<a class="a-focus" href="https://kristinevike.com" target="_blank"> This is a link </a>
-				</span>
-
-				<a class="a-visited-default" href="https://kristinevike.com" target="_blank"> This is a link </a>
-			</div>
-
-			<h1> Inputs </h1>
-			<div class="block">
-				<input type="radio"> </input>
-				<input type="checkbox"> </input>
-				<div class="content">
-					<h2> Input fields </h2>
-					<div class="form-group">
-						<label class="label-inactive" for="Inactive">Inactive</label>
-						<input id="Inactive" class="input-inactive" type="text" value="Label"
-							placeholder="search a user..."> </input>
-					</div>
-
-					<div class="form-group">
-						<label class="label-focus" for="Focus">Focus</label>
-						<input id="Focus" class="input-focus" type="text" value="Label" placeholder="search a user...">
-						</input>
-					</div>
-
-					<div class="form-group">
-						<label class="label-active" for="Active">Active</label>
-						<input id="Active" class="input-active" type="text" value="Label"
-							placeholder="search a user..."> </input>
-					</div>
-					<div class="form-group">
-						<label class="label-disabled" for="Disabled">Disabled</label>
-						<input id="Disabled" class="input-disabled" type="text" value="Label"
-							placeholder="search a user..." disabled>
-						</input>
-					</div>
-
-					<div class="form-group">
-						<label class="label-error" for="Error">Error</label>
-						<input class="input-error" type="text" value="Label" placeholder="%saperrie..."> </input>
-					</div>
+		<h1> Inputs </h1>
+		<input type="radio"> </input>
+		<input type="checkbox"> </input>
+		<div class="block">
+			<div class="form">
+				<h2> Input fields </h2>
+				<div class="form-group">
+					<label class="label-inactive" for="Inactive">Inactive</label>
+					<input id="Inactive" class="input-inactive" type="text" value="Label"
+						placeholder="search a user...">
+					</input>
 				</div>
-				<div class="content">
-					<h2> Buttons</h2>
-					<p> Inactive </p>
-					<input class="button-inactive" type="submit" value="submit"> </input>
-					<input class="button-inactive" type="button" value="button"> </input>
-					<p> Hover </p>
-					<input class="button-hover" type="submit" value="submit"> </input>
-					<input class="button-hover" type="button" value="button"> </input>
-					<p> Active </p>
-					<input class="button-active" type="submit" value="submit"> </input>
-					<input class="button-active" type="button" value="button"> </input>
-					<p> Disabled </p>
-					<input class="button-disabled" type="submit" value="submit" disabled> </input>
-					<input class="button-disabled" type="button" value="button" disabled> </input>
+
+				<div class="form-group">
+					<label class="label-focus" for="Focus">Focus</label>
+					<input id="Focus" class="input-focus" type="text" value="Label" placeholder="search a user...">
+					</input>
 				</div>
+
+				<div class="form-group">
+					<label class="label-active" for="Active">Active</label>
+					<input id="Active" class="input-active" type="text" value="Label" placeholder="search a user...">
+					</input>
+				</div>
+				<div class="form-group">
+					<label class="label-disabled" for="Disabled">Disabled</label>
+					<input id="Disabled" class="input-disabled" type="text" value="Label" placeholder="search a user..."
+						disabled>
+					</input>
+				</div>
+
+				<div class="form-group">
+					<label class="label-error" for="Error">Error</label>
+					<input class="input-error" type="text" value="Label" placeholder="%saperrie..."> </input>
+				</div>
+			</div>
+			<div class="form">
+				<h2> Buttons</h2>
+				<span> Inactive </span>
+				<input class="button-default" type="submit" value="submit"> </input>
+				<input class="button-default" type="button" value="button"> </input>
+				<span> Hover </span>
+				<input class="button-hover" type="submit" value="submit"> </input>
+				<input class="button-hover" type="button" value="button"> </input>
+				<span> Active </span>
+				<input class="button-active" type="submit" value="submit"> </input>
+				<input class="button-active" type="button" value="button"> </input>
+				<span> Disabled </span>
+				<input class="button-disabled" type="submit" value="submit" disabled> </input>
+				<input class="button-disabled" type="button" value="button" disabled> </input>
 			</div>
 		</div>
+
+	</div>
+	</div>
 </body>
 
 </html>
