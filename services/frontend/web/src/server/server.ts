@@ -7,7 +7,8 @@ import fastifyVite from '@fastify/vite'
 
 try {
 	const serv: FastifyInstance = Fastify(options);
-	addPlugins(serv);
+	await addPlugins(serv);
+	await serv.vite.ready();
 	await serv.ready();
 	serv.listen({ port: 1212, host: '0.0.0.0' }).then(() => {
 		serv.log.info("serv run");
@@ -18,8 +19,8 @@ catch (err) {
 	process.exit(1);
 }
 
-function addPlugins(serv: FastifyInstance) {
-	serv.register(fastifyStatic, {
+async function addPlugins(serv: FastifyInstance) {
+	await serv.register(fastifyStatic, {
 			root: [
 				"/app/static/",
 				"/app/images/",
@@ -30,7 +31,8 @@ function addPlugins(serv: FastifyInstance) {
 		.register(servRoutes)
 		.register(fastifyVite, {
 			root: "/app",
+			clientModule: "/app/src/client/main.ts",
 			dev: process.argv.includes('--dev'),
-			spa: true
+			spa: true,
 		});
 }
