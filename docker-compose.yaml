@@ -67,6 +67,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./services/frontend/web:/app
+    user: "${T_UID}:${T_GID}"
   # matchmaking:
   #   build:
   #     context: ./services/matchmaking
@@ -119,6 +120,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/pong/app:/usr/app
+    user: "${T_UID}:${T_GID}"
   # users:
   #   build:
   #     context: ./services/users
