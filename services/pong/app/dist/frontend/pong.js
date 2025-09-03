@@ -62,7 +62,7 @@ function updatePaddlePos(pad, key, ws, ctx) {
         const newPos = Number(event.data);
         ctx.clearRect(pad.x, pad.y, 10, 54);
         pad.y = newPos;
-        drawPaddle(ctx);
+        renderGame(ctx);
     };
 }
 // window.addEventListener("keyup", createKeyUpEvent(ctx));

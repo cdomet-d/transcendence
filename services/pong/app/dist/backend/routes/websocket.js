@@ -1,6 +1,6 @@
 import { upgrade, wshandler } from '../handlers/websocket.js';
 const opts = {
-    schema: {},
+    schema: {}, //TODO: get coralie's json object
     handler: upgrade,
     wsHandler: wshandler,
 };
