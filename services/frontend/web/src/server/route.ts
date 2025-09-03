@@ -14,8 +14,9 @@ async function handler(req: FastifyRequest, rep: FastifyReply) {
     }
 }
 
-const mainRoute: FastifyPluginCallback = function (serv, options, done) {
+const servRoutes: FastifyPluginCallback = function (serv, options, done) {
     serv.get('/', handler);
+    serv.get('/central', handler);
     serv.get('/account', handler);
     serv.get('/auth', handler);
     serv.get('/user/friends', handler);
@@ -26,4 +27,4 @@ const mainRoute: FastifyPluginCallback = function (serv, options, done) {
     done();
 }
 
-export { mainRoute };
+export { servRoutes };

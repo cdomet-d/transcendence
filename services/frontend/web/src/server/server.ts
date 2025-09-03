@@ -1,10 +1,11 @@
 import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
 import fastifyStatic from '@fastify/static'
-import { mainRoute } from './route.js';
+import { servRoutes } from './route.js';
+import { options } from './serv.conf.js';
 
 try {
-	const serv: FastifyInstance = Fastify({logger: {file: "/app/server.log"}});
+	const serv: FastifyInstance = Fastify(options);
 	addPlugins(serv);
 	await serv.ready();
 	serv.listen({ port: 1212, host: '0.0.0.0' }).then(() => {
@@ -25,5 +26,5 @@ function addPlugins(serv: FastifyInstance) {
 				"/app/dist/pong/",
 			],
 		})
-		.register(mainRoute);
+		.register(servRoutes);
 }

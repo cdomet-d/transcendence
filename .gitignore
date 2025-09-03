@@ -1,8 +1,6 @@
 _logs/
 .secrets/
 *.pem
-services/frontend/web/node_modules/
-web/dist/
 .gitignore
 .notes/
 node_modules/
