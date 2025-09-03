@@ -3,6 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import fastifyStatic from '@fastify/static'
 import { servRoutes } from './route.js';
 import { options } from './serv.conf.js';
+import fastifyVite from '@fastify/vite'
 
 try {
 	const serv: FastifyInstance = Fastify(options);
@@ -22,9 +23,14 @@ function addPlugins(serv: FastifyInstance) {
 			root: [
 				"/app/static/",
 				"/app/images/",
-				"/app/dist/",
-				"/app/dist/pong/",
+				"/app/dist/client/",
+				"/app/dist/client/pong/",
 			],
 		})
-		.register(servRoutes);
+		.register(servRoutes)
+		.register(fastifyVite, {
+			root: import.meta.dirname, // where to look for vite.config.js
+			dev: process.argv.includes('--dev'),
+			spa: true
+		});
 }

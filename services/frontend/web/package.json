@@ -5,10 +5,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "vite",
-    "build": "npx @tailwindcss/cli -i ./static/style-src.css -o ./static/style-dist.css && tsc && node dist/backend/server.js",
-    "preview": "vite preview",
-    "start": "nodemon"
+    "watch:css": "npx @tailwindcss/cli -i ./static/style-src.css -o ./static/style-dist.css --watch",
+    "start": "concurrently \"npm run watch:css\" \"nodemon\""
   },
   "author": "",
   "license": "ISC",
@@ -21,7 +19,8 @@
     "typescript": "^5.9.2"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.1.12",
+    "@fastify/vite": "^8.2.0",
+    "concurrently": "^9.2.1",
     "nodemon": "^3.1.10",
     "vite": "^7.1.4"
   },

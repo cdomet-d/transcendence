@@ -1,6 +1,6 @@
 import { render404 } from './404.js';
 import { renderHeader, clearHeader } from './header.js';
-import { init } from './translation.js'
+import { init } from '../translation.js'
 
 interface routeInterface {
     path: string;
