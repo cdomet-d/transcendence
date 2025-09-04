@@ -27,6 +27,9 @@ stop:
 	@docker compose stop
 	@docker compose down
 
+cleandb:
+	@rm services/database/js/data/app.db
+
 # setenv:
 # 	@printf "$(BG)\n%-8s$(RE) %s\n" "[INFO]" "Running environnement deployment script..."
 # 	@sh .scripts/setenv.sh

@@ -11,6 +11,7 @@ if [ ! -f "$DB_FILE" ]; then
     echo "Creating SQLite database at $DB_FILE..."
     sqlite3 "$DB_FILE" < /usr/src/app/init_db.sql
     echo "Database created successfully!"
+	.data/testdb.sh
 else
     echo "Database already exists at $DB_FILE"
 fi

@@ -1,0 +1,20 @@
+usersAuth:
+1|passhash|user1|user1@example.com|2025-09-04
+
+userProfile:
+1|user1|avatar1.png|Bio of user1|blue|0|1|1|2025-09-04 13:00:00
+
+userStats:
+Error: in prepare, no such table: userStats
+
+blockedUsers:
+1|1|2
+
+friendship:
+1|1|2|2025-09-01 10:00:00|1
+
+gameMatchInfo:
+1|90|2025-09-04 12:00:00|2|1|1|2
+
+gameLobby:
+1|1
