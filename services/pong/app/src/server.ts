@@ -6,7 +6,6 @@ import { fileURLToPath } from 'url';
 // Third-party modules
 import Fastify from 'fastify'
 import websocket from '@fastify/websocket'
-import fastifyStatic from '@fastify/static';
 import type { FastifyInstance } from 'fastify';
 // Local modules
 import { wsRoute } from './routes/websocket.js';
@@ -30,13 +29,6 @@ try {
 //add plugins
 function addPlugins(serv: FastifyInstance) {
 	serv.register(websocket);
-	// serv.register(fastifyStatic, {
-	// 			root: [
-	// 				'/usr/app/static/',
-	// 				'/usr/app/dist/frontend/'
-	// 			],
-	// 			prefix: '/game/match/',
-	// 		});
 	serv.register(wsRoute);
 }
 
