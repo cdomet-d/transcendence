@@ -1,8 +1,5 @@
 {
   "compilerOptions": {
-    // "outDir": "dist/client",
-    // "rootDir": "src/client",
-
     "target": "ES2022",
     "useDefineForClassFields": true,
     "module": "ESNext",
