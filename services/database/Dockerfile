@@ -7,10 +7,8 @@ RUN apk update && apk add --no-cache sqlite
 WORKDIR /usr/src/app
 
 COPY ./js /usr/src/app
-COPY init_db.sql /usr/src/init_db.sql
-COPY creatingDB.sh /usr/src/app
 
-RUN chmod +x /usr/src/app/creatingDB.sh
+RUN chmod 777 /usr/src/app/creatingDB.sh
 
 ENTRYPOINT ["/usr/src/app/creatingDB.sh"]
 CMD ["node", "listener.js"]

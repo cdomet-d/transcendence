@@ -1,14 +1,19 @@
 #!/bin/sh
-DB_FILE="/usr/src/app/app.db"
+
+DB_DIR="/usr/src/app/data"
+DB_FILE="$DB_DIR/app.db"
+
+# Create data directory if it doesn't exist
+mkdir -p "$DB_DIR"
+
+# Initialize database if it doesn't exist
 if [ ! -f "$DB_FILE" ]; then
-    echo "Creating SQLite database..."
-    sqlite3 $DB_FILE < /usr/src/app/init_db.sql
+    echo "Creating SQLite database at $DB_FILE..."
+    sqlite3 "$DB_FILE" < /usr/src/app/init_db.sql
+    echo "Database created successfully!"
+else
+    echo "Database already exists at $DB_FILE"
 fi
 
-# Exec the default CMD or keep the container running. For example:
-# If no argument, just keep it running with a shell:
-if [ "$#" -eq 0 ]; then
-    exec sh
-else
-    exec "$@"
-fi
+# Execute the command passed to the container (keeps it running)
+exec "$@"
