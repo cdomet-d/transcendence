@@ -1,4 +1,4 @@
-import fsp from 'fs/promises';
+// import fsp from 'fs/promises';
 import type { FastifyPluginCallback } from 'fastify';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
