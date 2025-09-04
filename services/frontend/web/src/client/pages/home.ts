@@ -1,6 +1,6 @@
 ;
-import { t } from './translation.ts';
-import { renderLanguageDropdownButton } from './languageDropdownButton.ts'
+import { t } from './language/translation.ts';
+import { renderLanguageDropdownButton } from './language/languageDropdownButton.ts'
 
 export function renderHome(main: HTMLElement) {
   main.innerHTML = `
