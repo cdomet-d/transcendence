@@ -1,4 +1,4 @@
-import type { FastifyRequest, FastifyReply } from 'fastify';
+import type { FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 import { paddlePos } from './pong.js';
 
