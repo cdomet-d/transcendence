@@ -45,7 +45,7 @@ function runServ(serv) {
     console.log(process.env.PORT);
     serv.listen({ port: port, host: '0.0.0.0' })
         .then((address) => {
-        serv.log.info(`Pong Microservice listening on ${port} at ${address}`);
+        serv.log.info(`Matchmaking Microservice listening on ${port} at ${address}`);
     })
         .catch((err) => { throw err; });
 }

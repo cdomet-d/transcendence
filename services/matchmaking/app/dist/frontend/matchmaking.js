@@ -12,10 +12,10 @@ function matchmaking(ws) {
     }
     // renderMM(ctx);
     renderGame(ctx);
-    window.addEventListener("keydown", createKeyDownEvent(ws));
+    window.addEventListener("keydown", createKeyDownEvent(ws, ctx));
 }
 function styleGame(canvas) {
-    const game = document.getElementById("game");
+    const game = document.getElementById("matchmaking");
     game.className = "min-h-screen flex flex-col items-center justify-center bg-white";
     // "border-[5px] border-[#f7d793] bg-[antiquewhite]";
     const h1 = document.querySelector('h1');
@@ -45,16 +45,17 @@ function drawBall(ctx) {
     ctx.arc(WIDTH / 2, HEIGHT / 2, 10, 0, Math.PI * 2, false);
     ctx.fill();
 }
-function createKeyDownEvent(ws) {
+function createKeyDownEvent(ws, ctx) {
     return function keyDownEvent(event) {
         if (event.key === "m")
-            updatePaddlePos("matchmaking", ws);
+            updatePaddlePos("matchmaking", ws, ctx);
     };
 }
-function updatePaddlePos(payload, ws) {
+function updatePaddlePos(payload, ws, ctx) {
     ws.send(payload);
     ws.onmessage = (event) => {
         // PROCESS SERVER RESPONSE
+        renderGame(ctx);
     };
 }
 // window.addEventListener("keyup", createKeyUpEvent(ctx));

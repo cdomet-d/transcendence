@@ -21,11 +21,11 @@ function matchmaking(ws: WebSocket) {
 
 	// renderMM(ctx);
 	renderGame(ctx);
-	window.addEventListener("keydown", createKeyDownEvent(ws));
+	window.addEventListener("keydown", createKeyDownEvent(ws, ctx));
 }
 
 function styleGame(canvas: HTMLCanvasElement) {
-	const game = document.getElementById("game") as HTMLElement;
+	const game = document.getElementById("matchmaking") as HTMLElement;
 	game.className = "min-h-screen flex flex-col items-center justify-center bg-white"
 	// "border-[5px] border-[#f7d793] bg-[antiquewhite]";
 
@@ -62,17 +62,18 @@ function drawBall(ctx: CanvasRenderingContext2D) {
 	ctx.fill();
 }
 
-function createKeyDownEvent(ws: WebSocket) {
+function createKeyDownEvent(ws: WebSocket, ctx: CanvasRenderingContext2D) {
 	return function keyDownEvent(event: KeyboardEvent): void {
 		if (event.key === "m")
-			updatePaddlePos("matchmaking", ws);
+			updatePaddlePos("matchmaking", ws, ctx);
 	}
 }
 
-function updatePaddlePos(payload: string, ws: WebSocket) {
+function updatePaddlePos(payload: string, ws: WebSocket, ctx: CanvasRenderingContext2D) {
 	ws.send(payload);
 	ws.onmessage = (event) => {
 		// PROCESS SERVER RESPONSE
+		renderGame(ctx);
 	};
 }
 
