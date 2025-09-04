@@ -208,7 +208,8 @@
 				sapien tristique eget. Pellentesque viverra sed enim eget auctor. Nulla facilisi. Donec sit amet
 				porttitor urna, ut scelerisque magna. Duis viverra congue molestie. Nam cursus mauris lectus, ut
 				auctor tellus ornare ac. Nam vel mauris erat. Quisque orci mi, ornare sed justo id, volutpat
-				egestas tellus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur
+				egestas tellus. <a class="a-default">CLICK ME</a> Orci varius natoque penatibus et magnis dis
+				parturient montes, nascetur
 				ridiculus mus. Proin dignissim dui a placerat sagittis. Pellentesque venenatis id mi quis
 				tempor. Pellentesque pretium volutpat nunc eget consectetur. Vestibulum consequat nibh eu ornare
 				vestibulum. Nullam lacinia porttitor condimentum. Morbi vel feugiat enim.
@@ -218,20 +219,35 @@
 		<h3> links </h3>
 		<div class="block-two-col">
 			<span> Default state: </span>
-			<a class="a-default" href="https://profile.intra.42.fr/users/aljulien" target="_blank"> This is a link </a>
+			<a class="a-default" href="https://profile.intra.42.fr/users/aljulien" target="_blank"> This is a link
+			</a>
 			<span> Hover state:
 			</span>
-			<a class="a-hover" href="https://profile.intra.42.fr/users/cdomet-d" target="_blank"> This is a link </a>
+			<a class="a-hover" href="https://profile.intra.42.fr/users/cdomet-d" target="_blank"> This is a link
+			</a>
 			<span> Focus state:
 			</span>
-			<a class="a-focus" href="https://profile.intra.42.fr/users/csweetin" target="_blank"> This is a link </a>
+			<a class="a-focus" href="https://profile.intra.42.fr/users/csweetin" target="_blank"> This is a link
+			</a>
 			<span> Active state:
 			</span>
-			<a class="a-focus" href="https://profile.intra.42.fr/users/saperrie" target="_blank"> This is a link </a>
+			<a class="a-focus" href="https://profile.intra.42.fr/users/saperrie" target="_blank"> This is a link
+			</a>
 			<span> Visited state:
 			</span>
-			<a class="a-visit" href="https://profile.intra.42.fr/users/saperrie" target="_blank"> This is a link </a>
+			<a class="a-visit" href="https://profile.intra.42.fr/users/saperrie" target="_blank"> This is a link
+			</a>
+			<span> Examples in a paragraph</span>
+			<p>Stranger Things is set in the fictional rural town of <a class="a-default"
+					href="https://strangerthings.fandom.com/wiki/Hawkins">Hawkins, Indiana</a>, in the 1980s. The
+				nearby Hawkins National Laboratory ostensibly performs scientific research for the United States
+				Department of Energy
+				but also secretly experiments with the paranormal and supernatural, sometimes with human test subjects.
+				They have inadvertently created a portal to an alternate dimension they refer to as the <a
+					class="a-default" href="https://strangerthings.fandom.com/wiki/The_Upside_Down">Upside Down</a>,
+				whose presence begins to affect the residents of Hawkins in unusual ways. </p>
 		</div>
+
 
 		<h1 class="title-1"> Inputs </h1>
 		<div class="block">
@@ -239,60 +255,70 @@
 			<input type="checkbox"> </input>
 			<div class="form">
 				<h2> Input fields </h2>
-				<div class="form-background">
-					<div class="form-group">
-						<label class="label-inactive" for="Inactive">Inactive</label>
-						<input id="Inactive" class="input-inactive" type="text" value="Label"
-							placeholder="search a user...">
-						</input>
-					</div>
+				<div class="form-group">
+					<label class="label-inactive" for="Inactive">Inactive</label>
+					<input id="Inactive" class="input-inactive" type="text" value="Label"
+						placeholder="search a user...">
+					</input>
+				</div>
 
-					<div class="form-group">
-						<label class="label-focus" for="Focus">Focus</label>
-						<input id="Focus" class="input-focus" type="text" value="Label" placeholder="search a user...">
-						</input>
-					</div>
+				<div class="form-group">
+					<label class="label-focus" for="Focus">Focus</label>
+					<input id="Focus" class="input-focus" type="text" value="Label" placeholder="search a user...">
+					</input>
+				</div>
 
-					<div class="form-group">
-						<label class="label-active" for="Active">Active</label>
-						<input id="Active" class="input-active" type="text" value="Label"
-							placeholder="search a user...">
-						</input>
-					</div>
-					<div class="form-group">
-						<label class="label-disabled" for="Disabled">Disabled</label>
-						<input id="Disabled" class="input-disabled" type="text" value="Label"
-							placeholder="search a user..." disabled>
-						</input>
-					</div>
+				<div class="form-group">
+					<label class="label-active" for="Active">Active</label>
+					<input id="Active" class="input-active" type="text" value="Label" placeholder="search a user...">
+					</input>
+				</div>
+				<div class="form-group">
+					<label class="label-disabled" for="Disabled">Disabled</label>
+					<input id="Disabled" class="input-disabled" type="text" value="Label" placeholder="search a user..."
+						disabled>
+					</input>
+				</div>
 
-					<div class="form-group">
-						<label class="label-error" for="Error">Error</label>
-						<input class="input-error" type="text" value="Label" placeholder="%saperrie..."> </input>
-					</div>
+				<div class="form-group">
+					<label class="label-error" for="Error">Error</label>
+					<input class="input-error" type="text" value="Label" placeholder="%saperrie..."> </input>
 				</div>
 			</div>
 		</div>
 		<div class="block">
 			<div class="form">
 				<h2> Buttons</h2>
-				<div class="form-background">
-					<span> Inactive </span>
-					<input class="button-default" type="submit" value="submit"> </input>
-					<input class="button-default" type="button" value="button"> </input>
-					<span> Hover </span>
-					<input class="button-hover" type="submit" value="submit"> </input>
-					<input class="button-hover" type="button" value="button"> </input>
-					<span> Active </span>
-					<input class="button-active" type="submit" value="submit"> </input>
-					<input class="button-active" type="button" value="button"> </input>
-					<span> Disabled </span>
-					<input class="button-disabled" type="submit" value="submit" disabled> </input>
-					<input class="button-disabled" type="button" value="button" disabled> </input>
+				<span> Inactive</span>
+				<div class="wrapper">
+					<button class="button-default" type="button"> Superb Button !</button>
+				</div>
+				<span> Hover</span>
+				<div class="wrapper">
+					<button class="button-hover" type="button"> Superb Button !</button>
+				</div>
+				<span> Active</span>
+				<div class="wrapper">
+					<button class="button-active" type="button"> Superb Button !</button>
+				</div>
+				<span> Disabled</span>
+				<div class="wrapper">
+					<button class="button-disabled" type="button" disabled> Superb Button !</button>
 				</div>
 			</div>
-
 		</div>
+		<h1 class="title-1"> Menu elements </h1>
+		<div class="block">
+			<div class="menu-wrapper">
+				<div class="menu-element"> A menu element <div class="menu-decor-h"> </div>
+					<div class="menu-decor-v"></div>
+				</div>
+			<div class="menu-element"> A menu element </div>
+			<div class="menu-element"> A menu element </div>
+			<div class="menu-element"> A menu element </div>
+			</div>
+		</div>
+	</div>
 	</div>
 </body>
 
