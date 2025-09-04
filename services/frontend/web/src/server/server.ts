@@ -2,6 +2,7 @@ import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
 import { servRoutes } from './route.js';
 import { options } from './serv.conf.js';
+// import fastifyStatic from '@fastify/static'
 import fastifyVite from '@fastify/vite'
 
 try {
@@ -20,8 +21,13 @@ catch (err) {
 
 async function addPlugins(serv: FastifyInstance) {
 	await serv.register(servRoutes)
-		.register(fastifyVite, {
-			root: "/app",
-			dev: process.argv.includes('--dev'),
-		});
+				// .register(fastifyStatic, {
+				// 	root: [
+				// 		'/app/src/client/pages'
+				// 	]
+				// })
+				.register(fastifyVite, {
+					root: "/app",
+					dev: process.argv.includes('--dev'),
+				});
 }
