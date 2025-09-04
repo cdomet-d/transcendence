@@ -1,10 +1,10 @@
-import { renderHome } from './home.js';
-import { render404 } from './404.js';
-import { renderCentral } from './central.js';
-import { renderProfile } from './profile.js';
-import { renderLeaderboard } from './leaderboard.js';
-import { renderTournament } from './tournament.js';
-import { wsRequest } from './pong/wsreply.js';
+import { renderHome } from './home.ts';
+import { render404 } from './404.ts';
+import { renderCentral } from './central.ts';
+import { renderProfile } from './profile.ts';
+import { renderLeaderboard } from './leaderboard.ts';
+import { renderTournament } from './tournament.ts';
+import { wsRequest } from './pong/wsreply.ts';
 
 export const routes = [
   { path: '/', callback: renderHome },

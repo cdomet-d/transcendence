@@ -1,6 +1,6 @@
-import { render404 } from './404.js';
-import { renderHeader, clearHeader } from './header.js';
-import { init } from '../translation.js'
+import { render404 } from './404.ts';
+import { renderHeader, clearHeader } from './header.ts';
+import { init } from './translation.ts'
 
 interface routeInterface {
     path: string;

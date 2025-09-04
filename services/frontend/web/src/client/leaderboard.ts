@@ -1,5 +1,5 @@
 
-import { renderPageTemplate } from './page.template.js'
+import { renderPageTemplate } from './page.template.ts'
 
 export function renderLeaderboard(main: HTMLElement) {
 	renderPageTemplate(main, {

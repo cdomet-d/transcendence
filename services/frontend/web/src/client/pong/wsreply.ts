@@ -1,4 +1,4 @@
-import { pong } from './pong.js'
+import { pong } from './pong.ts'
 
 function wsRequest(main: HTMLElement) {
     const ws = new WebSocket('wss://localhost:8443/api/game/match');

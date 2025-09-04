@@ -1,5 +1,5 @@
-import { Router } from './router.class.js';
-import { routes } from './routes.js';
+import { Router } from './router.class.ts';
+import { routes } from './routes.ts';
 
 const router = new Router(routes);
 
