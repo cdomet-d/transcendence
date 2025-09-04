@@ -71,7 +71,7 @@ services:
       - ssl-key.pem
       - ssl-cert.pem
     volumes:
-      - ./services/frontend/web:/app
+      - ./services/frontend/app:/app
     # user: "${T_UID}:${T_GID}"
   # matchmaking:
   #   build:
