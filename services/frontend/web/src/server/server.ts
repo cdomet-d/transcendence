@@ -23,6 +23,5 @@ async function addPlugins(serv: FastifyInstance) {
 		.register(fastifyVite, {
 			root: "/app",
 			dev: process.argv.includes('--dev'),
-			spa: true,
 		});
 }
