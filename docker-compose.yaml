@@ -11,15 +11,22 @@ secrets:
     file: .secrets/ssl-key.pem
 
 services:
-  # accessibility:
-  #   build:
-  #     context: ./services/accessibility
-  #     dockerfile: Dockerfile
-  #   container_name: accessibility
-  #   image: accessibility:0.0.1
-  #   networks:
-  #     - transcendence
-  #   restart: unless-stopped
+  accessibility:
+    build:
+      context: ./services/accessibility
+      dockerfile: Dockerfile
+    container_name: accessibility
+    image: accessibility:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/accessibility/app:/usr/app
   # account:
   #   build:
   #     context: ./services/account
