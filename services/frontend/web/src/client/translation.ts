@@ -16,7 +16,7 @@ const savedLang = localStorage.getItem('selectedLanguage');
   } else {
     currentLang = 'en';
   }
-  translation = resources[currentLang] ?? {}; //TODO: fix that ?? {}
+  translation = resources[currentLang];
 }
 
 export function t(key: string): string {
