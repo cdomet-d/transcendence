@@ -5,14 +5,11 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "watch:css": "npx @tailwindcss/cli -i ./static/style-src.css -o ./static/style-dist.css --watch",
-    "start": "concurrently \"npm run watch:css\" \"nodemon\""
+    "start": "nodemon"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@fastify/static": "^8.2.0",
-    "@tailwindcss/cli": "^4.1.12",
     "@types/node": "^24.3.0",
     "fastify": "^5.5.0",
     "tailwindcss": "^4.1.12",
@@ -20,7 +17,7 @@
   },
   "devDependencies": {
     "@fastify/vite": "^8.2.0",
-    "concurrently": "^9.2.1",
+    "@tailwindcss/vite": "^4.1.12",
     "nodemon": "^3.1.10",
     "vite": "^7.1.4"
   },
