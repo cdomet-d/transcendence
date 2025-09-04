@@ -8,3 +8,4 @@ node_modules/
 server.log
 dist/
 style-dist.css
+package-lock.json
