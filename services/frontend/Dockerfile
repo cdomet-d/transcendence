@@ -4,16 +4,7 @@ RUN mkdir -p /app && chown -R 1000:1000 /app
 
 WORKDIR /app
 
-# COPY ./web/package-lock.json ./web/package.json ./
-# COPY ./web/vite.config.ts ./web/tsconfig.json ./web/index.html ./web/listener.js
-# COPY ./web/src/ src/
-# COPY ./web/public/ public/
-
-# RUN npm install
-
-# EXPOSE 5173
-
-# CMD ["npm", "run", "build"]
+EXPOSE 1212
 
 COPY ./tools/front.sh /usr/local/bin/
 
