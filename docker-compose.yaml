@@ -59,15 +59,22 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/auth/app:/usr/app
-  # dashboard:
-  #   build:
-  #     context: ./services/dashboards
-  #     dockerfile: Dockerfile
-  #   container_name: dashboard
-  #   image: dashboard:0.0.1
-  #   networks:
-  #     - transcendence
-  #   restart: unless-stopped
+  dashboard:
+    build:
+      context: ./services/dashboards
+      dockerfile: Dockerfile
+    container_name: dashboard
+    image: dashboard:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/dashboards/app:/usr/app
   # friends:
   #   build:
   #     context: ./services/friends
