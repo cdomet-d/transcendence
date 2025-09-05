@@ -8,4 +8,5 @@ npm install
 
 # npx tsc
 
-npm start
+npm run dev
+//npm start

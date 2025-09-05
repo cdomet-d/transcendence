@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon"
+    "dev": "nodemon",
+    "start": "tsc && node dist/server.js"
   },
   "keywords": [],
   "author": "",

@@ -1,10 +1,11 @@
 {
-  "name": "dashboard",
+  "name": "users",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon"
+    "dev": "nodemon",
+    "start": "tsc && node dist/server.js"
   },
   "author": "",
   "license": "ISC",
