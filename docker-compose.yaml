@@ -43,15 +43,22 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/account/app:/usr/app
-  # auth:
-  #   build:
-  #     context: ./services/auth
-  #     dockerfile: Dockerfile
-  #   container_name: auth
-  #   image: auth:0.0.1
-  #   networks:
-  #     - transcendence
-  #   restart: unless-stopped
+  auth:
+    build:
+      context: ./services/auth
+      dockerfile: Dockerfile
+    container_name: auth
+    image: auth:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/auth/app:/usr/app
   # dashboard:
   #   build:
   #     context: ./services/dashboards
