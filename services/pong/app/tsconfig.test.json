@@ -1,20 +1,7 @@
 {
-  "compilerOptions": {
-  "target": "ES6",                        
-  "module": "CommonJS",                   
-  "moduleResolution": "node",            
-  "esModuleInterop": true,              
-  "allowJs": true,                        
-  "jsx": "react-jsx",                     
-  "noEmit": true,                        
-  "resolveJsonModule": true,             
-  "strict": true,     
-  // "verbatimModuleSyntax": true,
-  "isolatedModules": true,
-  // "noUncheckedSideEffectImports": true,
-  "moduleDetection": "force",
-  "skipLibCheck": true,
-  },
+  "extends": "./tsconfig.node.json",
   "include": ["src/**/*", "test/**/*"],
-  "exclude": ["node_modules"]
+  "compilerOptions": {
+    "types": ["jest", "node"]
+  }
 }
