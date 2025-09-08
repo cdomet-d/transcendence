@@ -11,7 +11,7 @@ reback: fclean backup
 
 test: stop
 	@docker compose -f docker-compose-test.yaml build
-	@docker compose up -d
+	@docker compose -f docker-compose-test.yaml up -d
 
 clean: stop
 	@printf "$(BG)\n%-8s$(RE) %s\n" "[INFO]" "Removing stale logs..."
