@@ -126,6 +126,7 @@ services:
       - ./services/matchmaking/app:/usr/app
     depends_on:
       - nats-server
+      - pong
   monitoring:
     build:
       context: ./services/monitoring

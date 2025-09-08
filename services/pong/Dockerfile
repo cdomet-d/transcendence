@@ -4,20 +4,10 @@ RUN mkdir -p /usr/app && chown -R 1000:1000 /usr/app
 
 WORKDIR /usr/app
 
-COPY tools/pong.sh /usr/local/bin/ 
+COPY tools/pong.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/pong.sh
 
 EXPOSE 2020
-
-# --------------- NATS
-WORKDIR /app
-
-RUN npm install nats dotenv
-
-COPY ./entrypoint/subscriber.js ./
-
-ENTRYPOINT [ "node", "subscriber.js" ]
-# --------------- NATS
 
 CMD ["pong.sh"]

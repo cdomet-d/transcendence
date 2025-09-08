@@ -10,6 +10,7 @@ import type { FastifyInstance } from 'fastify';
 // Local modules
 import { wsRoute } from './routes/websocket.js';
 import { options } from './serv.conf.js'
+import { natsSubscribtion } from './subscriber.js';
 /***********************************************/
 
 // const __filename = fileURLToPath(import.meta.url);
@@ -21,6 +22,7 @@ try {
 	addPlugins(serv);
 	await serv.ready();
 	runServ(serv);
+	natsSubscribtion();
 } catch (err) {
 	console.error('server error:', err);
 	process.exit(1);
@@ -45,4 +47,3 @@ function runServ(serv: FastifyInstance): void {
 			})
 			.catch((err) => { throw err; });
 }
-

@@ -1,9 +1,9 @@
-require('dotenv').config();
+import 'dotenv/config';
+import { connect, StringCodec } from 'nats';
 
-const { connect, StringCodec } = require('nats');
-
-(async () => {
-  const nc = await connect({ servers: "nats://nats-server:4222" , token: process.env.NATS_SERVER_TOKEN});
+export async function natsSubscribtion() {
+  let token = process.env.NATS_SERVER_TOKEN;
+  const nc = await connect({ servers: "nats://nats-server:4222", token: token ?? "" });
 
   const sc = StringCodec();
 
@@ -15,4 +15,4 @@ const { connect, StringCodec } = require('nats');
   })();
 
   console.log(`Listening for messages on "matchmaking.ready"...`);
-})();
+};
