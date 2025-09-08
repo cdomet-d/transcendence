@@ -56,6 +56,8 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    volumes:
+      - ./services/friends:/usr/app
   frontend:
     build:
       context: ./services/frontend
@@ -151,5 +153,11 @@ volumes:
     driver: local
     driver_opts: 
       device: services/database/js
+      o: bind
+      type: none
+  friendsDB:   
+    driver: local
+    driver_opts:
+      device: services/friends/database
       o: bind
       type: none
