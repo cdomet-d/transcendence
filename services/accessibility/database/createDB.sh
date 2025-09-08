@@ -1,7 +1,7 @@
 #!/bin/sh
 
 DB_DIR="/usr/src/database"
-DB_FILE="$DB_DIR/friends.db"
+DB_FILE="$DB_DIR/language.db"
 SEED_FILE="/usr/src/database/seed.sql"
 
 # Create data directory if it doesn't exist

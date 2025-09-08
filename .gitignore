@@ -11,3 +11,4 @@ server.log
 *.db
 services/pong/app/dist/
 services/pong/app/static/style-dist.css
+*.logs

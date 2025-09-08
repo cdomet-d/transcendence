@@ -10,8 +10,6 @@ COPY ./js /usr/src/app
 
 COPY ./database /usr/src/database
 
-WORKDIR /usr/src/database
-
 WORKDIR /usr/src/app
 
 EXPOSE 1616
