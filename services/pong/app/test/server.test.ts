@@ -18,7 +18,7 @@ describe('Fastify server', () => {
     });
 
     test('WebSocket should respond correctly', (done) => {
-        const wsUrl = address.replace(/^http/, 'ws') + "/api/game/match";
+        const wsUrl = address.replace(/^https/, 'wss') + "/api/game/match";
 
         const ws = new WebSocket(wsUrl);
 
