@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon",
-    
+    "test": "jest",
     "start": "tsc && node dist/server.js"
   },
   "keywords": [],
