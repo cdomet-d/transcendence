@@ -57,7 +57,7 @@ services:
       - transcendence
     restart: unless-stopped
     volumes:
-      - ./services/friends:/usr/app
+      - friendsDB:/usr/src/database
   frontend:
     build:
       context: ./services/frontend

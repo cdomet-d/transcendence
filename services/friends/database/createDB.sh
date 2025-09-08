@@ -2,6 +2,7 @@
 
 DB_DIR="/usr/src/database"
 DB_FILE="$DB_DIR/friends.db"
+SEED_FILE="/usr/src/database/seed.sql"
 
 # Create data directory if it doesn't exist
 mkdir -p "$DB_DIR"
@@ -14,6 +15,9 @@ if [ ! -f "$DB_FILE" ]; then
 else
     echo "Database already exists at $DB_FILE"
 fi
+
+sqlite3 "$DB_FILE" < "$SEED_FILE" 2> /usr/src/database/seed_error.log
+
 
 # Execute the command passed to the container (keeps it running)
 exec "$@"

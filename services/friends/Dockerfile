@@ -12,10 +12,9 @@ COPY ./database /usr/src/database
 
 WORKDIR /usr/src/database
 
-#RUN sh /usr/src/database/creatingDB.sh
-
 WORKDIR /usr/src/app
 
 EXPOSE 1616
 
+ENTRYPOINT ["/usr/src/database/createDB.sh"]
 CMD ["node", "listener.js"]
