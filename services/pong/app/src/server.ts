@@ -17,13 +17,19 @@ import { options } from './serv.conf.js'
 
 //init server
 try {
-	const serv: FastifyInstance = Fastify(options);
-	addPlugins(serv);
+	const serv = init();
 	await serv.ready();
 	runServ(serv);
 } catch (err) {
 	console.error('server error:', err);
 	process.exit(1);
+}
+
+//init server
+function init(): FastifyInstance {
+	const serv: FastifyInstance = Fastify(options);
+	addPlugins(serv);
+	return (serv);
 }
 
 //add plugins
@@ -46,3 +52,4 @@ function runServ(serv: FastifyInstance): void {
 			.catch((err) => { throw err; });
 }
 
+export { init };
