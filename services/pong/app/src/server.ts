@@ -19,7 +19,7 @@ import { options } from './serv.conf.js'
 try {
 	const serv = init();
 	await serv.ready();
-	runServ(serv);
+	await runServ(serv);
 } catch (err) {
 	console.error('server error:', err);
 	process.exit(1);
@@ -39,17 +39,18 @@ function addPlugins(serv: FastifyInstance) {
 }
 
 //run server
-function runServ(serv: FastifyInstance): void {
+async function runServ(serv: FastifyInstance): Promise<void> {
+	const port: number = getPort();
+	const address: string = await serv.listen({ port: port, host: '0.0.0.0' });
+	serv.log.info(`Pong Microservice listening on ${port} at ${address}`);
+}
+
+function getPort(): number {
 	const port: number = Number(process.env.PORT);
 	if (Number.isNaN(port)) {
 		throw new Error("Invalid port");
 	}
-
-	serv.listen({ port: port, host: '0.0.0.0' })
-			.then((address) => {
-				serv.log.info(`Pong Microservice listening on ${port} at ${address}`);
-			})
-			.catch((err) => { throw err; });
+	return port;
 }
 
 export { init };
