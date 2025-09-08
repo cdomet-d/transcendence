@@ -7,8 +7,9 @@
 
 <body>
 	<div class="card">
-		<h1 class="title-1"> Atoms element designs </h1>
-		<h1 class="title-1"> Spacings and sizes </h1>
+		<h1 class="title-shadow title-1"> Atoms element designs </h1>
+		<h1 class="title-shadow title-1"> Spacings and sizes </h1>
+
 		<div class="block">
 			<h2> Spacings (paddings, margins) </h2>
 			<p> Spacing determines the neutral space between elements. It's controlled through margins and padding. Our
@@ -60,7 +61,7 @@
 				--regular: 1rem <br>
 			</code>
 		</div>
-		<h1 class="title-1"> Palette </h1>
+		<h1 class="title-shadow title-1"> Palette </h1>
 		<div class="block">
 			<h2> Backgrounds </h2>
 			<p> HEX: #fffcf7 // RGB: [255, 252, 247] </p>
@@ -133,7 +134,7 @@
 			</div>
 		</div>
 
-		<h1 class="title-1"> Typography </h1>
+		<h1 class="title-shadow title-1"> Typography </h1>
 		<div class="block">
 			<h2> Fonts </h2>
 			<p> The font used here is PixelOperator by <a class="a-default"
@@ -179,25 +180,25 @@
 			<h3> HTML - h1 </h3>
 			<p> font-size: var(--xxl) // line-height: 130% </p>
 		</div>
-		<h1 class="title-1"> This is an example title</h1>
+		<h1 class="title-shadow title-1"> This is an example title</h1>
 
 		<div class="block">
 			<h3> HTML - h2 </h3>
 			<p> font-size: var(--xl) // line-height: 110% </p>
 		</div>
-		<h2 class="title-2"> This is an example title</h2>
+		<h2 class="title-shadow title-2"> This is an example title</h2>
 
 		<div class="block">
 			<h3> HTML - h3 </h3>
 			<p> font-size: var(--l) // line-height: 110% </p>
 		</div>
-		<h3 class="title-3"> This is an example title </h3>
+		<h3 class="title-shadow title-3"> This is an example title </h3>
 
 		<div class="block">
 			<h3> HTML - h4 </h3>
 			<p> font-size: var(--m) // line-height: 100% </p>
 		</div>
-		<h4 class="title-4"> This is an example title </h4>
+		<h4 class="title-shadow title-4"> This is an example title </h4>
 
 		<div class="block">
 			<h3> body paragraph </h3>
@@ -249,7 +250,7 @@
 		</div>
 
 
-		<h1 class="title-1"> Inputs </h1>
+		<h1 class="title-shadow title-1"> Inputs </h1>
 		<div class="block">
 			<input type="radio"> </input>
 			<input type="checkbox"> </input>
@@ -290,33 +291,96 @@
 			<div class="form">
 				<h2> Buttons</h2>
 				<span> Inactive</span>
-				<div class="wrapper">
-					<button class="button-default" type="button"> Superb Button !</button>
+				<div class="button-wrapper">
+					<button class="button-shadow button-default" type="button"> Superb Button !</button>
 				</div>
 				<span> Hover</span>
-				<div class="wrapper">
-					<button class="button-hover" type="button"> Superb Button !</button>
+				<div class="button-wrapper">
+					<button class="button-shadow button-hover" type="button"> Superb Button !</button>
 				</div>
 				<span> Active</span>
-				<div class="wrapper">
+				<div class="button-wrapper">
 					<button class="button-active" type="button"> Superb Button !</button>
 				</div>
 				<span> Disabled</span>
-				<div class="wrapper">
+				<div class="button-wrapper">
 					<button class="button-disabled" type="button" disabled> Superb Button !</button>
 				</div>
 			</div>
 		</div>
-		<h1 class="title-1"> Menu elements </h1>
+
+		<h1 class="title-shadow title-1"> Menu elements </h1>
 		<div class="block">
-			<div class="menu-wrapper">
-				<div class="menu-element"> A menu element <div class="menu-decor-h"> </div>
-					<div class="menu-decor-v"></div>
-				</div>
-			<div class="menu-element"> A menu element </div>
-			<div class="menu-element"> A menu element </div>
-			<div class="menu-element"> A menu element </div>
+			<span> Inactive</span>
+			<div class="opt-1-menu-wrapper">
+				<div class="opt-1-menu-element"> A menu element </div>
+				<div class="opt-1-menu-element"> A menu element </div>
+				<div class="opt-1-menu-element"> A menu element </div>
+				<div class="opt-1-menu-element"> A menu element </div>
 			</div>
+
+			<span> Hover</span>
+			<div class="opt-1-menu-wrapper">
+				<div class="opt-1-menu-element-hover"> A menu element </div>
+				<div class="opt-1-menu-element-hover"> A menu element </div>
+				<div class="opt-1-menu-element-hover"> A menu element </div>
+				<div class="opt-1-menu-element-hover"> A menu element </div>
+			</div>
+
+			<span> Active</span>
+			<div class="opt-1-menu-wrapper">
+				<div class="opt-1-menu-element-active"> A menu element </div>
+				<div class="opt-1-menu-element-active"> A menu element </div>
+				<div class="opt-1-menu-element-active"> A menu element </div>
+				<div class="opt-1-menu-element-active"> A menu element </div>
+			</div>
+		</div>
+
+		<span> Inactive</span>
+		<div class="opt-2-menu-wrapper">
+			<div class="opt-2-menu-element"> Profile </div>
+			<div class="opt-2-menu-element"> Game </div>
+			<div class="opt-2-menu-element"> Settings </div>
+			<div class="opt-2-menu-element"> A menu element </div>
+		</div>
+		<div class="block">
+			<p>
+				archi: merged pong frontend with container frontend
+
+				created two sub folders:
+				server: for node.js code (aka backend). with that we can now access pages by searching their url and not
+				just by clicking on a button
+				client: code executed in browser (aka frontend). divided it in different sub folders for more clarity
+				added in client folder the frontend files from the pong container
+				replaced vite server with plugin fastify/vite that acts as middleware, enabling us to directly
+				communicate to our server fastify on the correct port
+
+				add: a basic fastify server for each container (you can modify them as you please)
+
+				//branch can be deleted
+
+				issue: during dev when you change code and your files get recompiled by the container it is possible
+				that you loose permissions on those (dist folder). I found a solution which is to add a user, with the
+				ids of the user you use on your host, in the docker compose file. but it doesn't work at school cause of
+				the user namespace so don't know how to fix that.
+			</p>
+		</div>
+
+
+		<span> Hover</span>
+		<div class="opt-2-menu-wrapper">
+			<div class="opt-2-menu-element-hover"> A menu element </div>
+			<div class="opt-2-menu-element-hover"> A menu element </div>
+			<div class="opt-2-menu-element-hover"> A menu element </div>
+			<div class="opt-2-menu-element-hover"> A menu element </div>
+		</div>
+
+		<span> Active</span>
+		<div class="opt-2-menu-wrapper">
+			<div class="opt-2-menu-element-active"> A menu element </div>
+			<div class="opt-2-menu-element-active"> A menu element </div>
+			<div class="opt-2-menu-element-active"> A menu element </div>
+			<div class="opt-2-menu-element-active"> A menu element </div>
 		</div>
 	</div>
 	</div>

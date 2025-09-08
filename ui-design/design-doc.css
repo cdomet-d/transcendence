@@ -30,6 +30,8 @@
 	--space-l: 2.4rem;
 	--space-xl: 3.2rem;
 
+	--br: 10px;
+
 	/* Colors */
 	--white: #fffcf7;
 	--black: #372a25;
@@ -45,6 +47,91 @@
 	--disabled: #f0ebe9;
 	--coffee: #835441;
 	--watered-down-coffee: #d5b6aa;
+
+	.button-shadow {
+		box-shadow:
+			0.0px 0.0px var(--orange-accent),
+			0.1px 0.1px var(--orange-accent),
+			0.2px 0.2px var(--orange-accent),
+			0.3px 0.3px var(--orange-accent),
+			0.4px 0.4px var(--orange-accent),
+			0.5px 0.5px var(--orange-accent),
+			0.6px 0.6px var(--orange-accent),
+			0.7px 0.7px var(--orange-accent),
+			0.8px 0.8px var(--orange-accent),
+			0.9px 0.9px var(--orange-accent),
+			1.0px 1.0px var(--orange-accent),
+			1.1px 1.1px var(--orange-accent),
+			1.2px 1.2px var(--orange-accent),
+			1.3px 1.3px var(--orange-accent),
+			1.4px 1.4px var(--orange-accent),
+			1.5px 1.5px var(--orange-accent),
+			1.6px 1.6px var(--orange-accent),
+			1.7px 1.7px var(--orange-accent),
+			1.8px 1.8px var(--orange-accent),
+			1.9px 1.9px var(--orange-accent),
+			2.0px 2.0px var(--orange-accent),
+			2.1px 2.1px var(--orange-accent),
+			2.2px 2.2px var(--orange-accent),
+			2.3px 2.3px var(--orange-accent),
+			2.4px 2.4px var(--orange-accent),
+			2.5px 2.5px var(--orange-accent),
+			2.6px 2.6px var(--orange-accent),
+			2.7px 2.7px var(--orange-accent),
+			2.8px 2.8px var(--orange-accent),
+			2.9px 2.9px var(--orange-accent),
+			3.0px 3.0px var(--orange-accent);
+	}
+
+	.title-shadow {
+		text-shadow:
+			-0.0px -0.0px var(--orange-accent),
+			-0.2px -0.1px var(--orange-accent),
+			-0.4px -0.2px var(--orange-accent),
+			-0.6px -0.3px var(--orange-accent),
+			-0.8px -0.4px var(--orange-accent),
+			-1.0px -0.5px var(--orange-accent),
+			-1.2px -0.6px var(--orange-accent),
+			-1.4px -0.7px var(--orange-accent),
+			-1.6px -0.8px var(--orange-accent),
+			-1.8px -0.9px var(--orange-accent),
+			-2.0px -1.0px var(--orange-accent),
+			-2.2px -1.1px var(--orange-accent),
+			-2.4px -1.2px var(--orange-accent),
+			-2.6px -1.3px var(--orange-accent),
+			-2.8px -1.4px var(--orange-accent),
+			-3.0px -1.5px var(--orange-accent),
+			-3.2px -1.6px var(--orange-accent),
+			-3.4px -1.7px var(--orange-accent),
+			-3.6px -1.8px var(--orange-accent),
+			-3.8px -1.9px var(--orange-accent),
+			-4.0px -2.0px var(--orange-accent),
+			-4.2px -2.1px var(--orange-accent),
+			-4.4px -2.2px var(--orange-accent),
+			-4.6px -2.3px var(--orange-accent),
+			-4.8px -2.4px var(--orange-accent),
+			-5.0px -2.5px var(--orange-accent),
+			-5.2px -2.6px var(--orange-accent),
+			-5.4px -2.7px var(--orange-accent),
+			-5.6px -2.8px var(--orange-accent),
+			-5.8px -2.9px var(--orange-accent),
+			-6.0px -3.0px var(--orange-accent),
+			-6.2px -3.1px var(--orange-accent),
+			-6.4px -3.2px var(--orange-accent),
+			-6.6px -3.3px var(--orange-accent),
+			-6.8px -3.4px var(--orange-accent),
+			-7.0px -3.5px var(--orange-accent),
+			-7.2px -3.6px var(--orange-accent),
+			-7.4px -3.7px var(--orange-accent),
+			-7.6px -3.8px var(--orange-accent),
+			-7.8px -3.9px var(--orange-accent),
+			-8.0px -4.0px var(--orange-accent),
+			-8.2px -4.1px var(--orange-accent),
+			-8.4px -4.2px var(--orange-accent),
+			-8.6px -4.3px var(--orange-accent),
+			-8.8px -4.4px var(--orange-accent),
+			-9.0px -4.5px var(--orange-accent);
+	}
 }
 
 .card {
@@ -52,13 +139,13 @@
 	width: auto;
 	display: grid;
 	grid-template-columns: auto;
-	gap: var(--space-m);
+	/* gap: var(--space-xs); */
 	overflow: hidden;
 }
 
 .block {
 	background-color: var(--white);
-	border-radius: 15px;
+	border-radius: 0px 0px var(--br) var(--br);
 	box-sizing: border-box;
 	display: grid;
 	gap: var(--space-s);
@@ -69,7 +156,7 @@
 
 .block-two-col {
 	background-color: var(--white);
-	border-radius: 15px;
+	border-radius: var(--br);
 	box-sizing: border-box;
 	display: grid;
 	gap: var(--space-s);
@@ -128,6 +215,60 @@ li {
 	list-style: none;
 }
 
+.body-background {
+	margin-left: var(--space-m);
+	height: var(--xxl);
+	width: auto;
+}
+
+.swatch {
+	position: relative;
+	margin-left: var(--space-m);
+	height: var(--space-ml);
+	width: auto;
+	box-shadow: 3x 3px var(--watered-down-coffee);
+}
+
+.swatch>p {
+	position: absolute;
+	top: 18%;
+	background-color: #ffffff00;
+	margin-left: var(--space-xs);
+}
+
+.title-1 {
+	color: var(--yellow-accent);
+	font-family: PixelOperator;
+	text-align: center;
+
+
+	font-size: var(--xxl);
+	line-height: 130%;
+}
+
+.title-2 {
+	color: var(--yellow-accent);
+	font-family: PixelOperator;
+	text-align: center;
+	font-size: var(--xl);
+	line-height: 110%;
+}
+
+.title-3 {
+	color: var(--yellow-accent);
+	font-family: PixelOperator;
+	text-align: center;
+	font-size: var(--l);
+	line-height: 110%;
+}
+
+.title-4 {
+	color: var(--yellow-accent);
+	text-align: center;
+	font-size: var(--m);
+	line-height: 100%;
+}
+
 .blockcode {
 	border: var(--coffee) 1px solid;
 	padding: var(--space-s);
@@ -138,10 +279,9 @@ li {
 }
 
 .form-group>label {
-	border-radius: 10px;
+	border-radius: var(--br);
 	box-sizing: border-box;
 	font-size: var(--regular);
-	height: fit-content;
 	height: fit-content;
 	line-height: var(--xxxs);
 	padding: 0px var(--space-xs) 2px var(--space-xs);
@@ -149,7 +289,7 @@ li {
 	right: 20px;
 	text-align: center;
 	top: -6px;
-	width: 12%;
+	width: var(--l);
 }
 
 .form-group>input:focus {
@@ -159,7 +299,7 @@ li {
 .form-group>input {
 	border: none;
 	box-sizing: border-box;
-	border-radius: 10px;
+	border-radius: var(--br);
 	height: var(--m);
 	font-family: PixelOperator;
 	padding-left: var(--regular);
@@ -248,7 +388,8 @@ a {
 	}
 }
 
-.wrapper {
+.button-wrapper {
+	box-sizing: border-box;
 	display: grid;
 	grid-template-columns: subgrid;
 	position: relative;
@@ -259,140 +400,40 @@ a {
 button {
 	position: relative;
 	box-sizing: border-box;
-	border-radius: 10px;
+	border-radius: var(--br);
 	font-family: PixelOperator;
 	font-size: var(--xs);
 	height: var(--m);
+}
+
+.button-hover::before,
+.button-default:hover::before {
+	animation: button-grow 0.6s 1 ease-in-out forwards;
+	background-color: var(--orange-accent);
+	border-radius: var(--br);
+	content: "";
+	height: 0px;
+	left: -1px;
+	position: absolute;
+	top: -1px;
+	width: 0px;
+	z-index: -1;
+	/* Button also has.shadow class */
 }
 
 .button-default {
 	color: var(--coffee);
 	border: none;
 	background-color: var(--white);
-	box-shadow:
-		0.1px 0.1px var(--orange-accent),
-		0.2px 0.2px var(--orange-accent),
-		0.3px 0.3px var(--orange-accent),
-		0.4px 0.4px var(--orange-accent),
-		0.5px 0.5px var(--orange-accent),
-		0.6px 0.6px var(--orange-accent),
-		0.7px 0.7px var(--orange-accent),
-		0.8px 0.8px var(--orange-accent),
-		0.9px 0.9px var(--orange-accent),
-		1.0px 1.0px var(--orange-accent),
-		1.1px 1.1px var(--orange-accent),
-		1.2px 1.2px var(--orange-accent),
-		1.3px 1.3px var(--orange-accent),
-		1.4px 1.4px var(--orange-accent),
-		1.5px 1.5px var(--orange-accent),
-		1.6px 1.6px var(--orange-accent),
-		1.7px 1.7px var(--orange-accent),
-		1.8px 1.8px var(--orange-accent),
-		1.9px 1.9px var(--orange-accent),
-		2.0px 2.0px var(--orange-accent),
-		2.1px 2.1px var(--orange-accent),
-		2.2px 2.2px var(--orange-accent),
-		2.3px 2.3px var(--orange-accent),
-		2.4px 2.4px var(--orange-accent),
-		2.5px 2.5px var(--orange-accent),
-		2.6px 2.6px var(--orange-accent),
-		2.7px 2.7px var(--orange-accent),
-		2.8px 2.8px var(--orange-accent),
-		2.9px 2.9px var(--orange-accent),
-		3.0px 3.0px var(--orange-accent),
-		3.1px 3.1px var(--orange-accent),
-		3.2px 3.2px var(--orange-accent),
-		3.3px 3.3px var(--orange-accent),
-		3.4px 3.4px var(--orange-accent),
-		3.5px 3.5px var(--orange-accent),
-		3.6px 3.6px var(--orange-accent),
-		3.7px 3.7px var(--orange-accent),
-		3.8px 3.8px var(--orange-accent),
-		3.9px 3.9px var(--orange-accent),
-		4.0px 4.0px var(--orange-accent),
-		4.1px 4.1px var(--orange-accent),
-		4.2px 4.2px var(--orange-accent),
-		4.3px 4.3px var(--orange-accent),
-		4.4px 4.4px var(--orange-accent),
-		4.5px 4.5px var(--orange-accent),
-		4.6px 4.6px var(--orange-accent),
-		4.7px 4.7px var(--orange-accent),
-		4.8px 4.8px var(--orange-accent),
-		4.9px 4.9px var(--orange-accent),
-		5.0px 5.0px var(--orange-accent);
-}
-
-.button-hover::before,
-.button-default:hover::before {
-	content: "";
-	width: 0px;
-	height: 0px;
-	background-color: var(--orange-accent);
-	border-radius: 10px;
-	animation: button-grow 0.6s 1 ease-in-out forwards;
-	position: absolute;
-	top: -1px;
-	left: -1px;
-	z-index: -1;
+	/* Button also has.shadow class */
 }
 
 .button-hover {
 	position: relative;
-
 	border: none;
 	color: var(--coffee);
 	background-color: var(--white);
-	box-shadow:
-		0.1px 0.1px var(--orange-accent),
-		0.2px 0.2px var(--orange-accent),
-		0.3px 0.3px var(--orange-accent),
-		0.4px 0.4px var(--orange-accent),
-		0.5px 0.5px var(--orange-accent),
-		0.6px 0.6px var(--orange-accent),
-		0.7px 0.7px var(--orange-accent),
-		0.8px 0.8px var(--orange-accent),
-		0.9px 0.9px var(--orange-accent),
-		1.0px 1.0px var(--orange-accent),
-		1.1px 1.1px var(--orange-accent),
-		1.2px 1.2px var(--orange-accent),
-		1.3px 1.3px var(--orange-accent),
-		1.4px 1.4px var(--orange-accent),
-		1.5px 1.5px var(--orange-accent),
-		1.6px 1.6px var(--orange-accent),
-		1.7px 1.7px var(--orange-accent),
-		1.8px 1.8px var(--orange-accent),
-		1.9px 1.9px var(--orange-accent),
-		2.0px 2.0px var(--orange-accent),
-		2.1px 2.1px var(--orange-accent),
-		2.2px 2.2px var(--orange-accent),
-		2.3px 2.3px var(--orange-accent),
-		2.4px 2.4px var(--orange-accent),
-		2.5px 2.5px var(--orange-accent),
-		2.6px 2.6px var(--orange-accent),
-		2.7px 2.7px var(--orange-accent),
-		2.8px 2.8px var(--orange-accent),
-		2.9px 2.9px var(--orange-accent),
-		3.0px 3.0px var(--orange-accent),
-		3.1px 3.1px var(--orange-accent),
-		3.2px 3.2px var(--orange-accent),
-		3.3px 3.3px var(--orange-accent),
-		3.4px 3.4px var(--orange-accent),
-		3.5px 3.5px var(--orange-accent),
-		3.6px 3.6px var(--orange-accent),
-		3.7px 3.7px var(--orange-accent),
-		3.8px 3.8px var(--orange-accent),
-		3.9px 3.9px var(--orange-accent),
-		4.0px 4.0px var(--orange-accent),
-		4.1px 4.1px var(--orange-accent),
-		4.2px 4.2px var(--orange-accent),
-		4.3px 4.3px var(--orange-accent),
-		4.4px 4.4px var(--orange-accent),
-		4.5px 4.5px var(--orange-accent),
-		4.6px 4.6px var(--orange-accent),
-		4.7px 4.7px var(--orange-accent),
-		4.8px 4.8px var(--orange-accent),
-		4.9px 4.9px var(--orange-accent),
-		5.0px 5.0px var(--orange-accent);
+	/* Button also has.shadow class */
 }
 
 .button-active,
@@ -411,283 +452,125 @@ button {
 	background-color: var(--disabled);
 }
 
-.body-background {
-	margin-left: var(--space-m);
-	height: var(--xxl);
-	width: auto;
-}
-
-.swatch {
-	position: relative;
-	margin-left: var(--space-m);
-	height: var(--space-ml);
-	width: auto;
-	box-shadow: 3x 3px var(--watered-down-coffee);
-}
-
-.swatch>p {
-	position: absolute;
-	top: 18%;
-	background-color: #ffffff00;
-	margin-left: var(--space-xs);
-}
-
-.title-1 {
-	color: var(--yellow-accent);
-	font-family: PixelOperator;
-	text-align: center;
-	text-shadow:
-		-0.0px -0.0px var(--orange-accent),
-		-0.2px -0.1px var(--orange-accent),
-		-0.4px -0.2px var(--orange-accent),
-		-0.6px -0.3px var(--orange-accent),
-		-0.8px -0.4px var(--orange-accent),
-		-1.0px -0.5px var(--orange-accent),
-		-1.2px -0.6px var(--orange-accent),
-		-1.4px -0.7px var(--orange-accent),
-		-1.6px -0.8px var(--orange-accent),
-		-1.8px -0.9px var(--orange-accent),
-		-2.0px -1.0px var(--orange-accent),
-		-2.2px -1.1px var(--orange-accent),
-		-2.4px -1.2px var(--orange-accent),
-		-2.6px -1.3px var(--orange-accent),
-		-2.8px -1.4px var(--orange-accent),
-		-3.0px -1.5px var(--orange-accent),
-		-3.2px -1.6px var(--orange-accent),
-		-3.4px -1.7px var(--orange-accent),
-		-3.6px -1.8px var(--orange-accent),
-		-3.8px -1.9px var(--orange-accent),
-		-4.0px -2.0px var(--orange-accent),
-		-4.2px -2.1px var(--orange-accent),
-		-4.4px -2.2px var(--orange-accent),
-		-4.6px -2.3px var(--orange-accent),
-		-4.8px -2.4px var(--orange-accent),
-		-5.0px -2.5px var(--orange-accent),
-		-5.2px -2.6px var(--orange-accent),
-		-5.4px -2.7px var(--orange-accent),
-		-5.6px -2.8px var(--orange-accent),
-		-5.8px -2.9px var(--orange-accent),
-		-6.0px -3.0px var(--orange-accent),
-		-6.2px -3.1px var(--orange-accent),
-		-6.4px -3.2px var(--orange-accent),
-		-6.6px -3.3px var(--orange-accent),
-		-6.8px -3.4px var(--orange-accent),
-		-7.0px -3.5px var(--orange-accent),
-		-7.2px -3.6px var(--orange-accent),
-		-7.4px -3.7px var(--orange-accent),
-		-7.6px -3.8px var(--orange-accent),
-		-7.8px -3.9px var(--orange-accent),
-		-8.0px -4.0px var(--orange-accent),
-		-8.2px -4.1px var(--orange-accent),
-		-8.4px -4.2px var(--orange-accent),
-		-8.6px -4.3px var(--orange-accent),
-		-8.8px -4.4px var(--orange-accent),
-		-9.0px -4.5px var(--orange-accent);
-
-	font-size: var(--xxl);
-	line-height: 130%;
-}
-
-.title-2 {
-	color: var(--yellow-accent);
-	font-family: PixelOperator;
-	text-align: center;
-	text-shadow:
-		-0.0px -0.0px var(--orange-accent),
-		-0.2px -0.1px var(--orange-accent),
-		-0.4px -0.2px var(--orange-accent),
-		-0.6px -0.3px var(--orange-accent),
-		-0.8px -0.4px var(--orange-accent),
-		-1.0px -0.5px var(--orange-accent),
-		-1.2px -0.6px var(--orange-accent),
-		-1.4px -0.7px var(--orange-accent),
-		-1.6px -0.8px var(--orange-accent),
-		-1.8px -0.9px var(--orange-accent),
-		-2.0px -1.0px var(--orange-accent),
-		-2.2px -1.1px var(--orange-accent),
-		-2.4px -1.2px var(--orange-accent),
-		-2.6px -1.3px var(--orange-accent),
-		-2.8px -1.4px var(--orange-accent),
-		-3.0px -1.5px var(--orange-accent),
-		-3.2px -1.6px var(--orange-accent),
-		-3.4px -1.7px var(--orange-accent),
-		-3.6px -1.8px var(--orange-accent),
-		-3.8px -1.9px var(--orange-accent),
-		-4.0px -2.0px var(--orange-accent),
-		-4.2px -2.1px var(--orange-accent),
-		-4.4px -2.2px var(--orange-accent),
-		-4.6px -2.3px var(--orange-accent),
-		-4.8px -2.4px var(--orange-accent),
-		-5.0px -2.5px var(--orange-accent),
-		-5.2px -2.6px var(--orange-accent),
-		-5.4px -2.7px var(--orange-accent),
-		-5.6px -2.8px var(--orange-accent),
-		-5.8px -2.9px var(--orange-accent),
-		-6.0px -3.0px var(--orange-accent),
-		-6.2px -3.1px var(--orange-accent),
-		-6.4px -3.2px var(--orange-accent),
-		-6.6px -3.3px var(--orange-accent),
-		-6.8px -3.4px var(--orange-accent),
-		-7.0px -3.5px var(--orange-accent),
-		-7.2px -3.6px var(--orange-accent),
-		-7.4px -3.7px var(--orange-accent),
-		-7.6px -3.8px var(--orange-accent),
-		-7.8px -3.9px var(--orange-accent),
-		-8.0px -4.0px var(--orange-accent),
-		-8.2px -4.1px var(--orange-accent),
-		-8.4px -4.2px var(--orange-accent),
-		-8.6px -4.3px var(--orange-accent),
-		-8.8px -4.4px var(--orange-accent),
-		-9.0px -4.5px var(--orange-accent);
-
-	font-size: var(--xl);
-	line-height: 110%;
-}
-
-.title-3 {
-	color: var(--yellow-accent);
-	font-family: PixelOperator;
-	text-align: center;
-	text-shadow:
-		-0.0px -0.0px var(--orange-accent),
-		-0.2px -0.1px var(--orange-accent),
-		-0.4px -0.2px var(--orange-accent),
-		-0.6px -0.3px var(--orange-accent),
-		-0.8px -0.4px var(--orange-accent),
-		-1.0px -0.5px var(--orange-accent),
-		-1.2px -0.6px var(--orange-accent),
-		-1.4px -0.7px var(--orange-accent),
-		-1.6px -0.8px var(--orange-accent),
-		-1.8px -0.9px var(--orange-accent),
-		-2.0px -1.0px var(--orange-accent),
-		-2.2px -1.1px var(--orange-accent),
-		-2.4px -1.2px var(--orange-accent),
-		-2.6px -1.3px var(--orange-accent),
-		-2.8px -1.4px var(--orange-accent),
-		-3.0px -1.5px var(--orange-accent),
-		-3.2px -1.6px var(--orange-accent),
-		-3.4px -1.7px var(--orange-accent),
-		-3.6px -1.8px var(--orange-accent),
-		-3.8px -1.9px var(--orange-accent),
-		-4.0px -2.0px var(--orange-accent),
-		-4.2px -2.1px var(--orange-accent),
-		-4.4px -2.2px var(--orange-accent),
-		-4.6px -2.3px var(--orange-accent),
-		-4.8px -2.4px var(--orange-accent),
-		-5.0px -2.5px var(--orange-accent),
-		-5.2px -2.6px var(--orange-accent),
-		-5.4px -2.7px var(--orange-accent),
-		-5.6px -2.8px var(--orange-accent),
-		-5.8px -2.9px var(--orange-accent),
-		-6.0px -3.0px var(--orange-accent),
-		-6.2px -3.1px var(--orange-accent),
-		-6.4px -3.2px var(--orange-accent),
-		-6.6px -3.3px var(--orange-accent),
-		-6.8px -3.4px var(--orange-accent),
-		-7.0px -3.5px var(--orange-accent),
-		-7.2px -3.6px var(--orange-accent),
-		-7.4px -3.7px var(--orange-accent),
-		-7.6px -3.8px var(--orange-accent),
-		-7.8px -3.9px var(--orange-accent),
-		-8.0px -4.0px var(--orange-accent),
-		-8.2px -4.1px var(--orange-accent),
-		-8.4px -4.2px var(--orange-accent),
-		-8.6px -4.3px var(--orange-accent),
-		-8.8px -4.4px var(--orange-accent),
-		-9.0px -4.5px var(--orange-accent);
-
-	font-size: var(--l);
-	line-height: 110%;
-}
-
-.title-4 {
-	color: var(--yellow-accent);
-	text-align: center;
-	text-shadow:
-		-0.0px -0.0px var(--orange-accent),
-		-0.2px -0.1px var(--orange-accent),
-		-0.4px -0.2px var(--orange-accent),
-		-0.6px -0.3px var(--orange-accent),
-		-0.8px -0.4px var(--orange-accent),
-		-1.0px -0.5px var(--orange-accent),
-		-1.2px -0.6px var(--orange-accent),
-		-1.4px -0.7px var(--orange-accent),
-		-1.6px -0.8px var(--orange-accent),
-		-1.8px -0.9px var(--orange-accent),
-		-2.0px -1.0px var(--orange-accent),
-		-2.2px -1.1px var(--orange-accent),
-		-2.4px -1.2px var(--orange-accent),
-		-2.6px -1.3px var(--orange-accent),
-		-2.8px -1.4px var(--orange-accent),
-		-3.0px -1.5px var(--orange-accent),
-		-3.2px -1.6px var(--orange-accent),
-		-3.4px -1.7px var(--orange-accent),
-		-3.6px -1.8px var(--orange-accent),
-		-3.8px -1.9px var(--orange-accent),
-		-4.0px -2.0px var(--orange-accent),
-		-4.2px -2.1px var(--orange-accent),
-		-4.4px -2.2px var(--orange-accent),
-		-4.6px -2.3px var(--orange-accent),
-		-4.8px -2.4px var(--orange-accent),
-		-5.0px -2.5px var(--orange-accent),
-		-5.2px -2.6px var(--orange-accent),
-		-5.4px -2.7px var(--orange-accent),
-		-5.6px -2.8px var(--orange-accent),
-		-5.8px -2.9px var(--orange-accent),
-		-6.0px -3.0px var(--orange-accent),
-		-6.2px -3.1px var(--orange-accent),
-		-6.4px -3.2px var(--orange-accent),
-		-6.6px -3.3px var(--orange-accent),
-		-6.8px -3.4px var(--orange-accent),
-		-7.0px -3.5px var(--orange-accent),
-		-7.2px -3.6px var(--orange-accent),
-		-7.4px -3.7px var(--orange-accent),
-		-7.6px -3.8px var(--orange-accent),
-		-7.8px -3.9px var(--orange-accent),
-		-8.0px -4.0px var(--orange-accent),
-		-8.2px -4.1px var(--orange-accent),
-		-8.4px -4.2px var(--orange-accent),
-		-8.6px -4.3px var(--orange-accent),
-		-8.8px -4.4px var(--orange-accent),
-		-9.0px -4.5px var(--orange-accent);
-
-	font-size: var(--m);
-	line-height: 100%;
-}
-
-.menu-wrapper {
+.button-wrapper {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1fr;
-	grid-auto-rows: var(--m);
-	box-shadow: 0px 0px var(--watered-down-coffee), 
-	1px 1px var(--watered-down-coffee), 
-	2px 2px var(--watered-down-coffee),
-	3px 3px var(--watered-down-coffee);
+	grid-template-columns: subgrid;
+	position: relative;
+	z-index: 1;
+	width: fit-content;
 }
 
-.menu-element {
+.opt-1-menu-wrapper {
+	box-sizing: border-box;
+	color: var(--coffee);
+	display: grid;
+	gap: var(--space-xs) var(--space-xs);
+	grid-auto-rows: var(--m);
+	padding: var(--space-xs) var(--space-xs);
+	grid-template-columns: 1fr 1fr 1fr 1fr;
 	position: relative;
-	border: var(--orange-accent) solid 3px;
-	box-shadow: 4px 4px var(--watered-down-coffee) inset, 3px 3px var(--coffee) inset;
+	border-radius: var(--br) var(--br) 0 0;
+	z-index: 1;
+}
+
+.opt-1-menu-element,
+.opt-1-menu-element-hover {
+	box-sizing: border-box;
+	position: relative;
+	border-radius: var(--br);
+	box-shadow: 3.0px 3.0px var(--orange-accent);
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	text-align: center;
+	min-width: fit-content;
+	padding: var(--space-xs);
+	background-color: var(--white);
 }
 
-.menu-decor-h {
+.opt-1-menu-element-hover::before,
+.opt-1-menu-element:hover::before {
+	animation: button-grow 0.6s 1 ease-in-out forwards;
+	background-color: var(--orange-accent);
+	border-radius: var(--br);
+	content: "";
+	height: 0px;
+	left: -1px;
 	position: absolute;
-	bottom: 5px;
-	right: 15px;
-	background-color: var(--watered-down-coffee);
-	height: 2.5%;
-	width: 20%;
+	top: -1px;
+	width: 0px;
+	z-index: -1;
 }
 
-.menu-decor-v {
-	position: absolute;
-	top: 10px;
-	right: 5px;
+.opt-1-menu-element-active,
+.opt-1-menu-element:active {
+	align-items: center;
+	background-color: var(--white);
+	border-radius: var(--br);
+	border: #b6652b solid 1px;
+	box-shadow: 2px 1px 0px var(--watered-down-coffee) inset;
+	box-sizing: border-box;
+	color: var(--coffee);
+	display: flex;
+	justify-content: center;
+	min-width: fit-content;
+	padding: var(--space-xs);
+	position: relative;
+	text-align: center;
+}
+
+.opt-2-menu-wrapper {
+	margin: 0px var(--space-ml) 0px var(--space-ml);
+	/* background-color: var(--coffee) ; */
+	box-sizing: border-box;
+	color: var(--coffee);
+	display: grid;
+	gap: var(--space-xs) var(--space-xs);
+	grid-auto-rows: var(--s);
+	padding: var(--space-xs) var(--space-xs) 0px var(--space-xs);
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	position: relative;
+	border-radius: var(--br) var(--br) 0 0;
+	z-index: 1;
+	border-bottom: var(--yellow-accent) 2px solid;
+}
+
+
+
+.opt-2-menu-element,
+.opt-2-menu-element-hover {
+	/* border-radius: var(--br); */
+	/* box-shadow: -1px -1px var(--coffee); */
+	/* box-shadow: 3.0px 3.0px var(--orange-accent); */
+	align-items: center;
+	background-color: var(--white);
+	border-left: var(--yellow-accent) 2px solid;
+	border-radius: var(--br) var(--br) 0px 0px;
+	border-right: var(--yellow-accent) 2px solid;
+	border-top: var(--yellow-accent) 2px solid;
+	/* box-sizing: border-box; */
+	display: flex;
+	justify-content: center;
+	min-width: fit-content;
+	padding: var(--space-xs);
+	position: relative;
+	text-align: center;
+}
+
+.opt-2-menu-element-hover,
+.opt-2-menu-element:hover {
+	/* text-decoration: none;
+	background: linear-gradient(to left, transparent 50%, var(--yellow-accent) 50%);
+	background-size: 200% 100%;
+	background-position: 100% 0;
+	animation: a-grow 0.2s 1 linear forwards; */
+	border:none;
+	border-right: 2px var(--watered-down-coffee) solid;
+	transform: scale(1.05);
+	box-shadow: 0px 2px var(--white);
+}
+
+.opt-2-menu-element-active,
+.opt-2-menu-element:active {
 	background-color: var(--watered-down-coffee);
-	height: 25px;
-	width: 1.5px;
 }
