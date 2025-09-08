@@ -1,13 +1,17 @@
 all: stop
 	@printf "$(BG)\n%-8s$(RE) %s\n" "[INFO]" "Building vanilla images..."
-	@docker compose build
+	@docker compose -f docker-compose.yaml build
 
 backup: stop
-	@docker compose build
+	@docker compose -f docker-compose.yaml build
 
 re: fclean all
 
 reback: fclean backup
+
+test: stop
+	@docker compose -f docker-compose-test.yaml build
+	@docker compose up -d
 
 clean: stop
 	@printf "$(BG)\n%-8s$(RE) %s\n" "[INFO]" "Removing stale logs..."

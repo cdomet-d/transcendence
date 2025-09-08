@@ -1,0 +1,15 @@
+on:
+  pull_request:
+    branches:
+    - main
+jobs:
+  unit-tests:
+    name: Run tests
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: run containers
+        run: make test
+      - name: cleanup
+        run: make fclean
+      
