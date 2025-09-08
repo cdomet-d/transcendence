@@ -1,4 +1,3 @@
-
 networks:
   transcendence:
     driver: bridge
@@ -20,6 +19,13 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/accessibility/app:/usr/app
   account:
     build:
       context: ./services/account
@@ -29,6 +35,13 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/account/app:/usr/app
   auth:
     build:
       context: ./services/auth
@@ -38,6 +51,13 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/auth/app:/usr/app
   dashboard:
     build:
       context: ./services/dashboards
@@ -47,6 +67,13 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/dashboards/app:/usr/app
   friends:
     build:
       context: ./services/friends
@@ -56,6 +83,13 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/friends/app:/usr/app
   frontend:
     build:
       context: ./services/frontend
@@ -65,8 +99,14 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
     volumes:
-      - ./services/frontend/web:/app
+      - ./services/frontend/app:/app
+    # user: "${T_UID}:${T_GID}"
   matchmaking:
     build:
       context: ./services/matchmaking
@@ -76,6 +116,13 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/matchmaking/app:/usr/app
   monitoring:
     build:
       context: ./services/monitoring
@@ -85,6 +132,13 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/monitoring/app:/usr/app
   nginx:
     build:
       context: ./services/nginx/
@@ -119,6 +173,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/pong/app:/usr/app
+    # user: "${T_UID}:${T_GID}"
   users:
     build:
       context: ./services/users
@@ -128,4 +183,27 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/users/app:/usr/app
+  ssr:
+    build:
+      context: ./services/ssr
+      dockerfile: Dockerfile
+    container_name: ssr
+    image: ssr:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/ssr/app:/usr/app
 

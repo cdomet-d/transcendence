@@ -1,12 +1,11 @@
 _logs/
 .secrets/
 *.pem
-services/frontend/web/node_modules/
-web/dist/
 .gitignore
 .notes/
 node_modules/
 .env
 server.log
-services/pong/app/dist/
-services/pong/app/static/style-dist.css
+dist/
+style-dist.css
+package-lock.json
