@@ -26,7 +26,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/accessibility/app:/usr/app
-    command: ["npm", "test"]
+    command: ["npm", "run", "test"]
 
   account:
     build:
@@ -44,7 +44,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/account/app:/usr/app
-    command: ["npm", "test"]
+    command: ["npm", "run", "test"]
 
   auth:
     build:
@@ -62,7 +62,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/auth/app:/usr/app
-    command: ["npm", "test"]
+    command: ["npm", "run", "test"]
 
   dashboard:
     build:
@@ -80,7 +80,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/dashboards/app:/usr/app
-    command: ["npm", "test"]
+    command: ["npm", "run", "test"]
 
   friends:
     build:
@@ -98,7 +98,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/friends/app:/usr/app
-    command: ["npm", "test"]
+    command: ["npm", "run", "test"]
       
   frontend:
     build:
@@ -116,7 +116,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/frontend/app:/app
-    command: ["npm", "test"]
+    command: ["npm", "run", "test"]
     # user: "${T_UID}:${T_GID}"
 
   matchmaking:
@@ -135,7 +135,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/matchmaking/app:/usr/app
-    command: ["npm", "test"]
+    command: ["npm", "run", "test"]
 
   monitoring:
     build:
@@ -153,7 +153,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/monitoring/app:/usr/app
-    command: ["npm", "test"]
+    command: ["npm", "run", "test"]
 
   nginx:
     build:
@@ -190,7 +190,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/pong/app:/usr/app
-    command: ["npm", "test"]
+    command: ["npm", "run", "test"]
     # user: "${T_UID}:${T_GID}"
 
   users:
@@ -209,7 +209,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/users/app:/usr/app
-    command: ["npm", "test"]
+    command: ["npm", "run", "test"]
 
   ssr:
     build:
@@ -227,5 +227,5 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/ssr/app:/usr/app
-    command: ["npm", "test"]
+    command: ["npm", "run", "test"]
 
