@@ -1,4 +1,4 @@
-import { init } from '../src/server.ts';
+import { init } from '../src/server.js';
 import type { FastifyInstance } from 'fastify';
 import {describe, expect, test, afterAll, beforeAll} from '@jest/globals';
 import WebSocket from 'ws';
@@ -17,26 +17,27 @@ describe('Fastify server', () => {
         await server.close();
     });
 
-    test('WebSocket should respond correctly', (done) => {
+    test('WebSocket should respond correctly', async () => {
         const wsUrl = address.replace(/^https/, 'wss') + "/api/game/match";
 
-        const ws = new WebSocket(wsUrl);
+        await new Promise<void>((resolve, reject) => {
+            const ws = new WebSocket(wsUrl, { rejectUnauthorized: false });
 
-        ws.on('open', () => {
-            ws.send('Hey server');
-        });
+            ws.on('open', () => {
+                ws.send('Hey server');
+            });
 
-        ws.on('message', (data) => {
-            expect(data.toString()).toBe('Hey from server');
-            ws.close();
-        });
+            ws.on('message', (data: any) => {
+                try {
+                    expect(data.toString()).toBe('Hey from server');
+                    ws.close();
+                } catch (err) {
+                    reject(err);
+                }
+            });
 
-        ws.on('close', () => {
-            done();
-        });
-
-        ws.on('error', (err) => {
-            done(err);
+            ws.on('close', () => resolve());
+            ws.on('error', (err: any) => reject(err));
         });
     });
 });
