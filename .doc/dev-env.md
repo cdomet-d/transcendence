@@ -13,7 +13,7 @@ paquet qui permet de refresh le server a chaque changement dans le code. \
 Le fichier nodemon.json permet de configurer quels fichiers à watch, ignorer, leur extensions et la commande à executer à chaque refresh
 
 ## Typescript
-cmd pour créer le fichier *tsconfig.json* : **tsc --init** \
+cmd pour créer le fichier *tsconfig.json* : **npx tsc --init** \
 tsc doit etre installé soit en global ou soit en local.\
 cmd pour installer en local : **npm i typescript**.\
 Ce fichier permet d'indiquer où sont les fichiers .ts (./src) à compiler et où mettre les fichiers .js (./dist). Il permet aussi de configurer la compilation du code.
@@ -24,5 +24,5 @@ tailwindcss peut etre utilisé de différentes manières : https://tailwindcss.c
 
 Avec le CLI de tailwindcss:\
 cmd pour compiler un fichier css : **npx @tailwindcss/cli -i ./static/style-src.css -o ./static/style-dist.css** \
-(npx permet d'executer un paquet node.js)
+(npx permet d'executer un paquet node.js) \
 cette commande va recupérer tout le tailwind css dans nos fichiers et générer du css standard dans *./static/style-dist.css*

@@ -1,0 +1,17 @@
+
+import { renderPageTemplate } from './page.template.ts'
+
+export function renderTournament(main: HTMLElement) {
+	renderPageTemplate(main, {
+		title: "TOURNAMENT",
+		nextButtons: [
+			{ href: "/404", label: "4 players" },
+			{ href: "/404", label: "8 players" },
+			{ href: "/404", label: "16 players" },
+
+		],
+		backHref: "/central",
+		showBack: true,
+		homeHref: "/"
+	});
+}
