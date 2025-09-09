@@ -4,7 +4,7 @@ on:
   #   - main
   push:
     branches:
-    - test
+    - proto/unitTesting
 jobs:
   unit-tests:
     name: Run tests
