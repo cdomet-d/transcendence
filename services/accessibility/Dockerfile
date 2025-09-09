@@ -8,12 +8,10 @@ RUN chmod +x /usr/local/bin/access.sh
 
 RUN apk add --no-cache sqlite
 
-COPY ./js /usr/src/app
-
-WORKDIR /usr/src/app
+WORKDIR /usr/app
 
 EXPOSE 1313
 
 ENTRYPOINT ["/usr/local/bin/createDB.sh"]
-CMD ["node", "listener.js"]
-#CMD ["access.sh"]
+#CMD ["node", "listener.js"]
+CMD ["access.sh"]

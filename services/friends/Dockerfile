@@ -8,12 +8,9 @@ RUN chmod +x /usr/local/bin/friends.sh
 
 RUN apk add --no-cache sqlite
 
-COPY ./js /usr/src/app
-
-WORKDIR /usr/src/app
+WORKDIR /usr/app
 
 EXPOSE 1616
 
 ENTRYPOINT ["/usr/local/bin/createDB.sh"]
-CMD ["node", "listener.js"]
-#CMD ["friends.sh"]
+CMD ["friends.sh"]
