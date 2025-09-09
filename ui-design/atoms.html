@@ -217,7 +217,9 @@
 			</p>
 		</div>
 
-		<h3> links </h3>
+		<div class="block">
+			<h3> links </h3>
+		</div>
 		<div class="block-two-col">
 			<span> Default state: </span>
 			<a class="a-default" href="https://profile.intra.42.fr/users/aljulien" target="_blank"> This is a link
@@ -251,39 +253,39 @@
 
 
 		<h1 class="title-shadow title-1"> Inputs </h1>
-		<div class="block">
+		<div class="block-two-col">
 			<input type="radio"> </input>
 			<input type="checkbox"> </input>
 			<div class="form">
 				<h2> Input fields </h2>
 				<div class="form-group">
-					<label class="label-inactive" for="Inactive">Inactive</label>
-					<input id="Inactive" class="input-inactive" type="text" value="Label"
-						placeholder="search a user...">
+					<label class="label-default" for="Inactive">Inactive</label>
+					<input id="Inactive" class="pixel-border input-default" type="text" placeholder="search a user...">
 					</input>
 				</div>
 
 				<div class="form-group">
 					<label class="label-focus" for="Focus">Focus</label>
-					<input id="Focus" class="input-focus" type="text" value="Label" placeholder="search a user...">
+					<input id="Focus" class="pixel-border-hover input-focus" type="text" placeholder="search a user...">
 					</input>
 				</div>
 
 				<div class="form-group">
 					<label class="label-active" for="Active">Active</label>
-					<input id="Active" class="input-active" type="text" value="Label" placeholder="search a user...">
+					<input id="Active" class="pixel-border-active input-active" type="text"
+						placeholder="search a user...">
 					</input>
 				</div>
 				<div class="form-group">
 					<label class="label-disabled" for="Disabled">Disabled</label>
-					<input id="Disabled" class="input-disabled" type="text" value="Label" placeholder="search a user..."
-						disabled>
+					<input id="Disabled" class="pixel-border-disabled input-disabled" type="text"
+						placeholder="search a user..." disabled>
 					</input>
 				</div>
 
 				<div class="form-group">
 					<label class="label-error" for="Error">Error</label>
-					<input class="input-error" type="text" value="Label" placeholder="%saperrie..."> </input>
+					<input class="pixel-border-error input-error" type="text" placeholder="%saperrie"> </input>
 				</div>
 			</div>
 		</div>
@@ -292,95 +294,22 @@
 				<h2> Buttons</h2>
 				<span> Inactive</span>
 				<div class="button-wrapper">
-					<button class="button-shadow button-default" type="button"> Superb Button !</button>
+					<button class="pixel-border button-default" type="button"> Superb Button !</button>
 				</div>
 				<span> Hover</span>
 				<div class="button-wrapper">
-					<button class="button-shadow button-hover" type="button"> Superb Button !</button>
+					<button class="pixel-border-hover button-hover" type="button"> Superb Button !</button>
 				</div>
 				<span> Active</span>
 				<div class="button-wrapper">
-					<button class="button-active" type="button"> Superb Button !</button>
+					<button class="pixel-border-active button-active" type="button"> Superb Button !</button>
 				</div>
 				<span> Disabled</span>
 				<div class="button-wrapper">
-					<button class="button-disabled" type="button" disabled> Superb Button !</button>
+					<button class="pixel-border-disabled button-disabled" type="button" disabled> Superb Button
+						!</button>
 				</div>
 			</div>
-		</div>
-
-		<h1 class="title-shadow title-1"> Menu elements </h1>
-		<div class="block">
-			<span> Inactive</span>
-			<div class="opt-1-menu-wrapper">
-				<div class="opt-1-menu-element"> A menu element </div>
-				<div class="opt-1-menu-element"> A menu element </div>
-				<div class="opt-1-menu-element"> A menu element </div>
-				<div class="opt-1-menu-element"> A menu element </div>
-			</div>
-
-			<span> Hover</span>
-			<div class="opt-1-menu-wrapper">
-				<div class="opt-1-menu-element-hover"> A menu element </div>
-				<div class="opt-1-menu-element-hover"> A menu element </div>
-				<div class="opt-1-menu-element-hover"> A menu element </div>
-				<div class="opt-1-menu-element-hover"> A menu element </div>
-			</div>
-
-			<span> Active</span>
-			<div class="opt-1-menu-wrapper">
-				<div class="opt-1-menu-element-active"> A menu element </div>
-				<div class="opt-1-menu-element-active"> A menu element </div>
-				<div class="opt-1-menu-element-active"> A menu element </div>
-				<div class="opt-1-menu-element-active"> A menu element </div>
-			</div>
-		</div>
-
-		<span> Inactive</span>
-		<div class="opt-2-menu-wrapper">
-			<div class="opt-2-menu-element"> Profile </div>
-			<div class="opt-2-menu-element"> Game </div>
-			<div class="opt-2-menu-element"> Settings </div>
-			<div class="opt-2-menu-element"> A menu element </div>
-		</div>
-		<div class="block">
-			<p>
-				archi: merged pong frontend with container frontend
-
-				created two sub folders:
-				server: for node.js code (aka backend). with that we can now access pages by searching their url and not
-				just by clicking on a button
-				client: code executed in browser (aka frontend). divided it in different sub folders for more clarity
-				added in client folder the frontend files from the pong container
-				replaced vite server with plugin fastify/vite that acts as middleware, enabling us to directly
-				communicate to our server fastify on the correct port
-
-				add: a basic fastify server for each container (you can modify them as you please)
-
-				//branch can be deleted
-
-				issue: during dev when you change code and your files get recompiled by the container it is possible
-				that you loose permissions on those (dist folder). I found a solution which is to add a user, with the
-				ids of the user you use on your host, in the docker compose file. but it doesn't work at school cause of
-				the user namespace so don't know how to fix that.
-			</p>
-		</div>
-
-
-		<span> Hover</span>
-		<div class="opt-2-menu-wrapper">
-			<div class="opt-2-menu-element-hover"> A menu element </div>
-			<div class="opt-2-menu-element-hover"> A menu element </div>
-			<div class="opt-2-menu-element-hover"> A menu element </div>
-			<div class="opt-2-menu-element-hover"> A menu element </div>
-		</div>
-
-		<span> Active</span>
-		<div class="opt-2-menu-wrapper">
-			<div class="opt-2-menu-element-active"> A menu element </div>
-			<div class="opt-2-menu-element-active"> A menu element </div>
-			<div class="opt-2-menu-element-active"> A menu element </div>
-			<div class="opt-2-menu-element-active"> A menu element </div>
 		</div>
 	</div>
 	</div>

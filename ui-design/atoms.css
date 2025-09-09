@@ -1,0 +1,453 @@
+@font-face {
+	font-family: PixelOperator;
+	src: url(./assets/fonts/pixel_operator/PixelOperator.ttf);
+}
+
+:root {
+	font-size: 100%;
+	font-family: PixelOperator;
+	background: linear-gradient(180deg, var(--gradient1) 0%, var(--gradient2), var(--gradient3), var(--gradient4) 100%);
+	background-repeat: no-repeat;
+	margin: 0;
+
+	/* Sizing */
+	--xxl: 6rem;
+	--xl: 5rem;
+	--l: 4rem;
+	--m: 3rem;
+	--s: 2rem;
+	--xs: 1.6rem;
+	--xxs: 1.4rem;
+	--xxxs: 1.2rem;
+	--regular: 1rem;
+
+	/* Spacing */
+	--space-xs: 0.4rem;
+	--space-s: 0.8rem;
+	--space-sm: 1.2rem;
+	--space-m: 1.6rem;
+	--space-ml: 2.0rem;
+	--space-l: 2.4rem;
+	--space-xl: 3.2rem;
+
+	--br: 10px;
+
+	/* Colors */
+	--white: #fffcf7;
+	--black: #372a25;
+	--gradient1: #131254;
+	--gradient2: #0f88fa;
+	--gradient3: #64e6e8;
+	--gradient4: #d1ffda;
+
+	--orange: #a74500;
+	--pixel-border: #734c3a;
+	--red: #bc3908;
+	--yellow: #f8ca53;
+
+	--disabled: #fdeec8;
+	--coffee: #835441;
+	--shadow-1: #d5b6aa;
+	--shadow-2: #736864;
+
+	/* Shadows */
+	--shadow-yellow: #c48061;
+	--shadow-orange: #8e1f1b;
+	--shadow-red: #a03812;
+
+	/* Highlights */
+	--highlight-yellow: #fbecc1;
+	--highlight-orange: #e4753a;
+	--highlight-red: #f2906c;
+
+	.title-shadow {
+		text-shadow:
+			-0.0px -0.0px var(--orange),
+			-0.2px -0.1px var(--orange),
+			-0.4px -0.2px var(--orange),
+			-0.6px -0.3px var(--orange),
+			-0.8px -0.4px var(--orange),
+			-1.0px -0.5px var(--orange),
+			-1.2px -0.6px var(--orange),
+			-1.4px -0.7px var(--orange),
+			-1.6px -0.8px var(--orange),
+			-1.8px -0.9px var(--orange),
+			-2.0px -1.0px var(--orange),
+			-2.2px -1.1px var(--orange),
+			-2.4px -1.2px var(--orange),
+			-2.6px -1.3px var(--orange),
+			-2.8px -1.4px var(--orange),
+			-3.0px -1.5px var(--orange),
+			-3.2px -1.6px var(--orange),
+			-3.4px -1.7px var(--orange),
+			-3.6px -1.8px var(--orange),
+			-3.8px -1.9px var(--orange),
+			-4.0px -2.0px var(--orange),
+			-4.2px -2.1px var(--orange),
+			-4.4px -2.2px var(--orange),
+			-4.6px -2.3px var(--orange),
+			-4.8px -2.4px var(--orange),
+			-5.0px -2.5px var(--orange),
+			-5.2px -2.6px var(--orange),
+			-5.4px -2.7px var(--orange),
+			-5.6px -2.8px var(--orange),
+			-5.8px -2.9px var(--orange),
+			-6.0px -3.0px var(--orange),
+			-6.2px -3.1px var(--orange),
+			-6.4px -3.2px var(--orange),
+			-6.6px -3.3px var(--orange),
+			-6.8px -3.4px var(--orange),
+			-7.0px -3.5px var(--orange),
+			-7.2px -3.6px var(--orange),
+			-7.4px -3.7px var(--orange),
+			-7.6px -3.8px var(--orange),
+			-7.8px -3.9px var(--orange),
+			-8.0px -4.0px var(--orange),
+			-8.2px -4.1px var(--orange),
+			-8.4px -4.2px var(--orange),
+			-8.6px -4.3px var(--orange),
+			-8.8px -4.4px var(--orange),
+			-9.0px -4.5px var(--orange);
+	}
+}
+
+.card {
+	margin: var(--space-l);
+	width: auto;
+	display: grid;
+	grid-template-columns: auto;
+	gap: var(--space-sm);
+}
+
+.block {
+	background-color: var(--white);
+	border-radius: var(--br);
+	box-sizing: border-box;
+	display: grid;
+	gap: var(--space-s);
+	grid-template-columns: subgrid;
+	margin: 0px var(--space-ml) 0px var(--space-ml);
+	padding: var(--space-ml);
+}
+
+.block-two-col {
+	background-color: var(--white);
+	border-radius: var(--br);
+	box-sizing: border-box;
+	display: grid;
+	gap: var(--space-s);
+	grid-template-columns: 1fr 1fr;
+	margin: 0px var(--space-ml) 0px var(--space-ml);
+	padding: var(--space-ml);
+	position: relative;
+}
+
+.block-two-col>p {
+	margin: 0px;
+	padding: 0px;
+}
+
+.form {
+	position: relative;
+	box-sizing: border-box;
+	display: grid;
+	gap: var(--space-l);
+	grid-template-columns: subgrid;
+	padding: var(--space-sm);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	font-family: PixelOperator;
+}
+
+p,
+span {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	font-size: var(--regular);
+	font-family: PixelOperator;
+	color: var(--black);
+}
+
+ul {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	font-size: var(--regular);
+	line-height: var(--space-sm);
+	color: var(--black);
+}
+
+li {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px var(--space-m);
+	list-style: none;
+}
+
+.body-background {
+	margin-left: var(--space-m);
+	height: var(--xxl);
+	width: auto;
+}
+
+.swatch {
+	position: relative;
+	margin-left: var(--space-m);
+	height: var(--space-ml);
+	width: auto;
+	box-shadow: 3x 3px var(--shadow-1);
+}
+
+.swatch>p {
+	position: absolute;
+	top: 18%;
+	background-color: #ffffff00;
+	margin-left: var(--space-xs);
+}
+
+.title-1 {
+	color: var(--yellow);
+	font-family: PixelOperator;
+	text-align: center;
+	font-size: var(--xxl);
+	line-height: 130%;
+}
+
+.title-2 {
+	color: var(--yellow);
+	font-family: PixelOperator;
+	text-align: center;
+	font-size: var(--xl);
+	line-height: 110%;
+}
+
+.title-3 {
+	color: var(--yellow);
+	font-family: PixelOperator;
+	text-align: center;
+	font-size: var(--l);
+	line-height: 110%;
+}
+
+.title-4 {
+	color: var(--yellow);
+	text-align: center;
+	font-size: var(--m);
+	line-height: 100%;
+}
+
+.blockcode {
+	border: var(--coffee) 1px solid;
+	padding: var(--space-s);
+}
+
+.form-group {
+	position: relative;
+}
+
+.form-group>label {
+	background-color: var(--white);
+	min-width: fit-content;
+	width: var(--l);
+	padding: var(--space-xs);
+	line-height: var(--space-l);
+}
+
+.form-group>input {
+	border: none;
+	box-sizing: border-box;
+	font-family: PixelOperator;
+	font-size: var(--regular);
+	padding: var(--space-xs) var(--space-xs) var(--space-xs) var(--space-ml);
+}
+
+.form-group>input:focus {
+	outline: none;
+}
+
+.input-default {
+	background-color: var(--white);
+	color: var(--shadow-1);
+	box-shadow: -3px 0 0 0 var(--pixel-border),
+		3px 0 0 0 var(--pixel-border),
+		0 -3px 0 0 var(--pixel-border),
+		0 3px 0 0 var(--pixel-border);
+}
+
+.input-default:hover {
+	background-color: var(--white);
+	color: var(--coffee);
+	box-shadow: -3px 0 0 0 var(--pixel-border),
+		3px 0 0 0 var(--pixel-border),
+		0 -3px 0 0 var(--pixel-border),
+		0 3px 0 0 var(--pixel-border),
+		-3px -3px var(--yellow) inset;
+}
+
+.input-default:active,
+.input-default:focus,
+.input-active,
+.input-focus {
+	background-color: var(--highlight-yellow);
+	color: var(--coffee);
+	box-shadow: -3px 0 0 0 var(--pixel-border),
+		3px 0 0 0 var(--pixel-border),
+		0 -3px 0 0 var(--pixel-border),
+		0 3px 0 0 var(--pixel-border),
+		3px 3px var(--yellow) inset;
+}
+
+.input-disabled {
+	background-color: var(--disabled);
+	color: var(--shadow-1);
+}
+
+.input-error {
+	background-color: var(--highlight-red);
+	color: var(--black);
+}
+
+a {
+	line-height: 140%;
+	font-size: var(--regular);
+	text-decoration: none;
+	color: var(--coffee);
+}
+
+.a-default,
+.a-default:active {
+	text-decoration: underline;
+}
+
+.a-visit {
+	background-color: var(--disabled);
+}
+
+@keyframes a-grow {
+	from {
+		background-position: 100% 0;
+	}
+
+	to {
+		background-position: 0 0;
+	}
+}
+
+.a-hover,
+.a-focus,
+.a-default:hover,
+.a-default:active,
+.a-default:focus {
+	text-decoration: none;
+	background: linear-gradient(to left, transparent 50%, var(--yellow) 50%);
+	background-size: 200% 100%;
+	background-position: 100% 0;
+	animation: a-grow 0.2s 1 linear forwards;
+}
+
+@keyframes button-grow {
+	0% {
+		width: 20px;
+		height: 20px;
+	}
+
+	100% {
+		height: 100%;
+		width: 100%;
+	}
+}
+
+.button-wrapper {
+	box-sizing: border-box;
+	display: grid;
+	grid-template-columns: subgrid;
+	position: relative;
+	z-index: 1;
+	/* width: fit-content; */
+}
+
+button {
+	position: relative;
+	box-sizing: border-box;
+	font-family: PixelOperator;
+	padding: var(--space-xs);
+	font-size: var(--regular);
+}
+
+.button-default {
+	background-color: var(--yellow);
+	border: none;
+}
+
+.button-hover,
+.button-default:hover {
+	border: none;
+	background-color: var(--yellow);
+}
+
+.button-active,
+.button-default:active {
+	border: none;
+	background-color: var(--yellow);
+}
+
+.button-disabled {
+	border: none;
+	background-color: var(--disabled);
+}
+
+.pixel-border {
+	box-shadow:
+		-3px 0 0 0 var(--pixel-border),
+		3px 0 0 0 var(--pixel-border),
+		0 -3px 0 0 var(--pixel-border),
+		0 3px 0 0 var(--pixel-border);
+}
+
+.pixel-border-hover,
+.pixel-border:hover {
+	box-shadow: -3px 0 0 0 var(--pixel-border),
+		3px 0 0 0 var(--pixel-border),
+		0 -3px 0 0 var(--pixel-border),
+		0 3px 0 0 var(--pixel-border),
+		-3px -3px var(--highlight-yellow) inset;
+}
+
+.pixel-border-active,
+.pixel-border:active {
+	box-shadow: -3px 0 0 0 var(--pixel-border),
+		3px 0 0 0 var(--pixel-border),
+		0 -3px 0 0 var(--pixel-border),
+		0 3px 0 0 var(--pixel-border),
+		3px 3px var(--shadow-yellow) inset;
+}
+
+.pixel-border-disabled {
+	box-shadow: -3px 0 0 0 var(--shadow-2),
+		3px 0 0 0 var(--shadow-2),
+		0 -3px 0 0 var(--shadow-2),
+		0 3px 0 0 var(--shadow-2),
+		-3px -3px var(--shadow-1) inset,
+		3px 3px var(--white) inset;
+}
+
+.pixel-border-error {
+	box-shadow: -3px 0 0 0 var(--red),
+		3px 0 0 0 var(--red),
+		0 -3px 0 0 var(--red),
+		0 3px 0 0 var(--red),
+		3px 3px var(--highlight-red) inset;
+}
+
+.bg-pixel-border {
+	box-shadow: -3px 0 0 0 var(--white),
+		3px 0 0 0 var(--white),
+		0 -3px 0 0 var(--white),
+		0 3px 0 0 var(--white);
+}
