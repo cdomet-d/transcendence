@@ -1,9 +1,9 @@
-import { renderHome } from '../../pages/home.ts';
-import { render404 } from '../../pages/404.ts';
-import { renderCentral } from '../../pages/central.ts';
-import { renderProfile } from '../../pages/profile.ts';
-import { renderLeaderboard } from '../../pages/leaderboard.ts';
-import { renderTournament } from '../../pages/tournament.ts';
+import { renderHome } from '../pages/home.js';
+import { render404 } from '../pages/404.js';
+import { renderCentral } from '../pages/central.js';
+import { renderProfile } from '../pages/profile.js';
+import { renderLeaderboard } from '../pages/leaderboard.js';
+import { renderTournament } from '../pages/tournament.js';
 // import { wsRequest } from '../scripts/game/wsreply.ts';
 
 export const routes = [

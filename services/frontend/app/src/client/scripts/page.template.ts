@@ -3,20 +3,22 @@ type NavButton = {
   label: string;
 };
 
-export function renderPageTemplate(main: HTMLElement, {
-  title,
-  nextButtons = [],
-  backHref,
-  showBack = true,
-  homeHref = "/"
-}: {
+interface Element {
     title: string;
     nextButtons?: NavButton[];
     backHref?: string;
     showBack?: boolean;
     homeHref?: string;
+}
 
-}) {
+export function renderPageTemplate(main: HTMLElement, { 
+  title,
+  nextButtons = [],
+  backHref,
+  showBack = true,
+  homeHref = "/"
+}: Element)
+{
   main.innerHTML = `
 	<div class="top-center-button" id="lang-dropdown-container"></div>
     <div class="pt-12 text-center text-2xl font-bold">${title}</div>

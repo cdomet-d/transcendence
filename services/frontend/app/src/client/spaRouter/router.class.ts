@@ -1,6 +1,6 @@
-import { render404 } from '../pages/404.ts';
-import { renderHeader, clearHeader } from '../pages/header.ts';
-import { init } from '../pages/language/translation.ts'
+import { render404 } from '../scripts/404.ts';
+import { renderHeader, clearHeader } from '../scripts/header.ts';
+import { init } from '../scripts/language/translation.ts'
 
 interface routeInterface {
     path: string;
@@ -12,7 +12,7 @@ export class Router {
 
     constructor(routes: routeInterface[]) {
         this._routes = routes;
-        this._loadInitialRoute();
+        // this._loadInitialRoute();
     }
 
     _getCurrentURL() {

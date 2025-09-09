@@ -8,7 +8,7 @@ import fastifyVite from '@fastify/vite'
 try {
 	const serv: FastifyInstance = Fastify(options);
 	await addPlugins(serv);
-	await serv.vite.ready();
+	// await serv.vite.ready();
 	await serv.ready();
 	serv.listen({ port: 1212, host: '0.0.0.0' }).then(() => {
 		serv.log.info("serv run");
@@ -26,8 +26,8 @@ async function addPlugins(serv: FastifyInstance) {
 				// 		'/app/src/client/pages'
 				// 	]
 				// })
-				.register(fastifyVite, {
-					root: "/app",
-					dev: process.argv.includes('--dev'),
-				});
+				// .register(fastifyVite, {
+				// 	root: "/app",
+				// 	dev: process.argv.includes('--dev'),
+				// });
 }

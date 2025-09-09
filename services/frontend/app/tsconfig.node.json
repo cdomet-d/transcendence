@@ -2,8 +2,8 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    "rootDir": "./src/server",
-    "outDir": "./dist/server",
+    "rootDir": "./src",
+    "outDir": "./dist",
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
@@ -37,6 +37,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
   },
-  "include": ["src/server/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/server/**/*", "src/pages/**/*"],
+  "exclude": ["node_modules", "dist", "src/client"]
 }
