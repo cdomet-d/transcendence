@@ -26,6 +26,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/accessibility/app:/usr/app
+      - accessibilityDB:/usr/data
   #account:
   #  build:
   #    context: ./services/account
@@ -236,5 +237,11 @@ volumes:
     driver: local
     driver_opts:
       device: services/friends/data
+      o: bind
+      type: none
+  accessibilityDB:   
+    driver: local
+    driver_opts:
+      device: services/accessibility/data
       o: bind
       type: none

@@ -8,7 +8,6 @@ RUN chmod +x /usr/local/bin/friends.sh
 
 RUN apk add --no-cache sqlite
 
-
 COPY ./js /usr/src/app
 
 WORKDIR /usr/src/app
