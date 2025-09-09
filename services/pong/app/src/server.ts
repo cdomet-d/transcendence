@@ -23,7 +23,7 @@ async function main() {
 		await serv.ready();
 		await runServ(serv);
 	} catch (err) {
-		console.error('server error:', err);
+		console.error('server', err);
 		process.exit(1);
 	}
 }
