@@ -28,7 +28,10 @@ stop:
 	@docker compose down
 
 cleandb:
-	@rm services/database/js/data/app.db
+	@rm services/account/data/*.db
+	@rm services/friends/data/*.db
+	@rm services/accessibility/data/*.db
+	@rm services/users/data/*.db
 
 # setenv:
 # 	@printf "$(BG)\n%-8s$(RE) %s\n" "[INFO]" "Running environnement deployment script..."

@@ -2,12 +2,15 @@ FROM node:20-alpine3.22@sha256:820e86612c21d0636580206d802a726f2595366e1b867e564
 
 RUN mkdir -p /usr/app && chown -R 1000:1000 /usr/app
 
-WORKDIR /usr/app
-
-COPY ./tools/users.sh /usr/local/bin/ 
+COPY ./tools /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/users.sh
 
+RUN apk add --no-cache sqlite
+
+WORKDIR /usr/app
+
 EXPOSE 2626
 
+ENTRYPOINT ["/usr/local/bin/createDB.sh"]
 CMD ["users.sh"]

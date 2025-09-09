@@ -193,6 +193,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/users/app:/usr/app
+      - usersDB:/usr/data
   ssr:
     build:
       context: ./services/ssr
@@ -250,5 +251,11 @@ volumes:
     driver: local
     driver_opts:
       device: services/account/data
+      o: bind
+      type: none
+  usersDB:
+    driver: local
+    driver_opts:
+      device: services/users/data
       o: bind
       type: none
