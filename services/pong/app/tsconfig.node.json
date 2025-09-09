@@ -7,8 +7,9 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
-    "target": "esnext",
+    "module": "node20",
+    // "moduleResolution": "nodenext",
+    "target": "es2024",
     "types": ["node"],
     "lib": ["esnext"],
 
@@ -22,7 +23,7 @@
     "exactOptionalPropertyTypes": true,
 
     // Style Options
-    // "noImplicitReturns": true,
+    "noImplicitReturns": true,
     // "noImplicitOverride": true,
     // "noUnusedLocals": true,
     // "noUnusedParameters": true,
@@ -31,12 +32,16 @@
 
     // Recommended Options
     "strict": true,
-    "verbatimModuleSyntax": true,
+    // "verbatimModuleSyntax": true,
     // "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "test", "**/*.test.ts"]
+  "exclude": ["node_modules", "test", "dist"]
 }
+

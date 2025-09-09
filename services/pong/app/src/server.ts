@@ -15,14 +15,17 @@ import { options } from './serv.conf.js'
 // const __filename = fileURLToPath(import.meta.url);
 // export const __dirname = path.dirname(__filename);
 
-//init server
-try {
-	const serv = init();
-	await serv.ready();
-	await runServ(serv);
-} catch (err) {
-	console.error('server error:', err);
-	process.exit(1);
+main();
+
+async function main() {
+	try {
+		const serv = init();
+		await serv.ready();
+		await runServ(serv);
+	} catch (err) {
+		console.error('server error:', err);
+		process.exit(1);
+	}
 }
 
 //init server
