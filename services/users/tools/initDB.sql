@@ -9,8 +9,6 @@ CREATE TABLE userProfile (
   isOnline BOOLEAN,
   lastConnexion DATETIME,
   PRIMARY KEY (userID),
-  FOREIGN KEY (userID) REFERENCES usersAuth(userID),
-  FOREIGN KEY (username) REFERENCES usersAuth(username) ON UPDATE CASCADE
 );
 
 CREATE TABLE userStats (
@@ -24,5 +22,4 @@ CREATE TABLE userStats (
   averageMatchDuration INTEGER, --time in secondes
   highestScore INTEGER,
   PRIMARY KEY (userID),
-  FOREIGN KEY(userID) REFERENCES userProfile(userID)
 );

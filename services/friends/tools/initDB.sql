@@ -3,8 +3,6 @@ CREATE TABLE blockedUsers (
   blockingUserID INTEGER,
   blockedUserID INTEGER,
   PRIMARY KEY (blockedID),
-  FOREIGN KEY (blockingUserID) REFERENCES usersAuth(userID),
-  FOREIGN KEY (blockedUserID) REFERENCES usersAuth(userID)
 );
 
 CREATE TABLE friendship (
@@ -14,6 +12,4 @@ CREATE TABLE friendship (
   startTimeFriendship DATETIME,
   status BOOLEAN, --false == pending friendship, true == actual friendship
   PRIMARY KEY(friendshipID),
-  FOREIGN KEY (userID) REFERENCES usersAuth(userID),
-  FOREIGN KEY (friendID) REFERENCES usersAuth(userID)
 );
