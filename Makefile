@@ -32,6 +32,7 @@ cleandb:
 	@rm services/friends/data/*.db
 	@rm services/accessibility/data/*.db
 	@rm services/users/data/*.db
+	@rm services/dashboards/data/*.db
 
 # setenv:
 # 	@printf "$(BG)\n%-8s$(RE) %s\n" "[INFO]" "Running environnement deployment script..."
