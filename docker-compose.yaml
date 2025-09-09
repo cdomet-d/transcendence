@@ -76,6 +76,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/dashboards/app:/usr/app
+      - statsDB:/usr/data
   friends:
     build:
       context: ./services/friends
@@ -257,5 +258,11 @@ volumes:
     driver: local
     driver_opts:
       device: services/users/data
+      o: bind
+      type: none
+  statsDB:
+    driver: local
+    driver_opts:
+      device: services/dashboards/data
       o: bind
       type: none
