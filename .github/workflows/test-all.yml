@@ -10,14 +10,15 @@ jobs:
     name: Run tests
     runs-on: ubuntu-22.04
     env:
+      TSECRETS: ${{ secrets.T_SECRETS }}
       NATS_SERVER_TOKEN: ${{ secrets.NATS_SERVER_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - name: Create SSL secrets
         run: |
-          mkdir -p "${{ secrets.T_SECRETS }}"
-          echo "${{ secrets.SSL_KEY }}" > "${{ secrets.T_SECRETS }}"/ssl-key.pem
-          echo "${{ secrets.SSL_CERT }}" > "${{ secrets.T_SECRETS }}"/ssl-cert.pem
+          mkdir -p "$TSECRETS"
+          echo "${{ secrets.SSL_KEY }}" > "$TSECRETS/ssl-key.pem"
+          echo "${{ secrets.SSL_CERT }}" > "$TSECRETS/ssl-cert.pem"
       - name: run containers
         run: make test
       - name: cleanup
