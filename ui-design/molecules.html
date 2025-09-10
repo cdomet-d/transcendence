@@ -8,65 +8,173 @@
 
 <body>
 	<div class="card">
-		<h1 class="title-shadow title-1"> Navigation </h1>
-		<div class="bg-pixel-border menu-wrapper">
-			<span> State: default </span> <span></span> <span></span> <span></span>
-			<div class="pixel-border menu-element"> A menu element </div>
-			<div class="pixel-border menu-element"> A menu element </div>
-			<div class="pixel-border menu-element"> A menu element </div>
-			<div class="pixel-border menu-element"> A menu element </div>
+		<p class="title-shadow title-3"> horizontal nav bars </p>
+		<span class="bg bg-pixel-border"> State: default | Variant: horizontal </span>
+		<div class="bg bg-pixel-border horizontal-menu-wrapper">
+			<div class="pixel-border menu-element button-default"> A menu element </div>
+			<div class="pixel-border menu-element button-default"> A menu element </div>
+			<div class="pixel-border menu-element button-default"> A menu element </div>
+			<div class="pixel-border menu-element button-default"> A menu element </div>
 		</div>
 
-		<div class="bg-pixel-border menu-wrapper">
-			<span> State: hover </span><span></span><span></span><span></span>
-			<div class="pixel-border-hover menu-element-hover"> A menu element </div>
-			<div class="pixel-border-hover menu-element-hover"> A menu element </div>
-			<div class="pixel-border-hover menu-element-hover"> A menu element </div>
-			<div class="pixel-border-hover menu-element-hover"> A menu element </div>
+		<span class="bg bg-pixel-border"> State: hover | Variant: horizontal </span>
+		<div class="bg bg-pixel-border horizontal-menu-wrapper">
+			<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
+			<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
+			<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
+			<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
 		</div>
 
-		<div class="bg-pixel-border menu-wrapper">
-			<span> State: active </span><span></span><span></span><span></span>
-			<div class="pixel-border-active menu-element-active"> A menu element </div>
-			<div class="pixel-border-active menu-element-active"> A menu element </div>
-			<div class="pixel-border-active menu-element-active"> A menu element </div>
-			<div class="pixel-border-active menu-element-active"> A menu element </div>
+		<span class="bg bg-pixel-border"> State: active | Variant: horizontal </span>
+		<div class="bg bg-pixel-border horizontal-menu-wrapper">
+			<div class="pixel-border-active menu-element button-active"> A menu element </div>
+			<div class="pixel-border-active menu-element button-active"> A menu element </div>
+			<div class="pixel-border-active menu-element button-active"> A menu element </div>
+			<div class="pixel-border-active menu-element button-active"> A menu element </div>
+		</div>
+		<p class="title-shadow title-3"> vertical nav bars </p>
+		<div class="flexbox-auto-col">
+			<div class="bg bg-pixel-border vertical-menu-wrapper">
+				<span> State: default | Variant: vertical </span>
+				<div class="pixel-border menu-element button-default"> A menu element </div>
+				<div class="pixel-border menu-element button-default"> A menu element </div>
+				<div class="pixel-border menu-element button-default"> A menu element </div>
+				<div class="pixel-border menu-element button-default"> A menu element </div>
+			</div>
+			<div class="bg bg-pixel-border vertical-menu-wrapper">
+				<span> State: hover | Variant: vertical </span>
+				<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
+				<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
+				<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
+				<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
+			</div>
+			<div class="bg bg-pixel-border vertical-menu-wrapper">
+				<span> State: active | Variant: vertical </span>
+				<div class="pixel-border-active menu-element button-active"> A menu element </div>
+				<div class="pixel-border-active menu-element button-active"> A menu element </div>
+				<div class="pixel-border-active menu-element button-active"> A menu element </div>
+				<div class="pixel-border-active menu-element button-active"> A menu element </div>
+			</div>
 		</div>
 
-		<h1 class="title-shadow title-1"> Search </h1>
-		<div class="search">
-			<div class="bg-pixel-border search-bar flex-item">
-				<span> Search bar </span> <span></span>
+		<p class="title-shadow title-3"> search bars </p>
+		<div class="flexbox-auto-col">
+			<div class="bg bg-pixel-border search-bar">
+				<span> Search bar </span> <span> State: default </span>
 				<div class="form-group">
+					<label class="thin-pixel-border" for="Search"> Search </label>
 					<img class="search-icon" src="./assets/icons/search-icon.png"></img>
 					<input class="input-default" id="Search" placeholder="Search" type="text"></input>
 				</div>
 				<button class="pixel-border button-default" type="button"> Search </button>
 			</div>
+			<div class="bg bg-pixel-border search-bar">
+				<span> Search bar </span> <span> State: hover </span>
+				<div class="form-group">
+					<label class="thin-pixel-border" for="Search"> Search </label>
+					<img class="search-icon" src="./assets/icons/search-icon.png"></img>
+					<input class="input-hover" id="Search" placeholder="Search" type="text"></input>
+				</div>
+				<button class="pixel-border-hover button-hover" type="button"> Search </button>
+			</div>
+			<div class="bg bg-pixel-border search-bar">
+				<span> Search bar </span> <span> State: active </span>
+				<div class="form-group">
+					<label class="thin-pixel-border" for="Search"> Search </label>
+					<img class="search-icon" src="./assets/icons/search-icon.png"></img>
+					<input class="input-active" id="Search" placeholder="Search" type="text"></input>
+				</div>
+				<button class="pixel-border-active button-active" type="button"> Search </button>
+			</div>
+			<div class="bg bg-pixel-border search-bar">
+				<span> Search bar </span> <span> State: error </span>
+				<div class="form-group">
+					<label class="thin-pixel-border" for="Search"> Search </label>
+					<img class="search-icon" src="./assets/icons/search-icon.png"></img>
+					<input class="pixel-border-error input-error" id="Search" placeholder="Search" type="text"></input>
+				</div>
+				<button class="pixel-border-disabled button-disabled" type="button"> Search </button>
+			</div>
+		</div>
 
-			<div class="bg-pixel-border search-result flex-item">
+		<p class="title-shadow title-3"> search results </p>
+		<div class="flexbox-auto-col">
+			<div class="bg bg-pixel-border search-result">
 				<span> Search results </span>
-				<span class="user-avatar-login">
-					<span class="user-avatar">
-						<img src="./assets/icons/teal-avatar.png"></img>
+				<span class="user-search-result">
+					<span class="avatar-wrapper">
+						<img class="avatar-s" src="./assets/icons/light-green-avatar.png"></img>
 					</span>
-					<p> appetizingChicken </p>
+					<p> <a class="a-default"> appetizingChicken </a> </p>
 				</span>
-				<span class="user-avatar-login">
-					<span class="user-avatar">
-						<img src="./assets/icons/pink-avatar.png"></img>
+				<span class="user-search-result">
+					<span class="avatar-wrapper">
+						<img class="avatar-s" src="./assets/icons/pink-avatar.png"></img>
 					</span>
-					<p> angryGoose </p>
+					<p> <a class="a-default"> angryGoose </a> </p>
 				</span>
-				<span class="user-avatar-login">
-					<span class="user-avatar">
-						<img src="./assets/icons/purple-avatar.png"></img>
+				<span class="user-search-result">
+					<span class="avatar-wrapper">
+						<img class="avatar-s" src="./assets/icons/magenta-avatar.png"></img>
 					</span>
-					<p> alternateZebra </p>
+					<p> <a class="a-default"> alternateZebra </a> </p>
 				</span>
+			</div>
+			<div class="bg bg-pixel-border search-result">
+				<span> Search results with active profile link </span>
+				<span class="user-search-result">
+					<span class="avatar-wrapper">
+						<img class="avatar-s" src="./assets/icons/light-green-avatar.png"></img>
+					</span>
+					<p> <a class="a-default"> appetizingChicken </a> </p>
+				</span>
+				<span class="user-search-result">
+					<span class="avatar-wrapper">
+						<img class="avatar-s" src="./assets/icons/pink-avatar.png"></img>
+					</span>
+					<p> <a class="a-focus"> angryGoose </a> </p>
+				</span>
+				<span class="user-search-result">
+					<span class="avatar-wrapper">
+						<img class="avatar-s" src="./assets/icons/magenta-avatar.png"></img>
+					</span>
+					<p> <a class="a-default"> alternateZebra </a> </p>
+				</span>
+			</div>
+			<div class="bg bg-pixel-border search-result">
+				<span> no results... :'( </span>
+				<div class="fail-wrapper">
+					<img src="./assets/icons/no-result.png"> </img>
+				</div>
+			</div>
+		</div>
+
+		<p class="title-shadow title-3"> user profile card </p>
+
+		<div class="bg bg-pixel-border user-card">
+			<div class="user-grid">
+				<div class="avatar-wrapper">
+					<img class="avatar-l" src="./assets/icons/magenta-avatar.png"></img>
+				</div>
+				<div class="bio-group">
+					<div class="username"> angryGoose </div>
+					<div class="user-status"></div>
+					<span class="biography"> hoooooooooooooooonk
+					</span>
+				</div>
+			</div>
+			<div class="thin-pixel-border user-info">
+				<div class="line"> <span> Level: </span> <span> 78 </span></div>
+			</div>
+			<button class="thin-pixel-border button-default menu-element" type="button"> See profile </button>
+			<div class="horizontal-menu-wrapper">
+				<button class="thin-pixel-border menu-element button-default" type="button"> Challenge! </button>
+				<button class="thin-pixel-border menu-element button-default" type="button"> Add friend </button>
+				<button class="thin-pixel-border menu-element button-default" type="button"> <img class="icon" src="./assets/icons/block-user.png" </button>
 			</div>
 		</div>
 	</div>
+
 </body>
 
 </html>

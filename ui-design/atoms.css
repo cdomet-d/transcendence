@@ -11,24 +11,25 @@
 	margin: 0;
 
 	/* Sizing */
-	--xxl: 6rem;
-	--xl: 5rem;
-	--l: 4rem;
-	--m: 3rem;
-	--s: 2rem;
-	--xs: 1.6rem;
-	--xxs: 1.4rem;
-	--xxxs: 1.2rem;
-	--regular: 1rem;
+	--l: 3.4rem;
+	--m: 3.0rem;
+	--regular: 1.0rem;
+	--s: 2.6rem;
+	--xl: 3.6rem;
+	--xs: 2.2rem;
+	--xxl: 4.0rem;
+	--xxs: 1.8rem;
+	--xxxs: 1.4rem;
 
 	/* Spacing */
-	--space-xs: 0.4rem;
-	--space-s: 0.8rem;
-	--space-sm: 1.2rem;
+	--space-l: 2.4rem;
 	--space-m: 1.6rem;
 	--space-ml: 2.0rem;
-	--space-l: 2.4rem;
+	--space-s: 0.8rem;
+	--space-sm: 1.2rem;
 	--space-xl: 3.2rem;
+	--space-xs: 0.4rem;
+	--space-xxs: 0.2rem;
 
 	--br: 10px;
 
@@ -249,22 +250,27 @@ li {
 
 .form-group {
 	position: relative;
+	min-width: fit-content;
 }
 
 .form-group>label {
 	background-color: var(--white);
 	min-width: fit-content;
-	width: var(--l);
-	padding: var(--space-xs);
-	line-height: var(--space-l);
+	width: auto;
+	padding: 0px var(--space-xs) 0px var(--space-xs);
+	position: absolute;
+	top: -8px;
+	right: 8px;
+	color: var(--shadow-2)
 }
 
 .form-group>input {
 	border: none;
+	height: 2.5rem;
 	box-sizing: border-box;
 	font-family: PixelOperator;
 	font-size: var(--regular);
-	padding: var(--space-xs) var(--space-xs) var(--space-xs) var(--space-ml);
+	padding: var(--space-xs) var(--space-s) var(--space-xs) var(--space-ml);
 }
 
 .form-group>input:focus {
@@ -280,6 +286,7 @@ li {
 		0 3px 0 0 var(--pixel-border);
 }
 
+.input-hover,
 .input-default:hover {
 	background-color: var(--white);
 	color: var(--coffee);
@@ -369,7 +376,6 @@ a {
 	grid-template-columns: subgrid;
 	position: relative;
 	z-index: 1;
-	/* width: fit-content; */
 }
 
 button {
@@ -398,6 +404,7 @@ button {
 }
 
 .button-disabled {
+	color: var(--shadow-1);
 	border: none;
 	background-color: var(--disabled);
 }
@@ -433,8 +440,8 @@ button {
 		3px 0 0 0 var(--shadow-2),
 		0 -3px 0 0 var(--shadow-2),
 		0 3px 0 0 var(--shadow-2),
-		-3px -3px var(--shadow-1) inset,
-		3px 3px var(--white) inset;
+		3px 3px var(--shadow-1) inset,
+		-3px -3px var(--white) inset;
 }
 
 .pixel-border-error {
@@ -450,4 +457,47 @@ button {
 		3px 0 0 0 var(--white),
 		0 -3px 0 0 var(--white),
 		0 3px 0 0 var(--white);
+}
+
+.thin-pixel-border {
+	box-shadow:
+		-2px 0 0 0 var(--pixel-border),
+		2px 0 0 0 var(--pixel-border),
+		0 -2px 0 0 var(--pixel-border),
+		0 2px 0 0 var(--pixel-border);
+}
+
+.thin-pixel-border-hover,
+.thin-pixel-border:hover {
+	box-shadow: -2px 0 0 0 var(--pixel-border),
+		2px 0 0 0 var(--pixel-border),
+		0 -2px 0 0 var(--pixel-border),
+		0 2px 0 0 var(--pixel-border),
+		-2px -2px var(--highlight-yellow) inset;
+}
+
+.thin-pixel-border-active,
+.thin-pixel-border:active {
+	box-shadow: -2px 0 0 0 var(--pixel-border),
+		2px 0 0 0 var(--pixel-border),
+		0 -2px 0 0 var(--pixel-border),
+		0 2px 0 0 var(--pixel-border),
+		2px 2px var(--shadow-yellow) inset;
+}
+
+.thin-pixel-border-disabled {
+	box-shadow: -2px 0 0 0 var(--shadow-2),
+		2px 0 0 0 var(--shadow-2),
+		0 -2px 0 0 var(--shadow-2),
+		0 2px 0 0 var(--shadow-2),
+		2px 2px var(--shadow-1) inset,
+		-2px -2px var(--white) inset;
+}
+
+.thin-pixel-border-error {
+	box-shadow: -2px 0 0 0 var(--red),
+		2px 0 0 0 var(--red),
+		0 -2px 0 0 var(--red),
+		0 2px 0 0 var(--red),
+		2px 2px var(--highlight-red) inset;
 }
