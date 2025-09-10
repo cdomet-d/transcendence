@@ -10,7 +10,7 @@ jobs:
     name: Run tests
     runs-on: ubuntu-22.04
     env:
-      TSECRETS: ${{ secrets.T_SECRETS }}
+      TSECRETS: ${{ secrets.TSECRETS }}
       NATS_SERVER_TOKEN: ${{ secrets.NATS_SERVER_TOKEN }}
     steps:
       - uses: actions/checkout@v3
