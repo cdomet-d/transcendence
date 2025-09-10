@@ -1,25 +1,13 @@
-// import fsp from 'fs/promises';
+import fsp from 'fs/promises';
 import type { FastifyPluginCallback } from 'fastify';
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import { routes } from './routes.js';
+import { buildHtmlPage } from './build.html.js';
 
 async function handler(req: FastifyRequest, rep: FastifyReply) {
-    // try {
-    //     const script = await fsp.readFile("/app/src/client/index.html");
-    //     rep.header('Content-Type', 'text/html');
-    //     rep.send(script);
-    // }
-    // catch (err) {
-    //     const error = err as NodeJS.ErrnoException;
-    //     rep.code(500).send(error.message);
-    // }
-    // rep.html(); //for vite
-    req.server.log.info(`RES ROUTE: ${req.routeOptions.url}`);
-    const route = routes.find(routes => routes.path == req.routeOptions.url);
-    req.server.log.info(`ROUTE: ${route}`);
-    req.server.log.info(`HTML: ${route?.callback()}`);
+    const html = buildHtmlPage(req.routeOptions.url);
     rep.header('Content-Type', 'text/html');
-    rep.send(route?.callback())
+    rep.send(html)
+    // rep.html(); //for vite
 }
 
 const servRoutes: FastifyPluginCallback = function (serv, options, done) {

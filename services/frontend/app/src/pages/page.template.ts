@@ -1,5 +1,5 @@
-import { renderLanguageDropdownButton } from './language/languageDropdownButtonHTML.js'
-import { renderHeader } from './headerHTML.js'
+// import { renderLanguageDropdownButton } from './language/languageDropdownButtonHTML.js'
+// import { renderHeader } from './header.js'
 
 type NavButton = {
 	href: string;
@@ -22,25 +22,8 @@ showBack = true,
 homeHref = "/"
 }: Element) : string
 {
-	const start = `<!doctype html>
-	<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<link rel="icon" type="image/svg+xml" href="/sunflower.svg" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="/output.css">
-		<script type="module" src="/main.js"></script>
-		<title>🔥 PONG 2 OUF 🔥</title>
-	</head>
-	<body>
-		<div id="app">`
-	const end = `
-		</div>
-	</body>
-	</html>`
-	const header = renderHeader();
-	const langBtn = renderLanguageDropdownButton();
-	const main = `
+	// const langBtn = renderLanguageDropdownButton();
+	const app = `
 	<div class="top-center-button" id="lang-dropdown-container"></div>
 		<div class="pt-12 text-center text-2xl font-bold">${title}</div>
 		<div class="flex justify-center mt-32 gap-8">
@@ -75,6 +58,6 @@ homeHref = "/"
 			</a>
 		</div>
 	`;
-	const htmlPage = start + header + main + langBtn + end;
+	const htmlPage = app /*+ langBtn*/;
 	return htmlPage;
 }

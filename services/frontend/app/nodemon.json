@@ -1,7 +1,7 @@
 {
-  "watch": ["src/server"],
+  "watch": ["src/"],
   "ext": "ts",
-  "ignore": ["dist/server"],
+  "ignore": ["dist/"],
   "exec": "tsc --project tsconfig.node.json && node dist/server/server.js"
 }
 
