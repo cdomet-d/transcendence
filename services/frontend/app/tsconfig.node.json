@@ -10,7 +10,7 @@
     "module": "nodenext",
     "target": "esnext",
     "types": ["node"],
-    "lib": ["esnext"],
+    "lib": ["esnext", "DOM", "DOM.Iterable"],
 
     // Other Outputs
     // "sourceMap": true,
@@ -37,6 +37,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
   },
-  "include": ["src/server/**/*", "src/pages/**/*"],
-  "exclude": ["node_modules", "dist", "src/client"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
