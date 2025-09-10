@@ -7,5 +7,5 @@ node_modules/
 .env
 server.log
 dist/
-style-dist.css
+output.css
 package-lock.json

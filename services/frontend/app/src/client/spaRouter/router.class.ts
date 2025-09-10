@@ -1,6 +1,6 @@
-import { render404 } from '../scripts/404.ts';
-import { renderHeader, clearHeader } from '../scripts/header.ts';
-import { init } from '../scripts/language/translation.ts'
+import { render404 } from '../scripts/404.js';
+import { renderHeader, clearHeader } from '../scripts/header.js';
+import { init } from '../scripts/language/translation.js'
 
 interface routeInterface {
     path: string;
@@ -28,15 +28,15 @@ export class Router {
     }
 
     _loadRoute(path: string) {
-        const main = document.getElementById('app');
+        const app = document.getElementById('app');
         const header = document.getElementById('header');
 
-        if (!main || !header) return;
+        if (!app || !header) return;
 
         const matchedRoute = this._matchUrlToRoute(path);
         if (!matchedRoute) {
             // throw new Error('Route not found');
-            render404(main);
+            render404(app);
             return;
         }
 
@@ -49,6 +49,6 @@ export class Router {
             renderHeader();
         }
 		init();
-        matchedRoute.callback(main);
+        app.innerHTML = matchedRoute.callback();
     }
 }

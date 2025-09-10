@@ -1,5 +1,5 @@
-import { renderLanguageDropdownButton } from './language/languageDropdownButton.js'
-import { renderHeader } from './header.js'
+import { renderLanguageDropdownButton } from './language/languageDropdownButtonHTML.js'
+import { renderHeader } from './headerHTML.js'
 
 type NavButton = {
 	href: string;
@@ -26,12 +26,17 @@ homeHref = "/"
 	<html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<link rel="icon" type="image/svg+xml" href="/images/sunflower.svg" />
+		<link rel="icon" type="image/svg+xml" href="/sunflower.svg" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="/output.css">
+		<script type="module" src="/main.js"></script>
 		<title>🔥 PONG 2 OUF 🔥</title>
 	</head>
-	<body>`
-	const end = `</body>
+	<body>
+		<div id="app">`
+	const end = `
+		</div>
+	</body>
 	</html>`
 	const header = renderHeader();
 	const langBtn = renderLanguageDropdownButton();

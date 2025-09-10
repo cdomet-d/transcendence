@@ -1,4 +1,4 @@
-import { t, changeLanguage, currentLang } from './translation.ts'
+import { t, changeLanguage, currentLang } from './translation.js'
 
 export function renderLanguageDropdownButton(target: HTMLElement, rerenderPageCallback: () => void) {
 target.innerHTML = `
