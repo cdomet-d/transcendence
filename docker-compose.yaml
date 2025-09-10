@@ -1,4 +1,3 @@
-
 networks:
   transcendence:
     driver: bridge
@@ -20,6 +19,13 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/accessibility/app:/usr/app
   account:
     build:
       context: ./services/account
@@ -29,6 +35,13 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/account/app:/usr/app
   auth:
     build:
       context: ./services/auth
@@ -38,6 +51,13 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/auth/app:/usr/app
   dashboard:
     build:
       context: ./services/dashboards
@@ -47,6 +67,13 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/dashboards/app:/usr/app
   friends:
     build:
       context: ./services/friends
@@ -56,6 +83,13 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/friends/app:/usr/app
   frontend:
     build:
       context: ./services/frontend
@@ -65,17 +99,34 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
     volumes:
-      - ./services/frontend/web:/app
+      - ./services/frontend/app:/app
+    # user: "${T_UID}:${T_GID}"
   matchmaking:
     build:
       context: ./services/matchmaking
       dockerfile: Dockerfile
     container_name: matchmaking
     image: matchmaking:0.0.1
+    environment:
+      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+      - NGINXIP=nginx
     networks:
       - transcendence
     restart: unless-stopped
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/matchmaking/app:/usr/app
+    depends_on:
+      pong:
+            condition: service_healthy
   monitoring:
     build:
       context: ./services/monitoring
@@ -84,6 +135,26 @@ services:
     image: monitoring:0.0.1
     networks:
       - transcendence
+    restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/monitoring/app:/usr/app
+  nats-server:
+    build:
+      context: ./services/NATS
+      dockerfile: Dockerfile
+    container_name: nats-server
+    image: nats:0.0.1
+    environment:
+      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+    networks:
+      - transcendence
+    ports:
+      - "4222:4222"
     restart: unless-stopped
   nginx:
     build:
@@ -110,6 +181,7 @@ services:
     environment:
       - NGINXIP=nginx
       - PORT=2020
+      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
     image: pong:0.0.1
     networks:
       - transcendence
@@ -118,7 +190,16 @@ services:
       - ssl-key.pem
       - ssl-cert.pem
     volumes:
-      - pong:/usr/src/app
+      - ./services/pong/app:/usr/app
+    depends_on:
+      -  nats-server
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 25s
+    # user: "${T_UID}:${T_GID}"
   users:
     build:
       context: ./services/users
@@ -128,11 +209,26 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
-
-volumes:
-  pong:
-    driver: local
-    driver_opts:
-      device: services/pong/js
-      o: bind
-      type: none
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/users/app:/usr/app
+  ssr:
+    build:
+      context: ./services/ssr
+      dockerfile: Dockerfile
+    container_name: ssr
+    image: ssr:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/ssr/app:/usr/app
