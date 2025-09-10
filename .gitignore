@@ -7,9 +7,7 @@ node_modules/
 .env
 server.log
 nats.log
-services/pong/app/dist/
-services/pong/app/static/style-dist.css
 dist/
 style-dist.css
 package*.json
-
+.env
