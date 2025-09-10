@@ -6,6 +6,9 @@ jobs:
   unit-tests:
     name: Run tests
     runs-on: ubuntu-22.04
+    env:
+      TSECRETS: ${{ secrets.TSECRETS }}
+      NATS_SERVER_TOKEN: ${{ secrets.NATS_SERVER_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - name: Create SSL secrets
