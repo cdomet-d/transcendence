@@ -3,7 +3,7 @@ export function renderHeader(): string {
 		<header class="w-full bg-amber-200 text-white px-4 py-2 flex items-center justify-between shadow">
 			<!-- Logo and Site Title -->
 			<div class="flex items-center space-x-3 flex-shrink-0">
-				<img src="src/images/sunflower.svg" alt="BigT Pong Logo" class="h-10 w-10 object-contain"/>
+				<img src="/sunflower.svg" alt="BigT Pong Logo" class="h-10 w-10 object-contain"/>
 				<span class="text-2xl font-bold text-black">BigT Pong</span>
 			</div>
 
