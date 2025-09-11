@@ -8,7 +8,7 @@ function wshandler(socket: WebSocket, req: FastifyRequest): void {
 	socket.on('message', (payload: any) => {
 		const mess: string = payload.toString();
 		req.server.log.info(`client sent: ${mess}`);
-		if (mess.match("quickMatch"))
+		if (mess.match("create 1vs1"))
 			handleQuickMatch(socket, mess);
 	});
 }

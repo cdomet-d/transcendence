@@ -4,7 +4,7 @@ import { init } from '../pages/language/translation.ts'
 
 interface routeInterface {
     path: string;
-    callback: (main: any) => void;
+    callback: (main: any, route: string) => void;
 }
 
 export class Router {
@@ -49,6 +49,6 @@ export class Router {
             renderHeader();
         }
 		init();
-        matchedRoute.callback(main);
+        matchedRoute.callback(main, path);
     }
 }

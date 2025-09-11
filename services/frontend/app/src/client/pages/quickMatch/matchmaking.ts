@@ -1,15 +1,26 @@
-function matchmaking(socket: WebSocket, main: HTMLElement, message: string) {
-	// renderPage();
 
-	if (message === "quickMatch") {
-		console.log("handling Quick Match request");
-		socket.send("quickMatch");
-	} else if (message === "tournament") {
-		console.log("handling Tournament request");
-		socket.send("tournament");
-	} else {
-		console.log("WS message unclear..");
-	}
+function renderMM(main: HTMLElement) {
+
+	main.innerHTML = `
+<body>
+	<div>
+		<button id="play-btn">Find opponent</button>
+	<div>
+</body>`;
+}
+
+function matchmaking(socket: WebSocket, main: HTMLElement) {
+
+	renderMM(main);
+
+	const button = document.getElementById("play-btn") as HTMLButtonElement;
+	if (button)
+		button.addEventListener("click", () => requestMatchWS(socket));
+}
+
+function requestMatchWS(socket: WebSocket) {
+	socket.send("create 1vs1");
+	console.log("Looking for opponent");
 }
 
 export { matchmaking };

@@ -9,7 +9,7 @@ export async function initNATS() {
   const nc = await connect({ servers: "nats://nats-server:4222", token: token ?? ""});
   const sc = StringCodec();
 
-  nc.publish('matchmaking.ready', sc.encode('Players paired up!\n\n Waiting for GameCreation...'));
+  nc.publish('matchmaking.ready', sc.encode('Players paired up!\n Waiting for GameCreation...'));
   console.log(`Published message to "matchmaking.ready"`);
 
   await nc.flush();
