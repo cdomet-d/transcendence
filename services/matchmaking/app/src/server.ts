@@ -4,7 +4,7 @@ import websocket from '@fastify/websocket'
 import type { FastifyInstance } from 'fastify';
 import { options } from './serv.conf.js';
 import { initNATS } from './publisher.js';
-import { wsRoute } from './routes/websocket.js';
+import { wsRoute } from './routes/wsRoutes.js';
 
 try {
 	const serv: FastifyInstance = Fastify(options);

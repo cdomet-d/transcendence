@@ -13,7 +13,8 @@ function wsRequest(main: HTMLElement, route: string) {
     ws.onopen = () => {
         console.log("WebSocket connection established!")
         ws.onmessage = (event) => {
-            const message = JSON.parse(event.data);
+            // const message = JSON.parse(event.data);
+            const message = event.data;
             console.log("message from server:", message);
             if (message.match("matched"))
                 console.log("MATCH FOUND");
