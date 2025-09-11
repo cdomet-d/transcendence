@@ -3,7 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import { servRoutes } from './route.js';
 import { options } from './serv.conf.js';
 import fastifyStatic from '@fastify/static'
-import fastifyVite from '@fastify/vite'
+// import fastifyVite from '@fastify/vite'
 
 try {
 	const serv: FastifyInstance = Fastify(options);

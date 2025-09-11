@@ -1,4 +1,4 @@
-import fsp from 'fs/promises';
+// import fsp from 'fs/promises';
 import type { FastifyPluginCallback } from 'fastify';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { buildHtmlPage } from './build.html.js';
@@ -6,7 +6,7 @@ import { buildHtmlPage } from './build.html.js';
 async function handler(req: FastifyRequest, rep: FastifyReply) {
     const html = buildHtmlPage(req.routeOptions.url);
     rep.header('Content-Type', 'text/html');
-    rep.send(html)
+    rep.send(html);
     // rep.html(); //for vite
 }
 
