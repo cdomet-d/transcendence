@@ -7,11 +7,11 @@ export function renderHeader() {
     <span class="text-2xl font-bold text-black">BigT Pong</span>
   </div>
 
-  <!-- Center/Left Search + Leaderboard -->
+  <!-- Center/Left search + Leaderboard -->
   <div class="flex flex-1 items-center justify-center relative max-w-xl ml-12 mr-4">
-    <input id="search-bar"
+    <input id="input-with-button"
       type="search"
-      placeholder="Search someone's profile..."
+      placeholder="search someone's profile..."
       class="w-72 px-4 py-2 rounded-full bg-amber-50 text-gray-800 focus:outline-none shadow"
     />
     <button

@@ -11,7 +11,7 @@
 		<h1 class="title-shadow title-1"> Atoms element designs </h1>
 		<h1 class="title-shadow title-1"> Spacings and sizes </h1>
 
-		<div class="block">
+		<div class="block bg-pixel-border bg">
 			<h2> Spacings (paddings, margins) </h2>
 			<p> Spacing determines the neutral space between elements. It's controlled through margins and padding. Our
 				spacing is determined by increments of 0.4. We start at 0.4, then increment by that value. </p>
@@ -63,7 +63,7 @@
 			</code>
 		</div>
 		<h1 class="title-shadow title-1"> Palette </h1>
-		<div class="block">
+		<div class="block bg-pixel-border bg">
 			<h2> Backgrounds </h2>
 			<p> HEX: #fffcf7 // RGB: [255, 252, 247] </p>
 			<div class="swatch" style="background-color: #fffcf7;"></div>
@@ -97,7 +97,7 @@
 		</div>
 
 
-		<div class="block">
+		<div class="block bg-pixel-border bg">
 			<h2> Accessible color combinations </h2>
 			<div class="swatch" style="background-color: #fffcf7;">
 				<p style="color:#372a25;"> Background: #fffcf7 | Text: #372a25 </p>
@@ -136,7 +136,7 @@
 		</div>
 
 		<h1 class="title-shadow title-1"> Typography </h1>
-		<div class="block">
+		<div class="block bg-pixel-border bg">
 			<h2> Fonts </h2>
 			<p> The font used here is PixelOperator by <a class="a-default"
 					href="https://www.dafont.com/fr/profile.php?user=340815">
@@ -177,31 +177,31 @@
 			<p>They vary through line height and font size, which are described for each below. </p>
 
 		</div>
-		<div class="block">
+		<div class="block bg-pixel-border bg">
 			<h3> HTML - h1 </h3>
 			<p> font-size: var(--xxl) // line-height: 130% </p>
 		</div>
 		<h1 class="title-shadow title-1"> This is an example title</h1>
 
-		<div class="block">
+		<div class="block bg-pixel-border bg">
 			<h3> HTML - h2 </h3>
 			<p> font-size: var(--xl) // line-height: 110% </p>
 		</div>
 		<h2 class="title-shadow title-2"> This is an example title</h2>
 
-		<div class="block">
+		<div class="block bg-pixel-border bg">
 			<h3> HTML - h3 </h3>
 			<p> font-size: var(--l) // line-height: 110% </p>
 		</div>
 		<h3 class="title-shadow title-3"> This is an example title </h3>
 
-		<div class="block">
+		<div class="block bg-pixel-border bg">
 			<h3> HTML - h4 </h3>
 			<p> font-size: var(--m) // line-height: 100% </p>
 		</div>
 		<h4 class="title-shadow title-4"> This is an example title </h4>
 
-		<div class="block">
+		<div class="block bg-pixel-border bg">
 			<h3> body paragraph </h3>
 			<p> margin: 0px 0px 0px 0px // font-size: var(--regular) // line-height: var(--space-sm) // font-family:
 				PixelOperator;</p>
@@ -218,10 +218,10 @@
 			</p>
 		</div>
 
-		<div class="block">
+		<div class="block bg-pixel-border bg">
 			<h3> links </h3>
 		</div>
-		<div class="block-two-col">
+		<div class="bg-pixel-border bg block-two-col">
 			<span> Default state: </span>
 			<a class="a-default" href="https://profile.intra.42.fr/users/aljulien" target="_blank"> This is a link
 			</a>
@@ -229,13 +229,13 @@
 			</span>
 			<a class="a-hover" href="https://profile.intra.42.fr/users/cdomet-d" target="_blank"> This is a link
 			</a>
-			<span> Focus state:
+			<span> hover state:
 			</span>
-			<a class="a-focus" href="https://profile.intra.42.fr/users/csweetin" target="_blank"> This is a link
+			<a class="a-hover" href="https://profile.intra.42.fr/users/csweetin" target="_blank"> This is a link
 			</a>
 			<span> Active state:
 			</span>
-			<a class="a-focus" href="https://profile.intra.42.fr/users/saperrie" target="_blank"> This is a link
+			<a class="a-hover" href="https://profile.intra.42.fr/users/saperrie" target="_blank"> This is a link
 			</a>
 			<span> Visited state:
 			</span>
@@ -254,63 +254,56 @@
 
 
 		<h1 class="title-shadow title-1"> Inputs </h1>
-		<div class="block-two-col">
-			<input type="radio"> </input>
-			<input type="checkbox"> </input>
-			<div class="form">
-				<h2> Input fields </h2>
-				<div class="form-group">
-					<label class="label-default" for="Inactive">Inactive</label>
-					<input id="Inactive" class="pixel-border input-default" type="text" placeholder="search a user...">
-					</input>
-				</div>
-
-				<div class="form-group">
-					<label class="label-focus" for="Focus">Focus</label>
-					<input id="Focus" class="pixel-border-hover input-focus" type="text" placeholder="search a user...">
-					</input>
-				</div>
-
-				<div class="form-group">
-					<label class="label-active" for="Active">Active</label>
-					<input id="Active" class="pixel-border-active input-active" type="text"
-						placeholder="search a user...">
-					</input>
-				</div>
-				<div class="form-group">
-					<label class="label-disabled" for="Disabled">Disabled</label>
-					<input id="Disabled" class="pixel-border-disabled input-disabled" type="text"
-						placeholder="search a user..." disabled>
-					</input>
-				</div>
-
-				<div class="form-group">
-					<label class="label-error" for="Error">Error</label>
-					<input class="pixel-border-error input-error" type="text" placeholder="%saperrie"> </input>
-				</div>
+		<input type="radio"> </input>
+		<input type="checkbox"> </input>
+		<div class="input-grid bg-pixel-border bg">
+			<h2> Input fields </h2>
+			<span> Default </span>
+			<div class="form-group">
+				<label class="thin-pixel-border label-default" for="default">default</label>
+				<input id="default" class="pixel-border input-default" type="text" placeholder="search a user...">
+				</input>
 			</div>
+			<span> Hover </span>
+			<div class="form-group">
+				<label class="thin-pixel-border label-hover" for="hover">hover</label>
+				<input id="hover" class="pixel-border-hover input-hover" type="text" placeholder="search a user...">
+				</input>
+			</div>
+			<span> Active </span>
+			<div class="form-group">
+				<label class="thin-pixel-border label-active" for="Active">Active</label>
+				<input id="Active" class="pixel-border-active input-active" type="text" placeholder="search a user...">
+				</input>
+			</div>
+			<span> Disabled </span>
+			<div class="form-group">
+				<label class="thin-pixel-border label-disabled" for="Disabled">Disabled</label>
+				<input id="Disabled" class="pixel-border-disabled input-disabled" type="text"
+					placeholder="search a user..." disabled>
+				</input>
+			</div>
+			<span> Error </span>
+			<div class="form-group">
+				<label class="thin-pixel-border label-error" for="Error">Error</label>
+				<input class="pixel-border-error input-error" type="text" placeholder="%saperrie"> </input>
+			</div>
+
+			<span> File upload </span>
+			<input id="upload" type="file"></input>
+			<input id="submit" type="submit"> Submit! </input>
 		</div>
-		<div class="block">
-			<div class="form">
-				<h2> Buttons</h2>
-				<span> Inactive</span>
-				<div class="button-wrapper">
-					<button class="pixel-border button-default" type="button"> Superb Button !</button>
-				</div>
-				<span> Hover</span>
-				<div class="button-wrapper">
-					<button class="pixel-border-hover button-hover" type="button"> Superb Button !</button>
-				</div>
-				<span> Active</span>
-				<div class="button-wrapper">
-					<button class="pixel-border-active button-active" type="button"> Superb Button !</button>
-				</div>
-				<span> Disabled</span>
-				<div class="button-wrapper">
-					<button class="pixel-border-disabled button-disabled" type="button" disabled> Superb Button
-						!</button>
-				</div>
-			</div>
+		<div class="input-grid bg-pixel-border bg">
+			<h2> Buttons</h2>
+			<span> default</span>
+			<button class="pixel-border button-default" type="button"> Superb Button !</button>
+			<span> Hover</span>
+			<button class="pixel-border-hover button-hover" type="button"> Superb Button !</button>
+			<span> Active</span>
+			<button class="pixel-border-active button-active" type="button"> Superb Button !</button>
+			<span> Disabled</span>
+			<button class="pixel-border-disabled button-disabled" type="button" disabled> Superb Button
+				!</button>
 		</div>
 	</div>
 	</div>

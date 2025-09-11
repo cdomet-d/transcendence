@@ -1,0 +1,40 @@
+@import url(./atoms.css);
+@import url(./molecules.css);
+
+:root {
+
+	font-size: 100%;
+
+	/* Spacing */
+	--space-xs: 0.25rem;
+	--space-s: 0.5rem;
+	--space-sm: 1rem;
+	--space-m: 2rem;
+	--space-ml: 3rem;
+	--space-l: 3.5rem;
+	--space-xl: 4rem;
+
+	--body-margin: 2.03rem;
+	--single-col: 26.875rem;
+}
+
+body {
+	margin: var(--body-margin);
+}
+
+.four-col-layout {
+	outline: solid 1px red;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: var(--space-sm);
+}
+
+.single-col {
+	margin: var(--space-xs);
+	background-color: white;
+	box-sizing: border-box;
+	flex: 1 1 0;
+	width: var(--single-col);
+	height: var(--space-m);
+}
