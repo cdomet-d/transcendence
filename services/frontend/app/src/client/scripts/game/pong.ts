@@ -9,49 +9,22 @@ interface paddelPos {
 let leftPad: paddelPos = {x: 10, y: 108};
 let rightPad: paddelPos = {x: 460, y: 108};
 
-function pong(ws: WebSocket, main: HTMLElement) {
-	// main.innerHTML = `
-	// <div id="game">
-    //   <h1>Game Screen</h1>
-    //   <canvas id="canvas">
-    //     pong game <!-- fallback if unable to be displayed -->
-    //   </canvas>
-	//   <a href="/central" data-link id="back-btn" >
-	// 	Back
-	//   </a>
-    // </div>
-	// `;
-	const canvas = document.getElementById("canvas") as HTMLCanvasElement;
-	// styleGame(canvas);
+function pong(/*ws: WebSocket*/) {
+	const ctx = getCanvasContext();
+	renderGame(ctx);
+}
 
+function getCanvasContext(): CanvasRenderingContext2D {
+	const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 	const ctx = canvas.getContext('2d');
 	if (ctx === null) {
 		console.log("error: context not supported");
-		process.exit(1);
+		process.exit(1); //TODO: can't exit
 	}
-
-	renderGame(ctx);
-	window.addEventListener("keydown", createKeyDownEvent(ctx,ws));
+	return ctx;
 }
 
-function styleGame(canvas: HTMLCanvasElement) {
-	const game = document.getElementById("game") as HTMLElement;
-	game.className = "min-h-screen flex flex-col items-center justify-center bg-white"
-	// "border-[5px] border-[#f7d793] bg-[antiquewhite]";
-
-	const h1 = document.querySelector('h1') as HTMLElement;
-	h1.className = "text-4xl font-bold mb-6";
-	// "m-2.5 p-2.5 bg-beige";
-
-	const backBtn = document.getElementById("back-btn") as HTMLElement;
-	backBtn.className = "mt-4 py-3 px-8 rounded-full border-1 border-black bg-gradient-to-br from-[#ffcc00] to-[#ea9800] shadow-md hover:scale-105 transition-all text-white text-lg font-semibold";
-
-	canvas.className = "border mb-6 bg-aliceblue border-4 border-[#8ec7fc] rounded-[20px]";
-	canvas.width = WIDTH;
-	canvas.height = HEIGHT;
-}
-
-function renderGame(ctx: CanvasRenderingContext2D) {
+export function renderGame(ctx: CanvasRenderingContext2D) {
 	drawMiddleLine(ctx);
 	drawPaddle(ctx);
 	drawBall(ctx);
@@ -75,8 +48,9 @@ function drawBall(ctx: CanvasRenderingContext2D) {
 	ctx.fill();
 }
 
-function createKeyDownEvent(ctx: CanvasRenderingContext2D, ws: WebSocket) {
+export function createKeyDownEvent(ws: WebSocket) {
 	return function keyDownEvent(event: KeyboardEvent): void {
+		const ctx: CanvasRenderingContext2D = getCanvasContext();
 		if (event.key === "ArrowUp")
 			updatePaddlePos(rightPad, "Pad: ArrowUp", ws, ctx);
 		if (event.key === "ArrowDown")
