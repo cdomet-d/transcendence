@@ -22,6 +22,7 @@ export function renderHome(): string {
 }
 
 export function renderCentral(): string {
+	console.log("in renderCentral", translate('Quick Match'));
 	return renderPageTemplate({
 		title: translate('CENTRAL'),
 		nextButtons: [

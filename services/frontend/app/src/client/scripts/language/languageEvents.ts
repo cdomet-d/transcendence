@@ -17,7 +17,7 @@ export function addLanguageEvents() {
 			const lang = (item as HTMLElement).dataset.lang;
 			if (lang && lang !== currentLang) {
 				changeLanguage(lang);
-				options.classList.add('hidden');
+				options.classList.add('hidden'); //TODO: what is this for ?
 				rerenderPage();
 			}
 		});
