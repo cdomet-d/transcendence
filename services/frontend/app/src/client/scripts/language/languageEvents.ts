@@ -1,7 +1,7 @@
 import { changeLanguage, currentLang } from './translation.js'
 import { renderLanguageDropdownButton } from '../../../pages/languageDropdownButton.js'
 
-export function addLanguageEvents() {
+export function addLanguageEvents(callback: () => string) {
 	const switchBtn = document.getElementById('language-switch');
 	const options = document.getElementById('language-options');
 
@@ -17,10 +17,19 @@ export function addLanguageEvents() {
 			if (lang && lang !== currentLang) {
 				changeLanguage(lang);
 				options.classList.add('hidden');
-				const langDropdown = document.getElementById('lang-dropdown-container');
-				if (!langDropdown) return;
-				langDropdown.innerHTML = renderLanguageDropdownButton();
+				rerenderPage(callback);
 			}
 		});
 	});
+}
+
+function rerenderPage(callback: () => string) {
+	const langDropdown = document.getElementById('lang-dropdown-container');
+	const page = document.getElementById('page');
+	if (!langDropdown || !page)
+		return;
+
+	page.innerHTML = callback();
+	langDropdown.innerHTML = renderLanguageDropdownButton();
+	addLanguageEvents(callback);
 }

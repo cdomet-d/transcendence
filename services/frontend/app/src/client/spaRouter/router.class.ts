@@ -4,11 +4,11 @@ import { pong } from '../scripts/game/pong.js';
 
 interface routeInterface {
     path: string;
-    callback: (main: any) => void;
+    callback: () => string;
 }
 
 export class Router {
-    _routes: Array<{ path: string, callback: Function }>;
+    _routes: Array< routeInterface >;
 
     constructor(routes: routeInterface[]) {
         this._routes = routes;
@@ -18,20 +18,27 @@ export class Router {
         return window.location.pathname;
     }
 
-    _matchUrlToRoute(path: string) {
+    _matchUrlToRoute(path: string): routeInterface | undefined {
         return this._routes.find(route => route.path === path);
     }
 
+    _getCallback() : routeInterface["callback"] {
+        const route: routeInterface | undefined = this._matchUrlToRoute(this._getCurrentURL());
+        if (!route)
+            return render404;
+        return route.callback;
+    }
+
     _loadRoute(path: string) {
-        const app = document.getElementById('app');
+        const page = document.getElementById('page');
         const header = document.getElementById('header');
 
-        if (!app || !header) return;
+        if (!page || !header) return;
 
         const matchedRoute = this._matchUrlToRoute(path);
         if (!matchedRoute) {
             // throw new Error('Route not found');
-            app.innerHTML = render404();
+            page.innerHTML = render404();
             return;
         }
 
@@ -44,7 +51,8 @@ export class Router {
             document.getElementById('header')!.innerHTML = renderHeader();
         }
 
-        app.innerHTML = matchedRoute.callback();
+        page.innerHTML = matchedRoute.callback();
+        
         if (matchedRoute.path === '/game/match') {
             pong();
             import("../scripts/game/wsreply.js").then((game) => {

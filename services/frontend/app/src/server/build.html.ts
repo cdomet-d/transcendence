@@ -5,43 +5,45 @@ import { renderLanguageDropdownButton } from '../pages/languageDropdownButton.js
 // import { renderGame } from '../client/scripts/game/pong.js';
 
 function buildHtmlPage(url: string | undefined): string {
-    if (url === undefined)
-        return "error"; //TODO: fix that
-    const route = routes.find(routes => routes.path == url);
+	if (url === undefined)
+		return "error"; //TODO: fix that
+	const route = routes.find(routes => routes.path == url);
 
-    const app: string | undefined = route?.callback();
+	const page: string | undefined = route?.callback();
 
-    let header: string = "";
-    if (url !== "/")
-        header = renderHeader();
+	let header: string = "";
+	if (url !== "/")
+		header = renderHeader();
 
-    const langDropdown = renderLanguageDropdownButton();
-    
-    const html: string = `
-    <!doctype html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="/sunflower.svg" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/output.css">
-        <script type="module" src="/main.js"></script>
-        <title>🔥 PONG 2 OUF 🔥</title>
-    </head>
-    <body>
-        <div class="top-center-button" id="lang-dropdown-container">
-            ${langDropdown}
-        </div>
-        <div id="header">
-            ${header}
-        </div>
-        <div id="app">
-            ${app}
-        </div>
-    </body>
-    </html>
-    `;
-    return html;
+	const langDropdown = renderLanguageDropdownButton();
+	
+	const html: string = `
+	<!doctype html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/svg+xml" href="/sunflower.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="/output.css">
+		<script type="module" src="/main.js"></script>
+		<title>🔥 PONG 2 OUF 🔥</title>
+	</head>
+	<body>
+		<div id="header">
+			${header}
+		</div>
+		<div id="app">
+			<div class="top-center-button" id="lang-dropdown-container">
+				${langDropdown}
+			</div>
+			<div id="page">
+				${page}
+			</div>
+		</div>
+	</body>
+	</html>
+	`;
+	return html;
 }
 
 // function renderCanvas() {
