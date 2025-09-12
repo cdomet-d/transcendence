@@ -1,0 +1,65 @@
+@import url(./atoms.css);
+
+.user-card {
+	width: var(--single-col);
+	position: relative;
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--space-s);
+}
+
+.username {
+	background-color: var(--white);
+	font-size: var(--s);
+	line-height: 110%;
+	color: var(--yellow);
+	text-shadow: -0.0px -0.0px var(--shadow-yellow),
+		-0.2px -0.1px var(--shadow-yellow),
+		-0.4px -0.2px var(--shadow-yellow),
+		-0.6px -0.3px var(--shadow-yellow),
+		-0.8px -0.4px var(--shadow-yellow),
+		-1.0px -0.5px var(--shadow-yellow),
+		-1.2px -0.6px var(--shadow-yellow),
+		-1.4px -0.7px var(--shadow-yellow),
+		-1.6px -0.8px var(--shadow-yellow),
+		-1.8px -0.9px var(--shadow-yellow),
+		-2.0px -1.0px var(--shadow-yellow);
+}
+
+.biography {
+	box-sizing: border-box;
+	max-height: var(--m);
+	overflow: hidden;
+	grid-column: span 2;
+}
+
+.user-info {
+	padding: var(--space-s);
+	box-sizing: border-box;
+}
+
+.user-status {
+	height: var(--space-s);
+	width: var(--space-s);
+	background-color: var(--orange);
+	border-radius: 30px;
+	line-height: 110%;
+}
+
+.user-grid {
+	display: flex;
+	align-items: center;
+	gap: var(--space-m);
+	padding-bottom: var(--space-s);
+}
+
+.bio-group {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	align-items: center;
+	gap: 0 var(--space-s);
+}
+
+.user-grid>img {
+	padding-left: var(--space-m);
+}

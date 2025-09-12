@@ -3,33 +3,46 @@
 	src: url(./assets/fonts/pixel_operator/PixelOperator.ttf);
 }
 
+@keyframes a-grow {
+	from {
+		background-position: 100% 0;
+	}
+
+	to {
+		background-position: 0 0;
+	}
+}
+
 :root {
 	font-size: 100%;
 	font-family: PixelOperator;
 	background: linear-gradient(180deg, var(--gradient1) 0%, var(--gradient2), var(--gradient3), var(--gradient4) 100%);
 	background-repeat: no-repeat;
-	/* background-size: 100% 100vh; */
 	margin: 0;
 
-	/* Sizing */
-	--l: 3.4rem;
-	--m: 3.0rem;
-	--regular: 1.0rem;
-	--s: 2.6rem;
-	--xl: 3.6rem;
-	--xs: 2.2rem;
-	--xxl: 4.0rem;
-	--xxs: 1.8rem;
-	--xxxs: 1.4rem;
+	--regular: 1rem;
+	--s: 1.5rem;
+	--m: 2rem;
+	--ml: 2.5rem;
+	--l: 3rem;
+	--x-large: 3.5rem;
 
-	/* Spacing */
+	--image-s: 1.5rem;
+	--image-m: 2rem;
+	--image-l: 4rem;
+	--image-xl: 8rem;
+
 	--space-xs: 0.25rem;
 	--space-s: 0.5rem;
 	--space-sm: 1rem;
 	--space-m: 2rem;
-	--space-m: 3rem;
+	--space-ml: 3rem;
 	--space-l: 3.5rem;
 	--space-xl: 4rem;
+
+	--body-margin: 2.03rem;
+	--single-col: 26.875rem;
+	--double-col: 55.25rem;
 
 	--br: 10px;
 
@@ -41,25 +54,31 @@
 	--gradient3: #64e6e8;
 	--gradient4: #d1ffda;
 
+	--green: #76c54b;
 	--orange: #a74500;
-	--pixel-border: #734c3a;
-	--red: #bc3908;
 	--yellow: #f8ca53;
+	--red: #f2906c;
 
-	--disabled: #fdeec8;
+	--neutral-border: #734c3a;
+	--border-red: #a03812;
+	--border-green: #005a44;
+
 	--coffee: #835441;
+	--disabled: #fdeec8;
 	--shadow-1: #d5b6aa;
 	--shadow-2: #736864;
 
 	/* Shadows */
-	--shadow-yellow: #c48061;
+	--shadow-green: #04983a;
 	--shadow-orange: #8e1f1b;
-	--shadow-red: #a03812;
+	--shadow-yellow: #c48061;
+	--shadow-red: #cd3434;
 
 	/* Highlights */
+	--highlight-red: #f7c7b5;
+	--highlight-green: #bde559;
 	--highlight-yellow: #fbecc1;
 	--highlight-orange: #e4753a;
-	--highlight-red: #f2906c;
 
 	.title-shadow {
 		text-shadow:
@@ -88,8 +107,8 @@
 			-4.4px -2.2px var(--orange),
 			-4.6px -2.3px var(--orange),
 			-4.8px -2.4px var(--orange),
-			-5.0px -2.5px var(--orange),
-			-5.2px -2.6px var(--orange),
+			-5.0px -2.5px var(--orange);
+			/* -5.2px -2.6px var(--orange),
 			-5.4px -2.7px var(--orange),
 			-5.6px -2.8px var(--orange),
 			-5.8px -2.9px var(--orange),
@@ -108,7 +127,7 @@
 			-8.4px -4.2px var(--orange),
 			-8.6px -4.3px var(--orange),
 			-8.8px -4.4px var(--orange),
-			-9.0px -4.5px var(--orange);
+			-9.0px -4.5px var(--orange); */
 	}
 }
 
@@ -282,53 +301,40 @@ input::file-selector-button {
 	left: var(--space-xs);
 	background-color: var(--yellow);
 	border: none;
-	box-shadow: -2px 0 0 0 var(--pixel-border),
-	2px 0 0 0 var(--pixel-border),
-	0 -2px 0 0 var(--pixel-border),
-	0 2px 0 0 var(--pixel-border);
-}
-
-input:placeholder {
-	position:absolute;
-	left: var(--space-l);
+	box-shadow: -2px 0 0 0 var(--neutral-border),
+		2px 0 0 0 var(--neutral-border),
+		0 -2px 0 0 var(--neutral-border),
+		0 2px 0 0 var(--neutral-border);
 }
 
 input:focus {
 	outline: none;
 }
 
-input#submit {
-	box-shadow: -4px 0 0 0 var(--pixel-border),
-		4px 0 0 0 var(--pixel-border),
-		0 -4px 0 0 var(--pixel-border),
-		0 4px 0 0 var(--pixel-border);
-}
-
 input#upload {
-	position:relative;
-	padding: var(--space-xl);
+	position: relative;
+	padding-left: var(--space-xxl);
+	padding-top: var(--space-s);
 	font-size: var(--regular);
-	background-color: #64e6e8;
-	outline: solid 1px red;
 }
 
 .input-default {
 	background-color: var(--white);
 	color: var(--shadow-1);
-	box-shadow: -4px 0 0 0 var(--pixel-border),
-		4px 0 0 0 var(--pixel-border),
-		0 -4px 0 0 var(--pixel-border),
-		0 4px 0 0 var(--pixel-border);
+	box-shadow: -4px 0 0 0 var(--neutral-border),
+		4px 0 0 0 var(--neutral-border),
+		0 -4px 0 0 var(--neutral-border),
+		0 4px 0 0 var(--neutral-border);
 }
 
 .input-hover,
 .input-default:hover {
 	background-color: var(--white);
 	color: var(--coffee);
-	box-shadow: -4px 0 0 0 var(--pixel-border),
-		4px 0 0 0 var(--pixel-border),
-		0 -4px 0 0 var(--pixel-border),
-		0 4px 0 0 var(--pixel-border),
+	box-shadow: -4px 0 0 0 var(--neutral-border),
+		4px 0 0 0 var(--neutral-border),
+		0 -4px 0 0 var(--neutral-border),
+		0 4px 0 0 var(--neutral-border),
 		-4px -4px var(--yellow) inset;
 }
 
@@ -338,47 +344,45 @@ input#upload {
 .input-focus {
 	background-color: var(--highlight-yellow);
 	color: var(--coffee);
-	box-shadow: -4px 0 0 0 var(--pixel-border),
-		4px 0 0 0 var(--pixel-border),
-		0 -4px 0 0 var(--pixel-border),
-		0 4px 0 0 var(--pixel-border),
+	box-shadow: -4px 0 0 0 var(--neutral-border),
+		4px 0 0 0 var(--neutral-border),
+		0 -4px 0 0 var(--neutral-border),
+		0 4px 0 0 var(--neutral-border),
 		4px 4px var(--yellow) inset;
 }
 
-.input-disabled {
+.bg-disabled {
 	background-color: var(--disabled);
+	border: none;
 	color: var(--shadow-1);
 }
 
-.input-error {
-	background-color: var(--highlight-red);
+.bg-invalid {
+	background-color: var(--red);
 	color: var(--black);
 }
 
-a {
-	line-height: 140%;
-	font-size: var(--regular);
-	text-decoration: none;
-	color: var(--coffee);
+.bg-valid {
+	background-color: var(--green);
+	color: var(--black);
+}
+
+.error-message {
+	padding: var(--space-s);
+	color: var(--red);
 }
 
 .a-default,
 .a-default:active {
+	line-height: 140%;
+	font-size: var(--regular);
+	text-decoration: none;
+	color: var(--coffee);
 	text-decoration: underline;
 }
 
 .a-visit {
 	background-color: var(--disabled);
-}
-
-@keyframes a-grow {
-	from {
-		background-position: 100% 0;
-	}
-
-	to {
-		background-position: 0 0;
-	}
 }
 
 .a-hover,
@@ -393,139 +397,52 @@ a {
 	animation: a-grow 0.2s 1 linear forwards;
 }
 
-@keyframes button-grow {
-	0% {
-		width: 20px;
-		height: 20px;
-	}
-
-	100% {
-		height: 100%;
-		width: 100%;
-	}
-}
-
 button {
-	height: 90%;
-	width: 98%;
+	height: 100%;
+	width: 100%;
 	box-sizing: border-box;
 	font-family: PixelOperator;
 	padding: var(--space-xs);
 	font-size: var(--regular);
 }
 
-.button-default {
+.button-bg {
 	background-color: var(--yellow);
 	border: none;
 }
 
-.button-hover,
-.button-default:hover {
-	border: none;
+.avatar-wrapper {
+	width: fit-content;
+	height: fit-content;
+	min-width: var(--image-s);
+	min-height: var(--image-s);
+	max-width: var(--image-xl);
+	max-height: var(--image-xl);
+	border: solid 1px var(--shadow-yellow);
 	background-color: var(--yellow);
+	overflow: hidden;
+	border-radius: 80px;
+	padding: var(--space-s);
+	display: flex;
 }
 
-.button-active,
-.button-default:active {
-	border: none;
-	background-color: var(--yellow);
+.avatar-s {
+	max-height: var(--image-s);
+	max-width: var(--image-s);
+	display: block;
 }
 
-.button-disabled {
-	color: var(--shadow-1);
-	border: none;
-	background-color: var(--disabled);
+.avatar-m {
+	max-height: var(--image-m);
+	max-width: var(--image-m);
 }
 
-.pixel-border {
-	box-shadow:
-		-4px 0 0 0 var(--pixel-border),
-		4px 0 0 0 var(--pixel-border),
-		0 -4px 0 0 var(--pixel-border),
-		0 4px 0 0 var(--pixel-border);
+.avatar-l {
+	height: var(--image-l);
+	width: var(--image-l);
 }
 
-.pixel-border-hover,
-.pixel-border:hover {
-	box-shadow: -4px 0 0 0 var(--pixel-border),
-		4px 0 0 0 var(--pixel-border),
-		0 -4px 0 0 var(--pixel-border),
-		0 4px 0 0 var(--pixel-border),
-		-4px -4px var(--highlight-yellow) inset;
-}
-
-.pixel-border-active,
-.pixel-border:active {
-	box-shadow: -4px 0 0 0 var(--pixel-border),
-		4px 0 0 0 var(--pixel-border),
-		0 -4px 0 0 var(--pixel-border),
-		0 4px 0 0 var(--pixel-border),
-		4px 4px var(--shadow-yellow) inset;
-}
-
-.pixel-border-disabled {
-	box-shadow: -4px 0 0 0 var(--shadow-2),
-		4px 0 0 0 var(--shadow-2),
-		0 -4px 0 0 var(--shadow-2),
-		0 4px 0 0 var(--shadow-2),
-		4px 4px var(--shadow-1) inset,
-		-4px -4px var(--white) inset;
-}
-
-.pixel-border-error {
-	box-shadow: -4px 0 0 0 var(--red),
-		4px 0 0 0 var(--red),
-		0 -4px 0 0 var(--red),
-		0 4px 0 0 var(--red),
-		4px 4px var(--highlight-red) inset;
-}
-
-.bg-pixel-border {
-	box-shadow: -4px 0 0 0 var(--white),
-		4px 0 0 0 var(--white),
-		0 -4px 0 0 var(--white),
-		0 4px 0 0 var(--white);
-}
-
-.thin-pixel-border {
-	box-shadow:
-		-2px 0 0 0 var(--pixel-border),
-		2px 0 0 0 var(--pixel-border),
-		0 -2px 0 0 var(--pixel-border),
-		0 2px 0 0 var(--pixel-border);
-}
-
-.thin-pixel-border-hover,
-.thin-pixel-border:hover {
-	box-shadow: -2px 0 0 0 var(--pixel-border),
-		2px 0 0 0 var(--pixel-border),
-		0 -2px 0 0 var(--pixel-border),
-		0 2px 0 0 var(--pixel-border),
-		-2px -2px var(--highlight-yellow) inset;
-}
-
-.thin-pixel-border-active,
-.thin-pixel-border:active {
-	box-shadow: -2px 0 0 0 var(--pixel-border),
-		2px 0 0 0 var(--pixel-border),
-		0 -2px 0 0 var(--pixel-border),
-		0 2px 0 0 var(--pixel-border),
-		2px 2px var(--shadow-yellow) inset;
-}
-
-.thin-pixel-border-disabled {
-	box-shadow: -2px 0 0 0 var(--shadow-2),
-		2px 0 0 0 var(--shadow-2),
-		0 -2px 0 0 var(--shadow-2),
-		0 2px 0 0 var(--shadow-2),
-		2px 2px var(--shadow-1) inset,
-		-2px -2px var(--white) inset;
-}
-
-.thin-pixel-border-error {
-	box-shadow: -2px 0 0 0 var(--red),
-		2px 0 0 0 var(--red),
-		0 -2px 0 0 var(--red),
-		0 2px 0 0 var(--red),
-		2px 2px var(--highlight-red) inset;
+.avatar-xl {
+	height: var(--image-xl);
+	width: var(--image-xl);
 }

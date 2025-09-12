@@ -2,106 +2,120 @@
 <html>
 
 <head>
+	<link rel="stylesheet" href="./borders.css">
 	<link rel="stylesheet" href="./atoms.css">
 	<link rel="stylesheet" href="./molecules.css">
 </head>
 
 <body>
 	<div class="card">
+
 		<p class="title-shadow title-3"> horizontal nav bars </p>
-		<span class="bg bg-pixel-border"> State: default | Variant: horizontal </span>
-		<div class="bg bg-pixel-border horizontal-menu-wrapper">
-			<div class="pixel-border menu-element button-default"> A menu element </div>
-			<div class="pixel-border menu-element button-default"> A menu element </div>
-			<div class="pixel-border menu-element button-default"> A menu element </div>
-			<div class="pixel-border menu-element button-default"> A menu element </div>
+		<span class="bg background-border"> State: default | Variant: horizontal </span>
+		<div class="bg background-border horizontal-menu-wrapper">
+			<div class="interactive-border menu-element button-bg"> A menu element </div>
+			<div class="interactive-border menu-element button-bg"> A menu element </div>
+			<div class="interactive-border menu-element button-bg"> A menu element </div>
+			<div class="interactive-border menu-element button-bg"> A menu element </div>
 		</div>
 
-		<span class="bg bg-pixel-border"> State: hover | Variant: horizontal </span>
-		<div class="bg bg-pixel-border horizontal-menu-wrapper">
-			<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
-			<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
-			<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
-			<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
+		<span class="bg background-border"> State: hover | Variant: horizontal </span>
+		<div class="bg background-border horizontal-menu-wrapper">
+			<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
+			<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
+			<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
+			<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
 		</div>
 
-		<span class="bg bg-pixel-border"> State: active | Variant: horizontal </span>
-		<div class="bg bg-pixel-border horizontal-menu-wrapper">
-			<div class="pixel-border-active menu-element button-active"> A menu element </div>
-			<div class="pixel-border-active menu-element button-active"> A menu element </div>
-			<div class="pixel-border-active menu-element button-active"> A menu element </div>
-			<div class="pixel-border-active menu-element button-active"> A menu element </div>
+		<span class="bg background-border"> State: active | Variant: horizontal </span>
+		<div class="bg background-border horizontal-menu-wrapper">
+			<div class="interactive-border-active menu-element button-bg"> A menu element </div>
+			<div class="interactive-border-active menu-element button-bg"> A menu element </div>
+			<div class="interactive-border-active menu-element button-bg"> A menu element </div>
+			<div class="interactive-border-active menu-element button-bg"> A menu element </div>
 		</div>
 		<p class="title-shadow title-3"> vertical nav bars </p>
 		<div class="flexbox-auto-col">
-			<div class="bg bg-pixel-border vertical-menu-wrapper">
+			<div class="bg background-border vertical-menu-wrapper">
 				<span> State: default | Variant: vertical </span>
-				<div class="pixel-border menu-element button-default"> A menu element </div>
-				<div class="pixel-border menu-element button-default"> A menu element </div>
-				<div class="pixel-border menu-element button-default"> A menu element </div>
-				<div class="pixel-border menu-element button-default"> A menu element </div>
+				<div class="interactive-border menu-element button-bg"> A menu element </div>
+				<div class="interactive-border menu-element button-bg"> A menu element </div>
+				<div class="interactive-border menu-element button-bg"> A menu element </div>
+				<div class="interactive-border menu-element button-bg"> A menu element </div>
 			</div>
-			<div class="bg bg-pixel-border vertical-menu-wrapper">
+			<div class="bg background-border vertical-menu-wrapper">
 				<span> State: hover | Variant: vertical </span>
-				<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
-				<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
-				<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
-				<div class="pixel-border-hover menu-element button-hover"> A menu element </div>
+				<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
+				<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
+				<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
+				<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
 			</div>
-			<div class="bg bg-pixel-border vertical-menu-wrapper">
+			<div class="bg background-border vertical-menu-wrapper">
 				<span> State: active | Variant: vertical </span>
-				<div class="pixel-border-active menu-element button-active"> A menu element </div>
-				<div class="pixel-border-active menu-element button-active"> A menu element </div>
-				<div class="pixel-border-active menu-element button-active"> A menu element </div>
-				<div class="pixel-border-active menu-element button-active"> A menu element </div>
+				<div class="interactive-border-active menu-element button-bg"> A menu element </div>
+				<div class="interactive-border-active menu-element button-bg"> A menu element </div>
+				<div class="interactive-border-active menu-element button-bg"> A menu element </div>
+				<div class="interactive-border-active menu-element button-bg"> A menu element </div>
 			</div>
 		</div>
 
 		<p class="title-shadow title-3"> upload buttons </p>
-		<div class="bg bg-pixel-border input-with-button">
-			<input id="upload" type="file"></input>
-			<input id="submit" type="submit"> Submit! </input>
+		<div class="bg background-border input-with-button">
+			<div class="form-group">
+				<input id="upload" class="interactive-border" type="file"></input>
+				<label class="thin-border" for="upload"> File upload </label>
+			</div>
+			<input id="submit" class="interactive-border button-bg" type="submit" value="Send files"> </input>
+		</div>
+
+		<div class="bg background-border input-with-button">
+			<div class="form-group">
+				<input id="upload" class="inert-border-red bg-invalid" type="file"></input>
+				<label class="thin-border" for="upload"> File upload </label>
+			</div>
+			<input id="submit" class="interactive-border-disabled bg-disabled" type="submit" value="Send files"> </input>
+			<span class="flex-center error-message"> Explicit error message </span>
 		</div>
 
 		<p class="title-shadow title-3"> search bars </p>
 		<div class="flexbox-auto-col">
-			<div class="bg bg-pixel-border input-with-button">
+			<div class="bg background-border input-with-button">
 				<div class="form-group">
 					<img class="search-icon" src="./assets/icons/search-icon.png"></img>
-					<label class="thin-pixel-border" for="search"> search </label>
+					<label class="thin-border" for="search"> search </label>
 					<input class="input-default" id="search" placeholder="default" type="text"></input>
 				</div>
-				<button class="pixel-border button-default" type="button"> search </button>
+				<button class="interactive-border button-bg" type="button"> search </button>
 			</div>
-			<div class="bg bg-pixel-border input-with-button">
+			<div class="bg background-border input-with-button">
 				<div class="form-group">
-					<label class="thin-pixel-border" for="search"> search </label>
+					<label class="thin-border" for="search"> search </label>
 					<img class="search-icon" src="./assets/icons/search-icon.png"></img>
 					<input class="input-hover" id="search" placeholder="hover" type="text"></input>
 				</div>
-				<button class="pixel-border-hover button-hover" type="button"> search </button>
+				<button class="interactive-border-hover button-bg" type="button"> search </button>
 			</div>
-			<div class="bg bg-pixel-border input-with-button">
+			<div class="bg background-border input-with-button">
 				<div class="form-group">
-					<label class="thin-pixel-border" for="search"> search </label>
+					<label class="thin-border" for="search"> search </label>
 					<img class="search-icon" src="./assets/icons/search-icon.png"></img>
 					<input class="input-active" id="search" placeholder="active" type="text"></input>
 				</div>
-				<button class="pixel-border-active button-active" type="button"> search </button>
+				<button class="interactive-border-active button-bg" type="button"> search </button>
 			</div>
-			<div class="bg bg-pixel-border input-with-button">
+			<div class="bg background-border input-with-button">
 				<div class="form-group">
-					<label class="thin-pixel-border" for="search"> search </label>
+					<label class="thin-border" for="search"> search </label>
 					<img class="search-icon" src="./assets/icons/search-icon.png"></img>
-					<input class="pixel-border-error input-error" id="search" placeholder="error!!" type="text"></input>
+					<input class="inert-border-red bg-invalid" id="search" placeholder="error!!" type="text"></input>
 				</div>
-				<button class="pixel-border-disabled button-disabled" type="button"> search </button>
+				<button class="interactive-border-disabled bg-disabled" type="button"> search </button>
 			</div>
 		</div>
 
 		<p class="title-shadow title-3"> search results </p>
 		<div class="flexbox-auto-col">
-			<div class="bg bg-pixel-border search-result flex-item">
+			<div class="bg background-border search-result flex-item">
 				<span> search results </span>
 				<span class="user-search-result">
 					<span class="avatar-wrapper">
@@ -122,7 +136,7 @@
 					<p> <a class="a-default"> alternateZebra </a> </p>
 				</span>
 			</div>
-			<div class="bg bg-pixel-border search-result flex-item">
+			<div class="bg background-border search-result flex-item">
 				<span> search results with active profile link </span>
 				<span class="user-search-result">
 					<span class="avatar-wrapper">
@@ -143,41 +157,39 @@
 					<p> <a class="a-default"> alternateZebra </a> </p>
 				</span>
 			</div>
-			<div class="bg bg-pixel-border search-result flex-item">
+			<div class="bg background-border search-result flex-item">
 				<span> no results... :'( </span>
 				<div class="fail-wrapper">
-					<img src="./assets/icons/no-result.png"> </img>
+					<img class="breathe" src="./assets/icons/no-result.png"> </img>
 				</div>
 			</div>
 		</div>
 
-		<p class="title-shadow title-3"> user profile card </p>
-
-		<div class="bg bg-pixel-border user-card">
-			<div class="user-grid">
-				<div class="avatar-wrapper">
-					<img class="avatar-l" src="./assets/icons/magenta-avatar.png"></img>
+		<p class="title-shadow title-3"> Popup message </p>
+		<div class="popup-container">
+			<div class="popup-message inert-border">
+				<div class="inner-popup bg inert-border">
+					<div class="title-and-paragraph">
+						<p class="title-3 title-shadow"> A popup message appeared ! </p>
+						<p> This is the content of the message !!!</p>
+					</div>
+					<div class="horizontal-menu-wrapper">
+						<div class="menu-element interactive-border-red bg-invalid">Refuse</div>
+						<div class="menu-element interactive-border-green bg-valid">Acknowledge</div>
+					</div>
 				</div>
-				<div class="bio-group">
-					<div class="username"> angryGoose </div>
-					<div class="user-status"></div>
-					<span class="biography"> hoooooooooooooooonk
-					</span>
-				</div>
-			</div>
-			<div class="thin-pixel-border user-info">
-				<div class="line"> <span> Level: </span> <span> 78 </span></div>
-			</div>
-			<button class="thin-pixel-border button-default menu-element" type="button"> See profile </button>
-			<div class="horizontal-menu-wrapper">
-				<button class="thin-pixel-border menu-element button-default" type="button"> Challenge! </button>
-				<button class="thin-pixel-border menu-element button-default" type="button"> Add friend </button>
-				<button class="thin-pixel-border menu-element button-default" type="button"> <img class="icon"
-						src="./assets/icons/block-user.png" </button>
 			</div>
 		</div>
+
+		<p class="title-shadow title-3"> Loader </p>
+		<div class="loader-container bg background-border">
+			<img class="load avatar-l" src="./assets/icons/light-green-avatar.png">
+			<img class="load avatar-l" src="./assets/icons/blue-avatar.png">
+			<img class="load avatar-l" src="./assets/icons/magenta-avatar.png">
+		</div>
+
+
 	</div>
-
 </body>
 
 </html>
