@@ -1,4 +1,4 @@
-import { currentLang } from '../client/scripts/language/translation.js'
+import { currentLang } from '../scripts/language/translation.js'
 
 function renderLanguageDropdownButton(): string {
   return `

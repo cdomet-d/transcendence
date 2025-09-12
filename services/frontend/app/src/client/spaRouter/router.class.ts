@@ -1,5 +1,5 @@
-import { render404 } from '../../pages/html.pages.js';
-import { clearHeader, renderHeader } from '../../pages/header.js'
+import { render404 } from '../pages/html.pages.js';
+import { clearHeader, renderHeader } from '../pages/header.js'
 import { pong } from '../scripts/game/pong.js';
 // import { initLanguageClient } from '../scripts/language/translation.js';
 

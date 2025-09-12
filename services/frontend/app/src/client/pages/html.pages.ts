@@ -1,4 +1,4 @@
-import { translate } from '../client/scripts/language/translation.js';
+import { translate } from '../scripts/language/translation.js';
 import { renderPageTemplate } from './page.template.js'
 
 export function renderHome(): string {

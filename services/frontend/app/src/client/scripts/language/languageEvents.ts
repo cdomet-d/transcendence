@@ -1,6 +1,6 @@
 import { changeLanguage, currentLang } from './translation.js'
-import { renderLanguageDropdownButton } from '../../../pages/languageDropdownButton.js'
-import { renderCentral } from '../../../pages/html.pages.js';
+import { renderLanguageDropdownButton } from '../../pages/languageDropdownButton.js'
+import { renderCentral } from '../../pages/html.pages.js';
 
 export function addLanguageEvents() {
 	const switchBtn = document.getElementById('language-switch');

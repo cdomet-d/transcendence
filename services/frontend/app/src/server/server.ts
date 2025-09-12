@@ -27,8 +27,9 @@ async function addPlugins(serv: FastifyInstance) {
 						"/app/src",
 						"/app/src/css",
 						"/app/dist/client/spaRouter",
-						"/app/dist/client/",
-						"/app/dist/client/scripts/game",
+						"/app/dist/client",
+						// "/app/dist/client/scripts/language",
+						// "/app/dist/client/scripts/game",
 						"/app/dist/",
 						"/app/src/images"
 					]

@@ -1,3 +1,5 @@
+console.log("i18n module loaded", import.meta.url, Math.random());
+
 import en from '../../../assets/locales/en.json' with { type: "json" };
 import fr from '../../../assets/locales/fr.json' with { type: "json" };
 import es from '../../../assets/locales/es.json' with { type: "json" };
@@ -8,18 +10,18 @@ export let currentLang: string = "en";
 export const resources: Record<string, TranlationMap> = { en ,fr, es };
 export let translation: TranlationMap /*= resources["en"]*/;
 
-// export function initLanguageClient() {
-// 	const savedLang = localStorage.getItem('selectedLanguage');
-// 	console.log("savedLang:", savedLang);
-// 	if (savedLang && resources[savedLang]) {
-// 		currentLang = savedLang;
-// 	} else {
-// 		currentLang = 'en';
-// 	}
-// 	translation = resources[currentLang] ?? {};
-// 	console.log("translation:", translation);
-// 	console.log("currentLang", currentLang);
-// }
+export function initLanguageClient() {
+	const savedLang = localStorage.getItem('selectedLanguage');
+	console.log("savedLang:", savedLang);
+	if (savedLang && resources[savedLang]) {
+		currentLang = savedLang;
+	} else {
+		currentLang = 'en';
+	}
+	translation = resources[currentLang] ?? {};
+	console.log("translation:", translation);
+	console.log("currentLang", currentLang);
+}
 
 export function translate(key: string): string {
 	console.log("translation in translate", translation);

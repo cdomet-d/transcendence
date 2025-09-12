@@ -1,6 +1,6 @@
 import { routes } from '../client/spaRouter/routes.js';
-import { renderHeader } from '../pages/header.js';
-import { renderLanguageDropdownButton } from '../pages/languageDropdownButton.js'
+import { renderHeader } from '../client/pages/header.js';
+import { renderLanguageDropdownButton } from '../client/pages/languageDropdownButton.js'
 // import { createCanvas } from 'canvas';
 // import { renderGame } from '../client/scripts/game/pong.js';
 
