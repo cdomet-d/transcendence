@@ -39,4 +39,4 @@ if (window.location.pathname === '/game/match') {
 
 initLanguage();
 
-addLanguageEvents(router._getCallback());
+addLanguageEvents();

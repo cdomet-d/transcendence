@@ -17,9 +17,11 @@ export function initLanguage() {
 		currentLang = 'en';
 	}
 	translation = resources[currentLang] ?? {};
+	console.log(translation);
 }
 
 export function translate(key: string): string {
+	console.log("IN TRANSLATE");
 	return (translation[key] || key);
 }
 
