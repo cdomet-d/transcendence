@@ -9,7 +9,7 @@ function wshandler(socket: WebSocket, req: FastifyRequest): void {
 		const mess: string = payload.toString();
 		req.server.log.info(`client sent: ${mess}`);
 		if (mess.match("create 1vs1"))
-			handleQuickMatch(socket, mess);
+			handleQuickMatch(socket, mess, req);
 	});
 }
 

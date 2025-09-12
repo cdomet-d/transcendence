@@ -8,7 +8,8 @@ function matchmaking(socket: WebSocket, main: HTMLElement) {
 }
 
 function requestMatchWS(socket: WebSocket) {
-	socket.send("create 1vs1");
+	if (socket.readyState === WebSocket.OPEN)
+		socket.send("create 1vs1");
 	console.log("Looking for opponent");
 }
 
