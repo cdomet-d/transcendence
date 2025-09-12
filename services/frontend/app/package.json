@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
     "@fastify/static": "^8.2.0",
     "@tailwindcss/cli": "^4.1.13",
     "@types/node": "^24.3.0",

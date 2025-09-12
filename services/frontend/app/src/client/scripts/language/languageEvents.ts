@@ -1,5 +1,6 @@
 import { changeLanguage, currentLang } from './translation.js'
 import { renderLanguageDropdownButton } from '../../../pages/languageDropdownButton.js'
+import { renderCentral } from '../../../pages/html.pages.js';
 
 export function addLanguageEvents() {
 	const switchBtn = document.getElementById('language-switch');
@@ -23,9 +24,8 @@ export function addLanguageEvents() {
 	});
 }
 
-function rerenderPage() {
-	console.log("IIIINNNN");
-	const callback = () => "hey"; //TODO: fix callback
+export function rerenderPage() {
+	const callback = renderCentral; //TODO: fix callback
 	const langDropdown = document.getElementById('lang-dropdown-container');
 	const page = document.getElementById('page');
 	if (!langDropdown || !page)

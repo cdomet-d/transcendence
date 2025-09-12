@@ -2,7 +2,8 @@ import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
 import { servRoutes } from './route.js';
 import { options } from './serv.conf.js';
-import fastifyStatic from '@fastify/static'
+import fastifyStatic from '@fastify/static';
+import cookie from '@fastify/cookie';
 // import fastifyVite from '@fastify/vite'
 
 try {
@@ -32,6 +33,9 @@ async function addPlugins(serv: FastifyInstance) {
 						"/app/src/images"
 					]
 				})
+				.register(cookie/*, {
+					secret: "une-super-cle",
+				}*/)
 				// .register(fastifyVite, {
 				// 	root: "/app",
 				// 	dev: process.argv.includes('--dev'),

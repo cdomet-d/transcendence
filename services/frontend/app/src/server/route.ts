@@ -2,8 +2,17 @@
 import type { FastifyPluginCallback } from 'fastify';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { buildHtmlPage } from './build.html.js';
+import { setTranslation } from '../client/scripts/language/translation.js'
+
+function initLanguage(req: FastifyRequest) {
+    let savedLang: string | undefined = req.cookies.lang;
+    if (!savedLang)
+        savedLang = "en";
+    setTranslation(savedLang);
+}
 
 async function handler(req: FastifyRequest, rep: FastifyReply) {
+    initLanguage(req);
     const html = buildHtmlPage(req.routeOptions.url);
     rep.header('Content-Type', 'text/html');
     rep.send(html);

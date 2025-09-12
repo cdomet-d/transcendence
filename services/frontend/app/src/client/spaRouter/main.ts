@@ -2,7 +2,7 @@ import { Router } from './router.class.js';
 import { routes } from './routes.js';
 import { pong } from '../scripts/game/pong.js';
 import { addLanguageEvents } from '../scripts/language/languageEvents.js';
-import { initLanguage } from '../scripts/language/translation.js';
+// import { initLanguageClient } from '../scripts/language/translation.js';
 
 const router = new Router(routes);
 
@@ -37,6 +37,5 @@ if (window.location.pathname === '/game/match') {
     })
 }
 
-initLanguage();
-
+// initLanguageClient();
 addLanguageEvents();
