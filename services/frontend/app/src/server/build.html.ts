@@ -1,14 +1,22 @@
 import { routes } from '../client/spaRouter/routes.js';
 import { renderHeader } from '../pages/header.js';
+import { renderLanguageDropdownButton } from '../pages/languageDropdownButton.js'
+// import { createCanvas } from 'canvas';
+// import { renderGame } from '../client/scripts/game/pong.js';
 
 function buildHtmlPage(url: string | undefined): string {
     if (url === undefined)
         return "error"; //TODO: fix that
     const route = routes.find(routes => routes.path == url);
+
     const app: string | undefined = route?.callback();
+
     let header: string = "";
     if (url !== "/")
         header = renderHeader();
+
+    const langDropdown = renderLanguageDropdownButton();
+    
     const html: string = `
     <!doctype html>
     <html lang="en">
@@ -21,12 +29,25 @@ function buildHtmlPage(url: string | undefined): string {
         <title>🔥 PONG 2 OUF 🔥</title>
     </head>
     <body>
-        <div id="header">${header}</div>
-        <div id="app">${app}</div>
+        <div class="top-center-button" id="lang-dropdown-container">
+            ${langDropdown}
+        </div>
+        <div id="header">
+            ${header}
+        </div>
+        <div id="app">
+            ${app}
+        </div>
     </body>
     </html>
     `;
     return html;
 }
+
+// function renderCanvas() {
+//     const canvas = createCanvas(200, 200);
+//     const ctx = canvas.getContext('2d');
+//     renderGame(ctx);
+// }
 
 export { buildHtmlPage };

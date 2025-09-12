@@ -1,6 +1,3 @@
-// import { renderLanguageDropdownButton } from './language/languageDropdownButtonHTML.js'
-// import { renderHeader } from './header.js'
-
 type NavButton = {
 	href: string;
 	label: string;
@@ -22,9 +19,7 @@ showBack = true,
 homeHref = "/"
 }: Element) : string
 {
-	// const langBtn = renderLanguageDropdownButton();
-	const app = `
-	<div class="top-center-button" id="lang-dropdown-container"></div>
+	const htmlPage = `
 		<div class="pt-12 text-center text-2xl font-bold">${title}</div>
 		<div class="flex justify-center mt-32 gap-8">
 			${nextButtons.map(btn => `
@@ -58,6 +53,5 @@ homeHref = "/"
 			</a>
 		</div>
 	`;
-	const htmlPage = app /*+ langBtn*/;
 	return htmlPage;
 }

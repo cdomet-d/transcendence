@@ -9,17 +9,17 @@ import es from '../../../assets/locales/es.json' with { type: "json" };
 
 const resources: Record<string, TranlationMap> = { en ,fr, es };
 
-export function init() {
-const savedLang = localStorage.getItem('selectedLanguage');
-  if (savedLang && resources[savedLang]) {
-    currentLang = savedLang;
-  } else {
-    currentLang = 'en';
-  }
-  translation = resources[currentLang] ?? {};
+export function initLanguage() {
+	const savedLang = localStorage.getItem('selectedLanguage');
+	if (savedLang && resources[savedLang]) {
+		currentLang = savedLang;
+	} else {
+		currentLang = 'en';
+	}
+	translation = resources[currentLang] ?? {};
 }
 
-export function t(key: string): string {
+export function translate(key: string): string {
 	return (translation[key] || key);
 }
 

@@ -1,5 +1,6 @@
 import { render404 } from '../../pages/html.pages.js';
 import { clearHeader, renderHeader } from '../../pages/header.js'
+import { pong } from '../scripts/game/pong.js';
 
 interface routeInterface {
     path: string;
@@ -11,7 +12,6 @@ export class Router {
 
     constructor(routes: routeInterface[]) {
         this._routes = routes;
-        // this._loadInitialRoute();
     }
 
     _getCurrentURL() {
@@ -20,10 +20,6 @@ export class Router {
 
     _matchUrlToRoute(path: string) {
         return this._routes.find(route => route.path === path);
-    }
-
-    _loadInitialRoute() {
-        this._loadRoute(this._getCurrentURL());
     }
 
     _loadRoute(path: string) {
@@ -48,7 +44,17 @@ export class Router {
             document.getElementById('header')!.innerHTML = renderHeader();
         }
 
-		// init();
         app.innerHTML = matchedRoute.callback();
+        if (matchedRoute.path === '/game/match') {
+            pong();
+            import("../scripts/game/wsreply.js").then((game) => {
+                game.wsRequest();
+            })
+        }
     }
 }
+
+// async function loadGameScript(callback) {
+//   const module = await import('../scripts/game/wsreply.js');
+//   module.callback();
+// }

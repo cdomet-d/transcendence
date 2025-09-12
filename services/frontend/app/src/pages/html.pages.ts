@@ -1,10 +1,8 @@
-// import { translate } from './language/translationHTML.js';
-// import { renderLanguageDropdownButton } from './language/languageDropdownButtonHTML.js'
+import { translate } from '../client/scripts/language/translation.js';
 import { renderPageTemplate } from './page.template.js'
 
 export function renderHome(): string {
 	let html = `
-		<div class="top-center-button" id="lang-dropdown-container"></div>
 		<div class="min-h-screen flex items-center justify-center bg-white">
 			<a
 				href="/central"
@@ -18,32 +16,18 @@ export function renderHome(): string {
 			</a>
 		</div>
 	`;
-	// html += renderLanguageDropdownButton();
 	return html;
 }
 
 export function renderCentral(): string {
-	// return renderPageTemplate({
-	// 	title: translate('CENTRAL'),
-	// 	nextButtons: [
-	// 	{ href: "/game/tournament", label: translate('Tournament') },
-	// 	{ href: "/quickMatch", label: translate('Quick Match') },
-	// 	{ href: "/account", label: translate('Profile') },
-	// 	{ href: "/game/leaderboard", label: translate('Leaderboard') },
-	// 	{ href: "/game/match", label: translate('Game') },
-	// 	],
-	// 	backHref: "/",
-	// 	showBack: true,
-	// 	homeHref: "/"
-	// });
 	return renderPageTemplate({
-		title: 'CENTRAL',
+		title: translate('CENTRAL'),
 		nextButtons: [
-		{ href: "/game/tournament", label: 'Tournament' },
-		{ href: "/quickMatch", label: 'Quick Match' },
-		{ href: "/account", label: 'Profile' },
-		{ href: "/game/leaderboard", label: 'Leaderboard' },
-		{ href: "/game/match", label: 'Game'},
+		{ href: "/game/tournament", label: translate('Tournament') },
+		{ href: "/quickMatch", label: translate('Quick Match') },
+		{ href: "/account", label: translate('Profile') },
+		{ href: "/game/leaderboard", label: translate('Leaderboard') },
+		{ href: "/game/match", label: translate('Game') },
 		],
 		backHref: "/",
 		showBack: true,
@@ -66,10 +50,8 @@ export function renderProfile(): string {
 	return renderPageTemplate({
 		title: "PROFILE",
 		nextButtons: [
-			// { href: "/accountSettings", label: translate("Account Settings") },
-			// { href: "/editProfile", label: translate("Edit Profile") }
-			{ href: "/accountSettings", label:"Account Settings" },
-			{ href: "/editProfile", label:"Edit Profile" }
+			{ href: "/accountSettings", label: translate("Account Settings") },
+			{ href: "/editProfile", label: translate("Edit Profile") }
 		],
 		backHref: "/central",
 		showBack: true,
