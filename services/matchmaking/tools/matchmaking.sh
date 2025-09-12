@@ -4,5 +4,5 @@
 
 npm install nats dotenv
 
-npm run dev
+npm run dev | tee LOGS
 #npm start

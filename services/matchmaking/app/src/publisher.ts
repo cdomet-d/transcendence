@@ -3,7 +3,7 @@ import { connect, StringCodec } from 'nats';
 
 dotenv.config();
 
-export async function initNATS() {
+async function initNATS() {
 
   let token = process.env.NATS_SERVER_TOKEN;
   const nc = await connect({ servers: "nats://nats-server:4222", token: token ?? ""});
@@ -15,3 +15,13 @@ export async function initNATS() {
   await nc.flush();
   await nc.drain();
 };
+
+// function publishNATS(nc: NatsConnection) {
+//   const sc = StringCodec();
+
+//   nc.publish('matchmaking.ready', sc.encode('Players paired up!\n Waiting for GameCreation...'));
+//   console.log(`Published message to "matchmaking.ready"`);
+
+// }
+
+export { initNATS };
