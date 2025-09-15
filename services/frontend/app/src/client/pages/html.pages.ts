@@ -2,8 +2,6 @@ import { translate } from '../scripts/language/translation.js';
 import { renderPageTemplate } from './page.template.js'
 
 export function renderHome(): string {
-	console.log("IN HOME");
-	console.log(translate('Play'));
 	let html = `
 		<div class="min-h-screen flex items-center justify-center bg-white">
 			<a
@@ -22,7 +20,6 @@ export function renderHome(): string {
 }
 
 export function renderCentral(): string {
-	console.log("in renderCentral", translate('Quick Match'));
 	return renderPageTemplate({
 		title: translate('CENTRAL'),
 		nextButtons: [
