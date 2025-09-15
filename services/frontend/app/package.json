@@ -6,7 +6,8 @@
   "main": "server.js",
   "scripts": {
     "css": "npx @tailwindcss/cli -i ./src/css/src.css -o ./src/css/output.css",
-    "dev": "nodemon"
+    "css:watch": "npx @tailwindcss/cli -i ./src/css/src.css -o ./src/css/output.css --watch",
+    "dev": "concurrently \"nodemon\" \"npm run css:watch\""
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@fastify/vite": "^8.2.0",
     "@tailwindcss/vite": "^4.1.12",
+    "concurrently": "^9.2.1",
     "nodemon": "^3.1.10",
     "vite": "^7.1.4"
   },
