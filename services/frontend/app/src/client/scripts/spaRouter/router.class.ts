@@ -61,8 +61,3 @@ export class Router {
         }
     }
 }
-
-// async function loadGameScript(callback) {
-//   const module = await import('../scripts/game/wsreply.js');
-//   module.callback();
-// }

@@ -1,8 +1,6 @@
 import { routes } from '../client/scripts/spaRouter/routes.js';
 import { renderHeader } from '../client/pages/header.js';
 import { renderLanguageDropdownButton } from '../client/pages/languageDropdownButton.js'
-// import { createCanvas } from 'canvas';
-// import { renderGame } from '../client/scripts/game/pong.js';
 
 function buildHtmlPage(url: string | undefined): string {
 	if (url === undefined)
@@ -45,11 +43,5 @@ function buildHtmlPage(url: string | undefined): string {
 	`;
 	return html;
 }
-
-// function renderCanvas() {
-//     const canvas = createCanvas(200, 200);
-//     const ctx = canvas.getContext('2d');
-//     renderGame(ctx);
-// }
 
 export { buildHtmlPage };

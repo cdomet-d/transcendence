@@ -1,5 +1,3 @@
-// console.log("i18n module loaded", import.meta.url, Math.random());
-
 import en from '../../../assets/locales/en.json' with { type: "json" };
 import fr from '../../../assets/locales/fr.json' with { type: "json" };
 import es from '../../../assets/locales/es.json' with { type: "json" };
