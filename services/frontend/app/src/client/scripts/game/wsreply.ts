@@ -1,4 +1,4 @@
-import { /*pong, */createKeyDownEvent} from './pong.js'
+import { createKeyDownEvent} from './paddle.js'
 
 function wsRequest() {
     const ws = new WebSocket('wss://localhost:8443/api/game/match');

@@ -30,10 +30,10 @@ window.addEventListener('popstate', () => {
     router._loadRoute(cleanPath);
 });
 
-if (window.location.pathname === '/game/match') {
+if (router._getCurrentURL() === '/game/match') {
     pong();
-    import("./game/wsreply.js").then((game) => {
-        game.wsRequest();
+    import("./game/wsreply.js").then(({ wsRequest }) => {
+        wsRequest();
     })
 }
 
