@@ -2,11 +2,11 @@ import en from '../../../assets/locales/en.json' with { type: "json" };
 import fr from '../../../assets/locales/fr.json' with { type: "json" };
 import es from '../../../assets/locales/es.json' with { type: "json" };
 
-type TranlationMap = Record<string, string>;
+type TranslationMap = Record<string, string>;
 
 export let currentLang: string = "en";
-const resources: Record<string, TranlationMap> = { en ,fr, es };
-let translation: TranlationMap;
+const resources: Record<string, TranslationMap> = { en ,fr, es };
+let translation: TranslationMap;
 
 export function initLanguageCSR() {
 	const savedLang = localStorage.getItem('selectedLanguage');

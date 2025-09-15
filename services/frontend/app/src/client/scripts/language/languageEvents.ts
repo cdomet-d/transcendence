@@ -24,7 +24,7 @@ export function addLanguageEvents() {
 	});
 }
 
-export function rerenderPage() {
+function rerenderPage() {
 	const callback = router._getCallback();
 	const langDropdown = document.getElementById('lang-dropdown-container');
 	const page = document.getElementById('page');

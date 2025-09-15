@@ -2,11 +2,8 @@ import { routes } from '../client/scripts/spaRouter/routes.js';
 import { renderHeader } from '../client/pages/header.js';
 import { renderLanguageDropdownButton } from '../client/pages/languageDropdownButton.js'
 
-function buildHtmlPage(url: string | undefined): string {
-	if (url === undefined)
-		return "error"; //TODO: fix that
+function buildHtmlPage(url: string): string {
 	const route = routes.find(routes => routes.path == url);
-
 	const page: string | undefined = route?.callback();
 
 	let header: string = "";
