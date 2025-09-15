@@ -7,7 +7,7 @@
   "scripts": {
     "css": "npx @tailwindcss/cli -i ./src/css/src.css -o ./src/css/output.css",
     "css:watch": "npx @tailwindcss/cli -i ./src/css/src.css -o ./src/css/output.css --watch",
-    "dev": "concurrently \"nodemon\" \"npm run css:watch\""
+    "dev": "concurrently \"npm run css:watch\" \"nodemon\""
   },
   "author": "",
   "license": "ISC",
