@@ -1,4 +1,4 @@
-import * as page from '../pages/html.pages.js'
+import * as page from '../../pages/html.pages.js'
 
 interface routeInterface {
     path: string;

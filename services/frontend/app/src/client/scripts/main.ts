@@ -1,8 +1,8 @@
-import { Router } from './router.class.js';
-import { routes } from './routes.js';
-import { pong } from '../scripts/game/pong.js';
-import { addLanguageEvents } from '../scripts/language/languageEvents.js';
-import { initLanguageClient } from '../scripts/language/translation.js';
+import { Router } from './spaRouter/router.class.js';
+import { routes } from './spaRouter/routes.js';
+import { pong } from './game/pong.js';
+import { addLanguageEvents } from './language/languageEvents.js';
+import { initLanguageClient } from './language/translation.js';
 
 const router = new Router(routes);
 
@@ -32,7 +32,7 @@ window.addEventListener('popstate', () => {
 
 if (window.location.pathname === '/game/match') {
     pong();
-    import("../scripts/game/wsreply.js").then((game) => {
+    import("./game/wsreply.js").then((game) => {
         game.wsRequest();
     })
 }

@@ -19,12 +19,12 @@ export function initLanguageClient() {
 		currentLang = 'en';
 	}
 	translation = resources[currentLang] ?? {};
-	console.log("translation:", translation);
-	console.log("currentLang", currentLang);
+	// console.log("translation:", translation);
+	// console.log("currentLang", currentLang);
 }
 
 export function translate(key: string): string {
-	console.log("translation in translate", translation);
+	// console.log("translation in translate", translation);
 	return (translation[key] || key);
 }
 
@@ -35,8 +35,8 @@ export function changeLanguage(lang: string) {
 		localStorage.setItem('selectedLanguage', lang);
 		document.cookie = `lang=${lang};path=/;max-age=31536000`;
 	}
-	console.log("translation in changeLanguage", translation);
-	console.log("currentLang in changeLanguage", currentLang);
+	// console.log("translation in changeLanguage", translation);
+	// console.log("currentLang in changeLanguage", currentLang);
 }
 
 export function setTranslation(savedLang: string) {

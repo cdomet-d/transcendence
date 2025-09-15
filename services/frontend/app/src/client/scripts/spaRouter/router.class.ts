@@ -1,7 +1,6 @@
-import { render404 } from '../pages/html.pages.js';
-import { clearHeader, renderHeader } from '../pages/header.js'
-import { pong } from '../scripts/game/pong.js';
-// import { initLanguageClient } from '../scripts/language/translation.js';
+import { render404 } from '../../pages/html.pages.js';
+import { clearHeader, renderHeader } from '../../pages/header.js'
+import { pong } from '../game/pong.js';
 
 interface routeInterface {
     path: string;
@@ -52,12 +51,11 @@ export class Router {
             document.getElementById('header')!.innerHTML = renderHeader();
         }
 
-        // initLanguageClient();
         page.innerHTML = matchedRoute.callback();
         
         if (matchedRoute.path === '/game/match') {
             pong();
-            import("../scripts/game/wsreply.js").then((game) => {
+            import("../game/wsreply.js").then((game) => {
                 game.wsRequest();
             })
         }

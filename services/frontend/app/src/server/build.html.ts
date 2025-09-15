@@ -1,4 +1,4 @@
-import { routes } from '../client/spaRouter/routes.js';
+import { routes } from '../client/scripts/spaRouter/routes.js';
 import { renderHeader } from '../client/pages/header.js';
 import { renderLanguageDropdownButton } from '../client/pages/languageDropdownButton.js'
 // import { createCanvas } from 'canvas';
@@ -25,7 +25,7 @@ function buildHtmlPage(url: string | undefined): string {
 		<link rel="icon" type="image/svg+xml" href="/sunflower.svg" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="/output.css">
-		<script type="module" src="/main.js"></script>
+		<script type="module" src="/scripts/main.js"></script>
 		<title>🔥 PONG 2 OUF 🔥</title>
 	</head>
 	<body>

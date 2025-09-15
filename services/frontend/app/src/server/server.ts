@@ -23,19 +23,29 @@ catch (err) {
 async function addPlugins(serv: FastifyInstance) {
 	await serv.register(servRoutes)
 				.register(fastifyStatic, {
+					root: "/app/dist/client/scripts",
+					prefix: "/scripts/",
+				})
+				.register(fastifyStatic, {
+					root: "/app/dist/client/pages",
+					prefix: "/pages/",
+					decorateReply: false
+				})
+				.register(fastifyStatic, {
+					root: "/app/src/assets/",
+					prefix: "/assets/",
+					decorateReply: false
+				})
+				.register(fastifyStatic, {
 					root: [
-						"/app/src",
 						"/app/src/css",
-						"/app/dist/client/spaRouter",
-						"/app/dist/client",
-						// "/app/dist/client/scripts/language",
-						// "/app/dist/client/scripts/game",
-						"/app/dist/",
-						"/app/src/images"
-					]
+						"/app/src/images",
+					],
+					prefix: "/",
+					decorateReply: false
 				})
 				.register(cookie/*, {
-					secret: "une-super-cle",
+					secret: "", //TODO: add secret ?
 				}*/)
 				// .register(fastifyVite, {
 				// 	root: "/app",
