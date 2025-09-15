@@ -1,7 +1,6 @@
-// tailwind.config.js
 export default {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./src/client/pages/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {},
