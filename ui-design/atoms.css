@@ -25,7 +25,7 @@
 	--m: 2rem;
 	--ml: 2.5rem;
 	--l: 3rem;
-	--x-large: 3.5rem;
+	--xl: 3.5rem;
 
 	--image-s: 1.5rem;
 	--image-m: 2rem;
@@ -46,7 +46,6 @@
 
 	--br: 10px;
 
-	/* Colors */
 	--white: #fffcf7;
 	--black: #372a25;
 	--gradient1: #131254;
@@ -54,31 +53,31 @@
 	--gradient3: #64e6e8;
 	--gradient4: #d1ffda;
 
+	--highlight-green: #bde559;
 	--green: #76c54b;
-	--orange: #a74500;
-	--yellow: #f8ca53;
-	--red: #f2906c;
+	--shadow-green: #04983a;
 
-	--neutral-border: #734c3a;
-	--border-red: #a03812;
+	--highlight-orange: #EB6302;
+	--orange: #974308;
+	--shadow-orange: #692C00;
+
+	--highlight-red: #E37248;
+	--red: #AF370B;
+	--shadow-red: #6B1D00;
+
+	--highlight-yellow: #FFE6A4;
+	--yellow: #FFB800;
+	--shadow-yellow: #D99D00;
+
+
+	--neutral-border: #2A1E00;
+	--border-red: #6B1D00;
 	--border-green: #005a44;
 
 	--coffee: #835441;
 	--disabled: #fdeec8;
 	--shadow-1: #d5b6aa;
 	--shadow-2: #736864;
-
-	/* Shadows */
-	--shadow-green: #04983a;
-	--shadow-orange: #8e1f1b;
-	--shadow-yellow: #c48061;
-	--shadow-red: #cd3434;
-
-	/* Highlights */
-	--highlight-red: #f7c7b5;
-	--highlight-green: #bde559;
-	--highlight-yellow: #fbecc1;
-	--highlight-orange: #e4753a;
 
 	.title-shadow {
 		text-shadow:
@@ -108,7 +107,7 @@
 			-4.6px -2.3px var(--orange),
 			-4.8px -2.4px var(--orange),
 			-5.0px -2.5px var(--orange);
-			/* -5.2px -2.6px var(--orange),
+		/* -5.2px -2.6px var(--orange),
 			-5.4px -2.7px var(--orange),
 			-5.6px -2.8px var(--orange),
 			-5.8px -2.9px var(--orange),
@@ -231,7 +230,7 @@ li {
 	color: var(--yellow);
 	font-family: PixelOperator;
 	text-align: center;
-	font-size: var(--xxl);
+	font-size: var(--xl);
 	line-height: 130%;
 }
 
@@ -239,7 +238,7 @@ li {
 	color: var(--yellow);
 	font-family: PixelOperator;
 	text-align: center;
-	font-size: var(--xl);
+	font-size: var(--l);
 	line-height: 110%;
 }
 
@@ -247,14 +246,14 @@ li {
 	color: var(--yellow);
 	font-family: PixelOperator;
 	text-align: center;
-	font-size: var(--l);
+	font-size: var(--m);
 	line-height: 110%;
 }
 
 .title-4 {
 	color: var(--yellow);
 	text-align: center;
-	font-size: var(--m);
+	font-size: var(--s);
 	line-height: 100%;
 }
 
@@ -281,6 +280,7 @@ li {
 }
 
 input {
+	/* -moz-appearance: none; */
 	width: 100%;
 	height: 100%;
 	border: none;
@@ -293,6 +293,44 @@ input[type=text] {
 	padding: var(--space-xs) var(--space-s) var(--space-xs) var(--space-m);
 }
 
+input[type=range] {
+	box-shadow:
+		8px 8px var(--shadow-yellow) inset,
+		-4px -4px var(--highlight-yellow) inset,
+		-2px -2px var(--neutral-border),
+		-2px 2px var(--neutral-border),
+		2px -2px var(--neutral-border),
+		2px 2px var(--neutral-border),
+		-4px 0 0 0 var(--neutral-border),
+		4px 0 0 0 var(--neutral-border),
+		0 -4px 0 0 var(--neutral-border),
+		0 4px 0 0 var(--neutral-border);
+	background-color: var(--yellow);
+	padding:4px;
+	height: var(--s);
+}
+
+input[type=range]::-moz-range-thumb {
+	outline: none;
+	border: none;
+	border-radius: 0;
+	width: var(--m);
+	height: var(--s);
+	background-color: var(--orange);
+	box-shadow:
+		2px -2px var(--shadow-orange) inset,
+		-2px 2px var(--highlight-orange) inset,
+		-2px 0 0 0 var(--neutral-border),
+		2px 0 0 0 var(--neutral-border),
+		0 -2px 0 0 var(--neutral-border),
+		0 2px 0 0 var(--neutral-border);
+}
+
+input[type=radio] {
+	height: var(--s);
+	width: var(--s);
+	border-radius: 0px;
+}
 input::file-selector-button {
 	font-family: PixelOperator;
 	height: var(--s);
@@ -320,22 +358,12 @@ input#upload {
 
 .input-default {
 	background-color: var(--white);
-	color: var(--shadow-1);
-	box-shadow: -4px 0 0 0 var(--neutral-border),
-		4px 0 0 0 var(--neutral-border),
-		0 -4px 0 0 var(--neutral-border),
-		0 4px 0 0 var(--neutral-border);
+	color: var(--shadow-2);
 }
 
 .input-hover,
 .input-default:hover {
 	background-color: var(--white);
-	color: var(--coffee);
-	box-shadow: -4px 0 0 0 var(--neutral-border),
-		4px 0 0 0 var(--neutral-border),
-		0 -4px 0 0 var(--neutral-border),
-		0 4px 0 0 var(--neutral-border),
-		-4px -4px var(--yellow) inset;
 }
 
 .input-default:active,
@@ -343,22 +371,24 @@ input#upload {
 .input-active,
 .input-focus {
 	background-color: var(--highlight-yellow);
-	color: var(--coffee);
 	box-shadow: -4px 0 0 0 var(--neutral-border),
 		4px 0 0 0 var(--neutral-border),
 		0 -4px 0 0 var(--neutral-border),
-		0 4px 0 0 var(--neutral-border),
+		0 4px 0 0 var(--neutral-border), -2px -2px var(--neutral-border),
+		-2px 2px var(--neutral-border),
+		2px -2px var(--neutral-border),
+		2px 2px var(--neutral-border),
 		4px 4px var(--yellow) inset;
 }
 
 .bg-disabled {
 	background-color: var(--disabled);
 	border: none;
-	color: var(--shadow-1);
+	color: var(--shadow-2);
 }
 
 .bg-invalid {
-	background-color: var(--red);
+	background-color: var(--highlight-red);
 	color: var(--black);
 }
 
@@ -377,7 +407,6 @@ input#upload {
 	line-height: 140%;
 	font-size: var(--regular);
 	text-decoration: none;
-	color: var(--coffee);
 	text-decoration: underline;
 }
 

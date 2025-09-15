@@ -154,7 +154,7 @@
 	width: var(--single-col);
 }
 
-.search-icon {
+.search-icon-dark {
 	height: var(--s);
 	width: var(--s);
 	position: absolute;
@@ -212,7 +212,7 @@
 	padding: var(--space-l);
 	grid-template-columns: 1fr;
 	width: var(--double-col);
-	background-image: url(./assets/imgs/tile-bg.png);
+	background-image: url(./assets/icons/tile-bg.png);
 }
 
 .inner-popup {

@@ -255,8 +255,6 @@
 
 
 		<h1 class="title-shadow title-1"> Inputs </h1>
-		<input type="radio"> </input>
-		<input type="checkbox"> </input>
 		<div class="input-grid background-border bg">
 			<h2> Input fields </h2>
 			<span> Default </span>
@@ -289,7 +287,7 @@
 			<span> Error </span>
 			<div class="form-group">
 				<label class="thin-border label-error" for="Error">Error</label>
-				<input class="interactive-border-error bg-invalid" type="text" placeholder="%saperrie"> </input>
+				<input class="inert-border-red bg-invalid" type="text" placeholder="%saperrie"> </input>
 			</div>
 
 			<span> File upload </span>
@@ -308,19 +306,41 @@
 				!</button>
 		</div>
 
+		<h2 class="title-2 title-shadow"> Sliders, checkboxes and radio buttons </h2>
 		<div class="bg background-border block">
-			<h2> Avatars wrapper </h2>
+			<input class="inert-border" type="radio"> </input>
+			<input type="checkbox"> </input>
+			<input type="range" name="speed" min="0" max="5" step="1"> </input>
+		</div>
+
+		<h2 class="title-2 title-shadow"> Avatars & wrappers </h2>
+		<div class="bg background-border block flexbox-auto-col">
 			<span> Wrapper </span>
 			<div class="avatar-wrapper"></div>
 			<span> Small avatar (search results, game history...) </span>
-			<div class="avatar-wrapper"><img class="avatar-s" src="./assets/icons/light-green-avatar.png"></img></div>
+			<div class="avatar-wrapper"><img class="avatar-s" src="./assets/icons/light-green-avatar.png"></img>
+			</div>
 			<span> Medium avatar (SHRUG...) </span>
-			<div class="avatar-wrapper"><img class="avatar-m" src="./assets/icons/light-green-avatar.png"></img></div>
+			<div class="avatar-wrapper"><img class="avatar-m" src="./assets/icons/light-green-avatar.png"></img>
+			</div>
 			<span> Large avatar (profile card...) </span>
-			<div class="avatar-wrapper"><img class="avatar-l" src="./assets/icons/light-green-avatar.png"></img></div>
+			<div class="avatar-wrapper"><img class="avatar-l" src="./assets/icons/light-green-avatar.png"></img>
+			</div>
 			<span> Large avatar (profile page, opponent reveal...) </span>
-			<div class="avatar-wrapper"><img class="avatar-xl" src="./assets/icons/light-green-avatar.png"></img></div>
+			<div class="avatar-wrapper"><img class="avatar-xl" src="./assets/icons/light-green-avatar.png"></img>
+			</div>
 		</div>
+
+		<h2 class="title-2 title-shadow"> Icons </h2>
+		<div class="bg background-border flexbox-auto-col">
+			<span> Search icon </span>
+			<img class="avatar-xl" src="./assets/icons/search-icon-dark.png"></img>
+			<span> Background tile </span>
+			<img class="avatar-xl" src="./assets/icons/tile-bg.png"></img>
+			<span> No result </span>
+			<img class="avatar-xl" src="./assets/icons/no-result.png"></img>
+		</div>
+	</div>
 	</div>
 </body>
 
