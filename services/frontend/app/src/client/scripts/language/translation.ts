@@ -2,13 +2,13 @@ import en from '../../../assets/locales/en.json' with { type: "json" };
 import fr from '../../../assets/locales/fr.json' with { type: "json" };
 import es from '../../../assets/locales/es.json' with { type: "json" };
 
-export type TranlationMap = Record<string, string>;
+type TranlationMap = Record<string, string>;
 
 export let currentLang: string = "en";
-export const resources: Record<string, TranlationMap> = { en ,fr, es };
-export let translation: TranlationMap /*= resources["en"]*/;
+const resources: Record<string, TranlationMap> = { en ,fr, es };
+let translation: TranlationMap;
 
-export function initLanguageClient() {
+export function initLanguageCSR() {
 	const savedLang = localStorage.getItem('selectedLanguage');
 	if (savedLang && resources[savedLang]) {
 		currentLang = savedLang;
@@ -31,7 +31,7 @@ export function changeLanguage(lang: string) {
 	}
 }
 
-export function setTranslation(savedLang: string) {
+export function initLanguageSSR(savedLang: string) {
 	if (savedLang && resources[savedLang]) {
 		currentLang = savedLang;
 	} else {

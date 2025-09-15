@@ -2,7 +2,7 @@ import { Router } from './spaRouter/router.class.js';
 import { routes } from './spaRouter/routes.js';
 import { pong } from './game/pong.js';
 import { addLanguageEvents } from './language/languageEvents.js';
-import { initLanguageClient } from './language/translation.js';
+import { initLanguageCSR } from './language/translation.js';
 
 export const router = new Router(routes);
 
@@ -37,5 +37,5 @@ if (router._getCurrentURL() === '/game/match') {
     })
 }
 
-initLanguageClient();
+initLanguageCSR();
 addLanguageEvents();

@@ -2,13 +2,13 @@
 import type { FastifyPluginCallback } from 'fastify';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { buildHtmlPage } from './build.html.js';
-import { setTranslation } from '../client/scripts/language/translation.js'
+import { initLanguageSSR } from '../client/scripts/language/translation.js'
 
 function initLanguage(req: FastifyRequest) {
     let savedLang: string | undefined = req.cookies.lang;
     if (!savedLang)
         savedLang = "en";
-    setTranslation(savedLang);
+    initLanguageSSR(savedLang);
 }
 
 async function handler(req: FastifyRequest, rep: FastifyReply) {
