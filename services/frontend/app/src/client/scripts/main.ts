@@ -4,7 +4,7 @@ import { pong } from './game/pong.js';
 import { addLanguageEvents } from './language/languageEvents.js';
 import { initLanguageClient } from './language/translation.js';
 
-const router = new Router(routes);
+export const router = new Router(routes);
 
 function sanitisePath(path: string) {
     if (path == "/")

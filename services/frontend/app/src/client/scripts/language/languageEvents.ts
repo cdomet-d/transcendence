@@ -1,6 +1,6 @@
 import { changeLanguage, currentLang } from './translation.js'
 import { renderLanguageDropdownButton } from '../../pages/languageDropdownButton.js'
-import { renderCentral } from '../../pages/html.pages.js';
+import { router } from '../main.js';
 
 export function addLanguageEvents() {
 	const switchBtn = document.getElementById('language-switch');
@@ -25,7 +25,7 @@ export function addLanguageEvents() {
 }
 
 export function rerenderPage() {
-	const callback = renderCentral; //TODO: fix callback
+	const callback = router._getCallback();
 	const langDropdown = document.getElementById('lang-dropdown-container');
 	const page = document.getElementById('page');
 	if (!langDropdown || !page)
