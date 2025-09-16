@@ -9,13 +9,20 @@ const resources: Record<string, TranslationMap> = { en ,fr, es };
 let translation: TranslationMap;
 
 export function initLanguageCSR() {
-	const savedLang = localStorage.getItem('selectedLanguage');
-	if (savedLang && resources[savedLang]) {
+	let savedLang: string | null = localStorage.getItem('selectedLanguage');
+	if (!savedLang)
+		savedLang = "en";
+	setLangVars(savedLang);
+}
+
+export function setLangVars(savedLang: string) {
+	if (resources[savedLang]) {
 		currentLang = savedLang;
+		translation = resources[savedLang];
 	} else {
 		currentLang = 'en';
+		translation = resources["en"];
 	}
-	translation = resources[currentLang] ?? {};
 }
 
 export function translate(key: string): string {
@@ -29,13 +36,4 @@ export function changeLanguage(lang: string) {
 		localStorage.setItem('selectedLanguage', lang);
 		document.cookie = `lang=${lang};path=/;max-age=31536000`;
 	}
-}
-
-export function initLanguageSSR(savedLang: string) {
-	if (savedLang && resources[savedLang]) {
-		currentLang = savedLang;
-	} else {
-		currentLang = 'en';
-	}
-	translation = resources[savedLang] ?? {};
 }
