@@ -308,7 +308,14 @@
 
 		<h2 class="title-2 title-shadow"> Sliders, checkboxes and radio buttons </h2>
 		<div class="bg background-border block">
-			<input class="inert-border" type="radio"> </input>
+			<div class="radio-container inert-border">
+				<input type="radio"> </input>
+				<span class="radio-checkmark"></span>
+			</div>
+			<div class="radio-container inert-border">
+				<input type="radio" checked="checked"> </input>
+				<span class="radio-checkmark"></span>
+			</div>
 			<input type="checkbox"> </input>
 			<input type="range" name="speed" min="0" max="5" step="1"> </input>
 		</div>

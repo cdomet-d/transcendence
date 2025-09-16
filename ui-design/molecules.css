@@ -88,12 +88,6 @@
 	animation-delay: .40s;
 }
 
-.bg {
-	box-sizing: border-box;
-	background-color: var(--white);
-	padding: var(--space-sm);
-}
-
 .icon {
 	height: 32px;
 	width: 32px;
