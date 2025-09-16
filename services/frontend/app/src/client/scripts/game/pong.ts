@@ -12,6 +12,9 @@ export let rightPad: paddelPos = {x: 460, y: 108};
 function pong() {
 	const ctx = getCanvasContext();
 	renderGame(ctx);
+	import("./wsreply.js").then(({ wsRequest }) => {
+        wsRequest();
+    }) //TODO: can import fail ?
 }
 
 export function getCanvasContext(): CanvasRenderingContext2D {

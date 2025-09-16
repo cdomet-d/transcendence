@@ -29,7 +29,7 @@ function rerenderPage() {
 	const langDropdown = document.getElementById('lang-dropdown-container');
 	const page = document.getElementById('page');
 	if (!langDropdown || !page)
-		return;
+		return; //TODO: handle error
 
 	page.innerHTML = callback();
 	langDropdown.innerHTML = renderLanguageDropdownButton();

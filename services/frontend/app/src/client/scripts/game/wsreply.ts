@@ -14,7 +14,6 @@ function wsRequest() {
             console.log("message from server:", event.data);
         }
         window.addEventListener("keydown", createKeyDownEvent(ws));
-        // pong(ws);
     }
 }
 

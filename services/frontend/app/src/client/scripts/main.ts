@@ -30,12 +30,8 @@ window.addEventListener('popstate', () => {
     router._loadRoute(cleanPath);
 });
 
-if (router._getCurrentURL() === '/game/match') {
-    pong();
-    import("./game/wsreply.js").then(({ wsRequest }) => {
-        wsRequest();
-    })
-}
+if (router._getCurrentURL() === '/game/match')
+    pong(); //TODO: find a way to render it server side
 
 initLanguageCSR();
 addLanguageEvents();

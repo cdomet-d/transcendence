@@ -33,7 +33,7 @@ export class Router {
         const page = document.getElementById('page');
         const header = document.getElementById('header');
 
-        if (!page || !header) return;
+        if (!page || !header) return; //TODO: handle error
 
         const matchedRoute = this._matchUrlToRoute(path);
         if (!matchedRoute) {
@@ -53,11 +53,8 @@ export class Router {
 
         page.innerHTML = matchedRoute.callback();
         
-        if (matchedRoute.path === '/game/match') {
+        if (matchedRoute.path === '/game/match')
             pong();
-            import("../game/wsreply.js").then((game) => {
-                game.wsRequest();
-            })
-        }
+        //TODO: eventually if other features need their script add an element script to routeInterface
     }
 }
