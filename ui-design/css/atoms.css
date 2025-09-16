@@ -62,8 +62,8 @@
 	--shadow-orange: #7A3703;
 
 	--highlight-red: #E37248;
-	--red: #AF370B;
-	--shadow-red: #6B1D00;
+	--red: #AA4926;
+	--shadow-red: #9A3E1C;
 
 	--highlight-yellow: #FFE6A4;
 	--yellow: #FFB800;
@@ -527,6 +527,18 @@ button:active {
 	transform: scale(1);
 }
 
+.dis-av-wrap {
+	width: 9rem;
+	height: 9rem;
+	border: solid 1px var(--shadow-yellow);
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+	border-radius: 80px;
+	padding: var(--space-s);
+	display: flex;
+}
+
 .avatar-wrapper {
 	width: fit-content;
 	height: fit-content;
@@ -535,7 +547,6 @@ button:active {
 	max-width: var(--image-xl);
 	max-height: var(--image-xl);
 	border: solid 1px var(--shadow-yellow);
-	background-color: var(--yellow);
 	overflow: hidden;
 	border-radius: 80px;
 	padding: var(--space-s);
@@ -545,7 +556,6 @@ button:active {
 .avatar-s {
 	max-height: var(--image-s);
 	max-width: var(--image-s);
-	display: block;
 }
 
 .avatar-m {

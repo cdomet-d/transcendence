@@ -15,25 +15,25 @@
 		<span class="bg background-border"> State: default | Variant: horizontal </span>
 		<div class="bg background-border horizontal-menu-wrapper">
 			<button class="inert-border menu-element button-bg"> A menu element </button>
-			<button class="inert-border menu-element button-bg"> A menu element </button>
-			<button class="inert-border menu-element button-bg"> A menu element </button>
-			<button class="inert-border menu-element button-bg"> A menu element </button>
+			<button class="inert-border menu-element button-bg"> Different </button>
+			<button class="inert-border menu-element button-bg"> 1 </button>
+			<button class="inert-border menu-element button-bg"> aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa </button>
 		</div>
 
 		<span class="bg background-border"> State: hover | Variant: horizontal </span>
 		<div class="bg background-border horizontal-menu-wrapper">
 			<button class="inert-border menu-element button-bg"> A menu element </button>
-			<button class="inert-border menu-element button-bg"> A menu element </button>
-			<button class="inert-border menu-element button-bg"> A menu element </button>
-			<button class="inert-border menu-element button-bg"> A menu element </button>
+			<button class="inert-border menu-element button-bg-hover"> A menu element </button>
+			<button class="inert-border menu-element button-bg-hover"> A menu element </button>
+			<button class="inert-border menu-element button-bg-hover"> A menu element </button>
 		</div>
 
 		<span class="bg background-border"> State: active | Variant: horizontal </span>
 		<div class="bg background-border horizontal-menu-wrapper">
-			<button class="inert-border menu-element button-bg"> A menu element </button>
-			<button class="inert-border menu-element button-bg"> A menu element </button>
-			<button class="inert-border menu-element button-bg"> A menu element </button>
-			<button class="inert-border menu-element button-bg"> A menu element </button>
+			<button class="inert-border menu-element button-bg-active"> A menu element </button>
+			<button class="inert-border menu-element button-bg-active"> A menu element </button>
+			<button class="inert-border menu-element button-bg-active"> A menu element </button>
+			<button class="inert-border menu-element button-bg-active"> A menu element </button>
 		</div>
 		<p class="title-shadow title-3"> vertical nav bars </p>
 		<div class="flexbox-auto-col">
@@ -46,36 +46,39 @@
 			</div>
 			<div class="bg background-border vertical-menu-wrapper">
 				<span> State: hover | Variant: vertical </span>
-				<button class="inert-border menu-element button-bg"> A menu element </button>
-				<button class="inert-border menu-element button-bg"> A menu element </button>
-				<button class="inert-border menu-element button-bg"> A menu element </button>
-				<button class="inert-border menu-element button-bg"> A menu element </button>
+				<button class="inert-border menu-element button-bg-hover"> A menu element </button>
+				<button class="inert-border menu-element button-bg-hover"> A menu element </button>
+				<button class="inert-border menu-element button-bg-hover"> A menu element </button>
+				<button class="inert-border menu-element button-bg-hover"> A menu element </button>
 			</div>
 			<div class="bg background-border vertical-menu-wrapper">
 				<span> State: active | Variant: vertical </span>
-				<button class="inert-border menu-element button-bg"> A menu element </button>
-				<button class="inert-border menu-element button-bg"> A menu element </button>
-				<button class="inert-border menu-element button-bg"> A menu element </button>
-				<button class="inert-border menu-element button-bg"> A menu element </button>
+				<button class="inert-border menu-element button-bg-active"> A menu element </button>
+				<button class="inert-border menu-element button-bg-active"> A menu element </button>
+				<button class="inert-border menu-element button-bg-active"> A menu element </button>
+				<button class="inert-border menu-element button-bg-active"> A menu element </button>
 			</div>
 		</div>
 
 		<p class="title-shadow title-3"> upload buttons </p>
-		<div class="bg background-border input-with-button">
-			<div class="form-group">
-				<input id="upload" class="inert-border" type="file"></input>
-				<label class="thin-border" for="upload"> File upload </label>
+		<div class="flexbox-auto-col">
+			<div class="bg background-border input-with-button">
+				<div class="form-group">
+					<input id="upload" class="inert-border" type="file"></input>
+					<label class="thin-border" for="upload"> File upload </label>
+				</div>
+				<input id="submit" class="inert-border button-bg" type="submit" value="Send files"> </input>
 			</div>
-			<input id="submit" class="inert-border button-bg" type="submit" value="Send files"> </input>
-		</div>
 
-		<div class="bg background-border input-with-button">
-			<div class="form-group">
-				<input id="upload" class="inert-border-red bg-invalid" type="file"></input>
-				<label class="thin-border" for="upload"> File upload </label>
+			<div class="bg background-border input-with-button">
+				<div class="form-group">
+					<input id="upload" class="inert-border-red bg-invalid" type="file"></input>
+					<label class="thin-border" for="upload"> File upload </label>
+				</div>
+				<input id="submit" class="inert-border-disabled bg-disabled" type="submit" value="Send files">
+				<span class="flex-center error-message"> Explicit error message </span>
+				</input>
 			</div>
-			<input id="submit" class="inert-border-disabled bg-disabled" type="submit" value="Send files"> </input>
-			<span class="flex-center error-message"> Explicit error message </span>
 		</div>
 
 		<p class="title-shadow title-3"> search bars </p>
@@ -111,6 +114,7 @@
 					<input class="inert-border-red bg-invalid" id="search" placeholder="error!!" type="text"></input>
 				</div>
 				<button class="inert-border-disabled bg-disabled" type="button"> search </button>
+				<span class="flex-center error-message"> Explicit error message </span>
 			</div>
 		</div>
 
@@ -167,27 +171,56 @@
 		</div>
 
 		<p class="title-shadow title-3"> Popup message </p>
-		<div class="popup-container">
-			<div class="popup-message inert-border">
-				<div class="inner-popup bg inert-border">
+		<div class="content-center-outer-div">
+			<div class="content-center-inner-div">
+				<div class="popup bg background-border">
 					<div class="title-and-paragraph">
 						<p class="title-3 title-shadow"> A popup message appeared ! </p>
 						<p> This is the content of the message !!!</p>
 					</div>
 					<div class="horizontal-menu-wrapper">
-						<div class="menu-element inert-border-red bg-invalid">Refuse</div>
-						<div class="menu-element inert-border-green bg-valid">Acknowledge</div>
+						<button class="menu-element inert-border-red bg-invalid">Dismiss</button>
+						<button class="menu-element inert-border-green bg-valid">Acknowledge</button>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<p class="title-shadow title-3"> Loader </p>
-		<div class="loader-container bg background-border">
-			<img class="load avatar-l" src="../assets/icons/light-green-avatar.png">
-			<img class="load avatar-l" src="../assets/icons/blue-avatar.png">
-			<img class="load avatar-l" src="../assets/icons/magenta-avatar.png">
+		<p class="title-shadow title-3"> Notifications </p>
+		<div class="flexbox-auto-col">
+			<div class="notification-text bg background-border">
+				<p> %login% challenged you to a 1v1 match !! </p>
+			</div>
+			<div class="notification-icon-container bg background-border">
+				<img class="avatar-l" src="../assets/icons/notification.png" />
+			</div>
+			<div class="notification-icon-container bg background-border">
+				<div class="inert-border-red unread-notification"> <span> +9 </span> </div>
+				<img class="avatar-l" src="../assets/icons/notification.png" />
+			</div>
+
+			<div class="notification-reveal bg background-border">
+				<div class="notification-text bg">
+					<p> %login% challenged you to a 1v1 match !! </p>
+					<p> %login% challenged you to a tournament !! </p>
+					<p> %login% challenged you to a 1v1 match !! </p>
+					<p> %login% challenged you to a 1v1 match !! </p>
+					<p> %login% challenged you to a 1v1 match !! </p>
+				</div>
+				<div class="notification-icon-container">
+					<img class="avatar-l" src="../assets/icons/notification.png" />
+				</div>
+			</div>
 		</div>
+		<p class="bg"> Here if a user has >9 notifications, transform it in +9 because I am NOT doing responsive for
+			stupid values <3 </p>
+
+				<p class="title-shadow title-3"> Loader </p>
+				<div class="loader-container bg background-border">
+					<img class="load avatar-l" src="../assets/icons/light-green-avatar.png">
+					<img class="load avatar-l" src="../assets/icons/blue-avatar.png">
+					<img class="load avatar-l" src="../assets/icons/magenta-avatar.png">
+				</div>
 
 
 	</div>
