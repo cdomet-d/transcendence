@@ -20,8 +20,8 @@ export function setLangVars(savedLang: string) {
 		currentLang = savedLang;
 		translation = resources[savedLang];
 	} else {
-		currentLang = 'en';
-		translation = resources["en"];
+		currentLang = "en";
+		translation = en;
 	}
 }
 
