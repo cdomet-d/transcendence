@@ -1,6 +1,6 @@
-import en from '../../../assets/locales/en.json' with { type: "json" };
-import fr from '../../../assets/locales/fr.json' with { type: "json" };
-import es from '../../../assets/locales/es.json' with { type: "json" };
+import en from '../../assets/locales/en.json' with { type: "json" };
+import fr from '../../assets/locales/fr.json' with { type: "json" };
+import es from '../../assets/locales/es.json' with { type: "json" };
 
 type TranslationMap = Record<string, string>;
 
