@@ -2,7 +2,7 @@
 
 > /usr/app/server.log
 
-npm install
+npm install nats dotenv
 
 npm run dev
 #npm start

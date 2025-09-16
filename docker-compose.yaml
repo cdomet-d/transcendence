@@ -113,16 +113,20 @@ services:
       dockerfile: Dockerfile
     container_name: matchmaking
     image: matchmaking:0.0.1
+    environment:
+      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+      - NGINXIP=nginx
     networks:
       - transcendence
     restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
     volumes:
       - ./services/matchmaking/app:/usr/app
+    depends_on:
+      pong:
+            condition: service_healthy
   monitoring:
     build:
       context: ./services/monitoring
@@ -139,6 +143,19 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/monitoring/app:/usr/app
+  nats-server:
+    build:
+      context: ./services/NATS
+      dockerfile: Dockerfile
+    container_name: nats-server
+    image: nats:0.0.1
+    environment:
+      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+    networks:
+      - transcendence
+    ports:
+      - "4222:4222"
+    restart: unless-stopped
   nginx:
     build:
       context: ./services/nginx/
@@ -164,6 +181,7 @@ services:
     environment:
       - NGINXIP=nginx
       - PORT=2020
+      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
     image: pong:0.0.1
     networks:
       - transcendence
@@ -173,6 +191,14 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/pong/app:/usr/app
+    depends_on:
+      -  nats-server
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 25s
     # user: "${T_UID}:${T_GID}"
   users:
     build:
