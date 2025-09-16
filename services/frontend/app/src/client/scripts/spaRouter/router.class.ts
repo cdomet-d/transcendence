@@ -8,12 +8,15 @@ interface routeInterface {
 }
 
 export class Router {
+    /*                            PROPERTIES                                  */
     _routes: Array< routeInterface >;
 
+    /*                           CONSTRUCTORS                                 */
     constructor(routes: routeInterface[]) {
         this._routes = routes;
     }
 
+    /*                             METHODS                                    */
     _getCurrentURL() {
         return window.location.pathname;
     }
