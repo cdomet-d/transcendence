@@ -1,23 +1,30 @@
 import Fastify from 'fastify'
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { servRoutes } from './route.js';
 import { options } from './serv.conf.js';
 import fastifyStatic from '@fastify/static';
 import cookie from '@fastify/cookie';
+import { render404 } from '../client/pages/html.pages.js';
 // import fastifyVite from '@fastify/vite'
 
 try {
 	const serv: FastifyInstance = Fastify(options);
+	serv.setNotFoundHandler(errorHandler);
 	await addPlugins(serv);
 	// await serv.vite.ready();
 	await serv.ready();
-	serv.listen({ port: 1212, host: '0.0.0.0' }).then(() => {
-		serv.log.info("serv run");
-	});
+	await serv.listen({ port: 1212, host: '0.0.0.0' })
+	serv.log.info("serv run");
 }
 catch (err) {
 	console.error('server error:', err);
 	process.exit(1);
+}
+
+function errorHandler(request: FastifyRequest, reply: FastifyReply) {
+	reply.code(404)
+		 .header('Content-Type', 'text/html')
+		 .send(render404());
 }
 
 async function addPlugins(serv: FastifyInstance) {
@@ -32,7 +39,7 @@ async function addPlugins(serv: FastifyInstance) {
 					decorateReply: false
 				})
 				.register(fastifyStatic, {
-					root: "/app/src/assets/",
+					root: "/app/dist/client/assets/",
 					prefix: "/assets/",
 					decorateReply: false
 				})

@@ -93,9 +93,14 @@ export function renderGame(): string {
 
 export function render404(): string {
 	let html: string = `
-		<div class="container">
+	<html>
+	<body>
+		<div class="container mx-auto px-4">
+			<h1>Page 404</h1>
 			<img src="/capybara.webp" alt="capy" style="width:100%;">
 		</div>
+	</body>
+	</html>
 	`
 	return html;
 }

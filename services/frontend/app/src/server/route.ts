@@ -3,7 +3,6 @@ import type { FastifyPluginCallback } from 'fastify';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { buildHtmlPage } from './build.html.js';
 import { initLanguageSSR } from '../client/scripts/language/translation.js'
-import { exit } from 'process';
 
 function initLanguage(req: FastifyRequest) {
     let savedLang: string | undefined = req.cookies.lang;
@@ -15,8 +14,10 @@ function initLanguage(req: FastifyRequest) {
 function handler(req: FastifyRequest, rep: FastifyReply) {
     initLanguage(req);
     const url: string | undefined = req.routeOptions.url;
-    if (!url)
-        exit(1); //TODO: handle error
+    if (!url) {
+        rep.callNotFound();
+        return;
+    }
     const html = buildHtmlPage(url);
     rep.header('Content-Type', 'text/html');
     rep.send(html);
