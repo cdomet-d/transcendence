@@ -8,6 +8,5 @@ npm install
 
 # npx tsc
 
-npm run css
 npm run dev
 #npm start
