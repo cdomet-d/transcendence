@@ -9,7 +9,7 @@ import { render404 } from '../client/pages/html.pages.js';
 
 try {
 	const serv: FastifyInstance = Fastify(options);
-	serv.setNotFoundHandler(errorHandler);
+	serv.setNotFoundHandler(error404Handler);
 	await addPlugins(serv);
 	// await serv.vite.ready();
 	await serv.ready();
@@ -21,7 +21,7 @@ catch (err) {
 	process.exit(1);
 }
 
-function errorHandler(request: FastifyRequest, reply: FastifyReply) {
+function error404Handler(request: FastifyRequest, reply: FastifyReply) {
 	reply.code(404)
 		 .header('Content-Type', 'text/html')
 		 .send(render404());
