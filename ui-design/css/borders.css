@@ -1,0 +1,86 @@
+@import url(./atoms.css);
+
+.inert-border {
+	box-shadow:
+		-2px -2px var(--neutral-border),
+		-2px 2px var(--neutral-border),
+		2px -2px var(--neutral-border),
+		2px 2px var(--neutral-border),
+		-4px 0 0 0 var(--neutral-border),
+		4px 0 0 0 var(--neutral-border),
+		0 -4px 0 0 var(--neutral-border),
+		0 4px 0 0 var(--neutral-border);
+}
+
+.inert-border-green {
+	box-shadow:
+		-2px -2px var(--border-green),
+		-2px 2px var(--border-green),
+		2px -2px var(--border-green),
+		2px 2px var(--border-green),
+		-4px 0 0 0 var(--border-green),
+		4px 0 0 0 var(--border-green),
+		0 -4px 0 0 var(--border-green),
+		0 4px 0 0 var(--border-green);
+}
+
+
+.inert-border-red {
+	box-shadow:
+		-2px -2px var(--border-red),
+		-2px 2px var(--border-red),
+		2px -2px var(--border-red),
+		2px 2px var(--border-red),
+		-4px 0 0 0 var(--border-red),
+		4px 0 0 0 var(--border-red),
+		0 -4px 0 0 var(--border-red),
+		0 4px 0 0 var(--border-red);
+}
+
+.inert-border-disabled {
+	box-shadow:
+		-2px -2px var(--shadow-2),
+		-2px 2px var(--shadow-2),
+		2px -2px var(--shadow-2),
+		2px 2px var(--shadow-2),
+		-4px 0 0 0 var(--shadow-2),
+		4px 0 0 0 var(--shadow-2),
+		0 -4px 0 0 var(--shadow-2),
+		0 4px 0 0 var(--shadow-2);
+}
+
+.inert-border-thin {
+	box-shadow:
+		-1px -1px var(--neutral-border),
+		-1px 1px var(--neutral-border),
+		1px -1px var(--neutral-border),
+		1px 1px var(--neutral-border),
+		-2px 0 0 0 var(--neutral-border),
+		2px 0 0 0 var(--neutral-border),
+		0 -2px 0 0 var(--neutral-border),
+		0 2px 0 0 var(--neutral-border);
+}
+
+.background-border {
+	box-shadow:
+		-2px -2px #F7E8C4,
+		-2px 2px #F7E8C4,
+		2px -2px #F7E8C4,
+		2px 2px #F7E8C4,
+		-4px 0 0 0 #F7E8C4,
+		4px 0 0 0 #F7E8C4,
+		0 -4px 0 0 #F7E8C4,
+		0 4px 0 0 #F7E8C4;
+}
+
+.thin-border {
+	box-shadow:
+		-1px -1px var(--neutral-border),
+		-1px 1px var(--neutral-border),
+		1px -1px var(--neutral-border),
+		1px 1px var(--neutral-border),
+		-2px 0 0 0 var(--neutral-border),
+		2px 0 0 0 var(--neutral-border),
+		0 -2px 0 0 var(--neutral-border),
+		0 2px 0 0 var(--neutral-border);
+}

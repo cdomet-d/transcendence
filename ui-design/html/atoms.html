@@ -2,9 +2,10 @@
 <html>
 
 <head>
-	<link rel="stylesheet" href="./borders.css">
-	<link rel="stylesheet" href="./atoms.css">
-	<link rel="stylesheet" href="./molecules.css">
+	<link rel="stylesheet" href="../css/borders.css">
+	<link rel="stylesheet" href="../css/atoms.css">
+	<link rel="stylesheet" href="../css/background.css">
+	<link rel="stylesheet" href="../css/molecules.css">
 </head>
 
 <body>
@@ -65,7 +66,7 @@
 		</div>
 		<h1 class="title-shadow title-1"> Palette </h1>
 		<div class="block background-border bg">
-			<h2> Backgrounds </h2>
+			<h2> background </h2>
 			<p> HEX: #fffcf7 // RGB: [255, 252, 247] </p>
 			<div class="swatch" style="background-color: #fffcf7;"></div>
 			<div class="swatch" style="background: linear-gradient(90deg, #fffcf7 0%, #fffcf700 100%);"></div>
@@ -260,27 +261,25 @@
 			<span> Default </span>
 			<div class="form-group">
 				<label class="thin-border label-default" for="default">default</label>
-				<input id="default" class="interactive-border input-default" type="text" placeholder="search a user...">
+				<input id="default" class="input-bg inert-border" type="text" placeholder="search a user...">
 				</input>
 			</div>
 			<span> Hover </span>
 			<div class="form-group">
 				<label class="thin-border label-hover" for="hover">hover</label>
-				<input id="hover" class="interactive-border-hover input-hover" type="text"
-					placeholder="search a user...">
+				<input id="hover" class="inert-border input-bg-hover" type="text" placeholder="search a user...">
 				</input>
 			</div>
 			<span> Active </span>
 			<div class="form-group">
 				<label class="thin-border label-active" for="Active">Active</label>
-				<input id="Active" class="interactive-border-active input-active" type="text"
-					placeholder="search a user...">
+				<input id="Active" class="inert-border input-bg-active" type="text" placeholder="search a user...">
 				</input>
 			</div>
 			<span> Disabled </span>
 			<div class="form-group">
 				<label class="thin-border label-disabled" for="Disabled">Disabled</label>
-				<input id="Disabled" class="interactive-border-disabled bg-disabled" type="text"
+				<input id="Disabled" class="inert-border-disabled bg-disabled" type="text"
 					placeholder="search a user..." disabled>
 				</input>
 			</div>
@@ -291,33 +290,47 @@
 			</div>
 
 			<span> File upload </span>
-			<input id="upload" class="interactive-border" type="file"></input>
+			<input id="upload" class="inert-border input-bg" type="file"></input>
 		</div>
 		<div class="input-grid background-border bg">
 			<h2> Buttons</h2>
 			<span> default</span>
-			<button class="interactive-border button-bg" type="button"> Superb Button !</button>
+			<button class="inert-border button-bg" type="button"> Superb Button !</button>
 			<span> Hover</span>
-			<button class="interactive-border-hover button-bg" type="button"> Superb Button !</button>
+			<button class="inert-border button-bg-hover" type="button"> Superb Button !</button>
 			<span> Active</span>
-			<button class="interactive-border-active button-bg" type="button"> Superb Button !</button>
+			<button class="inert-border button-bg-active" type="button"> Superb Button !</button>
 			<span> Disabled</span>
-			<button class="interactive-border-disabled bg-disabled" type="button" disabled> Superb Button
+			<button class="inert-border-disabled bg-disabled" type="button" disabled> Superb Button
 				!</button>
 		</div>
 
 		<h2 class="title-2 title-shadow"> Sliders, checkboxes and radio buttons </h2>
 		<div class="bg background-border block">
-			<div class="radio-container inert-border">
-				<input type="radio"> </input>
-				<span class="radio-checkmark"></span>
+			<div class="flexbox-auto-col">
+				<p> Radio button (single selection) | Unchecked / Checked </p>
+				<div class="radio-container inert-border plain-yellow-bg">
+					<input type="radio"> </input>
+					<span class="radio-checkmark"></span>
+				</div>
+				<div class="radio-container inert-border  plain-yellow-bg">
+					<input type="radio" checked="checked"> </input>
+					<span class="radio-checkmark"></span>
+				</div>
 			</div>
-			<div class="radio-container inert-border">
-				<input type="radio" checked="checked"> </input>
-				<span class="radio-checkmark"></span>
+			<div class="flexbox-auto-col">
+			<p> Checkbox button (multiple selection) | Unchecked / Checked </p>
+				<div class="checkbox-container inert-border plain-yellow-bg">
+					<input type="checkbox"> </input>
+					<span class="checkbox-checkmark"></span>
+				</div>
+				<div class="checkbox-container inert-border plain-yellow-bg">
+					<input type="checkbox" checked="checked"> </input>
+					<span class="checkbox-checkmark"></span>
+				</div>
 			</div>
-			<input type="checkbox"> </input>
-			<input type="range" name="speed" min="0" max="5" step="1"> </input>
+			<p> Slider (paddle speed, ?) </p>
+			<input class="plain-clear-bg inert-border" type="range" name="paddle-speed" min="0" max="5" step="1"> </input>
 		</div>
 
 		<h2 class="title-2 title-shadow"> Avatars & wrappers </h2>
@@ -325,27 +338,27 @@
 			<span> Wrapper </span>
 			<div class="avatar-wrapper"></div>
 			<span> Small avatar (search results, game history...) </span>
-			<div class="avatar-wrapper"><img class="avatar-s" src="./assets/icons/light-green-avatar.png"></img>
+			<div class="avatar-wrapper"><img class="avatar-s" src="../assets/icons/light-green-avatar.png"></img>
 			</div>
 			<span> Medium avatar (SHRUG...) </span>
-			<div class="avatar-wrapper"><img class="avatar-m" src="./assets/icons/light-green-avatar.png"></img>
+			<div class="avatar-wrapper"><img class="avatar-m" src="../assets/icons/light-green-avatar.png"></img>
 			</div>
 			<span> Large avatar (profile card...) </span>
-			<div class="avatar-wrapper"><img class="avatar-l" src="./assets/icons/light-green-avatar.png"></img>
+			<div class="avatar-wrapper"><img class="avatar-l" src="../assets/icons/light-green-avatar.png"></img>
 			</div>
 			<span> Large avatar (profile page, opponent reveal...) </span>
-			<div class="avatar-wrapper"><img class="avatar-xl" src="./assets/icons/light-green-avatar.png"></img>
+			<div class="avatar-wrapper"><img class="avatar-xl" src="../assets/icons/light-green-avatar.png"></img>
 			</div>
 		</div>
 
 		<h2 class="title-2 title-shadow"> Icons </h2>
 		<div class="bg background-border flexbox-auto-col">
 			<span> Search icon </span>
-			<img class="avatar-xl" src="./assets/icons/search-icon-dark.png"></img>
+			<img class="avatar-xl" src="../assets/icons/search-icon-dark.png"></img>
 			<span> Background tile </span>
-			<img class="avatar-xl" src="./assets/icons/tile-bg.png"></img>
+			<img class="avatar-xl" src="../assets/icons/tile-bg.png"></img>
 			<span> No result </span>
-			<img class="avatar-xl" src="./assets/icons/no-result.png"></img>
+			<img class="avatar-xl" src="../assets/icons/no-result.png"></img>
 		</div>
 	</div>
 	</div>

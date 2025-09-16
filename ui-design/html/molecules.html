@@ -2,9 +2,10 @@
 <html>
 
 <head>
-	<link rel="stylesheet" href="./borders.css">
-	<link rel="stylesheet" href="./atoms.css">
-	<link rel="stylesheet" href="./molecules.css">
+	<link rel="stylesheet" href="../css/borders.css">
+	<link rel="stylesheet" href="../css/atoms.css">
+	<link rel="stylesheet" href="../css/background.css">
+	<link rel="stylesheet" href="../css/molecules.css">
 </head>
 
 <body>
@@ -13,59 +14,59 @@
 		<p class="title-shadow title-3"> horizontal nav bars </p>
 		<span class="bg background-border"> State: default | Variant: horizontal </span>
 		<div class="bg background-border horizontal-menu-wrapper">
-			<div class="interactive-border menu-element button-bg"> A menu element </div>
-			<div class="interactive-border menu-element button-bg"> A menu element </div>
-			<div class="interactive-border menu-element button-bg"> A menu element </div>
-			<div class="interactive-border menu-element button-bg"> A menu element </div>
+			<button class="inert-border menu-element button-bg"> A menu element </button>
+			<button class="inert-border menu-element button-bg"> A menu element </button>
+			<button class="inert-border menu-element button-bg"> A menu element </button>
+			<button class="inert-border menu-element button-bg"> A menu element </button>
 		</div>
 
 		<span class="bg background-border"> State: hover | Variant: horizontal </span>
 		<div class="bg background-border horizontal-menu-wrapper">
-			<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
-			<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
-			<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
-			<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
+			<button class="inert-border menu-element button-bg"> A menu element </button>
+			<button class="inert-border menu-element button-bg"> A menu element </button>
+			<button class="inert-border menu-element button-bg"> A menu element </button>
+			<button class="inert-border menu-element button-bg"> A menu element </button>
 		</div>
 
 		<span class="bg background-border"> State: active | Variant: horizontal </span>
 		<div class="bg background-border horizontal-menu-wrapper">
-			<div class="interactive-border-active menu-element button-bg"> A menu element </div>
-			<div class="interactive-border-active menu-element button-bg"> A menu element </div>
-			<div class="interactive-border-active menu-element button-bg"> A menu element </div>
-			<div class="interactive-border-active menu-element button-bg"> A menu element </div>
+			<button class="inert-border menu-element button-bg"> A menu element </button>
+			<button class="inert-border menu-element button-bg"> A menu element </button>
+			<button class="inert-border menu-element button-bg"> A menu element </button>
+			<button class="inert-border menu-element button-bg"> A menu element </button>
 		</div>
 		<p class="title-shadow title-3"> vertical nav bars </p>
 		<div class="flexbox-auto-col">
 			<div class="bg background-border vertical-menu-wrapper">
 				<span> State: default | Variant: vertical </span>
-				<div class="interactive-border menu-element button-bg"> A menu element </div>
-				<div class="interactive-border menu-element button-bg"> A menu element </div>
-				<div class="interactive-border menu-element button-bg"> A menu element </div>
-				<div class="interactive-border menu-element button-bg"> A menu element </div>
+				<button class="inert-border menu-element button-bg"> A menu element </button>
+				<button class="inert-border menu-element button-bg"> A menu element </button>
+				<button class="inert-border menu-element button-bg"> A menu element </button>
+				<button class="inert-border menu-element button-bg"> A menu element </button>
 			</div>
 			<div class="bg background-border vertical-menu-wrapper">
 				<span> State: hover | Variant: vertical </span>
-				<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
-				<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
-				<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
-				<div class="interactive-border-hover menu-element button-bg"> A menu element </div>
+				<button class="inert-border menu-element button-bg"> A menu element </button>
+				<button class="inert-border menu-element button-bg"> A menu element </button>
+				<button class="inert-border menu-element button-bg"> A menu element </button>
+				<button class="inert-border menu-element button-bg"> A menu element </button>
 			</div>
 			<div class="bg background-border vertical-menu-wrapper">
 				<span> State: active | Variant: vertical </span>
-				<div class="interactive-border-active menu-element button-bg"> A menu element </div>
-				<div class="interactive-border-active menu-element button-bg"> A menu element </div>
-				<div class="interactive-border-active menu-element button-bg"> A menu element </div>
-				<div class="interactive-border-active menu-element button-bg"> A menu element </div>
+				<button class="inert-border menu-element button-bg"> A menu element </button>
+				<button class="inert-border menu-element button-bg"> A menu element </button>
+				<button class="inert-border menu-element button-bg"> A menu element </button>
+				<button class="inert-border menu-element button-bg"> A menu element </button>
 			</div>
 		</div>
 
 		<p class="title-shadow title-3"> upload buttons </p>
 		<div class="bg background-border input-with-button">
 			<div class="form-group">
-				<input id="upload" class="interactive-border" type="file"></input>
+				<input id="upload" class="inert-border" type="file"></input>
 				<label class="thin-border" for="upload"> File upload </label>
 			</div>
-			<input id="submit" class="interactive-border button-bg" type="submit" value="Send files"> </input>
+			<input id="submit" class="inert-border button-bg" type="submit" value="Send files"> </input>
 		</div>
 
 		<div class="bg background-border input-with-button">
@@ -73,7 +74,7 @@
 				<input id="upload" class="inert-border-red bg-invalid" type="file"></input>
 				<label class="thin-border" for="upload"> File upload </label>
 			</div>
-			<input id="submit" class="interactive-border-disabled bg-disabled" type="submit" value="Send files"> </input>
+			<input id="submit" class="inert-border-disabled bg-disabled" type="submit" value="Send files"> </input>
 			<span class="flex-center error-message"> Explicit error message </span>
 		</div>
 
@@ -81,35 +82,35 @@
 		<div class="flexbox-auto-col">
 			<div class="bg background-border input-with-button">
 				<div class="form-group">
-					<img class="search-icon-dark" src="./assets/icons/search-icon-dark.png"></img>
+					<img class="search-icon-dark" src="../assets/icons/search-icon-dark.png"></img>
 					<label class="thin-border" for="search"> search </label>
-					<input class="input-default interactive-border" id="search" placeholder="default" type="text"></input>
+					<input class="input-bg inert-border" id="search" placeholder="default" type="text"></input>
 				</div>
-				<button class="interactive-border button-bg" type="button"> search </button>
+				<button class="inert-border button-bg" type="button"> search </button>
 			</div>
 			<div class="bg background-border input-with-button">
 				<div class="form-group">
 					<label class="thin-border" for="search"> search </label>
-					<img class="search-icon-dark" src="./assets/icons/search-icon-dark.png"></img>
-					<input class="input-hover interactive-border-hover" id="search" placeholder="hover" type="text"></input>
+					<img class="search-icon-dark" src="../assets/icons/search-icon-dark.png"></img>
+					<input class="input-bg-hover inert-border" id="search" placeholder="hover" type="text"></input>
 				</div>
-				<button class="interactive-border-hover button-bg" type="button"> search </button>
+				<button class="inert-border button-bg" type="button"> search </button>
 			</div>
 			<div class="bg background-border input-with-button">
 				<div class="form-group">
 					<label class="thin-border" for="search"> search </label>
-					<img class="search-icon-dark" src="./assets/icons/search-icon-dark.png"></img>
-					<input class="input-active interactive-border-active" id="search" placeholder="active" type="text"></input>
+					<img class="search-icon-dark" src="../assets/icons/search-icon-dark.png"></img>
+					<input class="input-bg-active inert-border" id="search" placeholder="active" type="text"></input>
 				</div>
-				<button class="interactive-border-active button-bg" type="button"> search </button>
+				<button class="inert-border button-bg" type="button"> search </button>
 			</div>
 			<div class="bg background-border input-with-button">
 				<div class="form-group">
 					<label class="thin-border" for="search"> search </label>
-					<img class="search-icon-dark" src="./assets/icons/search-icon-dark.png"></img>
+					<img class="search-icon-dark" src="../assets/icons/search-icon-dark.png"></img>
 					<input class="inert-border-red bg-invalid" id="search" placeholder="error!!" type="text"></input>
 				</div>
-				<button class="interactive-border-disabled bg-disabled" type="button"> search </button>
+				<button class="inert-border-disabled bg-disabled" type="button"> search </button>
 			</div>
 		</div>
 
@@ -119,19 +120,19 @@
 				<span> search results </span>
 				<span class="user-search-result">
 					<span class="avatar-wrapper">
-						<img class="avatar-s" src="./assets/icons/light-green-avatar.png"></img>
+						<img class="avatar-s" src="../assets/icons/light-green-avatar.png"></img>
 					</span>
 					<p> <a class="a-default"> appetizingChicken </a> </p>
 				</span>
 				<span class="user-search-result">
 					<span class="avatar-wrapper">
-						<img class="avatar-s" src="./assets/icons/pink-avatar.png"></img>
+						<img class="avatar-s" src="../assets/icons/pink-avatar.png"></img>
 					</span>
 					<p> <a class="a-default"> angryGoose </a> </p>
 				</span>
 				<span class="user-search-result">
 					<span class="avatar-wrapper">
-						<img class="avatar-s" src="./assets/icons/magenta-avatar.png"></img>
+						<img class="avatar-s" src="../assets/icons/magenta-avatar.png"></img>
 					</span>
 					<p> <a class="a-default"> alternateZebra </a> </p>
 				</span>
@@ -140,19 +141,19 @@
 				<span> search results with active profile link </span>
 				<span class="user-search-result">
 					<span class="avatar-wrapper">
-						<img class="avatar-s" src="./assets/icons/light-green-avatar.png"></img>
+						<img class="avatar-s" src="../assets/icons/light-green-avatar.png"></img>
 					</span>
 					<p> <a class="a-default"> appetizingChicken </a> </p>
 				</span>
 				<span class="user-search-result">
 					<span class="avatar-wrapper">
-						<img class="avatar-s" src="./assets/icons/pink-avatar.png"></img>
+						<img class="avatar-s" src="../assets/icons/pink-avatar.png"></img>
 					</span>
 					<p> <a class="a-hover"> angryGoose </a> </p>
 				</span>
 				<span class="user-search-result">
 					<span class="avatar-wrapper">
-						<img class="avatar-s" src="./assets/icons/magenta-avatar.png"></img>
+						<img class="avatar-s" src="../assets/icons/magenta-avatar.png"></img>
 					</span>
 					<p> <a class="a-default"> alternateZebra </a> </p>
 				</span>
@@ -160,7 +161,7 @@
 			<div class="bg background-border search-result flex-item">
 				<span> no results... :'( </span>
 				<div class="fail-wrapper">
-					<img class="breathe" src="./assets/icons/no-result.png"> </img>
+					<img class="breathe" src="../assets/icons/no-result.png"> </img>
 				</div>
 			</div>
 		</div>
@@ -174,8 +175,8 @@
 						<p> This is the content of the message !!!</p>
 					</div>
 					<div class="horizontal-menu-wrapper">
-						<div class="menu-element interactive-border-red bg-invalid">Refuse</div>
-						<div class="menu-element interactive-border-green bg-valid">Acknowledge</div>
+						<div class="menu-element inert-border-red bg-invalid">Refuse</div>
+						<div class="menu-element inert-border-green bg-valid">Acknowledge</div>
 					</div>
 				</div>
 			</div>
@@ -183,9 +184,9 @@
 
 		<p class="title-shadow title-3"> Loader </p>
 		<div class="loader-container bg background-border">
-			<img class="load avatar-l" src="./assets/icons/light-green-avatar.png">
-			<img class="load avatar-l" src="./assets/icons/blue-avatar.png">
-			<img class="load avatar-l" src="./assets/icons/magenta-avatar.png">
+			<img class="load avatar-l" src="../assets/icons/light-green-avatar.png">
+			<img class="load avatar-l" src="../assets/icons/blue-avatar.png">
+			<img class="load avatar-l" src="../assets/icons/magenta-avatar.png">
 		</div>
 
 

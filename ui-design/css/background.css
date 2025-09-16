@@ -1,0 +1,170 @@
+@import url(../css/atoms.css);
+
+.bg {
+	box-sizing: border-box;
+	background: linear-gradient(180deg,
+			#F9ECCE 0 10%,
+			#FAF0D8 0 20%,
+			#FCF4E2 0 30%,
+			#FDF8ED 0 40%,
+			#FFFCF7 0 50%,
+			#FFFCF7 0 60%,
+			#FDF8ED 0 70%,
+			#FCF4E2 0 80%,
+			#FAF0D8 0 90%,
+			#F9ECCE 0 100%);
+	padding: var(--space-sm);
+}
+
+.plain-yellow-bg {
+	border: none;
+	background: linear-gradient(180deg,
+			#F4B000 0 10%,
+			#F7B200 0 20%,
+			#FAB400 0 30%,
+			#FCB600 0 40%,
+			#FFB800 0 50%,
+			#FFB800 0 60%,
+			#FCB600 0 70%,
+			#FAB400 0 80%,
+			#F7B200 0 90%,
+			#F4B000 0 100%);
+}
+
+.plain-clear-bg {
+	background: linear-gradient(180deg,
+			#ffdc99 0 10%,
+			#ffe0a5 0 20%,
+			#ffe4b0 0 30%,
+			#ffe8bb 0 40%,
+			#ffecc6 0 50%,
+			#ffecc6 0 60%,
+			#ffe8bb 0 70%,
+			#ffe4b0 0 80%,
+			#ffe0a5 0 90%,
+			#ffdc99 0 100%);
+}
+
+.bg-disabled {
+	background-color: var(--disabled);
+	color: var(--shadow-2);
+	border-top: 2px solid var(--shadow-1);
+	border-bottom: 2px solid var(--shadow-1);
+}
+
+.bg-invalid {
+	background: linear-gradient(180deg,
+			var(--highlight-red) 0 10%,
+			var(--highlight-red) 0 20%,
+			#e67a52 0 30%,
+			#e9815b 0 40%,
+			#eb8964 0 50%,
+			#eb8964 0 60%,
+			#e9815b 0 70%,
+			#e67a52 0 80%,
+			var(--highlight-red) 0 90%,
+			var(--highlight-red) 0 100%);
+	background-color: var(--highlight-red);
+	color: var(--black);
+}
+
+.bg-valid {
+	background-color: var(--green);
+	color: var(--black);
+}
+
+.button-bg {
+	border: none;
+	border-top: 2px solid var(--highlight-yellow);
+	border-bottom: 2px solid var(--shadow-yellow);
+	background: linear-gradient(180deg,
+			#F4B000 0 10%,
+			#F7B200 0 20%,
+			#FAB400 0 30%,
+			#FCB600 0 40%,
+			#FFB800 0 50%,
+			#FFB800 0 60%,
+			#FCB600 0 70%,
+			#FAB400 0 80%,
+			#F7B200 0 90%,
+			#F4B000 0 100%);
+}
+
+.button-bg:hover,
+.button-bg-hover {
+	background: linear-gradient(180deg,
+			#ffc245 0 10%,
+			#ffc652 0 20%,
+			#ffca5f 0 30%,
+			#ffcd6b 0 40%,
+			#ffd177 0 50%,
+			#ffd177 0 60%,
+			#ffcd6b 0 70%,
+			#ffca5f 0 80%,
+			#ffc652 0 90%,
+			#ffc245 0 100%);
+	border-top: 2.1px solid var(--highlight-yellow);
+	border-bottom: 2.1px solid var(--highlight-yellow);
+}
+
+.button-bg:active,
+.button-bg-active {
+	background: linear-gradient(180deg,
+			#E3A300 0 10%,
+			#E7A700 0 20%,
+			#E9A900 0 30%,
+			#ECAB00 0 40%,
+			#EFAC00 0 50%,
+			#EFAC00 0 60%,
+			#ECAB00 0 70%,
+			#E9A900 0 80%,
+			#E7A700 0 90%,
+			#E3A300 0 100%);
+	border-top: 2px solid var(--shadow-yellow);
+	border-bottom: 2px solid var(--shadow-yellow);
+}
+
+.input-bg {
+	background: linear-gradient(180deg,
+			var(--white) 0 10%,
+			#FFE5B2 0 20%,
+			#FFE8BC 0 30%,
+			#FFEAC1 0 40%,
+			#FFECC6 0 50%,
+			#FFECC6 0 60%,
+			#FFEAC1 0 70%,
+			#FFE8BC 0 80%,
+			#FFE5B2 0 90%,
+			#ECAB00 0 100%);
+}
+
+.input-bg-hover,
+.input-bg:hover {
+	background: linear-gradient(180deg,
+			var(--white) 0 10%,
+			#FFE5B2 0 20%,
+			#FFE8BC 0 30%,
+			#FFEAC1 0 40%,
+			#FFECC6 0 50%,
+			#FFECC6 0 60%,
+			#FFEAC1 0 70%,
+			#FFE8BC 0 80%,
+			#FFE5B2 0 90%,
+			var(--white) 0 100%);
+}
+
+.input-bg-active,
+.input-bg:active,
+.input-bg:focus {
+	background: linear-gradient(180deg,
+			#ECAB00 0 10%,
+			#FFE5B2 0 20%,
+			#FFE8BC 0 30%,
+			#FFEAC1 0 40%,
+			#FFECC6 0 50%,
+			#FFECC6 0 60%,
+			#FFEAC1 0 70%,
+			#FFE8BC 0 80%,
+			#FFE5B2 0 90%,
+			#ECAB00 0 100%);
+}

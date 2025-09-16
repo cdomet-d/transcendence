@@ -94,6 +94,9 @@
 }
 
 .horizontal-menu-wrapper {
+	align-items: center;
+	justify-content: center;
+	justify-items: center;
 	box-sizing: border-box;
 	display: grid;
 	gap: var(--space-sm) var(--space-sm);
@@ -103,6 +106,9 @@
 }
 
 .vertical-menu-wrapper {
+	align-items: center;
+	justify-items: center;
+	justify-content: center;
 	box-sizing: border-box;
 	display: grid;
 	gap: var(--space-s) var(--space-s);
@@ -111,8 +117,6 @@
 }
 
 .menu-element {
-	height: 100%;
-	width: 100%;
 	box-sizing: border-box;
 	display: flex;
 	align-items: center;
