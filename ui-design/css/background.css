@@ -45,6 +45,20 @@
 			#ffdc99 0 100%);
 }
 
+.plain-invalid-bg {
+	background: linear-gradient(180deg,
+			#CE633B 0 10%,
+			#D3673F 0 20%,
+			#D96B42 0 30%,
+			#DE6E45 0 40%,
+			#E37248 0 50%,
+			#E37248 0 60%,
+			#DE6E45 0 70%,
+			#D96B42 0 80%,
+			#D3673F 0 90%,
+			#CE633B 0 100%);
+}
+
 .bg-disabled {
 	background-color: var(--disabled);
 	color: var(--shadow-2);

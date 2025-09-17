@@ -22,7 +22,7 @@
 
 		<span class="bg background-border"> State: hover | Variant: horizontal </span>
 		<div class="bg background-border horizontal-menu-wrapper">
-			<button class="inert-border menu-element button-bg"> A menu element </button>
+			<button class="inert-border menu-element button-bg-hover"> A menu element </button>
 			<button class="inert-border menu-element button-bg-hover"> A menu element </button>
 			<button class="inert-border menu-element button-bg-hover"> A menu element </button>
 			<button class="inert-border menu-element button-bg-hover"> A menu element </button>
@@ -64,7 +64,7 @@
 		<div class="flexbox-auto-col">
 			<div class="bg background-border input-with-button">
 				<div class="form-group">
-					<input id="upload" class="inert-border" type="file"></input>
+					<input id="upload" class="inert-border plain-clear-bg" type="file"></input>
 					<label class="thin-border" for="upload"> File upload </label>
 				</div>
 				<input id="submit" class="inert-border button-bg" type="submit" value="Send files"> </input>
@@ -72,7 +72,7 @@
 
 			<div class="bg background-border input-with-button">
 				<div class="form-group">
-					<input id="upload" class="inert-border-red bg-invalid" type="file"></input>
+					<input id="upload" class="inert-border-red plain-invalid-bg" type="file"></input>
 					<label class="thin-border" for="upload"> File upload </label>
 				</div>
 				<input id="submit" class="inert-border-disabled bg-disabled" type="submit" value="Send files">
@@ -188,8 +188,11 @@
 
 		<p class="title-shadow title-3"> Notifications </p>
 		<div class="flexbox-auto-col">
-			<div class="notification-text bg background-border">
-				<p> %login% challenged you to a 1v1 match !! </p>
+			<div class="notif-cont">
+				<div class="notification-text bg inert-border">
+					<img src="../assets/icons/notification-bubble-contour.png" />
+					<p> %login% challenged you to a 1v1 match !! </p>
+				</div>
 			</div>
 			<div class="notification-icon-container bg background-border">
 				<img class="avatar-l" src="../assets/icons/notification.png" />
@@ -199,21 +202,25 @@
 				<img class="avatar-l" src="../assets/icons/notification.png" />
 			</div>
 
-			<div class="notification-reveal bg background-border">
-				<div class="notification-text bg">
-					<p> %login% challenged you to a 1v1 match !! </p>
-					<p> %login% challenged you to a tournament !! </p>
-					<p> %login% challenged you to a 1v1 match !! </p>
-					<p> %login% challenged you to a 1v1 match !! </p>
-					<p> %login% challenged you to a 1v1 match !! </p>
-				</div>
-				<div class="notification-icon-container">
-					<img class="avatar-l" src="../assets/icons/notification.png" />
+			<div class="notif-cont">
+				<div class="notification-reveal bg background-border">
+					<div class="notification-text bg inert-border">
+						<img src="../assets/icons/notification-bubble-contour.png" />
+						<p> %login% challenged you to a 1v1 match !! </p>
+						<p> %login% challenged you to a tournament !! </p>
+						<p> %login% challenged you to a 1v1 match !! </p>
+						<p> %login% challenged you to a 1v1 match !! </p>
+						<p> %login% challenged you to a 1v1 match !! </p>
+					</div>
+					<div class="notification-icon-container">
+						<img class="avatar-l" src="../assets/icons/notification.png" />
+					</div>
 				</div>
 			</div>
 		</div>
+
 		<p class="bg"> Here if a user has >9 notifications, transform it in +9 because I am NOT doing responsive for
-			stupid values <3 </p>
+			stupid values <3 <br> Here I will add javascript later to do the whole "notifications appear when the user clicks the bell" thing.</p>
 
 				<p class="title-shadow title-3"> Loader </p>
 				<div class="loader-container bg background-border">
@@ -221,6 +228,18 @@
 					<img class="load avatar-l" src="../assets/icons/blue-avatar.png">
 					<img class="load avatar-l" src="../assets/icons/magenta-avatar.png">
 				</div>
+
+				<div class="loader-container bg background-border">
+					<img class="load avatar-m" src="../assets/icons/light-green-avatar.png">
+					<img class="load avatar-m" src="../assets/icons/blue-avatar.png">
+					<img class="load avatar-m" src="../assets/icons/magenta-avatar.png">
+				</div>
+				<div class="loader-container bg background-border">
+					<img class="load avatar-s" src="../assets/icons/light-green-avatar.png">
+					<img class="load avatar-s" src="../assets/icons/blue-avatar.png">
+					<img class="load avatar-s" src="../assets/icons/magenta-avatar.png">
+				</div>
+
 
 
 	</div>

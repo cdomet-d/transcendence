@@ -76,8 +76,8 @@
 
 	--coffee: #835441;
 	--disabled: #fdeec8;
-	--shadow-1: #d5b6aa;
-	--shadow-2: #736864;
+	--shadow-1: #C4AB9A;
+	--shadow-2: #8F5F3F;
 	--title-shadow: #AC5A0E;
 
 	.title-shadow {
@@ -377,7 +377,7 @@ input[type=range]::-moz-range-thumb {
 
 .checkbox-container>input {
 	margin:0;
-	opacity: 0%;
+	opacity: 50%;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -509,6 +509,7 @@ input#upload {
 }
 
 button {
+	overflow: hidden;
 	border: none;
 	outline: none;
 	height: 95%;
