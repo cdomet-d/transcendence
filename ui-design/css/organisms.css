@@ -9,7 +9,6 @@
 }
 
 .username {
-	background-color: var(--white);
 	font-size: var(--s);
 	line-height: 110%;
 	color: var(--yellow);
@@ -34,6 +33,8 @@
 }
 
 .user-info {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 	padding: var(--space-s);
 	box-sizing: border-box;
 }
@@ -41,15 +42,17 @@
 .user-status {
 	height: var(--space-s);
 	width: var(--space-s);
-	background-color: var(--orange);
+	background-color: var(--red);
 	border-radius: 30px;
 	line-height: 110%;
 }
 
 .user-grid {
-	display: flex;
+	max-width: var(--single-col);
+	display: grid;
+	grid-template-columns: 0.5fr 1fr 0.5fr;
 	align-items: center;
-	gap: var(--space-m);
+	gap: var(--space-s);
 	padding-bottom: var(--space-s);
 }
 
@@ -58,8 +61,4 @@
 	grid-template-columns: 1fr 1fr;
 	align-items: center;
 	gap: 0 var(--space-s);
-}
-
-.user-grid>img {
-	padding-left: var(--space-m);
 }

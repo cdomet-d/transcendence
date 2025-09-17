@@ -271,6 +271,12 @@ li {
 	min-width: fit-content;
 }
 
+.two-icons {
+	position: relative;
+	display: flex;
+	justify-content: center;
+}
+
 .form-group>label {
 	background-color: var(--white);
 	color: var(--shadow-2);
@@ -513,7 +519,7 @@ button {
 	border: none;
 	outline: none;
 	height: 95%;
-	width: 95%;
+	width: 100%;
 	box-sizing: border-box;
 	font-family: PixelOperator;
 	padding: var(--space-xs);
@@ -521,11 +527,11 @@ button {
 }
 
 button:hover {
-	transform: scale(1.02);
+	transform: scale3d(1, 1.05, 1);
 }
 
 button:active {
-	transform: scale(1);
+	transform: scale3d(1, 1, 1);
 }
 
 .dis-av-wrap {
