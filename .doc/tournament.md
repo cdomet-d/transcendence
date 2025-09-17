@@ -1,0 +1,17 @@
+ - 1v1:
+   - local:
+      -  guest vs guest
+      -  persistentUser vs guest
+   - remote:
+      -  guest vs guest
+      -  guest vs persistentRemoteUser
+      -  persistentUser vs persistentRemoteUser
+
+ - tournament:
+   -  local:
+      - guest vs N_guests
+      - persistentUser vs N_guests
+   -  remote:
+      - guest vs N_guests
+      - persistentUser vs N_persistentUser
+      - persistentUser vs N_guests
