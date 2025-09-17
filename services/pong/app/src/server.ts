@@ -16,16 +16,25 @@ import { natsSubscribtion } from './subscriber.js';
 // const __filename = fileURLToPath(import.meta.url);
 // export const __dirname = path.dirname(__filename);
 
+main();
+
+async function main() {
+	try {
+		const serv = init();
+		await serv.ready();
+		await runServ(serv);
+		natsSubscribtion();
+	} catch (err) {
+		console.error('server', err);
+		process.exit(1);
+	}
+}
+
 //init server
-try {
+function init(): FastifyInstance {
 	const serv: FastifyInstance = Fastify(options);
 	addPlugins(serv);
-	await serv.ready();
-	runServ(serv);
-	natsSubscribtion();
-} catch (err) {
-	console.error('server error:', err);
-	process.exit(1);
+	return (serv);
 }
 
 //add plugins
@@ -35,15 +44,16 @@ function addPlugins(serv: FastifyInstance) {
 }
 
 //run server
-function runServ(serv: FastifyInstance): void {
+async function runServ(serv: FastifyInstance): Promise<void> {
+	const port: number = getPort();
+	const address: string = await serv.listen({ port: port, host: '0.0.0.0' });
+	serv.log.info(`Pong Microservice listening on ${port} at ${address}`);
+}
+
+function getPort(): number {
 	const port: number = Number(process.env.PORT);
 	if (Number.isNaN(port)) {
 		throw new Error("Invalid port");
 	}
-
-	serv.listen({ port: port, host: '0.0.0.0' })
-			.then((address) => {
-				serv.log.info(`Pong Microservice listening on ${port} at ${address}`);
-			})
-			.catch((err) => { throw err; });
+	return port;
 }
