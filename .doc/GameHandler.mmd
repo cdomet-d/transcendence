@@ -1,0 +1,21 @@
+sequenceDiagram
+    title GameHandler (local quick match)
+
+    %% participant GH as GameHandler
+    autonumber
+
+    create participant MM as Matchmaking
+    create participant Pre as PreGame
+    MM-)Pre: send pregame.local.2players.create (NATS)
+    destroy MM
+    MM->MM: am ded
+    Pre->>Pre: receive:<br> - userIDs<br> - local/remote<br> - tournament/quickMatch
+    Pre->>Pre: Create almost full match object
+    create participant P as Pong
+    Pre-)P: send match.ready (NATS)
+    P->>P: Fill match with random score and winner
+    create participant Post as PostGame
+    P-)Post:send match.over (NATS)
+    Post->>Post: receive: full match object
+    create participant DB as DataBase
+    Post->>DB: send data

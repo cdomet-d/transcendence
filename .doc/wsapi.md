@@ -15,10 +15,13 @@ Objects:
 
 
 PreGame -> NATS:
-game.local.1v1.create
+game.local.2players.create
+game.local.4players.create
+game.local.8players.create
 
-game.tournament.2players.create
-game.tournament.4players.create
+game.remote.2players.create
+game.remote.4players.create
+game.remote.8players.create
 
 
 PreGame -> Game:
@@ -26,6 +29,7 @@ game.start
     {
         match:
         -   matchID
+        -   tournamentID <!-- 0 if quick match -->
         -   score
         -   local: bool
         -   users[]:
@@ -40,6 +44,7 @@ game.start
     }
 
 match.userID.score
+
 
 sessionID
 if local >> same sessionID, different userID
