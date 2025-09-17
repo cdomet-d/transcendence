@@ -1,6 +1,6 @@
-import { pong } from './pong.ts'
+import { createKeyDownEvent} from './paddle.js'
 
-function wsRequest(main: HTMLElement) {
+function wsRequest() {
     const ws = new WebSocket('wss://localhost:8443/api/game/match');
 
     ws.onerror = (err) => {
@@ -13,7 +13,7 @@ function wsRequest(main: HTMLElement) {
         ws.onmessage = (event) => {
             console.log("message from server:", event.data);
         }
-        pong(ws, main);
+        window.addEventListener("keydown", createKeyDownEvent(ws));
     }
 }
 

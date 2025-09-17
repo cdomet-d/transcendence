@@ -1,7 +1,10 @@
-import { Router } from './router.class.ts';
-import { routes } from './routes.ts';
+import { Router } from './spaRouter/router.class.js';
+import { routes } from './spaRouter/routes.js';
+import { pong } from './game/pong.js';
+import { addLanguageEvents } from './language/languageEvents.js';
+import { initLanguageCSR } from './language/translation.js';
 
-const router = new Router(routes);
+export const router = new Router(routes);
 
 function sanitisePath(path: string) {
     if (path == "/")
@@ -26,3 +29,9 @@ window.addEventListener('popstate', () => {
     const cleanPath = sanitisePath(window.location.pathname);
     router._loadRoute(cleanPath);
 });
+
+if (router._getCurrentURL() === '/game/match')
+    pong(); //TODO: find a way to render it server side
+
+initLanguageCSR();
+addLanguageEvents();

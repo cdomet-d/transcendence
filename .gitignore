@@ -10,6 +10,5 @@ nats.log
 services/pong/app/dist/
 services/pong/app/static/style-dist.css
 dist/
-style-dist.css
-package*.json
-
+output.css
+package-lock.json
