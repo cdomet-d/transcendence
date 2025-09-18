@@ -35,6 +35,10 @@ export class Game {
 		return this.#_sockets;
 	}
 
+	get local(): boolean {
+		return this.#_gameInfo._local;
+	}
+
     /*                              SETTERS                                  */
 	set score(score: Array< number >) {
 		this.#_gameInfo._score = score;
