@@ -1,14 +1,14 @@
 import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
 import { options } from './serv.conf.js';
-import { initNATS } from './publisher.js';
+import { natsSubscribe } from './nats/subscriber.js';
 
 try {
 	const serv: FastifyInstance = Fastify(options);
 	serv.listen({ port: 1818, host: '0.0.0.0' }).then(() => {
 		serv.log.info("serv run");
 	});
-	initNATS();
+	natsSubscribe();
 }
 catch (err) {
 	console.error('server error:', err);

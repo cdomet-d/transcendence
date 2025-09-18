@@ -10,7 +10,7 @@ import type { FastifyInstance } from 'fastify';
 // Local modules
 import { wsRoute } from './routes/websocket.js';
 import { options } from './serv.conf.js'
-import { natsSubscribtion } from './subscriber.js';
+import { natsSubscribtion } from './nats/subscriber.js';
 /***********************************************/
 
 // const __filename = fileURLToPath(import.meta.url);

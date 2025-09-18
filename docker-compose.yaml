@@ -107,6 +107,27 @@ services:
     volumes:
       - ./services/frontend/app:/app
     # user: "${T_UID}:${T_GID}"
+  gamemanager:
+    build:
+      context: ./services/GameManager
+      dockerfile: Dockerfile
+    container_name: gamemanager
+    image: gamemanager:0.0.1
+    environment:
+      - PORT=2121
+      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+      - NGINXIP=nginx
+    networks:
+      - transcendence
+    restart: unless-stopped
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/GameManager/app:/usr/app
+    depends_on:
+      matchmaking:
+        condition: service_healthy
   matchmaking:
     build:
       context: ./services/matchmaking
@@ -124,9 +145,12 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/matchmaking/app:/usr/app
-    depends_on:
-      pong:
-            condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
   monitoring:
     build:
       context: ./services/monitoring
@@ -193,12 +217,6 @@ services:
       - ./services/pong/app:/usr/app
     depends_on:
       -  nats-server
-    healthcheck:
-      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 25s
     # user: "${T_UID}:${T_GID}"
   users:
     build:

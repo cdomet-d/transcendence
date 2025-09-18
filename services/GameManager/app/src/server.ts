@@ -1,14 +1,19 @@
 import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
 import { options } from './serv.conf.js';
-import { natsSubscription } from './subscriber.js';
+import { natsPublish } from './nats/publisher.js';
 
 try {
 	const serv: FastifyInstance = Fastify(options);
-	serv.listen({ port: 1818, host: '0.0.0.0' }).then(() => {
+		const port: number = Number(process.env.PORT);
+	if (Number.isNaN(port)) {
+		throw new Error("Invalid port");
+	}
+
+	serv.listen({ port: port, host: '0.0.0.0' }).then(() => {
 		serv.log.info("serv run");
 	});
-	natsSubscription();
+	natsPublish();
 }
 catch (err) {
 	console.error('server error:', err);
