@@ -1,0 +1,37 @@
+sequenceDiagram
+    title GameHandler (local quickMatch)
+    autonumber
+
+    create actor C as Client
+    create participant Pre as PreGame
+    C-)Pre: OPEN connection (WS)
+    C-)Pre: request local quickMatch + send JSON.userInfo (WS)
+    C->>C: Show "Waiting..." screen
+    Pre->>Pre: filter request + signal appropriate NATS subject
+    create participant MM as Matchmaking
+    Pre-)MM: send pregame.local.2players.create (NATS)
+    MM->>MM: receive client info 
+    MM->>MM: wait for more clients
+    MM->>MM: match up
+    MM->>MM: create and fill match object
+    MM--)Pre: send match object to pregame.local.2players.ready (NATS)
+    Pre--)C: send match found (WS)
+    C->>C: Show "Match found!"
+    destroy MM
+    MM->MM: am ded
+    Pre->>Pre: receive match object
+    create participant P as Pong
+    Pre-)P: send match object to game.ready (NATS)
+    P--)Pre: send game.waiting (NATS)
+    Pre--)C: send game.waiting + CLOSE connection (WS)
+    destroy Pre
+    Pre-xPre:am ded
+    C->>C: Show "Joining game..."
+    C-)P: OPEN connection (WS)
+    P->>P: Add score and winner/loser to match object
+    create participant Post as PostGame
+    P-)Post:send full match object to game.over (NATS)
+    P--)C: CLOSE connection (WS)
+    Post->>Post: receive full match object
+    create participant DB as DataBase
+    Post->>DB: send data
