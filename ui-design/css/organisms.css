@@ -1,16 +1,26 @@
-@import url(./atoms.css);
+@import url(./variables.css);
 
 .user-card {
+	padding: var(--space-m);
 	width: var(--single-col);
-	position: relative;
+	height: var(--single-col);
+	display: grid;
+	grid-template-columns: var(--avatar-m) 1fr var(--m);
+	grid-template-rows: 1fr 1fr 1fr;
+	gap: var(--space-s);
+}
+
+.bio-group {
 	display: grid;
 	grid-template-columns: 1fr;
-	gap: var(--space-s);
+	grid-auto-rows: var(--s);
+	align-items: center;
+	gap: 0 var(--space-s);
 }
 
 .username {
 	font-size: var(--s);
-	line-height: 110%;
+	line-height: 100%;
 	color: var(--yellow);
 	text-shadow: -0.0px -0.0px var(--shadow-yellow),
 		-0.2px -0.1px var(--shadow-yellow),
@@ -23,13 +33,13 @@
 		-1.6px -0.8px var(--shadow-yellow),
 		-1.8px -0.9px var(--shadow-yellow),
 		-2.0px -1.0px var(--shadow-yellow);
-}
+	display: grid;
+	grid-template-columns: auto 10%;
+	justify-items: center;
+	align-items: center;
+	justify-content: left;
+	width: 100%;
 
-.biography {
-	box-sizing: border-box;
-	max-height: var(--m);
-	overflow: hidden;
-	grid-column: span 2;
 }
 
 .user-info {
@@ -50,15 +60,63 @@
 .user-grid {
 	max-width: var(--single-col);
 	display: grid;
-	grid-template-columns: 0.5fr 1fr 0.5fr;
+	grid-template-columns: var(--avatar-m) 1fr var(--ml);
 	align-items: center;
 	gap: var(--space-s);
 	padding-bottom: var(--space-s);
 }
 
-.bio-group {
+.profile-page {
+	width: 65vw;
+	box-sizing: border-box;
+	padding: var(--space-m);
+}
+
+.profile-header {
+	padding: var(--space-m);
+	position: relative;
+	height: 16.5rem;
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: var(--image-xxl) 1fr 1fr var(--menu-element);
+	grid-template-rows: 3rem 3rem 3rem 3rem;
+	justify-content: space-around;
 	align-items: center;
-	gap: 0 var(--space-s);
+	justify-items: center;
+	gap: var(--space-xs) var(--space-m);
+}
+
+.profile-header>.vertical-menu-wrapper {
+	width: var(--menu-element);
+}
+
+.profile-header .username {
+	font-size: var(--l);
+	display: grid;
+	grid-template-columns: auto 10%;
+	justify-content: left;
+	width: 100%;
+}
+
+.two-rows {
+	grid-row: span 2;
+}
+
+.three-rows {
+	grid-row: span 3;
+}
+
+.four-rows {
+	grid-row: span 4;
+}
+
+.two-col {
+	grid-column: span 2;
+}
+
+.three-col {
+	grid-column: span 3;
+}
+
+.four-col {
+	grid-column: span 4;
 }

@@ -1,4 +1,4 @@
-@import url(../css/atoms.css);
+@import url(./atoms.css);
 
 .bg {
 	box-sizing: border-box;
@@ -13,7 +13,6 @@
 			#FCF4E2 0 80%,
 			#FAF0D8 0 90%,
 			#F9ECCE 0 100%);
-	padding: var(--space-sm);
 }
 
 .plain-yellow-bg {

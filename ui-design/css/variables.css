@@ -1,0 +1,126 @@
+
+:root {
+	font-size: 100%;
+	font-family: PixelOperator;
+	background: linear-gradient(180deg, var(--gradient1) 0%, var(--gradient2), var(--gradient3), var(--gradient4) 100%);
+	background-repeat: no-repeat;
+	margin: 0;
+
+	--regular: 1rem;
+	--s: 1.5rem;
+	--m: 2rem;
+	--ml: 2.5rem;
+	--l: 3rem;
+	--xl: 3.5rem;
+
+	--image-s: 1.5rem;
+	--image-m: 3rem;
+	--image-l: 4rem;
+	--image-xl: 8rem;
+	--image-xxl: 10rem;
+
+	--avatar-s: 2.5rem;
+	--avatar-m: 4rem;
+	--avatar-l: 5rem;
+	--avatar-xl: 9rem;
+	--avatar-xxl: 12rem;
+
+	--space-xs: 0.25rem;
+	--space-s: 0.5rem;
+	--space-sm: 1rem;
+	--space-m: 2rem;
+	--space-ml: 3rem;
+	--space-l: 3.5rem;
+	--space-xl: 4rem;
+
+	--body-margin: 2.03rem;
+	--menu-element: 12rem;
+	--single-col: 26.875rem;
+	--double-col: 55.25rem;
+
+	--br: 10px;
+
+	--white: #fffcf7;
+	--black: #372a25;
+	--gradient1: #131254;
+	--gradient2: #0f88fa;
+	--gradient3: #64e6e8;
+	--gradient4: #d1ffda;
+
+	--highlight-green: #bde559;
+	--green: #76c54b;
+	--shadow-green: #04983a;
+
+	--highlight-orange: #EE881C;
+	--orange: #BC6511;
+	--shadow-orange: #7A3703;
+
+	--highlight-red: #E37248;
+	--red: #AA4926;
+	--shadow-red: #9A3E1C;
+
+	--highlight-yellow: #FFE6A4;
+	--yellow: #FFB800;
+	--shadow-yellow: #966c00;
+
+
+	--neutral-border: #773d16;
+	--border-red: #6B1D00;
+	--border-green: #005a44;
+
+	--coffee: #835441;
+	--disabled: #fdeec8;
+	--shadow-1: #C4AB9A;
+	--shadow-2: #8F5F3F;
+	--title-shadow: #AC5A0E;
+
+	.title-shadow {
+		text-shadow:
+			-0.0px -0.0px var(--title-shadow),
+			-0.2px -0.1px var(--title-shadow),
+			-0.4px -0.2px var(--title-shadow),
+			-0.6px -0.4px var(--title-shadow),
+			-0.8px -0.4px var(--title-shadow),
+			-1.0px -0.5px var(--title-shadow),
+			-1.2px -0.6px var(--title-shadow),
+			-1.4px -0.7px var(--title-shadow),
+			-1.6px -0.8px var(--title-shadow),
+			-1.8px -0.9px var(--title-shadow),
+			-2.0px -1.0px var(--title-shadow),
+			-2.2px -1.1px var(--title-shadow),
+			-2.4px -1.2px var(--title-shadow),
+			-2.6px -1.3px var(--title-shadow),
+			-2.8px -1.4px var(--title-shadow),
+			-3.0px -1.5px var(--title-shadow),
+			-3.2px -1.6px var(--title-shadow),
+			-3.4px -1.7px var(--title-shadow),
+			-3.6px -1.8px var(--title-shadow),
+			-3.8px -1.9px var(--title-shadow),
+			-4.0px -2.0px var(--title-shadow),
+			-4.2px -2.1px var(--title-shadow),
+			-4.4px -2.2px var(--title-shadow),
+			-4.6px -2.3px var(--title-shadow),
+			-4.8px -2.4px var(--title-shadow),
+			-5.0px -2.5px var(--title-shadow);
+		/* -5.2px -2.6px var(--orange),
+			-5.4px -2.7px var(--orange),
+			-5.6px -2.8px var(--orange),
+			-5.8px -2.9px var(--orange),
+			-6.0px -3.0px var(--orange),
+			-6.2px -3.1px var(--orange),
+			-6.4px -3.2px var(--orange),
+			-6.6px -3.3px var(--orange),
+			-6.8px -3.4px var(--orange),
+			-7.0px -3.5px var(--orange),
+			-7.2px -3.6px var(--orange),
+			-7.4px -3.7px var(--orange),
+			-7.6px -3.8px var(--orange),
+			-7.8px -3.9px var(--orange),
+			-8.0px -4.0px var(--orange),
+			-8.2px -4.1px var(--orange),
+			-8.4px -4.2px var(--orange),
+			-8.6px -4.3px var(--orange),
+			-8.8px -4.4px var(--orange),
+			-9.0px -4.5px var(--orange); */
+	}
+}

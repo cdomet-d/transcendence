@@ -2,9 +2,6 @@
 <html>
 
 <head>
-	<link rel="stylesheet" href="../css/borders.css">
-	<link rel="stylesheet" href="../css/atoms.css">
-	<link rel="stylesheet" href="../css/background.css">
 	<link rel="stylesheet" href="../css/molecules.css">
 	<link rel="stylesheet" href="../css/organisms.css">
 </head>
@@ -12,99 +9,113 @@
 <body>
 	<div class="card">
 		<p class="title-shadow title-3"> user profile card </p>
-		<div class="flexbox-auto-col">
-			<div class="bg background-border user-card">
-				<div class="user-grid">
-					<div class="avatar-wrapper">
-						<img class="avatar-l" src="../assets/icons/magenta-avatar.png"></img>
-					</div>
-					<div class="bio-group">
-						<div class="username"> %username% </div>
-						<div class="user-status"></div>
-						<span class="biography"> %biography%</span>
-						<span class="biography"> %rank%
-					</div>
-					<div class="vertical-menu-wrapper">
-						<button class="button-bg thin-border menu-element" type="button"> <img class="avatar-m"
-								src="../assets/icons/add-user.png" />
-						</button>
-						<button class="button-bg thin-border menu-element" type="button">
-							<img class="avatar-m" src="../assets/icons/block-user.png" />
-						</button>
-					</div>
+		<!-- <div class="flexbox-auto-col"> -->
+		<div class="bg background-border user-card">
+			<div class="user-grid">
+				<div class="avatar-wrapper-m">
+					<img src="../assets/icons/magenta-avatar.png"></img>
 				</div>
-				<div class="user-info">
-					<div class="line"> <span> Level: </span> <span> %level% </span></div>
-					<div class="line"> <span> Joined: </span> <span> %DD-MM-YYYY% </span></div>
+				<div class="bio-group">
+					<div class="username"> %username% <div class="user-status"></div>
+					</div>
+					<span class="biography"> %rank%</span>
+					<span class="biography"> %biography%</span>
 				</div>
-				<div class="horizontal-menu-wrapper">
-					<button class="thin-border menu-element button-bg" type="button"> See profile </button>
-					<button class="thin-border menu-element button-bg" type="button"> Challenge! </button>
+				<div class="vertical-menu-wrapper">
+					<button class="button-bg thin-border" type="button"> <img class="image-s"
+							src="../assets/icons/add-user.png" />
+					</button>
+					<button class="button-bg thin-border" type="button">
+						<img class="image-s" src="../assets/icons/block-user.png" />
+					</button>
 				</div>
 			</div>
-
-			<div class="bg background-border user-card">
-				<div class="user-grid">
-					<div class="avatar-wrapper">
-						<img class="avatar-l" src="../assets/icons/magenta-avatar.png"></img>
-					</div>
-					<div class="bio-group">
-						<div class="username"> %username% </div>
-						<div class="user-status"></div>
-						<span class="biography"> %biography%</span>
-						<span class="biography"> %rank%
-					</div>
-					<div class="vertical-menu-wrapper">
-						<button class="button-bg thin-border menu-element" type="button"> <img class="avatar-m"
-								src="../assets/icons/remove-user.png" />
-						</button>
-						<button class="button-bg thin-border menu-element" type="button">
-							<img class="avatar-m" src="../assets/icons/block-user.png" />
-						</button>
-					</div>
-				</div>
-				<div class="user-info">
-					<div class="line"> <span> Level: </span> <span> %level% </span></div>
-					<div class="line"> <span> Joined: </span> <span> %DD-MM-YYYY% </span></div>
-				</div>
-				<div class="horizontal-menu-wrapper">
-					<button class="thin-border menu-element button-bg" type="button"> See profile </button>
-					<button class="thin-border menu-element button-bg" type="button"> Challenge! </button>
-				</div>
+			<div class="user-info">
+				<div class="line"> <span> Level: </span> <span> %level% </span></div>
+				<div class="line"> <span> Joined: </span> <span> %DD-MM-YYYY% </span></div>
 			</div>
-
-			<div class="bg background-border user-card">
-				<div class="user-grid">
-					<div class="avatar-wrapper">
-						<img class="avatar-l" src="../assets/icons/magenta-avatar.png"></img>
-					</div>
-					<div class="bio-group">
-						<div class="username"> %username% </div>
-						<div class="user-status"></div>
-						<span class="biography"> %biography%</span>
-						<span class="biography"> %rank%
-					</div>
-					<div class="vertical-menu-wrapper">
-						<button class="button-bg thin-border menu-element" type="button">
-							<img class="avatar-m" src="../assets/icons/unblock-user.png" />
-						</button>
-					</div>
-				</div>
-				<div class="user-info">
-					<div class="line"> <span> Level: </span> <span> %level% </span></div>
-					<div class="line"> <span> Joined: </span> <span> %DD-MM-YYYY% </span></div>
-				</div>
+			<div class="horizontal-menu-wrapper">
+				<button class="thin-border button-bg" type="button"> See profile </button>
+				<button class="thin-border button-bg" type="button"> Challenge! </button>
 			</div>
 		</div>
-		<p class="title-shadow title-3"> user profile card </p>
-		<div class="flexbox-auto-col">
 
+		<div class="bg background-border user-card">
+			<div class="avatar-wrapper-m">
+				<img src="../assets/icons/magenta-avatar.png"></img>
+			</div>
+			<div class="username"> %username% <div class="user-status"></div>
+			</div>
+			<span class="biography"> %rank%</span>
+			<span class="biography"> %biography%</span>
+			<div class="vertical-menu-wrapper">
+				<button class="button-bg thin-border" type="button"> <img class="image-s"
+						src="../assets/icons/remove-user.png" />
+				</button>
+				<button class="button-bg thin-border" type="button">
+					<img class="image-s" src="../assets/icons/block-user.png" />
+				</button>
+			</div>
+			<div class="line"> <span> Level: </span> <span> %level% </span></div>
+			<div class="line"> <span> Joined: </span> <span> %DD-MM-YYYY% </span></div>
+			<div class="horizontal-menu-wrapper">
+				<button class="thin-border button-bg" type="button"> See profile </button>
+				<button class="thin-border button-bg" type="button"> Challenge! </button>
+			</div>
+		</div>
+
+		<div class="bg background-border user-card">
+			<div class="user-grid">
+				<div class="avatar-wrapper-m">
+					<img src="../assets/icons/magenta-avatar.png"></img>
+				</div>
+				<div class="bio-group">
+					<div class="username"> %username% <div class="user-status"></div>
+					</div>
+					<span class="biography"> %biography%</span>
+
+				</div>
+				<div class="vertical-menu-wrapper">
+					<button class="button-bg thin-border" type="button">
+						<img class="image-s" src="../assets/icons/unblock-user.png" />
+					</button>
+				</div>
+			</div>
+			<div class="user-info">
+				<span class="biography"> %rank%</span>
+				<div class="line"> <span> Level: </span> <span> %level% </span></div>
+				<div class="line"> <span> Joined: </span> <span> %DD-MM-YYYY% </span></div>
+			</div>
+		</div>
+		<!-- </div> -->
+
+
+		<p class="title-shadow title-3"> user profile (self-view)</p>
+		<div class="profile-page inert-border">
+			<div class="profile-header bg background-border">
+				<div class="three-rows avatar-wrapper-xl">
+					<img src="../assets/icons/light-green-avatar.png" />
+				</div>
+				<div class="username two-col"> %username% <div class="user-status"></div>
+				</div>
+				<span class="two-rows two-col">
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae aliquam mi. Aliquam vulputate
+					augue sed risus consectetur, quis auctor odio maximus. Nullam volutpat, justo eu suscipit
+					condimentum, risus metus ultrices quam, eu tempor erat tellus vitae mauris. Quisque sed odio sed
+					ipsum lacinia finibus non ac enim. Sed sagittis vel. </span>
+				<div class="two-rows vertical-menu-wrapper">
+					<button class="thin-border button-bg" type="button"> Settings </button>
+					<button class="thin-border button-bg" type="button"> Challenge! </button>
+				</div>
+				<span> </span>
+				<span> Joined: %DD-MM-YYYY% </span>
+				<span> %rank%</span>
+				<span> %level%</span>
+			</div>
 		</div>
 	</div>
-
-	<div class="profile-tabs">
-		
 	</div>
+
 </body>
 
 </html>

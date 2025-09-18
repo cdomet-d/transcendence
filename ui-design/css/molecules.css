@@ -95,7 +95,6 @@
 	width: 32px;
 }
 
-
 .profile-tabs {
 	align-items: center;
 	box-sizing: border-box;
@@ -147,23 +146,6 @@
 	justify-content: center;
 	width: var(--menu-element);
 	max-width: var(--menu-element);
-}
-
-.flexbox-auto-col {
-	box-sizing: border-box;
-	display: flex;
-	flex-wrap: wrap;
-	align-items: flex-start;
-	gap: var(--space-sm);
-}
-
-.flex-item {
-	min-width: fit-content;
-	align-items: center;
-}
-
-.flex-center {
-	justify-content: center;
 }
 
 .input-with-button {
@@ -263,12 +245,14 @@
 	flex-direction: wrap;
 	justify-content: center;
 	gap: var(--space-l);
+	padding: var(--space-sm)
 }
 
 .notif-cont {
 	width: var(--single-col);
 }
 .notification-text {
+	padding: var(--space-sm);
 	width: fit-content;
 	position: relative;
 }
@@ -307,8 +291,8 @@
 
 .unread-notification {
 	position: absolute;
-	top:24px;
-	right:24px;
+	top:8px;
+	right:8px;
 	display:flex;
 	align-items: center;
 	justify-content: center;

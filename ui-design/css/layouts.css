@@ -1,0 +1,63 @@
+@import url(./variables.css);
+
+.card {
+	box-sizing: border-box;
+	width: auto;
+	display: grid;
+	grid-template-columns: auto;
+	gap: var(--space-m);
+}
+
+.block {
+	box-sizing: border-box;
+	display: grid;
+	gap: var(--space-m);
+	grid-template-columns: 1fr;
+	grid-auto-rows: max-content;
+}
+
+.block-two-col {
+	box-sizing: border-box;
+	display: grid;
+	gap: var(--space-s) var(--space-s);
+	grid-template-columns: 1fr 1fr;
+}
+
+.input-grid {
+	box-sizing: border-box;
+	grid-template-columns: 1fr;
+	grid-auto-rows: var(--m);
+	grid-auto-columns: 100%;
+	display: grid;
+	gap: var(--space-s);
+	align-items: center;
+	justify-items: center;
+}
+
+.block-two-col>p {
+	margin: 0px;
+	padding: 0px;
+}
+
+.form-group {
+	box-sizing: border-box;
+	position: relative;
+	min-width: fit-content;
+}
+
+.flexbox-auto-col {
+	box-sizing: border-box;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: var(--space-sm);
+}
+
+.flex-item {
+	min-width: fit-content;
+	align-items: center;
+}
+
+.flex-center {
+	justify-content: center;
+}
