@@ -23,7 +23,7 @@
 	--avatar-m: 4rem;
 	--avatar-l: 5rem;
 	--avatar-xl: 9rem;
-	--avatar-xxl: 12rem;
+	--avatar-xxl: 11rem;
 
 	--space-xs: 0.25rem;
 	--space-s: 0.5rem;
@@ -34,9 +34,11 @@
 	--space-xl: 4rem;
 
 	--body-margin: 2.03rem;
-	--menu-element: 12rem;
-	--single-col: 26.875rem;
-	--double-col: 55.25rem;
+	--menu-element: 10vw;
+	--single-col: 27rem;
+	--double-col: 46.042rem;
+	/* --single-col: 22.396vw;
+	--double-col: 46.042rem; */
 
 	--br: 10px;
 

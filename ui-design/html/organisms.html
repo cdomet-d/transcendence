@@ -9,18 +9,17 @@
 <body>
 	<div class="card">
 		<p class="title-shadow title-3"> user profile card </p>
-		<!-- <div class="flexbox-auto-col"> -->
-		<div class="bg background-border user-card">
-			<div class="user-grid">
+		<div class="flexbox-auto-col">
+			<div class="bg background-border user-card">
 				<div class="avatar-wrapper-m">
 					<img src="../assets/icons/magenta-avatar.png"></img>
 				</div>
-				<div class="bio-group">
-					<div class="username"> %username% <div class="user-status"></div>
-					</div>
-					<span class="biography"> %rank%</span>
-					<span class="biography"> %biography%</span>
+				<div class="username"> %username% <div class="user-status"></div>
 				</div>
+				<span class="rank title-shadow"> %NB% </span>
+				<span class="two-col biography">
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. In venenatis venenatis consequat. Maecenas
+					eros elit, placerat a venenatis at odio. </span>
 				<div class="vertical-menu-wrapper">
 					<button class="button-bg thin-border" type="button"> <img class="image-s"
 							src="../assets/icons/add-user.png" />
@@ -29,65 +28,55 @@
 						<img class="image-s" src="../assets/icons/block-user.png" />
 					</button>
 				</div>
+				<div class="three-col horizontal-menu-wrapper">
+					<button class="thin-border button-bg" type="button"> See profile </button>
+					<button class="thin-border button-bg" type="button"> Challenge! </button>
+				</div>
 			</div>
-			<div class="user-info">
-				<div class="line"> <span> Level: </span> <span> %level% </span></div>
-				<div class="line"> <span> Joined: </span> <span> %DD-MM-YYYY% </span></div>
-			</div>
-			<div class="horizontal-menu-wrapper">
-				<button class="thin-border button-bg" type="button"> See profile </button>
-				<button class="thin-border button-bg" type="button"> Challenge! </button>
-			</div>
-		</div>
 
-		<div class="bg background-border user-card">
-			<div class="avatar-wrapper-m">
-				<img src="../assets/icons/magenta-avatar.png"></img>
-			</div>
-			<div class="username"> %username% <div class="user-status"></div>
-			</div>
-			<span class="biography"> %rank%</span>
-			<span class="biography"> %biography%</span>
-			<div class="vertical-menu-wrapper">
-				<button class="button-bg thin-border" type="button"> <img class="image-s"
-						src="../assets/icons/remove-user.png" />
-				</button>
-				<button class="button-bg thin-border" type="button">
-					<img class="image-s" src="../assets/icons/block-user.png" />
-				</button>
-			</div>
-			<div class="line"> <span> Level: </span> <span> %level% </span></div>
-			<div class="line"> <span> Joined: </span> <span> %DD-MM-YYYY% </span></div>
-			<div class="horizontal-menu-wrapper">
-				<button class="thin-border button-bg" type="button"> See profile </button>
-				<button class="thin-border button-bg" type="button"> Challenge! </button>
-			</div>
-		</div>
-
-		<div class="bg background-border user-card">
-			<div class="user-grid">
+			<div class="bg background-border user-card">
 				<div class="avatar-wrapper-m">
 					<img src="../assets/icons/magenta-avatar.png"></img>
 				</div>
-				<div class="bio-group">
-					<div class="username"> %username% <div class="user-status"></div>
-					</div>
-					<span class="biography"> %biography%</span>
-
+				<div class="username"> %username% <div class="user-status"></div>
 				</div>
+				<span class="rank title-shadow"> %NB% </span>
+				<span class="two-col biography">
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. In venenatis venenatis consequat. Maecenas
+					eros elit, placerat a venenatis at odio. </span>
+				<div class="vertical-menu-wrapper">
+					<button class="button-bg thin-border" type="button"> <img class="image-s"
+							src="../assets/icons/remove-user.png" />
+					</button>
+					<button class="button-bg thin-border" type="button">
+						<img class="image-s" src="../assets/icons/block-user.png" />
+					</button>
+				</div>
+				<div class="three-col horizontal-menu-wrapper">
+					<button class="thin-border button-bg" type="button"> See profile </button>
+					<button class="thin-border button-bg" type="button"> Challenge! </button>
+				</div>
+			</div>
+			<div class="bg background-border user-card">
+				<div class="avatar-wrapper-m">
+					<img src="../assets/icons/magenta-avatar.png"></img>
+				</div>
+				<div class="username"> %username% <div class="user-status"></div>
+				</div>
+				<span class="rank title-shadow"> %NB% </span>
+				<span class="two-col error-message">
+					This user is blocked. Unblock them to see their profile! </span>
 				<div class="vertical-menu-wrapper">
 					<button class="button-bg thin-border" type="button">
 						<img class="image-s" src="../assets/icons/unblock-user.png" />
 					</button>
 				</div>
-			</div>
-			<div class="user-info">
-				<span class="biography"> %rank%</span>
-				<div class="line"> <span> Level: </span> <span> %level% </span></div>
-				<div class="line"> <span> Joined: </span> <span> %DD-MM-YYYY% </span></div>
+				<div class="three-col horizontal-menu-wrapper">
+					<button class="thin-border bg-disabled" type="button" disabled="disabled"> See profile </button>
+					<button class="thin-border bg-disabled" type="button" disabled="disabled"> Challenge! </button>
+				</div>
 			</div>
 		</div>
-		<!-- </div> -->
 
 
 		<p class="title-shadow title-3"> user profile (self-view)</p>
@@ -108,8 +97,7 @@
 					<button class="thin-border button-bg" type="button"> Challenge! </button>
 				</div>
 				<span> </span>
-				<span> Joined: %DD-MM-YYYY% </span>
-				<span> %rank%</span>
+				<span> Joined: %DD-MM-YYYY% </span>rankn> %NB%</span>
 				<span> %level%</span>
 			</div>
 		</div>

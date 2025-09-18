@@ -368,6 +368,7 @@ button {
 	font-size: var(--regular);
 }
 
+
 button:hover {
 	transform: scale3d(1, 1.05, 1);
 }
@@ -376,16 +377,9 @@ button:active {
 	transform: scale3d(1, 1, 1);
 }
 
-.dis-av-wrap {
-	width: 9rem;
-	height: 9rem;
-	border: solid 1px var(--shadow-yellow);
-	justify-content: center;
-	align-items: center;
-	overflow: hidden;
-	border-radius: 80px;
-	padding: var(--space-s);
-	display: flex;
+button:disabled {
+	transform: none;
+	cursor: not-allowed;
 }
 
 .avatar-wrapper-s {
