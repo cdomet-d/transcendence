@@ -11,29 +11,27 @@ import type { FastifyInstance } from 'fastify';
 import { wsRoute } from './routes/websocket.js';
 import { options } from './serv.conf.js'
 import { natsSubscribtion } from './subscriber.js';
+import { GameRegistry } from './classes/gameRegistry.class.js';
 /***********************************************/
 
 // const __filename = fileURLToPath(import.meta.url);
 // export const __dirname = path.dirname(__filename);
 
-main();
-
-async function main() {
-	try {
-		const serv = init();
-		await serv.ready();
-		await runServ(serv);
-		natsSubscribtion();
-	} catch (err) {
-		console.error('server', err);
-		process.exit(1);
-	}
+try {
+	const serv = init();
+	await serv.ready();
+	await runServ(serv);
+	natsSubscribtion();
+} catch (err) {
+	console.error('server', err);
+	process.exit(1);
 }
 
 //init server
 function init(): FastifyInstance {
 	const serv: FastifyInstance = Fastify(options);
 	addPlugins(serv);
+	//TODO: figure out how to add a Game object which is accessible by the handlers
 	return (serv);
 }
 
