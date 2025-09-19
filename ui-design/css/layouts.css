@@ -1,25 +1,26 @@
 @import url(./variables.css);
 
 body {
-	margin: var(--body-margin);
+	width:var(--full-width);
+	margin: var(--body-margin) auto var(--body-margin) auto;
 	/* margin:0; */
 }
 
 .vertical-spacing {
 	display: grid;
 	box-sizing: border-box;
-	gap: var(--space-m);
+	gap: var(--space-xs);
 }
 
 .sidebar-and-content {
 	width:var(--full-width);
+	box-sizing: border-box;
 	display: grid;
 	/* place-items: center; */
 	grid-auto-flow: column;
-	grid-template-columns: 36.66vw 59.33vw;
-	/* grid-template-columns: 1fr 1fr; */
+	grid-template-columns: var(--percent-sidebar) var(--percent-content);
 	grid-template-rows: var(--l);
-	gap: var(--space-sm);
+	gap: 1.18%;
 }
 
 .sidebar {
@@ -42,7 +43,6 @@ body {
 }
 
 .full-screen-element {
-	width: var(--full-width);
 	box-sizing: border-box;
 }
 
