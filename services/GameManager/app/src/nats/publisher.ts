@@ -10,7 +10,7 @@ export async function natsPublish() {
   const sc = StringCodec();
 
   nc.publish('pregame.local.2players.create', sc.encode('Waiting for GameCreation...'));
-  console.log(`Published message to "pregame.local.2players.create"`);
+  // console.log(`Published message to "pregame.local.2players.create"`);
 
   await nc.flush();
   await nc.drain();

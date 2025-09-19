@@ -13,7 +13,6 @@ try {
 	addPlugins(serv);
 	await serv.ready();
 	runServ(serv);
-	natsSubscribe();
 } catch (err) {
 	console.error('server error:', err);
 	process.exit(1);

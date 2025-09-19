@@ -1,4 +1,4 @@
-import { wsHandler } from '../handlers/websocket.js'
+import { wsHandler } from '../handlers/wsHandler.js'
 import type { FastifyPluginCallback } from 'fastify';
 
 // const opts = {

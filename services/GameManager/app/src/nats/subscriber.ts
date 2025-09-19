@@ -10,21 +10,20 @@ export async function natsSubscribe() {
   const pregame = nc.subscribe('pregame.local.2players.ready');
   (async () => {
     for await (const msg of pregame) {
-      console.log(`Received message: ${sc.decode(msg.data)}`);
+      // console.log(`Received message: ${sc.decode(msg.data)}`);
       nc.publish('game.ready');
-      console.log(`SENT "game.ready"`);
+      // console.log(`SENT "game.ready"`);
     }
   })();
 
     const game = nc.subscribe('game.waiting');
   (async () => {
     for await (const msg of game) {
-      console.log(`Received message: ${sc.decode(msg.data)}`);
+      // console.log(`Received message: ${sc.decode(msg.data)}`);
       // SIGNAL CLIENT AND CLOSE WS
-      console.log(`\nMATCH READY\n we can CLOSE client WS`);
+      // console.log(`\nMATCH READY\n we can CLOSE client WS`);
     }
   })();
-
 
   console.log(`Listening for messages on "pregame.local.2players.ready"...`);
 };

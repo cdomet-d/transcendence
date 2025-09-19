@@ -16,17 +16,17 @@ function wsRequest() {
         if (opponentBtn &&  ws.readyState === WebSocket.OPEN) {
             opponentBtn.addEventListener('click', () => {
                 const message = JSON.stringify({
-                    "event": "GAME_REQUEST_FORM",
-                    "payload": {
-                        "format": "quickMatch",
-                        "remote": "false",
-                        "players": "2",
-                        "userID": "1",
-                        "username": "sam"
+                    event: "GAME_REQUEST_FORM",
+                    payload: {
+                        format: "quickMatch",
+                        remote: "false",
+                        players: "2",
+                        userID: "1",
+                        username: "sam"
                     }
                 });
                 ws.send(message);
-                console.log("SENT GAME FORM TO BACK")
+                console.log("SENT GAME FORM")
             });
         }
     }

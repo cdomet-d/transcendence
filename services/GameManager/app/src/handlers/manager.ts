@@ -1,8 +1,9 @@
 import type { WebSocket } from '@fastify/websocket';
 
-interface payload {
-    format: string,
+interface requestForm {
+    format: "quick" | "tournament",
     remote: boolean,
+    players: number
     username: string,
     userID: number
 }
@@ -13,14 +14,14 @@ interface userInfo {
 }
 
 interface matchInfo {
-    format: string,
+    format: "quick" | "tournament",
     remote: boolean,
     players: number
 }
 
 interface match {
     matchID: number,
-    format: string,
+    format: "quick" | "tournament",
     remote: boolean,
     users: userInfo[],
     players: number,
@@ -29,12 +30,30 @@ interface match {
     loser: userInfo,
 }
 
-export function handleMatchRequest(socket: WebSocket, payload: string) {
+export function handleMatchRequest(socket: WebSocket, data: any) {
+    console.log(data.event);
+    if (data.event !== "GAME_REQUEST_FORM") {
+        // handle error;
+        console.log(data.event);
+        return;
+    }
     
-    const obj = JSON.parse(payload);
-    obj.username = "ok";
-    // getUserInfo
-    // getMatchInfo
-    // 
-    ;
+    // Decompose data
+    const { format, remote, players, userID, username } = data.payload;
+
+    const gameInfo = { format, remote, players };
+    
+    // Which subject do we publish to?
+    let nats_subject: string = "pregame." +
+    gameInfo.format + "." +
+    (gameInfo.remote === "true" ? "remote." : "local.") +
+    gameInfo.players + "." + 
+    "create";
+    
+    console.log("Publishing to `", nats_subject, " `");
+    
+    // What are we sending them?
+    const userInfo = { userID, username };
+    // const jc = JSONCodec();
+    // nc.publish(nats_subject, jc.encode(userInfo));
 }
