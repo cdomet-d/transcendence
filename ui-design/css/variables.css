@@ -5,40 +5,49 @@
 	background: linear-gradient(180deg, var(--gradient1) 0%, var(--gradient2), var(--gradient3), var(--gradient4) 100%);
 	background-repeat: no-repeat;
 	margin: 0;
+	padding: 0;
 
 	--regular: 1rem;
-	--s: 1.5rem;
-	--m: 2rem;
-	--ml: 2.5rem;
-	--l: 3rem;
-	--xl: 3.5rem;
+	--s: 1.62rem;
+	--m: 2.62rem;
+	--ml: 4.24rem;
+	--l: 6.86rem;
 
 	--image-s: 1.5rem;
-	--image-m: 3rem;
-	--image-l: 4rem;
-	--image-xl: 8rem;
-	--image-xxl: 10rem;
+	--image-m: 2.43rem;
+	--image-l: 6.36rem;
+	--image-xl: 10.29rem;
+	--image-xxl: 16.65rem;
 
 	--avatar-s: 2.5rem;
-	--avatar-m: 4rem;
-	--avatar-l: 5rem;
-	--avatar-xl: 9rem;
-	--avatar-xxl: 11rem;
+	--avatar-m: 3.43rem;
+	--avatar-l: 7.36rem;
+	--avatar-xl: 11.29rem;
+	--avatar-xxl: 17.65rem;
 
-	--space-xs: 0.25rem;
-	--space-s: 0.5rem;
-	--space-sm: 1rem;
-	--space-m: 2rem;
-	--space-ml: 3rem;
-	--space-l: 3.5rem;
-	--space-xl: 4rem;
+	--nspace-xs: -0.25rem;
+	--nspace-s: -0.5rem;
+	--nspace-sm: -11.29rem;
+	--nspace-m: -16.65rem;
 
-	--body-margin: 2.03rem;
-	--menu-element: 10vw;
-	--single-col: 27rem;
-	--double-col: 46.042rem;
-	/* --single-col: 22.396vw;
-	--double-col: 46.042rem; */
+	--space-xs: 0.5rem;
+	--space-s: 0.81rem;
+	--space-sm: 1.31rem;
+	--space-m: 2.12rem;
+	--space-ml: 3.43rem;
+	--space-l: 5.55rem;
+	--space-xl: 8.98rem;
+
+	--body-margin: 2vw;
+
+	--percent-menu-element: 14.38%;
+	--percent-sidebar: 31.2%;
+	--percent-content: 61.8%;
+
+	--menu-element: 16.22em;
+	--sidebar: 42.47em;
+	--content: 68.72em;
+	--full-width: 96vw;
 
 	--br: 10px;
 
@@ -55,7 +64,7 @@
 
 	--highlight-orange: #EE881C;
 	--orange: #BC6511;
-	--shadow-orange: #7A3703;
+	--shadow-orange: #9a4a0d;
 
 	--highlight-red: #E37248;
 	--red: #AA4926;

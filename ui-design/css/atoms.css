@@ -18,10 +18,6 @@
 	}
 }
 
-body {
-	margin: var(--body-margin);
-}
-
 h1,
 h2,
 h3,
@@ -56,12 +52,6 @@ li {
 	list-style: none;
 }
 
-.body-background {
-	margin-left: var(--space-m);
-	height: var(--xxl);
-	width: auto;
-}
-
 .swatch {
 	position: relative;
 	margin-left: var(--space-m);
@@ -81,7 +71,7 @@ li {
 	color: var(--yellow);
 	font-family: PixelOperator;
 	text-align: center;
-	font-size: var(--xl);
+	font-size: var(--l);
 	line-height: 130%;
 }
 
@@ -89,7 +79,7 @@ li {
 	color: var(--yellow);
 	font-family: PixelOperator;
 	text-align: center;
-	font-size: var(--l);
+	font-size: var(--m);
 	line-height: 110%;
 }
 
@@ -97,15 +87,8 @@ li {
 	color: var(--yellow);
 	font-family: PixelOperator;
 	text-align: center;
-	font-size: var(--m);
-	line-height: 110%;
-}
-
-.title-4 {
-	color: var(--yellow);
-	text-align: center;
 	font-size: var(--s);
-	line-height: 100%;
+	line-height: 110%;
 }
 
 .blockcode {
@@ -176,7 +159,7 @@ input[type=range]::-moz-range-thumb {
 	box-sizing: border-box;
 	position: relative;
 	display: block;
-	width: var(--l);
+	width: var(--m);
 	height: var(--s);
 	border: none;
 }
@@ -192,7 +175,7 @@ input[type=range]::-moz-range-thumb {
 
 .radio-container>input:checked~.radio-checkmark {
 	position: absolute;
-	left: var(--s);
+	left: 50%;
 }
 
 .radio-checkmark {
@@ -239,8 +222,8 @@ input[type=range]::-moz-range-thumb {
 	box-sizing: border-box;
 	position: absolute;
 	cursor: pointer;
-	top: 4px;
-	left: 4px;
+	top: 4.54px;
+	left: 4.6px;
 	width: 65%;
 	height: 65%;
 	background-color: var(--orange);

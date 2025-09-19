@@ -1,7 +1,6 @@
 @import url(./atoms.css);
 
 .bg {
-	box-sizing: border-box;
 	background: linear-gradient(180deg,
 			#F9ECCE 0 10%,
 			#FAF0D8 0 20%,

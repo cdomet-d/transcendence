@@ -117,7 +117,6 @@
 }
 
 .horizontal-menu-wrapper {
-	min-width: fit-content;
 	align-items: center;
 	box-sizing: border-box;
 	display: grid;
@@ -130,7 +129,6 @@
 }
 
 .vertical-menu-wrapper {
-	min-width: fit-content;
 	align-items: center;
 	box-sizing: border-box;
 	display: grid;
@@ -143,12 +141,13 @@
 
 .menu-element {
 	background-color: transparent;
+	width: var(--menu-element);
+	min-width: var(--menu-element);
+	max-width: var(--menu-element);
 	box-sizing: border-box;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: var(--menu-element);
-	max-width: var(--menu-element);
 }
 
 .input-with-button {
@@ -158,7 +157,7 @@
 	grid-template-columns: 1.5fr 0.5fr;
 	grid-auto-rows: var(--m);
 	gap: var(--space-s) var(--space-sm);
-	width: var(--single-col);
+	width: var(--sidebar);
 }
 
 .input-with-button>span {
@@ -175,7 +174,7 @@
 
 .search-result {
 	min-width: fit-content;
-	width: var(--single-col);
+	width: var(--sidebar);
 	box-sizing: border-box;
 	display: grid;
 	grid-template-columns: 1fr;
@@ -238,7 +237,7 @@
 }
 
 .popup>.horizontal-menu-wrapper {
-	width: var(--single-col);
+	width: var(--sidebar);
 }
 
 .popup>.title-and-paragraph>p {
@@ -256,7 +255,7 @@
 }
 
 .notif-cont {
-	width: var(--single-col);
+	width: var(--sidebar);
 }
 .notification-text {
 	margin-right: 20px ;

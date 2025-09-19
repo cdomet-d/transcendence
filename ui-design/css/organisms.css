@@ -1,13 +1,13 @@
 @import url(./variables.css);
 
 .user-card {
-	width: var(--single-col);
+	width: var(--sidebar);
 	box-sizing: border-box;
 	padding: var(--space-sm);
 	display: grid;
-	grid-template-columns: var(--avatar-m) 1fr var(--space-xl);
-	grid-template-rows:  var(--avatar-m) 1fr var(--m);
-	gap: var(--space-xs) var(--space-s);
+	grid-template-columns: var(--avatar-m) 1fr 1fr var(--space-xl);
+	grid-template-rows: var(--avatar-m) 1fr var(--m);
+	gap: var(--space-s) var(--space-s);
 	align-items: center;
 }
 
@@ -16,9 +16,14 @@
 }
 
 .rank {
+	box-sizing: border-box;
+	padding: var(--space-s);
 	font-size: var(--m);
 	color: var(--yellow);
+	display: grid;
+	place-items: center;
 }
+
 .username {
 	font-size: var(--m);
 	line-height: 100%;
@@ -51,22 +56,44 @@
 }
 
 .profile-page {
-	min-width: fit-content;
-	width: 65vw;
+	width: var(--triple-col);
 	box-sizing: border-box;
-	padding: var(--space-m);
+	padding: var(--space-l);
+	position: relative;
+	z-index: 0;
+}
+
+.profile-header::after {
+	content: '';
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: var(--nspace-xs);
+	bottom: var(--nspace-xs);
+	background-color: var(--shadow-1);
+	z-index: -1;
+	box-shadow:
+		-2px -2px var(--shadow-1),
+		-2px 2px var(--shadow-1),
+		2px -2px var(--shadow-1),
+		2px 2px var(--shadow-1),
+		-4px 0 0 0 var(--shadow-1),
+		4px 0 0 0 var(--shadow-1),
+		0 -4px 0 0 var(--shadow-1),
+		0 4px 0 0 var(--shadow-1);
 }
 
 .profile-header {
+	box-sizing: border-box;
 	padding: var(--space-m);
 	position: relative;
 	display: grid;
-	grid-template-columns: var(--image-xxl) 1fr 1fr var(--menu-element);
+	grid-template-columns: var(--image-xxl) 1fr var(--menu-element);
 	grid-template-rows: 1fr 1fr 1fr 1fr;
 	justify-content: space-around;
 	align-items: center;
 	justify-items: center;
-	gap: var(--space-xs) var(--space-m);
+	gap: var(--space-xs) var(--space-xs);
 }
 
 .profile-header>.vertical-menu-wrapper {

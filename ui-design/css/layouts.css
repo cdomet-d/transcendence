@@ -1,15 +1,52 @@
 @import url(./variables.css);
 
-.card {
-	box-sizing: border-box;
-	width: auto;
+body {
+	margin: var(--body-margin);
+	/* margin:0; */
+}
+
+.vertical-spacing {
 	display: grid;
-	grid-template-columns: auto;
+	box-sizing: border-box;
 	gap: var(--space-m);
 }
 
-.block {
+.sidebar-and-content {
+	width:var(--full-width);
+	display: grid;
+	/* place-items: center; */
+	grid-auto-flow: column;
+	grid-template-columns: 36.66vw 59.33vw;
+	/* grid-template-columns: 1fr 1fr; */
+	grid-template-rows: var(--l);
+	gap: var(--space-sm);
+}
+
+.sidebar {
+	background-color: red;
+	height: 100%;
+	width: 100%;
+}
+
+.content {
+	background-color: green;
+	height: 100%;
+	width: 100%;
+}
+
+.fullscreen {
+	display: grid;
+	grid-template-columns: var(--full-width);
+	background-color: green;
+	height: var(--l);
+}
+
+.full-screen-element {
+	width: var(--full-width);
 	box-sizing: border-box;
+}
+
+.block {
 	display: grid;
 	gap: var(--space-m);
 	grid-template-columns: 1fr;
@@ -61,3 +98,4 @@
 .flex-center {
 	justify-content: center;
 }
+
