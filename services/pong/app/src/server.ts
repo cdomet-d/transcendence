@@ -21,7 +21,7 @@ try {
 	const serv = init();
 	await serv.ready();
 	await runServ(serv);
-	natsSubscribtion();
+	// natsSubscribtion(serv.gameRegistry);
 } catch (err) {
 	console.error('server', err);
 	process.exit(1);
@@ -30,8 +30,8 @@ try {
 //init server
 function init(): FastifyInstance {
 	const serv: FastifyInstance = Fastify(options);
+	serv.decorate("gameRegistry", new GameRegistry());
 	addPlugins(serv);
-	//TODO: figure out how to add a Game object which is accessible by the handlers
 	return (serv);
 }
 
