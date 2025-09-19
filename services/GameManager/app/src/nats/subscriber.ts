@@ -21,7 +21,7 @@ export async function natsSubscribe() {
     for await (const msg of game) {
       console.log(`Received message: ${sc.decode(msg.data)}`);
       // SIGNAL CLIENT AND CLOSE WS
-      console.log(`\nMATCH READY\n\nCLOSE CLIENT WS`);
+      console.log(`\nMATCH READY\n we can CLOSE client WS`);
     }
   })();
 

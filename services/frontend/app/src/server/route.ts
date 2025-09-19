@@ -34,6 +34,7 @@ const servRoutes: FastifyPluginCallback = function (serv, options, done) {
     serv.get('/game/leaderboard', handler);
     serv.get('/game/tournament', handler);
     serv.get('/game/match', handler);
+    serv.get('/game/menu', handler);
     done();
 }
 

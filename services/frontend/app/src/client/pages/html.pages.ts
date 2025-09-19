@@ -23,11 +23,11 @@ export function renderCentral(): string {
 	return renderPageTemplate({
 		title: translate('CENTRAL'),
 		nextButtons: [
-		{ href: "/game/tournament", label: translate('Tournament') },
-		{ href: "/quickMatch", label: translate('Quick Match') },
-		{ href: "/account", label: translate('Profile') },
-		{ href: "/game/leaderboard", label: translate('Leaderboard') },
-		{ href: "/game/match", label: translate('Game') },
+			{ href: "/game/tournament", label: translate('Tournament') },
+			{ href: "/game/menu", label: translate('Menu') },
+			{ href: "/account", label: translate('Profile') },
+			{ href: "/game/leaderboard", label: translate('Leaderboard') },
+			{ href: "/game/match", label: translate('Game') },
 		],
 		backHref: "/",
 		showBack: true,
@@ -85,6 +85,23 @@ export function renderGame(): string {
 			class="mt-4 py-3 px-8 rounded-full border-1 border-black bg-gradient-to-br from-[#ffcc00] to-[#ea9800] shadow-md hover:scale-105 transition-all text-white text-lg font-semibold">
 			Back
 			</a>
+		</div>
+	`;
+	return html;
+}
+
+export function renderGameMenu(): string {
+	let html: string = `
+		<div class="relative min-h-screen flex flex-col items-center justify-center">
+		    <button id="look-opponent-btn"
+			class="py-3 px-8 rounded-full border border-black bg-gradient-to-br from-blue-500 to-blue-700 shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
+		        Find opponent
+		    </button>
+
+		    <a href="/central" data-link id="back-btn"
+			class="absolute bottom-8 left-1/2 transform -translate-x-1/2 py-3 px-8 rounded-full border border-black bg-gradient-to-br from-[#ffcc00] to-[#ea9800] shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
+		        Back
+		    </a>
 		</div>
 	`;
 	return html;
