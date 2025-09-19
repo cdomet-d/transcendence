@@ -4,23 +4,27 @@ type gameMap = Map< number, Game >;
 
 export class GameRegistry {
     /*                             PROPERTIES                                */
-	#games_: gameMap;
+	#_games: gameMap;
 
     /*                            CONSTRUCTORS                               */
 	constructor() {
-		this.#games_ = new Map();
+		this.#_games = new Map();
 	}
 
     /*                              METHODS                                  */
 	public addGame(newGame: Game) {
-		this.#games_.set(newGame.gameID, newGame);
+		this.#_games.set(newGame.gameID, newGame);
 	}
 
 	public deleteGame(gameID: number) {
-		this.#games_.delete(gameID);
+		this.#_games.delete(gameID);
 	}
 
 	public findGame(gameID: number): Game | undefined {
-		return this.#games_.get(gameID);
+		return this.#_games.get(gameID);
+	}
+
+	get games() {
+		return this.#_games;
 	}
 }
