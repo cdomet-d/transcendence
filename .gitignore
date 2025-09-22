@@ -8,6 +8,5 @@ node_modules/
 server.log
 nats.log
 dist/
-style-dist.css
-package*.json
-.env
+output.css
+package-lock.json

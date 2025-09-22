@@ -1,18 +1,27 @@
 // import fsp from 'fs/promises';
 import type { FastifyPluginCallback } from 'fastify';
 import type { FastifyRequest, FastifyReply } from 'fastify';
+import { buildHtmlPage } from './build.html.js';
+import { setLangVars } from '../client/scripts/language/translation.js'
 
-async function handler(req: FastifyRequest, rep: FastifyReply) {
-    // try {
-    //     const script = await fsp.readFile("/app/src/client/index.html");
-    //     rep.header('Content-Type', 'text/html');
-    //     rep.send(script);
-    // }
-    // catch (err) {
-    //     const error = err as NodeJS.ErrnoException;
-    //     rep.code(500).send(error.message);
-    // }
-    rep.html(); //for vite
+function initLanguageSSR(req: FastifyRequest) {
+    let savedLang: string | undefined = req.cookies.lang;
+    if (!savedLang)
+        savedLang = "en";
+    setLangVars(savedLang);
+}
+
+function handler(req: FastifyRequest, rep: FastifyReply) {
+    initLanguageSSR(req);
+    const url: string | undefined = req.routeOptions.url;
+    if (!url) {
+        rep.callNotFound();
+        return;
+    }
+    const html = buildHtmlPage(url);
+    rep.header('Content-Type', 'text/html');
+    rep.send(html);
+    // rep.html(); //for vite
 }
 
 const servRoutes: FastifyPluginCallback = function (serv, options, done) {
