@@ -3,7 +3,7 @@ import { connect, StringCodec } from 'nats';
 
 dotenv.config();
 
-export async function natsPublish() {
+export async function natsConnect() {
 
   let token = process.env.NATS_SERVER_TOKEN;
   const nc = await connect({ servers: "nats://nats-server:4222", token: token ?? ""});

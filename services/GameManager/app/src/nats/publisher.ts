@@ -1,17 +1,26 @@
 import dotenv from 'dotenv';
 import { connect, StringCodec } from 'nats';
+import type { NatsConnection } from 'nats';
 
 dotenv.config();
 
-export async function natsPublish() {
+let nc: NatsConnection | undefined;
 
-  let token = process.env.NATS_SERVER_TOKEN;
-  const nc = await connect({ servers: "nats://nats-server:4222", token: token ?? ""});
+export async function natsConnect(): Promise<NatsConnection> {
+  if (!nc) {
+    let token = process.env.NATS_SERVER_TOKEN;
+    nc = await connect({ servers: "nats://nats-server:4222", token: token ?? ""});
+  }
+  return nc;
+};
+
+export async function natsPublish(subject: string, data: string) {
+  
+  const connection: NatsConnection = await natsConnect();
   const sc = StringCodec();
 
-  nc.publish('pregame.local.2players.create', sc.encode('Waiting for GameCreation...'));
-  // console.log(`Published message to "pregame.local.2players.create"`);
+  connection.publish(subject, sc.encode(data));
 
-  await nc.flush();
-  await nc.drain();
-};
+  // await connection.flush();
+  // await connection.drain();
+}

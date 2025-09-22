@@ -15,13 +15,22 @@ Objects:
 
 
 PreGame -> NATS:
-game.local.2players.create
-game.local.4players.create
-game.local.8players.create
+game.   quick.local.2         .create
+game.   tournament.remote.4   .create
+game.   quick.local.8         .create
 
-game.remote.2players.create
-game.remote.4players.create
-game.remote.8players.create
+game.quick.remote.2players.create
+game.tournament.remote.4players.create
+game.tournament.remote.8players.create
+
+
+           ||local  |remote |
+-----------------------------
+quick      || 1vs1  | 1vs1  |
+-----------------------------
+tournament || 2/4/8 | 2/4/8 |
+-----------------------------
+
 
 
 PreGame -> Game:
@@ -30,7 +39,6 @@ game.start
         match:
         -   matchID
         -   tournamentID <!-- 0 if quick match -->
-        -   score
         -   local: bool
         -   users[]:
             -   user1:
@@ -39,6 +47,7 @@ game.start
             -   user2:
                 -   username
                 -   userID
+        -   score 
         -   winner
         -   loser
     }

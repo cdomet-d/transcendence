@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { connect, StringCodec } from 'nats';
-import { natsPublish } from './publisher.js';
+import { natsConnect } from './publisher.js';
 
 export async function natsSubscribe() {
   let token = process.env.NATS_SERVER_TOKEN;
@@ -13,7 +13,7 @@ export async function natsSubscribe() {
     for await (const msg of pregame) {
       console.log(`Received message: ${sc.decode(msg.data)}`);
   	  // RESPOND THAT GAME IS READY
-      natsPublish();
+      natsConnect();
     }
   })();
 

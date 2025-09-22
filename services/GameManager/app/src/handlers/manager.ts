@@ -1,4 +1,5 @@
 import type { WebSocket } from '@fastify/websocket';
+import { natsPublish } from '../nats/publisher.js';
 
 interface requestForm {
     format: "quick" | "tournament",
@@ -21,10 +22,10 @@ interface matchInfo {
 
 interface match {
     matchID: number,
-    format: "quick" | "tournament",
+    tournamentID: number,
+    // format: "quick" | "tournament",
     remote: boolean,
     users: userInfo[],
-    players: number,
     score: string,
     winner: userInfo,
     loser: userInfo,
@@ -54,6 +55,6 @@ export function handleMatchRequest(socket: WebSocket, data: any) {
     
     // What are we sending them?
     const userInfo = { userID, username };
-    // const jc = JSONCodec();
-    // nc.publish(nats_subject, jc.encode(userInfo));
+    
+    natsPublish(nats_subject, JSON.stringify(userInfo));
 }

@@ -5,7 +5,7 @@ import type { FastifyInstance } from 'fastify';
 
 import { wsRoute } from './routes/wsRoute.js';
 import { options } from './serv.conf.js'
-import { natsPublish } from './nats/publisher.js';
+import { natsConnect } from './nats/publisher.js';
 import { natsSubscribe } from './nats/subscriber.js';
 
 try {
@@ -36,5 +36,5 @@ function runServ(serv: FastifyInstance): void {
 			.catch((err) => { throw err; });
 	
 	natsSubscribe();
-	natsPublish();
+	natsConnect();
 }
