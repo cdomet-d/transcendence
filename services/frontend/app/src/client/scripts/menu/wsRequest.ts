@@ -26,7 +26,7 @@ function wsRequest() {
                     }
                 });
                 ws.send(message);
-                console.log("SENT GAME FORM")
+                console.log("1")
             });
         }
     }

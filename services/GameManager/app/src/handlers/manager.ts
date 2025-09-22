@@ -55,6 +55,8 @@ export function handleMatchRequest(socket: WebSocket, data: any) {
     
     // What are we sending them?
     const userInfo = { userID, username };
-    
-    natsPublish(nats_subject, JSON.stringify(userInfo));
+    let replySubject = nats_subject.replace("create", "ready");
+	console.log("3");
+    console.log("\nDATA SUBJECT ", replySubject, "\n\n");
+    natsPublish(nats_subject, JSON.stringify(userInfo), replySubject);
 }

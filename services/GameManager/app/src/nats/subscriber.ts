@@ -5,14 +5,13 @@ export async function natsSubscribe() {
   let token = process.env.NATS_SERVER_TOKEN;
   const nc = await connect({ servers: "nats://nats-server:4222", token: token ?? "" });
 
-  const sc = StringCodec();
-
-  const pregame = nc.subscribe('pregame.local.2players.ready');
+  const pregame = nc.subscribe('pregame.local.2.ready');
   (async () => {
-    for await (const msg of pregame) {
+    for await (const payload of pregame) {
       // console.log(`Received message: ${sc.decode(msg.data)}`);
-      nc.publish('game.ready');
-      // console.log(`SENT "game.ready"`);
+      nc.publish('game.ready', payload.data);
+      console.log(`SENT "game.ready"`);
+      console.log("7");
     }
   })();
 
@@ -21,9 +20,9 @@ export async function natsSubscribe() {
     for await (const msg of game) {
       // console.log(`Received message: ${sc.decode(msg.data)}`);
       // SIGNAL CLIENT AND CLOSE WS
-      // console.log(`\nMATCH READY\n we can CLOSE client WS`);
+      console.log(`Manager received message from MM!\n`);
     }
   })();
 
-  console.log(`Listening for messages on "pregame.local.2players.ready"...`);
+  console.log(`Listening for messages on "pregame.local.2.ready"...`);
 };

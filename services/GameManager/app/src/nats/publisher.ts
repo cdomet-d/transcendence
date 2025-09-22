@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
-import { connect, StringCodec } from 'nats';
-import type { NatsConnection } from 'nats';
+import { connect, StringCodec, type NatsConnection } from 'nats';
 
 dotenv.config();
 
@@ -14,13 +13,16 @@ export async function natsConnect(): Promise<NatsConnection> {
   return nc;
 };
 
-export async function natsPublish(subject: string, data: string) {
+export async function natsPublish(subject: string, payload: string, replySubject: string) {
   
   const connection: NatsConnection = await natsConnect();
   const sc = StringCodec();
 
-  connection.publish(subject, sc.encode(data));
+  const reply = replySubject ? { reply: replySubject} : undefined;
+  connection.publish(subject, sc.encode(payload), reply);
 
+  console.log("4");
+  console.log("SUBJECT: ", subject, "   REPLY: ", reply);
   // await connection.flush();
   // await connection.drain();
 }
