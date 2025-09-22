@@ -1,3 +1,5 @@
+import type { WebSocket } from '@fastify/websocket';
+
 interface user {
 	_username: string,
 	_userID: number,
