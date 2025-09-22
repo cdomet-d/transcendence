@@ -1,4 +1,5 @@
 import type { WebSocket } from '@fastify/websocket';
+import type { Player } from './player.class.js';
 
 interface user {
 	_username: string,
@@ -15,17 +16,17 @@ export interface gameInfo {
 	_loser: string
 }
 
-type socketMap = Map< number, WebSocket >;
+type playerTab = Array< Player >;
 
 export class Game {
     /*                             PROPERTIES                                */
 	#_gameInfo: gameInfo;
-	#_sockets: socketMap;
+	#_players: playerTab;
 
     /*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo) {
 		this.#_gameInfo = gameInfo;
-		this.#_sockets = new Map();
+		this.#_players = new Array();
 	}
 
     /*                              GETTERS                                  */
@@ -33,8 +34,8 @@ export class Game {
 		return this.#_gameInfo._gameID;
 	}
 
-	get sockets(): socketMap {
-		return this.#_sockets;
+	get players(): playerTab {
+		return this.#_players;
 	}
 
 	get local(): boolean {
@@ -55,7 +56,7 @@ export class Game {
 	}
 
     /*                              METHODS                                  */
-	public addUserSocket(userID: number, socket: WebSocket) {
-		this.#_sockets.set(userID, socket);
+	public addPlayer(player: Player) {
+		this.#_players.push(player);
 	}
 }
