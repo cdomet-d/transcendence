@@ -1,7 +1,7 @@
-import type { FastifyRequest } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
-import type { FastifyInstance } from 'fastify';
-import type { Game } from "../classes/game.class.js";
+import { Player } from "../classes/player.class.js";
+import type { Game } from '../classes/game.class.js';
 import { setUpGame } from './pong.js';
 
 function wshandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): void {
@@ -14,20 +14,28 @@ function wshandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest
 		const userID: number = Number(UserIdCookie);
 		const gameID: number = Number(GameIdCookie);
 		if (Number.isNaN(gameID) || Number.isNaN(userID))
-			throw new Error("wrong gameID"); //TODO: catch error
+			throw new Error("wrong ID"); //TODO: catch error
 
 		const game: Game | undefined = this.gameRegistry.findGame(gameID);
 		if (!game) 
 			throw new Error("game not found"); //TODO: send nats message ?
 
-		if (game.sockets.size === 2) {
-			socket.close();
-			throw new Error("not allowed");
+		if (game.players.length === 2) {
+			// socket.close();
+			throw new Error("not allowed"); //errorHandler should be called
 		}
-		game.addUserSocket(userID, socket);
 
-		if (game.local || game.sockets.size === 2)
-			setUpGame();
+		game.addPlayer(new Player(userID, socket));
+		if (game.local) {
+			const randUserIdCookie: string | undefined = req.cookies.userid;
+			const randUserId: number = Number(randUserIdCookie);
+			if (Number.isNaN(randUserId))
+				throw new Error("wrong ID");
+			game.addPlayer(new Player(randUserId, socket));
+		}
+		
+		if (game.players.length === 2)
+			setUpGame(game);
 	});
 
 	socket.on('close', () => {
