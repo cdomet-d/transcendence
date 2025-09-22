@@ -23,8 +23,4 @@ export class GameRegistry {
 	public findGame(gameID: number): Game | undefined {
 		return this.#_games.get(gameID);
 	}
-
-	get games() {
-		return this.#_games;
-	}
 }
