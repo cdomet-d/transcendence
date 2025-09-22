@@ -1,30 +1,17 @@
 import type { WebSocket } from '@fastify/websocket';
+import type { paddlePos } from '../classes/player.class.js';
+import type { Player } from '../classes/player.class.js';
 
 const WIDTH = 480;
 const HEIGHT = 270;
 const padSpeed: number = 7;
 
-interface paddlePos {
-	x: number;
-	y: number;
-}
-
-let leftPad: paddlePos = {x: 10, y: 108};
-let rightPad: paddlePos = {x: 460, y: 108};
-
-function paddlePos(socket: WebSocket, message: string) {
-    const key: string = message.slice(5, message.length);
-    if (key === "ArrowUp") {
-        up(rightPad, socket);
+export function paddlePos(player: Player, key: string) {
+    if (key === "w" || key === "ArrowUp") {
+        up(player.paddle, player.socket);
     }
-    if (key === "ArrowDown") {
-        down(rightPad, socket);
-    }
-    if (key === "w") {
-        up(leftPad, socket);
-    }
-    if (key === "s") {
-        down(leftPad, socket);
+    if (key === "s" || key === "ArrowDown") {
+        down(player.paddle, player.socket);
     }
 }
 
@@ -43,5 +30,3 @@ function down(pad: paddlePos, socket: WebSocket) {
         socket.send(pad.y.toString());
     //else
 }
-
-export { paddlePos };
