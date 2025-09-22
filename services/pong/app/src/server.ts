@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import Fastify from 'fastify'
 import websocket from '@fastify/websocket'
 import type { FastifyInstance } from 'fastify';
+import cookie from '@fastify/cookie';
 // Local modules
 import { wsRoute } from './routes/websocket.js';
 import { options } from './serv.conf.js'
@@ -39,6 +40,9 @@ function init(): FastifyInstance {
 function addPlugins(serv: FastifyInstance) {
 	serv.register(websocket);
 	serv.register(wsRoute);
+	serv.register(cookie/*, {
+						secret: "", //TODO: add secret ?
+					}*/);
 }
 
 //run server
