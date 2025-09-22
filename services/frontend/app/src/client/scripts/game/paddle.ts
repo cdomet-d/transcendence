@@ -14,7 +14,7 @@ export function createKeyDownEvent(ws: WebSocket) {
 	}
 }
 
-function updatePaddlePos(pad: game.paddelPos, key: string, ws: WebSocket, ctx: CanvasRenderingContext2D) {
+function updatePaddlePos(pad: game.paddlePos, key: string, ws: WebSocket, ctx: CanvasRenderingContext2D) {
 	ws.send(key);
 	ws.onmessage = (event) => {
 		const newPos: number = Number(event.data);

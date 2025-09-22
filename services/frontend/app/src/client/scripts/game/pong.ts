@@ -1,13 +1,13 @@
 const WIDTH = 480;
 const HEIGHT = 270;
 
-export interface paddelPos {
+export interface paddlePos {
 	x: number;
 	y: number;
 }
 
-export let leftPad: paddelPos = {x: 10, y: 108};
-export let rightPad: paddelPos = {x: 460, y: 108};
+export let leftPad: paddlePos = {x: 10, y: 108};
+export let rightPad: paddlePos = {x: 460, y: 108};
 
 function pong() {
 	const ctx = getCanvasContext();
