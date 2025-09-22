@@ -5,8 +5,8 @@
 	box-sizing: border-box;
 	padding: var(--space-sm);
 	display: grid;
-	grid-template-columns: var(--avatar-m) 1fr 1fr var(--space-xl);
-	grid-template-rows: var(--avatar-m) 1fr var(--m);
+	grid-template-columns: var(--image-cont-m) 1fr 1fr var(--space-xl);
+	grid-template-rows: var(--image-cont-m) 1fr var(--m);
 	gap: var(--space-s) var(--space-s);
 	align-items: center;
 }

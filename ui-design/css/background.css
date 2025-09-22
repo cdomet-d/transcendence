@@ -190,8 +190,8 @@
 			#ffca5f 0 80%,
 			#ffc652 0 90%,
 			#ffc245 0 100%);
-	border-top: 2.1px solid var(--highlight-yellow);
-	border-bottom: 2.1px solid var(--highlight-yellow);
+	border-top: 2px solid var(--highlight-yellow);
+	border-bottom: 2px solid var(--highlight-yellow);
 }
 
 .button-bg:active,

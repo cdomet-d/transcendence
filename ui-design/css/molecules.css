@@ -141,9 +141,8 @@
 
 .menu-element {
 	background-color: transparent;
-	width: var(--menu-element);
-	min-width: var(--menu-element);
-	max-width: var(--menu-element);
+	width: 10.27vw;
+	min-width: 3.75rem;
 	box-sizing: border-box;
 	display: flex;
 	align-items: center;
@@ -207,25 +206,6 @@
 
 .user-search-result>p>a {
 	text-decoration: none;
-}
-
-.content-center-outer-div {
-	min-width: fit-content;
-	width: 100%;
-	align-items: center;
-	box-sizing: border-box;
-	display: grid;
-	grid-template-columns: 1fr;
-	justify-items: center;
-	z-index: 2;
-}
-
-.content-center-inner-div {
-	padding: var(--space-l);
-	width: 75%;
-	display: grid;
-	box-sizing: border-box;
-	grid-template-columns: 1fr;
 }
 
 .popup {

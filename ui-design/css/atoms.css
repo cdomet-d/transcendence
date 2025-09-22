@@ -24,47 +24,40 @@ h3,
 h4,
 h5,
 h6 {
-	margin: 0px 0px 0px 0px;
-	padding: 0px 0px 0px 0px;
+	margin:0;
+	padding:0;
 	font-family: PixelOperator;
 }
 
 p,
 span {
-	margin: 0px 0px 0px 0px;
-	padding: 0px 0px 0px 0px;
+	margin:0;
+	padding:0;
 	font-size: var(--regular);
 	font-family: PixelOperator;
 	color: var(--black);
 }
 
 ul {
-	margin: 0px 0px 0px 0px;
-	padding: 0px 0px 0px 0px;
+	margin:0;
+	padding:0;
 	font-size: var(--regular);
 	line-height: var(--space-sm);
 	color: var(--black);
 }
 
 li {
-	margin: 0px 0px 0px 0px;
+	margin:0;
 	padding: 0px 0px 0px var(--space-m);
 	list-style: none;
 }
 
-.swatch {
-	position: relative;
-	margin-left: var(--space-m);
-	height: var(--space-m);
-	width: auto;
-	box-shadow: 3x 3px var(--shadow-1);
-}
-
-.swatch>p {
-	position: absolute;
-	top: 18%;
-	background-color: #ffffff00;
-	margin-left: var(--space-xs);
+.largest-title {
+	color: var(--yellow);
+	font-family: PixelOperator;
+	text-align: center;
+	font-size: var(--xl);
+	line-height: 130%;
 }
 
 .title-1 {
@@ -343,7 +336,7 @@ button {
 	overflow: hidden;
 	border: none;
 	outline: none;
-	height: 95%;
+	height: 90%;
 	width: 100%;
 	box-sizing: border-box;
 	font-family: PixelOperator;
@@ -353,11 +346,11 @@ button {
 
 
 button:hover {
-	transform: scale3d(1, 1.05, 1);
+	transform: scale(1.02);
 }
 
 button:active {
-	transform: scale3d(1, 1, 1);
+	transform: scale(1);
 }
 
 button:disabled {
@@ -369,15 +362,15 @@ button:disabled {
 	border-radius: 100px;
 	box-sizing: border-box;
 	display: flex;
-	height: var(--avatar-s);
-	max-height: var(--avatar-s);
-	max-width: var(--avatar-s);
-	min-height: var(--avatar-s);
-	min-width: var(--avatar-s);
+	height: var(--image-cont-s);
+	max-height: var(--image-cont-s);
+	max-width: var(--image-cont-s);
+	min-height: var(--image-cont-s);
+	min-width: var(--image-cont-s);
 	outline: solid 2px var(--shadow-yellow);
 	overflow: hidden;
 	padding: var(--space-s);
-	width: var(--avatar-s);
+	width: var(--image-cont-s);
 }
 
 .avatar-wrapper-s>img {
@@ -389,15 +382,15 @@ button:disabled {
 	border-radius: 100px;
 	box-sizing: border-box;
 	display: flex;
-	height: var(--avatar-m);
-	max-height: var(--avatar-m);
-	max-width: var(--avatar-m);
-	min-height: var(--avatar-m);
-	min-width: var(--avatar-m);
+	height: var(--image-cont-m);
+	max-height: var(--image-cont-m);
+	max-width: var(--image-cont-m);
+	min-height: var(--image-cont-m);
+	min-width: var(--image-cont-m);
 	outline: solid 2px var(--shadow-yellow);
 	overflow: hidden;
 	padding: var(--space-s);
-	width: var(--avatar-m);
+	width: var(--image-cont-m);
 }
 
 .avatar-wrapper-m>img {
@@ -408,15 +401,15 @@ button:disabled {
 	border-radius: 100px;
 	box-sizing: border-box;
 	display: flex;
-	height: var(--avatar-l);
-	max-height: var(--avatar-l);
-	max-width: var(--avatar-l);
-	min-height: var(--avatar-l);
-	min-width: var(--avatar-l);
+	height: var(--image-cont-l);
+	max-height: var(--image-cont-l);
+	max-width: var(--image-cont-l);
+	min-height: var(--image-cont-l);
+	min-width: var(--image-cont-l);
 	outline: solid 2px var(--shadow-yellow);
 	overflow: hidden;
 	padding: var(--space-s);
-	width: var(--avatar-l);
+	width: var(--image-cont-l);
 }
 
 .avatar-wrapper-l>img {
@@ -427,15 +420,15 @@ button:disabled {
 	border-radius: 100px;
 	box-sizing: border-box;
 	display: flex;
-	height: var(--avatar-xl);
-	max-height: var(--avatar-xl);
-	max-width: var(--avatar-xl);
-	min-height: var(--avatar-xl);
-	min-width: var(--avatar-xl);
+	height: var(--image-cont-xl);
+	max-height: var(--image-cont-xl);
+	max-width: var(--image-cont-xl);
+	min-height: var(--image-cont-xl);
+	min-width: var(--image-cont-xl);
 	outline: solid 2px var(--shadow-yellow);
 	overflow: hidden;
 	padding: var(--space-s);
-	width: var(--avatar-xl);
+	width: var(--image-cont-xl);
 }
 
 .avatar-wrapper-xl>img {

@@ -3,13 +3,15 @@
 
 <head>
 	<link rel="stylesheet" href="../css/atoms.css">
+	<link rel="stylesheet" href="../css/palette.css">
 </head>
 
 <body>
+	<div class="base-container">
 		<h1 class="title-shadow title-1"> Atoms element designs </h1>
 		<h1 class="title-shadow title-1"> Spacings and sizes </h1>
 
-		<div class="full-screen-element block background-border bg">
+		<div class="block bg-brdr bg">
 			<h2> Spacings (paddings, margins) </h2>
 			<p> Spacing determines the neutral space between elements. It's controlled through margins and padding. Our
 				spacing is determined by increments of 0.4. We start at 0.4, then increment by that value. </p>
@@ -61,80 +63,183 @@
 			</code>
 		</div>
 		<h1 class="title-shadow title-1"> Palette </h1>
-		<div class="full-screen-element block background-border bg">
-			<h2> background </h2>
-			<p> HEX: #fffcf7 // RGB: [255, 252, 247] </p>
-			<div class="swatch" style="background-color: #fffcf7;"></div>
-			<div class="swatch" style="background: linear-gradient(90deg, #fffcf7 0%, #fffcf700 100%);"></div>
-			<p> HEX: #93eaeb // RGB: [147, 234, 235] </p>
-			<div class="swatch" style="background-color: #93eaeb;"></div>
-			<div class="swatch" style="background: linear-gradient(90deg, #93eaeb 0%, #93eaeb00 100%);"></div>
-			<p> HEX: #0e4a4b // RGB: [14, 74, 75] </p>
-			<div class="swatch" style="background-color: #0e4a4b;"></div>
-			<div class="swatch" style="background: linear-gradient(90deg, #0e4a4b 0%, #0e4a4b00 100%);"></div>
-			<h4> Gradients </h4>
-			<div class="swatch"
-				style="background: repeating-linear-gradient(90deg, var(--gradient1) 0%, var(--gradient2), var(--gradient3), var(--gradient4) 100%);">
+
+		<div class="block bg-brdr bg">
+			<div class="palette-group">
+				<div class="document-title">Base Colors</div>
+				<div class="palette-row">
+					<div class="swatch">
+						<div class="color-box" style="background: #fffcf7;"></div>
+						<div class="varname">--white</div>
+						<div class="hexcode">#fffcf7</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #372a25;"></div>
+						<div class="varname">--black</div>
+						<div class="hexcode">#372a25</div>
+					</div>
+				</div>
 			</div>
 
-			<h3> Accents & Titles </h3>
-			<p> HEX: #f8ca53 // RGB: [248, 202, 83] </p>
-			<div class="swatch" style="background-color: #f8ca53;"></div>
-			<div class="swatch" style="background: linear-gradient(90deg, #f8ca53 0%, #f8ca5300 100%);"></div>
-			<p> HEX: #a74500 // RGB: [167, 69, 0] </p>
-			<div class="swatch" style="background-color: #a74500;"></div>
-			<div class="swatch" style="background: linear-gradient(90deg, #a74500 0%, #a7450000 100%);"></div>
-
-			<h3> Typography </h3>
-			<p> HEX: #835441 // RGB: [131, 84, 65] </p>
-			<div class="swatch" style="background-color: #835441;"></div>
-			<div class="swatch" style="background: linear-gradient(90deg, #835441 0%, #83544100 100%);"></div>
-			<p> HEX: #372a25 // RGB: [55, 42, 37] </p>
-			<div class="swatch" style="background-color: #372a25;"></div>
-			<div class="swatch" style="background: linear-gradient(90deg, #372a25 0%, #372a2500 100%);"></div>
-		</div>
-
-
-		<div class="full-screen-element block background-border bg">
-			<h2> Accessible color combinations </h2>
-			<div class="swatch" style="background-color: #fffcf7;">
-				<p style="color:#372a25;"> Background: #fffcf7 | Text: #372a25 </p>
-			</div>
-			<div class="swatch" style="background-color: #fffcf7;">
-				<p style="color:#835441;"> Background: #fffcf7 | Text: #835441 </p>
-			</div>
-			<div class="swatch" style="background-color: #fffcf7;">
-				<p style="color:#a74500;"> Background: #fffcf7 | Text: #a74500 </p>
+			<div class="palette-group">
+				<div class="document-title">Gradients</div>
+				<div class="palette-row">
+					<div class="swatch">
+						<div class="color-box" style="background: #131254;"></div>
+						<div class="varname">--gradient1</div>
+						<div class="hexcode">#131254</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #0f88fa;"></div>
+						<div class="varname">--gradient2</div>
+						<div class="hexcode">#0f88fa</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #64e6e8;"></div>
+						<div class="varname">--gradient3</div>
+						<div class="hexcode">#64e6e8</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #d1ffda;"></div>
+						<div class="varname">--gradient4</div>
+						<div class="hexcode">#d1ffda</div>
+					</div>
+				</div>
 			</div>
 
-			<div class="swatch" style="background-color: #f8ca53;">
-				<p style="color:#372a25;"> Background: #f8ca53 | Text: #372a25 </p>
+			<div class="palette-group">
+				<div class="document-title">Greens</div>
+				<div class="palette-row">
+					<div class="swatch">
+						<div class="color-box" style="background: #bde559;"></div>
+						<div class="varname">--highlight-green</div>
+						<div class="hexcode">#bde559</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #76c54b;"></div>
+						<div class="varname">--green</div>
+						<div class="hexcode">#76c54b</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #04983a;"></div>
+						<div class="varname">--shadow-green</div>
+						<div class="hexcode">#04983a</div>
+					</div>
+				</div>
 			</div>
 
-			<div class="swatch" style="background-color: #a74500;">
-				<p style="color:#fffcf7;"> Background: #372a25 | Text: #fffcf7 </p>
+			<div class="palette-group">
+				<div class="document-title">Oranges</div>
+				<div class="palette-row">
+					<div class="swatch">
+						<div class="color-box" style="background: #EE881C;"></div>
+						<div class="varname">--highlight-orange</div>
+						<div class="hexcode">#EE881C</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #BC6511;"></div>
+						<div class="varname">--orange</div>
+						<div class="hexcode">#BC6511</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #9a4a0d;"></div>
+						<div class="varname">--shadow-orange</div>
+						<div class="hexcode">#9a4a0d</div>
+					</div>
+				</div>
 			</div>
 
-			<div class="swatch" style="background-color: #0e4a4b;">
-				<p style="color:#fffcf7;"> Background: #0e4a4b | Text: #fffcf7 </p>
+			<div class="palette-group">
+				<div class="document-title">Reds</div>
+				<div class="palette-row">
+					<div class="swatch">
+						<div class="color-box" style="background: #E37248;"></div>
+						<div class="varname">--highlight-red</div>
+						<div class="hexcode">#E37248</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #AA4926;"></div>
+						<div class="varname">--red</div>
+						<div class="hexcode">#AA4926</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #9A3E1C;"></div>
+						<div class="varname">--shadow-red</div>
+						<div class="hexcode">#9A3E1C</div>
+					</div>
+				</div>
 			</div>
 
-			<div class="swatch" style="background-color: #835441;">
-				<p style="color:#fffcf7;"> Background: #835441 | Text: #fffcf7 </p>
+			<div class="palette-group">
+				<div class="document-title">Yellows</div>
+				<div class="palette-row">
+					<div class="swatch">
+						<div class="color-box" style="background: #FFE6A4;"></div>
+						<div class="varname">--highlight-yellow</div>
+						<div class="hexcode">#FFE6A4</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #FFB800;"></div>
+						<div class="varname">--yellow</div>
+						<div class="hexcode">#FFB800</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #966c00;"></div>
+						<div class="varname">--shadow-yellow</div>
+						<div class="hexcode">#966c00</div>
+					</div>
+				</div>
 			</div>
 
-			<div class="swatch" style="background-color: #372a25;">
-				<p style="color:#fffcf7;"> Background: #372a25 | Text: #fffcf7 </p>
-			</div>
-
-			<h3> Acceptable for large elements (> 24px) </h3>
-			<div class="swatch" style="background-color: #0e4a4b;">
-				<p style="color:#f8ca53;"> Background: #0e4a4b | Text: #f8ca53 </p>
+			<div class="palette-group">
+				<div class="document-title">Borders & Neutrals</div>
+				<div class="palette-row">
+					<div class="swatch">
+						<div class="color-box" style="background: #773d16;"></div>
+						<div class="varname">--neutral-border</div>
+						<div class="hexcode">#773d16</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #6B1D00;"></div>
+						<div class="varname">--border-red</div>
+						<div class="hexcode">#6B1D00</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #005a44;"></div>
+						<div class="varname">--border-green</div>
+						<div class="hexcode">#005a44</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #835441;"></div>
+						<div class="varname">--coffee</div>
+						<div class="hexcode">#835441</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #fdeec8;"></div>
+						<div class="varname">--disabled</div>
+						<div class="hexcode">#fdeec8</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #C4AB9A;"></div>
+						<div class="varname">--shadow-1</div>
+						<div class="hexcode">#C4AB9A</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #8F5F3F;"></div>
+						<div class="varname">--shadow-2</div>
+						<div class="hexcode">#8F5F3F</div>
+					</div>
+					<div class="swatch">
+						<div class="color-box" style="background: #AC5A0E;"></div>
+						<div class="varname">--title-shadow</div>
+						<div class="hexcode">#AC5A0E</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
 		<h1 class="title-shadow title-1"> Typography </h1>
-		<div class="full-screen-element block background-border bg">
+		<div class="block bg-brdr bg">
 			<h2> Fonts </h2>
 			<p> The font used here is PixelOperator by <a class="a-default"
 					href="https://www.dafont.com/fr/profile.php?user=340815">
@@ -175,31 +280,25 @@
 			<p>They vary through line height and font size, which are described for each below. </p>
 
 		</div>
-		<div class="full-screen-element block background-border bg">
+		<div class="block bg-brdr bg">
 			<h3> HTML - h1 </h3>
 			<p> font-size: var(--xxl) // line-height: 130% </p>
 		</div>
 		<h1 class="title-shadow title-1"> This is an example title</h1>
 
-		<div class="full-screen-element block background-border bg">
+		<div class="block bg-brdr bg">
 			<h3> HTML - h2 </h3>
 			<p> font-size: var(--xl) // line-height: 110% </p>
 		</div>
 		<h2 class="title-shadow title-2"> This is an example title</h2>
 
-		<div class="full-screen-element block background-border bg">
+		<div class="block bg-brdr bg">
 			<h3> HTML - h3 </h3>
 			<p> font-size: var(--l) // line-height: 110% </p>
 		</div>
 		<h3 class="title-shadow title-3"> This is an example title </h3>
 
-		<div class="full-screen-element block background-border bg">
-			<h3> HTML - h4 </h3>
-			<p> font-size: var(--m) // line-height: 100% </p>
-		</div>
-		<h4 class="title-shadow title-4"> This is an example title </h4>
-
-		<div class="full-screen-element block background-border bg">
+		<div class="block bg-brdr bg">
 			<h3> body paragraph </h3>
 			<p> margin: 0px 0px 0px 0px // font-size: var(--regular) // line-height: var(--space-sm) // font-family:
 				PixelOperator;</p>
@@ -216,124 +315,127 @@
 			</p>
 		</div>
 
-		<div class="full-screen-element block background-border bg">
+		<div class="block bg-brdr bg">
 			<h3> links </h3>
-		</div>
-		<div class="full-screen-element background-border bg block-two-col">
-			<span> Default state: </span>
-			<a class="a-default" href="https://profile.intra.42.fr/users/aljulien" target="_blank"> This is a link
-			</a>
-			<span> Hover state:
-			</span>
-			<a class="a-hover" href="https://profile.intra.42.fr/users/cdomet-d" target="_blank"> This is a link
-			</a>
-			<span> hover state:
-			</span>
-			<a class="a-hover" href="https://profile.intra.42.fr/users/csweetin" target="_blank"> This is a link
-			</a>
-			<span> Active state:
-			</span>
-			<a class="a-hover" href="https://profile.intra.42.fr/users/saperrie" target="_blank"> This is a link
-			</a>
-			<span> Visited state:
-			</span>
-			<a class="a-visit" href="https://profile.intra.42.fr/users/saperrie" target="_blank"> This is a link
-			</a>
-			<span> Examples in a paragraph</span>
-			<p>Stranger Things is set in the fictional rural town of <a class="a-default"
-					href="https://strangerthings.fandom.com/wiki/Hawkins">Hawkins, Indiana</a>, in the 1980s. The
-				nearby Hawkins National Laboratory ostensibly performs scientific research for the United States
-				Department of Energy
-				but also secretly experiments with the paranormal and supernatural, sometimes with human test subjects.
-				They have inadvertently created a portal to an alternate dimension they refer to as the <a
-					class="a-default" href="https://strangerthings.fandom.com/wiki/The_Upside_Down">Upside Down</a>,
-				whose presence begins to affect the residents of Hawkins in unusual ways. </p>
+			<div class="two-col">
+				<span> Default state: </span>
+				<a class="a-default" href="https://profile.intra.42.fr/users/aljulien" target="_blank"> This is a link
+				</a>
+				<span> Hover state:
+				</span>
+				<a class="a-hover" href="https://profile.intra.42.fr/users/cdomet-d" target="_blank"> This is a link
+				</a>
+				<span> hover state:
+				</span>
+				<a class="a-hover" href="https://profile.intra.42.fr/users/csweetin" target="_blank"> This is a link
+				</a>
+				<span> Active state:
+				</span>
+				<a class="a-hover" href="https://profile.intra.42.fr/users/saperrie" target="_blank"> This is a link
+				</a>
+				<span> Visited state:
+				</span>
+				<a class="a-visit" href="https://profile.intra.42.fr/users/saperrie" target="_blank"> This is a link
+				</a>
+				<span> Examples in a paragraph</span>
+				<p>Stranger Things is set in the fictional rural town of <a class="a-default"
+						href="https://strangerthings.fandom.com/wiki/Hawkins">Hawkins, Indiana</a>, in the 1980s. The
+					nearby Hawkins National Laboratory ostensibly performs scientific research for the United States
+					Department of Energy
+					but also secretly experiments with the paranormal and supernatural, sometimes with human test
+					subjects.
+					They have inadvertently created a portal to an alternate dimension they refer to as the <a
+						class="a-default" href="https://strangerthings.fandom.com/wiki/The_Upside_Down">Upside Down</a>,
+					whose presence begins to affect the residents of Hawkins in unusual ways. </p>
+			</div>
 		</div>
 
 
 		<h1 class="title-shadow title-1"> Inputs </h1>
-		<div class="full-screen-element input-grid background-border bg">
-			<h2> Input fields </h2>
-			<span> Default </span>
-			<div class="form-group">
-				<label class="thin-border label-default" for="default">default</label>
-				<input id="default" class="input-bg inert-border" type="text" placeholder="search a user...">
-				</input>
-			</div>
-			<span> Hover </span>
-			<div class="form-group">
-				<label class="thin-border label-hover" for="hover">hover</label>
-				<input id="hover" class="inert-border input-bg-hover" type="text" placeholder="search a user...">
-				</input>
-			</div>
-			<span> Active </span>
-			<div class="form-group">
-				<label class="thin-border label-active" for="Active">Active</label>
-				<input id="Active" class="inert-border input-bg-active" type="text" placeholder="search a user...">
-				</input>
-			</div>
-			<span> Disabled </span>
-			<div class="form-group">
-				<label class="thin-border label-disabled" for="Disabled">Disabled</label>
-				<input id="Disabled" class="inert-border-disabled bg-disabled" type="text"
-					placeholder="search a user..." disabled>
-				</input>
-			</div>
-			<span> Error </span>
-			<div class="form-group">
-				<label class="thin-border label-error" for="Error">Error</label>
-				<input class="inert-border-red bg-invalid" type="text" placeholder="%saperrie"> </input>
-			</div>
+		<div class="block bg-brdr bg">
+			<div class="input-grid">
+				<h2> Input fields </h2>
+				<span> Default </span>
+				<div class="form-group">
+					<label class="thin-border label-default" for="default">default</label>
+					<input id="default" class="input-bg brdr" type="text" placeholder="search a user...">
+					</input>
+				</div>
+				<span> Hover </span>
+				<div class="form-group">
+					<label class="thin-border label-hover" for="hover">hover</label>
+					<input id="hover" class="brdr input-bg-hover" type="text" placeholder="search a user...">
+					</input>
+				</div>
+				<span> Active </span>
+				<div class="form-group">
+					<label class="thin-border label-active" for="Active">Active</label>
+					<input id="Active" class="brdr input-bg-active" type="text" placeholder="search a user...">
+					</input>
+				</div>
+				<span> Disabled </span>
+				<div class="form-group">
+					<label class="thin-border label-disabled" for="Disabled">Disabled</label>
+					<input id="Disabled" class="brdr-disabled bg-disabled" type="text"
+						placeholder="search a user..." disabled>
+					</input>
+				</div>
+				<span> Error </span>
+				<div class="form-group">
+					<label class="thin-border label-error" for="Error">Error</label>
+					<input class="brdr-red bg-invalid" type="text" placeholder="%saperrie"> </input>
+				</div>
 
-			<span> File upload </span>
-			<input id="upload" class="inert-border input-bg" type="file"></input>
+				<span> File upload </span>
+				<input id="upload" class="brdr input-bg" type="file"></input>
+			</div>
+			<div class="input-grid">
+				<h2> Buttons</h2>
+				<span> default</span>
+				<button class="brdr button-bg" type="button"> Superb Button !</button>
+				<span> Hover</span>
+				<button class="brdr button-bg-hover" type="button"> Superb Button !</button>
+				<span> Active</span>
+				<button class="brdr button-bg-active" type="button"> Superb Button !</button>
+				<span> Disabled</span>
+				<button class="brdr-disabled bg-disabled" type="button" disabled> Superb Button
+					!</button>
+			</div>
 		</div>
-		<div class="full-screen-element input-grid background-border bg">
-			<h2> Buttons</h2>
-			<span> default</span>
-			<button class="inert-border button-bg" type="button"> Superb Button !</button>
-			<span> Hover</span>
-			<button class="inert-border button-bg-hover" type="button"> Superb Button !</button>
-			<span> Active</span>
-			<button class="inert-border button-bg-active" type="button"> Superb Button !</button>
-			<span> Disabled</span>
-			<button class="inert-border-disabled bg-disabled" type="button" disabled> Superb Button
-				!</button>
-		</div>
+
 
 		<h2 class="title-2 title-shadow"> Sliders, checkboxes and radio buttons </h2>
-		<div class="full-screen-element bg background-border block">
+		<div class="bg bg-brdr block">
 			<div class="flexbox-auto-col">
 				<p> Radio button (single selection) | Unchecked / Checked </p>
-				<div class="radio-container inert-border plain-yellow-bg">
+				<div class="radio-container brdr plain-yellow-bg">
 					<input type="radio"> </input>
 					<span class="radio-checkmark"></span>
 				</div>
-				<div class="radio-container inert-border  plain-yellow-bg">
+				<div class="radio-container brdr  plain-yellow-bg">
 					<input type="radio" checked="checked"> </input>
 					<span class="radio-checkmark"></span>
 				</div>
 			</div>
 			<div class="flexbox-auto-col">
 				<p> Checkbox button (multiple selection) | Unchecked / Checked </p>
-				<div class="checkbox-container inert-border plain-yellow-bg">
+				<div class="checkbox-container brdr plain-yellow-bg">
 					<input type="checkbox"> </input>
 					<span class="checkbox-checkmark"></span>
 				</div>
-				<div class="checkbox-container inert-border plain-yellow-bg">
+				<div class="checkbox-container brdr plain-yellow-bg">
 					<input type="checkbox" checked="checked"> </input>
 					<span class="checkbox-checkmark"></span>
 				</div>
 			</div>
 			<p> Slider (paddle speed, ?) </p>
-			<input class="plain-clear-bg inert-border" type="range" name="paddle-speed" min="0" max="5" step="1">
+			<input class="plain-clear-bg brdr" type="range" name="paddle-speed" min="0" max="5" step="1">
 			</input>
 		</div>
 
 		<h2 class="title-2 title-shadow"> Avatars & wrappers </h2>
-		<div class="full-screen-element bg background-border block flexbox-auto-col">
-			<div class="avatar-wrapper-l plain-yellow-bg"></div>
-			<div class="avatar-wrapper-s plain-yellow-bg"><img class="avatar-s"
+		<div class="bg bg-brdr block">
+			<div class="avatar-wrapper-s plain-yellow-bg"><img class="image-cont-s"
 					src="../assets/icons/light-green-avatar.png"></img>
 			</div>
 			<div class="avatar-wrapper-m plain-yellow-bg"><img class="avatar-m"
@@ -348,12 +450,35 @@
 		</div>
 
 		<h2 class="title-2 title-shadow"> Icons </h2>
-		<div class="full-screen-element bg background-border flexbox-auto-col">
-			<img class="image-xl" src="../assets/icons/search-icon.png"></img>
-			<img class="image-xl" src="../assets/icons/no-result.png"></img>
-			<img class="image-xl" src="../assets/icons/notification.png"></img>
+		<div class="block bg bg-brdr">
+			<span class="document-title"> 24px </span>
+			<div class="flexbox-auto-col">
+				<img class="image-s" src="../assets/icons/search-icon.png"></img>
+				<img class="image-s" src="../assets/icons/no-result.png"></img>
+				<img class="image-s" src="../assets/icons/notification.png"></img>
+			</div>
+			<span class="document-title"> 38.88px </span>
+			<div class="flexbox-auto-col">
+				<img class="image-m" src="../assets/icons/search-icon.png"></img>
+				<img class="image-m" src="../assets/icons/no-result.png"></img>
+				<img class="image-m" src="../assets/icons/notification.png"></img>
+			</div>
+			<span class="document-title"> 62.91px </span>
+			<div class="flexbox-auto-col">
+				<img class="image-l" src="../assets/icons/search-icon.png"></img>
+				<img class="image-l" src="../assets/icons/no-result.png"></img>
+				<img class="image-l" src="../assets/icons/notification.png"></img>
+			</div>
+			<span class="document-title"> 101.78px </span>
+			<div class="flexbox-auto-col">
+				<img class="image-xl" src="../assets/icons/search-icon.png"></img>
+				<img class="image-xl" src="../assets/icons/no-result.png"></img>
+				<img class="image-xl" src="../assets/icons/notification.png"></img>
+			</div>
 		</div>
 	</div>
+	</div>
+
 </body>
 
 </html>

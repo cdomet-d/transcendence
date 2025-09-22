@@ -1,4 +1,3 @@
-
 :root {
 	font-size: 100%;
 	font-family: PixelOperator;
@@ -7,28 +6,24 @@
 	margin: 0;
 	padding: 0;
 
-	--regular: 1rem;
-	--s: 1.62rem;
-	--m: 2.62rem;
-	--ml: 4.24rem;
-	--l: 6.86rem;
-
+	/* Images and image containers */
 	--image-s: 1.5rem;
 	--image-m: 2.43rem;
 	--image-l: 6.36rem;
 	--image-xl: 10.29rem;
 	--image-xxl: 16.65rem;
 
-	--avatar-s: 2.5rem;
-	--avatar-m: 3.43rem;
-	--avatar-l: 7.36rem;
-	--avatar-xl: 11.29rem;
-	--avatar-xxl: 17.65rem;
+	--image-cont-s: 2.5rem;
+	--image-cont-m: 3.43rem;
+	--image-cont-l: 7.36rem;
+	--image-cont-xl: 11.29rem;
+	--image-cont-xxl: 17.65rem;
 
-	--nspace-xs: -0.25rem;
-	--nspace-s: -0.5rem;
-	--nspace-sm: -11.29rem;
-	--nspace-m: -16.65rem;
+	/* Golden ratio spacing */
+	--nspace-xs: -0.5rem;
+	--nspace-s: -0.81rem;
+	--nspace-sm: -1.31rem;
+	--nspace-m: -2.12rem;
 
 	--space-xs: 0.5rem;
 	--space-s: 0.81rem;
@@ -38,19 +33,27 @@
 	--space-l: 5.55rem;
 	--space-xl: 8.98rem;
 
+	/* Font sizing */
+	--regular: 1rem;
+	--s: 1.62rem;
+	--m: 2.62rem;
+	--ml: 4.24rem;
+	--l: 6.86rem;
+	--xl: 11.10rem;
+
+	/* Elements sizes */
 	--body-margin: 2vw;
+	--percent-sidebar: 38.06%;
+	--percent-content: 61.94%;
 
-	--percent-menu-element: 14.38%;
-	--percent-sidebar: 37.64%;
-	--percent-content: 61.18%;
+	--sidebar: 33.42rem;
+	--content: 54.08em;
 
-	--menu-element: 16.22em;
-	--sidebar: 41.59em;
-	--content: 67.61em;
-	--full-width: 94.34vw;
+	--ui-doc-full-width: 74.91vw;
+	--full-height: 100vh;
+	--full-width: 100vw;
 
-	--br: 10px;
-
+	/* Palette */
 	--white: #fffcf7;
 	--black: #372a25;
 	--gradient1: #131254;
@@ -112,26 +115,32 @@
 			-4.4px -2.2px var(--title-shadow),
 			-4.6px -2.3px var(--title-shadow),
 			-4.8px -2.4px var(--title-shadow),
-			-5.0px -2.5px var(--title-shadow);
-		/* -5.2px -2.6px var(--orange),
-			-5.4px -2.7px var(--orange),
-			-5.6px -2.8px var(--orange),
-			-5.8px -2.9px var(--orange),
-			-6.0px -3.0px var(--orange),
-			-6.2px -3.1px var(--orange),
-			-6.4px -3.2px var(--orange),
-			-6.6px -3.3px var(--orange),
-			-6.8px -3.4px var(--orange),
-			-7.0px -3.5px var(--orange),
-			-7.2px -3.6px var(--orange),
-			-7.4px -3.7px var(--orange),
-			-7.6px -3.8px var(--orange),
-			-7.8px -3.9px var(--orange),
-			-8.0px -4.0px var(--orange),
-			-8.2px -4.1px var(--orange),
-			-8.4px -4.2px var(--orange),
-			-8.6px -4.3px var(--orange),
-			-8.8px -4.4px var(--orange),
-			-9.0px -4.5px var(--orange); */
+			-5.0px -2.5px var(--title-shadow),
+			-5.2px -2.6px var(--title-shadow),
+			-5.4px -2.7px var(--title-shadow),
+			-5.6px -2.8px var(--title-shadow),
+			-5.8px -2.9px var(--title-shadow),
+			-6.0px -3.0px var(--title-shadow),
+			-6.2px -3.1px var(--title-shadow),
+			-6.4px -3.2px var(--title-shadow),
+			-6.6px -3.3px var(--title-shadow),
+			-6.8px -3.4px var(--title-shadow),
+			-7.0px -3.5px var(--title-shadow),
+			-7.2px -3.6px var(--title-shadow),
+			-7.4px -3.7px var(--title-shadow),
+			-7.6px -3.8px var(--title-shadow),
+			-7.8px -3.9px var(--title-shadow),
+			-8.0px -4.0px var(--title-shadow),
+			-8.2px -4.1px var(--title-shadow),
+			-8.4px -4.2px var(--title-shadow),
+			-8.6px -4.3px var(--title-shadow),
+			-8.8px -4.4px var(--title-shadow),
+			-9.0px -4.5px var(--title-shadow);
 	}
+}
+
+.document-title {
+	font-weight: bold;
+	margin-bottom: 1rem;
+	text-transform: capitalize;
 }
