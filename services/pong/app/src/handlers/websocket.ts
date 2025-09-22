@@ -1,17 +1,37 @@
 import type { FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
-import { paddlePos } from './pong.js';
 import type { FastifyInstance } from 'fastify';
+import type { Game } from "../classes/game.class.js";
+import { setUpGame } from './pong.js';
 
 function wshandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): void {
 	this.log.info('WebSocket connection established');
-	this.log.info(`${Object.getPrototypeOf(this.gameRegistry.games)}`);
 
-	socket.on('message', (payload: any) => {
-		const mess: string = payload.toString();
-		req.server.log.info(`client sent: ${mess}`);
-		if (mess.match("Pad:"))
-			paddlePos(socket, mess);
+	socket.on('open', () => {
+		const GameIdCookie: string | undefined = req.cookies.gameid;
+		const UserIdCookie: string | undefined = req.cookies.userid;
+
+		const userID: number = Number(UserIdCookie);
+		const gameID: number = Number(GameIdCookie);
+		if (Number.isNaN(gameID) || Number.isNaN(userID))
+			throw new Error("wrong gameID"); //TODO: catch error
+
+		const game: Game | undefined = this.gameRegistry.findGame(gameID);
+		if (!game) 
+			throw new Error("game not found"); //TODO: send nats message ?
+
+		if (game.sockets.size === 2) {
+			socket.close();
+			throw new Error("not allowed");
+		}
+		game.addUserSocket(userID, socket);
+
+		if (game.local || game.sockets.size === 2)
+			setUpGame();
+	});
+
+	socket.on('close', () => {
+		//TODO: delete game ? need to know if every thing is done
 	});
 }
 
