@@ -1,11 +1,13 @@
 @import url(./variables.css);
 
-/* UI DOCUMENT DISPLAY */
-
 body {
 	margin: 0;
+	height: auto;
+	background: linear-gradient(180deg, var(--gradient1) 0%, var(--gradient2), var(--gradient3), var(--gradient4) 100%);
+	background-repeat: no-repeat;
 }
 
+/* UI DOCUMENT DISPLAY */
 .base-container {
 	align-items: center;
 	box-sizing: border-box;
@@ -18,41 +20,73 @@ body {
 	width: 100%;
 }
 
+.input-grid {
+	width: 100%;
+	box-sizing: border-box;
+	grid-template-columns: 1fr;
+	grid-auto-rows: var(--m);
+	grid-auto-columns: 100%;
+	display: grid;
+	gap: var(--space-s);
+	align-items: center;
+	justify-items: center;
+}
+
+/* DESIGN */
+
+.header {
+	box-sizing: border-box;
+	width: 100%;
+	height: var(--ml);
+	display: grid;
+	grid-template-columns: 15% 30% 45%;
+	grid-template-rows: var(--ml);
+	place-items: center;
+	gap: var(--space-s);
+}
+
+.header-item {
+	padding: var(--space-xs);
+}
+
+.single-centered-no-header {
+	box-sizing: border-box;
+	display: grid;
+	grid-template-columns: var(--full-width);
+	grid-template-rows: var(--full-height);
+	place-items: center;
+	width: var(--full-width);
+}
+
+.single-centered {
+	box-sizing: border-box;
+	display: grid;
+	grid-template-columns: var(--full-width);
+	grid-auto-rows: minmax(0, 1fr);
+	place-items: center;
+	min-height: var(--full-height-wheader);
+}
+
+.pong-court {
+	box-sizing: border-box;
+	aspect-ratio: 19/9;
+	/* height: 90%; */
+	width: 95%;
+}
+
+.centered-block {
+	height: 80%;
+	width: 80%;
+}
+
 .block {
 	box-sizing: border-box;
 	padding: var(--space-m);
 	display: grid;
 	gap: var(--space-xs);
 	grid-template-columns: 1fr;
-	grid-auto-rows: max-content;
-	/* height:100% */
-}
+	height:100%
 
-/* DESIGN */
-.header {
-	width: 100%;
-	height: var(--ml);
-	display: grid;
-	grid-template-columns: 25% 75%;
-	place-items: center;
-	
-
-}
-.single-centered {
-	/* overflow: hidden; */
-	box-sizing: border-box;
-	display: grid;
-	gap: var(--space-s);
-	grid-template-columns: var(--full-width);
-	grid-template-rows: var(--full-height);
-	place-items: center;
-}
-
-.centered-block {
-	height: 75%;
-	width: 80%;
-	max-width: 80vw;
-	max-height: 60.91vh;
 }
 
 .centered-flexbox {
@@ -68,18 +102,6 @@ body {
 	display: grid;
 	gap: var(--space-s) var(--space-s);
 	grid-template-columns: 48.09% 1fr;
-}
-
-.input-grid {
-	width: 100%;
-	box-sizing: border-box;
-	grid-template-columns: 1fr;
-	grid-auto-rows: var(--m);
-	grid-auto-columns: 100%;
-	display: grid;
-	gap: var(--space-s);
-	align-items: center;
-	justify-items: center;
 }
 
 .two-col>p {

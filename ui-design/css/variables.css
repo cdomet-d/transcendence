@@ -1,8 +1,6 @@
 :root {
 	font-size: 100%;
 	font-family: PixelOperator;
-	background: linear-gradient(180deg, var(--gradient1) 0%, var(--gradient2), var(--gradient3), var(--gradient4) 100%);
-	background-repeat: no-repeat;
 	margin: 0;
 	padding: 0;
 
@@ -51,6 +49,7 @@
 
 	--ui-doc-full-width: 74.91vw;
 	--full-height: 100vh;
+	--full-height-wheader: 92.5vh;
 	--full-width: 100vw;
 
 	/* Palette */

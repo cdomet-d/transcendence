@@ -109,7 +109,7 @@ li {
 input {
 	-moz-appearance: none;
 	width: 100%;
-	height: 100%;
+	height: 90%;
 	border: none;
 	box-sizing: border-box;
 	font-family: PixelOperator;
@@ -342,6 +342,9 @@ button {
 	font-family: PixelOperator;
 	padding: var(--space-xs);
 	font-size: var(--regular);
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 
