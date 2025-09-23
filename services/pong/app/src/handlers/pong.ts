@@ -7,7 +7,7 @@ export function setUpGame(game: Game) {
     game.players[0]?.setLeftPaddle();
     game.players[1]?.setRightPaddle();
 
-    //TODO: send info to display game screen (users names)
+    //TODO: send info to display game screen (users names) or is it gameManager's job?
     startGame(game);
 }
 

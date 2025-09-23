@@ -39,29 +39,10 @@ function wshandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest
 	});
 
 	socket.on('close', () => {
-		//TODO: delete game ? need to know if every thing is done
+		//TODO: delete game ? need to know if everything is done
 	});
 }
 
 export { wshandler };
 
-/*
-const player1: user = {
-	username: "cha",
-	userID: 1
-}
 
-const player2: user = {
-	username: "sweet",
-	userID: 2
-}
-
-const gameobj: game = {
-	matchID: 1,
-	score: [],
-	local: true,
-	users: [player1, player2],
-	winner: "",
-	loser: ""
-}
-*/
