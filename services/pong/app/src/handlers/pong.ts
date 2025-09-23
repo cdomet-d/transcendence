@@ -18,16 +18,19 @@ function startGame(game: Game) {
         return;
 
     let keys: string[] = ["w", "s"];
-    setPaddleEvent(leftPlayer, keys);
     if (game.local)
-        keys = ["ArrowUp", "ArrowDown"];
-    setPaddleEvent(rightPlayer, keys);
+        keys.concat(["ArrowUp", "ArrowDown"]);
+    setPaddleEvent(leftPlayer, keys);
+    if (!game.local)
+        setPaddleEvent(rightPlayer, keys);
 }
 
 function setPaddleEvent(player: Player, keys: string[]) {
     player.socket.on("message", (payload: any) => {
         const mess: string = payload.toString();
-		if (mess === keys[0] || mess === keys[1])
-			paddlePos(player, mess);
+        keys.forEach((key) => {
+            if (mess === key)
+                paddlePos(player, mess);
+        })
     })
 }
