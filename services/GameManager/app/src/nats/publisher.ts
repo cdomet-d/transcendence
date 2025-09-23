@@ -22,7 +22,7 @@ export async function natsPublish(subject: string, payload: string, replySubject
   connection.publish(subject, sc.encode(payload), reply);
 
   console.log("4");
-  console.log("SUBJECT: ", subject, "   REPLY: ", reply);
+  console.log("SUBJECT: ", subject, "   REPLY: ", reply, "\n\n");
   // await connection.flush();
   // await connection.drain();
 }

@@ -10,6 +10,7 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 		
 		const data: JSON = JSON.parse(message);
 		console.log("2");
+		console.log("ws msg received by GM\n\n");
 		handleMatchRequest(socket, data);
 	});
 }

@@ -25,7 +25,7 @@ export async function natsSubscribe() {
   (async () => {
     for await (const payload of pregame) {
       console.log("5");
-      console.log(`Received message from GameManager: ${sc.decode(payload.data)}`);
+      console.log(`Received message from GameManager: ${sc.decode(payload.data)}\n\n`);
 
         // const matchObj = matchmaking();
           const user1: userInfo = JSON.parse(sc.decode(payload.data));
@@ -55,6 +55,4 @@ export async function natsSubscribe() {
       natsPublish(subject, JSON.stringify(matchObj));
     }
   })();
-
-  console.log(`Listening for messages on "pregame.quickMatch.local.2.create"...`);
 };

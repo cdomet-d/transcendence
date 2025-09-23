@@ -5,10 +5,8 @@ RUN mkdir -p /usr/app && chown -R 1000:1000 /usr/app
 WORKDIR /usr/app
 
 COPY tools/matchmaking.sh /usr/local/bin/
-COPY tools/healthcheck.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/matchmaking.sh
-RUN chmod +x /usr/local/bin/healthcheck.sh
 
 EXPOSE 1818
 

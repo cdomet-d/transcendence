@@ -21,6 +21,7 @@ export async function natsPublish(subject: string, data: string) {
   connection.publish(subject, sc.encode(data));
   
   console.log("6");
+  console.log("MM sending match obj to GM\n\n");
   // await connection.flush();
   // await connection.drain();
 }

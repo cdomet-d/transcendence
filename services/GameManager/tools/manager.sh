@@ -4,4 +4,4 @@
 
 npm install
 
-npm run dev
+npm run dev | tee LOGS

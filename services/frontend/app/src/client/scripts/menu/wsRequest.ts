@@ -27,6 +27,7 @@ function wsRequest() {
                 });
                 ws.send(message);
                 console.log("1")
+                console.log("CLICK\n\n")
             });
         }
     }

@@ -4,5 +4,5 @@
 
 npm install
 
-npm run dev | tee nats.log
+npm run dev | tee LOGS
 #npm start
