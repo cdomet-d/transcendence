@@ -1,10 +1,10 @@
 import type { WebSocket } from '@fastify/websocket';
 import type { Player } from './player.class.js';
 
-interface user {
+export interface user {
 	_username: string,
 	_userID: number,
-	_score: number; //TODO: needed?
+	//_score: number; //TODO: needed?
 }
 
 export interface gameInfo {

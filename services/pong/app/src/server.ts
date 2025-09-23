@@ -26,8 +26,8 @@ async function init(): Promise<FastifyInstance> {
 	serv.decorate("gameRegistry", new GameRegistry());
 
 	//nats
-	const nc = await initNatsConnexion(); //TODO: use await ?
-	serv.decorate("nc", nc);
+	// const nc = await initNatsConnexion(); //TODO: use await ?
+	// serv.decorate("nc", nc);
 	natsSubscribtion(serv);
 
 	//plugins
@@ -42,6 +42,7 @@ function addPlugins(serv: FastifyInstance) {
 	serv.register(websocket, {
 		errorHandler: function (error, socket: WebSocket, req: FastifyRequest, reply: FastifyReply) {
 						//TODO: send html error page ?
+						serv.log.error(error);
 						socket.close()
 					},
 		options: {},

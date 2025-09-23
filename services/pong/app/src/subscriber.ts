@@ -12,38 +12,38 @@ export async function initNatsConnexion(): Promise<NatsConnection> {
 }
 
 export async function natsSubscribtion(serv: FastifyInstance) {
-	const sc = StringCodec();
+	// const sc = StringCodec();
 
-	const sub = serv.nc.subscribe('game.start');
-	(async () => {
-		for await (const msg of sub) {
-			const _gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
-			serv.gameRegistry.addGame(new Game(_gameInfo));
-			console.log(`Received message: ${JSON.stringify(_gameInfo)}`);
-			//TODO: send back a message saying the object was received
-		}
-	})();
+	// const sub = serv.nc.subscribe('game.start');
+	// (async () => {
+	// 	for await (const msg of sub) {
+	// 		const _gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
+	// 		serv.gameRegistry.addGame(new Game(_gameInfo));
+	// 		console.log(`Received message: ${JSON.stringify(_gameInfo)}`);
+	// 		//TODO: send back a message saying the object was received
+	// 	}
+	// })();
 
-	console.log(`Listening for messages on "game.start"...`);
+	// console.log(`Listening for messages on "game.start"...`);
+	serv.gameRegistry.addGame(new Game(gameobj));
 };
 
-/*
+import type { user } from './classes/game.class.js';
 const player1: user = {
-	username: "cha",
-	userID: 1
+	_username: "cha",
+	_userID: 1
 }
 
 const player2: user = {
-	username: "sweet",
-	userID: 2
+	_username: "sweet",
+	_userID: 2
 }
 
-const gameobj: game = {
-	matchID: 1,
-	score: [],
-	local: true,
-	users: [player1, player2],
-	winner: "",
-	loser: ""
+const gameobj: gameInfo = {
+	_gameID: 1,
+	_score: [],
+	_local: true,
+	_users: [player1, player2],
+	_winner: "",
+	_loser: ""
 }
-*/
