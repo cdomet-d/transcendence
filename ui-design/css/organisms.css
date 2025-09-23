@@ -80,19 +80,22 @@
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: (minmax(0, 1fr));
+	grid-column-start: auto;
 	align-content: center;
-	min-width: 495.7px;
+	min-width: 600px;
 	min-height: var(--full-height-wheader);
+	height: var(--full-height-wheader);
+	max-height: var(--full-height-wheader);
 	box-sizing: border-box;
 	padding: var(--space-xs);
-	position: relative;
+	align-content: flex-start;
 	justify-items: center;
-	gap: var(--space-s);
+	gap: var(--space-xxs);
 }
 
 .profile-header {
-	height: 40%;
 	box-sizing: border-box;
+	background-color: aqua;
 	position: relative;
 	display: grid;
 	grid-template-columns: var(--image-cont-xl) 1fr var(--image-cont-l);
@@ -102,14 +105,16 @@
 	gap: var(--space-xxs) var(--space-xxs);
 }
 
-.game-history {
+.tab-group {
+	overflow: hidden;
 	width:100%;
-	min-height: 50%;
 	display: grid;
 	grid-auto-flow: row;
-	/* gap: var(--space-xs); */
 }
 
+.game-history {
+	overflow: scroll;
+}
 .game-history-match {
 	box-sizing: border-box;
 	width:100%;
@@ -118,7 +123,6 @@
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 	justify-content: space-evenly;
 	justify-items: center;
-	border-left: solid 0.5px var(--shadow-1);
 }
 
 .game-history-header span {
@@ -127,18 +131,12 @@
 	color: var(--orange);
 }
 
-.game-history .game-history-match span {
-	width: 100%;
-	text-align: center;
-	border-right: solid 0.5px var(--shadow-1);
-}
-
 .profile-header>.username{
 	font-size: var(--m);
 }
 
 .profile-page>.profile-tabs {
-	width: 90%;
+	width: 100%;
 }
 
 .two-rows {
