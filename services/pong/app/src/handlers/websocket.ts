@@ -27,7 +27,7 @@ function wshandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest
 
 		game.addPlayer(new Player(userID, socket));
 		if (game.local) {
-			const randUserIdCookie: string | undefined = req.cookies.userid;
+			const randUserIdCookie: string | undefined = req.cookies.randuserid;
 			const randUserId: number = Number(randUserIdCookie);
 			if (Number.isNaN(randUserId))
 				throw new Error("wrong ID");
