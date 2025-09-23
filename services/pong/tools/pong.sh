@@ -7,5 +7,5 @@ npm install
 # npx @tailwindcss/cli -i ./static/style-src.css -o ./static/style-dist.css
 # npx tsc
 
-npm run dev | tee nats.log
+npm run dev | tee .logs
 #npm start

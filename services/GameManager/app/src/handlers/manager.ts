@@ -32,12 +32,6 @@ interface match {
 }
 
 export function handleMatchRequest(socket: WebSocket, data: any) {
-    if (data.event !== "GAME_REQUEST_FORM") {
-        // handle error;
-        console.log(data.event);
-        return;
-    }
-    
     // Decompose data
     const { format, remote, players, userID, username } = data.payload;
 
@@ -50,10 +44,11 @@ export function handleMatchRequest(socket: WebSocket, data: any) {
     gameInfo.players + "." + "create";
     
     
-    // What are we sending them?
+    // What are we sending there?
     const userInfo = { userID, username };
     let replySubject = nats_subject.replace("create", "ready");
 	console.log("3");
     console.log("DATA SUBJECT ", replySubject, "\n\n");
+
     natsPublish(nats_subject, JSON.stringify(userInfo), replySubject);
 }

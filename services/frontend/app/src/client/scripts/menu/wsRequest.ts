@@ -8,8 +8,11 @@ function wsRequest() {
 
     ws.onopen = () => {
         console.log("WebSocket connection established!")
-        ws.onmessage = (event) => {
-            console.log("message from server:", event.data);
+        ws.onmessage = (message: any) => {
+            console.log("message from server:", message.data);
+            if (message.data === "game.waiting") {
+                ws.close();
+            }
         }
 
         const opponentBtn = document.getElementById('look-opponent-btn');
@@ -28,8 +31,13 @@ function wsRequest() {
                 ws.send(message);
                 console.log("1")
                 console.log("CLICK\n\n")
+                console.log(message);
             });
         }
+    }
+
+    ws.onclose = () => {
+        console.log("WebSocket connection has been terminated!");
     }
 }
 

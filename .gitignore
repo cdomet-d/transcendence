@@ -5,8 +5,7 @@ _logs/
 .notes/
 node_modules/
 .env
-server.log
-nats.log
+*.log
 services/pong/app/dist/
 services/pong/app/static/style-dist.css
 dist/
