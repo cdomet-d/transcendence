@@ -370,14 +370,15 @@ button:disabled {
 	border-radius: 100px;
 	box-sizing: border-box;
 	display: flex;
+	justify-content: center;
+	overflow: hidden;
+
 	height: var(--image-cont-s);
 	max-height: var(--image-cont-s);
 	max-width: var(--image-cont-s);
 	min-height: var(--image-cont-s);
 	min-width: var(--image-cont-s);
-	outline: solid 2px var(--shadow-yellow);
-	overflow: hidden;
-	padding: var(--space-s);
+	outline: solid 2px var(--orange);
 	width: var(--image-cont-s);
 }
 
@@ -390,14 +391,15 @@ button:disabled {
 	border-radius: 100px;
 	box-sizing: border-box;
 	display: flex;
+	justify-content: center;
+	overflow: hidden;
+
 	height: var(--image-cont-m);
 	max-height: var(--image-cont-m);
 	max-width: var(--image-cont-m);
 	min-height: var(--image-cont-m);
 	min-width: var(--image-cont-m);
-	outline: solid 2px var(--shadow-yellow);
-	overflow: hidden;
-	padding: var(--space-s);
+	outline: solid 2px var(--orange);
 	width: var(--image-cont-m);
 }
 
@@ -409,14 +411,15 @@ button:disabled {
 	border-radius: 100px;
 	box-sizing: border-box;
 	display: flex;
+	justify-content: center;
+	overflow: hidden;
+
 	height: var(--image-cont-l);
 	max-height: var(--image-cont-l);
 	max-width: var(--image-cont-l);
 	min-height: var(--image-cont-l);
 	min-width: var(--image-cont-l);
-	outline: solid 2px var(--shadow-yellow);
-	overflow: hidden;
-	padding: var(--space-s);
+	outline: solid 2px var(--orange);
 	width: var(--image-cont-l);
 }
 
@@ -428,14 +431,15 @@ button:disabled {
 	border-radius: 100px;
 	box-sizing: border-box;
 	display: flex;
+	justify-content: center;
+	overflow: hidden;
+
 	height: var(--image-cont-xl);
 	max-height: var(--image-cont-xl);
 	max-width: var(--image-cont-xl);
 	min-height: var(--image-cont-xl);
 	min-width: var(--image-cont-xl);
-	outline: solid 2px var(--shadow-yellow);
-	overflow: hidden;
-	padding: var(--space-s);
+	outline: solid 2px var(--orange);
 	width: var(--image-cont-xl);
 }
 

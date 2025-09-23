@@ -1,5 +1,17 @@
 @import url(./variables.css);
 
+.small-user {
+	width: var(--image-xxl);
+	height: var(--xl);
+	box-sizing: border-box;
+	padding: var(--space-s);
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr 1fr var(--m);
+	place-items: center;
+	background-color: rgba(0, 255, 255, 0.143);
+}
+
 .user-card {
 	width: var(--sidebar);
 	height: auto;
@@ -65,7 +77,7 @@
 	grid-template-columns: auto 10%;
 	justify-content: left;
 	justify-items: center;
-	width: 100%;
+	width: fit-content;
 }
 
 .user-status {
@@ -79,10 +91,10 @@
 .profile-page {
 	display: grid;
 	grid-template-columns: 1fr;
-	grid-template-rows: (minmax(0, 1fr));
+	grid-template-rows: var(--xl) 1fr;
 	grid-column-start: auto;
 	align-content: center;
-	min-width: 600px;
+	min-width: 580px;
 	min-height: var(--full-height-wheader);
 	height: var(--full-height-wheader);
 	max-height: var(--full-height-wheader);
@@ -95,26 +107,35 @@
 
 .profile-header {
 	box-sizing: border-box;
-	background-color: aqua;
 	position: relative;
 	display: grid;
 	grid-template-columns: var(--image-cont-xl) 1fr var(--image-cont-l);
-	grid-template-rows: var(--ml) var(--ml) var(--m);
+	grid-template-rows: 1fr  1fr 1fr;
 	align-items: center;
 	justify-items: center;
 	gap: var(--space-xxs) var(--space-xxs);
 }
 
 .tab-group {
+	width: 100%;
 	overflow: hidden;
-	width:100%;
+	align-items: stretch;
 	display: grid;
 	grid-auto-flow: row;
+	grid-template-columns: 1fr;
+	grid-template-rows: var(--s) 1fr;
 }
 
 .game-history {
 	overflow: scroll;
+	height:100%;
 }
+
+.friends {
+	overflow: scroll;
+	height:100%;
+}
+
 .game-history-match {
 	box-sizing: border-box;
 	width:100%;

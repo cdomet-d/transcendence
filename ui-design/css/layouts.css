@@ -122,8 +122,8 @@ body {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: flex-start;
-	padding-bottom: var(--space-s);
-	gap: var(--space-sm) var(--space-sm);
+	/* justify-content: space-around; */
+	gap: var(--space-xs) var(--space-xs);
 }
 
 .flex-item {
