@@ -23,6 +23,7 @@
 	--nspace-sm: -1.31rem;
 	--nspace-m: -2.12rem;
 
+	--space-xxs: 0.25rem;
 	--space-xs: 0.5rem;
 	--space-s: 0.81rem;
 	--space-sm: 1.31rem;
@@ -40,7 +41,6 @@
 	--xl: 11.10rem;
 
 	/* Elements sizes */
-	--body-margin: 2vw;
 	--percent-sidebar: 38.06%;
 	--percent-content: 61.94%;
 
@@ -48,9 +48,11 @@
 	--content: 54.08em;
 
 	--ui-doc-full-width: 74.91vw;
-	--full-height: 100vh;
+
 	--full-height-wheader: 92.5vh;
+	--full-height: 100vh;
 	--full-width: 100vw;
+	--min-width: 600px;
 
 	/* Palette */
 	--white: #fffcf7;
@@ -109,32 +111,7 @@
 			-3.4px -1.7px var(--title-shadow),
 			-3.6px -1.8px var(--title-shadow),
 			-3.8px -1.9px var(--title-shadow),
-			-4.0px -2.0px var(--title-shadow),
-			-4.2px -2.1px var(--title-shadow),
-			-4.4px -2.2px var(--title-shadow),
-			-4.6px -2.3px var(--title-shadow),
-			-4.8px -2.4px var(--title-shadow),
-			-5.0px -2.5px var(--title-shadow),
-			-5.2px -2.6px var(--title-shadow),
-			-5.4px -2.7px var(--title-shadow),
-			-5.6px -2.8px var(--title-shadow),
-			-5.8px -2.9px var(--title-shadow),
-			-6.0px -3.0px var(--title-shadow),
-			-6.2px -3.1px var(--title-shadow),
-			-6.4px -3.2px var(--title-shadow),
-			-6.6px -3.3px var(--title-shadow),
-			-6.8px -3.4px var(--title-shadow),
-			-7.0px -3.5px var(--title-shadow),
-			-7.2px -3.6px var(--title-shadow),
-			-7.4px -3.7px var(--title-shadow),
-			-7.6px -3.8px var(--title-shadow),
-			-7.8px -3.9px var(--title-shadow),
-			-8.0px -4.0px var(--title-shadow),
-			-8.2px -4.1px var(--title-shadow),
-			-8.4px -4.2px var(--title-shadow),
-			-8.6px -4.3px var(--title-shadow),
-			-8.8px -4.4px var(--title-shadow),
-			-9.0px -4.5px var(--title-shadow);
+			-4.0px -2.0px var(--title-shadow);
 	}
 }
 

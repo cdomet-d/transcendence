@@ -4,10 +4,29 @@
 <head>
 	<link rel="stylesheet" href="../css/molecules.css">
 	<link rel="stylesheet" href="../css/organisms.css">
+	<link rel="stylesheet" href="../css/layouts.css">
 </head>
 
 <body>
-	<div class="card">
+	<div class="base-container">
+		<p class="title-shadow title-3"> header </p>
+		<div class="bg-brdr header">
+			<img class="header-item image-m" src="../assets/icons/default-avatar.png" />
+			<div class="header-item input-with-button">
+				<div class="form-group">
+					<img class="search-icon" src="../assets/icons/search-icon.png"></img>
+					<label class="thin-border" for="search"> search </label>
+					<input class="input-bg contrast-brdr" id="search" placeholder="search a user..."
+						type="text"></input>
+				</div>
+				<button class="contrast-brdr button-bg" type="button"> search </button>
+			</div>
+			<div class="header-item horizontal-menu-wrapper">
+				<button class="button-bg contrast-brdr menu-element"> profile </button>
+				<button class="button-bg contrast-brdr menu-element"> leaderboard </button>
+				<button class="button-bg contrast-brdr menu-element"> play </button>
+			</div>
+		</div>
 		<p class="title-shadow title-3"> user profile card </p>
 		<div class="flexbox-auto-col">
 			<div class="bg bg-brdr user-card">
@@ -16,11 +35,8 @@
 				</div>
 				<div class="username"> %username% <div class="user-status"></div>
 				</div>
-				<span class="two-col rank title-shadow"> %NB% </span>
-				<span class="three-col biography">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. In venenatis venenatis consequat. Maecenas
-					eros elit, placerat a venenatis at odio. </span>
-				<div class="vertical-menu-wrapper">
+				<span class="rank"> %NB% </span>
+				<div class="two-rows vertical-menu-wrapper">
 					<button class="button-bg thin-border" type="button"> <img class="image-s"
 							src="../assets/icons/add-user.png" />
 					</button>
@@ -28,6 +44,10 @@
 						<img class="image-s" src="../assets/icons/block-user.png" />
 					</button>
 				</div>
+				<span class="three-col biography">
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. In venenatis venenatis consequat.
+					Maecenas
+					eros elit, placerat a venenatis at odio. </span>
 				<div class="four-col horizontal-menu-wrapper">
 					<button class="thin-border button-bg" type="button"> See profile </button>
 					<button class="thin-border button-bg" type="button"> Challenge! </button>
@@ -40,11 +60,8 @@
 				</div>
 				<div class="username"> %username% <div class="user-status"></div>
 				</div>
-				<span class="two-col rank title-shadow"> %NB% </span>
-				<span class="three-col biography">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. In venenatis venenatis consequat. Maecenas
-					eros elit, placerat a venenatis at odio. </span>
-				<div class="vertical-menu-wrapper">
+				<span class="rank"> %NB% </span>
+				<div class="two-rows vertical-menu-wrapper">
 					<button class="button-bg thin-border" type="button"> <img class="image-s"
 							src="../assets/icons/remove-user.png" />
 					</button>
@@ -52,6 +69,10 @@
 						<img class="image-s" src="../assets/icons/block-user.png" />
 					</button>
 				</div>
+				<span class="three-col biography">
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. In venenatis venenatis consequat.
+					Maecenas
+					eros elit, placerat a venenatis at odio. </span>
 				<div class="four-col horizontal-menu-wrapper">
 					<button class="thin-border button-bg" type="button"> See profile </button>
 					<button class="thin-border button-bg" type="button"> Challenge! </button>
@@ -63,7 +84,7 @@
 				</div>
 				<div class="username"> %username% <div class="user-status"></div>
 				</div>
-				<span class="two-col rank title-shadow"> %NB% </span>
+				<span class="rank"> %NB% </span>
 				<span class="three-col error-message">
 					This user is blocked. Unblock them to see their profile! </span>
 				<div class="vertical-menu-wrapper">
@@ -81,31 +102,103 @@
 
 		<p class="title-shadow title-3"> user profile (self-view)</p>
 		<div class="profile-page bg brdr">
-			<div class="profile-page-shadow">
-			</div>
-			<div class="profile-header bg brdr">
-				<div class="three-rows avatar-wrapper-xl">
+			<div class="profile-header">
+				<div class="avatar-wrapper-l two-rows">
 					<img src="../assets/icons/light-green-avatar.png" />
 				</div>
-				<div class="username two-col"> %username% <div class="user-status"></div>
+				<div class="username"> %username% <div class="user-status"></div>
 				</div>
-				<span class="rank"> rank: %NB%</span>
-				<span> Joined: %DD-MM-YYYY% </span>
-				<span class="two-rows two-col">
+				<span class="since"> Joined %d days ago </span>
+				<p class="biography two-rows">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae aliquam mi. Aliquam
-					vulputate
-					augue sed risus consectetur, quis auctor odio maximus. Nullam volutpat, justo eu suscipit
+					vulputate augue sed risus consectetur, quis auctor odio maximus. Nullam volutpat, justo eu suscipit
 					condimentum, risus metus ultrices quam, eu tempor erat tellus vitae mauris. Quisque sed odio sed
-					ipsum lacinia finibus non ac enim. Sed sagittis vel. </span>
+					ipsum lacinia finibus non ac enim. Sed sagittis vel. Lorem ipsum dolor sit amet, consectetur
+					adipiscing elit. Aliquam vitae aliquam mi. Aliquam
+					vulputate augue sed risus consectetur, quis auctor odio maximus. Nullam volutpat, justo eu suscipit
+					condimentum, risus metus ultrices quam, eu tempor erat tellus vitae mauris. Quisque sed odio sed
+					ipsum lacinia finibus non ac enim. Sed sagittis vel. </p>
+				<span class="rank"> %NB%</span>
 				<div class="vertical-menu-wrapper">
 					<button class="thin-border button-bg" type="button"> Settings </button>
 				</div>
 			</div>
-			<!-- <div class="profile-tabs brdr">
+			<div class="profile-tabs brdr">
 				<button class="tab thin-border button-bg"> Game history </button>
 				<button class="tab thin-border button-bg"> Statistics </button>
 				<button class="tab thin-border button-bg"> Friends </button>
-			</div> -->
+			</div>
+		</div>
+
+		<p class="title-shadow title-3"> user profile (other user)</p>
+		<div class="profile-page bg brdr">
+			<div class="profile-header">
+				<div class="avatar-wrapper-l two-rows">
+					<img src="../assets/icons/light-green-avatar.png" />
+				</div>
+				<div class="username"> %username% <div class="user-status"></div>
+				</div>
+				<div class="horizontal-menu-wrapper">
+					<button class="button-bg thin-border" type="button"> <img class="image-s"
+							src="../assets/icons/add-user.png" />
+					</button>
+					<button class="button-bg thin-border" type="button">
+						<img class="image-s" src="../assets/icons/block-user.png" />
+					</button>
+				</div>
+				<p class="biography two-rows">
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae aliquam mi. Aliquam
+					vulputate augue sed risus consectetur, quis auctor odio maximus. Nullam volutpat, justo eu suscipit
+					condimentum, risus metus ultrices quam, eu tempor erat tellus vitae mauris. Quisque sed odio sed
+					ipsum lacinia finibus non ac enim. Sed sagittis vel. Lorem ipsum dolor sit amet, consectetur
+					adipiscing elit. Aliquam vitae aliquam mi. Aliquam
+					vulputate augue sed risus consectetur, quis auctor odio maximus. Nullam volutpat, justo eu suscipit
+					condimentum, risus metus ultrices quam, eu tempor erat tellus vitae mauris. Quisque sed odio sed
+					ipsum lacinia finibus non ac enim. Sed sagittis vel. </p>
+				<span class="rank"> %NB%</span>
+				<div class="vertical-menu-wrapper">
+					<button class="thin-border button-bg" type="button"> Challenge!! </button>
+				</div>
+				<span class="since"> Joined %d days ago </span>
+			</div>
+			<div class="profile-tabs thin-border">
+				<button class="tab thin-border button-bg"> Game history </button>
+				<button class="tab thin-border button-bg"> Statistics </button>
+				<button class="tab thin-border button-bg"> Friends </button>
+			</div>
+			<div class="game-history">
+				<div class="game-history-match game-history-header"> <span>
+						Date </span><span> Opponent </span><span> Outcome </span><span> Score </span><span> Duration
+					</span></div>
+				<div class="game-history-match"> <span>
+						Date </span><span> Opponent </span><span> Outcome </span><span> Score </span><span> Duration
+					</span></div>
+				<div class="game-history-match"> <span>
+						Date </span><span> Opponent </span><span> Outcome </span><span> Score </span><span> Duration
+					</span></div>
+				<div class="game-history-match"> <span>
+						Date </span><span> Opponent </span><span> Outcome </span><span> Score </span><span> Duration
+					</span></div>
+				<div class="game-history-match"> <span>
+						Date </span><span> Opponent </span><span> Outcome </span><span> Score </span><span> Duration
+					</span></div>
+				<div class="game-history-match"> <span>
+						Date </span><span> Opponent </span><span> Outcome </span><span> Score </span><span> Duration
+					</span></div>
+				<div class="game-history-match"> <span>
+						Date </span><span> Opponent </span><span> Outcome </span><span> Score </span><span> Duration
+					</span></div>
+				<div class="game-history-match"> <span>
+						Date </span><span> Opponent </span><span> Outcome </span><span> Score </span><span> Duration
+					</span></div>
+				<div class="game-history-match"> <span>
+						Date </span><span> Opponent </span><span> Outcome </span><span> Score </span><span> Duration
+					</span></div>
+				<div class="game-history-match"> <span>
+						Date </span><span> Opponent </span><span> Outcome </span><span> Score </span><span> Duration
+					</span></div>
+
+			</div>
 		</div>
 	</div>
 	</div>

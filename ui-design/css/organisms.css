@@ -2,49 +2,70 @@
 
 .user-card {
 	width: var(--sidebar);
+	height: auto;
 	box-sizing: border-box;
 	padding: var(--space-sm);
 	display: grid;
-	grid-template-columns: var(--image-cont-m) 1fr 1fr var(--space-xl);
-	grid-template-rows: var(--image-cont-m) 1fr var(--m);
+	grid-template-columns: var(--image-cont-m) 1fr 1fr var(--m);
+	grid-template-rows: var(--image-cont-m) var(--ml) var(--m);
 	gap: var(--space-s) var(--space-s);
 	align-items: center;
 }
 
+.user-card>.vertical-menu-wrapper {
+	gap: var(--space-xxs);
+}
+
 .biography {
-	padding: var(--space-s);
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp:6;
+	overflow: hidden;
+	width: 100%;
+	text-overflow: ellipsis;
+	box-sizing: border-box;
+	padding: var(--space-xxs);
+	line-height: 1rem;
+	max-height: 6.5rem;
+}
+
+.since {
+	text-align: center;
+	overflow: hidden;
+	width: 100%;
+	text-overflow: ellipsis " [...]";
+	box-sizing: border-box;
+	padding: var(--space-xs);
+	max-height: 9ch;
+	display: block;
 }
 
 .rank {
-	box-sizing: border-box;
-	padding: var(--space-s);
-	font-size: var(--m);
 	color: var(--yellow);
-	display: grid;
-	place-items: center;
+	text-shadow:
+		-1px -1px var(--orange),
+		-2px -1px var(--orange);
+	font-family: PixelOperatorBold;
+	font-size: var(--s);
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .username {
-	font-size: var(--s);
-	line-height: 100%;
-	color: var(--yellow);
-	text-shadow: -0.0px -0.0px var(--shadow-yellow),
-		-0.2px -0.1px var(--shadow-yellow),
-		-0.4px -0.2px var(--shadow-yellow),
-		-0.6px -0.3px var(--shadow-yellow),
-		-0.8px -0.4px var(--shadow-yellow),
-		-1.0px -0.5px var(--shadow-yellow),
-		-1.2px -0.6px var(--shadow-yellow),
-		-1.4px -0.7px var(--shadow-yellow),
-		-1.6px -0.8px var(--shadow-yellow),
-		-1.8px -0.9px var(--shadow-yellow),
-		-2.0px -1.0px var(--shadow-yellow);
-	display: grid;
-	grid-template-columns: auto 10%;
-	justify-items: center;
 	align-items: center;
+	color: var(--yellow);
+	text-shadow:
+		-1px -1px var(--orange),
+		-2px -1px var(--orange);
+	display: grid;
+	font-family: PixelOperatorBold;
+	font-size: var(--s);
+	grid-template-columns: auto 10%;
 	justify-content: left;
-	width: 80%;
+	justify-items: center;
+	width: 100%;
 }
 
 .user-status {
@@ -56,55 +77,68 @@
 }
 
 .profile-page {
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: (minmax(0, 1fr));
+	align-content: center;
+	min-width: 495.7px;
+	min-height: var(--full-height-wheader);
 	box-sizing: border-box;
+	padding: var(--space-xs);
 	position: relative;
-	z-index: 0;
-}
-
-.profile-header::after {
-	content: '';
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	left: var(--nspace-xs);
-	bottom: var(--nspace-xs);
-	background-color: var(--shadow-1);
-	z-index: -1;
-	box-shadow:
-		-2px -2px var(--shadow-1),
-		-2px 2px var(--shadow-1),
-		2px -2px var(--shadow-1),
-		2px 2px var(--shadow-1),
-		-4px 0 0 0 var(--shadow-1),
-		4px 0 0 0 var(--shadow-1),
-		0 -4px 0 0 var(--shadow-1),
-		0 4px 0 0 var(--shadow-1);
+	justify-items: center;
+	gap: var(--space-s);
 }
 
 .profile-header {
-	/* height: 20%;
-	max-height: 20%; */
+	height: 40%;
 	box-sizing: border-box;
 	position: relative;
 	display: grid;
-	grid-template-columns: var(--image-cont-l) 1fr 1fr;
-	grid-template-rows: 1fr 1fr 1fr;
-	justify-content: space-around;
+	grid-template-columns: var(--image-cont-xl) 1fr var(--image-cont-l);
+	grid-template-rows: var(--ml) var(--ml) var(--m);
 	align-items: center;
 	justify-items: center;
-	gap: var(--space-xs) var(--space-xs);
+	gap: var(--space-xxs) var(--space-xxs);
 }
 
-.profile-header>.vertical-menu-wrapper {
-	width: var(--menu-element);
-}
-
-.profile-header .username {
-	font-size: var(--l);
+.game-history {
+	width:100%;
+	min-height: 50%;
 	display: grid;
-	grid-template-columns: auto 10%;
-	justify-content: left;
+	grid-auto-flow: row;
+	/* gap: var(--space-xs); */
+}
+
+.game-history-match {
+	box-sizing: border-box;
+	width:100%;
+	display: grid;
+	grid-auto-flow: column;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	justify-content: space-evenly;
+	justify-items: center;
+	border-left: solid 0.5px var(--shadow-1);
+}
+
+.game-history-header span {
+	font-family: PixelOperatorBold;
+	line-height: 150%;
+	color: var(--orange);
+}
+
+.game-history .game-history-match span {
 	width: 100%;
+	text-align: center;
+	border-right: solid 0.5px var(--shadow-1);
+}
+
+.profile-header>.username{
+	font-size: var(--m);
+}
+
+.profile-page>.profile-tabs {
+	width: 90%;
 }
 
 .two-rows {

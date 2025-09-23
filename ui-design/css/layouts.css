@@ -1,7 +1,7 @@
 @import url(./variables.css);
 
 body {
-	margin: 0;
+	margin: var(--space-s);
 	height: auto;
 	background: linear-gradient(180deg, var(--gradient1) 0%, var(--gradient2), var(--gradient3), var(--gradient4) 100%);
 	background-repeat: no-repeat;
@@ -55,6 +55,7 @@ body {
 	grid-template-columns: var(--full-width);
 	grid-template-rows: var(--full-height);
 	place-items: center;
+	min-width: var(--min-width);
 	width: var(--full-width);
 }
 
@@ -65,13 +66,14 @@ body {
 	grid-auto-rows: minmax(0, 1fr);
 	place-items: center;
 	min-height: var(--full-height-wheader);
+	min-width: var(--min-width);
 }
 
 .pong-court {
 	box-sizing: border-box;
 	aspect-ratio: 19/9;
-	/* height: 90%; */
 	width: 95%;
+	min-width: var(--min-width);
 }
 
 .centered-block {
@@ -86,7 +88,6 @@ body {
 	gap: var(--space-xs);
 	grid-template-columns: 1fr;
 	height:100%
-
 }
 
 .centered-flexbox {

@@ -8,6 +8,11 @@
 	src: url(../assets/fonts/pixel_operator/PixelOperator.ttf);
 }
 
+@font-face {
+	font-family: PixelOperatorBold;
+	src: url(../assets/fonts/pixel_operator/PixelOperator-Bold.ttf);
+}
+
 @keyframes a-grow {
 	from {
 		background-position: 100% 0;
