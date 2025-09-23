@@ -59,4 +59,12 @@ export class Game {
 	public addPlayer(player: Player) {
 		this.#_players.push(player);
 	}
+
+	public deletePlayers() {
+		this.#_players.forEach((player: Player) => {
+			player.socket.close();
+		})
+		this.#_players.splice(0, this.#_players.length);
+
+	} //TODO: to be removed. only for testing
 }
