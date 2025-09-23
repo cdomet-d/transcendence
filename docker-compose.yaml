@@ -125,9 +125,6 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/GameManager/app:/usr/app
-    depends_on:
-      matchmaking:
-        condition: service_healthy
   matchmaking:
     build:
       context: ./services/matchmaking
@@ -145,12 +142,6 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/matchmaking/app:/usr/app
-    healthcheck:
-      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 25s
   monitoring:
     build:
       context: ./services/monitoring

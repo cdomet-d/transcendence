@@ -9,12 +9,12 @@ sequenceDiagram
     C->>C: Show "Waiting..." screen
     Pre->>Pre: filter request + signal appropriate NATS subject
     create participant MM as Matchmaking
-    Pre-)MM: send pregame.local.2players.create (NATS)
+    Pre-)MM: send pregame.local.2.create (NATS)
     MM->>MM: receive client info 
     MM->>MM: wait for more clients
     MM->>MM: match up
     MM->>MM: create and fill match object
-    MM--)Pre: send match object to pregame.local.2players.ready (NATS)
+    MM--)Pre: send match object to pregame.local.2.ready (NATS)
     Pre--)C: send match found (WS)
     C->>C: Show "Match found!"
     destroy MM

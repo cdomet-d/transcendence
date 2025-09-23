@@ -19,9 +19,9 @@ game.   quick.local.2         .create
 game.   tournament.remote.4   .create
 game.   quick.local.8         .create
 
-game.quick.remote.2players.create
-game.tournament.remote.4players.create
-game.tournament.remote.8players.create
+game.quick.remote.2.create
+game.tournament.remote.4.create
+game.tournament.remote.8.create
 
 
            ||local  |remote |
