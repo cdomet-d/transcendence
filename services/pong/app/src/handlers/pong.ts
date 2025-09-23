@@ -1,4 +1,3 @@
-import type { WebSocket } from '@fastify/websocket';
 import type { Game } from '../classes/game.class.js';
 import { paddlePos } from './paddle.js';
 import type { Player } from '../classes/player.class.js';
@@ -19,18 +18,26 @@ function startGame(game: Game) {
 
     let keys: string[] = ["w", "s"];
     if (game.local)
-        keys.concat(["ArrowUp", "ArrowDown"]);
+        keys = keys.concat(["ArrowUp", "ArrowDown"]);
+    console.log("keys:", keys);
     setPaddleEvent(leftPlayer, keys);
     if (!game.local)
         setPaddleEvent(rightPlayer, keys);
 }
 
+export interface keys {
+	w: boolean,
+	s: boolean,
+	ArrowUp: boolean,
+	ArrowDown: boolean,
+}
+
 function setPaddleEvent(player: Player, keys: string[]) {
     player.socket.on("message", (payload: any) => {
-        const mess: string = payload.toString();
+        const mess: keys = JSON.parse(payload);
         keys.forEach((key) => {
-            if (mess === key)
-                paddlePos(player, mess);
+            // if (mess === key)
+            //     paddlePos(player, mess);
         })
     })
 }
