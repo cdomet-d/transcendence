@@ -1,5 +1,14 @@
+import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from "./paddle.js";
+
 const WIDTH = 480;
 const HEIGHT = 270;
+
+export interface keys {
+	w: boolean,
+	s: boolean,
+	ArrowUp: boolean,
+	ArrowDown: boolean,
+}
 
 export interface paddlePos {
 	x: number;
@@ -15,6 +24,24 @@ function pong() {
 	import("./wsreply.js").then(({ wsRequest }) => {
         wsRequest();
     }) //TODO: can import fail ?
+}
+
+export function initGame(ws: WebSocket) {
+	const ctx = getCanvasContext();
+	let _keys: keys = {w: false, s: false, ArrowUp: false, ArrowDown: false};
+
+	window.addEventListener("keydown", createKeyDownEvent(_keys, ws));
+	window.addEventListener("keyup", createKeyUpEvent(_keys));
+	addMessEvent(leftPad, rightPad, ws);
+	window.requestAnimationFrame(FrameRequestCallback(ctx));
+}
+
+function FrameRequestCallback(ctx: CanvasRenderingContext2D) {
+	return function game() {
+		ctx.clearRect(0, 0, WIDTH, HEIGHT);
+		renderGame(ctx);
+		window.requestAnimationFrame(FrameRequestCallback(ctx));
+	}
 }
 
 export function getCanvasContext(): CanvasRenderingContext2D {
@@ -51,7 +78,6 @@ function drawBall(ctx: CanvasRenderingContext2D) {
 	ctx.fill();
 }
 
-// window.addEventListener("keyup", createKeyUpEvent(ctx));
 
 // window.addEventListener("load", );
 

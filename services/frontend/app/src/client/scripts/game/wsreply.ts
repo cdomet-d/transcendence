@@ -1,4 +1,4 @@
-import { createKeyDownEvent} from './paddle.js'
+import { initGame } from './pong.js';
 
 function wsRequest() {
     document.cookie = "gameid=1;path=/;max-age=31536000";
@@ -17,7 +17,7 @@ function wsRequest() {
         ws.onmessage = (event) => {
             console.log("message from server:", event.data);
         }
-        window.addEventListener("keydown", createKeyDownEvent(ws));
+        initGame(ws);
     }
 }
 
