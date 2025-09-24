@@ -33,14 +33,16 @@ export function initGame(ws: WebSocket) {
 	window.addEventListener("keydown", createKeyDownEvent(_keys, ws));
 	window.addEventListener("keyup", createKeyUpEvent(_keys));
 	addMessEvent(leftPad, rightPad, ws);
-	window.requestAnimationFrame(FrameRequestCallback(ctx));
+	window.requestAnimationFrame(FrameRequestCallback(ctx, ws, _keys));
 }
 
-function FrameRequestCallback(ctx: CanvasRenderingContext2D) {
+function FrameRequestCallback(ctx: CanvasRenderingContext2D, ws: WebSocket, keys: keys) {
 	return function game() {
+		ws.send(JSON.stringify(keys));
 		ctx.clearRect(0, 0, WIDTH, HEIGHT);
 		renderGame(ctx);
-		window.requestAnimationFrame(FrameRequestCallback(ctx));
+		window.requestAnimationFrame(FrameRequestCallback(ctx, ws, keys));
+		// setTimeout(FrameRequestCallback(ctx, ws, keys), 10);
 	}
 }
 

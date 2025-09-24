@@ -29,7 +29,7 @@ export function createKeyDownEvent(keys: game.keys, ws: WebSocket)  {
 			keys.ArrowUp = true;
 		if (event.key === "ArrowDown")
 			keys.ArrowDown = true;
-		ws.send(JSON.stringify(keys));
+		// ws.send(JSON.stringify(keys));
 	}
 }
 
