@@ -19,7 +19,7 @@ export function addMessEvent(leftPad: game.paddlePos, rightPad: game.paddlePos, 
 	};
 }
 
-export function createKeyDownEvent(keys: game.keys, ws: WebSocket)  {
+export function createKeyDownEvent(keys: game.keys)  {
 	return function keyDownEvent(event: KeyboardEvent): void {
 		if (event.key === "w")
 			keys.w = true;
@@ -29,7 +29,6 @@ export function createKeyDownEvent(keys: game.keys, ws: WebSocket)  {
 			keys.ArrowUp = true;
 		if (event.key === "ArrowDown")
 			keys.ArrowDown = true;
-		// ws.send(JSON.stringify(keys));
 	}
 }
 

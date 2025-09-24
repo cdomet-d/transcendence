@@ -30,7 +30,7 @@ export function initGame(ws: WebSocket) {
 	const ctx = getCanvasContext();
 	let _keys: keys = {w: false, s: false, ArrowUp: false, ArrowDown: false};
 
-	window.addEventListener("keydown", createKeyDownEvent(_keys, ws));
+	window.addEventListener("keydown", createKeyDownEvent(_keys));
 	window.addEventListener("keyup", createKeyUpEvent(_keys));
 	addMessEvent(leftPad, rightPad, ws);
 	window.requestAnimationFrame(FrameRequestCallback(ctx, ws, _keys));
