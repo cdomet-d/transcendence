@@ -8,7 +8,7 @@
 <body>
 	<p class="title-shadow title-3"> profile tabs </p>
 	<div class="base-container vertical-spacing">
-		<div class="profile-tabs ">
+		<div class="tabs ">
 			<button class="tab thin-border button-bg"> Game history </button>
 			<button class="tab thin-border button-bg"> User statistics </button>
 		</div>
@@ -187,40 +187,60 @@
 
 		<p class="title-shadow title-3"> Notifications </p>
 		<div class="flexbox-auto-col">
-			<div class="notif-cont">
-				<div class="notification-text bg brdr">
+			<p class="bg"> Notifications content </p>
+			<div class="notification-wrapper">
+				<div class="notification-content bg brdr">
 					<img src="../assets/icons/notification-bubble.png" />
 					<p> %login% challenged you to a 1v1 match !! </p>
 				</div>
 			</div>
-			<div class="notification-icon-container bg bg-brdr">
+			<p class="bg"> No new notifications </p>
+			<div class="notification-icon-container">
+				<div class="brdr-red unread-notification"> </div>
 				<img class="image-l" src="../assets/icons/notification.png" />
 			</div>
-			<div class="notification-icon-container bg bg-brdr">
-				<div class="brdr-red unread-notification"> <span> +9 </span> </div>
+			<p class="bg"> Unread notifications </p>
+			<div class="notification-icon-container">
+				<div selected class="brdr-red unread-notification"> </div>
 				<img class="image-l" src="../assets/icons/notification.png" />
-			</div>
-
-			<div class="notif-cont">
-				<div class="notification-reveal bg bg-brdr">
-					<div class="notification-text bg brdr">
-						<img src="../assets/icons/notification-bubble.png" />
-						<p> %login% challenged you to a 1v1 match !! </p>
-						<p> %login% challenged you to a tournament !! </p>
-						<p> %login% challenged you to a 1v1 match !! </p>
-						<p> %login% challenged you to a 1v1 match !! </p>
-						<p> %login% challenged you to a 1v1 match !! </p>
-					</div>
-					<div class="notification-icon-container">
-						<img class="image-l" src="../assets/icons/notification.png" />
-					</div>
-				</div>
 			</div>
 		</div>
 
-		<p class="bg"> Here if a user has >9 notifications, transform it in +9 because I am NOT doing responsive for
-			stupid values <3 <br> Here I will add javascript later to do the whole "notifications appear when the user
-				clicks the bell" thing.</p>
+		<p class="bg"> Shown content after click </p>
+		<div class="notification-wrapper">
+			<div selected class="notification-interactive">
+				<div class="notification-content bg brdr">
+					<img src="../assets/icons/notification-bubble.png" />
+					<p> %login% challenged you to a 1v1 match !! </p>
+					<p> %login% challenged you to a tournament !! </p>
+					<p> %login% challenged you to a 1v1 match !! </p>
+					<p> %login% challenged you to a 1v1 match !! </p>
+					<p> %login% challenged you to a 1v1 match !! </p>
+				</div>
+			</div>
+			<div class="notification-icon-container">
+				<div class="brdr-red unread-notification"> </div>
+				<img class="image-l" src="../assets/icons/notification.png" />
+			</div>
+		</div>
+
+		<p class="bg"> Interaction demonstration </p>
+		<div class="notification-wrapper">
+			<div id="notificationIninteractiveWrapper" class="notification-interactive">
+				<div class="notification-content bg brdr">
+					<img src="../assets/icons/notification-bubble.png" />
+					<p> %login% challenged you to a 1v1 match !! </p>
+					<p> %login% challenged you to a tournament !! </p>
+					<p> %login% challenged you to a 1v1 match !! </p>
+					<p> %login% challenged you to a 1v1 match !! </p>
+					<p> %login% challenged you to a 1v1 match !! </p>
+				</div>
+			</div>
+			<div id="clickable" class="notification-icon-container">
+				<div id="unreadNotificationAlert" selected class="brdr-red unread-notification"> </div>
+				<img class="image-l" src="../assets/icons/notification.png" />
+			</div>
+		</div>
 
 		<p class="title-shadow title-3"> Loader </p>
 		<div class="loader-container bg-brdr">
@@ -240,9 +260,7 @@
 			<img class="load image-s" src="../assets/icons/magenta-avatar.png">
 		</div>
 	</div>
-
-
-
+<script src="../scripts/notifications.js"></script>
 </body>
 
 </html>
