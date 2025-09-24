@@ -14,8 +14,8 @@ export async function natsSubscribtion() {
       
       // prepareGame(msg.data);
       if (msg.reply)
-        nc.publish(msg.reply);
-      console.log(`Pong sent "game.ready"`);
+        nc.publish(msg.reply, msg.data);
+      console.log(`8\nPong sent "game.ready"`);
     }
   })();
 

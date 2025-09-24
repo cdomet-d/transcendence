@@ -31,7 +31,7 @@ interface match {
     loser: userInfo,
 }
 
-export function handleMatchRequest(socket: WebSocket, data: any) {
+export function handleMatchRequest(data: any) {
     // Decompose data
     const { format, remote, players, userID, username } = data.payload;
 

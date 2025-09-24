@@ -1,7 +1,18 @@
-function wsRequest() {
-    const ws = new WebSocket('wss://localhost:8443/api/game/menu');
+let wsInstance: any = null;
 
-    ws.onerror = (err) => {
+function openWsConnection() {
+    if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+        return wsInstance;
+    }
+    wsInstance = new WebSocket('wss://localhost:8443/api/game/menu');
+    // setup handlers
+    return wsInstance;
+}
+
+function wsRequest() {
+    const ws: WebSocket = openWsConnection();
+
+    ws.onerror = (err: any) => {
         console.log("error:", err);
         return; //TODO: handle error properly
     }

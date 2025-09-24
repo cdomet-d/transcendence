@@ -14,13 +14,35 @@ export async function natsSubscribe() {
       nc.publish('game.ready', payload.data, {reply: "game.waiting"});
     }
   })();
-
-    const game = nc.subscribe('game.waiting');
+  
+  const game = nc.subscribe('game.waiting');
   (async () => {
-    for await (const msg of game) {
-      // SIGNAL CLIENT AND CLOSE WS
-      sendWS("game.waiting");
-      console.log(`8\nPong says to GM: Game is WAITING\n`);
+    for await (const payload of game) {
+
+      // receive matchObj
+      console.log("HERE");
+      const sc = StringCodec();
+
+      const payloadString = sc.decode(payload.data);
+      if (payloadString) {
+        console.log("Payload STR: ", payloadString);
+      }
+      else {
+        console.log("PayloadStr is empty");
+      }
+      const data = JSON.parse(payloadString);
+      
+      // const data = JSON.parse(sc.decode(payload.data));
+      const userList = data.users;
+      const userListLen = userList.length;
+
+      // SIGNAL CLIENTS AND CLOSE WS
+      for (let i = 0; i < userListLen ; i++) {
+        console.log("CURRENT USER: ", userList[i].userID);
+        sendWS(userList[i].userID, "game.waiting");
+      }
+      console.log(`9\nPong says to GM: Game is WAITING\n`);
+    
     }
   })();
 };
