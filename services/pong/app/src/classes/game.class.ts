@@ -16,7 +16,7 @@ export interface gameInfo {
 	_loser: string
 }
 
-type playerTab = Array< Player >;
+export type playerTab = Array< Player >;
 
 export class Game {
     /*                             PROPERTIES                                */
@@ -67,4 +67,15 @@ export class Game {
 		this.#_players.splice(0, this.#_players.length);
 
 	} //TODO: to be removed. only for testing
+
+	public setLeftPaddle() {
+		if (this.#_players[0])
+        	this.#_players[0].paddle = {x: 10, y: 108};
+    }
+
+    public setRightPaddle() {
+		if (this.#_players[1])
+        	this.#_players[1].paddle = {x: 460, y: 108};
+    }
+
 }
