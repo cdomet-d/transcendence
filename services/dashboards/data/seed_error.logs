@@ -1,0 +1,2 @@
+Runtime error near line 1: UNIQUE constraint failed: gameMatchInfo.gameID (19)
+Runtime error near line 2: UNIQUE constraint failed: gameLobby.lobbyID (19)
