@@ -8,6 +8,7 @@ export interface keysObj {
 	s: boolean,
 	ArrowUp: boolean,
 	ArrowDown: boolean,
+    [key: string]: boolean,
 }
 
 export function setUpGame(game: Game) {
@@ -29,9 +30,19 @@ export function setUpGame(game: Game) {
     // startGame(game);
 }
 
+function keysDown(keys: keysObj): boolean {
+    for (const key in keys) {
+        if (keys[key])
+            return true;
+    }
+    return false
+}
+
 function setPaddleEventLocal(socket: WebSocket, leftPlayer: Player, rightPlayer: Player) {
     socket.on("message", (payload: any) => {
         const keys: keysObj = JSON.parse(payload);
+        if (!keysDown(keys))
+            return;
         updatePaddlePos(leftPlayer, {w: keys.w, s: keys.s, ArrowUp: false, ArrowDown: false});
         updatePaddlePos(rightPlayer, {w: false, s: false, ArrowUp: keys.ArrowUp, ArrowDown: keys.ArrowDown});
         leftPlayer.setMess("left", leftPlayer.paddle.y);
