@@ -5,17 +5,26 @@ export interface paddlePos {
     y: number;
 }
 
+// type messMap = Map< string, number >;
+export interface messObj {
+	leftPad: number | undefined,
+	rightPad: number | undefined,
+}
+
+
 export class Player {
     /*                             PROPERTIES                                */
     #_userID: number;
     #_socket: WebSocket;
     #_paddle: paddlePos;
+    #_mess: messObj;
 
     /*                            CONSTRUCTORS                               */
     constructor(userID: number, socket: WebSocket) {
         this.#_userID = userID;
         this.#_socket = socket;
         this.#_paddle = {x: 0, y: 0};
+        this.#_mess = {leftPad: undefined, rightPad: undefined};
     }
 
     /*                              GETTERS                                  */
@@ -27,12 +36,20 @@ export class Player {
         return this.#_paddle;
     }
 
-    /*                              METHODS                                  */
-    public setLeftPaddle() {
-        this.#_paddle = {x: 10, y: 108};
+    get mess(): messObj {
+        return this.#_mess;
     }
 
-    public setRightPaddle() {
-        this.#_paddle = {x: 460, y: 108};
+    /*                              SETTERS                                  */
+    set paddle(pad: paddlePos) {
+        this.#_paddle = pad;
+    }
+
+    /*                              METHODS                                  */
+    public setMess(side: string, newPos: number) {
+        if (side === "left")
+            this.#_mess.leftPad = newPos;//this.#_paddle.y;
+        else
+            this.#_mess.rightPad = newPos;//this.#_paddle.y;
     }
 }
