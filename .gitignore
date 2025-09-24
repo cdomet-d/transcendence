@@ -13,3 +13,4 @@ dist/
 output.css
 package-lock.json
 *.db
+*.log*

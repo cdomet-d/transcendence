@@ -24,6 +24,8 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
+    ports:
+      - "1313:1313"
     volumes:
       - ./services/accessibility/app:/usr/app
   account:

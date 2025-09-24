@@ -28,6 +28,7 @@ export function renderCentral(): string {
 		{ href: "/account", label: translate('Profile') },
 		{ href: "/game/leaderboard", label: translate('Leaderboard') },
 		{ href: "/game/match", label: translate('Game') },
+		{ href: "/sendRequest", label: translate('sendRequest')}
 		],
 		backHref: "/",
 		showBack: true,
@@ -52,6 +53,17 @@ export function renderProfile(): string {
 		nextButtons: [
 			{ href: "/accountSettings", label: translate("Account Settings") },
 			{ href: "/editProfile", label: translate("Edit Profile") }
+		],
+		backHref: "/central",
+		showBack: true,
+		homeHref: "/"
+	});
+}
+
+export function sendFriendRequest(): string {
+	return renderPageTemplate({
+		title: "send request",
+		nextButtons: [
 		],
 		backHref: "/central",
 		showBack: true,

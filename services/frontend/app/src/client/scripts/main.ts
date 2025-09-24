@@ -35,3 +35,20 @@ if (router._getCurrentURL() === '/game/match')
 
 initLanguageCSR();
 addLanguageEvents();
+
+document.getElementById('send-friend-btn')?.addEventListener('click', async () => {
+    const targetUsername = ;
+    const res = await fetch(`/api/user/friends-requests/${targetUsername}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}), // Add any required info
+        credentials: 'include' // optional, if using cookies/sessions
+    });
+    if (res.ok) {
+        // Optionally, show success to user
+        alert('Friend request sent!');
+    } else {
+        // Optionally, handle error
+        alert('Failed to send request');
+    }
+});

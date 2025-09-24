@@ -1,4 +1,0 @@
-Runtime error near line 1: UNIQUE constraint failed: usersAuth.userID (19)
-Parse error near line 2: unrecognized token: "`"
-  `
-  ^--- error here
