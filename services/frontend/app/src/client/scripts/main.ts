@@ -37,7 +37,7 @@ initLanguageCSR();
 addLanguageEvents();
 
 document.getElementById('send-friend-btn')?.addEventListener('click', async () => {
-    const targetUsername = ;
+    const targetUsername = "alex";
     const res = await fetch(`/api/user/friends-requests/${targetUsername}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

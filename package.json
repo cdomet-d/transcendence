@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/cdomet-d/transcendence/issues"
   },
-  "homepage": "https://github.com/cdomet-d/transcendence#readme"
+  "homepage": "https://github.com/cdomet-d/transcendence#readme",
+  "dependencies": {
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/sqlite3": "^5.1.0"
+  }
 }
