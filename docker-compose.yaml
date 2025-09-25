@@ -28,6 +28,7 @@ services:
       - "1313:1313"
     volumes:
       - ./services/accessibility/app:/usr/app
+      - accessibilityDB:/usr/data
   account:
     build:
       context: ./services/account
@@ -44,6 +45,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/account/app:/usr/app
+      - accountDB:/usr/data
   auth:
     build:
       context: ./services/auth
@@ -76,6 +78,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/dashboards/app:/usr/app
+      - statsDB:/usr/data
   friends:
     build:
       context: ./services/friends
@@ -92,6 +95,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/friends/app:/usr/app
+      - friendsDB:/usr/data
   frontend:
     build:
       context: ./services/frontend
@@ -208,4 +212,36 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/users/app:/usr/app
+      - usersDB:/usr/data
 
+volumes:
+  friendsDB:
+    driver: local
+    driver_opts:
+      device: services/friends/data
+      o: bind
+      type: none
+  accessibilityDB:
+    driver: local
+    driver_opts:
+      device: services/accessibility/data
+      o: bind
+      type: none
+  accountDB:
+    driver: local
+    driver_opts:
+      device: services/account/data
+      o: bind
+      type: none
+  usersDB:
+    driver: local
+    driver_opts:
+      device: services/users/data
+      o: bind
+      type: none
+  statsDB:
+    driver: local
+    driver_opts:
+      device: services/dashboards/data
+      o: bind
+      type: none
