@@ -50,7 +50,6 @@ function FrameRequestCallback(ctx: CanvasRenderingContext2D, ws: WebSocket, mess
 		ctx.clearRect(0, 0, WIDTH, HEIGHT);
 		renderGame(ctx);
 		window.requestAnimationFrame(FrameRequestCallback(ctx, ws, mess));
-		// setTimeout(FrameRequestCallback(ctx, ws, keys), 10);
 	}
 }
 
