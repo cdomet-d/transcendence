@@ -13,7 +13,7 @@
 		<div class="bg-brdr header">
 			<img class="header-item image-m" src="../assets/icons/default-avatar.png" />
 			<div class="header-item input-with-button">
-				<div class="form-group">
+				<div class="search input-n-label">
 					<img class="search-icon" src="../assets/icons/search-icon.png"></img>
 					<label class="thin-border" for="search"> search </label>
 					<input class="input-bg contrast-brdr" id="search" placeholder="search a user..."
@@ -349,9 +349,60 @@
 		</div>
 
 	</div>
+	<div class="single-centered-no-header">
+		<div class="centered-block bg bg-brdr">
+			<div class="letter-dance">
+				<span class="title-1 title-shadow"> R </span>
+				<span class="title-1 title-shadow"> E </span>
+				<span class="title-1 title-shadow"> G </span>
+				<span class="title-1 title-shadow"> I </span>
+				<span class="title-1 title-shadow"> S </span>
+				<span class="title-1 title-shadow"> T </span>
+				<span class="title-1 title-shadow"> E </span>
+				<span class="title-1 title-shadow"> R </span>
+			</div>
+			<p class="centered-text"> Just looking to play a game ? Enter a nickname and you're ready to go ! </p>
+			<p class="centered-text"> To enable friendships and user stats, you'll have to provide a password - this will create an account
+				for you.</p>
+			<div class="form-wrapper">
+				<form class="registration-form" action="/api/register" method="post">
+					<div class="input-n-label">
+						<input id="nickname" class="brdr plain-clear-bg" type="text"
+							pattern="^[a-zA-Z0-9]{4,18}$"></input>
+						<label class=" thin-border" for="nickname"> Nickname (4-18 characters) </label>
+					</div>
+					<div class="input-w-hint">
+						<div class="input-n-label">
+							<input id="password" class="brdr plain-clear-bg" type="password"
+								pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{12,256}$"></input>
+							<label class="thin-border" for="password"> Password </label>
+						</div>
+						<div class="display-inline">
+						<p id="pwHintTrigger">?</p>
+							<span id="pwHint" class="tooltip"> The password must be at least 12
+								characters long
+								and contain at least one lowercase
+								and uppercase letter, a digit and a special character.</span>
+						</div>
+					</div>
+					<input id="submit" class="brdr button-bg" type="submit" value="Register"> </input>
+				</form>
+			</div>
+		</div>
+	</div>
 	</div>
 
 	<script src="../scripts/tabs.js"> </script>
+	<script src="../scripts/collapsible-hint.js"> </script>
 </body>
 
 </html>
+
+<!-- It must be at least 12 characters long, and contain:
+
+at least one uppercase letter [A-Z]
+at least one lowercase letter [a-z]
+at least one digit [0 - 9]
+at least one special characters [@ $ ! % * ? &] -->
+
+^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{12,256}$

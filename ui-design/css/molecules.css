@@ -68,6 +68,16 @@
   }
 }
 
+@keyframes dance {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
 .breathe {
   transform-origin: bottom center;
   animation: breathe 3s linear alternate infinite;
@@ -88,6 +98,12 @@
 
 .load:nth-child(3) {
   animation-delay: 0.4s;
+}
+
+.letter-dance > span {
+  display: inline-block;
+  transform-origin: bottom center;
+  animation: dance 1.2s ease-in-out infinite;
 }
 
 .icon {
@@ -166,6 +182,10 @@
 
 .input-with-button > span {
   padding: 0;
+}
+
+.search > input[type="text"] {
+  padding: var(--space-xs) var(--space-s) var(--space-xs) var(--space-m);
 }
 
 .search-icon {
