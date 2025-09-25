@@ -3,11 +3,17 @@ import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from "./paddle.js"
 const WIDTH = 480;
 const HEIGHT = 270;
 
-export interface keys {
-	w: boolean,
-	s: boolean,
-	ArrowUp: boolean,
-	ArrowDown: boolean,
+export interface keysObj {
+	_w: boolean,
+	_s: boolean,
+	_ArrowUp: boolean,
+	_ArrowDown: boolean,
+	// [key: string]: boolean,
+}
+
+export interface messObj {
+	_keys: keysObj,
+	_timeStamp: number,
 }
 
 export interface paddlePos {
@@ -28,20 +34,22 @@ function pong() {
 
 export function initGame(ws: WebSocket) {
 	const ctx = getCanvasContext();
-	let _keys: keys = {w: false, s: false, ArrowUp: false, ArrowDown: false};
+	let keys: keysObj = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
+	let mess: messObj = { _keys: keys, _timeStamp: 0 };
 
-	window.addEventListener("keydown", createKeyDownEvent(_keys));
-	window.addEventListener("keyup", createKeyUpEvent(_keys));
+	window.addEventListener("keydown", createKeyDownEvent(mess._keys));
+	window.addEventListener("keyup", createKeyUpEvent(mess._keys));
 	addMessEvent(leftPad, rightPad, ws);
-	window.requestAnimationFrame(FrameRequestCallback(ctx, ws, _keys));
+	window.requestAnimationFrame(FrameRequestCallback(ctx, ws, mess));
 }
 
-function FrameRequestCallback(ctx: CanvasRenderingContext2D, ws: WebSocket, keys: keys) {
-	return function game() {
-		ws.send(JSON.stringify(keys));
+function FrameRequestCallback(ctx: CanvasRenderingContext2D, ws: WebSocket, mess: messObj) {
+	return function game(timestamp: number) {
+		mess._timeStamp = timestamp;
+		ws.send(JSON.stringify(mess));
 		ctx.clearRect(0, 0, WIDTH, HEIGHT);
 		renderGame(ctx);
-		window.requestAnimationFrame(FrameRequestCallback(ctx, ws, keys));
+		window.requestAnimationFrame(FrameRequestCallback(ctx, ws, mess));
 		// setTimeout(FrameRequestCallback(ctx, ws, keys), 10);
 	}
 }
