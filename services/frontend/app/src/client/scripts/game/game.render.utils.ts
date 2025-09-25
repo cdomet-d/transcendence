@@ -7,7 +7,7 @@ export function renderGame(game: Game) {
 }
 
 function drawPaddle(game: Game) {
-	game.ctx.fillRect(game.leftPad.x, game.leftPad.y, 10, 54);
+	game.ctx.fillRect(game.leftPad.x, game.leftPad.y, 10, 54); //TODO: initialise 10 and 54 in game class
 	game.ctx.fillRect(game.rightPad.x, game.rightPad.y, 10, 54);
 }
 
@@ -23,4 +23,3 @@ function drawBall(game: Game) {
 	game.ctx.arc(game.width / 2, game.height / 2, 10, 0, Math.PI * 2, false);
 	game.ctx.fill();
 }
-

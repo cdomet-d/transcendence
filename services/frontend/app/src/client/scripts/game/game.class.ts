@@ -29,7 +29,7 @@ export class Game {
         this.#_ctx = ctx;
         this.#_height = 270;
         this.#_width = 480;
-        this.#_leftPaddle = {x: 10, y: 108};
+        this.#_leftPaddle = {x: 10, y: 108}; //TODO: put operation
         this.#_rightPaddle = {x: 460, y: 108};
         let keys: keysObj = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
         this.#_mess = { _keys: keys, _timeStamp: 0 };
