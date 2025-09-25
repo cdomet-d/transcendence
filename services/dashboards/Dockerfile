@@ -4,10 +4,16 @@ RUN mkdir -p /usr/app && chown -R 1000:1000 /usr/app
 
 WORKDIR /usr/app
 
-COPY ./tools/dashboard.sh /usr/local/bin/ 
+COPY ./tools /usr/local/bin/ 
 
 RUN chmod +x /usr/local/bin/dashboard.sh
 
+RUN chmod +x /usr/local/bin/createDB.sh
+
+RUN apk update && apk add --no-cache sqlite
+
 EXPOSE 1515
+
+ENTRYPOINT ["/usr/local/bin/createDB.sh"]
 
 CMD ["dashboard.sh"]

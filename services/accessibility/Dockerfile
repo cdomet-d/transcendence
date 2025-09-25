@@ -10,7 +10,7 @@ RUN chmod +x /usr/local/bin/access.sh
 
 RUN chmod +x /usr/local/bin/createDB.sh
 
-RUN apk add --no-cache sqlite
+RUN apk update && apk add --no-cache sqlite
 
 EXPOSE 1313
 
