@@ -3,21 +3,21 @@ import type { keysObj } from './pong.js';
 
 const WIDTH = 480;
 const HEIGHT = 270;
-const padSpeed: number = 5;
+const padSpeed: number = 0.15;
 
-export function updatePaddlePos(player: Player, keys: keysObj) {
-    if (keys.w || keys.ArrowUp)
-        up(player.paddle);
-    if (keys.s || keys.ArrowDown)
-        down(player.paddle);
+export function updatePaddlePos(player: Player, keys: keysObj, delta: number) {
+    if (keys._w || keys._ArrowUp)
+        up(player.paddle, delta);
+    if (keys._s || keys._ArrowDown)
+        down(player.paddle, delta);
 }
 
-function up(pad: paddlePos) {
-    if (pad.y - padSpeed > 0)
-        pad.y -= padSpeed;
+function up(pad: paddlePos, delta: number) {
+    if (pad.y - (padSpeed * delta) > 0)
+        pad.y -= (padSpeed * delta);
 }
 
-function down(pad: paddlePos) {
-    if (pad.y + padSpeed < (HEIGHT - 54))
-        pad.y += padSpeed;
+function down(pad: paddlePos, delta: number) {
+    if (pad.y + (padSpeed * delta) < (HEIGHT - 54))
+        pad.y += (padSpeed * delta);
 }
