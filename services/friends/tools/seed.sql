@@ -1,2 +1,1 @@
-INSERT INTO blockedUsers (blockedID, blockingUserID, blockedUserID) VALUES (1, 1, 2);
-INSERT INTO friendship (friendshipID, userID, friendID, startTimeFriendship, status) VALUES (1, 1, 2, '2025-09-01 10:00:00', 1);
+INSERT INTO friendship (friendshipID, userID, friendID, startTimeFriendship, statusFrienship) VALUES (1, 1, 2, '2025-09-01 10:00:00', 1);

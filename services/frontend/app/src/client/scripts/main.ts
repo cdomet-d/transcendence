@@ -37,6 +37,7 @@ initLanguageCSR();
 addLanguageEvents();
 
 document.getElementById('send-friend-btn')?.addEventListener('click', async () => {
+    console.log("\n1\n")
     const targetUsername = "alex";
     const res = await fetch(`/api/user/friends-requests/${targetUsername}`, {
         method: 'POST',
@@ -45,10 +46,49 @@ document.getElementById('send-friend-btn')?.addEventListener('click', async () =
         credentials: 'include' // optional, if using cookies/sessions
     });
     if (res.ok) {
+        console.log("\nFriend request sent!\n")
         // Optionally, show success to user
         alert('Friend request sent!');
     } else {
+        console.log("\nFailed to send request!\n")
         // Optionally, handle error
         alert('Failed to send request');
     }
+});
+
+async function sendFriendRequestApi() {
+  try {
+    console.log('in function');
+
+    const targetUsername = "alex";
+    const response = await fetch(`/api/user/friends-requests/${targetUsername}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        friendshipID: 2,
+        userId: 123,
+        friendId: 456,
+        startTimeFriendship: new Date().toISOString(),
+        statusFrienship: false
+        }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('Request success:', data);
+    alert('Friend request sent successfully!');
+  } catch (error) {
+    console.error('Request failed', error);
+    alert('Failed to send friend request.');
+  }
+}
+
+document.getElementById('send-request-btn')?.addEventListener('click', (event) => {
+  event.preventDefault();
+  sendFriendRequestApi();
 });
