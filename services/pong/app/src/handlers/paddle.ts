@@ -3,7 +3,7 @@ import type { keysObj } from './pong.js';
 
 const WIDTH = 480;
 const HEIGHT = 270;
-const padSpeed: number = 0.15;
+const padSpeed: number = 0.2;
 
 export function updatePaddlePos(player: Player, keys: keysObj, delta: number) {
     if (keys._w || keys._ArrowUp)
