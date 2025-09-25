@@ -6,7 +6,7 @@ export interface paddlePos {
 }
 
 // type messMap = Map< string, number >;
-export interface messObj {
+export interface repObj {
 	leftPad: number | undefined,
 	rightPad: number | undefined,
 }
@@ -17,7 +17,7 @@ export class Player {
     #_userID: number;
     #_socket: WebSocket;
     #_paddle: paddlePos;
-    #_mess: messObj;
+    #_mess: repObj;
 
     /*                            CONSTRUCTORS                               */
     constructor(userID: number, socket: WebSocket) {
@@ -36,7 +36,7 @@ export class Player {
         return this.#_paddle;
     }
 
-    get mess(): messObj {
+    get mess(): repObj {
         return this.#_mess;
     }
 

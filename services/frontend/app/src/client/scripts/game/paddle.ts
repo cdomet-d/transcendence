@@ -2,14 +2,14 @@ import * as game from './pong.js'
 
 // type messMap = Map< string, number >
 
-interface messObj {
+interface repObj {
 	leftPad: number | undefined,
 	rightPad: number | undefined,
 }
 
 export function addMessEvent(leftPad: game.paddlePos, rightPad: game.paddlePos, ws: WebSocket) {
 	ws.onmessage = (event) => {
-		const mess: messObj = JSON.parse(event.data);
+		const mess: repObj = JSON.parse(event.data);
 		let newPos: number | undefined = mess.leftPad;
 		if (newPos)
 			leftPad.y = newPos;
@@ -19,29 +19,29 @@ export function addMessEvent(leftPad: game.paddlePos, rightPad: game.paddlePos, 
 	};
 }
 
-export function createKeyDownEvent(keys: game.keys)  {
+// import { keyChange } from './pong.js';
+export function createKeyDownEvent(keys: game.keysObj)  {
 	return function keyDownEvent(event: KeyboardEvent): void {
 		if (event.key === "w")
-			keys.w = true;
+			keys._w = true;
 		if (event.key === "s")
-			keys.s = true;
+			keys._s = true;
 		if (event.key === "ArrowUp")
-			keys.ArrowUp = true;
+			keys._ArrowUp = true;
 		if (event.key === "ArrowDown")
-			keys.ArrowDown = true;
+			keys._ArrowDown = true;
 	}
 }
 
-export function createKeyUpEvent(keys: game.keys)  {
+export function createKeyUpEvent(keys: game.keysObj)  {
 	return function keyUpEvent(event: KeyboardEvent): void {
 		if (event.key === "w")
-			keys.w = false;
+			keys._w = false;
 		if (event.key === "s")
-			keys.s = false;
+			keys._s = false;
 		if (event.key === "ArrowUp")
-			keys.ArrowUp = false;
+			keys._ArrowUp = false;
 		if (event.key === "ArrowDown")
-			keys.ArrowDown = false;
+			keys._ArrowDown = false;
 	}
 }
-
