@@ -1,26 +1,23 @@
-import * as game from './pong.js'
-
-// type messMap = Map< string, number >
+import { Game, type keysObj} from './game.class.js'
 
 interface repObj {
 	leftPad: number | undefined,
 	rightPad: number | undefined,
 }
 
-export function addMessEvent(leftPad: game.paddlePos, rightPad: game.paddlePos, ws: WebSocket) {
+export function addMessEvent(game: Game, ws: WebSocket) {
 	ws.onmessage = (event) => {
 		const mess: repObj = JSON.parse(event.data);
 		let newPos: number | undefined = mess.leftPad;
 		if (newPos)
-			leftPad.y = newPos;
+			game.leftPad.y = newPos;
 		newPos = mess.rightPad;
 		if (newPos)
-			rightPad.y = newPos;
+			game.rightPad.y = newPos;
 	};
 }
 
-// import { keyChange } from './pong.js';
-export function createKeyDownEvent(keys: game.keysObj)  {
+export function createKeyDownEvent(keys: keysObj)  {
 	return function keyDownEvent(event: KeyboardEvent): void {
 		event.preventDefault();
 		if (event.key === "w")
@@ -34,7 +31,7 @@ export function createKeyDownEvent(keys: game.keysObj)  {
 	}
 }
 
-export function createKeyUpEvent(keys: game.keysObj)  {
+export function createKeyUpEvent(keys: keysObj)  {
 	return function keyUpEvent(event: KeyboardEvent): void {
 		event.preventDefault();
 		if (event.key === "w")

@@ -1,6 +1,7 @@
-import { initGame } from './pong.js';
+import { startGame } from './game.loop.js';
+import { Game } from './game.class.js';
 
-function wsRequest() {
+function wsRequest(game: Game) {
     document.cookie = "gameid=1;path=/;max-age=31536000";
     document.cookie = "userid=1;path=/;max-age=31536000";
     document.cookie = "randuserid=2;path=/;max-age=31536000";
@@ -17,8 +18,10 @@ function wsRequest() {
         ws.onmessage = (event) => {
             console.log("message from server:", event.data);
         }
-        initGame(ws);
+        startGame(game, ws);
     }
+
+    //TODO: on close ?
 }
 
 export { wsRequest };
