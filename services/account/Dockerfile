@@ -4,10 +4,16 @@ RUN mkdir -p /usr/app && chown -R 1000:1000 /usr/app
 
 WORKDIR /usr/app
 
-COPY ./tools/account.sh /usr/local/bin/ 
+COPY ./tools /usr/local/bin/ 
 
 RUN chmod +x /usr/local/bin/account.sh
 
+RUN chmod +x /usr/local/bin/createDB.sh
+
+RUN apk add --no-cache sqlite
+
 EXPOSE 1414
+
+ENTRYPOINT ["/usr/local/bin/createDB.sh"]
 
 CMD ["account.sh"]
