@@ -142,7 +142,6 @@ body {
 }
 
 .display-inline {
-	outline: 1px red solid;
   display: flex;
 }
 

@@ -269,7 +269,16 @@
 
 .tooltip[selected] {
   box-sizing: border-box;
-  display: block;
   padding: var(--space-xs);
   width: 95%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  width: 100%;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  padding: var(--space-xxs);
+  line-height: 1rem;
+  max-height: var(--m);
 }
