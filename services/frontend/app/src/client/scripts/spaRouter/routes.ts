@@ -13,4 +13,5 @@ export const routes: routeInterface[] = [
   { path: '/game/leaderboard', callback: page.renderLeaderboard },
   { path: '/game/tournament', callback: page.renderTournament },
   { path: '/game/match', callback: page.renderGame},
+  { path: '/sendFriendRequest', callback: page.renderHome}
 ];

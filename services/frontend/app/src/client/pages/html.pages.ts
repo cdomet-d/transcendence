@@ -64,6 +64,7 @@ export function sendFriendRequest(): string {
 	return renderPageTemplate({
 		title: "send request",
 		nextButtons: [
+			{ href: "/home", label: translate("Back") },
 		],
 		backHref: "/central",
 		showBack: true,
