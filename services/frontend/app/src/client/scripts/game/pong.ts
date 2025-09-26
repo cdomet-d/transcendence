@@ -5,10 +5,11 @@ function pong() {
 	const ctx = getCanvasContext();
 	if (!ctx) {
 		console.log("error: context not supported");
-		process.exit(1); //TODO: can't exit
+		return; //TODO: display capibara ?
 	}
 	const game: Game = new Game(ctx);
-	renderGame(game);
+	renderGame(game); //TODO: before rendering need to receive players names
+	//TODO: should rendering be done after ws connection ?
 	import("./ws.req.js").then(({ wsRequest }) => {
         wsRequest(game);
     }) //TODO: can import fail ?
