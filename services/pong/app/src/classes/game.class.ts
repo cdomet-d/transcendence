@@ -1,6 +1,4 @@
-import type { WebSocket } from '@fastify/websocket';
 import type { Player } from './player.class.js';
-import type { randPlayer } from './random.player.class.js';
 
 export interface user {
 	_username: string,
