@@ -2,9 +2,8 @@ import { startGame } from './game.loop.js';
 import { Game } from './game.class.js';
 
 function wsRequest(game: Game) {
-    document.cookie = "gameid=1;path=/;max-age=31536000";
-    document.cookie = "userid=1;path=/;max-age=31536000";
-    document.cookie = "randuserid=2;path=/;max-age=31536000";
+    document.cookie = "gameid=1;path=/api/game/match;max-age=31536000";
+    document.cookie = "userid=1;path=/api/game/match;max-age=31536000";
 
     const ws = new WebSocket('wss://localhost:8443/api/game/match');
 
