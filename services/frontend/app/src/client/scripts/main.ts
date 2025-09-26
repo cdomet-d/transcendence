@@ -38,11 +38,10 @@ addLanguageEvents();
 
 document.getElementById('send-friend-btn')?.addEventListener('click', async () => {
     console.log("\n1\n")
-    const targetUsername = "alex";
-    const res = await fetch(`/api/user/friends-requests/${targetUsername}`, {
+    const res = await fetch(`/api/user/friends-requests`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}), // Add any required info
+        body: JSON.stringify({ requester_id: "alex", requestee_id: "Hugues" }),
         credentials: 'include' // optional, if using cookies/sessions
     });
     if (res.ok) {

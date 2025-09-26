@@ -1,10 +1,10 @@
 import type { FastifyInstance } from 'fastify';
-import { db } from './db.js'; // Adjust if your export/import differs
+import { db } from './db.js';
 
 export async function friendRoutes(fastify: FastifyInstance) {
-  fastify.post('/api/friend-request', async (request, reply) => {
+  fastify.post('/api/user/friends-requests/', async (request, reply) => {
     const { requester_id, requestee_id } = request.body as { requester_id: number, requestee_id: number };
-	console.log("In the friendRoutes function from friend container");
+	  request.log.info("In the friendRoutes function from friend container");
 
     if (!requester_id || !requestee_id) {
       reply.code(400).send({ error: 'Missing requester_id or requestee_id' });
@@ -13,8 +13,8 @@ export async function friendRoutes(fastify: FastifyInstance) {
 
     try {
       await db.run(
-        `INSERT INTO friendship (userID, friendID, startTimeFriendship, statusFrienship)
-        ake ruVALUES (?, ?, datetime('now'), ?)`,
+    `INSERT INTO friendship (userID, friendID, startTimeFriendship, statusFrienship)
+      VALUES (?, ?, datetime('now'), ?)`,
 		[requester_id, requestee_id, false]
       );
       reply.send({ status: 'ok', message: 'Friend request saved' });
