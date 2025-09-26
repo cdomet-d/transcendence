@@ -1,5 +1,6 @@
 import type { WebSocket } from '@fastify/websocket';
 import type { Player } from './player.class.js';
+import type { randPlayer } from './random.player.class.js';
 
 export interface user {
 	_username: string,
@@ -42,6 +43,10 @@ export class Game {
 		return this.#_gameInfo._local;
 	}
 
+	get randUserID(): number {
+		return this.#_gameInfo._users[1]!._userID;
+	}
+
     /*                              SETTERS                                  */
 	set score(score: Array< number >) {
 		this.#_gameInfo._score = score;
@@ -67,15 +72,4 @@ export class Game {
 		this.#_players.splice(0, this.#_players.length);
 
 	} //TODO: to be removed. only for testing
-
-	public setLeftPaddle() {
-		if (this.#_players[0])
-        	this.#_players[0].paddle = {x: 10, y: 108};
-    }
-
-    public setRightPaddle() {
-		if (this.#_players[1])
-        	this.#_players[1].paddle = {x: 460, y: 108};
-    }
-
 }
