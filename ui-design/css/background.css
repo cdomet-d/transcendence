@@ -1,257 +1,293 @@
 @import url(./atoms.css);
 
 .bg {
-	background: linear-gradient(180deg,
-			#F9ECCE 0 10%,
-			#FAF0D8 0 20%,
-			#FCF4E2 0 30%,
-			#FDF8ED 0 40%,
-			#FFFCF7 0 50%,
-			#FFFCF7 0 60%,
-			#FDF8ED 0 70%,
-			#FCF4E2 0 80%,
-			#FAF0D8 0 90%,
-			#F9ECCE 0 100%);
+  background: linear-gradient(
+    180deg,
+    #f9ecce 0 10%,
+    #faf0d8 0 20%,
+    #fcf4e2 0 30%,
+    #fdf8ed 0 40%,
+    #fffcf7 0 50%,
+    #fffcf7 0 60%,
+    #fdf8ed 0 70%,
+    #fcf4e2 0 80%,
+    #faf0d8 0 90%,
+    #f9ecce 0 100%
+  );
+}
+
+.overlay-bg {
+  background-color: #ffdb9976;
 }
 
 .plain-yellow-bg {
-	border: none;
-	background: linear-gradient(180deg,
-			#F4B000 0 10%,
-			#F7B200 0 20%,
-			#FAB400 0 30%,
-			#FCB600 0 40%,
-			#FFB800 0 50%,
-			#FFB800 0 60%,
-			#FCB600 0 70%,
-			#FAB400 0 80%,
-			#F7B200 0 90%,
-			#F4B000 0 100%);
+  border: none;
+  background: linear-gradient(
+    180deg,
+    #f4b000 0 10%,
+    #f7b200 0 20%,
+    #fab400 0 30%,
+    #fcb600 0 40%,
+    #ffb800 0 50%,
+    #ffb800 0 60%,
+    #fcb600 0 70%,
+    #fab400 0 80%,
+    #f7b200 0 90%,
+    #f4b000 0 100%
+  );
 }
 
 .plain-clear-bg {
-	background: linear-gradient(180deg,
-			#ffdc99 0 10%,
-			#ffe0a5 0 20%,
-			#ffe4b0 0 30%,
-			#ffe8bb 0 40%,
-			#ffecc6 0 50%,
-			#ffecc6 0 60%,
-			#ffe8bb 0 70%,
-			#ffe4b0 0 80%,
-			#ffe0a5 0 90%,
-			#ffdc99 0 100%);
+  background: linear-gradient(
+    180deg,
+    #ffdc99 0 10%,
+    #ffe0a5 0 20%,
+    #ffe4b0 0 30%,
+    #ffe8bb 0 40%,
+    #ffecc6 0 50%,
+    #ffecc6 0 60%,
+    #ffe8bb 0 70%,
+    #ffe4b0 0 80%,
+    #ffe0a5 0 90%,
+    #ffdc99 0 100%
+  );
 }
 
 .plain-invalid-bg {
-	background: linear-gradient(180deg,
-			#CE633B 0 10%,
-			#D3673F 0 20%,
-			#D96B42 0 30%,
-			#DE6E45 0 40%,
-			#E37248 0 50%,
-			#E37248 0 60%,
-			#DE6E45 0 70%,
-			#D96B42 0 80%,
-			#D3673F 0 90%,
-			#CE633B 0 100%);
+  background: linear-gradient(
+    180deg,
+    #ce633b 0 10%,
+    #d3673f 0 20%,
+    #d96b42 0 30%,
+    #de6e45 0 40%,
+    #e37248 0 50%,
+    #e37248 0 60%,
+    #de6e45 0 70%,
+    #d96b42 0 80%,
+    #d3673f 0 90%,
+    #ce633b 0 100%
+  );
 }
 
 .bg-disabled {
-	background-color: var(--disabled);
-	color: var(--shadow-2);
-	border-top: 2px solid var(--shadow-1);
-	border-bottom: 2px solid var(--shadow-1);
+  background-color: var(--disabled);
+  color: var(--shadow-2);
+  border-top: 2px solid var(--shadow-1);
+  border-bottom: 2px solid var(--shadow-1);
 }
 
 .bg-invalid {
-	border-top: 2px solid var(--highlight-red);
-	border-bottom: 2px solid var(--shadow-red);
-	background: linear-gradient(180deg,
-			#CE633B 0 10%,
-			#D3673F 0 20%,
-			#D96B42 0 30%,
-			#DE6E45 0 40%,
-			#E37248 0 50%,
-			#E37248 0 60%,
-			#DE6E45 0 70%,
-			#D96B42 0 80%,
-			#D3673F 0 90%,
-			#CE633B 0 100%);
+  border-top: 2px solid var(--highlight-red);
+  border-bottom: 2px solid var(--shadow-red);
+  background: linear-gradient(
+    180deg,
+    #ce633b 0 10%,
+    #d3673f 0 20%,
+    #d96b42 0 30%,
+    #de6e45 0 40%,
+    #e37248 0 50%,
+    #e37248 0 60%,
+    #de6e45 0 70%,
+    #d96b42 0 80%,
+    #d3673f 0 90%,
+    #ce633b 0 100%
+  );
 }
 
 .bg-invalid:hover {
-	border-top: 2px solid var(--highlight-red);
-	border-bottom: 2px solid var(--highlight-red);
-	background: linear-gradient(180deg,
-			#CE633B 0 10%,
-			#D3673F 0 20%,
-			#D96B42 0 30%,
-			#DE6E45 0 40%,
-			#E37248 0 50%,
-			#E37248 0 60%,
-			#DE6E45 0 70%,
-			#D96B42 0 80%,
-			#D3673F 0 90%,
-			#CE633B 0 100%);
+  border-top: 2px solid var(--highlight-red);
+  border-bottom: 2px solid var(--highlight-red);
+  background: linear-gradient(
+    180deg,
+    #ce633b 0 10%,
+    #d3673f 0 20%,
+    #d96b42 0 30%,
+    #de6e45 0 40%,
+    #e37248 0 50%,
+    #e37248 0 60%,
+    #de6e45 0 70%,
+    #d96b42 0 80%,
+    #d3673f 0 90%,
+    #ce633b 0 100%
+  );
 }
 
 .bg-invalid:active {
-	border-top: 2px solid var(--shadow-red);
-	border-bottom: 2px solid var(--shadow-red);
-	background: linear-gradient(180deg,
-			#CE633B 0 10%,
-			#D3673F 0 20%,
-			#D96B42 0 30%,
-			#DE6E45 0 40%,
-			#E37248 0 50%,
-			#E37248 0 60%,
-			#DE6E45 0 70%,
-			#D96B42 0 80%,
-			#D3673F 0 90%,
-			#CE633B 0 100%);
+  border-top: 2px solid var(--shadow-red);
+  border-bottom: 2px solid var(--shadow-red);
+  background: linear-gradient(
+    180deg,
+    #ce633b 0 10%,
+    #d3673f 0 20%,
+    #d96b42 0 30%,
+    #de6e45 0 40%,
+    #e37248 0 50%,
+    #e37248 0 60%,
+    #de6e45 0 70%,
+    #d96b42 0 80%,
+    #d3673f 0 90%,
+    #ce633b 0 100%
+  );
 }
 
 .bg-valid {
-	border-top: 2px solid var(--highlight-green);
-	border-bottom: 2px solid var(--shadow-green);
-	background: linear-gradient(180deg,
-			#42B143 0 10%,
-			#57B946 0 20%,
-			#61BD48 0 30%,
-			#6CC149 0 40%,
-			#76C54B 0 50%,
-			#76C54B 0 60%,
-			#6CC149 0 70%,
-			#61BD48 0 80%,
-			#57B946 0 90%,
-			#42B143 0 100%);
+  border-top: 2px solid var(--highlight-green);
+  border-bottom: 2px solid var(--shadow-green);
+  background: linear-gradient(
+    180deg,
+    #42b143 0 10%,
+    #57b946 0 20%,
+    #61bd48 0 30%,
+    #6cc149 0 40%,
+    #76c54b 0 50%,
+    #76c54b 0 60%,
+    #6cc149 0 70%,
+    #61bd48 0 80%,
+    #57b946 0 90%,
+    #42b143 0 100%
+  );
 }
 
 .bg-valid:hover {
-	border-top: 2px solid var(--highlight-green);
-	border-bottom: 2px solid var(--highlight-green);
-	background: linear-gradient(180deg,
-			#42B143 0 10%,
-			#57B946 0 20%,
-			#61BD48 0 30%,
-			#6CC149 0 40%,
-			#76C54B 0 50%,
-			#76C54B 0 60%,
-			#6CC149 0 70%,
-			#61BD48 0 80%,
-			#57B946 0 90%,
-			#42B143 0 100%);
+  border-top: 2px solid var(--highlight-green);
+  border-bottom: 2px solid var(--highlight-green);
+  background: linear-gradient(
+    180deg,
+    #42b143 0 10%,
+    #57b946 0 20%,
+    #61bd48 0 30%,
+    #6cc149 0 40%,
+    #76c54b 0 50%,
+    #76c54b 0 60%,
+    #6cc149 0 70%,
+    #61bd48 0 80%,
+    #57b946 0 90%,
+    #42b143 0 100%
+  );
 }
 
 .bg-valid:active {
-	border-top: 2px solid var(--shadow-green);
-	border-bottom: 2px solid var(--shadow-green);
-	background: linear-gradient(180deg,
-			#42B143 0 10%,
-			#57B946 0 20%,
-			#61BD48 0 30%,
-			#6CC149 0 40%,
-			#76C54B 0 50%,
-			#76C54B 0 60%,
-			#6CC149 0 70%,
-			#61BD48 0 80%,
-			#57B946 0 90%,
-			#42B143 0 100%);
+  border-top: 2px solid var(--shadow-green);
+  border-bottom: 2px solid var(--shadow-green);
+  background: linear-gradient(
+    180deg,
+    #42b143 0 10%,
+    #57b946 0 20%,
+    #61bd48 0 30%,
+    #6cc149 0 40%,
+    #76c54b 0 50%,
+    #76c54b 0 60%,
+    #6cc149 0 70%,
+    #61bd48 0 80%,
+    #57b946 0 90%,
+    #42b143 0 100%
+  );
 }
 
 .button-bg {
-	border: none;
-	border-top: 2px solid var(--highlight-yellow);
-	border-bottom: 2px solid var(--shadow-yellow);
-	background: linear-gradient(180deg,
-			#F4B000 0 10%,
-			#F7B200 0 20%,
-			#FAB400 0 30%,
-			#FCB600 0 40%,
-			#FFB800 0 50%,
-			#FFB800 0 60%,
-			#FCB600 0 70%,
-			#FAB400 0 80%,
-			#F7B200 0 90%,
-			#F4B000 0 100%);
+  border: none;
+  border-top: 2px solid var(--highlight-yellow);
+  border-bottom: 2px solid var(--shadow-yellow);
+  background: linear-gradient(
+    180deg,
+    #f4b000 0 10%,
+    #f7b200 0 20%,
+    #fab400 0 30%,
+    #fcb600 0 40%,
+    #ffb800 0 50%,
+    #ffb800 0 60%,
+    #fcb600 0 70%,
+    #fab400 0 80%,
+    #f7b200 0 90%,
+    #f4b000 0 100%
+  );
 }
 
 .button-bg:hover,
 .button-bg-hover {
-	background: linear-gradient(180deg,
-			#ffc245 0 10%,
-			#ffc652 0 20%,
-			#ffca5f 0 30%,
-			#ffcd6b 0 40%,
-			#ffd177 0 50%,
-			#ffd177 0 60%,
-			#ffcd6b 0 70%,
-			#ffca5f 0 80%,
-			#ffc652 0 90%,
-			#ffc245 0 100%);
-	border-top: 2px solid var(--highlight-yellow);
-	border-bottom: 2px solid var(--highlight-yellow);
+  background: linear-gradient(
+    180deg,
+    #ffc245 0 10%,
+    #ffc652 0 20%,
+    #ffca5f 0 30%,
+    #ffcd6b 0 40%,
+    #ffd177 0 50%,
+    #ffd177 0 60%,
+    #ffcd6b 0 70%,
+    #ffca5f 0 80%,
+    #ffc652 0 90%,
+    #ffc245 0 100%
+  );
+  border-top: 2px solid var(--highlight-yellow);
+  border-bottom: 2px solid var(--highlight-yellow);
 }
 
 .button-bg:active,
 .button-bg-active {
-	background: linear-gradient(180deg,
-			#E3A300 0 10%,
-			#E7A700 0 20%,
-			#E9A900 0 30%,
-			#ECAB00 0 40%,
-			#EFAC00 0 50%,
-			#EFAC00 0 60%,
-			#ECAB00 0 70%,
-			#E9A900 0 80%,
-			#E7A700 0 90%,
-			#E3A300 0 100%);
-	border-top: 2px solid var(--shadow-yellow);
-	border-bottom: 2px solid var(--shadow-yellow);
+  background: linear-gradient(
+    180deg,
+    #e3a300 0 10%,
+    #e7a700 0 20%,
+    #e9a900 0 30%,
+    #ecab00 0 40%,
+    #efac00 0 50%,
+    #efac00 0 60%,
+    #ecab00 0 70%,
+    #e9a900 0 80%,
+    #e7a700 0 90%,
+    #e3a300 0 100%
+  );
+  border-top: 2px solid var(--shadow-yellow);
+  border-bottom: 2px solid var(--shadow-yellow);
 }
 
 .input-bg {
-	background: linear-gradient(180deg,
-			var(--white) 0 10%,
-			#FFE5B2 0 20%,
-			#FFE8BC 0 30%,
-			#FFEAC1 0 40%,
-			#FFECC6 0 50%,
-			#FFECC6 0 60%,
-			#FFEAC1 0 70%,
-			#FFE8BC 0 80%,
-			#FFE5B2 0 90%,
-			#ECAB00 0 100%);
+  background: linear-gradient(
+    180deg,
+    var(--white) 0 10%,
+    #ffe5b2 0 20%,
+    #ffe8bc 0 30%,
+    #ffeac1 0 40%,
+    #ffecc6 0 50%,
+    #ffecc6 0 60%,
+    #ffeac1 0 70%,
+    #ffe8bc 0 80%,
+    #ffe5b2 0 90%,
+    #ecab00 0 100%
+  );
 }
 
 .input-bg-hover,
 .input-bg:hover {
-	background: linear-gradient(180deg,
-			var(--white) 0 10%,
-			#FFE5B2 0 20%,
-			#FFE8BC 0 30%,
-			#FFEAC1 0 40%,
-			#FFECC6 0 50%,
-			#FFECC6 0 60%,
-			#FFEAC1 0 70%,
-			#FFE8BC 0 80%,
-			#FFE5B2 0 90%,
-			var(--white) 0 100%);
+  background: linear-gradient(
+    180deg,
+    var(--white) 0 10%,
+    #ffe5b2 0 20%,
+    #ffe8bc 0 30%,
+    #ffeac1 0 40%,
+    #ffecc6 0 50%,
+    #ffecc6 0 60%,
+    #ffeac1 0 70%,
+    #ffe8bc 0 80%,
+    #ffe5b2 0 90%,
+    var(--white) 0 100%
+  );
 }
 
 .input-bg-active,
 .input-bg:active,
 .input-bg:focus {
-	background: linear-gradient(180deg,
-			#ECAB00 0 10%,
-			#FFE5B2 0 20%,
-			#FFE8BC 0 30%,
-			#FFEAC1 0 40%,
-			#FFECC6 0 50%,
-			#FFECC6 0 60%,
-			#FFEAC1 0 70%,
-			#FFE8BC 0 80%,
-			#FFE5B2 0 90%,
-			#ECAB00 0 100%);
+  background: linear-gradient(
+    180deg,
+    #ecab00 0 10%,
+    #ffe5b2 0 20%,
+    #ffe8bc 0 30%,
+    #ffeac1 0 40%,
+    #ffecc6 0 50%,
+    #ffecc6 0 60%,
+    #ffeac1 0 70%,
+    #ffe8bc 0 80%,
+    #ffe5b2 0 90%,
+    #ecab00 0 100%
+  );
 }

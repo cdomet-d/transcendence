@@ -85,6 +85,18 @@
 		0 4px 0 0 #F7E8C4;
 }
 
+.bg-brdr-overlay {
+	box-shadow:
+		-2px -2px #ffdb9976,
+		-2px 2px #ffdb9976,
+		2px -2px #ffdb9976,
+		2px 2px #ffdb9976,
+		-4px 0 0 0 #ffdb9976,
+		4px 0 0 0 #ffdb9976,
+		0 -4px 0 0 #ffdb9976,
+		0 4px 0 0 #ffdb9976;
+}
+
 .thin-border {
 	box-shadow:
 		-1px -1px var(--neutral-border),
