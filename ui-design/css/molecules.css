@@ -1,118 +1,31 @@
-@import url(./atoms.css);
-
-@keyframes load {
-  0% {
-    transform: translateY(0%) scale3d(1, 1, 1);
-  }
-
-  10% {
-    transform: translateY(5%) scale3d(0.9, 1.1, 1);
-  }
-
-  20% {
-    transform: translateY(10%) scale3d(0.8, 1.2, 1);
-  }
-
-  30% {
-    transform: translateY(15%) scale3d(0.7, 1.3, 1);
-  }
-
-  40% {
-    transform: translateY(20%) scale3d(0.8, 1.2, 1);
-  }
-
-  50% {
-    transform: translateY(25%) scale3d(0.9, 1.1, 1);
-  }
-
-  60% {
-    transform: translateY(30%) scale3d(1, 1, 1);
-  }
-
-  70% {
-    transform: translateY(35%) scale3d(1.1, 0.9, 1);
-  }
-
-  80% {
-    transform: translateY(35%) scale3d(1.2, 0.8, 1);
-  }
-
-  90% {
-    transform: translateY(35%) scale3d(1.3, 0.7, 1);
-  }
-
-  100% {
-    transform: translateY(35%) scale3d(1.4, 0.6, 1);
-  }
-}
-
-@keyframes breathe {
-  0% {
-    transform: scale3d(1, 1, 1);
-  }
-
-  25% {
-    transform: scale3d(1, 1.05, 1);
-  }
-
-  50% {
-    transform: scale3d(1, 1, 1);
-  }
-
-  75% {
-    transform: scale3d(1, 0.95, 1);
-  }
-
-  100% {
-    transform: scale3d(1, 1, 1);
-  }
-}
-
-@keyframes dance {
-  0%,
-  100% {
-    transform: rotate(-2deg);
-  }
-  50% {
-    transform: rotate(2deg);
-  }
-}
-
-.breathe {
-  transform-origin: bottom center;
-  animation: breathe 3s linear alternate infinite;
-}
-
-.load {
-  transform-origin: bottom center;
-  animation: load 0.5s linear alternate infinite;
-}
-
-.load:nth-child(1) {
-  animation-delay: 0s;
-}
-
-.load:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.load:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-.letter-dance > span {
-  display: inline-block;
-  transform-origin: bottom center;
-  animation: dance 1.2s ease-in-out infinite;
-}
+@import url(./variables.css);
 
 .icon {
   height: 32px;
   width: 32px;
 }
 
+.language {
+  box-sizing: border-box;
+  height: var(--m);
+  width: var(--m);
+  display: flex;
+  place-items: center;
+}
+
+.language-options {
+  font-family: PixelOperatorBold;
+  width: var(--l);
+  display: none;
+}
+
+.dropdown-item {
+  line-height: 130%;
+  padding: var(--space-s);
+  box-sizing: border-box;
+}
+
 .tabs {
-  min-width: fit-content;
   align-items: center;
   box-sizing: border-box;
   display: grid;
@@ -260,8 +173,9 @@
 }
 
 .notification-wrapper {
+  position: relative;
   box-sizing: border-box;
-  width: max-content;
+  width: fit-content;
   display: flex;
   align-items: flex-start;
   gap: var(--space-sm);
@@ -301,7 +215,7 @@
 .notification-interactive {
   display: none;
   width: fit-content;
-  position: relative;
+  position: fixed;
 }
 
 .notification-interactive[selected] {
@@ -311,12 +225,12 @@
 .unread-notification {
   display: none;
   position: absolute;
-  top: 16px;
-  right: 24px;
+  top: 8px;
+  right: 8px;
   box-sizing: border-box;
   background-color: var(--highlight-red);
-  width: var(--regular);
-  height: var(--regular);
+  width: var(--space-xs);
+  height: var(--space-xs);
   z-index: 2;
 }
 

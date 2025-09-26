@@ -3,14 +3,28 @@
 
 <head>
 	<link rel="stylesheet" href="../css/molecules.css">
+	<link rel="stylesheet" href="../css/atoms.css">
 </head>
 
 <body>
-	<p class="title-shadow title-3"> profile tabs </p>
 	<div class="base-container vertical-spacing">
+		<p class="title-shadow title-3"> profile tabs </p>
 		<div class="tabs ">
 			<button class="tab thin-border button-bg"> Game history </button>
 			<button class="tab thin-border button-bg"> User statistics </button>
+		</div>
+
+		<p class="title-shadow title-3"> language menu </p>
+
+		<div class="dropdown">
+			<button id="language-switch" class="language button-bg contrast-brdr">
+				${currentLang}
+			</button>
+			<div id="language-options" class="language-options plain-clear-bg contrast-brdr">
+				<div class="dropdown-item" data-lang="en">English</div>
+				<div class="dropdown-item" data-lang="fr">Français</div>
+				<div class="dropdown-item" data-lang="es">Español</div>
+			</div>
 		</div>
 
 		<p class="title-shadow title-3"> horizontal nav bars </p>
@@ -226,7 +240,7 @@
 
 		<p class="bg"> Interaction demonstration </p>
 		<div class="notification-wrapper">
-			<div id="notificationInteractiveWrapper" class="notification-interactive">
+			<div id="notifPopup" class="notification-interactive">
 				<div class="notification-content bg brdr">
 					<img src="../assets/icons/notification-bubble.png" />
 					<p> %login% challenged you to a 1v1 match !! </p>
@@ -236,8 +250,8 @@
 					<p> %login% challenged you to a 1v1 match !! </p>
 				</div>
 			</div>
-			<div id="clickable" class="notification-icon-container">
-				<div id="unreadNotificationAlert" selected class="brdr-red unread-notification"> </div>
+			<div id="notifToggle" class="notification-icon-container">
+				<div id="notifAlert" selected class="brdr-red unread-notification"> </div>
 				<img class="image-l" src="../assets/icons/notification.png" />
 			</div>
 		</div>
@@ -260,7 +274,7 @@
 			<img class="load image-s" src="../assets/icons/magenta-avatar.png">
 		</div>
 	</div>
-<script src="../scripts/notifications.js"></script>
+	<script src="../scripts/notifications.js"></script>
 </body>
 
 </html>

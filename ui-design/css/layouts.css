@@ -45,7 +45,7 @@ body {
   width: 100%;
   height: var(--ml);
   display: grid;
-  grid-template-columns: 15% 30% 45%;
+  grid-template-columns: 5% 32.3% 48.87% 5% 5%;
   grid-template-rows: var(--ml);
   place-items: center;
   gap: var(--space-s);
@@ -61,7 +61,6 @@ body {
   place-items: center;
   min-width: var(--min-width);
   min-height: var(--min-height);
-  width: var(--full-width);
   height: var(--full-height);
 }
 

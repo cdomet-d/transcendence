@@ -2,15 +2,17 @@
 <html>
 
 <head>
+	<link rel="stylesheet" href="../css/atoms.css">
 	<link rel="stylesheet" href="../css/molecules.css">
 	<link rel="stylesheet" href="../css/organisms.css">
 	<link rel="stylesheet" href="../css/layouts.css">
+	<link rel="stylesheet" href="../css/animations.css">
 </head>
 
 <body>
 	<div class="base-container">
 		<p class="title-shadow title-3"> header </p>
-		<div class="bg-brdr header">
+		<div class="header">
 			<img class="header-item image-m" src="../assets/icons/default-avatar.png" />
 			<div class="header-item input-with-button">
 				<div class="search input-n-label">
@@ -26,6 +28,33 @@
 				<button class="button-bg contrast-brdr menu-element"> leaderboard </button>
 				<button class="button-bg contrast-brdr menu-element"> play </button>
 			</div>
+			<div class="header-item notification-wrapper">
+				<div id="notifPopup" class="notification-interactive">
+					<div class="notification-content bg brdr">
+						<img src="../assets/icons/notification-bubble.png" />
+						<p> %login% challenged you to a 1v1 match !! </p>
+						<p> %login% challenged you to a tournament !! </p>
+						<p> %login% challenged you to a 1v1 match !! </p>
+						<p> %login% challenged you to a 1v1 match !! </p>
+						<p> %login% challenged you to a 1v1 match !! </p>
+					</div>
+				</div>
+				<div id="notifToggle" class="notification-icon-container">
+					<div id="notifAlert" selected class="brdr-red unread-notification"> </div>
+					<img class="image-m" src="../assets/icons/notification.png" />
+				</div>
+			</div>
+			<div class="dropdown">
+				<button id="language-switch" class="language button-bg contrast-brdr">
+					${currentLang}
+				</button>
+				<div id="language-options" class="language-options plain-clear-bg contrast-brdr">
+					<div class="dropdown-item" data-lang="en">English</div>
+					<div class="dropdown-item" data-lang="fr">Français</div>
+					<div class="dropdown-item" data-lang="es">Español</div>
+				</div>
+			</div>
+
 		</div>
 		<p class="title-shadow title-3"> small-user </p>
 
@@ -53,9 +82,6 @@
 					<button class="button-bg thin-border" type="button"> <img class="image-s"
 							src="../assets/icons/add-user.png" />
 					</button>
-					<button class="button-bg thin-border" type="button">
-						<img class="image-s" src="../assets/icons/block-user.png" />
-					</button>
 				</div>
 				<span class="three-col biography">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit. In venenatis venenatis consequat.
@@ -78,9 +104,6 @@
 					<button class="button-bg thin-border" type="button"> <img class="image-s"
 							src="../assets/icons/remove-user.png" />
 					</button>
-					<button class="button-bg thin-border" type="button">
-						<img class="image-s" src="../assets/icons/block-user.png" />
-					</button>
 				</div>
 				<span class="three-col biography">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit. In venenatis venenatis consequat.
@@ -89,25 +112,6 @@
 				<div class="four-col horizontal-menu-wrapper">
 					<button class="thin-border button-bg" type="button"> Profile </button>
 					<button class="thin-border button-bg" type="button"> Challenge! </button>
-				</div>
-			</div>
-			<div class="bg bg-brdr user-card">
-				<div class="avatar-wrapper-m">
-					<img src="../assets/icons/magenta-avatar.png"></img>
-				</div>
-				<div class="username"> %username% <div class="user-status"></div>
-				</div>
-				<span class="rank"> %NB% </span>
-				<span class="three-col error-message">
-					This user is blocked. Unblock them to see their profile! </span>
-				<div class="vertical-menu-wrapper">
-					<button class="button-bg thin-border" type="button">
-						<img class="image-s" src="../assets/icons/unblock-user.png" />
-					</button>
-				</div>
-				<div class="four-col horizontal-menu-wrapper">
-					<button class="thin-border bg-disabled" type="button" disabled="disabled"> Profile </button>
-					<button class="thin-border bg-disabled" type="button" disabled="disabled"> Challenge! </button>
 				</div>
 			</div>
 		</div>
@@ -362,7 +366,8 @@
 				<span class="title-1 title-shadow"> R </span>
 			</div>
 			<p class="centered-text"> Just looking to play a game ? Enter a nickname and you're ready to go ! </p>
-			<p class="centered-text"> To enable friendships and user stats, you'll have to provide a password - this will create an account
+			<p class="centered-text"> To enable friendships and user stats, you'll have to provide a password - this
+				will create an account
 				for you.</p>
 			<div class="form-wrapper">
 				<form class="registration-form" action="/api/register" method="post">
@@ -378,7 +383,7 @@
 							<label class="thin-border" for="password"> Password </label>
 						</div>
 						<div class="display-inline">
-						<p id="pwHintTrigger">?</p>
+							<p id="pwHintTrigger">?</p>
 							<span id="pwHint" class="tooltip"> The password must be at least 12
 								characters long
 								and contain at least one lowercase
@@ -394,15 +399,7 @@
 
 	<script src="../scripts/tabs.js"> </script>
 	<script src="../scripts/collapsible-hint.js"> </script>
+	<script src="../scripts/notifications.js"> </script>
 </body>
 
 </html>
-
-<!-- It must be at least 12 characters long, and contain:
-
-at least one uppercase letter [A-Z]
-at least one lowercase letter [a-z]
-at least one digit [0 - 9]
-at least one special characters [@ $ ! % * ? &] -->
-
-^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{12,256}$
