@@ -1,30 +1,36 @@
 import type { WebSocket } from '@fastify/websocket';
 
-export interface paddlePos {
+export interface paddleObj {
     x: number;
     y: number;
 }
 
-// type messMap = Map< string, number >;
 export interface repObj {
-	leftPad: number | undefined,
-	rightPad: number | undefined,
+	leftPadY: number,
+	rightPadY: number,
 }
-
 
 export class Player {
     /*                             PROPERTIES                                */
     #_userID: number;
+    #_paddle: paddleObj;
     #_socket: WebSocket;
-    #_paddle: paddlePos;
-    #_mess: repObj;
+    #_rep: repObj;
+    #_side: string;
 
     /*                            CONSTRUCTORS                               */
-    constructor(userID: number, socket: WebSocket) {
+    constructor(userID: number, socket: WebSocket, random: boolean) {
         this.#_userID = userID;
         this.#_socket = socket;
-        this.#_paddle = {x: 0, y: 0};
-        this.#_mess = {leftPad: undefined, rightPad: undefined};
+        this.#_rep = {leftPadY: 108, rightPadY: 108};
+        if (random) {
+            this.#_paddle = {x: 460, y: 108};
+            this.#_side = "right";
+        }
+        else {
+            this.#_paddle = {x: 10, y: 108};
+            this.#_side = "left";
+        }
     }
 
     /*                              GETTERS                                  */
@@ -32,24 +38,30 @@ export class Player {
         return this.#_socket;
     }
 
-    get paddle(): paddlePos {
+    get paddle(): paddleObj {
         return this.#_paddle;
     }
 
-    get mess(): repObj {
-        return this.#_mess;
+    get rep(): repObj {
+        return this.#_rep;
+    }
+
+    get left(): boolean {
+        if (this.#_side === "left")
+            return true;
+        return false;
     }
 
     /*                              SETTERS                                  */
-    set paddle(pad: paddlePos) {
+    set paddle(pad: paddleObj) {
         this.#_paddle = pad;
     }
 
     /*                              METHODS                                  */
     public setMess(side: string, newPos: number) {
         if (side === "left")
-            this.#_mess.leftPad = newPos;//this.#_paddle.y;
+            this.#_rep.leftPadY = newPos;
         else
-            this.#_mess.rightPad = newPos;//this.#_paddle.y;
+            this.#_rep.rightPadY = newPos;
     }
 }
