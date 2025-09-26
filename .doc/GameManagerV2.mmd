@@ -1,32 +1,61 @@
+%%{init:{"themeVariables": {
+    "noteBkgColor":"#f4f4f4", 
+    "noteTextColor":"black",
+    "noteBorderColor":"#000",
+    "fontFamily":"Arial"
+  }
+}}%%
 sequenceDiagram
-    title GameManager (tournament)
+    title Tournament MS Architecture
     autonumber
 
-    create actor C as Client
-    create participant Pre as PreGame
-    C-)Pre: OPEN connection (WS)
-    C-)Pre: request TOURNAMENT_LOBBY + send JSON.userInfo (WS)
-    C->>C: Show "Creating lobby..."
-    Pre->>Pre: Create LOBBY with host inside
-    Pre->>Pre: Invite other players
-    Pre->>Pre: Choose game rules
-    Pre->>Pre: Start TOURNAMENT
-    create participant P as Pong
-    Pre-)P: send pregame.remote.4.create (NATS)
-    Pre--)C: send match found (WS)
-    C->>C: Show "Match found!"
-    Pre->>Pre: receive match object
-    Pre-)P: send match object to game.ready (NATS)
-    P--)Pre: send game.waiting (NATS)
-    Pre--)C: send game.waiting + CLOSE connection (WS)
-    destroy Pre
-    Pre-xPre:am ded
-    C->>C: Show "Joining game..."
-    C-)P: OPEN connection (WS)
-    P->>P: Add score and winner/loser to match object
-    create participant Post as PostGame
-    P-)Post:send full match object to game.over (NATS)
-    P--)C: CLOSE connection (WS)
-    Post->>Post: receive full match object
-    create participant DB as DataBase
-    Post->>DB: send data
+    create actor U as User
+    create participant L as Lobby
+    U-)L: Open connection (WS)
+    Note over L: Create lobby
+    Note over L: Host joins
+    Note over U: Show <br/>Lobby
+    Note over L: Host invites friends
+    Note over L: Set game rules
+    Note over U: Show <br/>Bracket Placeholder
+    Note over L: "Play"
+
+    create participant T as Tournament
+    L-)T: Send tournament request (NATS)
+    Note over T: Create Bracket
+    Note over T: Create tournamentObj 
+
+    create participant GM as GameManager
+    T-)GM: Send tournamentObj +<br/> bracketObj (NATS)
+    destroy T
+    T--)L: Send  tournamentObj +<br/> bracketObj (NATS)
+    L--)U: Send bracketObj (WS)
+    Note over U: Show Real Bracket
+    Note over GM: PreGame
+    Note over GM: Receive tournamentObj +<br/> bracketObj
+    Note over GM: Start Routine
+    %% Note over GM: Pre: Organise tournament (match order)
+    
+      
+      create participant P as Pong
+      GM-)P: Send gameObj (NATS)
+      P--)L: Send "game.ready" +<br/> gameID (NATS)
+      destroy L
+      L--)U: Close connection +<br/> Send "game.ready" +<br/> gameID (WS)
+    loop Tournament Routine
+      U-)P: Open connection via gameID (WS)
+      Note over P: Game
+      P--)GM: Send updated gameObj (NATS)
+      Note over GM: PostGame
+      Note over GM: IF Continue Tournament
+      GM-)P: Send next gameObj (NATS)
+      P--)U: Send "game.ready" +<br/> gameID (WS)
+      Note over GM: Circle back to Step 9
+
+
+      create participant DB as Database
+      GM-)DB: Send gameObj (NATS)
+    end
+      Note over GM: ELSE Tournament Over
+      Note over GM: Process endgame
+      Note over DB: Store result
