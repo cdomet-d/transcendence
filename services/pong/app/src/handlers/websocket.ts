@@ -8,6 +8,8 @@ function wshandler(socket: WebSocket, req: FastifyRequest): void {
 	socket.on('message', (payload: any) => {
 		const mess: string = payload.toString();
 		req.server.log.info(`client sent: ${mess}`);
+		if (mess == "Hey server")
+			socket.send("Hey from server");
 		if (mess.match("Pad:"))
 			paddlePos(socket, mess);
 	});
