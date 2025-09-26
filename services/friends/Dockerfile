@@ -10,6 +10,8 @@ RUN chmod +x /usr/local/bin/friends.sh
 
 RUN chmod +x /usr/local/bin/createDB.sh
 
+#RUN chmod -x /usr/data/friends.db
+
 RUN apk update && apk add --no-cache sqlite
 
 EXPOSE 1616
