@@ -1,19 +1,15 @@
 import { Game, type keysObj} from './game.class.js'
 
 interface repObj {
-	leftPad: number | undefined,
-	rightPad: number | undefined,
+	leftPadY: number,
+	rightPadY: number,
 }
 
 export function addMessEvent(game: Game, ws: WebSocket) {
 	ws.onmessage = (event) => {
 		const mess: repObj = JSON.parse(event.data);
-		let newPos: number | undefined = mess.leftPad;
-		if (newPos)
-			game.leftPad.y = newPos;
-		newPos = mess.rightPad;
-		if (newPos)
-			game.rightPad.y = newPos;
+		game.leftPad.y = mess.leftPadY;
+		game.rightPad.y = mess.rightPadY;
 	};
 }
 
