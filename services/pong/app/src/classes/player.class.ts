@@ -14,9 +14,9 @@ export class Player {
     /*                             PROPERTIES                                */
     #_userID: number;
     #_paddle: paddleObj;
+    #_side: string;
     #_socket: WebSocket;
     #_rep: repObj;
-    #_side: string;
 
     /*                            CONSTRUCTORS                               */
     constructor(userID: number, socket: WebSocket, random: boolean) {
@@ -52,6 +52,7 @@ export class Player {
         return false;
     }
 
+    //TODO: add get right ?
     /*                              SETTERS                                  */
     set paddle(pad: paddleObj) {
         this.#_paddle = pad;
