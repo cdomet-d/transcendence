@@ -4,6 +4,7 @@ import { Player } from "../classes/player.class.js";
 import type { Game } from '../classes/game.class.js';
 import { setUpGame } from './pong.js';
 
+
 function wshandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): void {
 	this.log.info('WebSocket connection established');
 	const GameIdCookie: string | undefined = req.cookies.gameid;
@@ -18,19 +19,13 @@ function wshandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest
 	if (!game) 
 		throw new Error("game not found"); //TODO: send nats message ?
 
-	if (game.players.length === 2) {
-		// socket.close();
-		throw new Error("not allowed"); //errorHandler should be called
-	}
+	if (game.players.length === 2)
+		throw new Error("not allowed");
 
-	game.addPlayer(new Player(userID, socket));
-	if (game.local) {
-		const randUserIdCookie: string | undefined = req.cookies.randuserid;
-		const randUserId: number = Number(randUserIdCookie);
-		if (Number.isNaN(randUserId))
-			throw new Error("wrong ID");
-		game.addPlayer(new Player(randUserId, socket));
-	}
+	game.addPlayer(new Player(userID, socket, false));
+
+	if (game.local)
+		game.addPlayer(new Player(game.randUserID, socket, true));
 	
 	if (game.players.length === 2)
 		setUpGame(game);
@@ -42,5 +37,3 @@ function wshandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest
 }
 
 export { wshandler };
-
-
