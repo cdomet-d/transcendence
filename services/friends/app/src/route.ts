@@ -33,12 +33,17 @@ export async function friendRoutes(serv: FastifyInstance) {
   serv.post('/user/friends-requests/:username', async (request, reply) => {
     try {
       // 1. On récupère les informations de la requête
-      const { username } = request.params as { username: string };
-      const body = request.body;
+      const { username: receiverUsername } = request.params as { username: string };
+      const { userId: senderId } = request.body as { userId: number };
+      
+      const receiverId = 52;
+
+      if (!senderId || !receiverUsername) {
+        return reply.code(400).send({ message: 'Missing sender ID or receiver username.' });
+      }
 
       // C'est un excellent endroit pour déboguer ce que vous recevez !
-      console.log(`[Friends Service] Received friend request for username: ${username}`);
-      console.log('[Friends Service] Request body:', body);
+      serv.log.info(`Processing friend request from user ${senderId} to ${receiverUsername}`);
 
       // 2. ICI : La logique métier
       //    - Valider les données du body (sont-elles correctes ?)
@@ -47,11 +52,37 @@ export async function friendRoutes(serv: FastifyInstance) {
       //    - etc.
       //    Exemple : await database.createFriendRequest(body.userId, username);
 
+      const query = `
+        INSERT INTO friendship (friendshipID, userID, friendID, startTimeFriendship, statusFrienship)
+        VALUES (?, ?, ?, ?, ?)
+      `;
+      
+      const params = [
+        null, // La BDD gère friendshipID (auto-increment)
+        senderId, // L'ID de l'expéditeur (du body)
+        receiverId, // L'ID du destinataire (trouvé à l'étape 3.1)
+        new Date().toISOString(), // La date actuelle
+        false // statut 'pending'
+      ];
+
+      await new Promise<void>((resolve, reject) => {
+        db.run(query, params, function(err) {
+          if (err) {
+            serv.log.error(`SQL Error: ${err.message}`);
+            // Rejeter la promesse si une erreur SQL se produit
+            reject(new Error('Failed to create friend request in database.'));
+            return;
+          }
+          serv.log.info(`A row has been inserted with rowid ${this.lastID}`);
+          resolve();
+        });
+      });
+
       // 3. On envoie une réponse de succès
       // Le code 201 "Created" est sémantiquement correct pour un POST qui crée une ressource.
       return reply.code(201).send({
         success: true,
-        message: `Friend request sent to ${username}`
+        message: `Friend request sent to ${receiverUsername}`
       });
 
     } catch (error) {

@@ -60,18 +60,20 @@ async function sendFriendRequestApi() {
     console.log('in function');
 
     const targetUsername = "alex";
+    const senderUserId = 123; // Vient probablement d'un état de connexion
+    const friendRequestData = {
+      userId: senderUserId,
+      statusFriendship: 'pending'
+    }
+
+    const bodyAsString = JSON.stringify(friendRequestData);
+
     const response = await fetch(`/api/user/friends-requests/${targetUsername}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        friendshipID: 2,
-        userId: 123,
-        friendId: 456,
-        startTimeFriendship: new Date().toISOString(),
-        statusFrienship: false
-        }),
+      body: bodyAsString,
     });
 
     if (!response.ok) {
