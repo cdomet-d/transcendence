@@ -1,2 +1,4 @@
-INSERT INTO userProfile (userID, username, avatar, bio, profileColor, inGame, state, isOnline, lastConnexion) VALUES (1, 'user1', 'avatar1.png', 'Bio of user1', 'blue', 0, 1, 1, '2025-09-04 13:00:00');
+INSERT INTO userProfile (userID, username, avatar, bio, profileColor, inGame, state, isOnline, lastConnexion) VALUES (1, 'Hugues', 'avatar1.png', 'Bio of alex', 'blue', 0, 1, 1, '2025-09-04 13:00:00');
+INSERT INTO userProfile (userID, username, avatar, bio, profileColor, inGame, state, isOnline, lastConnexion) VALUES (2, 'alex', 'avatar1.png', 'Bio of Hugues', 'blue', 0, 1, 1, '2025-09-04 13:00:00');
 INSERT INTO userStats (userID, longestMatch, shorestMatch, totalMatch, totalWins, totalLoses, winStreak, averageMatchDuration, highestScore) VALUES (1, 120, 30, 10, 6, 4, 3, 60, 200);
+INSERT INTO userStats (userID, longestMatch, shorestMatch, totalMatch, totalWins, totalLoses, winStreak, averageMatchDuration, highestScore) VALUES (2, 120, 30, 10, 6, 4, 3, 60, 200);INSERT INTO userStats (userID, longestMatch, shorestMatch, totalMatch, totalWins, totalLoses, winStreak, averageMatchDuration, highestScore) VALUES (1, 120, 30, 10, 6, 4, 3, 60, 200);

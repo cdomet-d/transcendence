@@ -1,28 +1,10 @@
 import type { FastifyInstance } from 'fastify';
-import { db } from './db.js';
+import { dbFriends } from './db.js';
 
-/* export async function friendRoutes(fastify: FastifyInstance) {
-  fastify.post('/api/users/friends-requests/', async (request, reply) => {
-    const { requester_id, requestee_id } = request.body as { requester_id: number, requestee_id: number };
-	  request.log.info("In the friendRoutes function from friend container");
-
-    if (!requester_id || !requestee_id) {
-      reply.code(400).send({ error: 'Missing requester_id or requestee_id' });
-      return;
-    }
-
-    try {
-      await db.run(
-    `INSERT INTO friendship (userID, friendID, startTimeFriendship, statusFrienship)
-      VALUES (?, ?, datetime('now'), ?)`,
-		[requester_id, requestee_id, false]
-      );
-      reply.send({ status: 'ok', message: 'Friend request saved' });
-    } catch (err) {
-      reply.code(500).send({ error: 'Could not save friend request' });
-    }
-  });
-} */
+interface userData {
+  userID: number;
+  username: string;
+}
 
 // On suppose que cette fonction est importée dans votre server.ts et appelée avec serv.register()
 export async function friendRoutes(serv: FastifyInstance) {
@@ -36,15 +18,24 @@ export async function friendRoutes(serv: FastifyInstance) {
       const { username: receiverUsername } = request.params as { username: string };
       const { userId: senderId } = request.body as { userId: number };
       
-      const receiverId = 52;
+      serv.log.info(`Asking 'users' service for ID of '${receiverUsername}'`);
 
       if (!senderId || !receiverUsername) {
         return reply.code(400).send({ message: 'Missing sender ID or receiver username.' });
       }
 
-      // C'est un excellent endroit pour déboguer ce que vous recevez !
-      serv.log.info(`Processing friend request from user ${senderId} to ${receiverUsername}`);
+      const usersResponse = await fetch(`http://users:2626/internal/users/by-username/${receiverUsername}`);
+      if (usersResponse.status === 404) {
+        return (reply.code(404).send({message: `User '${receiverUsername}'`}));
+      }
 
+      if (!usersResponse.ok) {
+        throw new Error('Users service returned an error');
+
+      }
+      
+      const receiverUser = (await usersResponse.json()) as userData;
+      const receiverId = receiverUser.userID;
       // 2. ICI : La logique métier
       //    - Valider les données du body (sont-elles correctes ?)
       //    - Vérifier si l'utilisateur cible (username) existe
@@ -66,7 +57,7 @@ export async function friendRoutes(serv: FastifyInstance) {
       ];
 
       await new Promise<void>((resolve, reject) => {
-        db.run(query, params, function(err) {
+        dbFriends.run(query, params, function(err) {
           if (err) {
             serv.log.error(`SQL Error: ${err.message}`);
             // Rejeter la promesse si une erreur SQL se produit
@@ -96,6 +87,8 @@ export async function friendRoutes(serv: FastifyInstance) {
       });
     }
   });
+
+
 
   // ... vos autres routes (ex: GET /user/friends, etc.) peuvent être ici
 }

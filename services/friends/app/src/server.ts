@@ -4,10 +4,6 @@ import { options } from './serv.conf.js';
 import { friendRoutes } from './route.js';
 import cors from '@fastify/cors';
 
-interface Params {
-  username: string;
-}
-
 const serv: FastifyInstance = Fastify({
 	logger: true
 });

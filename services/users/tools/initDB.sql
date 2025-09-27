@@ -8,7 +8,7 @@ CREATE TABLE userProfile (
   state INTEGER,
   isOnline BOOLEAN,
   lastConnexion DATETIME,
-  PRIMARY KEY (userID),
+  PRIMARY KEY (userID)
 );
 
 CREATE TABLE userStats (
@@ -21,5 +21,5 @@ CREATE TABLE userStats (
   winStreak INTEGER,
   averageMatchDuration INTEGER, --time in secondes
   highestScore INTEGER,
-  PRIMARY KEY (userID),
+  PRIMARY KEY (userID)
 );
