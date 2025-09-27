@@ -89,5 +89,6 @@ async function sendFriendRequestApi() {
 
 document.getElementById('send-request-btn')?.addEventListener('click', (event) => {
   event.preventDefault();
+  console.log("that fuc");
   sendFriendRequestApi();
 });

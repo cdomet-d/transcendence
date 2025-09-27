@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/cdomet-d/transcendence#readme",
   "dependencies": {
+    "@fastify/cors": "^11.1.0",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {

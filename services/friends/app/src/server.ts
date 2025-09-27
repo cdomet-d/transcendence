@@ -1,23 +1,34 @@
 import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
-import type { FastifyRequest, FastifyReply } from 'fastify';
 import { options } from './serv.conf.js';
 import { friendRoutes } from './route.js';
+import cors from '@fastify/cors';
 
 interface Params {
   username: string;
 }
 
-  try {
-	const serv: FastifyInstance = Fastify(options);
+const serv: FastifyInstance = Fastify({
+	logger: true
+});
 
-	serv.register(friendRoutes);
-	console.log("in the fastify friends serv");
-	serv.listen({ port: 1616, host: '0.0.0.0' }).then(() => {
-		serv.log.info("serv run");
-	});
-}
-catch (err) {
-	console.error('server error:', err);
-	process.exit(1);
-}
+serv.register(cors, {
+  origin: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+});
+
+serv.register(friendRoutes);
+// 3. Créez une fonction de démarrage `async` pour lancer le serveur proprement.
+const start = async () => {
+  try {
+    // Le serveur ne sera considéré comme "démarré" qu'une fois cette ligne terminée.
+    await serv.listen({ port: 1616, host: '0.0.0.0' });
+  } catch (err) {
+    // Le logger intégré affichera l'erreur de manière détaillée.
+    serv.log.error(err);
+    process.exit(1);
+  }
+};
+
+// 4. Appelez la fonction pour démarrer le serveur.
+start();

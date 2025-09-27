@@ -11,10 +11,11 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@fastify/cors": "^11.1.0",
     "@types/node": "^24.3.1",
     "fastify": "^5.5.0",
-    "typescript": "^5.9.2",
-    "sqlite3": "*"
+    "sqlite3": "*",
+    "typescript": "^5.9.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
