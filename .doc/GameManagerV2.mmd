@@ -12,29 +12,29 @@ sequenceDiagram
     create actor U as User
     create participant L as Lobby
     U-)L: Open connection (WS)
-    Note over L: Create lobby
-    Note over L: Host joins
-    Note over U: Show <br/>Lobby
-    Note over L: Host invites friends
-    Note over L: Set game rules
-    Note over U: Show <br/>Bracket Placeholder
-    Note over L: "Play"
+    Note right of L: Create lobby
+    Note right of L: Host joins
+    Note right of U: Show <br/>Lobby
+    Note right of L: Host invites friends
+    Note right of L: Set game rules
+    Note right of U: Show <br/>Bracket Placeholder
+    Note right of L: "Play"
 
     create participant T as Tournament
     L-)T: Send tournament request (NATS)
-    Note over T: Create Bracket
-    Note over T: Create tournamentObj 
+    Note right of T: Create Bracket
+    Note right of T: Create tournamentObj 
 
     create participant GM as GameManager
     T-)GM: Send tournamentObj +<br/> bracketObj (NATS)
     destroy T
     T--)L: Send  tournamentObj +<br/> bracketObj (NATS)
     L--)U: Send bracketObj (WS)
-    Note over U: Show Real Bracket
-    Note over GM: PreGame
-    Note over GM: Receive tournamentObj +<br/> bracketObj
-    Note over GM: Start Routine
-    %% Note over GM: Pre: Organise tournament (match order)
+    Note right of U: Show Real Bracket
+    Note right of GM: PreGame
+    Note right of GM: Receive tournamentObj +<br/> bracketObj
+    Note right of GM: Start Routine
+    %% Note right of GM: Pre: Organise tournament (match order)
     
       
       create participant P as Pong
@@ -44,18 +44,17 @@ sequenceDiagram
       L--)U: Close connection +<br/> Send "game.ready" +<br/> gameID (WS)
     loop Tournament Routine
       U-)P: Open connection via gameID (WS)
-      Note over P: Game
+      Note right of P: Game
       P--)GM: Send updated gameObj (NATS)
-      Note over GM: PostGame
-      Note over GM: IF Continue Tournament
+      Note right of GM: PostGame
+      Note right of GM: IF Continue Tournament
       GM-)P: Send next gameObj (NATS)
       P--)U: Send "game.ready" +<br/> gameID (WS)
-      Note over GM: Circle back to Step 9
-
 
       create participant DB as Database
       GM-)DB: Send gameObj (NATS)
+      Note right of GM: Circle back to Step 9
     end
-      Note over GM: ELSE Tournament Over
-      Note over GM: Process endgame
-      Note over DB: Store result
+      Note right of GM: ELSE Tournament Over
+      Note right of GM: Process endgame
+      Note right of DB: Store result
