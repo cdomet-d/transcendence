@@ -5,5 +5,6 @@ CREATE TABLE translations (
     translation TEXT NOT NULL      -- actual translated text in the given language
 );
 
+--UNIQUE(word, language_code) <--- check if it works
 -- SELECT translation FROM translations WHERE word = 'hello' AND language_code = 'es';
 -- Returns: 'Hola'
