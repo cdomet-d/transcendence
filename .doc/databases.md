@@ -14,6 +14,8 @@ The sources files for database building are in /tools of each container's source
 
 ## Accessibility
 
+### General overview
+
 The accessibily container holds the translation for each supported langangues (English, French and Spanish). 
 There is only one table in this database : translations
 
@@ -41,3 +43,21 @@ The combination betweent the word column and the language_code column is a __nat
 We have the first column (ID) which I havn't mention yet. The column is there for multiple reasons. First, it is good pratice in SQL to keep an unmutable ID for each row of a table. It's known as a __surrogate key__, which only purpose is to uniquely identify a row in a database. It has absolutely zero meaning data wise. We use this surrogate key because the natural key can change. So having a stable, meaningless ID ensure we can always reliably reference a row in the table, which is mandatory for stability.
 It can also be used for easy modification. Since the natural key is a combination of other data in the table, it can be easier to make a SQL query looking for an integer than combination of two texts.
 Lasty, even is the table will remain pretty small, being able to make shorter, simpler queries also improves perfomances. It can make sense to simplify queries where we can when we have several databases, to maximise of perfomances for much more daunting tasks.
+
+### Usage and associated functions
+
+## Users
+### General overview
+### Usage and associated functions
+
+## Account
+### General overview
+### Usage and associated functions
+
+## Friends
+### General overview
+### Usage and associated functions
+
+## Dashboard
+### General overview
+### Usage and associated functions
