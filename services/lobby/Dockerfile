@@ -8,6 +8,6 @@ COPY tools/lobby.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/lobby.sh
 
-EXPOSE 1818
+EXPOSE 2222
 
 CMD ["lobby.sh"]

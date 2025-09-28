@@ -1,6 +1,5 @@
 let wsInstance: any = null;
 
-
 interface userInfo {
     userID: number,
     username: string

@@ -1,4 +1,3 @@
-import type { WebSocket } from '@fastify/websocket';
 import { natsPublish } from '../nats/publisher.js';
 
 interface requestForm {
@@ -23,7 +22,6 @@ interface matchInfo {
 interface match {
     matchID: number,
     tournamentID: number,
-    // format: "quick" | "tournament",
     remote: boolean,
     users: userInfo[],
     score: string,
