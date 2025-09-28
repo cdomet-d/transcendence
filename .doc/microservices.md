@@ -46,7 +46,7 @@ Cybersec is handled into each container
 - ./services/account: 1414
 - ./services/dashboards: 1515
 - ./services/friends: 1616
-- ./services/matchmaking: 1818
+- ./services/lobby: 1818
 - ./services/monitoring: 1919
 - ./services/pong: 2020
 - ./services/users: 2626

@@ -125,12 +125,12 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/GameManager/app:/usr/app
-  matchmaking:
+  lobby:
     build:
-      context: ./services/matchmaking
+      context: ./services/lobby
       dockerfile: Dockerfile
-    container_name: matchmaking
-    image: matchmaking:0.0.1
+    container_name: lobby
+    image: lobby:0.0.1
     environment:
       - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
       - NGINXIP=nginx
@@ -141,7 +141,7 @@ services:
       - ssl-key.pem
       - ssl-cert.pem
     volumes:
-      - ./services/matchmaking/app:/usr/app
+      - ./services/lobby/app:/usr/app
   monitoring:
     build:
       context: ./services/monitoring

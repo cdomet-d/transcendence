@@ -4,10 +4,10 @@ RUN mkdir -p /usr/app && chown -R 1000:1000 /usr/app
 
 WORKDIR /usr/app
 
-COPY tools/matchmaking.sh /usr/local/bin/
+COPY tools/lobby.sh /usr/local/bin/
 
-RUN chmod +x /usr/local/bin/matchmaking.sh
+RUN chmod +x /usr/local/bin/lobby.sh
 
 EXPOSE 1818
 
-CMD ["matchmaking.sh"]
+CMD ["lobby.sh"]
