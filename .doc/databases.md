@@ -12,7 +12,7 @@ There's is a total of 5 databases across the project which are the following :
 Each database and linked logs has it's own isolated volume and is stored in the data/ directory of each sources files's container locally and in /usr/data inside of each container.
 The sources files for database building are in /tools of each container's source directory. That where you will find the tables definition and tests but they will also be presented and explained here for better  readability. TODO &rarr; do a diagram for better understading
 
-![database.png](/assets/database.png "This is a sample image.")
+![database.png](assets/database.png "This is a sample image.")
 
 ## Accessibility
 
