@@ -4,9 +4,7 @@ CREATE TABLE userProfile (
   avatar TEXT,
   bio TEXT,
   profileColor TEXT,
-  inGame BOOLEAN,
-  userStatus INTEGER, -- ???
-  isOnline BOOLEAN,
+  activityStatus INTEGER
   lastConnexion DATETIME,
   PRIMARY KEY (userID)
 );

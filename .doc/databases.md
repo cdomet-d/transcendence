@@ -52,7 +52,10 @@ Lasty, even is the table will remain pretty small, being able to make shorter, s
 
 The users container holds the data for a user's profile such as the bio, profile picture, online status and so forth.
 The goal here is not to hold account info (like password), those informations will be handle in the account microservice.
-We have two table here :
+
+The tables in this database are pretty straight forward. I will elaborate on a couple column that need explanation in my opinion
+
+We have two tables here :
 * userProfile
 * userStat
 
@@ -64,11 +67,18 @@ This table has the following column :
 * avatar &rarr; text
 * bio &rarr; text
 * profileColor &rarr; text
-* inGame &rarr; boolean
-* userStatus &rarr; integer
-* isOnline &rarr; boolean
+* activityStatus &rarr; integer 
 * lastConnexion &rarr; datetime
 
+userID will match between different table and database and if a general ID for a user.
+
+activityStatus will be used to keep track of whether the user if offline, online or playing. The following value and meaning will be :
+
+| Value  | Meaning |
+| ------ |:-------:|
+|   0    | offline |
+|   1    | online  |
+|   2    | playing |
 
 ### userStats
 
