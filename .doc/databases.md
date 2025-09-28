@@ -47,7 +47,7 @@ Lasty, even is the table will remain pretty small, being able to make shorter, s
 ### Usage and associated functions
 
 TODO :
-* function with the language_code and word as parameter that will return the translation via a SQL query.
+* get translation of a word by word and language code
 
 ## Users
 
@@ -108,7 +108,19 @@ TODO :
 * get user stats by userID
 
 ## Account
+
 ### General overview
+
+The table has the following column : 
+* userID &rarr; integer (__primary key__)
+* hashedPassword &rarr; text
+* username &rarr; text (__unique__)
+* email &rarr; text (__unique__)
+* userStatus &rarr; integer
+* registerDate &rarr; datetime
+
+userStatus &rarr; is the user a admin, root (?) or normal user
+
 ### Usage and associated functions
 
 ## Friends
