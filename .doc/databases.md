@@ -51,6 +51,9 @@ Lasty, even is the table will remain pretty small, being able to make shorter, s
 TODO :
 * get translation of a word by word and language code
 
+This databases won't have a function to update the data via the code. 
+To add translation I think the best course of action will be to directly modify the seed.sql which adds data to the database at launch.
+
 ## Users
 
 ### General overview
@@ -141,10 +144,45 @@ The userStatus column stored the role of the user (admin, user). I don't know ye
 
 ### Usage and associated functions
 
+TODO :
+* register a user
+* verify password match for connection to the account
+* update password
+* verify email for connection
+* update username (if we want to allow it)
+* get userStatus (if we implement admin features)
+
 ## Friends
+
 ### General overview
+
+This database has only one table. The table has the following column :
+* friendshipID &rarr; integer (__primary key__)
+* userID &rarr; integer
+* friendID &rarr; integer
+* startTimeFriendship &rarr; datetime
+* statusFrienship &rarr; boolean
+
+In the same way as the language database, we have the friendshipID as a surrogate key.
+The actual way to determine the uniqueness of the friendship is the combination of the userID and the friendID.
+The userID references the user who initated the friend request, and the friendID is the user on the receiving hand of the friendship request.
+
+For the statusFriendship :
+
+| Value  | Meaning  |
+| ------ |:--------:|
+| 0      | pending  |
+| 1      | accepted |
+
 ### Usage and associated functions
 
+* Add a pending friendship request
+* Change the statusFriendship to accepted
+* Remove a frienship
+* Check if the friendship exists
+
 ## Dashboard
+
 ### General overview
+
 ### Usage and associated functions
