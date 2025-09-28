@@ -10,7 +10,7 @@ There's is a total of 5 databases across the project which are the following :
 | Dashboard | stats.db |
 
 Each database and linked logs has it's own isolated volume and is stored in the data/ directory of each sources files's container locally and in /usr/data inside of each container.
-The sources files for database building are in /tools of each container's source directory. That where you will find the tables definition and tests but they will also be presented and explained here for better readability.
+The sources files for database building are in /tools of each container's source directory. That where you will find the tables definition and tests but they will also be presented and explained here for better  readability. TODO &rarr; do a diagram for better understading
 
 ## Accessibility
 
@@ -45,6 +45,9 @@ It can also be used for easy modification. Since the natural key is a combinatio
 Lasty, even is the table will remain pretty small, being able to make shorter, simpler queries also improves perfomances. It can make sense to simplify queries where we can when we have several databases, to maximise of perfomances for much more daunting tasks.
 
 ### Usage and associated functions
+
+TODO :
+* function with the language_code and word as parameter that will return the translation via a SQL query.
 
 ## Users
 
@@ -92,7 +95,17 @@ This table has the following column :
 * averageMatchDuration &rarr; integer
 * highestScore &rarr; integer
 
+We don't have totalLosses because it can easily be computed by totalMatch and totalWin so we remove so useless SQL queries by not storing totalLosses.
+
 ### Usage and associated functions
+
+TODO :
+* get activity status by userID 
+* get profile info (username. avatar, bio, profile color, lastConnexion) by userID
+* get profile info (username. avatar, bio, profile color) by userID
+* get lastConnexion by userID
+
+* get user stats by userID
 
 ## Account
 ### General overview
