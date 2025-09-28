@@ -5,7 +5,7 @@ CREATE TABLE userProfile (
   bio TEXT,
   profileColor TEXT,
   inGame BOOLEAN,
-  state INTEGER,
+  userStatus INTEGER, -- ???
   isOnline BOOLEAN,
   lastConnexion DATETIME,
   PRIMARY KEY (userID)
@@ -17,7 +17,6 @@ CREATE TABLE userStats (
   shorestMatch INTEGER,
   totalMatch INTEGER,
   totalWins INTEGER,
-  totalLoses INTEGER,
   winStreak INTEGER,
   averageMatchDuration INTEGER, --time in secondes
   highestScore INTEGER,

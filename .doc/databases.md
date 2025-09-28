@@ -19,7 +19,7 @@ The sources files for database building are in /tools of each container's source
 The accessibily container holds the translation for each supported langangues (English, French and Spanish). 
 There is only one table in this database : translations
 
-The tables has 4 column :
+The table has 4 column :
 * ID &rarr; integer
 * word &rarr; text
 * language_code &rarr; text 
@@ -47,7 +47,41 @@ Lasty, even is the table will remain pretty small, being able to make shorter, s
 ### Usage and associated functions
 
 ## Users
+
 ### General overview
+
+The users container holds the data for a user's profile such as the bio, profile picture, online status and so forth.
+The goal here is not to hold account info (like password), those informations will be handle in the account microservice.
+We have two table here :
+* userProfile
+* userStat
+
+#### userProfile
+
+This table has the following column :
+* userID &rarr; integer (__primary key__)
+* username &rarr; text
+* avatar &rarr; text
+* bio &rarr; text
+* profileColor &rarr; text
+* inGame &rarr; boolean
+* userStatus &rarr; integer
+* isOnline &rarr; boolean
+* lastConnexion &rarr; datetime
+
+
+### userStats
+
+This table has the following column :
+* userID &rarr; integer (__primary key__)
+* longestMatch &rarr; integer
+* shorestMatch &rarr; integer
+* totalMatch &rarr; integer
+* totalWins &rarr; integer
+* winStreak &rarr; integer
+* averageMatchDuration &rarr; integer
+* highestScore &rarr; integer
+
 ### Usage and associated functions
 
 ## Account
