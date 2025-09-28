@@ -1,7 +1,7 @@
 import { Router } from './spaRouter/router.class.js';
 import { routes } from './spaRouter/routes.js';
 import { pong } from './game/pong.js';
-import { menu } from './menu/menu.js'
+import { lobby } from './lobby/lobby.js'
 import { addLanguageEvents } from './language/languageEvents.js';
 import { initLanguageCSR } from './language/translation.js';
 
@@ -33,8 +33,8 @@ window.addEventListener('popstate', () => {
 
 if (router._getCurrentURL() === '/game/match')
     pong(); //TODO: find a way to render it server side
-else if (router._getCurrentURL() === '/game/menu')
-    menu(); 
+else if (router._getCurrentURL() === '/game/lobby')
+    lobby(); 
 
 initLanguageCSR();
 addLanguageEvents();

@@ -1,7 +1,7 @@
 import { render404 } from '../../pages/html.pages.js';
 import { clearHeader, renderHeader } from '../../pages/header.js'
 import { pong } from '../game/pong.js';
-import { menu } from '../menu/menu.js' 
+import { lobby } from '../lobby/lobby.js' 
 
 interface routeInterface {
     path: string;
@@ -59,8 +59,8 @@ export class Router {
         
         if (matchedRoute.path === '/game/match')
             pong();
-        else if (matchedRoute.path === '/game/menu')
-            menu();
+        else if (matchedRoute.path === '/game/lobby')
+            lobby();
         //TODO: eventually if other features need their script add an element script to routeInterface
     }
 }

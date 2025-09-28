@@ -114,7 +114,6 @@ services:
     container_name: gamemanager
     image: gamemanager:0.0.1
     environment:
-      - PORT=2121
       - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
       - NGINXIP=nginx
     networks:
@@ -132,6 +131,7 @@ services:
     container_name: lobby
     image: lobby:0.0.1
     environment:
+      - PORT=1818
       - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
       - NGINXIP=nginx
     networks:

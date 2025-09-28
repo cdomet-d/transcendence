@@ -23,9 +23,9 @@ export function renderCentral(): string {
 	return renderPageTemplate({
 		title: translate('CENTRAL'),
 		nextButtons: [
-			{ href: "/game/tournament", label: translate('Tournament') },
 			{ href: "/game/menu", label: translate('Menu') },
 			{ href: "/account", label: translate('Profile') },
+			{ href: "/game/lobby", label: translate('Tournament') },
 			{ href: "/game/leaderboard", label: translate('Leaderboard') },
 			{ href: "/game/match", label: translate('Game') },
 		],
@@ -59,19 +59,20 @@ export function renderProfile(): string {
 	});
 }
 
-export function renderTournament(): string {
-	return renderPageTemplate({
-		title: "TOURNAMENT",
-		nextButtons: [
-			{ href: "/404", label: "4 players" },
-			{ href: "/404", label: "8 players" },
+// TODO: delete this comment
+// export function renderTournament(): string {
+// 	return renderPageTemplate({
+// 		title: "TOURNAMENT",
+// 		nextButtons: [
+// 			{ href: "/404", label: "4 players" },
+// 			{ href: "/404", label: "8 players" },
 
-		],
-		backHref: "/central",
-		showBack: true,
-		homeHref: "/"
-	});
-}
+// 		],
+// 		backHref: "/central",
+// 		showBack: true,
+// 		homeHref: "/"
+// 	});
+// }
 
 export function renderGame(): string {
 	let html: string = `
@@ -90,12 +91,12 @@ export function renderGame(): string {
 	return html;
 }
 
-export function renderGameMenu(): string {
+export function renderLobby(): string {
 	let html: string = `
 		<div class="relative min-h-screen flex flex-col items-center justify-center">
-		    <button id="look-opponent-btn"
+		    <button id="start-tournament-btn"
 			class="py-3 px-8 rounded-full border border-black bg-gradient-to-br from-blue-500 to-blue-700 shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
-		        Find opponent
+		        Start Tournament
 		    </button>
 
 		    <a href="/central" data-link id="back-btn"
