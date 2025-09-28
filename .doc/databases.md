@@ -14,7 +14,7 @@ The sources files for database building are in /tools of each container's source
 
 ## Accessibility
 
-The accessibily container holds the translation json for each supported langangues (English, French and Spanish). 
+The accessibily container holds the translation for each supported langangues (English, French and Spanish). 
 There is only one table in this database : translations
 
 The tables has 4 column :
