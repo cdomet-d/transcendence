@@ -10,7 +10,7 @@ There's is a total of 5 databases across the project which are the following :
 | Dashboard | stats.db |
 
 Each database and linked logs has it's own isolated volume and is stored in the data/ directory of each sources files's container locally and in /usr/data inside of each container.
-The sources files for database building are in /tools of each container's source directory. That where you will find the tables definition and tests but they will also be presented and explained here for better  readability. TODO &rarr; do a diagram for better understading
+The sources files for database building are in /tools of each container's source directory. That where you will find the tables definition and tests but they will also be presented and explained here for better  readability.
 
 ![database.png](assets/database.png "This is a sample image.")
 
@@ -102,12 +102,28 @@ We don't have totalLosses because it can easily be computed by totalMatch and to
 ### Usage and associated functions
 
 TODO :
-* get activity status by userID 
-* get profile info (username. avatar, bio, profile color, lastConnexion) by userID
-* get profile info (username. avatar, bio, profile color) by userID
-* get lastConnexion by userID
+* userProfile
+    * get user stats by userID
+    * update last connexion
+    * update longest match
+    * update shorest match
+    * update total match
+    * update total wins
+    * update win streak 
+    * update average match duration
+    * update highest score
 
-* get user stats by userID
+* userStats
+    * get activity status by userID 
+    * get profile info (username. avatar, bio, profile color, lastConnexion) by userID
+    * get profile info (username. avatar, bio, profile color) by userID
+    * get lastConnexion by userID
+    * update avatar
+    * updata bio
+    * update profileColor
+    * update activity status
+    * update lastConnexion
+    * update username ? (TODO : ask is we thing the user should be able to update username as part of customization)
 
 ## Account
 
@@ -121,7 +137,7 @@ The table has the following column :
 * userStatus &rarr; integer
 * registerDate &rarr; datetime
 
-userStatus &rarr; is the user a admin, root (?) or normal user
+The userStatus column stored the role of the user (admin, user). I don't know yet if it will be needed yet.
 
 ### Usage and associated functions
 
