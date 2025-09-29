@@ -88,7 +88,7 @@ activityStatus will be used to keep track of whether the user if offline, online
 |   1    | online  |
 |   2    | playing |
 
-### userStats
+#### userStats
 
 This table has the following column :
 * userID &rarr; integer (__primary key__)
@@ -186,7 +186,10 @@ For the statusFriendship :
 
 ### General overview
 
-This database has only one table which has the following column :
+#### gameMatchInfo
+
+This database has the following tables which has the following column :
+
 * gameID &rarr; integer (__primary key__)
 * duration &rarr; integer
 * startTime &rarr; datetime
@@ -194,6 +197,15 @@ This database has only one table which has the following column :
 * winnerID &rarr; integer 
 * loserID &rarr; integer
 * tournamentID &rarr; integer
+* localGame &rarr; boolean
+* scoreWinner &rarr; integer
+* scoreLoser &rarr; integer
+
+#### tournamentInfo
+
+* tournamentID &rarr; integer
+* winnerID &rarr; integer
+* playerIDs &rarr; integer
 
 ### Usage and associated functions
 
