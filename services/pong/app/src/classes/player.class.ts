@@ -52,12 +52,12 @@ export class Player {
         return false;
     }
 
-    //TODO: add get right ?
-    /*                              SETTERS                                  */
-    set paddle(pad: paddleObj) {
-        this.#_paddle = pad;
+    get right(): boolean {
+        if (this.#_side === "right")
+            return true;
+        return false;
     }
-
+    
     /*                              METHODS                                  */
     public setMess(side: string, newPos: number) {
         if (side === "left")
