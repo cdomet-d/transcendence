@@ -1,19 +1,41 @@
 CREATE TABLE gameMatchInfo (
-  gameID INTEGER,
+  gameID INTEGER AUTOINCREMENT,
   duration INTEGER,
   startTime DATETIME,
-  status INTEGER, --game is still in lobby, game started, game ended
-  hostID INTEGER,
+  gameStatus INTEGER, --game is still in lobby, game started, game ended
   winnerID INTEGER,
-  invitedID INTEGER,
-  PRIMARY KEY (gameID),
-  FOREIGN KEY (hostID) REFERENCES userProfile(userID),
-  FOREIGN KEY (winnerID) REFERENCES userProfile(userID),
-  FOREIGN KEY (invitedID) REFERENCES userProfile(userID)
+  loserID INTEGER,
+  tournamentID INTEGER,
+  localGame BOOLEAN, --zero == local, 1 == remote
+  scoreWinner INTEGER,
+  scoreLoser INTEGER,
+  PRIMARY KEY (gameID)
 );
 
-CREATE TABLE gameLobby (
-  lobbyID INTEGER,
-  status BOOLEAN, --false == not ready to start game, true == ready to start game
-  PRIMARY KEY (lobbyID)  
-);
+CREATE TABLE tournamentInfo {
+  tournamentID INTEGER AUTOINCREMENT NOT NULL, 
+  winnerID INTEGER,
+  playerIDs TEXT -- Stores a JSON array like '[1, 5, 12, 23]'
+}
+
+--PreGame -> Game:
+--
+--{ match: - matchID 
+--- tournamentID
+--- local: bool
+--- users[]: 
+--  - user1: 
+--    - userID
+--  - user2:
+--    - userID
+--  - score
+--  - winner
+--  - loser }
+--
+--tournament { - match[] }
+
+--CREATE TABLE gameLobby (
+--lobbyID INTEGER,
+--status BOOLEAN, --false == not ready to start game, true == ready to start game
+--PRIMARY KEY (lobbyID)  
+--);

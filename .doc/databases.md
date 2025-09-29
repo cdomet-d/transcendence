@@ -180,11 +180,21 @@ For the statusFriendship :
 * Change the statusFriendship to accepted
 * Remove a frienship
 * Check if the friendship exists
+* Get all friends of a user
 
 ## Dashboard
 
 ### General overview
----
+
+This database has only one table which has the following column :
+* gameID &rarr; integer (__primary key__)
+* duration &rarr; integer
+* startTime &rarr; datetime
+* ganeStatus &rarr; integer
+* winnerID &rarr; integer 
+* loserID &rarr; integer
+* tournamentID &rarr; integer
+
 ### Usage and associated functions
 
 
