@@ -30,17 +30,17 @@ tournament || ##### |  4/8  |
 PreGame -> Game:
 
 {
+    user:
+        -   username
+        -   userID
+}
+
+{
     match:
     -   matchID
     -   tournamentID <!-- 0 if quick match -->
     -   local: bool
-    -   users[]:
-        -   user1:
-            -   username
-            -   userID
-        -   user2:
-            -   username
-            -   userID
+    -   users[]
     -   score 
     -   winner
     -   loser
@@ -48,5 +48,7 @@ PreGame -> Game:
 
 
 tournament {
+    - tournamentID
+    - winnerID
     - match[]
 }
