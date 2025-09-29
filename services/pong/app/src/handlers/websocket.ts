@@ -4,7 +4,6 @@ import { Player } from "../classes/player.class.js";
 import type { Game } from '../classes/game.class.js';
 import { setUpGame } from './pong.js';
 
-
 function wshandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): void {
 	this.log.info('WebSocket connection established');
 	const GameIdCookie: string | undefined = req.cookies.gameid;
@@ -13,7 +12,7 @@ function wshandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest
 	const userID: number = Number(UserIdCookie);
 	const gameID: number = Number(GameIdCookie);
 	if (Number.isNaN(gameID) || Number.isNaN(userID))
-		throw new Error("wrong ID"); //TODO: catch error
+		throw new Error("wrong ID");
 
 	const game: Game | undefined = this.gameRegistry.findGame(gameID);
 	if (!game) 

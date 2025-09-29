@@ -11,7 +11,6 @@ import { options } from './serv.conf.js'
 import { initNatsConnexion, natsSubscribtion } from './subscriber.js';
 import { GameRegistry } from './classes/gameRegistry.class.js';
 
-
 try {
 	const serv = await init();
 	await runServ(serv);
