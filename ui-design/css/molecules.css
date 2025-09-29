@@ -73,6 +73,7 @@
   display: grid;
   gap: var(--space-s) var(--space-s);
   grid-auto-columns: 1fr;
+  grid-auto-rows: minmax(0, 1fr);
   justify-content: center;
   justify-items: center;
 }
