@@ -65,7 +65,8 @@ export class Game {
 
 	public deletePlayers() {
 		this.#_players.forEach((player: Player) => {
-			player.socket.close(); //TODO: for local don't want to close same socket twice !
+			if (player.socket.readyState === 1)
+				player.socket.close();
 		})
 		this.#_players.splice(0, this.#_players.length);
 
