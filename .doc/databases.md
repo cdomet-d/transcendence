@@ -184,5 +184,11 @@ For the statusFriendship :
 ## Dashboard
 
 ### General overview
-
+---
 ### Usage and associated functions
+
+
+
+
+TODO :
+secure extern API calls and understand what it actually means
