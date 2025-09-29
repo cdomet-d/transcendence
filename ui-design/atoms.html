@@ -6,9 +6,10 @@
 </head>
 
 <body>
-	<h1 class="title title-shadow text-[calc(5.85vw+1em)] leading-[130%]">This is an example title</h1>
-	<h2 class="title title-shadow text-[calc(3.63vw+1em)] leading-[110%]">This is an example title</h2>
-	<h3 class="title title-shadow text-[calc(2.24vw+1em)] leading-[110%]">This is an example title</h3>
+	<div class="grid grid-cols-1 gap-6 p-[2rem]">
+		<h1 class="title title-shadow text-[calc(5.85vw+1em)] leading-[130%]">This is an example title</h1>
+		<h2 class="title title-shadow text-[calc(3.63vw+1em)] leading-[110%]">This is an example title</h2>
+		<h3 class="title title-shadow text-[calc(2.24vw+1em)] leading-[110%]">This is an example title</h3>
 
 		<p>
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla egestas laoreet dui, at rutrum
@@ -22,110 +23,93 @@
 			vestibulum. Nullam lacinia porttitor condimentum. Morbi vel feugiat enim.
 		</p>
 
-		<h3 class="title title-shadow text-[calc(2.24vw+1em)] leading-[110%]" > links </h3>
-			<a class="a-default" href="https://profile.intra.42.fr/users/aljulien" target="_blank"> This is a link
-			</a>
+		<h3 class="title title-shadow text-[calc(2.24vw+1em)] leading-[110%]"> links </h3>
+		<a " href="https://profile.intra.42.fr/users/aljulien" target="_blank"> This is a link
+		</a>
 
-
-
-
-				<div class="w-full box-border relative">
-					<label class="brdr-thin" for="default">default</label>
-					<input id="default" class="input-bg brdr" type="text" placeholder="search a user...">
-					</input>
-
-				<span> File upload </span>
-				<input id="upload" class="brdr input-bg" type="file"></input>
-			</div>
-			<div class="input-grid">
-				<h2> Buttons</h2>
-				<span> default</span>
-				<button class="brdr button-bg" type="button"> Superb Button !</button>
-				<span> Hover</span>
-				<button class="brdr button-bg-hover" type="button"> Superb Button !</button>
-				<span> Active</span>
-				<button class="brdr button-bg-active" type="button"> Superb Button !</button>
-				<span> Disabled</span>
-				<button class="brdr-disabled bg-disabled" type="button" disabled> Superb Button
-					!</button>
-			</div>
-		</div>
-
-
-		<h2 class="title-2 title-shadow"> Sliders, checkboxes and radio buttons </h2>
-		<div class="bg bg-brdr block">
-			<div class="flexbox-auto-col">
-				<p> Radio button (single selection) | Unchecked / Checked </p>
-				<div class="radio-container brdr plain-yellow-bg">
-					<input type="radio"> </input>
-					<span class="radio-checkmark"></span>
-				</div>
-				<div class="radio-container brdr  plain-yellow-bg">
-					<input type="radio" checked="checked"> </input>
-					<span class="radio-checkmark"></span>
-				</div>
-			</div>
-			<div class="flexbox-auto-col">
-				<p> Checkbox button (multiple selection) | Unchecked / Checked </p>
-				<div class="checkbox-container brdr plain-yellow-bg">
-					<input type="checkbox"> </input>
-					<span class="checkbox-checkmark"></span>
-				</div>
-				<div class="checkbox-container brdr plain-yellow-bg">
-					<input type="checkbox" checked="checked"> </input>
-					<span class="checkbox-checkmark"></span>
-				</div>
-			</div>
-			<p> Slider (paddle speed, ?) </p>
-			<input class="plain-clear-bg brdr" type="range" name="paddle-speed" min="0" max="5" step="1">
+		<div class="w-full box-border relative">
+			<label class="min-w-[fit-content] flex justify-center brdr thin bg absolute right-[8px] -top-[8px] w-[10%]" for="default">default</label>
+			<input id="default" class="clear-bg brdr" type="text" pattern="^[a-zA-Z0-9]{4,18}$"
+				placeholder="search a user...">
 			</input>
 		</div>
 
-		<h2 class="title-2 title-shadow"> Avatars & wrappers </h2>
-		<div class="bg bg-brdr block">
-			<div class="avatar-wrapper-s plain-yellow-bg"><img class="image-cont-s"
-					src="../assets/icons/light-green-avatar.png"></img>
-			</div>
-			<div class="avatar-wrapper-m plain-yellow-bg"><img class="avatar-m"
-					src="../assets/icons/light-green-avatar.png"></img>
-			</div>
-			<div class="avatar-wrapper-l plain-yellow-bg"><img class="avatar-l"
-					src="../assets/icons/light-green-avatar.png"></img>
-			</div>
-			<div class="avatar-wrapper-xl plain-yellow-bg"><img class="avatar-xl"
-					src="../assets/icons/light-green-avatar.png"></img>
-			</div>
+		<div class="w-full box-border relative">
+			<label class="min-w-[fit-content] flex justify-center brdr thin bg absolute right-[8px] -top-[8px] w-[10%]" for="upload">upload</label>
+			<input id="upload" class="brdr clear-bg" type="file"></input>
 		</div>
 
-		<h2 class="title-2 title-shadow"> Icons </h2>
-		<div class="block bg bg-brdr">
-			<span class="document-title"> 24px </span>
-			<div class="flexbox-auto-col">
-				<img class="image-s" src="../assets/icons/search-icon.png"></img>
-				<img class="image-s" src="../assets/icons/no-result.png"></img>
-				<img class="image-s" src="../assets/icons/notification.png"></img>
-			</div>
-			<span class="document-title"> 38.88px </span>
-			<div class="flexbox-auto-col">
-				<img class="image-m" src="../assets/icons/search-icon.png"></img>
-				<img class="image-m" src="../assets/icons/no-result.png"></img>
-				<img class="image-m" src="../assets/icons/notification.png"></img>
-			</div>
-			<span class="document-title"> 62.91px </span>
-			<div class="flexbox-auto-col">
-				<img class="image-l" src="../assets/icons/search-icon.png"></img>
-				<img class="image-l" src="../assets/icons/no-result.png"></img>
-				<img class="image-l" src="../assets/icons/notification.png"></img>
-			</div>
-			<span class="document-title"> 101.78px </span>
-			<div class="flexbox-auto-col">
-				<img class="image-xl" src="../assets/icons/search-icon.png"></img>
-				<img class="image-xl" src="../assets/icons/no-result.png"></img>
-				<img class="image-xl" src="../assets/icons/notification.png"></img>
-			</div>
+		<button class="button brdr input-emphasis yellow-bg" type="button"> Superb Button !</button>
+		<span> Disabled</span>
+		<button class="disabled input-emphasis clear-bg brdr" type="button" disabled> Superb Button
+			!</button>
+
+
+		<h2 class="title title-shadow text-[calc(2.24vw+1em)] leading-[110%]"> Sliders, checkboxes and radio buttons
+		</h2>
+		<p> Radio button (single selection) | Unchecked / Checked </p>
+
+		<div class="box-border relative block border-none w-m h-s brdr yellow-bg">
+			<input class="peer absolute top-[0] left-[0] cursor-pointer" type="radio"> </input>
+			<span class="thin brdr z-1 orange-bg absolute top-[0] left-[0] cursor-pointer w-[50%] h-[100%] peer-checked:absolute peer-checked:left-1/2 border-box"></span>
+		</div>
+		<div class="box-border relative block border-none w-m h-s brdr yellow-bg">
+			<input class="peer absolute top-[0] left-[0] cursor-pointer" type="radio" checked> </input>
+			<span class="thin brdr z-1 orange-bg absolute top-[0] left-[0] cursor-pointer w-[50%] h-[100%] peer-checked:absolute peer-checked:left-1/2 border-box"></span>
+		</div>
+		<p> Checkbox button (multiple selection) | Unchecked / Checked </p>
+		<div class="w-s h-s border-box relative block border-none brdr yellow-bg">
+			<input class="peer m-0 z-2 cursor-pointer absolute top-[0] left-[0]" type="checkbox"> </input>
+			<span class="peer-checked:block z-1 hidden absolute top-[4.54px] left-[4.6px] cursor-pointer w-[65%] h-[65%] thin brdr orange-bg"></span>
+		</div>
+		<div class="w-s h-s border-box relative block border-none brdr yellow-bg">
+			<input class="peer m-0 z-2 cursor-pointer absolute top-[0] left-[0]" type="checkbox" checked="checked"> </input>
+			<span class="peer-checked:block z-1 hidden absolute top-[4.54px] left-[4.6px] cursor-pointer w-[65%] h-[65%] thin brdr orange-bg"></span>
+		</div>
+		<p> Slider (paddle speed, ?) </p>
+		<input class="clear-bg brdr" type="range" name="paddle-speed" min="0" max="5" step="1">
+		</input>
+
+		<h2 class="title title-shadow text-[calc(2.24vw+1em)] leading-[110%]""> Avatars & wrappers </h2>
+		<div class=" ismall avatar-wrapper flex justify-center overflow-hidden rounded-[100px] box-border"><img
+				src="./assets/icons/light-green-avatar.png"></img>
+	</div>
+	<div class="imedium avatar-wrapper flex justify-center overflow-hidden rounded-[100px] box-border"><img
+			src="./assets/icons/light-green-avatar.png"></img>
+	</div>
+	<div class="ilarge avatar-wrapper flex justify-center overflow-hidden rounded-[100px] box-border"><img
+			src="./assets/icons/light-green-avatar.png"></img>
+	</div>
+
+	<h2 class="title-2 title-shadow"> Icons </h2>
+	<div class="block bg bg-brdr">
+		<span class="document-title"> 24px </span>
+		<div class="flexbox-auto-col">
+			<img class="image-s" src="../assets/icons/search-icon.png"></img>
+			<img class="image-s" src="../assets/icons/no-result.png"></img>
+			<img class="image-s" src="../assets/icons/notification.png"></img>
+		</div>
+		<span class="document-title"> 38.88px </span>
+		<div class="flexbox-auto-col">
+			<img class="image-m" src="../assets/icons/search-icon.png"></img>
+			<img class="image-m" src="../assets/icons/no-result.png"></img>
+			<img class="image-m" src="../assets/icons/notification.png"></img>
+		</div>
+		<span class="document-title"> 62.91px </span>
+		<div class="flexbox-auto-col">
+			<img class="image-l" src="../assets/icons/search-icon.png"></img>
+			<img class="image-l" src="../assets/icons/no-result.png"></img>
+			<img class="image-l" src="../assets/icons/notification.png"></img>
+		</div>
+		<span class="document-title"> 101.78px </span>
+		<div class="flexbox-auto-col">
+			<img class="image-xl" src="../assets/icons/search-icon.png"></img>
+			<img class="image-xl" src="../assets/icons/no-result.png"></img>
+			<img class="image-xl" src="../assets/icons/notification.png"></img>
 		</div>
 	</div>
 	</div>
+
 
 </body>
 

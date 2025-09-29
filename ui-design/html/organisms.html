@@ -2,11 +2,11 @@
 <html>
 
 <head>
-	<link rel="stylesheet" href="../css/atoms.css">
-	<link rel="stylesheet" href="../css/molecules.css">
+	<!-- <link rel="stylesheet" href="../css/atoms.css"> -->
+	<!-- <link rel="stylesheet" href="../css/molecules.css">
 	<link rel="stylesheet" href="../css/organisms.css">
-	<link rel="stylesheet" href="../css/layouts.css">
-	<link rel="stylesheet" href="../css/animations.css">
+	<link rel="stylesheet" href="../css/layouts.css"> -->
+	<link rel="stylesheet" href="../dist/styles.css">
 </head>
 
 <body>
@@ -370,13 +370,13 @@
 			<div class="form-wrapper">
 				<form class="registration-form" action="/api/register" method="post">
 					<div class="input-n-label">
-						<input id="nickname" class="brdr plain-clear-bg" type="text"
+						<input id="nickname" class="brdr input-bg" type="text"
 							pattern="^[a-zA-Z0-9]{4,18}$"></input>
 						<label class=" thin-border" for="nickname"> Nickname (4-18 characters) </label>
 					</div>
 					<div class="input-w-hint">
 						<div class="input-n-label">
-							<input id="password" class="brdr plain-clear-bg" type="password"
+							<input id="password" class="brdr input-bg" type="password"
 								pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{12,256}$"></input>
 							<label class="thin-border" for="password"> Password </label>
 						</div>
@@ -407,7 +407,6 @@
 		</div>
 	</div>
 
-<!-- TODO: animate the looser title ? -->
 	<div class="single-centered-no-header">
 		<div class="centered-block overlay-bg bg-brdr-overlay">
 			<div class="letter-melt">
