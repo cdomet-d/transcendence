@@ -15,15 +15,18 @@ export function addMessEvent(game: Game, ws: WebSocket) {
 
 export function createKeyDownEvent(keys: keysObj)  {
 	return function keyDownEvent(event: KeyboardEvent): void {
-		event.preventDefault();
 		if (event.key === "w")
 			keys._w = true;
 		if (event.key === "s")
 			keys._s = true;
-		if (event.key === "ArrowUp")
+		if (event.key === "ArrowUp") {
+			event.preventDefault();
 			keys._ArrowUp = true;
-		if (event.key === "ArrowDown")
+		}
+		if (event.key === "ArrowDown") {
+			event.preventDefault();
 			keys._ArrowDown = true;
+		}
 	}
 }
 
