@@ -6,9 +6,9 @@ const HEIGHT = 270;
 const padSpeed: number = 0.2;
 
 export function updatePaddlePos(player: Player, keys: keysObj, delta: number) {
-    if ((player.left && keys._w) || (!player.left && keys._ArrowUp))
+    if ((player.left && keys._w) || (player.right && keys._ArrowUp))
         up(player.paddle, delta);
-    if ((player.left && keys._s) || (!player.left && keys._ArrowDown))
+    if ((player.left && keys._s) || (player.right && keys._ArrowDown))
         down(player.paddle, delta);
 }
 
