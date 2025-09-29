@@ -1,22 +1,23 @@
 {
-  "name": "tabs",
+  "name": "ui-design",
   "version": "1.0.0",
-  "description": "",
-  "main": "tabs.js",
+  "main": "index.js",
   "scripts": {
-    "dev": "nodemon",
-    "start": "tsc && node ./scripts/dist/tabs.js"
+    "build": "postcss ./css/tailwind.css -o dist/styles.css",
+    "watch": "postcss ./css/tailwind.css -o dist/styles.css --watch"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
-  "dependencies": {
-    "@types/node": "^20.19.5",
-    "fastify": "^5.5.0",
-    "tsc": "^2.0.4",
-    "typescript": "^5.9.2"
-  },
+  "description": "",
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "tailwindcss": "^4.1.13"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.13",
+    "postcss-import": "^16.1.1"
   }
 }

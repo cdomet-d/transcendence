@@ -103,6 +103,16 @@
   }
 }
 
+@keyframes a-grow {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: 0 0;
+  }
+}
+
 .breathe {
   transform-origin: bottom center;
   animation: breathe 3s linear alternate infinite;

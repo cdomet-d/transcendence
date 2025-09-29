@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" href="./dist/styles.css">
+</head>
+
+<body>
+	<h1 class="title title-shadow text-[calc(5.85vw+1em)] leading-[130%]">This is an example title</h1>
+	<h2 class="title title-shadow text-[calc(3.63vw+1em)] leading-[110%]">This is an example title</h2>
+	<h3 class="title title-shadow text-[calc(2.24vw+1em)] leading-[110%]">This is an example title</h3>
+
+		<p>
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla egestas laoreet dui, at rutrum
+			sapien tristique eget. Pellentesque viverra sed enim eget auctor. Nulla facilisi. Donec sit amet
+			porttitor urna, ut scelerisque magna. Duis viverra congue molestie. Nam cursus mauris lectus, ut
+			auctor tellus ornare ac. Nam vel mauris erat. Quisque orci mi, ornare sed justo id, volutpat
+			egestas tellus. <a class="a-default">CLICK ME</a> Orci varius natoque penatibus et magnis dis
+			parturient montes, nascetur
+			ridiculus mus. Proin dignissim dui a placerat sagittis. Pellentesque venenatis id mi quis
+			tempor. Pellentesque pretium volutpat nunc eget consectetur. Vestibulum consequat nibh eu ornare
+			vestibulum. Nullam lacinia porttitor condimentum. Morbi vel feugiat enim.
+		</p>
+
+		<h3 class="title title-shadow text-[calc(2.24vw+1em)] leading-[110%]" > links </h3>
+			<a class="a-default" href="https://profile.intra.42.fr/users/aljulien" target="_blank"> This is a link
+			</a>
+
+
+
+
+				<div class="w-full box-border relative">
+					<label class="brdr-thin" for="default">default</label>
+					<input id="default" class="input-bg brdr" type="text" placeholder="search a user...">
+					</input>
+
+				<span> File upload </span>
+				<input id="upload" class="brdr input-bg" type="file"></input>
+			</div>
+			<div class="input-grid">
+				<h2> Buttons</h2>
+				<span> default</span>
+				<button class="brdr button-bg" type="button"> Superb Button !</button>
+				<span> Hover</span>
+				<button class="brdr button-bg-hover" type="button"> Superb Button !</button>
+				<span> Active</span>
+				<button class="brdr button-bg-active" type="button"> Superb Button !</button>
+				<span> Disabled</span>
+				<button class="brdr-disabled bg-disabled" type="button" disabled> Superb Button
+					!</button>
+			</div>
+		</div>
+
+
+		<h2 class="title-2 title-shadow"> Sliders, checkboxes and radio buttons </h2>
+		<div class="bg bg-brdr block">
+			<div class="flexbox-auto-col">
+				<p> Radio button (single selection) | Unchecked / Checked </p>
+				<div class="radio-container brdr plain-yellow-bg">
+					<input type="radio"> </input>
+					<span class="radio-checkmark"></span>
+				</div>
+				<div class="radio-container brdr  plain-yellow-bg">
+					<input type="radio" checked="checked"> </input>
+					<span class="radio-checkmark"></span>
+				</div>
+			</div>
+			<div class="flexbox-auto-col">
+				<p> Checkbox button (multiple selection) | Unchecked / Checked </p>
+				<div class="checkbox-container brdr plain-yellow-bg">
+					<input type="checkbox"> </input>
+					<span class="checkbox-checkmark"></span>
+				</div>
+				<div class="checkbox-container brdr plain-yellow-bg">
+					<input type="checkbox" checked="checked"> </input>
+					<span class="checkbox-checkmark"></span>
+				</div>
+			</div>
+			<p> Slider (paddle speed, ?) </p>
+			<input class="plain-clear-bg brdr" type="range" name="paddle-speed" min="0" max="5" step="1">
+			</input>
+		</div>
+
+		<h2 class="title-2 title-shadow"> Avatars & wrappers </h2>
+		<div class="bg bg-brdr block">
+			<div class="avatar-wrapper-s plain-yellow-bg"><img class="image-cont-s"
+					src="../assets/icons/light-green-avatar.png"></img>
+			</div>
+			<div class="avatar-wrapper-m plain-yellow-bg"><img class="avatar-m"
+					src="../assets/icons/light-green-avatar.png"></img>
+			</div>
+			<div class="avatar-wrapper-l plain-yellow-bg"><img class="avatar-l"
+					src="../assets/icons/light-green-avatar.png"></img>
+			</div>
+			<div class="avatar-wrapper-xl plain-yellow-bg"><img class="avatar-xl"
+					src="../assets/icons/light-green-avatar.png"></img>
+			</div>
+		</div>
+
+		<h2 class="title-2 title-shadow"> Icons </h2>
+		<div class="block bg bg-brdr">
+			<span class="document-title"> 24px </span>
+			<div class="flexbox-auto-col">
+				<img class="image-s" src="../assets/icons/search-icon.png"></img>
+				<img class="image-s" src="../assets/icons/no-result.png"></img>
+				<img class="image-s" src="../assets/icons/notification.png"></img>
+			</div>
+			<span class="document-title"> 38.88px </span>
+			<div class="flexbox-auto-col">
+				<img class="image-m" src="../assets/icons/search-icon.png"></img>
+				<img class="image-m" src="../assets/icons/no-result.png"></img>
+				<img class="image-m" src="../assets/icons/notification.png"></img>
+			</div>
+			<span class="document-title"> 62.91px </span>
+			<div class="flexbox-auto-col">
+				<img class="image-l" src="../assets/icons/search-icon.png"></img>
+				<img class="image-l" src="../assets/icons/no-result.png"></img>
+				<img class="image-l" src="../assets/icons/notification.png"></img>
+			</div>
+			<span class="document-title"> 101.78px </span>
+			<div class="flexbox-auto-col">
+				<img class="image-xl" src="../assets/icons/search-icon.png"></img>
+				<img class="image-xl" src="../assets/icons/no-result.png"></img>
+				<img class="image-xl" src="../assets/icons/notification.png"></img>
+			</div>
+		</div>
+	</div>
+	</div>
+
+</body>
+
+</html>

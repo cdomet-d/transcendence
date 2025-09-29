@@ -1,7 +1,7 @@
-const clickedDiv = document.getElementById("pwHintTrigger");
+const hintToggle = document.getElementById("pwHintTrigger");
 
-if (clickedDiv) {
-  clickedDiv.addEventListener("click", () => {
+if (hintToggle) {
+  hintToggle.addEventListener("click", () => {
     const pwHint = document.getElementById("pwHint");
 
     if (pwHint) {
