@@ -20,7 +20,7 @@ try {
 }
 
 //init server
-async function init(): Promise<FastifyInstance> {
+export async function init(): Promise<FastifyInstance> {
 	const serv: FastifyInstance = Fastify(options);
 	serv.decorate("gameRegistry", new GameRegistry());
 
