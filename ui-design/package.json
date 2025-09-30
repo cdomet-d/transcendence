@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "test.js",
   "scripts": {
-	"dev": "vite",
+    "dev": "vite",
     "build": "tsc && postcss ./css/tailwind.css -o dist/styles.css",
     "watch": "tsc --watch & postcss ./css/tailwind.css -o dist/styles.css --watch"
   },
@@ -16,6 +16,8 @@
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
     "tailwindcss": "^4.1.13",
+    "tsc": "^2.0.4",
+    "typescript": "^5.9.2",
     "vite": "^7.1.7"
   },
   "dependencies": {

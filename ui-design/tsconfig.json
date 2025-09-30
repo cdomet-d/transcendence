@@ -2,22 +2,20 @@
 	// Visit https://aka.ms/tsconfig to read more about this file
 	"compilerOptions": {
 		// File Layout
-		"rootDir": "./",
-		"outDir": "./js",
+		// "rootDir": "./src",
+		// "outDir": "./dist",
 		// Environment Settings
-		// See also https://aka.ms/tsconfig/module
-		"module": "ES2020",
-		"target": "ES2020",
-		"moduleResolution": "node",
-		"esModuleInterop": true,
+		"module": "nodenext",
+		"target": "esnext",
 		"types": [],
-		// Other Outputs
 		"sourceMap": true,
 		"declaration": true,
 		"declarationMap": true,
+
 		// Stricter Typechecking Options
 		"noUncheckedIndexedAccess": true,
 		"exactOptionalPropertyTypes": true,
+
 		// Style Options
 		"noImplicitReturns": true,
 		"noImplicitOverride": true,
@@ -25,6 +23,7 @@
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
 		"noPropertyAccessFromIndexSignature": true,
+
 		// Recommended Options
 		"strict": true,
 		"verbatimModuleSyntax": true,
@@ -33,8 +32,10 @@
 		"moduleDetection": "force",
 		"skipLibCheck": true,
 	},
-	"exclude": [
-		"./scripts",
-		"./js"
+	"include": [
+		".ui-design/*.ts"
 	],
+	"exclude": [
+		".ui-design/dist"
+	]
 }
