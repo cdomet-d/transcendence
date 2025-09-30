@@ -3,6 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import { options } from './serv.conf.js';
 import cors from '@fastify/cors';
 import { userRoutes } from './route.js';
+import dbConnector from "./db.js"
 
 const serv: FastifyInstance = Fastify({
 	logger: true
@@ -14,6 +15,7 @@ serv.register(cors, {
 });
 
 serv.register(userRoutes);
+serv.regi
 
 const start = async () => {
 	try {
