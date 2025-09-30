@@ -7,10 +7,6 @@ interface repObj {
 
 export function addMessEvent(game: Game, ws: WebSocket) {
 	ws.onmessage = (event) => {
-		// const blob = new Blob([event.data], { type: 'image/png' });
-		// const imageUrl = URL.createObjectURL(blob);
-		// game.image = imageUrl;
-		// URL.revokeObjectURL(imageUrl);
 		const mess: repObj = JSON.parse(event.data);
 		game.leftPad.y = mess.leftPadY;
 		game.rightPad.y = mess.rightPadY;
