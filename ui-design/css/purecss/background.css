@@ -16,6 +16,20 @@
 	background-color: #ffdb9976;
 }
 
+.clear-bg {
+	background: linear-gradient(180deg,
+			#ffdc99 0 10%,
+			#ffe0a5 0 20%,
+			#ffe4b0 0 30%,
+			#ffe8bb 0 40%,
+			#ffecc6 0 50%,
+			#ffecc6 0 60%,
+			#ffe8bb 0 70%,
+			#ffe4b0 0 80%,
+			#ffe0a5 0 90%,
+			#ffdc99 0 100%);
+}
+
 .yellow-bg {
 	background: linear-gradient(180deg,
 			#f4b000 0 10%,
@@ -30,19 +44,34 @@
 			#f4b000 0 100%);
 }
 
-.clear-bg {
+.yellow-bg:hover {
 	background: linear-gradient(180deg,
-			#ffdc99 0 10%,
-			#ffe0a5 0 20%,
-			#ffe4b0 0 30%,
-			#ffe8bb 0 40%,
-			#ffecc6 0 50%,
-			#ffecc6 0 60%,
-			#ffe8bb 0 70%,
-			#ffe4b0 0 80%,
-			#ffe0a5 0 90%,
-			#ffdc99 0 100%);
+			#ffc245 0 10%,
+			#ffc652 0 20%,
+			#ffca5f 0 30%,
+			#ffcd6b 0 40%,
+			#ffd177 0 50%,
+			#ffd177 0 60%,
+			#ffcd6b 0 70%,
+			#ffca5f 0 80%,
+			#ffc652 0 90%,
+			#ffc245 0 100%);
 }
+
+.yellow-bg:active {
+	background: linear-gradient(180deg,
+			#e3a300 0 10%,
+			#e7a700 0 20%,
+			#e9a900 0 30%,
+			#ecab00 0 40%,
+			#efac00 0 50%,
+			#efac00 0 60%,
+			#ecab00 0 70%,
+			#e9a900 0 80%,
+			#e7a700 0 90%,
+			#e3a300 0 100%);
+}
+
 
 .red-bg {
 	background: linear-gradient(180deg,
@@ -58,7 +87,63 @@
 			#ce633b 0 100%);
 }
 
+.red-bg:hover {
+	background: linear-gradient(180deg,
+			#ce633b 0 10%,
+			#d3673f 0 20%,
+			#d96b42 0 30%,
+			#de6e45 0 40%,
+			#e37248 0 50%,
+			#e37248 0 60%,
+			#de6e45 0 70%,
+			#d96b42 0 80%,
+			#d3673f 0 90%,
+			#ce633b 0 100%);
+}
+
+.red-bg:active {
+	background: linear-gradient(180deg,
+			#ce633b 0 10%,
+			#d3673f 0 20%,
+			#d96b42 0 30%,
+			#de6e45 0 40%,
+			#e37248 0 50%,
+			#e37248 0 60%,
+			#de6e45 0 70%,
+			#d96b42 0 80%,
+			#d3673f 0 90%,
+			#ce633b 0 100%);
+}
+
 .green-bg {
+	background: linear-gradient(180deg,
+			#42b143 0 10%,
+			#57b946 0 20%,
+			#61bd48 0 30%,
+			#6cc149 0 40%,
+			#76c54b 0 50%,
+			#76c54b 0 60%,
+			#6cc149 0 70%,
+			#61bd48 0 80%,
+			#57b946 0 90%,
+			#42b143 0 100%);
+}
+
+.green-bg:hover {
+	background: linear-gradient(180deg,
+			#42b143 0 10%,
+			#57b946 0 20%,
+			#61bd48 0 30%,
+			#6cc149 0 40%,
+			#76c54b 0 50%,
+			#76c54b 0 60%,
+			#6cc149 0 70%,
+			#61bd48 0 80%,
+			#57b946 0 90%,
+			#42b143 0 100%);
+}
+
+.green-bg:active {
 	background: linear-gradient(180deg,
 			#42b143 0 10%,
 			#57b946 0 20%,

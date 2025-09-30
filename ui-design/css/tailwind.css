@@ -76,6 +76,8 @@
 		--transparent-blue: #64e6e834;
 
 		--border: #773d16;
+		--highlight: #FFE6A4;
+		--shadow: #966c00;
 
 		--highlight-orange: #ee881c;
 		--shadow-orange: #9a4a0d;
@@ -104,6 +106,8 @@
 
 	.disabled {
 		--border: #83756b;
+		--highlight: transparent;
+		--shadow: transparent;
 	}
 
 	.button {
@@ -139,6 +143,18 @@
 }
 
 @layer base {
+	.t1 {
+		font-size: calc(5.85vw + 1em);
+	}
+
+	.t2 {
+		font-size: calc(3.63vw + 1em);
+	}
+
+	.t3 {
+		font-size: calc(2.24vw + 1em);
+	}
+
 	html {
 		font-family: PixelOperator;
 		font-size: var(--regular);
@@ -159,13 +175,11 @@
 	span {
 		margin: 0;
 		padding: 0;
-		font-size: var(--regular);
 		color: var(--black);
 	}
 
 	a {
 		line-height: 100%;
-		font-size: var(--regular);
 		text-decoration: none;
 	}
 
@@ -188,7 +202,8 @@
 	}
 
 	input[type="text"],
-	input[type="password"] {
+	input[type="password"],
+	input[type=file] {
 		padding: var(--space-xs) var(--space-s) var(--space-xs) var(--space-s);
 	}
 
@@ -210,11 +225,6 @@
 		margin: 0;
 	}
 
-	input[type="range"] {
-		height: var(--s);
-		padding: var(--space-xs);
-	}
-
 	input[type="range"]::-moz-range-thumb {
 		box-sizing: border-box;
 		cursor: pointer;
@@ -230,30 +240,41 @@
 			0 -2px 0 0 var(--border), 0 2px 0 0 var(--border);
 	}
 
+	input[type=file] {
+		padding-left: 6rem;
+	}
+
+	input::file-selector-button {
+		cursor: pointer;
+		border-top: 2px solid var(--highlight);
+		border-bottom: 2px solid var(--shadow);
+		box-shadow: -2px 0 0 0 var(--border), 2px 0 0 0 var(--border),
+			0 -2px 0 0 var(--border), 0 2px 0 0 var(--border);
+		background: linear-gradient(180deg,
+				#f4b000 0 10%,
+				#f7b200 0 20%,
+				#fab400 0 30%,
+				#fcb600 0 40%,
+				#ffb800 0 50%,
+				#ffb800 0 60%,
+				#fcb600 0 70%,
+				#fab400 0 80%,
+				#f7b200 0 90%,
+				#f4b000 0 100%);
+	}
+
 	label {
 		color: var(--shadow-2);
-		min-width: fit-content;
 		padding: 0px var(--space-xs) 0px var(--space-xs);
 	}
 
-	button {
-		overflow: hidden;
-		outline: none;
-		height: 90%;
-		width: 100%;
-		box-sizing: border-box;
-		padding: var(--space-xs);
-		font-size: var(--regular);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
 	button:hover {
+		cursor: pointer;
 		transform: scale(1.02);
 	}
 
 	button:active {
+		cursor: pointer;
 		transform: scale(1);
 	}
 
@@ -267,6 +288,10 @@
 @layer components {}
 
 @layer utilities {
+	.f-yellow {
+		color: var(--yellow);
+	}
+
 	.w-s {
 		width: var(--s);
 	}
@@ -291,36 +316,9 @@
 		height: var(--l);
 	}
 
-	.iw-s {
-		width: var(--image-s);
-	}
-
-	.ih-s {
-		height: var(--image-s);
-	}
-
-	.iw-m {
-		width: var(--image-m);
-	}
-
-	.ih-m {
-		height: var(--image-m);
-	}
-
-	.iw-l {
-		width: var(--image-l);
-	}
-
-	.ih-l {
-		height: var(--image-l);
-	}
-
-	.iw-xl {
-		width: var(--image-xl);
-	}
-
-	.ih-xl {
-		height: var(--image-xl);
+	.isize {
+		width: var(--image-size);
+		height: var(--image-size);
 	}
 
 	.title-shadow {
@@ -335,11 +333,6 @@
 			-3px -1.5px var(--title-shadow), -3.2px -1.6px var(--title-shadow),
 			-3.4px -1.7px var(--title-shadow), -3.6px -1.8px var(--title-shadow),
 			-3.8px -1.9px var(--title-shadow), -4px -2px var(--title-shadow);
-	}
-
-	.title {
-		color: var(--yellow);
-		text-align: center;
 	}
 
 	.avatar-wrapper {
@@ -374,7 +367,7 @@
 		border-top: 2px solid var(--shadow);
 		border-bottom: 2px solid var(--shadow);
 	}
-
+	
 	.orange-bg {
 		background-color: var(--orange);
 		border-top: 2px solid var(--highlight-orange);

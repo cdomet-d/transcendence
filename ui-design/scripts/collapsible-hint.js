@@ -1,7 +1,7 @@
-var clickedDiv = document.getElementById("pwHintTrigger");
-if (clickedDiv) {
-    clickedDiv.addEventListener("click", function () {
-        var pwHint = document.getElementById("pwHint");
+const hintToggle = document.getElementById("pwHintTrigger");
+if (hintToggle) {
+    hintToggle.addEventListener("click", () => {
+        const pwHint = document.getElementById("pwHint");
         if (pwHint) {
             if (pwHint.hasAttribute("selected"))
                 pwHint.removeAttribute("selected");
@@ -10,3 +10,5 @@ if (clickedDiv) {
         }
     });
 }
+export {};
+//# sourceMappingURL=collapsible-hint.js.map

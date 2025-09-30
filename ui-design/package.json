@@ -1,10 +1,11 @@
 {
   "name": "ui-design",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "test.js",
   "scripts": {
-    "build": "postcss ./css/tailwind.css -o dist/styles.css",
-    "watch": "postcss ./css/tailwind.css -o dist/styles.css --watch"
+	"dev": "vite",
+    "build": "tsc && postcss ./css/tailwind.css -o dist/styles.css",
+    "watch": "tsc --watch & postcss ./css/tailwind.css -o dist/styles.css --watch"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +15,8 @@
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
-    "tailwindcss": "^4.1.13"
+    "tailwindcss": "^4.1.13",
+    "vite": "^7.1.7"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.13",
