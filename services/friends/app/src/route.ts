@@ -26,34 +26,25 @@ export async function friendRoutes(serv: FastifyInstance) {
 			const receiverUser = (await usersResponse.json()) as userData;
 			const receiverId = receiverUser.userID;
 
-			 const query = `
-				INSERT INTO friendship (friendshipID, userID, friendID, startTimeFriendship, statusFrienship)
-				VALUES (?, ?, ?, ?, ?)
+			const query = `
+				INSERT INTO friendship (userID, friendID, startTimeFriendship, statusFrienship)
+				VALUES (?, ?, ?, ?)
 			`;
 
 			const params = [
-				null,
 				senderId,
 				receiverId,
 				new Date().toISOString(),
 				false
 			];
 
-			await new Promise<void>((resolve, reject) => {
-				serv.dbFriends.run(query, params, function(err) {
-					if (err) {
-						serv.log.error(`SQL Error: ${err.message}`);
-						reject(new Error('Failed to create friend request in database.'));
-						return ;
-					}
-					serv.log.info(`A row has been inserted with rowid ${this.lastID}`);
-					resolve();
-				});
-			});
+			const result = await serv.dbFriends.run(query, params);
+
+			serv.log.info(`A row has been inserted with rowid ${result.lastID}`);
 
 			return reply.code(201).send({
-				 success: true,
-				 message: `Friend request sent to ${receiverUsername}`
+				success: true,
+				message: `Friend request sent to ${receiverUsername}`
 			});
 
 		} catch (error) {

@@ -75,7 +75,7 @@ Lasty, even is the table will remain pretty small, being able to make shorter, s
 ### Usage and associated functions
 
 TODO :
-* get translation of a word by word and language code
+* ~~get translation of a word by word and language code~~
 
 This databases won't have a function to update the data via the code. 
 To add translation I think the best course of action will be to directly modify the seed.sql which adds data to the database at launch.
