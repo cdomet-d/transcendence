@@ -211,6 +211,8 @@ The gameStatus column might not make the final cup, depending when we plan on up
 
 The tournamentID will allow use the get all the games played in a tournament without having to duplicate data in the tournament table. It can be nulled is a game is not part of a tournament.
 
+There is the question of the local game. If a game is local, the "invited" user is not register as a user, which means not userID. How do we planned on going about it ? We might set the loser/winnerID to null and set a "Invited player" a the game dashboard front wise. TODO : figure that out 
+
 #### tournamentInfo
 
 * tournamentID &rarr; integer
