@@ -1,5 +1,4 @@
 import type { FastifyInstance } from 'fastify';
-import { dbFriends } from './db.js';
 
 interface userData {
   userID: number;
@@ -57,7 +56,7 @@ export async function friendRoutes(serv: FastifyInstance) {
       ];
 
       await new Promise<void>((resolve, reject) => {
-        dbFriends.run(query, params, function(err) {
+        serv.dbFriends.run(query, params, function(err) {
           if (err) {
             serv.log.error(`SQL Error: ${err.message}`);
             // Rejeter la promesse si une erreur SQL se produit

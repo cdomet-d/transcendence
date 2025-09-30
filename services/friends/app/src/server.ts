@@ -3,6 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import { options } from './serv.conf.js';
 import { friendRoutes } from './route.js';
 import cors from '@fastify/cors';
+import dbConnector from "./db.js"
 
 const serv: FastifyInstance = Fastify({
 	logger: true
@@ -13,6 +14,7 @@ serv.register(cors, {
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 });
 
+serv.register(dbConnector);
 serv.register(friendRoutes);
 // 3. Créez une fonction de démarrage `async` pour lancer le serveur proprement.
 const start = async () => {

@@ -14,6 +14,32 @@ The sources files for database building are in /tools of each container's source
 
 ![database.png](assets/database.png "This is a sample image.")
 
+The correct methods for avoiding SQL injections is to NOT USE variable export for the query.
+Bad SQL query (dangerous) :
+```
+	const word;
+	const langCode;
+
+	const query = `
+		SELECT translation FROM translations WHERE {$word} = ? AND {$language_code} = ?
+	`;
+	
+	const result = await serv.dbLanguage.get(query);
+```
+
+Instead a good practice is to set variables in the query direcly when sending the query, not when building it.
+It will look like this :
+```
+	const word;
+	const langCode;
+
+	const query = `
+		SELECT translation FROM translations WHERE word = ? AND language_code = ?
+	`;
+
+	const result = await serv.dbLanguage.get(query, [word, langCode]);
+```
+
 ## Accessibility
 
 ### General overview
@@ -101,6 +127,8 @@ This table has the following column :
 * highestScore &rarr; integer
 
 We don't have totalLosses because it can easily be computed by totalMatch and totalWin so we remove so useless SQL queries by not storing totalLosses.
+
+averageMatchDuration will be in seconds.
 
 ### Usage and associated functions
 
@@ -249,6 +277,18 @@ The playersIDs is currently thought of has a JSON array storing the userID of al
 
 ## Miscellaneous
 
+### Information
+
+The UPDATE method can allow use the perfom addition to a column of a row without having to pull the data from the table first. Like so 
+
+```
+UPDATE userStats 
+SET totalPlayedGame = totalPlayedGame + 1 
+WHERE userID = 101;
+```
 TODO :
+* Change the way the database in instancieted in the code (connect db to fastify like in accessibility container)
 * secure extern API calls and understand what it actually means
 * For larger GET API calls, should make a get function per column or can a function that gets all the needed informations will be better ? Maybe even both ?
+* Clean code in friends container's routes.ts file 
+* Plug languageDB route to front to see if translation works
