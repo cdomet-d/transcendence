@@ -17,6 +17,8 @@
     "@fastify/websocket": "^11.2.0",
     "@types/node": "^24.3.0",
     "@types/ws": "^8.18.1",
+    "canvas": "^3.2.0",
+    "canvas-to-buffer": "^4.1.2",
     "dotenv": "^17.2.2",
     "fastify": "^5.4.0",
     "nats": "^2.29.3",

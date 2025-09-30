@@ -23,6 +23,7 @@ export class Game {
     #_leftPaddle: paddle;
     #_rightPaddle: paddle;
     #_mess: messObj;
+    #_image: HTMLImageElement;
 
     /*                            CONSTRUCTORS                               */
     constructor(ctx: CanvasRenderingContext2D) {
@@ -33,6 +34,7 @@ export class Game {
         this.#_rightPaddle = {x: 460, y: 108};
         let keys: keysObj = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
         this.#_mess = { _keys: keys, _timeStamp: 0 };
+        this.#_image = new Image();
     }
 
     /*                              GETTERS                                  */
@@ -56,8 +58,12 @@ export class Game {
         return this.#_width;
     }
 
-    get ctx() : CanvasRenderingContext2D {
+    get ctx(): CanvasRenderingContext2D {
         return this.#_ctx;
+    }
+
+    get image(): HTMLImageElement {
+        return this.#_image;
     }
 
     /*                              SETTERS                                  */
@@ -67,5 +73,9 @@ export class Game {
 
     set rightPad(newPos: number) {
         this.#_rightPaddle.y = newPos;
+    }
+
+    set image(url: string) {
+        this.#_image.src = url;
     }
 }

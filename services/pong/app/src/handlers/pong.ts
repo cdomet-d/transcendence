@@ -28,7 +28,11 @@ export function setUpGame(game: Game) {
 	}
 }
 
+import { createCanvas, type Canvas, type CanvasRenderingContext2D } from 'canvas';
+
 function setMessEvent(player: Player, opponent: Player, sendReply: Function) {
+	const canvas = createCanvas(480, 270);
+	const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
 	let lastFrameTime: number = 0;
 	player.socket.on("message", (payload: any) => {
 		const mess: messObj = JSON.parse(payload);
@@ -37,7 +41,7 @@ function setMessEvent(player: Player, opponent: Player, sendReply: Function) {
 		lastFrameTime = mess._timeStamp;
 		if (!keysDown(keys))
 			return;
-		sendReply(player, opponent, keys, delta);
+		sendReply(player, opponent, keys, delta, canvas, ctx);
 	})
 }
 
@@ -49,15 +53,20 @@ function keysDown(keys: keysObj): boolean {
 	return false
 }
 
-function local(player: Player, opponent: Player, keys: keysObj, delta: number) {
+import { renderGame } from './game.render.utils.js';
+function local(player: Player, opponent: Player, keys: keysObj, delta: number, canvas: Canvas, ctx: CanvasRenderingContext2D) {
 	updatePaddlePos(player, keys, delta);
 	updatePaddlePos(opponent, keys, delta);
+	// ctx.clearRect(0, 0, 480, 270);
+	// renderGame(ctx, opponent.paddle, player.paddle);
+	// const img = canvas.toBuffer()
+	// player.socket.send(img);
 	player.setMess("left", player.paddle.y);
 	player.setMess("right", opponent.paddle.y);
 	player.socket.send(JSON.stringify(player.rep));
 }
 
-function remote(player: Player, opponent: Player, keys: keysObj, delta: number) {
+function remote(player: Player, opponent: Player, keys: keysObj, delta: number, canvas: Canvas, ctx: CanvasRenderingContext2D) {
 	updatePaddlePos(player, keys, delta);
 	player.setMess("left", player.paddle.y);
 	opponent.setMess("right", player.paddle.y);

@@ -14,6 +14,7 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		game.mess._timeStamp = timestamp;
 		ws.send(JSON.stringify(game.mess));
 		game.ctx.clearRect(0, 0, game.width, game.height);
+		// game.ctx.drawImage(game.image, 0, 0);
 		renderGame(game);
 		window.requestAnimationFrame(FrameRequestCallback(game, ws));
 	}
