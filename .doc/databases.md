@@ -287,8 +287,8 @@ SET totalPlayedGame = totalPlayedGame + 1
 WHERE userID = 101;
 ```
 TODO :
-* Change the way the database in instancieted in the code (connect db to fastify like in accessibility container)
+* ~~Change the way the database in instancieted in the code (connect db to fastify like in accessibility container)~~
 * secure extern API calls and understand what it actually means
 * For larger GET API calls, should make a get function per column or can a function that gets all the needed informations will be better ? Maybe even both ?
-* Clean code in friends container's routes.ts file 
+* ~~Clean code in friends container's routes.ts file~~ 
 * Plug languageDB route to front to see if translation works
