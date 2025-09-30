@@ -193,7 +193,7 @@ This database has the following tables which has the following column :
 * gameID &rarr; integer (__primary key__)
 * duration &rarr; integer
 * startTime &rarr; datetime
-* ganeStatus &rarr; integer
+* gameStatus &rarr; integer
 * winnerID &rarr; integer 
 * loserID &rarr; integer
 * tournamentID &rarr; integer
@@ -201,16 +201,45 @@ This database has the following tables which has the following column :
 * scoreWinner &rarr; integer
 * scoreLoser &rarr; integer
 
+The gameStatus column might not make the final cup, depending when we plan on updating the database (throughout the game or only at the end). If we do keep it, the values will have the following meaning :
+
+| Value  |      Meaning     |
+| ------ |:----------------:|
+|   0    | still in "lobby" |
+|   1    |      started     |
+|   2    |      ended       |
+
+The tournamentID will allow use the get all the games played in a tournament without having to duplicate data in the tournament table. It can be nulled is a game is not part of a tournament.
+
 #### tournamentInfo
 
 * tournamentID &rarr; integer
 * winnerID &rarr; integer
-* playerIDs &rarr; integer
+* playerIDs &rarr; TEXT
+
+The playersIDs is currently thought of has a JSON array storing the userID of all tournament players. This data format allows for different tournament size and is pretty flexible in the event we implement other tournament size.
 
 ### Usage and associated functions
 
+#### gameMatchInfo
 
+* created a game and return gameID
+* update a game with gameID
+* get all tournament's game with tournament ID
+* get all game info with gameID
+* depending on how the front is, get only some of the info for game dashboard preview ?
+* get gameID (and/or gameInfo) with user ID (what game did a user played in)  
 
+#### tournamentInfo
+
+* create a tournament and return tournamentID
+* update tournament with tournamentID
+* get tournament info with tournmentID
+* get tournamentID with userID (what tournament did a user played in)
+* 
+
+## Miscellaneous
 
 TODO :
-secure extern API calls and understand what it actually means
+* secure extern API calls and understand what it actually means
+* For larger GET API calls, should make a get function per column or can a function that gets all the needed informations will be better ? Maybe even both ?
