@@ -211,6 +211,13 @@ The gameStatus column might not make the final cut, depending on when we plan on
 
 The tournamentID will allow use the get all the games played in a tournament without having to duplicate data in the tournament table. It can be nulled if a game is not part of a tournament.
 
+localGame's value and meaning are : 
+
+| Value  | Meaning |
+| ------ |:-------:|
+|   0    | remote  |
+|   1    | local   |
+
 There is the question of the local game. If a game is local, the "invited" user is not register as a user, which means not userID. How do we planned on going about it ? We might set the loser/winnerID to null and set a "Invited player" a the game dashboard front wise. TODO : figure that out 
 
 #### tournamentInfo
