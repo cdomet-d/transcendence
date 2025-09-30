@@ -1,5 +1,4 @@
 import type { FastifyInstance } from 'fastify';
-import { dbUsers } from './db.js';
 
 export async function userRoutes(serv: FastifyInstance) {
     serv.get('/internal/users/by-username/:username', async (request, reply) => {
@@ -8,7 +7,7 @@ export async function userRoutes(serv: FastifyInstance) {
             const query = `SELECT userID, username FROM userProfile WHERE username = ?`;
 
             const user = await new Promise((resolve, reject) => {
-                dbUsers.get(query, [username], (err, row) => {
+                serv.dbUsers.get(query, [username], (err, row) => {
                     if (err) return reject(err);
                     resolve(row);
                 });

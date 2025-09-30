@@ -15,7 +15,7 @@ serv.register(cors, {
 });
 
 serv.register(userRoutes);
-serv.regi
+serv.register(dbConnector);
 
 const start = async () => {
 	try {
