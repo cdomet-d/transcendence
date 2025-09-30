@@ -1,1 +1,2 @@
-INSERT INTO gameMatchInfo (gameID, duration, startTime, gameStatus, winnerID, loserID, tournamentID) VALUES (1, 90, '2025-09-04 12:00:00', 2, 1, 2, 1);
+INSERT INTO gameMatchInfo (gameID, duration, startTime, gameStatus, winnerID, loserID, tournamentID, localGame, scoreWinner, scoreLoser) VALUES (1, 90, '2025-09-04 12:00:00', 2, 1, 2, 1, 0, 4, 2);
+INSERT INTO tournamentInfo (tournamentID, winnerID, playerIDs) VALUES (1, 1, '[5, 21, 15, 4]');

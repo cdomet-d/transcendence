@@ -13,29 +13,7 @@ CREATE TABLE gameMatchInfo (
 );
 
 CREATE TABLE tournamentInfo {
-  tournamentID INTEGER AUTOINCREMENT NOT NULL, 
+  tournamentID INTEGER PRIMARY AUTOINCREMENT NOT NULL, 
   winnerID INTEGER,
   playerIDs TEXT -- Stores a JSON array like '[1, 5, 12, 23]'
 }
-
---PreGame -> Game:
---
---{ match: - matchID 
---- tournamentID
---- local: bool
---- users[]: 
---  - user1: 
---    - userID
---  - user2:
---    - userID
---  - score
---  - winner
---  - loser }
---
---tournament { - match[] }
-
---CREATE TABLE gameLobby (
---lobbyID INTEGER,
---status BOOLEAN, --false == not ready to start game, true == ready to start game
---PRIMARY KEY (lobbyID)  
---);

@@ -22,7 +22,7 @@ The accessibily container holds the translation for each supported langangues (E
 There is only one table in this database : translations
 
 The table has 4 column :
-* ID &rarr; integer
+* ID &rarr; integer (__primary key__)
 * word &rarr; text
 * language_code &rarr; text 
 * translation &rarr; text
@@ -215,7 +215,7 @@ There is the question of the local game. If a game is local, the "invited" user 
 
 #### tournamentInfo
 
-* tournamentID &rarr; integer
+* tournamentID &rarr; integer (__primary key__)
 * winnerID &rarr; integer
 * playerIDs &rarr; TEXT
 
