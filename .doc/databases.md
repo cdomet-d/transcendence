@@ -201,7 +201,7 @@ This database has the following tables which has the following column :
 * scoreWinner &rarr; integer
 * scoreLoser &rarr; integer
 
-The gameStatus column might not make the final cup, depending when we plan on updating the database (throughout the game or only at the end). If we do keep it, the values will have the following meaning :
+The gameStatus column might not make the final cut, depending on when we plan on updating the database (throughout the game or only at the end). If we do keep it, the values will have the following meaning :
 
 | Value  |      Meaning     |
 | ------ |:----------------:|
@@ -209,7 +209,7 @@ The gameStatus column might not make the final cup, depending when we plan on up
 |   1    |      started     |
 |   2    |      ended       |
 
-The tournamentID will allow use the get all the games played in a tournament without having to duplicate data in the tournament table. It can be nulled is a game is not part of a tournament.
+The tournamentID will allow use the get all the games played in a tournament without having to duplicate data in the tournament table. It can be nulled if a game is not part of a tournament.
 
 There is the question of the local game. If a game is local, the "invited" user is not register as a user, which means not userID. How do we planned on going about it ? We might set the loser/winnerID to null and set a "Invited player" a the game dashboard front wise. TODO : figure that out 
 
@@ -219,7 +219,7 @@ There is the question of the local game. If a game is local, the "invited" user 
 * winnerID &rarr; integer
 * playerIDs &rarr; TEXT
 
-The playersIDs is currently thought of has a JSON array storing the userID of all tournament players. This data format allows for different tournament size and is pretty flexible in the event we implement other tournament size.
+The playersIDs is currently thought of has a JSON array storing the userID of all tournament players. This data format allows for different tournament size and is pretty flexible in the event we implement other tournament size. TODO : Figure out if the JSON array format isn't to complicated and fast enough, and find a replacement if it's not optimized
 
 ### Usage and associated functions
 
