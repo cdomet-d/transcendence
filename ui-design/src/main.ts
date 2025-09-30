@@ -8,8 +8,8 @@ console.log("this script is running");
 
 cont.classList.add('flex', 'justify-center','items-center', 'w-[100%]', 'h-[15rem]')
 wrap.classList.add('w-[200px]', 'h-[100px]');
-test.render("Hello");
 
+test.render("hello");
 wrap.appendChild(test);
 cont.appendChild(wrap);
 document.body.append(cont);
