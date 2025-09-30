@@ -1,22 +1,15 @@
-import { natsPublish } from '../nats/publisher.js';
-
-interface requestForm {
-    format: "quick" | "tournament",
-    remote: boolean,
-    players: number
-    username: string,
-    userID: number
-}
+import { makeTournamentObj } from "../tournament/tournament.js";
 
 interface userInfo {
     userID: number,
     username: string
 }
 
-interface matchInfo {
-    format: "quick" | "tournament",
+interface lobbyInfo {
+    users: userInfo[],
     remote: boolean,
-    players: number
+    format: "quick" | "tournament"
+    // gameSettings: gameSettingsObj
 }
 
 interface match {
@@ -29,24 +22,39 @@ interface match {
     loser: userInfo,
 }
 
-export function handleMatchRequest(data: any) {
-    // Decompose data
-    const { format, remote, players, userID, username } = data.payload;
+interface tournament {
+    tournamentID: number,
+    winnerID: number,
+    bracket: match[]
+}
 
-    const gameInfo = { format, remote, players };
-    
-    // Which subject do we publish to?
-    let nats_subject: string = "pregame." +
-    gameInfo.format + "." +
-    (gameInfo.remote === "true" ? "remote." : "local.") +
-    gameInfo.players + "." + "create";
-    
-    
-    // What are we sending there?
-    const userInfo = { userID, username };
-    let replySubject = nats_subject.replace("create", "ready");
-	console.log("3");
-    console.log("DATA SUBJECT ", replySubject, "\n\n");
+function receiveLobbyInfo(): lobbyInfo {
+    const userArray: userInfo[] = [
+            { userID: 1, username: "sam" },
+            { userID: 2, username: "alex" },
+            { userID: 3, username: "cha" },
+            { userID: 4, username: "coco" },
+        ];
+    const lobbyInfo: lobbyInfo = { users: userArray, remote: true, format: "tournament" };
+    return lobbyInfo;
+}
 
-    natsPublish(nats_subject, JSON.stringify(userInfo), replySubject);
+export function processLobbyRequest() {
+    // Receive data
+    const lobbyInfo = receiveLobbyInfo();
+
+    // Filter request
+    if (lobbyInfo.format === "tournament") {
+        // create bracket (AKA matches[])
+        const matches: match[] = createBracket(lobbyInfo);
+
+        // create tournamentObj (use matches[] from createBracket())
+        const tournament: tournament = createTournament();
+        
+    } else if (lobbyInfo.format === "quick") {
+        // create matchObj
+        // send to PONG
+        // wait for approval from PONG
+        // signal involved clients match ready for them
+    }
 }

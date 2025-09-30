@@ -22,13 +22,10 @@ interface match {
 }
 
 interface tournament {
-    matches: match[]
+    matches: match[],
+    tournamentID: number,
+    winnerID: number
 }
-
-// interface bracket {
-//     //
-// }
-
 
 export function createTournament(payload: string) {
     const requestForm = JSON.parse(payload);
