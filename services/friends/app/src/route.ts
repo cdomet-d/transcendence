@@ -7,7 +7,8 @@ interface userData {
 
 export async function friendRoutes(serv: FastifyInstance) {
 
-	serv.post('/user/friends-requests/:username', async (request, reply) => {
+	// Send a friend request to another user with username, parameter : username of sender and receiver
+	serv.post('/friends/friends-requests/:username', async (request, reply) => {
 		try {
 			const { username: receiverUsername } = request.params as { username: string };
 			const { userId: senderId } = request.body as { userId: number };
