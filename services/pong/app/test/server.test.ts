@@ -8,7 +8,7 @@ describe('Fastify server', () => {
     let address: string;
 
     beforeAll(async () => {
-        server = init();
+        server = await init();
         await server.ready();
         address = await server.listen({ port: 0 });
     });
