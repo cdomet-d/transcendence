@@ -1,15 +1,15 @@
 @import "tailwindcss";
-@import "./purecss/animations.css";
-@import "./purecss/background.css";
+@import "./design-elements/css/animations.css";
+@import "./design-elements/css/background.css";
 
 @font-face {
 	font-family: PixelOperator;
-	src: url(../assets/fonts/pixel_operator/PixelOperator.ttf);
+	src: url(/fonts/PixelOperator.woff) format("woff");
 }
 
 @font-face {
 	font-family: PixelOperatorBold;
-	src: url(../assets/fonts/pixel_operator/PixelOperator-Bold.ttf);
+	src: url(/fonts/PixelOperator-Bold.woff) format("woff");
 }
 
 @layer theme {

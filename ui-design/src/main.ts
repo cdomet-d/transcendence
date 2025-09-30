@@ -1,17 +1,19 @@
-import { menuButton } from "./atoms";
+import { menuButton } from "./atoms.js";
 
 const wrap = document.createElement('div');
+const cont = document.createElement('div');
 const test = document.createElement('button', { is: 'menu-button' }) as menuButton;
 
 console.log("this script is running");
 
-wrap.classList.add('flex', 'justify-center', 'w-[100px]', 'h-[100px]');
-test.render('Hello');
+cont.classList.add('flex', 'justify-center','items-center', 'w-[100%]', 'h-[15rem]')
+wrap.classList.add('w-[200px]', 'h-[100px]');
+test.render("Hello");
 
 wrap.appendChild(test);
-document.body.append(wrap);
+cont.appendChild(wrap);
+document.body.append(cont);
 
-// const paragraph = document.createElement('p');
-// paragraph.textContent='HELLO IS ANYONEHERE'
-
-// document.body.append(paragraph);
+if (import.meta.hot) {
+  import.meta.hot.accept()
+}

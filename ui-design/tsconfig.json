@@ -1,41 +1,35 @@
 {
-	// Visit https://aka.ms/tsconfig to read more about this file
 	"compilerOptions": {
 		// File Layout
-		// "rootDir": "./src",
-		// "outDir": "./dist",
-		// Environment Settings
-		"module": "nodenext",
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"module": "esnext",
 		"target": "esnext",
-		"types": [],
-		"sourceMap": true,
-		"declaration": true,
-		"declarationMap": true,
-
-		// Stricter Typechecking Options
+		"types": [
+			"node",
+		],
+		"lib": [
+			"esnext",
+			"dom"
+		],
 		"noUncheckedIndexedAccess": true,
 		"exactOptionalPropertyTypes": true,
-
-		// Style Options
 		"noImplicitReturns": true,
 		"noImplicitOverride": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
 		"noPropertyAccessFromIndexSignature": true,
-
-		// Recommended Options
 		"strict": true,
 		"verbatimModuleSyntax": true,
-		"isolatedModules": true,
 		"noUncheckedSideEffectImports": true,
 		"moduleDetection": "force",
 		"skipLibCheck": true,
 	},
 	"include": [
-		".ui-design/*.ts"
+		"./src/**/*.ts"
 	],
 	"exclude": [
-		".ui-design/dist"
+		"./node_modules"
 	]
 }

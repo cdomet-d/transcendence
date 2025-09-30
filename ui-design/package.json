@@ -1,27 +1,29 @@
 {
-  "name": "ui-design",
-  "version": "1.0.0",
-  "main": "test.js",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && postcss ./css/tailwind.css -o dist/styles.css",
-    "watch": "tsc --watch & postcss ./css/tailwind.css -o dist/styles.css --watch"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "devDependencies": {
-    "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.6",
-    "postcss-cli": "^11.0.1",
-    "tailwindcss": "^4.1.13",
-    "tsc": "^2.0.4",
-    "typescript": "^5.9.2",
-    "vite": "^7.1.7"
-  },
-  "dependencies": {
-    "@tailwindcss/postcss": "^4.1.13",
-    "postcss-import": "^16.1.1"
-  }
+	"name": "ui-design",
+	"version": "1.0.0",
+	"main": "main.js",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc && postcss ./tailwind.css -o dist/styles.css",
+		"watch": "tsc --watch & postcss ./tailwind.css -o dist/styles.css --watch"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"type": "module",
+	"description": "",
+	"devDependencies": {
+		"@types/node": "^24.6.0",
+		"autoprefixer": "^10.4.21",
+		"postcss": "^8.5.6",
+		"postcss-cli": "^11.0.1",
+		"tailwindcss": "^4.1.13",
+		"tsc": "^2.0.4",
+		"typescript": "^5.9.2",
+		"vite": "^7.1.7"
+	},
+	"dependencies": {
+		"@tailwindcss/postcss": "^4.1.13",
+		"postcss-import": "^16.1.1"
+	}
 }
