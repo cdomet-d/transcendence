@@ -273,7 +273,6 @@ The playersIDs is currently thought of has a JSON array storing the userID of al
 * update tournament with tournamentID
 * get tournament info with tournmentID
 * get tournamentID with userID (what tournament did a user played in)
-* 
 
 ## Miscellaneous
 

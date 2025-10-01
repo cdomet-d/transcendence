@@ -93,6 +93,8 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
+    ports:
+      - "1616:1616"
     volumes:
       - ./services/friends/app:/usr/app
       - ./services/friends/data:/usr/data
