@@ -28,7 +28,7 @@ export function setUpGame(game: Game) {
 	}
 }
 
-function setMessEvent(player: Player, opponent: Player, sendReply: Function) {
+export function setMessEvent(player: Player, opponent: Player, sendReply: Function) {
 	let lastFrameTime: number = 0;
 	player.socket.on("message", (payload: any) => {
 		const mess: messObj = JSON.parse(payload);
@@ -49,16 +49,17 @@ function keysDown(keys: keysObj): boolean {
 	return false
 }
 
-function local(player: Player, opponent: Player, keys: keysObj, delta: number) {
+export function local(player: Player, opponent: Player, keys: keysObj, delta: number) {
 	updatePaddlePos(player, keys, delta);
 	updatePaddlePos(opponent, keys, delta);
 	player.setMess("left", player.paddle.y);
 	player.setMess("right", opponent.paddle.y);
 	if (player.socket.readyState === 1)
 		player.socket.send(JSON.stringify(player.rep));
+	//TODO: handle case where socket isn't open
 }
 
-function remote(player: Player, opponent: Player, keys: keysObj, delta: number) {
+export function remote(player: Player, opponent: Player, keys: keysObj, delta: number) {
 	updatePaddlePos(player, keys, delta);
 	player.setMess("left", player.paddle.y);
 	opponent.setMess("right", player.paddle.y);
