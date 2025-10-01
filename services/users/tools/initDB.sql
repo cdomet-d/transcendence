@@ -4,7 +4,7 @@ CREATE TABLE userProfile (
   avatar TEXT,
   bio TEXT,
   profileColor TEXT,
-  activityStatus INTEGER
+  activityStatus INTEGER,
   lastConnexion DATETIME
 );
 

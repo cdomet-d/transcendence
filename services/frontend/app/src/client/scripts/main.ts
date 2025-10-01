@@ -38,7 +38,7 @@ addLanguageEvents();
 
 document.getElementById('send-friend-btn')?.addEventListener('click', async () => {
     console.log("\n1\n")
-    const res = await fetch(`/api/user/friends-requests`, {
+    const res = await fetch(`/api/friends/friends-requests`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ requester_id: "alex", requestee_id: "Hugues" }),
@@ -68,7 +68,7 @@ async function sendFriendRequestApi() {
 
     const bodyAsString = JSON.stringify(friendRequestData);
 
-    const response = await fetch(`/api/user/friends-requests/${targetUsername}`, {
+    const response = await fetch(`/api/friends/friends-requests/${targetUsername}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

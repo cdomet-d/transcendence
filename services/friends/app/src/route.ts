@@ -9,6 +9,7 @@ export async function friendRoutes(serv: FastifyInstance) {
 
 	// Send a friend request to another user with username, parameter : username of sender and receiver
 	serv.post('/friends/friends-requests/:username', async (request, reply) => {
+		serv.log.info('in serv post friends container');
 		try {
 			const { username: receiverUsername } = request.params as { username: string };
 			const { userId: senderId } = request.body as { userId: number };
@@ -26,6 +27,7 @@ export async function friendRoutes(serv: FastifyInstance) {
 
 			const receiverUser = (await usersResponse.json()) as userData;
 			const receiverId = receiverUser.userID;
+			serv.log.info('received users service response');
 
 			const query = `
 				INSERT INTO friendship (userID, friendID, startTimeFriendship, statusFrienship)

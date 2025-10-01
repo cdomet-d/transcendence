@@ -16,7 +16,7 @@
     "fastify": "^5.5.0",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
