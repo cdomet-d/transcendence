@@ -18,7 +18,6 @@ services:
   #   image: accessibility:0.0.1
   #   networks:
   #     - transcendence
-  #   restart: unless-stopped
   #   environment:
   #     - NGINXIP=nginx
   #   secrets:
@@ -36,7 +35,6 @@ services:
   #   image: account:0.0.1
   #   networks:
   #     - transcendence
-  #   restart: unless-stopped
   #   environment:
   #     - NGINXIP=nginx
   #   secrets:
@@ -54,7 +52,6 @@ services:
   #   image: auth:0.0.1
   #   networks:
   #     - transcendence
-  #   restart: unless-stopped
   #   environment:
   #     - NGINXIP=nginx
   #   secrets:
@@ -72,7 +69,6 @@ services:
   #   image: dashboard:0.0.1
   #   networks:
   #     - transcendence
-  #   restart: unless-stopped
   #   environment:
   #     - NGINXIP=nginx
   #   secrets:
@@ -90,7 +86,6 @@ services:
   #   image: friends:0.0.1
   #   networks:
   #     - transcendence
-  #   restart: unless-stopped
   #   environment:
   #     - NGINXIP=nginx
   #   secrets:
@@ -108,7 +103,6 @@ services:
   #   image: frontend:0.0.1
   #   networks:
   #     - transcendence
-  #   restart: unless-stopped
   #   environment:
   #     - NGINXIP=nginx
   #   secrets:
@@ -127,7 +121,6 @@ services:
   #   image: matchmaking:0.0.1
   #   networks:
   #     - transcendence
-  #   restart: unless-stopped
   #   environment:
   #     - NGINXIP=nginx
   #   secrets:
@@ -145,7 +138,6 @@ services:
   #   image: monitoring:0.0.1
   #   networks:
   #     - transcendence
-  #   restart: unless-stopped
   #   environment:
   #     - NGINXIP=nginx
   #   secrets:
@@ -168,7 +160,6 @@ services:
   #     - transcendence
   #   ports:
   #     - "8443:443"
-  #   restart: unless-stopped
   #   secrets:
   #     - ssl-key.pem
   #     - ssl-cert.pem
@@ -184,7 +175,6 @@ services:
     image: pong:0.0.1
     networks:
       - transcendence
-    restart: unless-stopped
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
@@ -201,7 +191,6 @@ services:
   #   image: users:0.0.1
   #   networks:
   #     - transcendence
-  #   restart: unless-stopped
   #   environment:
   #     - NGINXIP=nginx
   #   secrets:
@@ -219,7 +208,6 @@ services:
   #   image: ssr:0.0.1
   #   networks:
   #     - transcendence
-  #   restart: unless-stopped
   #   environment:
   #     - NGINXIP=nginx
   #   secrets:
