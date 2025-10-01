@@ -9,7 +9,6 @@ describe('Fastify server', () => {
 
     beforeAll(async () => {
         server = await init();
-        await server.ready();
         address = await server.listen({ port: 0 });
     });
 
