@@ -6,7 +6,7 @@ import type { WebSocket } from '@fastify/websocket';
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import cookie from '@fastify/cookie';
 // Local modules
-import { wsRoute } from './routes/websocket.js';
+import { wsRoute } from './routes/ws.route.js';
 import { options } from './serv.conf.js'
 import { initNatsConnexion, natsSubscribtion } from './subscriber.js';
 import { GameRegistry } from './classes/gameRegistry.class.js';
