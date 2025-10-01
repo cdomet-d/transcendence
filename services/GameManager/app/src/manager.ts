@@ -1,4 +1,4 @@
-import { makeTournamentObj } from "../tournament/tournament.js";
+import { createBracket, createTournament } from "./tournament/tournament.js";
 
 interface userInfo {
     userID: number,
@@ -16,15 +16,15 @@ interface match {
     matchID: number,
     tournamentID: number,
     remote: boolean,
-    users: userInfo[],
+    users: userInfo[] | undefined,
     score: string,
-    winner: userInfo,
-    loser: userInfo,
+    winnerID: number,
+    loserID: number,
 }
 
 interface tournament {
     tournamentID: number,
-    winnerID: number,
+    winnerID: number | undefined,
     bracket: match[]
 }
 
@@ -45,15 +45,15 @@ export function processLobbyRequest() {
 
     // Filter request
     if (lobbyInfo.format === "tournament") {
-        // create bracket (AKA matches[])
-        const matches: match[] = createBracket(lobbyInfo);
-
-        // create tournamentObj (use matches[] from createBracket())
-        const tournament: tournament = createTournament();
-        
+        const tournament: tournament | undefined = createTournament(lobbyInfo);
+        if (tournament === undefined) {
+            console.log("Error: tournament Creation");
+            return;
+        }
+        startTournament(tournament);
     } else if (lobbyInfo.format === "quick") {
         // create matchObj
-        // send to PONG
+        // send it to PONG
         // wait for approval from PONG
         // signal involved clients match ready for them
     }
