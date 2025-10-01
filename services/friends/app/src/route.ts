@@ -215,7 +215,7 @@ export async function friendRoutes(serv: FastifyInstance) {
 
 			// 3. For each pending request, fetch the full profile of the SENDER
 			const profileCardPromises = pendingRequests.map(async (request) => {
-				const senderProfile = await getUserProfile(request.senderID);
+				//const senderProfile = await getUserProfile(request.senderID);
 				if (!senderProfile) return null; // Skip if a profile can't be fetched
 
 				// 4. Format the data to match the required "profile card" structure

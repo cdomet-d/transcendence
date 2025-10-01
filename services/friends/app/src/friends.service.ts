@@ -1,3 +1,5 @@
+import { Database } from 'sqlite';
+
 interface UserData {
   userID: number;
   username: string;
