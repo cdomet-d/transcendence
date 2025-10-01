@@ -14,9 +14,6 @@ function wsRequest(game: Game) {
 
     ws.onopen = () => {
         console.log("WebSocket connection established!")
-        ws.onmessage = (event) => {
-            console.log("message from server:", event.data);
-        }
         startGame(game, ws);
     }
 
