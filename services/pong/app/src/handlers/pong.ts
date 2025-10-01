@@ -54,14 +54,16 @@ function local(player: Player, opponent: Player, keys: keysObj, delta: number) {
 	updatePaddlePos(opponent, keys, delta);
 	player.setMess("left", player.paddle.y);
 	player.setMess("right", opponent.paddle.y);
-	player.socket.send(JSON.stringify(player.rep));
+	if (player.socket.readyState === 1)
+		player.socket.send(JSON.stringify(player.rep));
 }
 
 function remote(player: Player, opponent: Player, keys: keysObj, delta: number) {
 	updatePaddlePos(player, keys, delta);
 	player.setMess("left", player.paddle.y);
 	opponent.setMess("right", player.paddle.y);
-	player.socket.send(JSON.stringify(player.rep));
+	if (player.socket.readyState === 1)
+		player.socket.send(JSON.stringify(player.rep));
 	if (opponent.socket.readyState === 1)
 		opponent.socket.send(JSON.stringify(opponent.rep));
 }
