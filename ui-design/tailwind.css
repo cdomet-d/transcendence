@@ -199,6 +199,17 @@
 		width: 100%;
 		height: 90%;
 		outline: none;
+		background: linear-gradient(180deg,
+				#ffdc99 0 10%,
+				#ffe0a5 0 20%,
+				#ffe4b0 0 30%,
+				#ffe8bb 0 40%,
+				#ffecc6 0 50%,
+				#ffecc6 0 60%,
+				#ffe8bb 0 70%,
+				#ffe4b0 0 80%,
+				#ffe0a5 0 90%,
+				#ffdc99 0 100%);
 	}
 
 	input[type="text"],
@@ -209,9 +220,18 @@
 
 	input[type="text"]:invalid,
 	input[type="password"]:invalid {
-		border-top: 2px solid var(--highlight-red);
-		border-bottom: 2px solid var(--shadow-red);
-		color: var(--red);
+		background: linear-gradient(180deg,
+				#ce633b 0 10%,
+				#d3673f 0 20%,
+				#d96b42 0 30%,
+				#de6e45 0 40%,
+				#e37248 0 50%,
+				#e37248 0 60%,
+				#de6e45 0 70%,
+				#d96b42 0 80%,
+				#d3673f 0 90%,
+				#ce633b 0 100%);
+		color: white;
 	}
 
 	input:hover,
@@ -367,7 +387,7 @@
 		border-top: 2px solid var(--shadow);
 		border-bottom: 2px solid var(--shadow);
 	}
-	
+
 	.orange-bg {
 		background-color: var(--orange);
 		border-top: 2px solid var(--highlight-orange);
