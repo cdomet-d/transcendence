@@ -1,8 +1,9 @@
 import type { FastifyInstance } from 'fastify';
+import { Database } from 'sqlite';
 import { getUserID } from './friends.service.js';
 import { checkUserExists } from './friends.service.js';
 import { getPendingFriendRequests } from './friends.service.js'
-import { Database } from 'sqlite';
+import { getUserProfile } from './friends.service.js'
 
 interface userData {
   userID: number;
@@ -202,9 +203,9 @@ export async function friendRoutes(serv: FastifyInstance) {
 			const { userID } = request.params as { userID: number };
 
 			// 1. Get the main user's ID from their username
-			const mainUser = await checkUserExists(userID);
-			if (!mainUser)
-			    return (reply.code(404).send({ message: `User not found` }));
+		//	const mainUser = await checkUserExists(userID);
+		//	if (!mainUser)
+		//	    return (reply.code(404).send({ message: `User not found` }));
 
 			// 2. Get all pending friend requests sent TO this user from the database
 			const pendingRequests = await getPendingFriendRequests(serv.dbFriends, userID);
@@ -215,15 +216,15 @@ export async function friendRoutes(serv: FastifyInstance) {
 
 			// 3. For each pending request, fetch the full profile of the SENDER
 			const profileCardPromises = pendingRequests.map(async (request) => {
-				//const senderProfile = await getUserProfile(request.senderID);
-				if (!senderProfile) return null; // Skip if a profile can't be fetched
+				const senderProfile = await getUserProfile(request.senderID);
+				if (!senderProfile)
+					return (null); // Skip if a profile can't be fetched
 
 				// 4. Format the data to match the required "profile card" structure
 				return {
 					avatar: senderProfile.avatar,
 					biography: senderProfile.biography,
 					friendship: {
-						// NOTE: Using request creation time for "friendsSince" placeholde
 						friendsSince: request.startTime, 
 					},
 					profileColor: senderProfile.profileColor,

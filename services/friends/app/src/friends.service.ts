@@ -10,6 +10,16 @@ interface PendingRequest {
 	startTime: string;
 }
 
+interface UserProfile {
+    avatar: string;
+    biography: string;
+    joinedOn: string;
+    profileColor: string;
+    rank: string;
+    status: boolean;
+    username: string;
+}
+
 // Reusable function to get a user by their ID from the users service
 export async function getUserID(username: string): Promise<UserData | null> {
 	try {
@@ -50,19 +60,35 @@ export async function checkUserExists(userID: number): Promise<UserData | null> 
 // Gets all pending requests where the user is the receiver
 export async function getPendingFriendRequests(db: Database, userId: number): Promise<PendingRequest[]> {
     const query = `
-		SELECT 
-			CASE
-				WHEN userID = ? THEN friendID
-				ELSE userID
-			END AS otherUserID,
-			startTimeFriendship AS startTime
-		FROM 
-			friendship
-		WHERE 
-			(userID = ? OR friendID = ?) 
-			AND statusFrienship = false;
+		SELECT
+		    CASE
+		        WHEN userID = ? THEN friendID
+		        ELSE userID
+		    END AS otherUserID,
+		    startTimeFriendship AS startTime
+		FROM
+		    friendship
+		WHERE
+		    (userID = ? OR friendID = ?)
+		    AND statusFrienship = false;
 	`;
 
 	const requests = await db.all<PendingRequest[]>(query, [userId]);
 	return (requests);
+}
+
+// Fetches the full user profile card from the users service
+export async function getUserProfile(userId: number): Promise<UserProfile | null> {
+	try {
+		// NOTE: This assumes you have an endpoint like this on your users service
+		const response = await fetch(`http://users:2626/internal/users/profile/${userId}`);
+	
+		if (response.status === 404) return null;
+		if (!response.ok) throw new Error(`Users service returned status: ${response.status}`);
+
+		return await response.json() as UserProfile;
+	} catch (error) {
+		console.error(`Error fetching profile for user ID ${userId}:`, error);
+		throw error;
+	}
 }
