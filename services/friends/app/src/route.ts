@@ -1,8 +1,37 @@
 import type { FastifyInstance } from 'fastify';
+import { Database } from 'sqlite';
 
 interface userData {
   userID: number;
   username: string;
+}
+
+export async function friendshipExistsUsersID(db: Database, userA_ID: number, userB_ID: number): Promise<boolean> {
+    const query = `
+        SELECT 1 FROM friendship 
+        WHERE (userID = ? AND friendID = ?) 
+           OR (userID = ? AND friendID = ?)
+        LIMIT 1;
+    `;
+    
+    const params = [userA_ID, userB_ID, userB_ID, userA_ID];
+    const result = await db.get(query, params);
+
+    // The '!!' converts the result (an object or undefined) to a boolean.
+    return !!result;
+}
+
+export async function friendshipExistsFriendshipID(db: Database, friendshipID: number): Promise<boolean> {
+	const query = `
+		SELECT 1 FROM friendship 
+		WHERE (friendshipID = ?) 
+		LIMIT 1;
+	`;
+
+	const params = [friendshipID];
+	const result = await db.get(query, params);
+
+	return (!!result);
 }
 
 export async function friendRoutes(serv: FastifyInstance) {
@@ -43,6 +72,15 @@ export async function friendRoutes(serv: FastifyInstance) {
 
 			const result = await serv.dbFriends.run(query, params);
 
+			const alreadyExists = await friendshipExistsUsersID(serv.dbFriends, senderId, receiverId);
+
+			if (alreadyExists) {
+				return reply.code(409).send({
+					success: false,
+					message: 'Friendship already exists!'
+				});
+			}
+			
 			serv.log.info(`A row has been inserted with rowid ${result.lastID}`);
 
 			return reply.code(201).send({
@@ -66,6 +104,15 @@ export async function friendRoutes(serv: FastifyInstance) {
 
 			if (!requestID)
 				return (reply.code(404).send({message: `Friends request ID '${requestID}'`}));
+
+			const alreadyExists = await friendshipExistsFriendshipID(serv.dbFriends, requestID);
+
+			if (!alreadyExists) {
+				return reply.code(409).send({
+					success: false,
+					message: 'Friendship doesnt exists!'
+				});
+			}
 
 			const query = 
 			` UPDATE friendship SET statusFrienship = true WHERE friendshipID = ?
@@ -104,6 +151,16 @@ export async function friendRoutes(serv: FastifyInstance) {
 
 			const receiverUser = (await usersResponse.json()) as userData;
 			const receiverId = receiverUser.userID;
+
+			const alreadyExists = await friendshipExistsUsersID(serv.dbFriends, senderId, receiverId);
+
+			if (!alreadyExists) {
+				return reply.code(409).send({
+					success: false,
+					message: 'Friendship doesnt exists!'
+				});
+			}
+
 			serv.log.info('received users service response');
 
 			const query = `
@@ -134,5 +191,6 @@ export async function friendRoutes(serv: FastifyInstance) {
 			});
 		}
 	});
+
 
 }

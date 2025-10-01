@@ -206,9 +206,10 @@ For the statusFriendship :
 
 * ~~Add a pending friendship request~~
 * ~~Change the statusFriendship to accepted~~
-* Remove a frienship
-* Check if the friendship exists
+* ~~Remove a frienship~~
+* ~~Check if the friendship exists~~
 * Get all friends of a user
+* Get all pending friendship
 
 ## Dashboard
 
