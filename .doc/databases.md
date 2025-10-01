@@ -211,6 +211,8 @@ For the statusFriendship :
 * Get all friends of a user
 * Get all pending friendship
 
+TODO : write script of tests for everything that could go wrong
+
 ## Dashboard
 
 ### General overview
