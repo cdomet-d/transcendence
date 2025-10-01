@@ -11,13 +11,15 @@ import { options } from './serv.conf.js'
 import { initNatsConnexion, natsSubscribtion } from './subscriber.js';
 import { GameRegistry } from './classes/gameRegistry.class.js';
 
-try {
-	const serv = await init();
-	await runServ(serv);
-} catch (err) {
-	console.error('server', err);
-	process.exit(1);
-}
+(async () => {
+	try {
+		const serv = await init();
+		await runServ(serv);
+	} catch (err) {
+		console.error('server', err);
+		process.exit(1);
+	}
+})();
 
 //init server
 export async function init(): Promise<FastifyInstance> {
