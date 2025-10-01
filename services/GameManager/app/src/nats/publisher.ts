@@ -21,8 +21,6 @@ export async function natsPublish(subject: string, payload: string, replySubject
   const reply = replySubject ? { reply: replySubject} : undefined;
   connection.publish(subject, sc.encode(payload), reply);
 
-  console.log("4");
-  console.log("SUBJECT: ", subject, "   REPLY: ", reply, "\n\n");
   // await connection.flush();
   // await connection.drain();
 }

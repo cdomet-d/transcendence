@@ -1,4 +1,5 @@
 import { createBracket, createTournament } from "./tournament/tournament.js";
+import { startTournament } from "./tournament/tournament.state.js";
 
 interface userInfo {
     userID: number,
@@ -16,7 +17,7 @@ interface match {
     matchID: number,
     tournamentID: number,
     remote: boolean,
-    users: userInfo[] | undefined,
+    users: userInfo[] | undefined | null,
     score: string,
     winnerID: number,
     loserID: number,
@@ -24,7 +25,7 @@ interface match {
 
 interface tournament {
     tournamentID: number,
-    winnerID: number | undefined,
+    winnerID: number | undefined | null,
     bracket: match[]
 }
 

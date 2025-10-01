@@ -1,4 +1,3 @@
-import { generateKey } from "crypto";
 
 interface userInfo {
     userID: number,
@@ -16,7 +15,7 @@ interface match {
     matchID: number,
     tournamentID: number,
     remote: boolean,
-    users: userInfo[] | undefined,
+    users: userInfo[] | undefined | null,
     score: string,
     winnerID: number,
     loserID: number,
@@ -24,7 +23,7 @@ interface match {
 
 interface tournament {
     tournamentID: number,
-    winnerID: number | undefined,
+    winnerID: number | undefined | null,
     bracket: match[]
 }
 
@@ -43,7 +42,7 @@ export function createTournament(payload: lobbyInfo): tournament | undefined {
     }
 
     // create tournament
-    const tournamentObj = makeTournamentObj(requestForm);
+    const tournamentObj = makeTournamentObj(tournamentID, matches);
 
     return tournamentObj;
 }
@@ -69,13 +68,17 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: number): match
     let matches: match[] = [
         { matchID: 1, tournamentID: tournamentID, remote: true, users: opponents[0], score: "", winnerID: 0, loserID: 0 },
         { matchID: 2, tournamentID: tournamentID, remote: true, users: opponents[1], score: "", winnerID: 0, loserID: 0 },
-        { matchID: 3, tournamentID: tournamentID, remote: true, users: undefined, score: "", winnerID: 0, loserID: 0 },
+        { matchID: 3, tournamentID: tournamentID, remote: true, users: null, score: "", winnerID: 0, loserID: 0 },
     ];
 
     return matches;
 }
 
-export function makeTournamentObj(form: any) {
-    // make tournamentObject
-    // give gameIDs
+export function makeTournamentObj(tournamentID: number, matches: match[]): tournament {
+    const tournament: tournament = {
+        tournamentID: tournamentID,
+        winnerID: null,
+        bracket: matches
+    }
+    return tournament;
 }
