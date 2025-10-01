@@ -204,8 +204,8 @@ For the statusFriendship :
 
 ### Usage and associated functions
 
-* Add a pending friendship request
-* Change the statusFriendship to accepted
+* ~~Add a pending friendship request~~
+* ~~Change the statusFriendship to accepted~~
 * Remove a frienship
 * Check if the friendship exists
 * Get all friends of a user

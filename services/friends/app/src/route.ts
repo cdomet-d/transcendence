@@ -59,7 +59,7 @@ export async function friendRoutes(serv: FastifyInstance) {
 		}
 	});
 
-
+	//accept a friend request
 	serv.post('/friends/friends-request/:requestID', async (request, reply) => {
 		try {
 			const {requestID : requestID } = request.params as { requestID : number};
@@ -85,4 +85,54 @@ export async function friendRoutes(serv: FastifyInstance) {
 			}));
 		}
 	});
+
+	//delete a frienship
+	serv.post('/friends/:username', async (request, reply) => {
+		try {
+			const { username: friendUsername } = request.params as { username: string };
+			const { userId: senderId } = request.body as { userId: number };
+			
+			if (!senderId || !friendUsername)
+				return reply.code(400).send({ message: 'Missing sender ID or receiver username.' });
+
+			const usersResponse = await fetch(`http://users:2626/internal/users/by-username/${friendUsername}`);
+			if (usersResponse.status === 404)
+				return (reply.code(404).send({message: `User '${friendUsername}'`}));
+
+			if (!usersResponse.ok)
+				throw new Error('Users service returned an error');
+
+			const receiverUser = (await usersResponse.json()) as userData;
+			const receiverId = receiverUser.userID;
+			serv.log.info('received users service response');
+
+			const query = `
+				DELETE FROM friendship 
+				WHERE (userID = ? AND friendID = ?) 
+				   OR (userID = ? AND friendID = ?);
+			`;
+
+			const params = [
+				senderId,
+				receiverId,
+			];
+
+			const result = await serv.dbFriends.run(query, params);
+
+			serv.log.info(`A row has been delete with rowid ${result.lastID}`);
+
+			return reply.code(201).send({
+				success: true,
+				message: `Friendship deleted`
+			});
+
+		} catch (error) {
+			console.error('[Friends Service] Error processing friend request:', error);
+			return reply.code(500).send({
+			success: false,
+			message: 'An internal error occurred.'
+			});
+		}
+	});
+
 }
