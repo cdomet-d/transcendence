@@ -29,23 +29,23 @@ export function startTournament(tournamentObj: tournament) {
 
     // Routine
     // start first round of matches
-
-    // when a match finishes
-        // update current matchObj winnerID and loserID
-        // assign winnerID to player1 of next match
-        // send full matchObj to DB
     
-        // waiting screen for winner
-        // back to menu for loser
-    
-    // when first round done
-        // start next round
+    // THEN tournamentState will be called when needed and handle its bidnis 
 
-    // when tournament over
-        // send last matchObj to DB
-        // or send full tournamentObj?
+        // when a match finishes
+            // update current matchObj winnerID and loserID
+            // assign winnerID to player1 of next match
+            // send full matchObj to DB
 
-    // Tournament over procedure
+            // waiting screen for winner
+            // back to menu for loser
+
+        // when first round done
+            // start next round
+
+        // when tournament over
+            // send last matchObj to DB
+            // or send full tournamentObj?
 
     // natsPublish("game.request", sc.encode(JSON.stringify(matchObj)), "game.ready");
     ;

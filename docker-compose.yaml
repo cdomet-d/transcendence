@@ -125,24 +125,6 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/GameManager/app:/usr/app
-  lobby:
-    build:
-      context: ./services/lobby
-      dockerfile: Dockerfile
-    container_name: lobby
-    image: lobby:0.0.1
-    environment:
-      - PORT=2222
-      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-      - NGINXIP=nginx
-    networks:
-      - transcendence
-    restart: unless-stopped
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/lobby/app:/usr/app
   monitoring:
     build:
       context: ./services/monitoring
@@ -207,8 +189,6 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/pong/app:/usr/app
-    depends_on:
-      -  nats-server
     # user: "${T_UID}:${T_GID}"
   users:
     build:

@@ -13,7 +13,7 @@ export async function natsConnect(): Promise<NatsConnection> {
   return nc;
 };
 
-export async function natsPublish(subject: string, payload: string, replySubject: string) {
+export async function natsPublish(subject: string, payload: string, replySubject?: string) {
   
   const connection: NatsConnection = await natsConnect();
   const sc = StringCodec();
