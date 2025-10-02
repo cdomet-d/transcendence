@@ -1,5 +1,5 @@
 import type { paddleObj, Player } from '../classes/player.class.js';
-import type { keysObj } from './pong.js';
+import type { keysObj } from './mess.validation.js';
 
 const WIDTH = 480;
 const HEIGHT = 270;
