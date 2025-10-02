@@ -271,5 +271,3 @@ export async function friendRoutes(serv: FastifyInstance) {
 		}
 	});
 }
-
-

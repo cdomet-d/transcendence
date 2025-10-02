@@ -208,8 +208,8 @@ For the statusFriendship :
 * ~~Change the statusFriendship to accepted~~
 * ~~Remove a frienship~~
 * ~~Check if the friendship exists~~
-* Get all friends of a user
-* Get all pending friendship
+* ~~Get all friends of a user~~
+* ~~Get all pending friendship~~
 
 TODO : write script of tests for everything that could go wrong
 

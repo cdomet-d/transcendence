@@ -5,3 +5,5 @@
   startTimeFriendship DATETIME,
   statusFrienship BOOLEAN --false == pending friendship, true == actual friendship
 );
+
+--TODO : figure out why tf friendship are not uniaue, like I can added two frienships between the two same users 
