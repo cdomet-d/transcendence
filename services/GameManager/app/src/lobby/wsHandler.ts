@@ -1,6 +1,6 @@
 import type { FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
-import { startTournament } from '../tournament/tournament.state.js';
+import { startTournament } from '../tournament/tournamentRoutine.js';
 
 interface userInfo {
     userID: number,

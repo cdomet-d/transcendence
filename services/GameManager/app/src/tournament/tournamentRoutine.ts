@@ -29,7 +29,9 @@ export function startTournament(tournamentObj: tournament) {
 
     // Routine
     // start first round of matches
-    
+    startFirstRound(tournamentObj);
+
+
     // THEN tournamentState will be called when needed and handle its bidnis 
 
         // when a match finishes
@@ -49,4 +51,20 @@ export function startTournament(tournamentObj: tournament) {
 
     // natsPublish("game.request", sc.encode(JSON.stringify(matchObj)), "game.ready");
     ;
+}
+
+function startFirstRound(tournament: tournament) {
+
+    if (tournament.bracket && Array.isArray(tournament.bracket)) {
+        for (let i = 0; i < tournament.bracket.length; i++) {
+            const match = tournament.bracket[i];
+            if (match && match.users && match.users.length > 0) {
+                startMatch(match);
+            }
+        }
+    }
+}
+
+export function startMatch(match: match) {
+    natsPublish("game.request", JSON.stringify(match), "game.reply");
 }

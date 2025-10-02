@@ -59,6 +59,7 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: number): match
         return undefined;
     }
     
+    // suffle players in an array then assign them opponents for smoking hot brackets
     let opponents: userInfo[][] = [
         [lobbyInfo.users[0], lobbyInfo.users[1]],
         [lobbyInfo.users[2], lobbyInfo.users[3]]

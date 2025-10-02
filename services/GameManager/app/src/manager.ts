@@ -1,5 +1,5 @@
 import { createBracket, createTournament } from "./tournament/tournament.js";
-import { startTournament } from "./tournament/tournament.state.js";
+import { startTournament } from "./tournament/tournamentRoutine.js";
 
 interface userInfo {
     userID: number,
