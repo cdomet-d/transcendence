@@ -1,6 +1,6 @@
-import { setUpGame } from '../src/handlers/pong';
+import { setUpGame } from '../src/game/pong';
 import {describe, expect, test, beforeEach, jest} from '@jest/globals';
-import { wshandler } from '../src/handlers/websocket';
+import { wshandler } from '../src/game/ws.handler';
 
 describe('wshandler', () => {
 	let mockFastify: any;

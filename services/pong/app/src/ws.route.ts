@@ -1,4 +1,4 @@
-import { wshandler } from '../handlers/websocket.js'
+import { wshandler } from './game/ws.handler.js'
 import type { FastifyPluginCallback } from 'fastify';
 
 // const opts = {
