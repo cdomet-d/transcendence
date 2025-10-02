@@ -27,12 +27,9 @@ export function startTournament(tournamentObj: tournament) {
     // await approval
     // signal clients
 
-    // Routine
-    // start first round of matches
     startFirstRound(tournamentObj);
 
-
-    // THEN tournamentState will be called when needed and handle its bidnis 
+    // THEN tournamentState will be called via NATS "game.over" when needed and handle its bidnis 
 
         // when a match finishes
             // update current matchObj winnerID and loserID

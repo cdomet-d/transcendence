@@ -31,8 +31,9 @@ function wsConnect() {
     ws.onopen = () => {
         console.log("WebSocket connection established!")
         ws.onmessage = (message: any) => {
-            console.log("message from server:", message.data);
-            if (message.data === "game.waiting") {
+            // console.log("message from server:", message.data);
+            console.log("Client is ready to connect to Pong game");
+            if (message.data === "game.ready") {
                 ws.close();
             }
         }
