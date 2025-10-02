@@ -6,7 +6,7 @@ interface UserData {
 }
 
 interface PendingRequest {
-	senderID: number;
+	otherUserID: number;
 	startTime: string;
 }
 
@@ -57,24 +57,29 @@ export async function checkUserExists(userID: number): Promise<UserData | null> 
 	}
 }
 
-// Gets all pending requests where the user is the receiver
 export async function getPendingFriendRequests(db: Database, userId: number): Promise<PendingRequest[]> {
+    console.log("in getPendingFriendRequests function");
     const query = `
-		SELECT
-		    CASE
-		        WHEN userID = ? THEN friendID
-		        ELSE userID
-		    END AS otherUserID,
-		    startTimeFriendship AS startTime
-		FROM
-		    friendship
-		WHERE
-		    (userID = ? OR friendID = ?)
-		    AND statusFrienship = false;
-	`;
+        SELECT
+            CASE
+                WHEN userID = ? THEN friendID
+                ELSE userID
+            END AS otherUserID,
+            startTimeFriendship AS startTime
+        FROM
+            friendship
+        WHERE
+            (userID = ? OR friendID = ?)
+            AND statusFrienship = false;
+    `;
 
-	const requests = await db.all<PendingRequest[]>(query, [userId]);
-	return (requests);
+    // The corrected parameters array
+    const params = [userId, userId, userId];
+    
+    const requests = await db.all<PendingRequest[]>(query, params);
+    
+    // This should now return the correct data
+    return requests;
 }
 
 // Fetches the full user profile card from the users service
@@ -82,7 +87,7 @@ export async function getUserProfile(userId: number): Promise<UserProfile | null
 	try {
 		// NOTE: This assumes you have an endpoint like this on your users service
 		const response = await fetch(`http://users:2626/internal/users/profile/${userId}`);
-	
+		
 		if (response.status === 404) return null;
 		if (!response.ok) throw new Error(`Users service returned status: ${response.status}`);
 

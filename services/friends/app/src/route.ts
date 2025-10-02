@@ -11,18 +11,18 @@ interface userData {
 }
 
 export async function friendshipExistsUsersID(db: Database, userA_ID: number, userB_ID: number): Promise<boolean> {
-    const query = `
-        SELECT 1 FROM friendship 
-        WHERE (userID = ? AND friendID = ?) 
-           OR (userID = ? AND friendID = ?)
-        LIMIT 1;
-    `;
-    
-    const params = [userA_ID, userB_ID, userB_ID, userA_ID];
-    const result = await db.get(query, params);
+	const query = `
+		SELECT 1 FROM friendship 
+		WHERE (userID = ? AND friendID = ?) 
+			OR (userID = ? AND friendID = ?)
+		LIMIT 1;
+	`;
 
-    // The '!!' converts the result (an object or undefined) to a boolean.
-    return !!result;
+	const params = [userA_ID, userB_ID, userB_ID, userA_ID];
+	const result = await db.get(query, params);
+
+	// The '!!' converts the result (an object or undefined) to a boolean.
+	return (!!result);
 }
 
 export async function friendshipExistsFriendshipID(db: Database, friendshipID: number): Promise<boolean> {
@@ -200,6 +200,7 @@ export async function friendRoutes(serv: FastifyInstance) {
 //TODO: do we really need all this information for the friend-request list ? How will the UI looks like ?
 	serv.get('/friends/friend-request-list/:userID', async (request, reply) => {
 		try {
+			console.log("In the friend-request-list");
 			const { userID } = request.params as { userID: number };
 
 			// 1. Get the main user's ID from their username
@@ -211,15 +212,19 @@ export async function friendRoutes(serv: FastifyInstance) {
 			const pendingRequests = await getPendingFriendRequests(serv.dbFriends, userID);
 
 			if (pendingRequests.length === 0) {
+				console.log("In fact no request");
 				return reply.code(200).send([]); // Return empty array if no requests
 			}
+			console.log("In fact there is friendship request");
 
 			// 3. For each pending request, fetch the full profile of the SENDER
 			const profileCardPromises = pendingRequests.map(async (request) => {
-				const senderProfile = await getUserProfile(request.senderID);
-				if (!senderProfile)
+				console.log("processing the profile card");
+				const senderProfile = await getUserProfile(request.otherUserID);
+				if (!senderProfile) {
+					console.log("Profile can't be fetched");
 					return (null); // Skip if a profile can't be fetched
-
+				}
 				// 4. Format the data to match the required "profile card" structure
 				return {
 					avatar: senderProfile.avatar,
@@ -232,11 +237,13 @@ export async function friendRoutes(serv: FastifyInstance) {
 					username: senderProfile.username
 				};
 			});
+			console.log("done processing the profile card");
 
 			// Wait for all profile fetches to complete and filter out any nulls
 			const profileCards = (await Promise.all(profileCardPromises))
 								.filter(card => card !== null);
 
+			console.log("returning processed profile card");
 			return (reply.code(200).send(profileCards));
 
 		} catch (error) {

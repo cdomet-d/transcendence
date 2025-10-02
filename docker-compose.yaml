@@ -212,6 +212,8 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
+    ports:
+      - "2626:2626"
     volumes:
       - ./services/users/app:/usr/app
       - ./services/users/data:/usr/data
