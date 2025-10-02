@@ -6,8 +6,8 @@ import { setUpGame } from './pong.js';
 
 function wshandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): void {
 	this.log.info('WebSocket connection established');
-	const GameIdCookie: string | undefined = req.cookies.gameid;
-	const UserIdCookie: string | undefined = req.cookies.userid;
+	const GameIdCookie: string | undefined = "1";
+	const UserIdCookie: string | undefined = "1";
 
 	const userID: number = Number(UserIdCookie);
 	const gameID: number = Number(GameIdCookie);
