@@ -1,7 +1,7 @@
 import {describe, expect, test, afterAll, beforeAll} from '@jest/globals';
-import { updatePaddlePos } from "../src/handlers/paddle";
+import { updatePaddlePos } from "../src/game/paddle";
 import type { Player } from '../src/classes/player.class';
-import type { keysObj } from '../src/handlers/mess.validation';
+import type { keysObj } from '../src/game/mess.validation';
 const WIDTH = 480;
 const HEIGHT = 270;
 

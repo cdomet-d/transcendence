@@ -1,4 +1,4 @@
-import { setUpGame } from '../src/game/pong';
+import * as pong from '../src/game/pong';
 import {describe, expect, test, beforeEach, jest} from '@jest/globals';
 import { wshandler } from '../src/game/ws.handler';
 
@@ -78,15 +78,15 @@ describe('wshandler', () => {
 
 	test('calls setUpGame if players reach 2 when local', () => {
 		mockGame.local = true;
-		jest.spyOn(require('../src/handlers/pong'), 'setUpGame');
+		jest.spyOn(pong, 'setUpGame');
 		wshandler.call(mockFastify, mockSocket1, mockReq);
-		expect(setUpGame).toHaveBeenCalledWith(mockGame);
+		expect(pong.setUpGame).toHaveBeenCalledWith(mockGame);
 	});
 
 	test('calls setUpGame if players reach 2 when remote', () => {
-		jest.spyOn(require('../src/handlers/pong'), 'setUpGame');
+		jest.spyOn(pong, 'setUpGame');
 		wshandler.call(mockFastify, mockSocket1, mockReq);
 		wshandler.call(mockFastify, mockSocket2, mockReq);
-		expect(setUpGame).toHaveBeenCalledWith(mockGame);
+		expect(pong.setUpGame).toHaveBeenCalledWith(mockGame);
 	});
 });

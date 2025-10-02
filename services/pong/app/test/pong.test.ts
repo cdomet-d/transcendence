@@ -1,5 +1,5 @@
 import {describe, expect, test, beforeEach, jest} from '@jest/globals';
-import { setMessEvent } from '../src/handlers/pong';
+import { setMessEvent } from '../src/game/pong';
 
 describe("setMessEvent", () => {
     let player: any;
