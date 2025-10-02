@@ -1,6 +1,6 @@
 import type { FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
-import { startTournament } from '../tournament/tournamentRoutine.js';
+import { processLobbyRequest } from '../manager.js';
 
 interface userInfo {
     userID: number,
@@ -18,7 +18,6 @@ const wsClientsMap: Map<Number, WebSocket> = new Map();
 
 export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 	req.server.log.info('WebSocket connection established');
-	req.server.websocketServer 
 	// handle LOBBY creation CLIENT SIDE
 		// room info
 		// when they're sent (ex: Friend joins Lobby >> Others must see user appear in Lobby)
@@ -40,7 +39,7 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 		console.log("MESSAGE.EVENT: ", data.event);
 		if (data.event === "TOURNAMENT_REQUEST") {
 			// req.server.log.info(`server received: ${mess}`);
-			startTournament(data);
+			processLobbyRequest(data.payload);
 		}
 	});
 }
@@ -51,5 +50,6 @@ export function wsSend(userID: number, message: string): void {
         ws.send(message);
     } else {
         console.log(`Connection for user ${userID} not found or not open.`);
+		// handle this error 
     }
 }

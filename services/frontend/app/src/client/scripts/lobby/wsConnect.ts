@@ -44,8 +44,6 @@ function wsConnect() {
                 const message = createRequestForm();
                 ws.send(message);
                 console.log(message);
-                console.log("1")
-                console.log("CLICK\n\n")
             });
         }
     }
@@ -64,22 +62,10 @@ function createRequestForm(): string {
             remote: "true",
             players: "4",
             users: [
-                {
-                    userID: "1",
-                    username: "sam"
-                },
-                {
-                    userID: "2",
-                    username: "uel"
-                },
-                {
-                    userID: "3",
-                    username: "ping"
-                },
-                {
-                    userID: "4",
-                    username: "pong"
-                }
+                { userID: 1, username: "sam" },
+                { userID: 2, username: "alex" },
+                { userID: 3, username: "cha" },
+                { userID: 4, username: "coco" }
             ]
         }
     };

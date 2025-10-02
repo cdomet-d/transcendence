@@ -48,13 +48,10 @@ export function startTournament(tournamentObj: tournament) {
         // when tournament over
             // send last matchObj to DB
             // or send full tournamentObj?
-
-    // natsPublish("game.request", sc.encode(JSON.stringify(matchObj)), "game.ready");
     ;
 }
 
 function startFirstRound(tournament: tournament) {
-
     if (tournament.bracket && Array.isArray(tournament.bracket)) {
         for (let i = 0; i < tournament.bracket.length; i++) {
             const match = tournament.bracket[i];

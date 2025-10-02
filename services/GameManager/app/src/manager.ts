@@ -34,15 +34,15 @@ function receiveLobbyInfo(): lobbyInfo {
             { userID: 1, username: "sam" },
             { userID: 2, username: "alex" },
             { userID: 3, username: "cha" },
-            { userID: 4, username: "coco" },
+            { userID: 4, username: "coco" }
         ];
     const lobbyInfo: lobbyInfo = { users: userArray, remote: true, format: "tournament" };
     return lobbyInfo;
 }
 
-export function processLobbyRequest() {
+export function processLobbyRequest(lobbyInfo: lobbyInfo) {
     // Receive data
-    const lobbyInfo = receiveLobbyInfo();
+    // const lobbyInfo = receiveLobbyInfo();
 
     // Filter request
     if (lobbyInfo.format === "tournament") {

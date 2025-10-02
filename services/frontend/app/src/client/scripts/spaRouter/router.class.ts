@@ -1,7 +1,7 @@
 import { render404 } from '../../pages/html.pages.js';
 import { clearHeader, renderHeader } from '../../pages/header.js'
 import { pong } from '../game/pong.js';
-import { lobby } from '../lobby/lobby.js' 
+import { lobby } from '../lobby/lobby.js'
 
 interface routeInterface {
     path: string;
@@ -10,7 +10,7 @@ interface routeInterface {
 
 export class Router {
     /*                            PROPERTIES                                  */
-    _routes: Array< routeInterface >;
+    _routes: Array<routeInterface>;
 
     /*                           CONSTRUCTORS                                 */
     constructor(routes: routeInterface[]) {
@@ -26,7 +26,7 @@ export class Router {
         return this._routes.find(route => route.path === path);
     }
 
-    _getCallback() : routeInterface["callback"] {
+    _getCallback(): routeInterface["callback"] {
         const route: routeInterface | undefined = this._matchUrlToRoute(this._getCurrentURL());
         if (!route)
             return render404;
@@ -56,7 +56,7 @@ export class Router {
         }
 
         page.innerHTML = matchedRoute.callback();
-        
+
         if (matchedRoute.path === '/game/match')
             pong();
         else if (matchedRoute.path === '/game/lobby')
