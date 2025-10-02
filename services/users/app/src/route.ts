@@ -8,6 +8,17 @@ interface UserProfile {
     profileColor: string;
 }
 
+interface UserStats {
+	userID: number;
+	longestMatch: number;
+	shortestMatch: number;
+	totalMatch: number;
+	totalWins: number;
+	winStreak: number;
+	averageMatchDuration: number;
+	highestScore: number;
+}
+
 interface UserRow {
   userID: number;
   username: string;
