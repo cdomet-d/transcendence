@@ -6,5 +6,3 @@
   statusFrienship BOOLEAN, --false == pending friendship, true == actual friendship
   UNIQUE(userID, friendID)
 );
-
---TODO : figure out why tf friendship are not uniaue, like I can added two frienships between the two same users 

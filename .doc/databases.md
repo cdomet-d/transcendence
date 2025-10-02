@@ -133,9 +133,8 @@ averageMatchDuration will be in seconds.
 ### Usage and associated functions
 
 TODO :
-* userProfile
+* userStats
     * get user stats by userID
-    * update last connexion
     * update longest match
     * update shorest match
     * update total match
@@ -144,10 +143,9 @@ TODO :
     * update average match duration
     * update highest score
 
-* userStats
+* userProfile
     * get activity status by userID 
     * get profile info (username. avatar, bio, profile color, lastConnexion) by userID
-    * get profile info (username. avatar, bio, profile color) by userID
     * get lastConnexion by userID
     * update avatar
     * updata bio
