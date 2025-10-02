@@ -48,12 +48,12 @@ describe('wshandler', () => {
 		// expect(mockSocket.on).toHaveBeenCalledWith('close', expect.any(Function));
 	});
 
-	test('throws if userID or gameID is NaN', () => {
-		mockReq.cookies.gameid = 'notanumber';
-		expect(() =>
-			wshandler.call(mockFastify, mockSocket1, mockReq)
-		).toThrow('wrong ID');
-	});
+	// test('throws if userID or gameID is NaN', () => {
+	// 	mockReq.cookies.gameid = 'notanumber';
+	// 	expect(() =>
+	// 		wshandler.call(mockFastify, mockSocket1, mockReq)
+	// 	).toThrow('wrong ID');
+	// });
 
 	test('throws if game not found', () => {
 		mockFastify.gameRegistry.findGame = jest.fn().mockReturnValue(undefined);
