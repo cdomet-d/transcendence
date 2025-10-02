@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<!-- <link rel="stylesheet" href="../css/purecss/molecules.css">
+	<link rel="stylesheet" href="../css/purecss/atoms.css"> -->
+	<link rel="stylesheet" href="../../dist/styles.css">
+</head>
+
+<body>
+	<div class="grid grid-cols-1 gap-6 p-[2rem]">
+
+		<div
+			class="items-center box-border grid gap-[0 0] grid-flow-col auto-cols-fr auto-rows-[1fr] justify-center justify-items-center">
+			<button class="hover:transform-none w-[100%] thin brdr yellow-bg"> Game history </button>
+			<button class="hover:transform-none w-[100%] thin brdr yellow-bg"> User statistics </button>
+		</div>
+
+		<h3 class="f-yellow text-center title-shadow t3 leading-[110%]">Langague</h3>
+
+		<div class="dropdown">
+			<button id="language-switch" class="language button-bg contrast-brdr">
+				${currentLang}
+			</button>
+			<div id="language-options" class="language-options plain-clear-bg contrast-brdr">
+				<div class="dropdown-item" data-lang="en">English</div>
+				<div class="dropdown-item" data-lang="fr">Français</div>
+				<div class="dropdown-item" data-lang="es">Español</div>
+			</div>
+		</div>
+
+
+		<div class="gap-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center">
+			<button class="brdr whitespace-nowrap input-emphasis min-w-[4rem] box-border yellow-bg"> item
+			</button>
+			<button class="brdr whitespace-nowrap input-emphasis min-w-[4rem] box-border yellow-bg"> item
+			</button>
+			<button class="brdr whitespace-nowrap input-emphasis min-w-[4rem] box-border yellow-bg"> item
+			</button>
+		</div>
+
+		<div class="gap-s box-border grid auto-cols-[1fr] auto-rows-fr justify-items-center">
+			<button class="brdr whitespace-nowrap input-emphasis min-w-[4rem] box-border yellow-bg"> item
+			</button>
+			<button class="brdr whitespace-nowrap input-emphasis min-w-[4rem] box-border yellow-bg"> item
+			</button>
+			<button class="brdr whitespace-nowrap input-emphasis min-w-[4rem] box-border yellow-bg"> item
+			</button>
+		</div>
+
+		<h3 class="f-yellow text-center title-shadow t3 leading-[110%]">Upload</h3>
+		<form class="items-center box-border grid grid-cols-[61.94%_38.06%] gap-s w-full" action="/api/users/setting"
+			method="post">
+			<div class="w-full box-border relative">
+				<input id="upload" class="brdr relative input-emphasis file:absolute file:top-[12%] file:left-[0.5rem]
+				file:w-[5rem] file:h-[75%]" type="file"></input>
+				<label
+					class="min-w-[fit-content] flex -center brdr thin clear-bg absolute right-[8px] -top-[8px] w-[10%]"
+					for="upload">upload</label>
+			</div>
+			<input id="submit" class="h-full brdr yellow-bg input-emphasis" type="submit" value="Send files">
+			<span class="flex-center invalid hidden"> Explicit error message </span>
+			</input>
+		</form>
+
+
+		<h3 class="f-yellow text-center title-shadow t3 leading-[110%]">Search</h3>
+		<form class="items-center box-border grid grid-cols-[61.94%_38.06%] gap-s w-full" action="/api/search"
+			method="get">
+			<div class="w-full box-border relative">
+				<img class="w-s h-s absolute top-[4px] left-[4px]" src="../assets/icons/search-icon.png"></img>
+				<label
+					class="min-w-[fit-content] flex -center brdr thin clear-bg absolute right-[8px] -top-[8px] w-[10%]"
+					for="search">search</label>
+				<input class="brdr searchbar-padding " id="search" placeholder="default" type="text"></input>
+			</div>
+			<input id="submit" class="h-full brdr yellow-bg input-emphasis" type="submit" value="Send request"></input>
+		</form>
+
+		<div class="brdr box-border overflow-scroll h-full [width:inherit] masonery">
+			<div class="small-user-grid pad-s grid justify-items-center">
+				<div class="imedium avatar-wrapper">
+					<img src="../assets/icons/blue-avatar.png"></img>
+				</div>
+				<div class="f-yellow f-s grid username"> %username% <div class="user-status"></div>
+				</div>
+				<div class="gap-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center">
+					<button class="thin brdr whitespace-nowrap input-emphasis min-w-[4rem] box-border yellow-bg"
+						type="button"> <img class="ismall isize" src="../assets/icons/add-user.png"> </button>
+					<button class="thin brdr whitespace-nowrap input-emphasis min-w-[4rem] box-border yellow-bg"
+						type="button"> <img class="ismall isize" src="../assets/icons/challenge.png"> </button>
+				</div>
+			</div>
+			<div class="small-user-grid pad-s grid justify-items-center">
+				<div class="imedium avatar-wrapper">
+					<img src="../assets/icons/blue-avatar.png"></img>
+				</div>
+				<div class="f-yellow f-s grid username"> <a href=""> %username% </a>
+					<div class="user-status"></div>
+				</div>
+				<div class="gap-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center">
+					<button class="thin brdr whitespace-nowrap input-emphasis min-w-[4rem] box-border yellow-bg"
+						type="button"> <img class="ismall isize" src="../assets/icons/add-user.png"> </button>
+					<button class="thin brdr whitespace-nowrap input-emphasis min-w-[4rem] box-border yellow-bg"
+						type="button"> <img class="ismall isize" src="../assets/icons/challenge.png"> </button>
+				</div>
+			</div>
+		</div>
+		<div class="bg brdr min-w-[fit-content] box-border grid grid-cols-[1fr] gap-s justify-items-center">
+			<div class="ilarge avatar-wrapper w-full grid grid-flow-col pad-s">
+				<img class="breathe" src="../assets/icons/no-result.png"> </img>
+			</div>
+		</div>
+
+		<h3 class="f-yellow text-center title-shadow t3 leading-[110%]"> Popup </h3>
+		<div class="bg brdr grid align-center justify-center w-sidebar pad-s gap-s">
+			<div class="text-center">
+				<h3 class="f-yellow  title-shadow t3"> Popup!!! </h3>
+				<p> This is the content of the message !!!</p>
+			</div>
+			<div class="gap-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center">
+				<button class="valid thin brdr whitespace-nowrap input-emphasis min-w-[4rem] box-border green-bg"
+					type="button"> Accept </button>
+				<button class="invalid thin brdr whitespace-nowrap input-emphasis min-w-[4rem] box-border red-bg"
+					type="button"> Dismiss </button>
+			</div>
+		</div>
+
+		<h3 class="f-yellow text-center title-shadow t3 leading-[110%]"> Notifications </h3>
+
+		<div class="hidden relative border-box w-[fit-content] flex flex-start">
+			<div id="notifPopup" class="notification-interactive">
+				<div class="clear-bg brdr pad-s w-[fit-content] relative">
+					<img class="h-[32px] w-[16px] absolute right-[-20px] top-[8px]"
+						src="../assets/icons/notification-bubble.png" />
+					<p> %login% challenged you to a 1v1 match !! </p>
+				</div>
+			</div>
+		</div>
+
+		<div class="w-[fit-content] relative cursor-pointer hover:scale-108 transform transition-transform">
+			<div class="hidden z-2 invalid thin brdr red-bg w-xs h-xs absolute top-[8px] right-[8px]"> </div>
+			<img class="imedium isize z-1" src="../assets/icons/notification.png" />
+		</div>
+
+
+		<p class="title-shadow title-3"> Loader </p>
+		<div class="min-w-[fit-content] border-box flex flex-wrap justify-center gap-m pad-s">
+			<img class="load ismall isize" src="../assets/icons/light-green-avatar.png">
+			<img class="load ismall isize" src="../assets/icons/blue-avatar.png">
+			<img class="load ismall isize" src="../assets/icons/magenta-avatar.png">
+		</div>
+
+		<div class="min-w-[fit-content] border-box flex flex-wrap justify-center gap-m pad-s">
+			<img class="load imedium isize" src="../assets/icons/light-green-avatar.png">
+			<img class="load imedium isize" src="../assets/icons/blue-avatar.png">
+			<img class="load imedium isize" src="../assets/icons/magenta-avatar.png">
+		</div>
+		<div class="min-w-[fit-content] border-box flex flex-wrap justify-center gap-m pad-s">
+			<img class="load ilarge isize" src="../assets/icons/light-green-avatar.png">
+			<img class="load ilarge isize" src="../assets/icons/blue-avatar.png">
+			<img class="load ilarge isize" src="../assets/icons/magenta-avatar.png">
+		</div>
+	</div>
+	<!-- <script src="../scripts/notifications.js"></script> -->
+	</div>
+</body>
+
+</html>

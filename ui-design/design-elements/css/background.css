@@ -72,6 +72,11 @@
 			#e3a300 0 100%);
 }
 
+.tab[selected].yellow-bg {
+	background: #ffdc99;
+	border: none;
+	border-top: 2px solid var(--shadow-yellow);
+}
 
 .red-bg {
 	background: linear-gradient(180deg,

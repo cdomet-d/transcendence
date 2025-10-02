@@ -45,7 +45,7 @@
   background-color: transparent;
 }
 
-.tab[selected].button-bg {
+.tab[selected].yellow-bg {
   background: #ffdc99;
   border: none;
   border-top: 2px solid var(--shadow-yellow);
@@ -215,7 +215,6 @@
 
 .notification-interactive {
   display: none;
-  width: fit-content;
   position: fixed;
 }
 
@@ -223,8 +222,8 @@
   display: block;
 }
 
-.unread-notification {
-  display: none;
+.notif-alert {
+  /* display: none; */
   position: absolute;
   top: 8px;
   right: 8px;
@@ -235,12 +234,6 @@
   z-index: 2;
 }
 
-.unread-notification[selected] {
+.notif-alert[selected] {
   display: block;
-}
-
-.unread-notification > span {
-  color: var(--white);
-  padding: 0;
-  margin: 0;
 }
