@@ -1,11 +1,20 @@
 import type { FastifyInstance } from 'fastify';
 
 interface UserProfile {
-    userID: number;
-    username: string;
-    avatar: string;
-    biography: string;
-    profileColor: string;
+	userID: number;
+	username: string;
+	avatar: string;
+	biography: string;
+	profileColor: string;
+}
+
+interface UserRow {
+	userID: number;
+	username: string;
+}
+
+interface UserRowConnection {
+  lastConnexion: string;
 }
 
 interface UserStats {
@@ -17,15 +26,6 @@ interface UserStats {
 	winStreak: number;
 	averageMatchDuration: number;
 	highestScore: number;
-}
-
-interface UserRow {
-  userID: number;
-  username: string;
-}
-
-interface UserRowConnection {
-  lastConnexion: string;
 }
 
 export async function userRoutes(serv: FastifyInstance) {
