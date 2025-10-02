@@ -9,11 +9,15 @@ export function setUpGame(game: Game) {
 	const player1: Player = game.players[0];
 	const player2: Player = game.players[1];
 	
-	if (game.local)
+	if (game.local) {
 		setMessEvent(player1, player2, local);
+		player1.socket.send(1);
+	}
 	else {
 		setMessEvent(player1, player2, remote);
 		setMessEvent(player2, player1, remote);
+		player1.socket.send(1);
+		player2.socket.send(1);
 	}
 }
 
