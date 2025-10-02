@@ -3,7 +3,8 @@
   userID INTEGER, --user who asked for the friendship
   friendID INTEGER, --receiver of invite for friendship
   startTimeFriendship DATETIME,
-  statusFrienship BOOLEAN --false == pending friendship, true == actual friendship
+  statusFrienship BOOLEAN, --false == pending friendship, true == actual friendship
+  UNIQUE(userID, friendID)
 );
 
 --TODO : figure out why tf friendship are not uniaue, like I can added two frienships between the two same users 
