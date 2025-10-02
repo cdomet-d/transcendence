@@ -58,34 +58,52 @@ export async function checkUserExists(userID: number): Promise<UserData | null> 
 }
 
 export async function getPendingFriendRequests(db: Database, userId: number): Promise<PendingRequest[]> {
-    console.log("in getPendingFriendRequests function");
-    const query = `
-        SELECT
-            CASE
-                WHEN userID = ? THEN friendID
-                ELSE userID
-            END AS otherUserID,
-            startTimeFriendship AS startTime
-        FROM
-            friendship
-        WHERE
-            (userID = ? OR friendID = ?)
-            AND statusFrienship = false;
-    `;
+	console.log("in getPendingFriendRequests function");
+	const query = `
+		SELECT
+			CASE
+				WHEN userID = ? THEN friendID
+				ELSE userID
+			END AS otherUserID,
+			startTimeFriendship AS startTime
+		FROM
+			friendship
+		WHERE
+			(userID = ? OR friendID = ?)
+			AND statusFrienship = false;
+	`;
 
-    // The corrected parameters array
-    const params = [userId, userId, userId];
-    
-    const requests = await db.all<PendingRequest[]>(query, params);
-    
-    // This should now return the correct data
-    return requests;
+	const params = [userId, userId, userId];
+	const requests = await db.all<PendingRequest[]>(query, params);
+
+	return (requests);
+}
+
+export async function getFriendship(db: Database, userId: number): Promise<PendingRequest[]> {
+	console.log("in getPendingFriendRequests function");
+	const query = `
+		SELECT
+			CASE
+				WHEN userID = ? THEN friendID
+				ELSE userID
+			END AS otherUserID,
+			startTimeFriendship AS startTime
+		FROM
+			friendship
+		WHERE
+			(userID = ? OR friendID = ?)
+			AND statusFrienship = true;
+	`;
+
+	const params = [userId, userId, userId];
+	const requests = await db.all<PendingRequest[]>(query, params);
+
+	return (requests);
 }
 
 // Fetches the full user profile card from the users service
 export async function getUserProfile(userId: number): Promise<UserProfile | null> {
 	try {
-		// NOTE: This assumes you have an endpoint like this on your users service
 		const response = await fetch(`http://users:2626/internal/users/profile/${userId}`);
 		
 		if (response.status === 404) return null;

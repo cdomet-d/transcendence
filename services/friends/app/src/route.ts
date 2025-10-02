@@ -3,6 +3,7 @@ import { Database } from 'sqlite';
 import { getUserID } from './friends.service.js';
 import { checkUserExists } from './friends.service.js';
 import { getPendingFriendRequests } from './friends.service.js'
+import { getFriendship } from './friends.service.js'
 import { getUserProfile } from './friends.service.js'
 
 interface userData {
@@ -187,45 +188,63 @@ export async function friendRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//return all pending friendship
-	serv.get('/friends/friend-requestlist/:userID', async (request, reply) => {
-
-	});
 
 	//return all friendship
 	serv.get('/friends/friendslist/:userID', async (request, reply) => {
-	
+		try {
+		console.log("In the friend-list");
+		const { userID } = request.params as { userID: number };
+
+		const pendingRequests = await getFriendship(serv.dbFriends, userID);
+
+		if (pendingRequests.length === 0)
+			return reply.code(200).send([]); // Return empty array if no requests
+
+		const profileCardPromises = pendingRequests.map(async (request) => {
+			console.log("processing the profile card");
+			const senderProfile = await getUserProfile(request.otherUserID);
+			if (!senderProfile)
+				return (null); // Skip if a profile can't be fetched
+			return {
+				avatar: senderProfile.avatar,
+				biography: senderProfile.biography,
+				friendship: {
+					friendsSince: request.startTime, 
+				},
+				profileColor: senderProfile.profileColor,
+				rank: senderProfile.rank,
+				username: senderProfile.username
+			};
+		});
+
+		const profileCards = (await Promise.all(profileCardPromises))
+							.filter(card => card !== null);
+
+		return (reply.code(200).send(profileCards));
+
+	} catch (error) {
+		console.error('[Friends Service] Error fetching friend request list:', error);
+		return (reply.code(500).send({ message: 'An internal error occurred.' }));
+	}
 	});
 
-//TODO: do we really need all this information for the friend-request list ? How will the UI looks like ?
+	//TODO: do we really need all this information for the friend-request list ? How will the UI looks like ?
+	//return all pending friendship
 	serv.get('/friends/friend-request-list/:userID', async (request, reply) => {
 		try {
 			console.log("In the friend-request-list");
 			const { userID } = request.params as { userID: number };
 
-			// 1. Get the main user's ID from their username
-		//	const mainUser = await checkUserExists(userID);
-		//	if (!mainUser)
-		//	    return (reply.code(404).send({ message: `User not found` }));
-
-			// 2. Get all pending friend requests sent TO this user from the database
 			const pendingRequests = await getPendingFriendRequests(serv.dbFriends, userID);
 
-			if (pendingRequests.length === 0) {
-				console.log("In fact no request");
+			if (pendingRequests.length === 0)
 				return reply.code(200).send([]); // Return empty array if no requests
-			}
-			console.log("In fact there is friendship request");
 
-			// 3. For each pending request, fetch the full profile of the SENDER
 			const profileCardPromises = pendingRequests.map(async (request) => {
 				console.log("processing the profile card");
 				const senderProfile = await getUserProfile(request.otherUserID);
-				if (!senderProfile) {
-					console.log("Profile can't be fetched");
+				if (!senderProfile)
 					return (null); // Skip if a profile can't be fetched
-				}
-				// 4. Format the data to match the required "profile card" structure
 				return {
 					avatar: senderProfile.avatar,
 					biography: senderProfile.biography,
