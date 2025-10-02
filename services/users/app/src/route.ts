@@ -55,7 +55,6 @@ export async function userRoutes(serv: FastifyInstance) {
 		try {
 			const { userID } = request.params as { userID: number };
 
-			// Query your userProfile table for all the necessary info
 			const query = `
 				SELECT * FROM userProfile WHERE userID = ?
 			`;
@@ -66,7 +65,6 @@ export async function userRoutes(serv: FastifyInstance) {
 				return reply.code(404).send({ message: 'User profile not found' });
 			}
 
-			// On success, return the full profile object
 			return reply.code(200).send(userProfile);
 
 		} catch (error) {
@@ -181,7 +179,19 @@ export async function userRoutes(serv: FastifyInstance) {
 	//get all user's stats with userID
 	serv.get('/users/usersStats/:userID', async(request, reply) => {
 		try {
+			const { userID } = request.params as { userID: number };
 
+			const query = `
+				SELECT * FROM userStats WHERE userID = ?
+			`;
+
+			const userProfile = await serv.dbUsers.get<UserStats>(query, [userID]);
+
+			if (!userProfile) {
+				return reply.code(404).send({ message: 'User profile not found' });
+			}
+
+			return reply.code(200).send(userProfile);
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
 			return reply.code(500).send({ message: 'Internal server error' });
