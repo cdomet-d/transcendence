@@ -13,6 +13,10 @@ interface UserRow {
   username: string;
 }
 
+interface UserRowConnection {
+  lastConnexion: string;
+}
+
 export async function userRoutes(serv: FastifyInstance) {
 	//USER PROFILE
 
@@ -63,7 +67,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//get user's activity with userID
 	serv.get('/users/activity/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: number };
+			const { userID } = request.params as { userID: string };
 
 			const query = `
 				SELECT activityStatus FROM userProfile WHERE userID = ?
@@ -81,14 +85,26 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//get user's lastConnextion with userID
-	serv.get('/users/lastConnexion/:userID', async(request, reply) => {
+	serv.get('/users/lastConnection/:userID', async(request, reply) => {
 		try {
+			const userID = parseInt((request.params as { userID: string }).userID, 10);
+
+			const query = `
+				SELECT lastConnexion FROM userProfile WHERE userID = ?
+			`;
 			
+			const lastConnection = await serv.dbUsers.get<UserRowConnection>(query, [userID]);
+		
+			if (!lastConnection)
+				return reply.code(404).send({ message: 'User not found' });
+
+			return reply.code(200).send(lastConnection);
+
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
 			return reply.code(500).send({ message: 'Internal server error' });
 		}
-	});
+});
 
 	//update user's avatar with userID
 	serv.post('/users/updateAvatar/:userID', async(request, reply) => {
