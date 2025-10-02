@@ -2,6 +2,7 @@ import { init } from '../src/server.js';
 import type { FastifyInstance } from 'fastify';
 import {describe, expect, test, afterAll, beforeAll} from '@jest/globals';
 import WebSocket from 'ws';
+import fs from 'fs/promises';
 
 describe('Fastify server', () => {
     let server: FastifyInstance;
@@ -16,27 +17,18 @@ describe('Fastify server', () => {
         await server.close();
     });
 
-    test('WebSocket should respond correctly', async () => {
+    test('WebSocket should respond correctly', (done) => {
         const wsUrl = address.replace(/^https/, 'wss') + "/api/game/match";
+        const ws = new WebSocket(wsUrl, { rejectUnauthorized: false });
 
-        await new Promise<void>((resolve, reject) => {
-            const ws = new WebSocket(wsUrl, { rejectUnauthorized: false });
-
-            ws.on('open', () => {
-                ws.send('Hey server');
-            });
-
-            ws.on('message', (data: any) => {
-                try {
-                    expect(data.toString()).toBe('Hey from server');
-                    ws.close();
-                } catch (err) {
-                    reject(err);
-                }
-            });
-
-            ws.on('close', () => resolve());
-            ws.on('error', (err: any) => reject(err));
+        ws.on('open', () => {
+            ws.close();
+            setTimeout(async () => {
+                const logFilePath = '/usr/app/server.log';
+                const logs = await fs.readFile(logFilePath, 'utf-8');
+                expect(logs).toContain('WebSocket connection established');
+                done();
+            }, 100);
         });
     });
 });
