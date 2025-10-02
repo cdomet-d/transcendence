@@ -7,17 +7,18 @@ export async function natsSubscribtion() {
 
   const sc = StringCodec();
 
-  const game = nc.subscribe('game.ready');
+  const game = nc.subscribe('game.request');
   (async () => {
     for await (const msg of game) {
       // console.log(`Received message: ${sc.decode(msg.data)}`);
       
-      // prepareGame(msg.data);
+      // approve or decline game start depending on??
+            
       if (msg.reply)
         nc.publish(msg.reply, msg.data);
-      console.log(`8\nPong sent "game.ready"`);
+      console.log(`Pong published to "game.reply"`);
     }
   })();
 
-  console.log(`Listening for messages on "game.ready"...`);
+  console.log(`PONG listening on "game.request"`);
 };
