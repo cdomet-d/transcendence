@@ -45,15 +45,29 @@ describe('waitForMessage', () => {
 
 describe('wsHandler integration', () => {
     let mockFastify: any;
-    let mockSocket: any;
+    let mockSocket1: any;
+    let mockSocket2: any;
     let mockReq: any;
     let mockGame: any;
+    let ids1: { gameID: number, userID: number }
+    let ids2: { gameID: number, userID: number }
 
     beforeEach(() => {
-        mockSocket = {
+        ids1 = { gameID: 42, userID: 7 }
+        mockSocket1 = {
+            once: jest.fn((event: string, handler: (data: any) => void) => {
+                handler(JSON.stringify(ids1));
+            }),
+            send: jest.fn(),
             on: jest.fn(),
-            once: jest.fn(),
-            send: jest.fn()
+        };
+        ids2 = { gameID: 42, userID: 8 }
+        mockSocket2 = {
+            once: jest.fn((event: string, handler: (data: any) => void) => {
+                handler(JSON.stringify(ids2));
+            }),
+            send: jest.fn(),
+            on: jest.fn(),
         };
         mockReq = {};
         mockGame = {
@@ -80,38 +94,33 @@ describe('wsHandler integration', () => {
     });
 
     test('calls setUpGame for remote when players reach 2', () => {
-        mockSocket.once.mockImplementation((event: string, handler: (data: any) => void) => {
-            handler(JSON.stringify({ gameID: 42, userID: 7 }));
-        });
+        mockSocket1.once.mockImplementation();
+        mockSocket2.once.mockImplementation();
         jest.spyOn(pong, 'setUpGame');
-        wsHandler.call(mockFastify, mockSocket, mockReq);
-        wsHandler.call(mockFastify, mockSocket, mockReq); //TODO: test with diff ids when implemented
+        wsHandler.call(mockFastify, mockSocket1, mockReq);
+        wsHandler.call(mockFastify, mockSocket2, mockReq);
         expect(pong.setUpGame).toHaveBeenCalledWith(mockGame);
     });
 
     test('calls setUpGame for local when players reach 2', () => {
         mockGame.local = true;
-        mockSocket.once.mockImplementation((event: string, handler: (data: any) => void) => {
+        mockSocket1.once.mockImplementation((event: string, handler: (data: any) => void) => {
             handler(JSON.stringify({ gameID: 42, userID: 7 }));
         });
         jest.spyOn(pong, 'setUpGame');
-        wsHandler.call(mockFastify, mockSocket, mockReq);
+        wsHandler.call(mockFastify, mockSocket1, mockReq);
         expect(pong.setUpGame).toHaveBeenCalledWith(mockGame);
     });
 
-    test('throws "game not found" if gameRegistry returns undefined', async () => {
+    test('throws "game not found" if gameRegistry returns undefined', () => {
         mockFastify.gameRegistry.findGame = jest.fn().mockReturnValue(undefined);
-        mockSocket.once.mockImplementation((event: string, handler: (data: any) => void) => {
-            handler(JSON.stringify({ gameID: 42, userID: 7 }));
-        });
-        await expect(() => wsHandler.call(mockFastify, mockSocket, mockReq)).toThrow('game 42 not found');
+        mockSocket1.once.mockImplementation();
+        expect(() => wsHandler.call(mockFastify, mockSocket1, mockReq)).toThrow('game 42 not found');
     });
 
-    test('throws "not allowed" if game already has 2 players', async () => {
+    test('throws "not allowed" if game already has 2 players', () => {
         mockGame.players = [{}, {}];
-        mockSocket.once.mockImplementation((event: string, handler: (data: any) => void) => {
-            handler(JSON.stringify({ gameID: 42, userID: 7 }));
-        });
-        await expect(() => wsHandler.call(mockFastify, mockSocket, mockReq)).toThrow('not allowed');
+        mockSocket1.once.mockImplementation();
+        expect(() => wsHandler.call(mockFastify, mockSocket1, mockReq)).toThrow('not allowed');
     });
 });
