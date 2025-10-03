@@ -515,6 +515,36 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.post('/users/updateTotalMatch/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
+			const { newTotalMatch } = request.body as { newTotalMatch: any };
+
+			if (typeof newTotalMatch !== 'number' && isNaN(parseInt(newTotalMatch, 10))) {
+				return reply.code(400).send({
+					success: false,
+					message: 'Validation error: totalMatch must be a valid number.'
+				});
+			}
+			
+			const query = `
+				UPDATE userStats SET totalMatch = ? WHERE userID = ?
+			`;
+
+			const params = [
+				newTotalMatch,
+				userID
+			];
+
+			const result = await serv.dbUsers.run(query, params);
+
+			if (!result.changes)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found or request parameters are wrong'
+				}));
+			
+			return (reply.code(200).send({
+				success: true,
+				message: 'Total matches updated !'
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
