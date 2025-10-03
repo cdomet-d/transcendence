@@ -33,7 +33,7 @@ export class textInput extends HTMLInputElement {
   }
 
   render() {
-    this.classList.add("brdr input-emphasis");
+    this.classList.add("brdr", "input-emphasis");
   }
 }
 
