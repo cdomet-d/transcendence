@@ -181,8 +181,11 @@ TODO :
         -d '{"newStatus": <newStatus>}' \  
         http://localhost:2626/users/updateActivityStatus/1
     * update lastConnexion
-    * update username ? (TODO : ask is we thing the user should be able to update username as part of customization)
-
+    * update username
+        ```
+        curl -X POST \  -H "Content-Type: application/json" \
+        -d '{"newUsername": "ptitchat"}' \
+        http://localhost:2626/users/updateUsername/<userID>
 ## Account
 
 ### General overview

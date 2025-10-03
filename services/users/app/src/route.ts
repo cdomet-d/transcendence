@@ -320,7 +320,6 @@ export async function userRoutes(serv: FastifyInstance) {
 		try {
 			const { userID } = request.params as { userID: string };
 			const { newConnection } = request.body as { newConnection: any };
-			console.log('0');
 
 			const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
 			if (typeof newConnection !== 'string' || !dateTimeRegex.test(newConnection)) {
@@ -338,27 +337,22 @@ export async function userRoutes(serv: FastifyInstance) {
 				});
 			}
 
-			console.log('1');
-
 			const query = `
 				UPDATE userProfile SET lastConnection = ? WHERE userID = ?
 			`;
 
-			console.log('1.5');
 			const params = [
 				date.toISOString(),
 				userID
 			];
 
 			const result = await serv.dbUsers.run(query, params);
-			console.log('2');
 
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found or request parameters are wrong'
 				}));
-			console.log('3');
 			
 			return (reply.code(200).send({
 				success: true,
@@ -375,8 +369,39 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.post('/users/updateUsername/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
+			const { newUsername } = request.body as { newUsername: string };
+
+
+
+			const query = `
+				UPDATE userProfile SET username = ? WHERE userID = ?
+			`;
+
+			const params = [
+				newUsername,
+				userID
+			];
+
+			const result = await serv.dbUsers.run(query, params);
+
+			if (!result.changes)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found or request parameters are wrong'
+				}));
+			
+			return (reply.code(200).send({
+				success: true,
+				message: 'Username updated !'
+			}));
 
 		} catch (error) {
+			if (error && typeof error === 'object' && 'code' in error) {
+				return reply.code(409).send({
+					success: false,
+					message: 'This username is already taken.'
+				});
+			}
 			serv.log.error(`Error fetching user profile: ${error}`);
 			return reply.code(500).send({ message: 'Internal server error' });
 		}
