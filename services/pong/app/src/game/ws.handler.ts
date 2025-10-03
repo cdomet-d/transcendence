@@ -3,42 +3,41 @@ import type { WebSocket } from '@fastify/websocket';
 import { Player } from "../classes/player.class.js";
 import type { Game } from '../classes/game.class.js';
 import { setUpGame } from './pong.js';
-import type { GameRegistry } from '../classes/gameRegistry.class.js';
+import { validIds, type idsObj } from './mess.validation.js';
 
-interface idsObj {
-	gameID: number,
-	userID: number
-}
-
-function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): void {
+async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): Promise< void > {
 	this.log.info('WebSocket connection established');
+
+	const ids: idsObj = await waitForMessage(socket);
+
+	const game: Game | undefined = this.gameRegistry.findGame(ids.gameID);
+	if (!game)
+		throw new Error("game not found"); //TODO: send nats message ?
+	if (game.players.length === 2)
+		throw new Error("not allowed");
+
+	getPlayersInGame(game, ids.userID, socket);
 	
-	let gameRef = { game: undefined as Game | undefined };
-
-	const messHandler = createMessHandler(this.gameRegistry, gameRef, socket);
-	socket.once('message', messHandler)
-
 	socket.on('close', () => {
-		if (gameRef.game)
-			gameRef.game.deletePlayers(); //TODO: to be rm
+		if (game)
+			game.deletePlayers(); //TODO: to be rm
 		//TODO: delete game ? need to know if everything is done
 	});
 }
 
-function createMessHandler(gameRegistry: GameRegistry, ref: { game: Game | undefined }, socket: WebSocket) {
-	return (payload: string) => {
-		const ids: idsObj = JSON.parse(payload);
-		if (Number.isNaN(ids.gameID) || Number.isNaN(ids.userID))
-			throw new Error("wrong ID");
-
-		ref.game = gameRegistry.findGame(ids.gameID);
-		if (!ref.game)
-			throw new Error("game not found"); //TODO: send nats message ?
-		if (ref.game.players.length === 2)
-			throw new Error("not allowed");
-
-		getPlayersInGame(ref.game, ids.userID, socket);
-	}
+function waitForMessage(socket: WebSocket): Promise< idsObj > {
+	return new Promise((resolve, reject) => {
+		socket.once('message', (payload: string) => {
+			try {
+				const ids = JSON.parse(payload);
+				if (!validIds(ids))
+					reject(new Error("Invalid ids"));
+				resolve(ids);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	});
 }
 
 function getPlayersInGame(game: Game, userID: number, socket: WebSocket) {
@@ -49,4 +48,4 @@ function getPlayersInGame(game: Game, userID: number, socket: WebSocket) {
 		setUpGame(game);
 }
 
-export { wsHandler as wshandler };
+export { wsHandler };
