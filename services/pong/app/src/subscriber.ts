@@ -1,6 +1,5 @@
 import { connect, StringCodec, type NatsConnection } from 'nats';
-import { Game } from './classes/game.class.js';
-import type { gameInfo } from './classes/game.class.js'
+import { Game, type gameInfo } from './classes/game.class.js';
 import type { FastifyInstance } from 'fastify';
 
 export async function initNatsConnexion(): Promise<NatsConnection> {
@@ -15,6 +14,8 @@ export async function natsSubscribtion(serv: FastifyInstance) {
 	// const sc = StringCodec();
 
 	// const sub = serv.nc.subscribe('game.start');
+	// console.log(`Listening for messages on "game.start"...`);
+
 	// (async () => {
 	// 	for await (const msg of sub) {
 	// 		const _gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
@@ -24,8 +25,7 @@ export async function natsSubscribtion(serv: FastifyInstance) {
 	// 	}
 	// })();
 
-	// console.log(`Listening for messages on "game.start"...`);
-	serv.gameRegistry.addGame(new Game(gameobj));
+	serv.gameRegistry.addGame(new Game(gameobj)); //TODO: for testing
 };
 
 import type { user } from './classes/game.class.js';
