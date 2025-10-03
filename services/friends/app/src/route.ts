@@ -1,10 +1,10 @@
 import type { FastifyInstance } from 'fastify';
 import { Database } from 'sqlite';
 import { getUserID } from './friends.service.js';
-import { checkUserExists } from './friends.service.js';
 import { getPendingFriendRequests } from './friends.service.js'
 import { getFriendship } from './friends.service.js'
 import { getUserProfile } from './friends.service.js'
+//import { checkUserExists } from './friends.service.js';
 
 interface userData {
   userID: number;

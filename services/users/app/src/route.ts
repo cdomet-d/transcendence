@@ -152,7 +152,57 @@ export async function userRoutes(serv: FastifyInstance) {
 				message: 'Internal server error'
 			});
 		}
-});
+	});
+
+	//TODO: serv.post('/users/createProfile/:userID', async(request, reply) => {});
+
+	serv.post('/users/updateProfile/:userID', async(request, reply) => {
+		try {
+			const { userID } = request.params as { userID: number };
+			const statsToUpdate = request.body as { [key: string]: number };
+
+			const validStatKeys = [
+				'username',
+				'avatar',
+				'bio',
+				'profileColor',
+			];
+
+			const keysToUpdate = Object.keys(statsToUpdate).filter(key => validStatKeys.includes(key));
+
+			if (keysToUpdate.length === 0) {
+				return (reply.code(400).send({
+					success: false,
+					message: 'No valid stat fields provided for update.'
+				}));
+			}
+
+			const setClauses = keysToUpdate.map(key => `${key} = ?`).join(', ');
+			const params = keysToUpdate.map(key => statsToUpdate[key]);
+			params.push(userID);
+
+			const query = `
+				UPDATE userProfile SET ${setClauses} WHERE userID = ?
+			`;
+
+			const result = await serv.dbUsers.run(query, params);
+
+			if (result.changes === 0) {
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found'
+				}));
+			}
+
+			return (reply.code(200).send({
+				success: true,
+				message: 'User profile updated successfully!'
+			}));
+		} catch (error) {
+			serv.log.error(`Error fetching user profile: ${error}`);
+			return (reply.code(500).send({ message: 'Internal server error' }));
+		}
+	});
 
 	//update user's avatar with userID
 	serv.post('/users/updateAvatar/:userID', async(request, reply) => {
@@ -371,6 +421,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's username with userID
+	//TODO : update username in the account service
 	serv.post('/users/updateUsername/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
@@ -433,6 +484,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//update all stats of a user
 	serv.post('/users/updateAllStats/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };

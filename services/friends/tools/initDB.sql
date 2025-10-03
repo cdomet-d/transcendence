@@ -6,3 +6,5 @@
   statusFrienship BOOLEAN, --false == pending friendship, true == actual friendship
   UNIQUE(userID, friendID)
 );
+
+-- TODO: remove username of this table

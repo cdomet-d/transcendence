@@ -60,7 +60,7 @@ async function sendFriendRequestApi() {
     console.log('in function');
 
     const targetUsername = "alex";
-    const senderUserId = 123; // Vient probablement d'un état de connexion
+    const senderUserId = 2; // Vient probablement d'un état de connexion
     const friendRequestData = {
       userId: senderUserId,
       statusFriendship: 'pending'
