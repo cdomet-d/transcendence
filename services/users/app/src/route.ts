@@ -441,7 +441,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					message: 'Validation error: newStatus must be a valid number.'
 				});
 			}
-			
+
 			const query = `
 				UPDATE userStats SET longestMatch = ? WHERE userID = ?
 			`;
@@ -474,6 +474,36 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.post('/users/updateShortestMatch/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
+			const { newShortestMatch } = request.body as { newShortestMatch: any };
+
+			if (typeof newShortestMatch !== 'number' && isNaN(parseInt(newShortestMatch, 10))) {
+				return reply.code(400).send({
+					success: false,
+					message: 'Validation error: shorestMatch must be a valid number.'
+				});
+			}
+			
+			const query = `
+				UPDATE userStats SET shorestMatch = ? WHERE userID = ?
+			`;
+
+			const params = [
+				newShortestMatch,
+				userID
+			];
+
+			const result = await serv.dbUsers.run(query, params);
+
+			if (!result.changes)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found or request parameters are wrong'
+				}));
+			
+			return (reply.code(200).send({
+				success: true,
+				message: 'Shortest match updated !'
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
