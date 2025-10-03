@@ -2,8 +2,8 @@ import { match } from "assert";
 import { natsPublish } from "../nats/publisher.js";
 
 interface userInfo {
-    userID: number,
-    username: string
+    userID?: number,
+    username?: string
 }
 
 interface match {
@@ -32,14 +32,13 @@ export function startTournament(tournamentObj: tournament) {
     // await approval
     // signal clients
 
-    startFirstRound(tournamentObj);
     tournamentMap.set(tournamentObj.tournamentID, tournamentObj)
-    // THEN tournamentState will be called via NATS "game.over" when needed and handle its bidnis 
+    startFirstRound(tournamentObj);
 }
 
 function startFirstRound(tournament: tournament) {
     if (tournament.bracket && Array.isArray(tournament.bracket)) {
-        for (let i = 0; i < tournament.bracket.length; i++) {
+        for (let i = 0; tournament.bracket[i]?.users !== null; i++) {
             const match = tournament.bracket[i];
             if (match && match.users && match.users.length > 0) {
                 startMatch(match);
@@ -53,51 +52,53 @@ export function startMatch(match: match) {
 }
 
 export function tournamentState(payload: string) {
-    const currentMatch = JSON.parse(payload);
+    // receive previousMatch updated with winner and loser
+    const previousMatch = JSON.parse(payload);
 
-    // receive currentMatch updated with winner and loser
-
-    // retrieve tournamentObj
-    const tournamentObj = tournamentMap.get(currentMatch.tournamentID);
+    // retrieve tournamentObj from tournamentMap (storage might change)
+    const tournamentObj = tournamentMap.get(previousMatch.tournamentID);
     if (!tournamentObj) {
         console.log("No tournamentObj qué?");
         return;
     }
 
     // update bracket
-    // currentMatch is up to date, add it to bracket
+    // previousMatch is up to date, add it to bracket
     let i = 0;
-    for (;tournamentObj.bracket[i]?.matchID !== currentMatch.matchID; i++) {}
-    if (tournamentObj.bracket[i]?.matchID === currentMatch.matchID) {
-        tournamentObj.bracket[i] = currentMatch;
+    for (;tournamentObj.bracket[i]?.matchID !== previousMatch.matchID; i++) {}
+    if (tournamentObj.bracket[i]?.matchID === previousMatch.matchID) {
+        tournamentObj.bracket[i] = previousMatch;
     }
 
-    // WAS IT THE FINAL?
+    // send full matchObj to DB
+
+    // IF TOURNAMENT OVER
     const nextMatch = getNextMatchInBracket(tournamentObj);
-    if (nextMatch === undefined) { // Means currentMatch was the tournament final
+    if (nextMatch === undefined) { // Means previousMatch was the tournament final
         // handle end of tournament
     }
 
-    // IF TOURNAMENT GOES ON
-    // assign winnerID to player1 of next match
-    const nextPlayerID = currentMatch.winnerID;
-    if (nextMatch?.users === undefined) {
-// player1
-    } else {
-// player2
+    // IF NOT
+    const nextPlayer: string = getUsernameFromID(previousMatch.winnerID, previousMatch);
+    if (nextMatch?.users === null) { // assign winnerID to player1 of next match
+        nextMatch.users = [
+            { userID: previousMatch.winnerID, username: nextPlayer },
+            {}
+        ];
+    } else if (nextMatch?.users && nextMatch?.users[1] === null) { // assign winnerID to player2 of next match
+        nextMatch.users[1] = { userID: previousMatch.winnerID, username: nextPlayer };
     }
-    // send full matchObj to DB
 
     // waiting screen for winner
     // back to menu for loser
+}
 
-    // when first round done
-    // start next round
-
-    // when tournament over
-    // send last matchObj to DB
-    // or send full tournamentObj?
-    ;
+function getUsernameFromID(winnerID: number, previousMatch: match): string {
+    if (previousMatch.users?.length === 2) {
+        const user = previousMatch.users.find((users) => users?.userID === winnerID);
+        return user?.username ?? "USER NOT FOUND";
+    }
+    return "USER NOT FOUND";
 }
 
 function getNextMatchInBracket(tournament: tournament): match | undefined {
@@ -105,7 +106,6 @@ function getNextMatchInBracket(tournament: tournament): match | undefined {
         if (matchObj.users === null || (matchObj.users && matchObj.users[1] === null)) {
             return matchObj;
         }
-    }
-    );
+    });
     return undefined;
 }
