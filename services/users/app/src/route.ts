@@ -58,7 +58,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//get user's profile with userID
-	serv.get('/internal/users/profile/:userId', async (request, reply) => {
+	serv.get('/internal/users/profile/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
 

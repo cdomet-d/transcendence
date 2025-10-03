@@ -145,9 +145,16 @@ TODO :
 
 * userProfile
     * ~~get activity status by userID~~
+        * ``` curl http://localhost:2626/users/activity/<userID>
     * ~~get profile info (username. avatar, bio, profile color, lastConnexion) by userID~~
+        * ```
     * ~~get lastConnexion by userID~~
-    * update avatar
+        * ```curl http://localhost:2626/users/lastConnection/<userID>
+    * ~~update avatar~~
+        * ``` curl -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"newAvatar": "new_avatar_url.png"}' \
+            http://localhost:2626/users/updateAvatar/<userID>
     * updata bio
     * update profileColor
     * update activity status
