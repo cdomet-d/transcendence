@@ -40,13 +40,20 @@ export async function userRoutes(serv: FastifyInstance) {
 			const user = await serv.dbUsers.get<UserRow>(query, [username]);
 
 			if (!user) {
-				return (reply.code(404).send({ message: 'User not found' }));
+				return (reply.code(404).send({ 
+					success: false,
+					message: 'User not found'
+				}));
 			}
+			//TODO: add success in this reply
 			return (reply.code(200).send(user));
 
 		} catch (error) {
 			serv.log.error(error);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return reply.code(500).send({
+				success: false,
+				message: 'Internal server error'
+			});
 		}
 	});
 
@@ -62,14 +69,19 @@ export async function userRoutes(serv: FastifyInstance) {
 			const userProfile = await serv.dbUsers.get<UserProfile>(query, [userID]);
 
 			if (!userProfile) {
-				return reply.code(404).send({ message: 'User profile not found' });
+				return reply.code(404).send({
+					success: false,
+					message: 'User profile not found' });
 			}
-
+			//TODO: add success in this reply
 			return reply.code(200).send(userProfile);
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return reply.code(500).send({
+				success: false,
+				message: 'Internal server error'
+			});
 		}
 	});
 
@@ -84,12 +96,19 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const activityStatus = await serv.dbUsers.get<UserRow>(query, [userID]);
 			if (!activityStatus)
-				return (reply.code(404).send({ message: 'User not found' }));
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found'
+				}));
+			//TODO: add success in this reply
 			return (reply.code(200).send(activityStatus));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return reply.code(500).send({
+				success: false,
+				message: 'Internal server error'
+			});
 		}
 	});
 
@@ -105,13 +124,19 @@ export async function userRoutes(serv: FastifyInstance) {
 			const lastConnection = await serv.dbUsers.get<UserRowConnection>(query, [userID]);
 		
 			if (!lastConnection)
-				return reply.code(404).send({ message: 'User not found' });
-
+				return reply.code(404).send({
+					success: false,
+					message: 'User not found'
+				});
+			//TODO: add success in this reply
 			return reply.code(200).send(lastConnection);
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return reply.code(500).send({
+				success: false,
+				message: 'Internal server error'
+			});
 		}
 });
 
@@ -119,10 +144,36 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.post('/users/updateAvatar/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
+			const { newAvatar } = request.params as { newAvatar: string };
+
+			const query = `
+				UPDATE userProfile SET avatar = ? WHERE userID = ?
+			`;
+
+			const params = [
+				newAvatar,
+				userID
+			];
+
+			const result = await serv.dbUsers.run(query, params);
+
+			if (!result.changes)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found '
+				}));
+			
+			return (reply.code(200).send({
+				success: true,
+				message: 'Avatar updated !'
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return reply.code(500).send({
+				success: false,
+				message: 'Internal server error'
+			});
 		}
 	});
 

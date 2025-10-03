@@ -134,7 +134,7 @@ averageMatchDuration will be in seconds.
 
 TODO :
 * userStats
-    * get user stats by userID
+    * ~~get user stats by userID~~
     * update longest match
     * update shorest match
     * update total match
@@ -144,9 +144,9 @@ TODO :
     * update highest score
 
 * userProfile
-    * get activity status by userID 
-    * get profile info (username. avatar, bio, profile color, lastConnexion) by userID
-    * get lastConnexion by userID
+    * ~~get activity status by userID~~
+    * ~~get profile info (username. avatar, bio, profile color, lastConnexion) by userID~~
+    * ~~get lastConnexion by userID~~
     * update avatar
     * updata bio
     * update profileColor
@@ -292,3 +292,5 @@ TODO :
 * For larger GET API calls, should make a get function per column or can a function that gets all the needed informations will be better ? Maybe even both ?
 * ~~Clean code in friends container's routes.ts file~~ 
 * Plug languageDB route to front to see if translation works
+* Check function for database query for friend service 404 reply
+* check all reply to add success of the request

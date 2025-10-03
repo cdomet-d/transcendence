@@ -116,7 +116,13 @@ export async function friendRoutes(serv: FastifyInstance) {
 			
 			const result = await serv.dbFriends.run(query, [requestID]);
 
-			return (reply.code(201).send({
+			if (!result)
+				return (reply.code(404).send({
+					success: false,
+					message: 'Friendship not found'
+				}));
+
+			return (reply.code(200).send({
 				success: true,
 				message: `Friendship accepted !`
 			}));
