@@ -316,9 +316,40 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's last connextion with userID
-	serv.post('/users/updateLastConnexion/:userID', async(request, reply) => {
+	serv.post('/users/updateLastConnection/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
+			const { newConnection } = request.body as { newConnection: any };
+
+			const date = new Date(newConnection);
+			if (isNaN(date.getTime())) {
+				return reply.code(400).send({
+					success: false,
+					message: 'Validation error: newConnection must be a valid DATETIME string.'
+				});
+			}
+
+			const query = `
+				UPDATE userProfile SET lastConnection = ? WHERE userID = ?
+			`;
+
+			const params = [
+				newConnection,
+				userID
+			];
+
+			const result = await serv.dbUsers.run(query, params);
+
+			if (!result.changes)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found or request parameters are wrong'
+				}));
+			
+			return (reply.code(200).send({
+				success: true,
+				message: 'Last connection updated !'
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
