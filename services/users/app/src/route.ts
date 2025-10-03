@@ -73,8 +73,11 @@ export async function userRoutes(serv: FastifyInstance) {
 					success: false,
 					message: 'User profile not found' });
 			}
-			//TODO: add success in this reply
-			return reply.code(200).send(userProfile);
+
+			return reply.code(200).send({
+				success: true,
+				profile: userProfile
+			});
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
@@ -100,8 +103,11 @@ export async function userRoutes(serv: FastifyInstance) {
 					success: false,
 					message: 'User not found'
 				}));
-			//TODO: add success in this reply
-			return (reply.code(200).send(activityStatus));
+
+			return (reply.code(200).send({
+				success: true,
+				activityStatus: activityStatus
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
@@ -128,8 +134,11 @@ export async function userRoutes(serv: FastifyInstance) {
 					success: false,
 					message: 'User not found'
 				});
-			//TODO: add success in this reply
-			return reply.code(200).send(lastConnection);
+
+			return reply.code(200).send({
+				success: true,
+				lastConnection: lastConnection
+			});
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
@@ -160,7 +169,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
-					message: 'User not found '
+					message: 'User not found or request parameters are wrong'
 				}));
 			
 			return (reply.code(200).send({
@@ -181,17 +190,66 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.post('/users/updateBio/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
+			const { newBio } = request.params as { newBio: string };
+
+			const query = `
+				UPDATE userProfile SET bio = ? WHERE userID = ?
+			`;
+
+			const params = [
+				newBio,
+				userID
+			];
+
+			const result = await serv.dbUsers.run(query, params);
+
+			if (!result.changes)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found or request parameters are wrong'
+				}));
+			
+			return (reply.code(200).send({
+				success: true,
+				message: 'Bio updated !'
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return reply.code(500).send({
+				success: false,
+				message: 'Internal server error'
+			});
 		}
 	});
 
 	//update user's profile color with userID
-	serv.post('/users/updateProfilColor/:userID', async(request, reply) => {
+	serv.post('/users/updateProfileColor/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
+			const { newProfileColor } = request.params as { newProfileColor: string };
+
+			const query = `
+				UPDATE userProfile SET bio = ? WHERE userID = ?
+			`;
+
+			const params = [
+				newProfileColor,
+				userID
+			];
+
+			const result = await serv.dbUsers.run(query, params);
+
+			if (!result.changes)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found or request parameters are wrong'
+				}));
+			
+			return (reply.code(200).send({
+				success: true,
+				message: 'Profile Color updated !'
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
