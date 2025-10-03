@@ -168,6 +168,18 @@ TODO :
         http://localhost:2626/users/updateBio/<userID>
     * update profileColor
     * update activity status
+
+        ```
+        //newStatus must be a number, between quotes works too :
+        curl -X POST \
+        -H "Content-Type: application/json" \
+        -d '{"newStatus": "<newStatus>"}' \
+        http://localhost:2626/users/updateActivityStatus/1
+        
+        curl -X POST \
+        -H "Content-Type: application/json" \
+        -d '{"newStatus": <newStatus>}' \  
+        http://localhost:2626/users/updateActivityStatus/1
     * update lastConnexion
     * update username ? (TODO : ask is we thing the user should be able to update username as part of customization)
 

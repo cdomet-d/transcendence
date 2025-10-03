@@ -155,6 +155,14 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { userID } = request.params as { userID: string };
 			const { newAvatar } = request.params as { newAvatar: string };
 
+			if (typeof newAvatar !== 'string') {
+				return reply.code(400).send({
+					success: false,
+					message: 'Validation error: newStatus must be a number.'
+				});
+			}
+
+
 			const query = `
 				UPDATE userProfile SET avatar = ? WHERE userID = ?
 			`;
@@ -229,8 +237,15 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { userID } = request.params as { userID: string };
 			const { newProfileColor } = request.params as { newProfileColor: string };
 
+			if (typeof newProfileColor !== 'string') {
+				return reply.code(400).send({
+					success: false,
+					message: 'Validation error: newStatus must be a number.'
+				});
+			}
+
 			const query = `
-				UPDATE userProfile SET bio = ? WHERE userID = ?
+				UPDATE userProfile SET profileColor = ? WHERE userID = ?
 			`;
 
 			const params = [
@@ -261,7 +276,39 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.post('/users/updateActivityStatus/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
+			const { newStatus } = request.body as { newStatus: any };
 
+			const statusAsNumber = parseInt(newStatus, 10);
+
+			const validStatuses = [0, 1, 2];
+			if (isNaN(statusAsNumber) || !validStatuses.includes(statusAsNumber)) {
+				return reply.code(400).send({
+					success: false,
+					message: 'Validation error: newStatus must be 0, 1, or 2.'
+				});
+			}
+
+			const query = `
+				UPDATE userProfile SET activityStatus = ? WHERE userID = ?
+			`;
+
+			const params = [
+				newStatus,
+				userID
+			];
+
+			const result = await serv.dbUsers.run(query, params);
+
+			if (!result.changes)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found or request parameters are wrong'
+				}));
+			
+			return (reply.code(200).send({
+				success: true,
+				message: 'Activity status updated !'
+			}));
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
 			return reply.code(500).send({ message: 'Internal server error' });
