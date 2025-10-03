@@ -515,7 +515,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.post('/users/updateTotalMatch/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
-			const { newTotalMatch } = request.body as { newTotalMatch: any };
+			const { newWins } = request.body as { newTotalMatch: any };
 
 			if (typeof newTotalMatch !== 'number' && isNaN(parseInt(newTotalMatch, 10))) {
 				return reply.code(400).send({
@@ -556,6 +556,36 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.post('/users/updateWins/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
+			const { newWins } = request.body as { newWins: any };
+
+			if (typeof newWins !== 'number' && isNaN(parseInt(newWins, 10))) {
+				return reply.code(400).send({
+					success: false,
+					message: 'Validation error: totalWins must be a valid number.'
+				});
+			}
+			
+			const query = `
+				UPDATE userStats SET totalWins = ? WHERE userID = ?
+			`;
+
+			const params = [
+				newWins,
+				userID
+			];
+
+			const result = await serv.dbUsers.run(query, params);
+
+			if (!result.changes)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found or request parameters are wrong'
+				}));
+			
+			return (reply.code(200).send({
+				success: true,
+				message: 'Total wins updated !'
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
@@ -563,10 +593,55 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//update user's win streak with userID
-	serv.post('/users/updateWinStreak/:userID', async(request, reply) => {
+	//add one to user's win streak with userID
+	serv.post('/users/endWinStreak/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
+
+			const query = `
+				UPDATE userStats SET winStreak = winStreak + 1 WHERE userID = ?
+			`;
+
+			const result = await serv.dbUsers.run(query, userID);
+
+			if (!result.changes)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found or request parameters are wrong'
+				}));
+			
+			return (reply.code(200).send({
+				success: true,
+				message: 'Total wins updated !'
+			}));
+
+		} catch (error) {
+			serv.log.error(`Error fetching user profile: ${error}`);
+			return reply.code(500).send({ message: 'Internal server error' });
+		}
+	});
+
+	//set user's win streak to zero with userID
+	serv.post('/users/addWinStreak/:userID', async(request, reply) => {
+		try {
+			const { userID } = request.params as { userID: string };
+			
+			const query = `
+				UPDATE userStats SET winStreak = 0 WHERE userID = ?
+			`;
+
+			const result = await serv.dbUsers.run(query, userID);
+
+			if (!result.changes)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found or request parameters are wrong'
+				}));
+			
+			return (reply.code(200).send({
+				success: true,
+				message: 'Total wins updated !'
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
@@ -575,6 +650,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's average match duration with userID
+	//TODO: do I code average calculation logic here, or just worry about updating the value in the DB ?
 	serv.post('/users/updateAverageMatchDuration/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
@@ -589,6 +665,36 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.post('/users/updateHighestScore/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
+			const { newHighScore } = request.body as { newHighScore: any };
+
+			if (typeof newHighScore !== 'number' && isNaN(parseInt(newHighScore, 10))) {
+				return reply.code(400).send({
+					success: false,
+					message: 'Validation error: highestScore must be a valid number.'
+				});
+			}
+			
+			const query = `
+				UPDATE userStats SET highestScore = ? WHERE userID = ?
+			`;
+
+			const params = [
+				newHighScore,
+				userID
+			];
+
+			const result = await serv.dbUsers.run(query, params);
+
+			if (!result.changes)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found or request parameters are wrong'
+				}));
+			
+			return (reply.code(200).send({
+				success: true,
+				message: 'Highest score updated !'
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
