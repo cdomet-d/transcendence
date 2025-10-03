@@ -1,6 +1,5 @@
 
-GameManager >>>>    "pregame.request"   >>>>    Pong    >>>>    "pregame.pending"   >>>>    GameManager
-                                                Pong    >>>>    "pregame.declined"  >>>>    GameManager
+GameManager >>>>    "pregame.request"   >>>>    Pong    >>>>    "pregame.reply"   >>>>    GameManager
 
 Pong    >>>>    "postgame.over" >>>>    GameManager
 <!-- Pong    >>>>    "postgame.tournament.over" >>>>    GameManager -->

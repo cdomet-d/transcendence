@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { connect, StringCodec } from 'nats';
 import { wsSend } from '../lobby/wsHandler.js';
+import { tournamentState } from '../tournament/tournamentRoutine.js';
 
 export async function natsSubscribe() {
   let token = process.env.NATS_SERVER_TOKEN;
@@ -37,9 +38,9 @@ export async function natsSubscribe() {
       const sc = StringCodec();
       const payload = sc.decode(msg.data);
       console.log(`GM received in "game.over" : `, payload);
+      tournamentState(payload);
       // process endgame (continue tournament or not)
       // send updated matchObj to DB
-      // tournamentState(payload);
     }
   })();
 }
