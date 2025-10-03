@@ -133,17 +133,19 @@ averageMatchDuration will be in seconds.
 ### Usage and associated functions
 
 TODO :
+* Should I write a big funnction that updates of stats at once ?
+
 * userStats
     * ~~get user stats by userID~~
         
         ```curl http://localhost:2626/users/userStats/<userID>```
-    * update longest match
-    * update shorest match
-    * update total match
-    * update total wins
-    * update win streak 
+    * ~~update longest match~~
+    * ~~update shorest match~~
+    * ~~update total match~~
+    * ~~update total wins~~
+    * ~~update win streak~~ 
     * update average match duration
-    * update highest score
+    * ~~update highest score~~
 
 * userProfile
     * ~~get activity status by userID~~
