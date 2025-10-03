@@ -13,6 +13,20 @@ export interface messObj {
     _timeStamp: number,
 }
 
+export interface idsObj {
+    gameID: number,
+    userID: number
+}
+
+const idsObjSchema = {
+    type: 'object',
+    required: ['gameID', 'userID'],
+    properties: {
+        gameID: { type: 'number' },
+        userID: { type: 'number' },
+    }
+}
+
 const messObjSchema = {
     type: 'object',
     required: ['_keys', '_timeStamp'],
@@ -33,4 +47,7 @@ const messObjSchema = {
 };
 
 const ajv = new Ajv();
+
 export const validMess = ajv.compile(messObjSchema);
+
+export const validIds = ajv.compile(idsObjSchema);
