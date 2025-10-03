@@ -86,41 +86,34 @@ describe('wsHandler integration', () => {
                 findGame: jest.fn().mockReturnValue(mockGame)
             }
         };
-        jest.spyOn(validation, 'validIds').mockReturnValue(true);
+        // jest.spyOn(validation, 'validIds').mockReturnValue(true);
     });
 
     afterEach(() => {
         jest.restoreAllMocks();
     });
 
-    test('calls setUpGame for remote when players reach 2', () => {
-        mockSocket1.once.mockImplementation();
-        mockSocket2.once.mockImplementation();
+    test('calls setUpGame for remote when players reach 2', async () => {
         jest.spyOn(pong, 'setUpGame');
-        wsHandler.call(mockFastify, mockSocket1, mockReq);
-        wsHandler.call(mockFastify, mockSocket2, mockReq);
+        await wsHandler.call(mockFastify, mockSocket1, mockReq);
+        await wsHandler.call(mockFastify, mockSocket2, mockReq);
         expect(pong.setUpGame).toHaveBeenCalledWith(mockGame);
     });
 
-    test('calls setUpGame for local when players reach 2', () => {
+    test('calls setUpGame for local when players reach 2', async () => {
         mockGame.local = true;
-        mockSocket1.once.mockImplementation((event: string, handler: (data: any) => void) => {
-            handler(JSON.stringify({ gameID: 42, userID: 7 }));
-        });
         jest.spyOn(pong, 'setUpGame');
-        wsHandler.call(mockFastify, mockSocket1, mockReq);
+        await wsHandler.call(mockFastify, mockSocket1, mockReq);
         expect(pong.setUpGame).toHaveBeenCalledWith(mockGame);
     });
 
-    test('throws "game not found" if gameRegistry returns undefined', () => {
+    test('throws "game not found" if gameRegistry returns undefined', async () => {
         mockFastify.gameRegistry.findGame = jest.fn().mockReturnValue(undefined);
-        mockSocket1.once.mockImplementation();
-        expect(() => wsHandler.call(mockFastify, mockSocket1, mockReq)).toThrow('game 42 not found');
+        await expect(() => wsHandler.call(mockFastify, mockSocket1, mockReq)).rejects.toThrow('game 42 not found');
     });
 
-    test('throws "not allowed" if game already has 2 players', () => {
+    test('throws "not allowed" if game already has 2 players', async () => {
         mockGame.players = [{}, {}];
-        mockSocket1.once.mockImplementation();
-        expect(() => wsHandler.call(mockFastify, mockSocket1, mockReq)).toThrow('not allowed');
+        await expect(() => wsHandler.call(mockFastify, mockSocket1, mockReq)).rejects.toThrow('not allowed');
     });
 });
