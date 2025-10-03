@@ -515,7 +515,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.post('/users/updateTotalMatch/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
-			const { newWins } = request.body as { newTotalMatch: any };
+			const { newTotalMatch } = request.body as { newTotalMatch: any };
 
 			if (typeof newTotalMatch !== 'number' && isNaN(parseInt(newTotalMatch, 10))) {
 				return reply.code(400).send({
