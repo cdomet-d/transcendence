@@ -135,6 +135,8 @@ averageMatchDuration will be in seconds.
 TODO :
 * userStats
     * ~~get user stats by userID~~
+        
+        ```curl http://localhost:2626/users/userStats/<userID>```
     * update longest match
     * update shorest match
     * update total match
@@ -157,16 +159,21 @@ TODO :
             
             curl -X POST \
             -H "Content-Type: application/json" \
-            -d '{"newAvatar": "new_avatar_url.png"}' \
+            -d '{"newAvatar": "<new avatar>"}' \
             http://localhost:2626/users/updateAvatar/<userID>
     * updata bio
         
         ```
         curl -X POST \
         -H "Content-Type: application/json" \
-        -d '{"newBio": "new bio"}' \
+        -d '{"newBio": "<bio>>"}' \
         http://localhost:2626/users/updateBio/<userID>
     * update profileColor
+
+        ```
+        curl -X POST \  -H "Content-Type: application/json" \
+        -d '{"newProfileC": "<new color>"}' \    
+        http://localhost:2626/users/updateProfileColor/<userID> 
     * update activity status
 
         ```
@@ -174,17 +181,23 @@ TODO :
         curl -X POST \
         -H "Content-Type: application/json" \
         -d '{"newStatus": "<newStatus>"}' \
-        http://localhost:2626/users/updateActivityStatus/1
+        http://localhost:2626/users/updateActivityStatus/<userID>
         
         curl -X POST \
         -H "Content-Type: application/json" \
         -d '{"newStatus": <newStatus>}' \  
-        http://localhost:2626/users/updateActivityStatus/1
+        http://localhost:2626/users/updateActivityStatus/<userID>
     * update lastConnexion
-    * update username
+        
         ```
         curl -X POST \  -H "Content-Type: application/json" \
-        -d '{"newUsername": "ptitchat"}' \
+        -d '{"newConnection": "<DATETIME format YYYY-MM-DD HH:MM:SS>"}' \
+        http://localhost:2626/users/updateLastConnection/<userID>
+    * update username
+        
+        ```
+        curl -X POST \  -H "Content-Type: application/json" \
+        -d '{"newUsername": "<username>"}' \
         http://localhost:2626/users/updateUsername/<userID>
 ## Account
 

@@ -371,8 +371,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { userID } = request.params as { userID: string };
 			const { newUsername } = request.body as { newUsername: string };
 
-
-
 			const query = `
 				UPDATE userProfile SET username = ? WHERE userID = ?
 			`;
@@ -409,7 +407,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//USER STATS
 	//get all user's stats with userID
-	serv.get('/users/usersStats/:userID', async(request, reply) => {
+	serv.get('/users/userStats/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
 
@@ -430,10 +428,41 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	// TODO: Should we check the value of the current longuest match here or before calling the function altogether ? 
 	//update user's longuest match with userID
 	serv.post('/users/updateLonguestMatch/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
+			const { newLonguestMatch } = request.body as { newLonguestMatch: any };
+
+			if (typeof newLonguestMatch !== 'number' && isNaN(parseInt(newLonguestMatch, 10))) {
+				return reply.code(400).send({
+					success: false,
+					message: 'Validation error: newStatus must be a valid number.'
+				});
+			}
+			
+			const query = `
+				UPDATE userStats SET longestMatch = ? WHERE userID = ?
+			`;
+
+			const params = [
+				newLonguestMatch,
+				userID
+			];
+
+			const result = await serv.dbUsers.run(query, params);
+
+			if (!result.changes)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found or request parameters are wrong'
+				}));
+			
+			return (reply.code(200).send({
+				success: true,
+				message: 'Longuest match updated !'
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
