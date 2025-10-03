@@ -91,7 +91,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//get user's activity with userID
 	serv.get('/users/activity/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 
 			const query = `
 				SELECT activityStatus FROM userProfile WHERE userID = ?
@@ -121,13 +121,18 @@ export async function userRoutes(serv: FastifyInstance) {
 	//get user's lastConnextion with userID
 	serv.get('/users/lastConnection/:userID', async(request, reply) => {
 		try {
-			const userID = parseInt((request.params as { userID: string }).userID, 10);
+			const { userID } = request.params as { userID: number };
+			const newConnection = parseInt((request.params as { newConnection: string }).newConnection, 10);
 
 			const query = `
 				SELECT lastConnexion FROM userProfile WHERE userID = ?
 			`;
 			
-			const lastConnection = await serv.dbUsers.get<UserRowConnection>(query, [userID]);
+			const params = [
+				newConnection,
+				userID
+			];
+			const lastConnection = await serv.dbUsers.get<UserRowConnection>(query, params);
 		
 			if (!lastConnection)
 				return reply.code(404).send({
@@ -152,7 +157,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//update user's avatar with userID
 	serv.post('/users/updateAvatar/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			const { newAvatar } = request.params as { newAvatar: string };
 
 			if (typeof newAvatar !== 'string') {
@@ -197,7 +202,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//update user's bio with userID
 	serv.post('/users/updateBio/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			const { newBio } = request.params as { newBio: string };
 
 			const query = `
@@ -234,7 +239,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//update user's profile color with userID
 	serv.post('/users/updateProfileColor/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			const { newProfileColor } = request.params as { newProfileColor: string };
 
 			if (typeof newProfileColor !== 'string') {
@@ -275,7 +280,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//update user's activity with userID
 	serv.post('/users/updateActivityStatus/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			const { newStatus } = request.body as { newStatus: any };
 
 			const statusAsNumber = parseInt(newStatus, 10);
@@ -318,7 +323,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//update user's last connextion with userID
 	serv.post('/users/updateLastConnection/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			const { newConnection } = request.body as { newConnection: any };
 
 			const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
@@ -368,7 +373,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//update user's username with userID
 	serv.post('/users/updateUsername/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			const { newUsername } = request.body as { newUsername: string };
 
 			const query = `
@@ -428,11 +433,62 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	serv.post('/users/updateAllStats/:userID', async(request, reply) => {
+		try {
+			const { userID } = request.params as { userID: number };
+			const statsToUpdate = request.body as { [key: string]: number };
+
+			const validStatKeys = [
+				'longestMatch',
+				'shorestMatch',
+				'totalMatch',
+				'totalWins',
+				'winStreak',
+				'averageMatchDuration',
+				'highestScore'
+			];
+
+			const keysToUpdate = Object.keys(statsToUpdate).filter(key => validStatKeys.includes(key));
+
+			if (keysToUpdate.length === 0) {
+				return (reply.code(400).send({
+					success: false,
+					message: 'No valid stat fields provided for update.'
+				}));
+			}
+
+			const setClauses = keysToUpdate.map(key => `${key} = ?`).join(', ');
+			const params = keysToUpdate.map(key => statsToUpdate[key]);
+			params.push(userID);
+
+			const query = `
+				UPDATE userStats SET ${setClauses} WHERE userID = ?
+			`;
+
+			const result = await serv.dbUsers.run(query, params);
+
+			if (result.changes === 0) {
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found'
+				}));
+			}
+
+			return (reply.code(200).send({
+				success: true,
+				message: 'User stats updated successfully!'
+			}));
+		} catch (error) {
+			serv.log.error(`Error fetching user profile: ${error}`);
+			return (reply.code(500).send({ message: 'Internal server error' }));
+		}
+	});
+
 	// TODO: Should we check the value of the current longuest match here or before calling the function altogether ? 
 	//update user's longuest match with userID
 	serv.post('/users/updateLonguestMatch/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			const { newLonguestMatch } = request.body as { newLonguestMatch: any };
 
 			if (typeof newLonguestMatch !== 'number' && isNaN(parseInt(newLonguestMatch, 10))) {
@@ -473,7 +529,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//update user's shortest match with userID
 	serv.post('/users/updateShortestMatch/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			const { newShortestMatch } = request.body as { newShortestMatch: any };
 
 			if (typeof newShortestMatch !== 'number' && isNaN(parseInt(newShortestMatch, 10))) {
@@ -514,7 +570,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//update user's total match with userID
 	serv.post('/users/updateTotalMatch/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			const { newTotalMatch } = request.body as { newTotalMatch: any };
 
 			if (typeof newTotalMatch !== 'number' && isNaN(parseInt(newTotalMatch, 10))) {
@@ -555,7 +611,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//update user's total wins with userID
 	serv.post('/users/updateWins/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			const { newWins } = request.body as { newWins: any };
 
 			if (typeof newWins !== 'number' && isNaN(parseInt(newWins, 10))) {
@@ -596,7 +652,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//add one to user's win streak with userID
 	serv.post('/users/endWinStreak/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 
 			const query = `
 				UPDATE userStats SET winStreak = winStreak + 1 WHERE userID = ?
@@ -624,7 +680,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//set user's win streak to zero with userID
 	serv.post('/users/addWinStreak/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			
 			const query = `
 				UPDATE userStats SET winStreak = 0 WHERE userID = ?
@@ -653,7 +709,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//TODO: do I code average calculation logic here, or just worry about updating the value in the DB ?
 	serv.post('/users/updateAverageMatchDuration/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			const { newDuration } = request.body as { newDuration: any };
 
 			if (typeof newDuration !== 'number' && isNaN(parseInt(newDuration, 10))) {
@@ -694,7 +750,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//update user's highest score with userID
 	serv.post('/users/updateHighestScore/:userID', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			const { newHighScore } = request.body as { newHighScore: any };
 
 			if (typeof newHighScore !== 'number' && isNaN(parseInt(newHighScore, 10))) {
