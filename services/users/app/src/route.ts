@@ -320,31 +320,45 @@ export async function userRoutes(serv: FastifyInstance) {
 		try {
 			const { userID } = request.params as { userID: string };
 			const { newConnection } = request.body as { newConnection: any };
+			console.log('0');
+
+			const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+			if (typeof newConnection !== 'string' || !dateTimeRegex.test(newConnection)) {
+				return reply.code(400).send({
+					success: false,
+					message: 'Validation error: newConnection must be in YYYY-MM-DD HH:MM:SS format.'
+				});
+			}			
 
 			const date = new Date(newConnection);
 			if (isNaN(date.getTime())) {
 				return reply.code(400).send({
 					success: false,
-					message: 'Validation error: newConnection must be a valid DATETIME string.'
+					message: 'Validation error: The provided date is not a valid calendar date.'
 				});
 			}
+
+			console.log('1');
 
 			const query = `
 				UPDATE userProfile SET lastConnection = ? WHERE userID = ?
 			`;
 
+			console.log('1.5');
 			const params = [
-				newConnection,
+				date.toISOString(),
 				userID
 			];
 
 			const result = await serv.dbUsers.run(query, params);
+			console.log('2');
 
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found or request parameters are wrong'
 				}));
+			console.log('3');
 			
 			return (reply.code(200).send({
 				success: true,

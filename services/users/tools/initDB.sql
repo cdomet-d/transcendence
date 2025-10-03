@@ -1,11 +1,11 @@
 CREATE TABLE userProfile (
-  userID INTEGER PRIMARY AUTOINCREMENT KEY NOT NULL,
+  userID INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,
   username TEXT UNIQUE,
   avatar TEXT,
   bio TEXT,
   profileColor TEXT,
   activityStatus INTEGER,
-  lastConnexion DATETIME
+  lastConnection DATETIME
 );
 
 CREATE TABLE userStats (
