@@ -11,7 +11,6 @@ export class fileUpload extends HTMLInputElement {
     this.classList.add(
       "brdr",
       "relative",
-      "input-emphasis",
       "file:absolute",
       "file:top-[12%]",
       "file:left-[0.5rem]",
@@ -33,7 +32,7 @@ export class textInput extends HTMLInputElement {
   }
 
   render() {
-    this.classList.add("brdr", "input-emphasis");
+    this.classList.add("brdr");
   }
 }
 

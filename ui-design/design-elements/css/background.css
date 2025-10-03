@@ -72,10 +72,20 @@
 			#e3a300 0 100%);
 }
 
-.tab[selected].yellow-bg {
-	background: #ffdc99;
+.selected-yellow-bg {
+	background: linear-gradient(180deg,
+			#ffdc99 0 10%,
+			#ffe0a5 0 20%,
+			#ffe4b0 0 30%,
+			#ffe8bb 0 40%,
+			#ffecc6 0 50%,
+			#ffecc6 0 60%,
+			#ffe8bb 0 70%,
+			#ffe4b0 0 80%,
+			#ffe0a5 0 90%,
+			#ffdc99 0 100%);
 	border: none;
-	border-top: 2px solid var(--shadow-yellow);
+	border-top: 2px solid var(--border);
 }
 
 .red-bg {
