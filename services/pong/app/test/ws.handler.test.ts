@@ -1,92 +1,102 @@
 import * as pong from '../src/game/pong';
 import {describe, expect, test, beforeEach, jest} from '@jest/globals';
-import { wshandler } from '../src/game/ws.handler';
+import { wsHandler } from '../src/game/ws.handler';
 
-describe('wshandler', () => {
-	let mockFastify: any;
-	let mockSocket1: any;
-	let mockSocket2: any;
-	let mockReq: any;
-	let mockGame: any;
+describe('wsHandler', () => {
+    let mockFastify: any;
+    let mockSocket1: any;
+    let mockSocket2: any;
+    let mockReq: any;
+    let mockGame: any;
+	let ids: any;
 
-	beforeEach(() => {
-		mockSocket1 = {
-			on: jest.fn()
-		};
-		mockSocket2 = {
-			on: jest.fn()
-		};
-		mockReq = {
-			cookies: {
-				gameid: '42',
-				userid: '7'
-			}
-		};
-		mockGame = {
-			players: [],
-			gameID: 42,
-			local: false,
-			addPlayer: jest.fn(function(this: typeof mockGame, player) {
-				this.players.push(player);
-			}),
-			deletePlayers: jest.fn(),
-			randUserID: 99
-		};
-		mockFastify = {
-			log: { info: jest.fn() },
-			gameRegistry: {
-				findGame: jest.fn().mockReturnValue(mockGame)
-			}
-		};
-	});
+    beforeEach(() => {
+		ids = { gameid: 42, userid: 7 };
+        mockSocket1 = {
+            on: jest.fn(),
+            once: jest.fn((event: string, handler: (data: any) => void) => {
+                if (event === 'message') {
+                    handler(JSON.stringify(ids));
+                }
+            })
+        };
+        mockSocket2 = {
+            on: jest.fn(),
+            once: jest.fn((event: string, handler: (data: any) => void) => {
+                if (event === 'message') {
+                    handler(JSON.stringify(ids));
+                }
+            }),
+			send: jest.fn(),
+        };
+        mockReq = {};
+        mockGame = {
+            players: [],
+            gameID: 42,
+            local: false,
+            addPlayer: jest.fn(function(this: typeof mockGame, player) {
+                this.players.push(player);
+            }),
+            deletePlayers: jest.fn(),
+            randUserID: 99
+        };
+        mockFastify = {
+            log: { info: jest.fn() },
+            gameRegistry: {
+                findGame: jest.fn().mockReturnValue(mockGame)
+            }
+        };
+    });
 
-	test('logs connection and adds player', () => {
-		wshandler.call(mockFastify, mockSocket1, mockReq);
-		expect(mockFastify.log.info).toHaveBeenCalledWith('WebSocket connection established');
-		expect(mockGame.addPlayer).toHaveBeenCalled();
-		expect(mockGame.players.length).toBe(1);
-		// expect(mockSocket.on).toHaveBeenCalledWith('close', expect.any(Function));
-	});
+    test('logs connection and adds player', () => {
+        wsHandler.call(mockFastify, mockSocket1, mockReq);
+        expect(mockFastify.log.info).toHaveBeenCalledWith('WebSocket connection established');
+        expect(mockSocket1.once).toHaveBeenCalledWith('message', expect.any(Function));
+        expect(mockGame.addPlayer).toHaveBeenCalled();
+        expect(mockGame.players.length).toBe(1);
+        // expect(mockSocket1.on).toHaveBeenCalledWith('close', expect.any(Function));
+    });
 
-	// test('throws if userID or gameID is NaN', () => {
-	// 	mockReq.cookies.gameid = 'notanumber';
-	// 	expect(() =>
-	// 		wshandler.call(mockFastify, mockSocket1, mockReq)
-	// 	).toThrow('wrong ID');
-	// });
-
-	test('throws if game not found', () => {
-		mockFastify.gameRegistry.findGame = jest.fn().mockReturnValue(undefined);
+	test('throws if userID or gameID is NaN', () => {
+		ids = {gameid: 'notanumber', userid: 'nan'};
 		expect(() =>
-			wshandler.call(mockFastify, mockSocket1, mockReq)
-		).toThrow('game not found');
+			wsHandler.call(mockFastify, mockSocket1, mockReq)
+		).toThrow('wrong ID');
 	});
 
-	test('throws if game already has 2 players', () => {
-		mockGame.players = [{}, {}];
-		expect(() =>
-			wshandler.call(mockFastify, mockSocket1, mockReq)
-		).toThrow('not allowed');
-	});
+    test('throws if game not found', () => {
+        mockFastify.gameRegistry.findGame = jest.fn().mockReturnValue(undefined);
+        expect(() =>
+            wsHandler.call(mockFastify, mockSocket1, mockReq)
+        ).toThrow('game not found');
+    });
 
-	test('adds local player if game.local is true', () => {
-		mockGame.local = true;
-		wshandler.call(mockFastify, mockSocket1, mockReq);
-		expect(mockGame.addPlayer).toHaveBeenCalledTimes(2);
-		expect(mockGame.players.length).toBe(2);
-	});
+    test('throws if game already has 2 players', () => {
+        mockGame.players = [{}, {}];
+        expect(() =>
+            wsHandler.call(mockFastify, mockSocket1, mockReq)
+        ).toThrow('not allowed');
+    });
 
-	test('calls setUpGame if players reach 2 when local', () => {
-		mockGame.local = true;
-		jest.spyOn(pong, 'setUpGame');
-		wshandler.call(mockFastify, mockSocket1, mockReq);
-		expect(pong.setUpGame).toHaveBeenCalledWith(mockGame);
-	});
+    test('adds local player if game.local is true', () => {
+        mockGame.local = true;
+        wsHandler.call(mockFastify, mockSocket1, mockReq);
+        expect(mockSocket1.once).toHaveBeenCalledWith('message', expect.any(Function));
+        expect(mockGame.addPlayer).toHaveBeenCalledTimes(2);
+        expect(mockGame.players.length).toBe(2);
+    });
 
-	test('calls setUpGame if players reach 2 when remote', () => {
-		jest.spyOn(pong, 'setUpGame');
-		wshandler.call(mockFastify, mockSocket1, mockReq);
-		wshandler.call(mockFastify, mockSocket2, mockReq);
-		expect(pong.setUpGame).toHaveBeenCalledWith(mockGame);
-	});
+    test('calls setUpGame if players reach 2 when local', () => {
+        mockGame.local = true;
+        jest.spyOn(pong, 'setUpGame');
+        wsHandler.call(mockFastify, mockSocket1, mockReq);
+        expect(pong.setUpGame).toHaveBeenCalledWith(mockGame);
+    });
+
+    test('calls setUpGame if players reach 2 when remote', () => {
+        jest.spyOn(pong, 'setUpGame');
+        wsHandler.call(mockFastify, mockSocket1, mockReq);
+        wsHandler.call(mockFastify, mockSocket2, mockReq);
+        expect(pong.setUpGame).toHaveBeenCalledWith(mockGame);
+    });
 });
