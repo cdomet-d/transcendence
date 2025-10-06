@@ -1,15 +1,17 @@
-import { Game, type keysObj} from './game.class.js'
+import { Game, type keysObj, type paddleObj, type ballObj} from './game.class.js'
 
 interface repObj {
-	leftPadY: number,
-	rightPadY: number,
+	leftPad: paddleObj,
+	rightPad: paddleObj,
+	ball: ballObj,
 }
 
 export function addMessEvent(game: Game, ws: WebSocket) {
 	ws.onmessage = (event) => {
 		const mess: repObj = JSON.parse(event.data);
-		game.leftPad.y = mess.leftPadY;
-		game.rightPad.y = mess.rightPadY;
+		game.leftPad = mess.leftPad.y;
+		game.rightPad = mess.rightPad.y;
+		game.ball = mess.ball;
 	};
 }
 
