@@ -1,71 +1,78 @@
+export const HEIGHT = 270;
+export const WIDTH = 480;
+
 export interface keysObj {
-    _w: boolean,
-    _s: boolean,
-    _ArrowUp: boolean,
-    _ArrowDown: boolean,
+	_w: boolean,
+	_s: boolean,
+	_ArrowUp: boolean,
+	_ArrowDown: boolean,
 }
 
 export interface messObj {
-    _keys: keysObj,
-    _timeStamp: number,
+	_keys: keysObj,
+	_timeStamp: number,
 }
 
-export interface paddle {
+export interface paddleObj {
+	x: number;
+	y: number;
+}
+
+export interface ballObj {
 	x: number;
 	y: number;
 }
 
 export class Game {
-    /*                             PROPERTIES                                */
-    #_ctx: CanvasRenderingContext2D;
-    #_height: number;
-    #_width: number;
-    #_leftPaddle: paddle;
-    #_rightPaddle: paddle;
-    #_mess: messObj;
+	/*                             PROPERTIES                                */
+	#_ctx: CanvasRenderingContext2D;
+	#_leftPaddle: paddleObj;
+	#_rightPaddle: paddleObj;
+	#_ball: ballObj;
+	#_mess: messObj;
 
-    /*                            CONSTRUCTORS                               */
-    constructor(ctx: CanvasRenderingContext2D) {
-        this.#_ctx = ctx;
-        this.#_height = 270;
-        this.#_width = 480;
-        this.#_leftPaddle = {x: 10, y: 108}; //TODO: put operation
-        this.#_rightPaddle = {x: 460, y: 108};
-        let keys: keysObj = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
-        this.#_mess = { _keys: keys, _timeStamp: 0 };
-    }
+	/*                            CONSTRUCTORS                               */
+	constructor(ctx: CanvasRenderingContext2D) {
+		this.#_ctx = ctx;
+		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2};
+		this.#_leftPaddle = {x: 10, y: 108}; //TODO: put operation
+		this.#_rightPaddle = {x: 460, y: 108};
+		let keys: keysObj = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
+		this.#_mess = { _keys: keys, _timeStamp: 0 };
+	}
 
-    /*                              GETTERS                                  */
-    get leftPad(): paddle {
-        return this.#_leftPaddle;
-    }
+	/*                              GETTERS                                  */
+	get ball(): ballObj {
+		return this.#_ball;
+	}
 
-    get rightPad(): paddle {
-        return this.#_rightPaddle;
-    }
+	get leftPad(): paddleObj {
+		return this.#_leftPaddle;
+	}
 
-    get mess(): messObj {
-        return this.#_mess;
-    }
+	get rightPad(): paddleObj {
+		return this.#_rightPaddle;
+	}
 
-    get height(): number {
-        return this.#_height;
-    }
+	get mess(): messObj {
+		return this.#_mess;
+	}
 
-    get width(): number {
-        return this.#_width;
-    }
+	get ctx(): CanvasRenderingContext2D {
+		return this.#_ctx;
+	}
 
-    get ctx(): CanvasRenderingContext2D {
-        return this.#_ctx;
-    }
+	/*                              SETTERS                                  */
+	set leftPad(newPos: number) {
+		this.#_leftPaddle.y = newPos;
+	}
 
-    /*                              SETTERS                                  */
-    set leftPad(newPos: number) {
-        this.#_leftPaddle.y = newPos;
-    }
+	set rightPad(newPos: number) {
+		this.#_rightPaddle.y = newPos;
+	}
 
-    set rightPad(newPos: number) {
-        this.#_rightPaddle.y = newPos;
-    }
+	set ball(ball: ballObj) {
+		this.#_ball.x = ball.x;
+		this.#_ball.y = ball.y;
+	}
 }
