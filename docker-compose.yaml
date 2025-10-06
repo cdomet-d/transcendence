@@ -5,91 +5,91 @@ networks:
 
 secrets:
   ssl-cert.pem:
-    file: ${TSECRETS}/ssl-cert.pem
+    file: .secrets/ssl-cert.pem
   ssl-key.pem:
-    file: ${TSECRETS}/ssl-key.pem
+    file: .secrets/ssl-key.pem
 
 services:
-  accessibility:
-    build:
-      context: ./services/accessibility
-      dockerfile: Dockerfile
-    container_name: accessibility
-    image: accessibility:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/accessibility/app:/usr/app
-  account:
-    build:
-      context: ./services/account
-      dockerfile: Dockerfile
-    container_name: account
-    image: account:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/account/app:/usr/app
-  auth:
-    build:
-      context: ./services/auth
-      dockerfile: Dockerfile
-    container_name: auth
-    image: auth:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/auth/app:/usr/app
-  dashboard:
-    build:
-      context: ./services/dashboards
-      dockerfile: Dockerfile
-    container_name: dashboard
-    image: dashboard:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/dashboards/app:/usr/app
-  friends:
-    build:
-      context: ./services/friends
-      dockerfile: Dockerfile
-    container_name: friends
-    image: friends:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/friends/app:/usr/app
+  # accessibility:
+  #   build:
+  #     context: ./services/accessibility
+  #     dockerfile: Dockerfile
+  #   container_name: accessibility
+  #   image: accessibility:0.0.1
+  #   networks:
+  #     - transcendence
+  #   restart: unless-stopped
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/accessibility/app:/usr/app
+  # account:
+  #   build:
+  #     context: ./services/account
+  #     dockerfile: Dockerfile
+  #   container_name: account
+  #   image: account:0.0.1
+  #   networks:
+  #     - transcendence
+  #   restart: unless-stopped
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/account/app:/usr/app
+  # auth:
+  #   build:
+  #     context: ./services/auth
+  #     dockerfile: Dockerfile
+  #   container_name: auth
+  #   image: auth:0.0.1
+  #   networks:
+  #     - transcendence
+  #   restart: unless-stopped
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/auth/app:/usr/app
+  # dashboard:
+  #   build:
+  #     context: ./services/dashboards
+  #     dockerfile: Dockerfile
+  #   container_name: dashboard
+  #   image: dashboard:0.0.1
+  #   networks:
+  #     - transcendence
+  #   restart: unless-stopped
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/dashboards/app:/usr/app
+  # friends:
+  #   build:
+  #     context: ./services/friends
+  #     dockerfile: Dockerfile
+  #   container_name: friends
+  #   image: friends:0.0.1
+  #   networks:
+  #     - transcendence
+  #   restart: unless-stopped
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/friends/app:/usr/app
   frontend:
     build:
       context: ./services/frontend
