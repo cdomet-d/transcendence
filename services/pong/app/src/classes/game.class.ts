@@ -1,5 +1,8 @@
 import type { Player } from './player.class.js';
 
+export const HEIGHT = 270;
+export const WIDTH = 480;
+
 export interface user {
 	_username: string,
 	_userID: number,

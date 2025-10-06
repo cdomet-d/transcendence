@@ -1,8 +1,7 @@
 import type { paddleObj, Player } from '../classes/player.class.js';
 import type { keysObj } from './mess.validation.js';
+import { HEIGHT } from '../classes/game.class.js'
 
-const WIDTH = 480;
-const HEIGHT = 270;
 const padSpeed: number = 0.2;
 
 export function updatePaddlePos(player: Player, keys: keysObj, delta: number) {
