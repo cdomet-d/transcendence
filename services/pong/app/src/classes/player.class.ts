@@ -1,4 +1,10 @@
 import type { WebSocket } from '@fastify/websocket';
+import { HEIGHT, WIDTH } from './game.class.js';
+
+export interface ballObj {
+	x: number,
+	y: number
+}
 
 export interface paddleObj {
     x: number;
@@ -6,13 +12,15 @@ export interface paddleObj {
 }
 
 export interface repObj {
-	leftPadY: number,
-	rightPadY: number,
+	leftPad: paddleObj,
+	rightPad: paddleObj,
+	ball: ballObj,
 }
 
 export class Player {
     /*                             PROPERTIES                                */
     #_userID: number;
+	#_ball: ballObj;
     #_paddle: paddleObj;
     #_side: string;
     #_socket: WebSocket;
@@ -22,7 +30,8 @@ export class Player {
     constructor(userID: number, socket: WebSocket, random: boolean) {
         this.#_userID = userID;
         this.#_socket = socket;
-        this.#_rep = {leftPadY: 108, rightPadY: 108};
+		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2};
+        this.#_rep = {leftPad: {x: 10, y: 108}, rightPad: {x: 460, y: 108}, ball: {x: WIDTH / 2, y: HEIGHT / 2}};
         if (random) {
             this.#_paddle = {x: 460, y: 108};
             this.#_side = "right";
@@ -58,11 +67,20 @@ export class Player {
         return false;
     }
     
+	get ball(): ballObj {
+        return this.#_ball;
+    }
+
     /*                              METHODS                                  */
-    public setMess(side: string, newPos: number) {
+    public setMessPad(side: string, newPos: number) {
         if (side === "left")
-            this.#_rep.leftPadY = newPos;
+            this.#_rep.leftPad.y = newPos;
         else
-            this.#_rep.rightPadY = newPos;
+            this.#_rep.rightPad.y = newPos;
+    }
+
+    public setMessBall() {
+        this.#_rep.ball.x = this.#_ball.x;
+        this.#_rep.ball.y = this.#_ball.y;
     }
 }
