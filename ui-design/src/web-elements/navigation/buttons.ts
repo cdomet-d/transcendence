@@ -1,51 +1,57 @@
-export class menuButton extends HTMLButtonElement {
-  static get observedAttributes() {
-    return ["disabled"];
-  }
-  constructor() {
-    super();
-  }
 
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    if (oldValue === newValue) return;
-    if (name === "disabled")
-      if (this.disabled) {
-        this.classList.add("disabled", "clear-bg");
-        this.classList.remove("yellow-bg");
-      } else {
-        this.classList.remove("disabled", "clear-bg");
-        this.classList.add("yellow-bg");
-      }
-  }
-  connectedCallback() {
-    this.render();
-  }
-  set content(val: string) {
-    this.textContent = val;
-  }
 
-  render() {
-    this.classList.add(
-      "w-[100%]",
-      "h-[90%]",
-      "brdr",
-      "input-emphasis",
-      "overflow-hidden",
-      "outline-hidden",
-      "border-box",
-      "flex",
-      "justify-center",
-      "items-center"
-    );
-    if (this.disabled) {
-      this.classList.add("disabled", "clear-bg");
-    } else {
-      this.classList.add("yellow-bg");
+/**
+ * Custom menu button element extending HTMLButtonElement.
+ * Updates styles dynamically based on the "disabled" attribute.
+ *
+ * Observed attribute: "disabled"
+ *
+ * @property content - Setter to update the button's text content.
+ *
+ * @example
+ * const btn = document.createElement("button", { is: "menu-button" }) as menuBtn;
+ * btn.content = "Click me";
+ * btn.disabled = true;
+ * document.body.appendChild(btn);
+ */
+export class menuBtn extends HTMLButtonElement {
+    static get observedAttributes() {
+        return ['disabled'];
     }
-  }
+    constructor() {
+        super();
+    }
+
+    attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+        if (oldValue === newValue) return;
+        if (name === 'disabled')
+            if (this.disabled) {
+                this.classList.add('disabled', 'clear-bg');
+                this.classList.remove('yellow-bg');
+            } else {
+                this.classList.remove('disabled', 'clear-bg');
+                this.classList.add('yellow-bg');
+            }
+    }
+    connectedCallback() {
+        this.render();
+    }
+    set content(val: string) {
+        this.textContent = val;
+    }
+
+    render() {
+        this.className =
+            'w-[100%] h-[90%] brdr input-emphasis overflow-hidden outline-hidden border-box flex justify-center items-center';
+        if (this.disabled) {
+            this.classList.add('disabled', 'clear-bg');
+        } else {
+            this.classList.add('yellow-bg');
+        }
+    }
 }
 
-customElements.define("menu-button", menuButton, { extends: "button" });
+customElements.define('menu-button', menuBtn, { extends: 'button' });
 
 /**
  * Custom tab button element extending HTMLButtonElement.
@@ -61,60 +67,47 @@ customElements.define("menu-button", menuButton, { extends: "button" });
  * tab.setAttribute("selected", "");
  * document.body.appendChild(tab);
  */
-export class tab extends HTMLButtonElement {
-  static get observedAttributes() {
-    return ["selected"];
-  }
-  constructor() {
-    super();
-  }
-
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    if (oldValue === newValue) return;
-    if (name === "selected")
-      if (this.hasAttribute("selected")) {
-        this.classList.remove("yellow-bg", "brdr", "z-2");
-        this.classList.add("z-1");
-      } else {
-        this.classList.remove("z-1");
-        this.classList.add("yellow-bg", "brdr", "z-2");
-      }
-  }
-  connectedCallback() {
-    this.render();
-  }
-
-  set content(val: string) {
-    this.textContent = val;
-  }
-
-  render() {
-    this.classList.add(
-      "tab",
-      "z-2",
-      "w-[100%]",
-      "h-[100%]",
-      "thin",
-      "brdr",
-      "overflow-hidden",
-      "outline-hidden",
-      "border-box",
-      "flex",
-      "justify-center",
-      "items-center",
-      "hover:transform-none"
-    );
-    if (this.hasAttribute("selected")) {
-      this.classList.remove("yellow-bg", "brdr", "z-2");
-      this.classList.add("z-1");
-    } else {
-      this.classList.remove("z-1");
-      this.classList.add("yellow-bg", "brdr", "z-2");
+export class tabBtn extends HTMLButtonElement {
+    static get observedAttributes() {
+        return ['selected'];
     }
-  }
+    constructor() {
+        super();
+    }
+
+    attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+        if (oldValue === newValue) return;
+        if (name === 'selected')
+            if (this.hasAttribute('selected')) {
+                this.classList.remove('yellow-bg', 'brdr', 'z-2');
+                this.classList.add('z-1');
+            } else {
+                this.classList.remove('z-1');
+                this.classList.add('yellow-bg', 'brdr', 'z-2');
+            }
+    }
+    connectedCallback() {
+        this.render();
+    }
+
+    set content(val: string) {
+        this.textContent = val;
+    }
+
+    render() {
+        this.className =
+            'tab z-2 w-[100%] h-[100%] thin brdr overflow-hidden outline-hidden border-box flex justify-center items-center hover:transform-none';
+        if (this.hasAttribute('selected')) {
+            this.classList.remove('yellow-bg', 'brdr', 'z-2');
+            this.classList.add('z-1');
+        } else {
+            this.classList.remove('z-1');
+            this.classList.add('yellow-bg', 'brdr', 'z-2');
+        }
+    }
 }
 
-customElements.define("tab-button", tab, { extends: "button" });
+customElements.define('tab-button', tabBtn, { extends: 'button' });
 
 /**
  * Custom tab group extending HTMLDivElement.
@@ -129,112 +122,19 @@ customElements.define("tab-button", tab, { extends: "button" });
  * document.body.appendChild(tabGroup);
  */
 export class tabGroup extends HTMLDivElement {
-  constructor() {
-    super();
-  }
-
-  connectedCallback() {
-    this.render();
-  }
-
-  render() {
-    this.className =
-      "tab-group w-[100%] h-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center";
-  }
-}
-
-customElements.define("tab-group", tabGroup, { extends: "div" });
-
-/**
- * Creates a tab panel extending HTMLDivElement.
- *
- * @property content - Setter to update the container's text content.
- *
- * @example
- * const tabs: Tab[] = [
- *   { data: "home", content: "Home" },
- *   { data: "profile", content: "Profile" },
- * ];
- * const tabGroup = document.createElement("div", { is: "tab-group" }) as tabGroup;
- * document.body.appendChild(tabGroup);
- */
-export class tabPanel extends HTMLDivElement {
-  static get observedAttributes() {
-    return ["selected"];
-  }
-  constructor() {
-    super();
-  }
-
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    if (oldValue === newValue) return;
-    if (name === "selected") {
-      if (this.hasAttribute("selected")) {
-        this.classList.remove("hidden");
-        this.classList.add("block");
-      } else {
-        this.classList.remove("block");
-        this.classList.add("hidden");
-      }
+    constructor() {
+        super();
     }
-  }
-  connectedCallback() {
-    this.render();
-  }
 
-  render() {
-    this.className = "panel border-box overflow-scroll h-[100%] w-1";
-    if (this.hasAttribute("selected")) {
-      this.classList.add("block");
-    } else {
-      this.classList.add("hidden");
+    connectedCallback() {
+        this.render();
     }
-  }
+
+    render() {
+        this.className =
+            'tab-group w-[100%] h-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center';
+    }
 }
 
-customElements.define("tab-panel", tabPanel, { extends: "div" });
+customElements.define('tab-group', tabGroup, { extends: 'div' });
 
-export class tabWrapper extends HTMLDivElement {
-  constructor() {
-    super();
-  }
-
-  connectedCallback() {
-    this.render();
-
-    this.attachEvent();
-  }
-
-  render() {
-    this.className =
-      "clear-bg brdr w-[100%] overflow-hidden grid items-stretch grid-flow-row grid-cols-[1fr] grid-rows-[var(--s)_1fr]";
-  }
-
-  attachEvent() {
-    this.addEventListener("click", (event: MouseEvent) => {
-      const target = event.target as Element | null;
-
-      if (target) {
-        const tab: Element | null = target.closest(".tab");
-        if (tab && this.contains(tab)) this.animateTab(tab);
-      }
-    });
-  }
-
-  animateTab(tab: Element) {
-    const tabs = this.querySelectorAll(".tab");
-    const panels = this.querySelectorAll(".panel");
-
-    tabs.forEach((t) => t.removeAttribute("selected"));
-    panels.forEach((p) => p.removeAttribute("selected"));
-    tab.setAttribute("selected", "");
-
-    const clickedTab = tab.getAttribute("data-tab");
-    const activeTab = this.querySelector(
-      `.panel[data-content="${clickedTab}"]`
-    );
-    activeTab?.setAttribute("selected", "");
-  }
-}
-
-customElements.define("tab-wrapper", tabWrapper, { extends: "div" });

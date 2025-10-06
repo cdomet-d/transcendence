@@ -3,13 +3,13 @@ import * as typography from "./web-element-helpers/typography/typo-helper-module
 import * as formBtns from "./web-element-helpers/inputs/buttons-helper-modules.js";
 import * as nav from "./web-element-helpers/navigation/nav-helper-modules.js";
 
-import type { Tab } from "./web-element-helpers/navigation/nav-helper-modules.js";
+import type { Tab } from "./web-elements/navigation/tabs.js";
 import type { InputField } from "./web-element-helpers/inputs/fields-helper-modules.js";
 
 const tabs: Array<Tab> = [
-  { data: "history", content: "Game history", default: true },
-  { data: "stats", content: "Statistics", default: false },
-  { data: "friends", content: "Friends", default: false },
+  { id: "history", content: "Game history", default: true },
+  { id: "stats", content: "Statistics", default: false },
+  { id: "friends", content: "Friends", default: false },
 ];
 
 const fieldData: InputField = {
