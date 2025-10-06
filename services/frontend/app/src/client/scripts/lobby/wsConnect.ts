@@ -41,9 +41,13 @@ function wsConnect() {
     ws.onopen = () => {
         console.log("WebSocket connection established!")
         ws.onmessage = (message: any) => {
-            // console.log("message from server:", message.data);
-            console.log("Client is ready to connect to Pong game");
-            if (message.data === "game.ready") {
+            console.log("Client received WS message!");
+            
+            const gameRequest = JSON.parse(message.data);
+            if (gameRequest.event === "game.ready") {
+                const matchID: number = gameRequest.matchID;
+                console.log("client ready to connect game #", matchID);
+                // connect PONG url with specific matchID
                 ws.close();
             }
         }

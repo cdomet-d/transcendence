@@ -1,6 +1,6 @@
-import { match } from "assert";
 import { tournamentMap } from "./tournamentStart.js";
 import { Mutex } from 'async-mutex';
+import { startMatch } from "./tournamentStart.js";
 
 interface userInfo {
     userID?: number,
@@ -40,6 +40,7 @@ export async function tournamentState(payload: string) {
     const mutex = getTournamentMutex(tournamentID);
     const release = await mutex.acquire(tournamentID);
 
+    // TODO: Throw new Error inside try block
     try {
         const tournamentObj = tournamentMap.get(previousMatch.tournamentID);
         if (!tournamentObj) {
@@ -48,22 +49,28 @@ export async function tournamentState(payload: string) {
         }
 
         // find match object in bracket
-        const index = tournamentObj.bracket.findIndex(match => match.matchID === previousMatch.matchID);
+        const index = tournamentObj.bracket.findIndex((match) => match.matchID === previousMatch.matchID);
         if (index !== -1) {
             // update previousMatch info
             tournamentObj.bracket[index] = previousMatch;
         } else {
-            // TODO: handle error match not found in bracket
+            console.log("Match not found in tournament bracket qué?");
+            return;
         }
 
         // send full matchObj to DB??
 
+        // get next matchObj
         const nextMatch = getNextMatchInBracket(tournamentObj);
         if (nextMatch === undefined) { // Means previousMatch was the tournament final
             // handle end of tournament
+                // winner screen
+                // loser screen
+                // tournament over menu 
             return;
         }
 
+        // set up nextMatch
         const nextPlayer: string = getUsernameFromID(previousMatch.winnerID, previousMatch);
         if (nextMatch?.users === null) { // assign winnerID to player1 of next match
             nextMatch.users = [
@@ -73,14 +80,14 @@ export async function tournamentState(payload: string) {
         } else if (nextMatch?.users && nextMatch?.users[1] === null) { // assign winnerID to player2 of next match
             nextMatch.users[1] = { userID: previousMatch.winnerID, username: nextPlayer };
         }
+
+        // start next match
+        startMatch(nextMatch);
     } finally {
         release();
     }
-
     // waiting screen for winner
     // back to menu for loser
-
-    // when ready startMatch()
 }
 
 function getUsernameFromID(winnerID: number, previousMatch: match): string {
