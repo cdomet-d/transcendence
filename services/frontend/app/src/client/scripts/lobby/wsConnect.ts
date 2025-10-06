@@ -1,16 +1,26 @@
-let wsInstance: any = null;
 
 interface userInfo {
-    userID: number,
-    username: string
+    userID?: number,
+    username?: string
 }
 
-interface requestForm {
-    format: "quick" | "tournament",
+interface match {
+    matchID: number,
+    tournamentID: number,
     remote: boolean,
-    players: number
-    users: userInfo[]
+    users: userInfo[] | undefined | null,
+    score: string,
+    winnerID: number,
+    loserID: number,
 }
+
+interface tournament {
+    tournamentID: number,
+    winnerID: number | undefined | null,
+    bracket: match[]
+}
+
+let wsInstance: any = null;
 
 function openWsConnection() {
     if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {

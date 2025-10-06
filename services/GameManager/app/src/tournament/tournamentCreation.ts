@@ -43,7 +43,6 @@ export function createTournament(payload: lobbyInfo): tournament | undefined {
 
     // create tournament
     const tournamentObj = makeTournamentObj(tournamentID, matches);
-
     return tournamentObj;
 }
 
@@ -66,6 +65,7 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: number): match
     ];
     
     // generate gameIDs
+    // create nbMatch objects
     let matches: match[] = [
         { matchID: 1, tournamentID: tournamentID, remote: true, users: opponents[0], score: "", winnerID: 0, loserID: 0 },
         { matchID: 2, tournamentID: tournamentID, remote: true, users: opponents[1], score: "", winnerID: 0, loserID: 0 },

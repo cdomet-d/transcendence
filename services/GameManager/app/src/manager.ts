@@ -1,5 +1,5 @@
-import { createBracket, createTournament } from "./tournament/tournament.js";
-import { startTournament } from "./tournament/tournamentRoutine.js";
+import { createTournament } from "./tournament/tournamentCreation.js";
+import { startTournament } from "./tournament/tournamentStart.js";
 
 interface userInfo {
     userID: number,
@@ -29,21 +29,18 @@ interface tournament {
     bracket: match[]
 }
 
-function receiveLobbyInfo(): lobbyInfo {
-    const userArray: userInfo[] = [
-            { userID: 1, username: "sam" },
-            { userID: 2, username: "alex" },
-            { userID: 3, username: "cha" },
-            { userID: 4, username: "coco" }
-        ];
-    const lobbyInfo: lobbyInfo = { users: userArray, remote: true, format: "tournament" };
-    return lobbyInfo;
-}
+// function receiveLobbyInfo(): lobbyInfo {
+//     const userArray: userInfo[] = [
+//             { userID: 1, username: "sam" },
+//             { userID: 2, username: "alex" },
+//             { userID: 3, username: "cha" },
+//             { userID: 4, username: "coco" }
+//         ];
+//     const lobbyInfo: lobbyInfo = { users: userArray, remote: true, format: "tournament" };
+//     return lobbyInfo;
+// }
 
 export function processLobbyRequest(lobbyInfo: lobbyInfo) {
-    // Receive data
-    // const lobbyInfo = receiveLobbyInfo();
-
     // Filter request
     if (lobbyInfo.format === "tournament") {
         const tournament: tournament | undefined = createTournament(lobbyInfo);

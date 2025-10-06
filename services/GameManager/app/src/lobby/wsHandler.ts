@@ -36,7 +36,7 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 		console.log("hostID: ", hostID);
 		wsClientsMap.set(hostID, socket);
 
-		console.log("MESSAGE.EVENT: ", data.event);
+		console.log("message event: ", data.event);
 		if (data.event === "TOURNAMENT_REQUEST") {
 			// req.server.log.info(`server received: ${mess}`);
 			processLobbyRequest(data.payload);

@@ -1,5 +1,5 @@
 import { match } from "assert";
-import { natsPublish } from "../nats/publisher.js";
+import { tournamentMap } from "./tournamentStart.js";
 import { Mutex } from 'async-mutex';
 
 interface userInfo {
@@ -23,30 +23,7 @@ interface tournament {
     bracket: match[]
 }
 
-
-// Temporary solution: store tournaments in memory
-let tournamentMap: Map<number, tournament> = new Map();
 let mutexMap: Map<number, Mutex> = new Map();
-
-export function startTournament(tournamentObj: tournament) {
-    tournamentMap.set(tournamentObj.tournamentID, tournamentObj)
-    startFirstRound(tournamentObj);
-}
-
-function startFirstRound(tournament: tournament) {
-    if (tournament.bracket && Array.isArray(tournament.bracket)) {
-        for (let i = 0; tournament.bracket[i]?.users !== null; i++) {
-            const match = tournament.bracket[i];
-            if (match && match.users && match.users.length > 0) {
-                startMatch(match);
-            }
-        }
-    }
-}
-
-export function startMatch(match: match) {
-    natsPublish("game.request", JSON.stringify(match), "game.reply");
-}
 
 function getTournamentMutex(tournamentID: number): Mutex {
     if (!mutexMap.has(tournamentID)) {
@@ -55,6 +32,7 @@ function getTournamentMutex(tournamentID: number): Mutex {
     return mutexMap.get(tournamentID)!;
 }
 
+// Mutex zone
 export async function tournamentState(payload: string) {
     const previousMatch: match = JSON.parse(payload);
     const tournamentID: number = previousMatch.tournamentID;
@@ -69,22 +47,23 @@ export async function tournamentState(payload: string) {
             return;
         }
 
-        // update previousMatch info in bracket
-        let i = 0;
-        for (; tournamentObj.bracket[i]?.matchID !== previousMatch.matchID; i++) { }
-        if (tournamentObj.bracket[i]?.matchID === previousMatch.matchID) {
-            tournamentObj.bracket[i] = previousMatch;
+        // find match object in bracket
+        const index = tournamentObj.bracket.findIndex(match => match.matchID === previousMatch.matchID);
+        if (index !== -1) {
+            // update previousMatch info
+            tournamentObj.bracket[index] = previousMatch;
+        } else {
+            // TODO: handle error match not found in bracket
         }
 
-        // send full matchObj to DB
+        // send full matchObj to DB??
 
-        // IF TOURNAMENT OVER
         const nextMatch = getNextMatchInBracket(tournamentObj);
         if (nextMatch === undefined) { // Means previousMatch was the tournament final
             // handle end of tournament
+            return;
         }
 
-        // IF NOT
         const nextPlayer: string = getUsernameFromID(previousMatch.winnerID, previousMatch);
         if (nextMatch?.users === null) { // assign winnerID to player1 of next match
             nextMatch.users = [
