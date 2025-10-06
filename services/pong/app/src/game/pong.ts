@@ -2,6 +2,7 @@ import type { Game } from '../classes/game.class.js';
 import { updatePaddlePos } from './paddle.js';
 import type { Player } from '../classes/player.class.js';
 import { validMess, type messObj, type keysObj } from './mess.validation.js';
+import { updateBallPos } from './ball.js';
 
 export function setUpGame(game: Game) {
 	if (!game.players[0] || !game.players[1])
@@ -21,7 +22,7 @@ export function setUpGame(game: Game) {
 	}
 }
 
-export function setMessEvent(player: Player, opponent: Player, sendReply: Function) {
+function setMessEvent(player: Player, opponent: Player, sendReply: Function) {
 	let lastFrameTime: number = 0;
 	player.socket.on("message", (payload: string) => {
 		let mess: messObj;
@@ -32,8 +33,8 @@ export function setMessEvent(player: Player, opponent: Player, sendReply: Functi
 		const keys: keysObj = mess._keys;
 		const delta: number = mess._timeStamp - lastFrameTime;
 		lastFrameTime = mess._timeStamp;
-		if (!keysDown(keys))
-			return;
+		// if (!keysDown(keys))
+		// 	return;
 		sendReply(player, opponent, keys, delta);
 	})
 }
@@ -46,20 +47,25 @@ function keysDown(keys: keysObj): boolean {
 	return false
 }
 
-export function local(player: Player, opponent: Player, keys: keysObj, delta: number) {
+function local(player: Player, opponent: Player, keys: keysObj, delta: number) {
 	updatePaddlePos(player, keys, delta);
 	updatePaddlePos(opponent, keys, delta);
-	player.setMess("left", player.paddle.y);
-	player.setMess("right", opponent.paddle.y);
+	updateBallPos(player.ball, player.paddle, opponent.paddle, delta);
+	player.setMessPad("left", player.paddle.y);
+	player.setMessPad("right", opponent.paddle.y);
+	player.setMessBall();
 	if (player.socket.readyState === 1)
 		player.socket.send(JSON.stringify(player.rep));
 	//TODO: handle case where socket isn't open
 }
 
-export function remote(player: Player, opponent: Player, keys: keysObj, delta: number) {
+function remote(player: Player, opponent: Player, keys: keysObj, delta: number) {
 	updatePaddlePos(player, keys, delta);
-	player.setMess("left", player.paddle.y);
-	opponent.setMess("right", player.paddle.y);
+	updateBallPos(player.ball, player.paddle, opponent.paddle, delta);
+	updateBallPos(opponent.ball, opponent.paddle, player.paddle, delta);
+	player.setMessPad("left", player.paddle.y);
+	player.setMessBall();
+	opponent.setMessPad("right", player.paddle.y);
 	if (player.socket.readyState === 1)
 		player.socket.send(JSON.stringify(player.rep));
 	if (opponent.socket.readyState === 1)
