@@ -121,48 +121,12 @@
   gap: var(--space-xxs) var(--space-xxs);
 }
 
-.tabs-n-panels {
-  width: 100%;
-  overflow: hidden;
-  align-items: stretch;
-  display: grid;
-  grid-auto-flow: row;
-  grid-template-columns: 1fr;
-  grid-template-rows: var(--s) 1fr;
-}
-
-.tab-panel {
-  display: none;
-}
-
-.tab-panel[selected] {
-  display: block;
-}
-
-.statistics {
-  box-sizing: border-box;
-  overflow: scroll;
-  height: 100%;
-  width: inherit;
-}
-
 .stat {
   background-color: rgba(255, 166, 0, 0.648);
   height: var(--l);
 }
 
-.game-history {
-  box-sizing: border-box;
-  overflow: scroll;
-  height: 100%;
-  width: inherit;
-}
-
 .friends {
-  box-sizing: border-box;
-  overflow: scroll;
-  height: 100%;
-  width: inherit;
   display: grid;
   justify-content: center;
 }

@@ -74,9 +74,9 @@ export class tab extends HTMLButtonElement {
     if (name === "selected")
       if (this.hasAttribute("selected")) {
         this.classList.remove("yellow-bg", "brdr", "z-2");
-        this.classList.add("selected-yellow-bg", "z-1");
+        this.classList.add("z-1");
       } else {
-        this.classList.remove("selected-yellow-bg", "z-1");
+        this.classList.remove("z-1");
         this.classList.add("yellow-bg", "brdr", "z-2");
       }
   }
@@ -106,9 +106,9 @@ export class tab extends HTMLButtonElement {
     );
     if (this.hasAttribute("selected")) {
       this.classList.remove("yellow-bg", "brdr", "z-2");
-      this.classList.add("selected-yellow-bg", "z-1");
+      this.classList.add("z-1");
     } else {
-      this.classList.remove("selected-yellow-bg", "z-1");
+      this.classList.remove("z-1");
       this.classList.add("yellow-bg", "brdr", "z-2");
     }
   }
@@ -116,35 +116,9 @@ export class tab extends HTMLButtonElement {
 
 customElements.define("tab-button", tab, { extends: "button" });
 
-// const tabs = document.querySelectorAll<HTMLButtonElement>(".tab");
-
-// tabs.forEach((tab) => {
-//   tab.addEventListener("click", () => {
-//     document
-//       .querySelectorAll<HTMLElement>(".tab-panel")
-//       .forEach((panel) => panel.removeAttribute("selected"));
-// 	tabs.forEach(tab => tab.removeAttribute("selected"));
-
-//     const clickedTab = tab.getAttribute("data-tab");
-//     if (clickedTab) {
-//       const panel = document.querySelector<HTMLElement>(
-//         `.tab-panel[data-content="${clickedTab}"]`
-//       );
-//       if (panel) {
-//         panel.setAttribute("selected", "");
-// 		tab.setAttribute("selected", "");
-//       }
-//     }
-//   });
-// });
-
 /**
- * Custom tab group container extending HTMLDivElement.
- * Manages a collection of tab buttons and handles tab selection.
- *
- * Adds a click event listener to switch tabs on user interaction.
- *
- * @property content - Setter to update the container's text content.
+ * Custom tab group extending HTMLDivElement.
+ * Manages a collection of tab buttons.
  *
  * @example
  * const tabs: Tab[] = [
@@ -161,27 +135,106 @@ export class tabGroup extends HTMLDivElement {
 
   connectedCallback() {
     this.render();
-
-    this.addEventListener("click", (event: MouseEvent) => {
-      const selected = event.target as HTMLElement;
-      if (selected.matches(".tab")) {
-        this.changeTab(this, selected);
-      }
-    });
   }
 
   render() {
     this.className =
-      "w-[100%] h-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center";
-  }
-
-  changeTab(tabs: HTMLDivElement, target: HTMLElement) {
-    const nodeArr = Array.from(tabs.children);
-    nodeArr.forEach((node) => {
-      node.removeAttribute("selected");
-    });
-    target.setAttribute("selected", "");
+      "tab-group w-[100%] h-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center";
   }
 }
 
 customElements.define("tab-group", tabGroup, { extends: "div" });
+
+/**
+ * Creates a tab panel extending HTMLDivElement.
+ *
+ * @property content - Setter to update the container's text content.
+ *
+ * @example
+ * const tabs: Tab[] = [
+ *   { data: "home", content: "Home" },
+ *   { data: "profile", content: "Profile" },
+ * ];
+ * const tabGroup = document.createElement("div", { is: "tab-group" }) as tabGroup;
+ * document.body.appendChild(tabGroup);
+ */
+export class tabPanel extends HTMLDivElement {
+  static get observedAttributes() {
+    return ["selected"];
+  }
+  constructor() {
+    super();
+  }
+
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    if (oldValue === newValue) return;
+    if (name === "selected") {
+      if (this.hasAttribute("selected")) {
+        this.classList.remove("hidden");
+        this.classList.add("block");
+      } else {
+        this.classList.remove("block");
+        this.classList.add("hidden");
+      }
+    }
+  }
+  connectedCallback() {
+    this.render();
+  }
+
+  render() {
+    this.className = "panel border-box overflow-scroll h-[100%] w-1";
+    if (this.hasAttribute("selected")) {
+      this.classList.add("block");
+    } else {
+      this.classList.add("hidden");
+    }
+  }
+}
+
+customElements.define("tab-panel", tabPanel, { extends: "div" });
+
+export class tabWrapper extends HTMLDivElement {
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    this.render();
+
+    this.attachEvent();
+  }
+
+  render() {
+    this.className =
+      "clear-bg brdr w-[100%] overflow-hidden grid items-stretch grid-flow-row grid-cols-[1fr] grid-rows-[var(--s)_1fr]";
+  }
+
+  attachEvent() {
+    this.addEventListener("click", (event: MouseEvent) => {
+      const target = event.target as Element | null;
+
+      if (target) {
+        const tab: Element | null = target.closest(".tab");
+        if (tab && this.contains(tab)) this.animateTab(tab);
+      }
+    });
+  }
+
+  animateTab(tab: Element) {
+    const tabs = this.querySelectorAll(".tab");
+    const panels = this.querySelectorAll(".panel");
+
+    tabs.forEach((t) => t.removeAttribute("selected"));
+    panels.forEach((p) => p.removeAttribute("selected"));
+    tab.setAttribute("selected", "");
+
+    const clickedTab = tab.getAttribute("data-tab");
+    const activeTab = this.querySelector(
+      `.panel[data-content="${clickedTab}"]`
+    );
+    activeTab?.setAttribute("selected", "");
+  }
+}
+
+customElements.define("tab-wrapper", tabWrapper, { extends: "div" });

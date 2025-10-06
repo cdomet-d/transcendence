@@ -7,9 +7,9 @@ import type { Tab } from "./web-element-helpers/navigation/nav-helper-modules.js
 import type { InputField } from "./web-element-helpers/inputs/fields-helper-modules.js";
 
 const tabs: Array<Tab> = [
-  { data: "history", content: "Game history" },
-  { data: "stats", content: "Statistics" },
-  { data: "friends", content: "Friends" },
+  { data: "history", content: "Game history", default: true },
+  { data: "stats", content: "Statistics", default: false },
+  { data: "friends", content: "Friends", default: false },
 ];
 
 const fieldData: InputField = {
@@ -30,15 +30,19 @@ window.addEventListener("unhandledrejection", (e) => {
 const wrapper = document.createElement("div");
 wrapper.classList.add("grid", "gap-6", "justify-center", "w-[100vw]", "pad-sm");
 
-wrapper.appendChild(typography.createHeading("1", "Heading 1"));
-wrapper.appendChild(typography.createHeading("2", "Heading 2"));
-wrapper.appendChild(typography.createHeading("3", "Heading 3"));
-wrapper.appendChild(inputs.createUploadInput("upload"));
-wrapper.appendChild(inputs.createInputGrp(fieldData));
-wrapper.appendChild(formBtns.createRadioBtn("radio", "test"));
-wrapper.appendChild(formBtns.createCheckbox("check", "test"));
-wrapper.appendChild(nav.createBtn("test"));
-wrapper.appendChild(nav.createTabs(tabs));
+try {
+  wrapper.appendChild(typography.createHeading("1", "Heading 1"));
+  wrapper.appendChild(typography.createHeading("2", "Heading 2"));
+  wrapper.appendChild(typography.createHeading("3", "Heading 3"));
+  wrapper.appendChild(inputs.createUploadInput("upload"));
+  wrapper.appendChild(inputs.createInputGrp(fieldData));
+  wrapper.appendChild(formBtns.createRadioBtn("radio", "test"));
+  wrapper.appendChild(formBtns.createCheckbox("check", "test"));
+  wrapper.appendChild(nav.createBtn("test"));
+  wrapper.appendChild(nav.createTabs(tabs));
+} catch (error) {
+  console.log("[ERROR}", error);
+}
 
 document.body.append(wrapper);
 
