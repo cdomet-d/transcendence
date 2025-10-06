@@ -1,8 +1,8 @@
 import { Database } from 'sqlite';
 
 interface UserData {
-  userID: number;
-  username: string;
+	userID: number;
+	username: string;
 }
 
 interface PendingRequest {
@@ -11,13 +11,13 @@ interface PendingRequest {
 }
 
 interface UserProfile {
-    avatar: string;
-    biography: string;
-    joinedOn: string;
-    profileColor: string;
-    rank: string;
-    status: boolean;
-    username: string;
+	avatar: string;
+	biography: string;
+	joinedOn: string;
+	profileColor: string;
+	rank: string;
+	status: boolean;
+	username: string;
 }
 
 // Reusable function to get a user by their ID from the users service
@@ -58,7 +58,6 @@ export async function checkUserExists(userID: number): Promise<UserData | null> 
 }
 
 export async function getPendingFriendRequests(db: Database, userId: number): Promise<PendingRequest[]> {
-	console.log("in getPendingFriendRequests function");
 	const query = `
 		SELECT
 			CASE
@@ -80,7 +79,6 @@ export async function getPendingFriendRequests(db: Database, userId: number): Pr
 }
 
 export async function getFriendship(db: Database, userId: number): Promise<PendingRequest[]> {
-	console.log("in getPendingFriendRequests function");
 	const query = `
 		SELECT
 			CASE
@@ -114,4 +112,32 @@ export async function getUserProfile(userId: number): Promise<UserProfile | null
 		console.error(`Error fetching profile for user ID ${userId}:`, error);
 		throw error;
 	}
+}
+
+export async function friendshipExistsUsersID(db: Database, userA_ID: number, userB_ID: number): Promise<boolean> {
+	const query = `
+		SELECT 1 FROM friendship 
+		WHERE (userID = ? AND friendID = ?) 
+			OR (userID = ? AND friendID = ?)
+		LIMIT 1;
+	`;
+
+	const params = [userA_ID, userB_ID, userB_ID, userA_ID];
+	const result = await db.get(query, params);
+
+	// The '!!' converts the result (an object or undefined) to a boolean.
+	return (!!result);
+}
+
+export async function friendshipExistsFriendshipID(db: Database, friendshipID: number): Promise<boolean> {
+	const query = `
+		SELECT 1 FROM friendship 
+		WHERE (friendshipID = ?) 
+		LIMIT 1;
+	`;
+
+	const params = [friendshipID];
+	const result = await db.get(query, params);
+
+	return (!!result);
 }

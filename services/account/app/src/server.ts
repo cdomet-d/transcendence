@@ -1,19 +1,25 @@
 import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
-import { options } from './serv.conf.js';
 import dbConnector from "./db.js"
-import { request } from 'http';
 import { accountRoutes } from './routes.js';
+import cors from '@fastify/cors';
 
+const serv: FastifyInstance = Fastify({
+	logger: true
+});
 
-const serv: FastifyInstance = Fastify(options);
+serv.register(cors, {
+  origin: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+});
 
 serv.register(dbConnector);
 serv.register(accountRoutes);
 
 const start = async () => {
 	try {
-		serv.listen({ port: 1414, host: '0.0.0.0' });
+		console.log('listening on 1414');
+		await serv.listen({ port: 1414, host: '0.0.0.0' });
 	}
 	catch (err) {
 		console.error('server error:', err);

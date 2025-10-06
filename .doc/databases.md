@@ -340,4 +340,7 @@ TODO :
 * ~~Clean code in friends container's routes.ts file~~ 
 * Plug languageDB route to front to see if translation works
 * Check function for database query for friend service 404 reply
-* check all reply to add success of the request
+* ~~check all reply to add success of the request~~
+* Add .env varaible for db setup to ensure flexibility
+* Change all request to https
+* check all internal and external https request

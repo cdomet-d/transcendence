@@ -43,6 +43,8 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
+    ports:
+      - "1414:1414"
     volumes:
       - ./services/account/app:/usr/app
       - ./services/account/data:/usr/data

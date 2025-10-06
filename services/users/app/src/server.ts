@@ -1,6 +1,5 @@
 import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
-import { options } from './serv.conf.js';
 import cors from '@fastify/cors';
 import { userRoutes } from './route.js';
 import dbConnector from "./db.js"

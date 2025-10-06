@@ -1,9 +1,11 @@
 import type { FastifyInstance } from 'fastify';
-import { Database } from 'sqlite';
+
 import { getUserID } from './friends.service.js';
 import { getPendingFriendRequests } from './friends.service.js'
 import { getFriendship } from './friends.service.js'
 import { getUserProfile } from './friends.service.js'
+import { friendshipExistsFriendshipID } from './friends.service.js'
+import { friendshipExistsUsersID } from './friends.service.js'
 //import { checkUserExists } from './friends.service.js';
 
 interface userData {
@@ -11,39 +13,10 @@ interface userData {
   username: string;
 }
 
-export async function friendshipExistsUsersID(db: Database, userA_ID: number, userB_ID: number): Promise<boolean> {
-	const query = `
-		SELECT 1 FROM friendship 
-		WHERE (userID = ? AND friendID = ?) 
-			OR (userID = ? AND friendID = ?)
-		LIMIT 1;
-	`;
-
-	const params = [userA_ID, userB_ID, userB_ID, userA_ID];
-	const result = await db.get(query, params);
-
-	// The '!!' converts the result (an object or undefined) to a boolean.
-	return (!!result);
-}
-
-export async function friendshipExistsFriendshipID(db: Database, friendshipID: number): Promise<boolean> {
-	const query = `
-		SELECT 1 FROM friendship 
-		WHERE (friendshipID = ?) 
-		LIMIT 1;
-	`;
-
-	const params = [friendshipID];
-	const result = await db.get(query, params);
-
-	return (!!result);
-}
-
 export async function friendRoutes(serv: FastifyInstance) {
 
 	// Send a friend request to another user with username, parameter : username of sender and receiver
 	serv.post('/friends/send-friends-requests/:username', async (request, reply) => {
-		serv.log.info('in serv post friends container');
 		try {
 			const { username: receiverUsername } = request.params as { username: string };
 			const { userId: senderId } = request.body as { userId: number };
@@ -78,11 +51,11 @@ export async function friendRoutes(serv: FastifyInstance) {
 			];
 
 			const result = await serv.dbFriends.run(query, params);
-
-			return reply.code(201).send({
+			//TODO : add result check 
+			return (reply.code(201).send({
 				success: true,
 				message: `Friend request sent to ${receiverUsername}`
-			});
+			}));
 
 		} catch (error) {
 			console.error('[Friends Service] Error processing friend request:', error);
@@ -177,8 +150,7 @@ export async function friendRoutes(serv: FastifyInstance) {
 			];
 
 			const result = await serv.dbFriends.run(query, params);
-
-			serv.log.info(`A row has been delete with rowid ${result.lastID}`);
+			//TODO : add result check 
 
 			return reply.code(201).send({
 				success: true,

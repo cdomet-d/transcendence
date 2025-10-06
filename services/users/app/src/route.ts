@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { isPropertyAccessOrQualifiedName } from 'typescript';
 
 interface UserProfile {
 	userID: number;
@@ -154,7 +155,55 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO: serv.post('/users/createProfile/:userID', async(request, reply) => {});
+	serv.post('internal/users/createProfile/:userID', async(request, reply) => {
+		try {
+			const { userID } = request.params as { userID: number};
+			const { username } = request.params as { username: string};
+
+			const checkProfileExist = await fetch (`https://users:2626/internal/users/profile/:${userID}`);
+			if (checkProfileExist) {
+				return reply.code(409).send({
+					success: false,
+					message: 'This profile already exists'
+				});
+			}
+			
+			const checkStatsExist = await fetch (`https://users:2626/users/userStats/:${userID}`);
+			if (checkStatsExist) {
+				return reply.code(409).send({
+					success: false,
+					message: 'This profile already exists'
+				});
+			}
+
+			const queryProfile = `
+				INSERT INTO userProfile
+				(userID, username, avatar, bio, profileColor, activityStatus, lastConnection)
+				VALUES (?, ?, default, default, default, 1, ?)
+			`
+			const paramsProfile = [
+				userID,
+				username,
+				new Date().toISOString()
+			];
+
+			const createProfile = await serv.dbUsers.run(queryProfile, paramsProfile);
+			//TODO: add createProfile check
+
+			const queryStats = `
+			INSERT INTO userStats (userID, longestMatch, shorestMatch, totalMatch, totalWins,
+			winStreak, averageMatchDuration, highestScore)
+			VALUES (?, 0, 0, 0, 0, 0, 0, 0)
+			`
+			const createStats = await serv.dbUsers.run(queryStats, userID);
+		} catch (error ) {
+			console.error('[Friend service] Error accepting friend request', error);
+			return (reply.code(500).send({
+				success: false,
+				message: 'An internal error occured.'
+			}));
+		}
+	});
 
 	serv.post('/users/updateProfile/:userID', async(request, reply) => {
 		try {
@@ -448,16 +497,19 @@ export async function userRoutes(serv: FastifyInstance) {
 				success: true,
 				message: 'Username updated !'
 			}));
-
 		} catch (error) {
-			if (error && typeof error === 'object' && 'code' in error) {
+			if (error && typeof error === 'object' && 'code' in error && error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
 				return reply.code(409).send({
 					success: false,
 					message: 'This username is already taken.'
 				});
 			}
-			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+		
+			serv.log.error(`Error updating username: ${error}`);
+			return reply.code(500).send({ 
+				success: false,
+				message: 'Internal server error' 
+			});
 		}
 	});
 
