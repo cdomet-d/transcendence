@@ -1,21 +1,13 @@
-import { Game, type keysObj, type paddleObj, type ballObj} from './game.class.js'
-
-interface repObj {
-	leftPad: paddleObj,
-	rightPad: paddleObj,
-	ball: ballObj,
-}
+import { Game, type keysObj} from './game.class.js'
+import { validRep, type repObj } from './mess.validation.js';
 
 export function addMessEvent(game: Game, ws: WebSocket) {
 	ws.onmessage = (event) => {
-		if (event.data === 0) {
-			game.signal = 0;
-			return;
-		}
 		const mess: repObj = JSON.parse(event.data);
+		if (!validRep(mess))
+			return
 		game.leftPad = mess.leftPad.y;
 		game.rightPad = mess.rightPad.y;
-		console.log("BALL:\nx:", mess.ball.x, "\ny:", mess.ball.y);
 		game.ball = mess.ball;
 	};
 }
