@@ -94,6 +94,13 @@
 		--title-shadow: #ac5a0e;
 	}
 
+	.true {
+		--user-status: #76c54b;
+	}
+
+	.false {
+		--user-status: #aa4926;
+	}
 	.valid {
 		--border: #005a44;
 		--highlight: #bde559;
@@ -429,11 +436,10 @@
 	.user-status {
 		height: var(--space-s);
 		width: var(--space-s);
-		background-color: var(--red);
+		background-color: var(--user-status);
 		border-radius: 30px;
 		line-height: 110%;
 	}
-
 
 	.masonery {
 		height: auto;

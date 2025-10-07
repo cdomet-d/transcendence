@@ -2,10 +2,12 @@ import * as inputs from './web-element-helpers/inputs/fields-helper-modules.js';
 import * as typography from './web-element-helpers/typography/typo-helper-modules.js';
 import * as formBtns from './web-element-helpers/inputs/buttons-helper-modules.js';
 import * as nav from './web-element-helpers/navigation/nav-helper-modules.js';
+import * as user from './web-element-helpers/users/user-helper-modules.js';
 
 import type { Tab } from './web-elements/navigation/tabs.js';
 import type { InputField } from './web-element-helpers/inputs/fields-helper-modules.js';
 import type { Button } from './web-elements/navigation/menus.js';
+import type { Username } from './web-elements/users/user-atoms.js';
 
 const tabs: Array<Tab> = [
     { id: 'history', content: 'Game history', default: true },
@@ -50,6 +52,8 @@ try {
     wrapper.appendChild(typography.createAvatar('/assets/icons/default-avatar.png', 'a small blue blob', 'l'));
     wrapper.appendChild(nav.createMenu(mainMenu, 'horizontal'));
     wrapper.appendChild(nav.createMenu(mainMenu, 'vertical'));
+	const el:Username = user.createUsernameDiv('crimeGoose', false);
+    wrapper.appendChild(el);
 } catch (error) {
     console.log('[ERROR]', error);
 }
