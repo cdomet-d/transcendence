@@ -2,7 +2,7 @@ import { startGame } from './game.loop.js';
 import { Game } from './game.class.js';
 
 function wsRequest(game: Game) {
-    const ws = new WebSocket('wss://localhost:8443/api/game/match');
+    const ws = new WebSocket('wss://localhost:8443/api/game/match'); //?gameID=1');
 
     ws.onerror = (err) => {
         console.log("error:", err);
@@ -20,7 +20,9 @@ function wsRequest(game: Game) {
             startGame(game, ws);
     }, { once: true });
 
-    //TODO: on close ?
+    ws.onclose = () => {
+        window.cancelAnimationFrame(game.frameId);
+    }
 }
 
 export { wsRequest };
