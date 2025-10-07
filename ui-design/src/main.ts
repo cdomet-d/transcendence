@@ -5,12 +5,18 @@ import * as nav from './web-element-helpers/navigation/nav-helper-modules.js';
 
 import type { Tab } from './web-elements/navigation/tabs.js';
 import type { InputField } from './web-element-helpers/inputs/fields-helper-modules.js';
-import type { Size } from './web-element-helpers/typography/typo-helper-modules.js';
+import type { Button } from './web-elements/navigation/menus.js';
 
 const tabs: Array<Tab> = [
     { id: 'history', content: 'Game history', default: true },
     { id: 'stats', content: 'Statistics', default: false },
     { id: 'friends', content: 'Friends', default: false },
+];
+
+const mainMenu: Array<Button> = [
+    { content: 'Profile', role: 'menu' },
+    { content: 'Play', role: 'menu' },
+    { content: 'Leaderboard', role: 'menu' },
 ];
 
 const fieldData: InputField = {
@@ -21,8 +27,6 @@ const fieldData: InputField = {
     labelContent: 'Username',
 };
 
-const avSize: Size = 'm';
-
 window.addEventListener('error', (e) => {
     console.error('Global error:', e.error);
 });
@@ -30,8 +34,9 @@ window.addEventListener('unhandledrejection', (e) => {
     console.error('Unhandled promise rejection:', e.reason);
 });
 
+const innerW = window.innerWidth;
 const wrapper = document.createElement('div');
-wrapper.classList.add('grid', 'gap-6', 'justify-center', 'w-[100vw]', 'pad-sm');
+wrapper.classList.add('border-box', 'grid', 'gap-6', `w-[${innerW}]`, 'pad-sm');
 
 try {
     wrapper.appendChild(typography.createHeading('1', 'Heading 1'));
@@ -41,9 +46,10 @@ try {
     wrapper.appendChild(inputs.createInputGrp(fieldData));
     wrapper.appendChild(formBtns.createRadioBtn('radio', 'test'));
     wrapper.appendChild(formBtns.createCheckbox('check', 'test'));
-    wrapper.appendChild(nav.createBtn('test'));
     wrapper.appendChild(nav.createTabs(tabs));
     wrapper.appendChild(typography.createAvatar('/assets/icons/default-avatar.png', 'a small blue blob', 'l'));
+    wrapper.appendChild(nav.createMenu(mainMenu, 'horizontal'));
+    wrapper.appendChild(nav.createMenu(mainMenu, 'vertical'));
 } catch (error) {
     console.log('[ERROR]', error);
 }

@@ -46,7 +46,7 @@ export class menuBtn extends HTMLButtonElement {
 
     render() {
         this.className =
-            'w-[100%] h-[90%] brdr input-emphasis overflow-hidden outline-hidden border-box flex justify-center items-center';
+            'border-box brdr flex h-[90%] input-emphasis items-center justify-center min-w-[4rem] outline-hidden overflow-hidden w-[100%] whitespace-nowrap';
         if (this.disabled) {
             this.classList.add('disabled', 'clear-bg');
         } else {
