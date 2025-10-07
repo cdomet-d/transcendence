@@ -18,17 +18,26 @@ export interface gameInfo {
 	_loser: string
 }
 
+export interface ballObj {
+	x: number,
+	y: number,
+	dx: number,
+	dy: number,
+}
+
 export type playerTab = Array< Player >;
 
 export class Game {
     /*                             PROPERTIES                                */
 	#_gameInfo: gameInfo;
 	#_players: playerTab;
+	#_ball: ballObj;
 
     /*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo) {
 		this.#_gameInfo = gameInfo;
 		this.#_players = new Array();
+		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.2, dy: 0.025};
 	}
 
     /*                              GETTERS                                  */
@@ -47,7 +56,11 @@ export class Game {
 	get randUserID(): number {
 		return this.#_gameInfo._users[1]!._userID;
 	}
-
+		
+	get ball(): ballObj {
+		return this.#_ball;
+	}
+	
     /*                              SETTERS                                  */
 	set score(score: Array< number >) {
 		this.#_gameInfo._score = score;
