@@ -8,9 +8,14 @@ interface repObj {
 
 export function addMessEvent(game: Game, ws: WebSocket) {
 	ws.onmessage = (event) => {
+		if (event.data === 0) {
+			game.signal = 0;
+			return;
+		}
 		const mess: repObj = JSON.parse(event.data);
 		game.leftPad = mess.leftPad.y;
 		game.rightPad = mess.rightPad.y;
+		console.log("BALL:\nx:", mess.ball.x, "\ny:", mess.ball.y);
 		game.ball = mess.ball;
 	};
 }
