@@ -10,7 +10,6 @@ export function updateBallPos(ball: ballObj, player: Player, opponent: Player, d
 			return true;
 		ball.x = WIDTH / 2;
 		ball.y = HEIGHT / 2;
-		ball.dx *= -1;
 		return false;
 	}
 
@@ -28,21 +27,27 @@ export function updateBallPos(ball: ballObj, player: Player, opponent: Player, d
 	return false
 }
 
+const maxScore: number = 3;
+
+function updateScore(player: Player, opponent: Player, newX: number): boolean {
+	if (newX - 10 > WIDTH) {
+		player.incScore();
+		console.log("PLAYER:", player.score);
+	}
+	if (newX + 10 < 0) {
+		opponent.incScore();
+		console.log("OPPONENT:", player.score);
+	}
+	if (player.score === maxScore || opponent.score === maxScore)
+		return true;
+	return false;
+}
+
 function touchesPad(leftPad: coordinates, rightPad: coordinates, newX: number, newY: number): boolean {
 	if (newX + 10 > rightPad.x && (newY + 10 > rightPad.y && newY - 10 < rightPad.y + 54))
 		return true;
 	if (newX - 10 < leftPad.x && (newY + 1 > leftPad.y && newY - 1 < leftPad.y + 54))
 		return true;
 	//TODO: check top of paddle
-	return false;
-}
-
-function updateScore(player: Player, opponent: Player, newX: number): boolean {
-	if (newX - 10 > WIDTH)
-		player.incScore();
-	if (newX + 10 < 0)
-		opponent.incScore();
-	if (player.score === 5 || opponent.score === 5)
-		return true;
 	return false;
 }
