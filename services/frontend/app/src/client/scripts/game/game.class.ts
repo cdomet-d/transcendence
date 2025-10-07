@@ -30,6 +30,8 @@ export class Game {
 	#_rightPaddle: paddleObj;
 	#_ball: ballObj;
 	#_mess: messObj;
+	#_signal: number;
+	#_frameId: number;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(ctx: CanvasRenderingContext2D) {
@@ -39,6 +41,8 @@ export class Game {
 		this.#_rightPaddle = {x: 460, y: 108};
 		let keys: keysObj = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
 		this.#_mess = { _keys: keys, _timeStamp: 0 };
+		this.#_signal = 1;
+		this.#_frameId = 0
 	}
 
 	/*                              GETTERS                                  */
@@ -62,6 +66,14 @@ export class Game {
 		return this.#_ctx;
 	}
 
+	get signal(): number {
+		return this.#_signal;
+	}
+
+	get frameId(): number {
+		return this.#_frameId;
+	}
+
 	/*                              SETTERS                                  */
 	set leftPad(newPos: number) {
 		this.#_leftPaddle.y = newPos;
@@ -74,5 +86,13 @@ export class Game {
 	set ball(ball: ballObj) {
 		this.#_ball.x = ball.x;
 		this.#_ball.y = ball.y;
+	}
+
+	set signal(val: number) {
+		this.#_signal = val;
+	}
+
+	set frameId(id: number) {
+		this.#_frameId = id;
 	}
 }
