@@ -4,6 +4,7 @@ import { Player } from "../classes/player.class.js";
 import type { Game } from '../classes/game.class.js';
 import { setUpGame } from './pong.js';
 import { validIds, type idsObj } from './mess.validation.js';
+import { natsSubscribtion } from '../subscriber.js';//only for testing
 
 async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): Promise< void > {
 	this.log.info('WebSocket connection established');
@@ -21,7 +22,8 @@ async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyR
 	socket.on('close', () => {
 		if (game)
 			game.deletePlayers(); //TODO: to be rm
-		//TODO: delete game ? need to know if everything is done
+		this.gameRegistry.deleteGame(game.gameID);
+		natsSubscribtion(this); //only for testing
 	});
 }
 
