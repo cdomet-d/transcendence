@@ -45,10 +45,7 @@ export class tabPanel extends HTMLDivElement {
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
         let needsGrid: boolean = false;
 
-        console.log(this);
-		console.log("Matches", this.matches('[data-content="friends"]'));
         if (this.matches('[data-content="friends"]')) needsGrid = true;
-        console.log("NeedsGrid", needsGrid);
         if (oldValue === newValue) return;
         if (name === 'selected') {
             if (this.hasAttribute('selected')) {
@@ -59,14 +56,13 @@ export class tabPanel extends HTMLDivElement {
                 this.classList.add('hidden');
             }
         }
-		console.log(this.className);
     }
     connectedCallback() {
         this.render();
     }
 
     render() {
-        this.className = 'panel border-box overflow-scroll h-[100%] w-1';
+        this.className = 'panel border-box overflow-scroll h-[100%] w-[inherit]';
         if (this.hasAttribute('selected')) {
             this.classList.add('block');
         } else {

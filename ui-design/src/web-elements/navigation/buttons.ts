@@ -36,6 +36,10 @@ export class menuBtn extends HTMLButtonElement {
     connectedCallback() {
         this.render();
     }
+    /**
+     * Sets the button's text content.
+     * @param val - The text to display inside the button.
+     */
     set content(val: string) {
         this.textContent = val;
     }
