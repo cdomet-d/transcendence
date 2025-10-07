@@ -1,10 +1,8 @@
 {
   "extends": "./tsconfig.node.json",
   "compilerOptions": {
-    "module": "node20",
-    "target": "es2022",
     "types": ["jest", "node"],
   },
-  "include": ["test"],
+  "include": ["test", "types"],
   "exclude": ["src", "dist"]
 }

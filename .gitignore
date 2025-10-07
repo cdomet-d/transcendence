@@ -10,3 +10,4 @@ nats.log
 dist/
 output.css
 package-lock.json
+jest.results.txt
