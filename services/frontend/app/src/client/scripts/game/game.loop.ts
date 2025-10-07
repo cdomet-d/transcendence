@@ -11,11 +11,6 @@ export function startGame(game: Game, ws: WebSocket) {
 
 function FrameRequestCallback(game: Game, ws: WebSocket) {
 	return function gameLoop(timestamp: number) {
-		if (game.signal === 0) {
-			window.cancelAnimationFrame(game.frameId);
-			ws.close();
-			return ;
-		}
 		game.mess._timeStamp = timestamp;
 		ws.send(JSON.stringify(game.mess));
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);

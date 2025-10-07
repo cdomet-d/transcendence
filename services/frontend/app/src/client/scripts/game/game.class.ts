@@ -1,5 +1,6 @@
 export const HEIGHT = 270;
 export const WIDTH = 480;
+import type { coordinates } from "./mess.validation.js";
 
 export interface keysObj {
 	_w: boolean,
@@ -13,24 +14,13 @@ export interface messObj {
 	_timeStamp: number,
 }
 
-export interface paddleObj {
-	x: number;
-	y: number;
-}
-
-export interface ballObj {
-	x: number;
-	y: number;
-}
-
 export class Game {
 	/*                             PROPERTIES                                */
 	#_ctx: CanvasRenderingContext2D;
-	#_leftPaddle: paddleObj;
-	#_rightPaddle: paddleObj;
-	#_ball: ballObj;
+	#_leftPaddle: coordinates;
+	#_rightPaddle: coordinates;
+	#_ball: coordinates;
 	#_mess: messObj;
-	#_signal: number;
 	#_frameId: number;
 
 	/*                            CONSTRUCTORS                               */
@@ -41,20 +31,19 @@ export class Game {
 		this.#_rightPaddle = {x: 460, y: 108};
 		let keys: keysObj = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
 		this.#_mess = { _keys: keys, _timeStamp: 0 };
-		this.#_signal = 1;
 		this.#_frameId = 0
 	}
 
 	/*                              GETTERS                                  */
-	get ball(): ballObj {
+	get ball(): coordinates {
 		return this.#_ball;
 	}
 
-	get leftPad(): paddleObj {
+	get leftPad(): coordinates {
 		return this.#_leftPaddle;
 	}
 
-	get rightPad(): paddleObj {
+	get rightPad(): coordinates {
 		return this.#_rightPaddle;
 	}
 
@@ -64,10 +53,6 @@ export class Game {
 
 	get ctx(): CanvasRenderingContext2D {
 		return this.#_ctx;
-	}
-
-	get signal(): number {
-		return this.#_signal;
 	}
 
 	get frameId(): number {
@@ -83,13 +68,9 @@ export class Game {
 		this.#_rightPaddle.y = newPos;
 	}
 
-	set ball(ball: ballObj) {
+	set ball(ball: coordinates) {
 		this.#_ball.x = ball.x;
 		this.#_ball.y = ball.y;
-	}
-
-	set signal(val: number) {
-		this.#_signal = val;
 	}
 
 	set frameId(id: number) {

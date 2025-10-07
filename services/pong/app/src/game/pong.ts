@@ -52,7 +52,6 @@ function local(player: Player, opponent: Player, ball: ballObj, keys: keysObj, d
 	updatePaddlePos(player, keys, delta);
 	updatePaddlePos(opponent, keys, delta);
 	if (updateBallPos(ball, player, opponent, delta)) {
-		player.socket.send(0);
 		player.socket.close();
 		return;
 	}
@@ -71,8 +70,8 @@ function remote(player: Player, opponent: Player, ball: ballObj, keys: keysObj, 
 
 	if (player.ballMaster) { //TODO: change ballMaster if player gets disconnected
 		if (updateBallPos(ball, player, opponent, delta)) {
-			player.socket.send(0);
-			opponent.socket.send(0);
+			player.socket.close();
+			opponent.socket.close();
 			return;
 		}
 		player.setMessBall("left", ball);
