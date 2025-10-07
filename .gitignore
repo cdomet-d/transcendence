@@ -6,8 +6,7 @@ _logs/
 node_modules/
 .env
 *.log*
-services/pong/app/dist/
-services/pong/app/static/style-dist.css
 dist/
 output.css
 package-lock.json
+jest.results.txt

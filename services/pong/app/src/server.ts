@@ -1,24 +1,38 @@
 'use strict'
-/***************** MODULES *********************/
-// Core node modules
-import path from 'path'
-import { fileURLToPath } from 'url';
 // Third-party modules
 import Fastify from 'fastify'
 import websocket from '@fastify/websocket'
-import type { FastifyInstance } from 'fastify';
+import type { WebSocket } from '@fastify/websocket';
+import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+// import cookie from '@fastify/cookie';
 // Local modules
-import { wsRoute } from './routes/websocket.js';
+import { wsRoute } from './ws.route.js';
 import { options } from './serv.conf.js'
-import { natsSubscribtion } from './nats/subscriber.js';
-/***********************************************/
+import { initNatsConnexion, natsSubscribtion } from './subscriber.js';
+import { GameRegistry } from './classes/gameRegistry.class.js';
 
-// const __filename = fileURLToPath(import.meta.url);
-// export const __dirname = path.dirname(__filename);
+(async () => {
+	try {
+		const serv = await init();
+		await runServ(serv);
+	} catch (err) {
+		console.error('server', err);
+		process.exit(1);
+	}
+})();
 
 //init server
-try {
-	const serv = init();
+export async function init(): Promise<FastifyInstance> {
+	const serv: FastifyInstance = Fastify(options);
+	serv.decorate("gameRegistry", new GameRegistry());
+
+	//nats
+	// const nc = await initNatsConnexion(); //TODO: use await ?
+	// serv.decorate("nc", nc);
+	natsSubscribtion(serv);
+
+	//plugins
+	addPlugins(serv);
 	await serv.ready();
 	runServ(serv);
 	natsSubscribtion();
@@ -27,31 +41,31 @@ try {
 	process.exit(1);
 }
 
-//init server
-function init(): FastifyInstance {
-	const serv: FastifyInstance = Fastify(options);
-	addPlugins(serv);
-	return (serv);
-}
-
 //add plugins
 function addPlugins(serv: FastifyInstance) {
-	serv.register(websocket);
+	serv.register(websocket, {
+		errorHandler: function (error, socket: WebSocket, req: FastifyRequest, reply: FastifyReply) {
+						//TODO: send html error page ?
+						serv.log.error(error);
+						socket.close()
+					},
+		options: {},
+		});
 	serv.register(wsRoute);
+	// serv.register(cookie);
 }
 
 //run server
-function runServ(serv: FastifyInstance): void {
+async function runServ(serv: FastifyInstance): Promise<void> {
+	const port: number = getPort();
+	const address: string = await serv.listen({ port: port, host: '0.0.0.0' });
+	serv.log.info(`Pong Microservice listening on ${port} at ${address}`);
+}
+
+function getPort(): number {
 	const port: number = Number(process.env.PORT);
 	if (Number.isNaN(port)) {
 		throw new Error("Invalid port");
 	}
-
-	serv.listen({ port: port, host: '0.0.0.0' })
-			.then((address) => {
-				serv.log.info(`Pong Microservice listening on ${port} at ${address}`);
-			})
-			.catch((err) => { throw err; });
+	return port;
 }
-
-export { init };

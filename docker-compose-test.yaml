@@ -5,173 +5,164 @@ networks:
 
 secrets:
   ssl-cert.pem:
-    file: .secrets/ssl-cert.pem
+    file: ${TSECRETS}/ssl-cert.pem
   ssl-key.pem:
-    file: .secrets/ssl-key.pem
+    file: ${TSECRETS}/ssl-key.pem
 
 services:
-  accessibility:
-    build:
-      context: ./services/accessibility
-      dockerfile: Dockerfile
-    container_name: accessibility
-    image: accessibility:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/accessibility/app:/usr/app
-    command: ["npm", "run", "test"]
+  # accessibility:
+  #   build:
+  #     context: ./services/accessibility
+  #     dockerfile: Dockerfile
+  #   container_name: accessibility
+  #   image: accessibility:0.0.1
+  #   networks:
+  #     - transcendence
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/accessibility/app:/usr/app
+  #   command: ["npm", "run", "test"]
 
-  account:
-    build:
-      context: ./services/account
-      dockerfile: Dockerfile
-    container_name: account
-    image: account:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/account/app:/usr/app
-    command: ["npm", "run", "test"]
+  # account:
+  #   build:
+  #     context: ./services/account
+  #     dockerfile: Dockerfile
+  #   container_name: account
+  #   image: account:0.0.1
+  #   networks:
+  #     - transcendence
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/account/app:/usr/app
+  #   command: ["npm", "run", "test"]
 
-  auth:
-    build:
-      context: ./services/auth
-      dockerfile: Dockerfile
-    container_name: auth
-    image: auth:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/auth/app:/usr/app
-    command: ["npm", "run", "test"]
+  # auth:
+  #   build:
+  #     context: ./services/auth
+  #     dockerfile: Dockerfile
+  #   container_name: auth
+  #   image: auth:0.0.1
+  #   networks:
+  #     - transcendence
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/auth/app:/usr/app
+  #   command: ["npm", "run", "test"]
 
-  dashboard:
-    build:
-      context: ./services/dashboards
-      dockerfile: Dockerfile
-    container_name: dashboard
-    image: dashboard:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/dashboards/app:/usr/app
-    command: ["npm", "run", "test"]
+  # dashboard:
+  #   build:
+  #     context: ./services/dashboards
+  #     dockerfile: Dockerfile
+  #   container_name: dashboard
+  #   image: dashboard:0.0.1
+  #   networks:
+  #     - transcendence
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/dashboards/app:/usr/app
+  #   command: ["npm", "run", "test"]
 
-  friends:
-    build:
-      context: ./services/friends
-      dockerfile: Dockerfile
-    container_name: friends
-    image: friends:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/friends/app:/usr/app
-    command: ["npm", "run", "test"]
+  # friends:
+  #   build:
+  #     context: ./services/friends
+  #     dockerfile: Dockerfile
+  #   container_name: friends
+  #   image: friends:0.0.1
+  #   networks:
+  #     - transcendence
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/friends/app:/usr/app
+  #   command: ["npm", "run", "test"]
       
-  frontend:
-    build:
-      context: ./services/frontend
-      dockerfile: Dockerfile
-    container_name: frontend
-    image: frontend:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/frontend/app:/app
-    command: ["npm", "run", "test"]
-    # user: "${T_UID}:${T_GID}"
+  # frontend:
+  #   build:
+  #     context: ./services/frontend
+  #     dockerfile: Dockerfile
+  #   container_name: frontend
+  #   image: frontend:0.0.1
+  #   networks:
+  #     - transcendence
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/frontend/app:/app
+  #   command: ["npm", "run", "test"]
+  #   # user: "${T_UID}:${T_GID}"
 
-  matchmaking:
-    build:
-      context: ./services/matchmaking
-      dockerfile: Dockerfile
-    container_name: matchmaking
-    image: matchmaking:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/matchmaking/app:/usr/app
-    command: ["npm", "run", "test"]
+  # matchmaking:
+  #   build:
+  #     context: ./services/matchmaking
+  #     dockerfile: Dockerfile
+  #   container_name: matchmaking
+  #   image: matchmaking:0.0.1
+  #   networks:
+  #     - transcendence
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/matchmaking/app:/usr/app
+  #   command: ["npm", "run", "test"]
 
-  monitoring:
-    build:
-      context: ./services/monitoring
-      dockerfile: Dockerfile
-    container_name: monitoring
-    image: monitoring:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/monitoring/app:/usr/app
-    command: ["npm", "run", "test"]
+  # monitoring:
+  #   build:
+  #     context: ./services/monitoring
+  #     dockerfile: Dockerfile
+  #   container_name: monitoring
+  #   image: monitoring:0.0.1
+  #   networks:
+  #     - transcendence
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/monitoring/app:/usr/app
+  #   command: ["npm", "run", "test"]
 
-  nginx:
-    build:
-      context: ./services/nginx/
-      dockerfile: Dockerfile
-    container_name: nginx
-    environment:
-      - NGINX_HOST=bigt.com
-      - NGINX_PORT=443
-    image: nginx:0.0.1
-    networks:
-      - transcendence
-    ports:
-      - "8443:443"
-    restart: unless-stopped
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
+  # nginx:
+  #   build:
+  #     context: ./services/nginx/
+  #     dockerfile: Dockerfile
+  #   container_name: nginx
+  #   environment:
+  #     - NGINX_HOST=bigt.com
+  #     - NGINX_PORT=443
+  #   image: nginx:0.0.1
+  #   networks:
+  #     - transcendence
+  #   ports:
+  #     - "8443:443"
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
 
   pong:
     build:
@@ -184,7 +175,6 @@ services:
     image: pong:0.0.1
     networks:
       - transcendence
-    restart: unless-stopped
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
@@ -193,39 +183,37 @@ services:
     command: ["npm", "run", "test"]
     # user: "${T_UID}:${T_GID}"
 
-  users:
-    build:
-      context: ./services/users
-      dockerfile: Dockerfile
-    container_name: users
-    image: users:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/users/app:/usr/app
-    command: ["npm", "run", "test"]
+  # users:
+  #   build:
+  #     context: ./services/users
+  #     dockerfile: Dockerfile
+  #   container_name: users
+  #   image: users:0.0.1
+  #   networks:
+  #     - transcendence
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/users/app:/usr/app
+  #   command: ["npm", "run", "test"]
 
-  ssr:
-    build:
-      context: ./services/ssr
-      dockerfile: Dockerfile
-    container_name: ssr
-    image: ssr:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/ssr/app:/usr/app
-    command: ["npm", "run", "test"]
+  # ssr:
+  #   build:
+  #     context: ./services/ssr
+  #     dockerfile: Dockerfile
+  #   container_name: ssr
+  #   image: ssr:0.0.1
+  #   networks:
+  #     - transcendence
+  #   environment:
+  #     - NGINXIP=nginx
+  #   secrets:
+  #     - ssl-key.pem
+  #     - ssl-cert.pem
+  #   volumes:
+  #     - ./services/ssr/app:/usr/app
+  #   command: ["npm", "run", "test"]
 
