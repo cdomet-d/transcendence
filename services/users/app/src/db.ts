@@ -14,6 +14,7 @@ async function dbConnector(fastify: FastifyInstance) {
 		});
 
 		fastify.log.info('Connected to the users.db SQLite database');
+        console.log(db);
 
 		//Attaching db connection to fastify
 		fastify.decorate('dbUsers', db);

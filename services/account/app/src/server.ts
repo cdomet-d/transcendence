@@ -1,7 +1,8 @@
 import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
 import dbConnector from "./db.js"
-import { accountRoutes } from './routes.js';
+//import { accountRoutes } from './routes.js';
+import { minimalRoutes } from './routes.js';
 import cors from '@fastify/cors';
 
 const serv: FastifyInstance = Fastify({
@@ -14,7 +15,8 @@ serv.register(cors, {
 });
 
 serv.register(dbConnector);
-serv.register(accountRoutes);
+//serv.register(accountRoutes);
+serv.register(minimalRoutes);
 
 const start = async () => {
 	try {

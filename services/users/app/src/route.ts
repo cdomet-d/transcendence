@@ -155,7 +155,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('internal/users/createProfile/:userID', async(request, reply) => {
+	serv.post('/internal/users/createProfile/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number};
 			const { username } = request.params as { username: string};

@@ -13,9 +13,18 @@ async function dbConnector(fastify: FastifyInstance) {
 
 		});
 
-		fastify.log.info('Connected to the account.db SQLite database');
-		fastify.decorate('dbaccount', db);
+		//fastify.log.info('Connected to the account.db SQLite database');
+		//fastify.decorate('dbAccount', db);
+//
 
+        // --- ADD THESE LOGS ---
+        console.log('--- Inspecting DB object after creation ---');
+        console.log(db);
+        console.log('--- End Inspection ---');
+        // --- END OF LOG ---
+
+        fastify.log.info('Connected to the account.db SQLite database');
+        fastify.decorate('dbAccount', db);
 	} catch (err) {
 		fastify.log.info('Connection to the account.db SQLite database failed');
 		process.exit(1);
