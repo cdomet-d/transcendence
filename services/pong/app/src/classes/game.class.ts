@@ -14,8 +14,8 @@ export interface gameInfo {
 	_score: Array<number>,
 	_local: boolean,
 	_users: Array<user>,
-	_winner: string,
-	_loser: string
+	_winner: number,
+	_loser: number
 }
 
 export interface ballObj {
@@ -66,11 +66,11 @@ export class Game {
 		this.#_gameInfo._score = score;
 	}
 
-	set winner(winner: string) {
+	set winner(winner: number) {
 		this.#_gameInfo._winner = winner;
 	}
 
-	set loser(loser: string) {
+	set loser(loser: number) {
 		this.#_gameInfo._loser = loser;
 	}
 
