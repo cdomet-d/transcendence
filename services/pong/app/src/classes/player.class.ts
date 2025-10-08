@@ -1,5 +1,6 @@
 import type { WebSocket } from '@fastify/websocket';
 import { HEIGHT, WIDTH, type ballObj } from './game.class.js';
+import { type keysObj } from '../game/mess.validation.js';
 
 export interface coordinates {
 	x: number;
@@ -12,18 +13,18 @@ export interface repObj {
 	ball: coordinates,
 }
 
-interface speedObj {
-	paddle: number,
-}
+// interface speedObj {
+// 	paddle: number,
+// }
 
 export class Player {
 	/*                             PROPERTIES                                */
 	#_userID: number;
-	#_ballMaster: boolean;
-	#_speed: speedObj;
-	#_paddle: coordinates;
-	#_playerSide: string;
 	#_socket: WebSocket;
+	// #_speed: speedObj;
+	#_playerSide: string;
+	#_paddle: coordinates;
+	#_keys: keysObj;
 	#_rep: repObj;
 	#_score: number;
 
@@ -31,7 +32,7 @@ export class Player {
 	constructor(userID: number, socket: WebSocket, random: boolean) {
 		this.#_userID = userID;
 		this.#_socket = socket;
-		this.#_ballMaster = false;
+		this.#_keys = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
 		this.#_rep = {leftPad: {x: 10, y: 108}, rightPad: {x: 460, y: 108}, ball: {x: WIDTH / 2, y: HEIGHT / 2}};
 		if (random) {
 			this.#_paddle = {x: 460, y: 108};
@@ -41,7 +42,7 @@ export class Player {
 			this.#_paddle = {x: 10, y: 108};
 			this.#_playerSide = "left";
 		}
-		this.#_speed = {paddle: 0.2};
+		// this.#_speed = {paddle: 0.2};
 		this.#_score = 0;
 	}
 
@@ -70,21 +71,21 @@ export class Player {
 		return false;
 	}
 	
-	get ballMaster(): boolean {
-		return this.#_ballMaster
-	}
-
-	get speed(): speedObj {
-		return this.#_speed;
-	}
+	// get speed(): speedObj {
+	// 	return this.#_speed;
+	// }
 	
 	get score(): number {
 		return this.#_score;
 	}
 
+	get keys(): keysObj {
+		return this.#_keys;
+	}
+
 	/*                              SETTERS                                  */
-	set ballMaster(bool: boolean) {
-		this.#_ballMaster = bool;
+	set keys(keys: keysObj) {
+		this.#_keys = keys;
 	}
 
 	/*                              METHODS                                  */
