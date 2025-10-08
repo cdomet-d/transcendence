@@ -1,8 +1,6 @@
-import { cTitle } from '../../web-elements/typography/typography';
-import { Icon, Avatar } from '../../web-elements/typography/images';
-
-/** Defines size options for {@link Avatar}. */ 
-export type Size = 's' | 'm' | 'l';
+import { cTitle } from './typography';
+import { Icon, Avatar } from './images';
+import * as types from '../../types-interfaces';
 
 /**
  * Creates a heading element with a specified level.
@@ -26,30 +24,25 @@ export function createHeading(level: string, content: string): cTitle {
 /**
  * Creates a custom icon element.
  *
- * @param src - URL of the icon image.
- * @param alt - Alternative text for accessibility.
+ * @param metadata - an interface of type {@link types.ImgMetadata}.
  * @returns The {@link Icon} element.
  */
-export function createIcon(src: string, alt: string): Icon {
+export function createIcon(metadata: types.ImgMetadata): Icon {
     const el = document.createElement('img', { is: 'custom-icon' }) as Icon;
-    el.alt = alt;
-    el.src = src;
+    if (!metadata) return el;
+    el.metadata = metadata;
     return el;
 }
 
 /**
  * Creates an avatar element.
  *
- * @param src - Image source URL.
- * @param alt - Alt text for accessibility.
- * @param s - Size option, 's', 'm', or 'l'.
+ * @param metadata - an interface of type {@link types.ImgMetadata}. Optional - defaults to a medium-sized default avatar.
  * @returns The {@link Avatar} element.
  */
-export function createAvatar(src: string, alt: string, s: Size): Avatar {
+export function createAvatar(metadata?: types.ImgMetadata): Avatar {
     const el = document.createElement('div', { is: 'user-avatar' }) as Avatar;
-    el.alt = alt;
-    el.src = src;
-    el.size = s;
+    if (metadata) el.metadata = metadata;
 
     return el;
 }

@@ -1,30 +1,12 @@
 import { tabBtn, tabGroup } from './buttons';
-import { createTabs } from '../../web-element-helpers/navigation/nav-helper-modules';
-
-/**
- * Represents a tab with identifying data and display content.
- *
- * @property id - The identifier for the tab. Must be unique.
- * @property content - The visible text or content.
- * @property default - Indicates the default tab to be displayed on page load. Should be unique, but if it's not, the default tab will be the first which has `default: true`.
- *
- * @example
- * const exampleTab: Tab = {
- *   id: "home",
- *   content: "Home",
- * };
- */
-export interface Tab {
-    id: string;
-    content: string;
-    default: boolean;
-}
+import { createTabs } from './helpers';
+import { type TabMetadata } from '../../types-interfaces';
 
 /**
  * Creates a tab panel extending HTMLDivElement.
  *
  * @example
- * const tabs: Tab[] = [
+ * const tabs: TabMetadata	[] = [
  *   { data: "home", content: "Home" },
  *   { data: "profile", content: "Profile" },
  * ];
@@ -78,7 +60,7 @@ customElements.define('tab-panel', tabPanel, { extends: 'div' });
  * Handles tab interactions, styling, and content toggling.
  *
  * By default, it creates a single "default" tab and panel.
- * The user should set the internal #tabList propriety at create time to personnalize the content.
+ * The user should set the internal `#tabList` propriety at create time to personnalize the content.
  * You should use {@link createTabs} for that.
  *
  * @extends {HTMLDivElement}
@@ -89,14 +71,14 @@ customElements.define('tab-panel', tabPanel, { extends: 'div' });
  */
 
 export class tabWrapper extends HTMLDivElement {
-    #tabList: Array<Tab>;
+    #tabList: Array<TabMetadata>;
 
     constructor() {
         super();
         this.#tabList = [{ id: 'default', content: 'default', default: true }];
     }
 
-    set tabList(tabList: Array<Tab>) {
+    set tabList(tabList: Array<TabMetadata>) {
         this.#tabList = tabList;
         if (!this.isValidTabList(this.#tabList))
             throw new Error('Duplicate Tab.data will lead to UI confusion. Check your TabInfo array.');
@@ -125,7 +107,7 @@ export class tabWrapper extends HTMLDivElement {
         this.createPanels();
     }
 
-    private isValidTabList(tabList: Array<Tab>): boolean {
+    private isValidTabList(tabList: Array<TabMetadata>): boolean {
         return tabList.every((item, i, self) => i === self.findIndex((t) => t.id === item.id));
     }
 

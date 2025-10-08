@@ -101,6 +101,7 @@
 	.false {
 		--user-status: #aa4926;
 	}
+
 	.valid {
 		--border: #005a44;
 		--highlight: #bde559;
@@ -385,9 +386,11 @@
 	.gap-s {
 		gap: var(--space-s) var(--space-s);
 	}
+
 	.gap-m {
 		gap: var(--space-m) var(--space-m);
 	}
+
 	.gap-l {
 		gap: var(--space-l) var(--space-l);
 	}
@@ -510,5 +513,16 @@
 		background-color: var(--orange);
 		border-top: 2px solid var(--highlight-orange);
 		border-bottom: 2px solid var(--shadow-orange);
+	}
+
+	.small-user {
+		height: var(--xl);
+		box-sizing: border-box;
+		padding: var(--space-s);
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-template-rows: 1fr 1fr var(--m);
+		place-items: center;
+		background-color: var(--transparent-blue);
 	}
 }

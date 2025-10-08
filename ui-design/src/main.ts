@@ -1,27 +1,39 @@
-import * as inputs from './web-element-helpers/inputs/fields-helper-modules.js';
-import * as typography from './web-element-helpers/typography/typo-helper-modules.js';
-import * as formBtns from './web-element-helpers/inputs/buttons-helper-modules.js';
-import * as nav from './web-element-helpers/navigation/nav-helper-modules.js';
-import * as user from './web-element-helpers/users/user-helper-modules.js';
+import * as inputs from './web-elements/inputs/helpers.js';
+import * as typography from './web-elements/typography/helpers.js';
+import * as formBtns from './web-elements/inputs/helpers.js';
+import * as nav from './web-elements/navigation/helpers.js';
+import * as user from './web-elements/users/helpers.js';
+import * as defaults from './default-values.js';
+import type * as types from './types-interfaces.js';
+import type { UserCardSocial } from './web-elements/users/user-atoms.js';
 
-import type { Tab } from './web-elements/navigation/tabs.js';
-import type { InputField } from './web-element-helpers/inputs/fields-helper-modules.js';
-import type { Button } from './web-elements/navigation/menus.js';
-import type { Username } from './web-elements/users/user-atoms.js';
+const iMeta: types.ImgMetadata = {
+    id: 'user-avatar',
+    src: '/assets/icons/magenta-avatar.png',
+    alt: 'pp',
+    size: 'imedium',
+};
 
-const tabs: Array<Tab> = [
+// const bMeta: types.BtnMetadata = {
+//     role: 'social-menu',
+//     content: 'pp',
+//     ariaLabel: 'pp',
+// 	img: null
+// };
+
+const tabs: Array<types.TabMetadata> = [
     { id: 'history', content: 'Game history', default: true },
     { id: 'stats', content: 'Statistics', default: false },
     { id: 'friends', content: 'Friends', default: false },
 ];
 
-const mainMenu: Array<Button> = [
-    { content: 'Profile', role: 'menu' },
-    { content: 'Play', role: 'menu' },
-    { content: 'Leaderboard', role: 'menu' },
+const mainMenu: Array<types.BtnMetadata> = [
+    { content: 'Profile', role: 'menu', img: null, ariaLabel: 'User Profile Button' },
+    { content: 'Play', role: 'menu', img: null, ariaLabel: 'Pong Game' },
+    { content: 'Leaderboard', role: 'menu', img: null, ariaLabel: 'Leaderboard' },
 ];
 
-const fieldData: InputField = {
+const fieldData: types.InputMetadata = {
     type: 'text',
     pattern: '^[a-zA-Z0-9]{4,18}$',
     id: 'username',
@@ -49,11 +61,15 @@ try {
     wrapper.appendChild(formBtns.createRadioBtn('radio', 'test'));
     wrapper.appendChild(formBtns.createCheckbox('check', 'test'));
     wrapper.appendChild(nav.createTabs(tabs));
-    wrapper.appendChild(typography.createAvatar('/assets/icons/default-avatar.png', 'a small blue blob', 'l'));
+    wrapper.appendChild(typography.createAvatar(iMeta));
     wrapper.appendChild(nav.createMenu(mainMenu, 'horizontal'));
     wrapper.appendChild(nav.createMenu(mainMenu, 'vertical'));
-	const el:Username = user.createUsernameDiv('crimeGoose', false);
-    wrapper.appendChild(el);
+    wrapper.appendChild(user.createUsernameDiv('crimeGoose', false));
+
+    let social = nav.createSocialMenu(defaults.socialMenu, 'horizontal', 'stranger');
+    wrapper.appendChild(social);
+
+    wrapper.appendChild(document.createElement('template', { is: 'user-card-social' }) as UserCardSocial);
 } catch (error) {
     console.log('[ERROR]', error);
 }

@@ -1,3 +1,8 @@
+// import type { BtnMetadata } from '../../types-interfaces';
+// import { createSocialMenu } from '../navigation/helpers';
+// import type { SocialMenu } from '../navigation/menus';
+// import type { Avatar } from '../typography/images';
+
 /**
  * Custom element for displaying a username with status.
  * Extends HTMLDivElement.
@@ -57,3 +62,24 @@ export class Username extends HTMLDivElement {
 }
 
 customElements.define('username-container', Username, { extends: 'div' });
+
+export class UserCardSocial extends HTMLTemplateElement {
+    constructor() {
+        super();
+    }
+
+    connectedCallback() {
+        this.render();
+    }
+
+    render() {
+        this.className = 'border-box pad-s grid place-items-center small-user';
+        this.innerHTML = `
+			<slot name="avatar" </slot>
+			<slot name="username" </slot>
+			<slot name="social-menu" </slot>
+		`;
+    }
+}
+
+customElements.define('user-card-social', UserCardSocial, { extends: 'template' });

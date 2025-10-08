@@ -1,4 +1,4 @@
-import type { InputField } from '../../web-element-helpers/inputs/fields-helper-modules';
+import type { InputMetadata } from '../../types-interfaces'
 
 /**
  * Custom file upload input element.
@@ -81,12 +81,12 @@ customElements.define('input-label', inputLabel, { extends: 'label' });
 export class inputGroup extends HTMLDivElement {
     #input: textInput;
     #label: inputLabel;
-    #info: InputField;
+    #info: InputMetadata;
 
     /**
      * Sets input field information for label & input configuration.
      */
-    set info(data: InputField) {
+    set info(data: InputMetadata) {
         this.#info = data;
     }
 

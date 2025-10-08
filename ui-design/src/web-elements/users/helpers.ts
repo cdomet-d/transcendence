@@ -1,4 +1,6 @@
-import { Username } from "../../web-elements/users/user-atoms";
+import { Username } from './user-atoms';
+import * as defaults from '../../default-values';
+import * as types from '../../types-interfaces';
 
 /**
  * Creates a custom `Username` element displaying specified name and status.
@@ -8,8 +10,10 @@ import { Username } from "../../web-elements/users/user-atoms";
  * @returns A `Username` element with the given name and status set.
  */
 export function createUsernameDiv(username: string, status: boolean): Username {
-	const el = document.createElement('div', {is: 'username-container'}) as Username;
-	el.name = username;
-	el.updateStatus = status;
-	return el;
+    const el = document.createElement('div', { is: 'username-container' }) as Username;
+    el.name = username;
+    el.updateStatus = status;
+    return el;
 }
+
+export function createUserCardSocial(socialBtns: Array<types.BtnMetadata>, user: types.UserData) {}

@@ -1,4 +1,5 @@
-
+import { createIcon } from '../typography/helpers';
+import type { BtnMetadata } from '../../types-interfaces';
 
 /**
  * Custom menu button element extending HTMLButtonElement.
@@ -15,11 +16,24 @@
  * document.body.appendChild(btn);
  */
 export class menuBtn extends HTMLButtonElement {
+    #btnData: BtnMetadata;
+
     static get observedAttributes() {
         return ['disabled'];
     }
     constructor() {
         super();
+
+        this.#btnData = {
+            role: '',
+            content: null,
+            ariaLabel: '',
+            img: null,
+        };
+    }
+
+    set btnData(src: BtnMetadata) {
+        this.#btnData = src;
     }
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
@@ -36,12 +50,13 @@ export class menuBtn extends HTMLButtonElement {
     connectedCallback() {
         this.render();
     }
-    /**
-     * Sets the button's text content.
-     * @param val - The text to display inside the button.
-     */
-    set content(val: string) {
-        this.textContent = val;
+
+    renderTextualBtn() {
+        this.textContent = this.#btnData.content;
+    }
+
+    renderIconBtn() {
+        if (this.#btnData.img) this.appendChild(createIcon(this.#btnData.img));
     }
 
     render() {
@@ -52,9 +67,12 @@ export class menuBtn extends HTMLButtonElement {
         } else {
             this.classList.add('yellow-bg');
         }
+        this.role = this.#btnData.role;
+        this.ariaLabel = this.#btnData.ariaLabel;
+        if (this.#btnData.content) this.renderTextualBtn();
+        else this.renderIconBtn();
     }
 }
-
 customElements.define('menu-button', menuBtn, { extends: 'button' });
 
 /**
@@ -141,4 +159,3 @@ export class tabGroup extends HTMLDivElement {
 }
 
 customElements.define('tab-group', tabGroup, { extends: 'div' });
-
