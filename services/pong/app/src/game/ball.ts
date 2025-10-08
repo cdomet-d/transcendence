@@ -46,7 +46,7 @@ function updateScore(player: Player, opponent: Player, newX: number): boolean {
 function touchesPad(leftPad: coordinates, rightPad: coordinates, newX: number, newY: number): boolean {
 	if (newX + 10 > rightPad.x && (newY + 10 > rightPad.y && newY - 10 < rightPad.y + 54))
 		return true;
-	if (newX - 10 < leftPad.x && (newY + 1 > leftPad.y && newY - 1 < leftPad.y + 54))
+	if (newX - 10 < leftPad.x + 10 && (newY + 1 > leftPad.y && newY - 1 < leftPad.y + 54))
 		return true;
 	//TODO: check top of paddle
 	return false;
