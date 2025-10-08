@@ -9,6 +9,7 @@ export function addMessEvent(game: Game, ws: WebSocket) {
 		game.leftPad = mess.leftPad.y;
 		game.rightPad = mess.rightPad.y;
 		game.ball = mess.ball;
+		console.log("BALL:\nx:", game.ball.x, "\ny:", game.ball.y);
 	};
 }
 

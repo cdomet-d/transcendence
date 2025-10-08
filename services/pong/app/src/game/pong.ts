@@ -40,19 +40,12 @@ function setMessEvent(player: Player, opponent: Player, ball: ballObj, sendReply
 	})
 }
 
-// function keysDown(keys: keysObj): boolean {
-// 	for (const key in keys) {
-// 		if (keys[key])
-// 			return true;
-// 	}
-// 	return false
-// }
-
 function local(player: Player, opponent: Player, ball: ballObj, keys: keysObj, delta: number) {
 	updatePaddlePos(player, keys, delta);
 	updatePaddlePos(opponent, keys, delta);
 	if (updateBallPos(ball, player, opponent, delta)) {
 		player.socket.close();
+		//TODO: send result to gameManager via nats
 		return;
 	}
 	player.setMessPad("left", player.paddle.y);
@@ -72,6 +65,7 @@ function remote(player: Player, opponent: Player, ball: ballObj, keys: keysObj, 
 		if (updateBallPos(ball, player, opponent, delta)) {
 			player.socket.close();
 			opponent.socket.close();
+			//TODO: send result to gameManager via nats
 			return;
 		}
 		player.setMessBall("left", ball);
