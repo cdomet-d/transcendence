@@ -1,0 +1,44 @@
+%%{init:{"themeVariables": {
+    "noteBkgColor":"#f4f4f4", 
+    "noteTextColor":"black",
+    "noteBorderColor":"#000",
+    "fontFamily":"Arial"
+  }
+}}%%
+sequenceDiagram
+    title Tournament (GameManager)
+    autonumber
+
+    create actor U as User
+    create participant GM as GameManager
+    U-)GM: Open connection (WS)
+    Note over GM: 1. Lobby
+    GM->GM: Create Lobby
+    GM->GM: Setup UserSocketMap
+    GM->GM: Host joins
+    GM->GM: Host invites friends
+    GM->GM: Send Tournament/Game request (lobbyInfo)
+    Note over GM: 2. Tournament Creation
+    GM->GM: Create Bracket + tournamentObj<br> (ask DB for unique gameIDs)
+    GM->GM: Start Tournament
+    loop
+      Note over GM: 3. Tournament Routine
+      GM--)U: Send gameID (WS)
+      create Participant P as Pong
+      GM-)P: Send gameObj (NATS)
+      P->P: Create Game
+      U-)P: Open connection (WS)
+      P->P: Bouncer checks userIDs and gameID
+      Note over P: Game
+      P--)U: Close connection (WS)
+      P--)GM: Send updated gameObj (NATS)
+      GM->GM: Show EndOfMatch screen
+
+      create participant DB as Database
+      GM-)DB: Send gameObj (NATS)
+      Note over GM: 3.1 Tournament continues
+      Note over GM: Back to Step 9
+    end
+      Note over GM: 3.2 Tournament Over
+      GM--)U: Close all connections (WS)
+      Note over DB: Store result
