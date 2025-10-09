@@ -13,7 +13,7 @@ export class Username extends HTMLDivElement {
     #link: HTMLAnchorElement;
     #isLogged: boolean;
 
-	// TODO: make the user-status a percentage of username fontSize ? 
+    // TODO: make the user-status a percentage of username fontSize ?
     /**
      * Initializes the username and status elements.
      * Sets initial logged status to false.

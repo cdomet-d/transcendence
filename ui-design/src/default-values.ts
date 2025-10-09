@@ -39,4 +39,3 @@ export const userDefault: UserData = {
     id: '256',
     winstreak: '7',
 };
-

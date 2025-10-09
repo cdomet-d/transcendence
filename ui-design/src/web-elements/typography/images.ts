@@ -9,12 +9,7 @@ export class Icon extends HTMLImageElement {
 
     constructor() {
         super();
-        this.#data = {
-            src: '',
-            alt: '',
-            size: 'ismall',
-            id: '',
-        };
+        this.#data = { src: '', alt: '', size: 'ismall', id: '' };
     }
 
     set metadata(data: ImgMetadata) {
@@ -64,7 +59,7 @@ export class Avatar extends HTMLDivElement {
 
     set metadata(data: ImgMetadata) {
         this.#data = data;
-		this.render();
+        this.render();
     }
 
     connectedCallback() {

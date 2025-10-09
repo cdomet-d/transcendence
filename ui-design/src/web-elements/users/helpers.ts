@@ -34,7 +34,7 @@ export function createWinstreak(val: string): WinStreak {
  */
 export function createUserCardSocial(
     socialBtns: Array<types.BtnMetadata>,
-    user: types.UserData
+    user: types.UserData,
 ): UserCardSocial {
     const avatar = createAvatar(user.avatar);
     const username = createUsername(user.username, user.status);

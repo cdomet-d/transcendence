@@ -64,13 +64,13 @@ try {
     wrapper.appendChild(nav.createMenu(mainMenu, 'horizontal'));
     wrapper.appendChild(nav.createMenu(mainMenu, 'vertical'));
     wrapper.appendChild(user.createUsername('crimeGoose', false));
-	wrapper.appendChild(user.createUserCardSocial(defaults.socialMenu, defaults.userDefault));
-	wrapper.appendChild(user.createUserInline(defaults.userDefault));
+    wrapper.appendChild(user.createUserCardSocial(defaults.socialMenu, defaults.userDefault));
+    wrapper.appendChild(user.createUserInline(defaults.userDefault));
 
-	user.updateUserAvatar(iMeta,'256');
-	user.updateProfileView('stranger','256');
-	user.updateUserStatus(false, '256');
-	user.updateUsername('CringeWolf', '256');
+    user.updateUserAvatar(iMeta, '256');
+    user.updateProfileView('stranger', '256');
+    user.updateUserStatus(false, '256');
+    user.updateUsername('CringeWolf', '256');
 } catch (error) {
     console.log('[ERROR]', error);
 }

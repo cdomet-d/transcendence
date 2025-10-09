@@ -20,7 +20,7 @@ export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
  * - `f-s`, `f-m`, `f-l`: Font sizes (small, medium, large)
  * - `f-regular`: Regular font size
  */
-export type FontSize = 't1' | 't2' | 't3' | 'f-s' | 'f-m' | 'f-l' | 'f-regular'
+export type FontSize = 't1' | 't2' | 't3' | 'f-s' | 'f-m' | 'f-l' | 'f-regular';
 
 /**
  * Represents allowed font weight values for text elements.
@@ -28,7 +28,7 @@ export type FontSize = 't1' | 't2' | 't3' | 'f-s' | 'f-m' | 'f-l' | 'f-regular'
  * @remarks
  * - `f-bold`: Bold font weight
  */
-export type FontWeight = 'f-bold'
+export type FontWeight = 'f-bold';
 
 /**
  * Represents the structure of an input field.

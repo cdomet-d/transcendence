@@ -2,8 +2,7 @@ import { menuBtn } from './buttons';
 import { tabWrapper } from './tabs';
 import { Menu, SocialMenu } from './menus';
 
-import type { TabMetadata, MenuStyle, BtnMetadata, ProfileView} from '../../types-interfaces';
-
+import type { TabMetadata, MenuStyle, BtnMetadata, ProfileView } from '../../types-interfaces';
 
 /**
  * Creates a menu button element.
@@ -16,10 +15,8 @@ import type { TabMetadata, MenuStyle, BtnMetadata, ProfileView} from '../../type
  * document.body.appendChild(btn);
  */
 export function createBtn(btn: BtnMetadata): HTMLButtonElement {
-    const el = document.createElement('button', {
-        is: 'menu-button',
-    }) as menuBtn;
-	el.btnData = btn;
+    const el = document.createElement('button', { is: 'menu-button' }) as menuBtn;
+    el.btnData = btn;
     return el;
 }
 
@@ -30,9 +27,7 @@ export function createBtn(btn: BtnMetadata): HTMLButtonElement {
  * @returns A {@link tabWrapper} div element containing the tabs.
  */
 export function createTabs(list: Array<TabMetadata>): tabWrapper {
-    const el = document.createElement('div', {
-        is: 'tab-wrapper',
-    }) as tabWrapper;
+    const el = document.createElement('div', { is: 'tab-wrapper' }) as tabWrapper;
     el.tabList = list;
     return el;
 }
@@ -46,15 +41,19 @@ export function createTabs(list: Array<TabMetadata>): tabWrapper {
  */
 export function createMenu(content: Array<BtnMetadata>, style: MenuStyle): Menu {
     const el = document.createElement('div', { is: 'menu-wrapper' }) as Menu;
-	el.MenuElements = content;
-	el.MenuStyle = style;
-	return el;
+    el.MenuElements = content;
+    el.MenuStyle = style;
+    return el;
 }
 
-export function createSocialMenu(content: Array<BtnMetadata>, style: MenuStyle, v: ProfileView): SocialMenu {
+export function createSocialMenu(
+    content: Array<BtnMetadata>,
+    style: MenuStyle,
+    v: ProfileView,
+): SocialMenu {
     const el = document.createElement('div', { is: 'social-menu' }) as SocialMenu;
-	el.MenuElements = content;
-	el.MenuStyle = style;
-	el.view = v;
-	return el;
+    el.MenuElements = content;
+    el.MenuStyle = style;
+    el.view = v;
+    return el;
 }

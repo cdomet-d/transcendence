@@ -81,7 +81,9 @@ export class tabWrapper extends HTMLDivElement {
     set tabList(tabList: Array<TabMetadata>) {
         this.#tabList = tabList;
         if (!this.isValidTabList(this.#tabList))
-            throw new Error('Duplicate Tab.data will lead to UI confusion. Check your TabInfo array.');
+            throw new Error(
+                'Duplicate Tab.data will lead to UI confusion. Check your TabInfo array.',
+            );
     }
 
     attachEvent() {
@@ -127,9 +129,7 @@ export class tabWrapper extends HTMLDivElement {
     private createTabButtons(): HTMLDivElement {
         let isSet: boolean = false;
 
-        const tabHeader = document.createElement('div', {
-            is: 'tab-group',
-        }) as tabGroup;
+        const tabHeader = document.createElement('div', { is: 'tab-group' }) as tabGroup;
 
         this.#tabList.forEach((tab) => {
             const el = document.createElement('button', { is: 'tab-button' }) as tabBtn;

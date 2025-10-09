@@ -24,12 +24,7 @@ export class menuBtn extends HTMLButtonElement {
     constructor() {
         super();
 
-        this.#btnData = {
-            role: '',
-            content: null,
-            ariaLabel: '',
-            img: null,
-        };
+        this.#btnData = { role: '', content: null, ariaLabel: '', img: null };
     }
 
     set btnData(src: BtnMetadata) {

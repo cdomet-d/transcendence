@@ -41,7 +41,7 @@ export class Menu extends HTMLDivElement {
     /**
      * Sets the menu's layout style.
      * @param style - MenuStyle ('horizontal' or 'vertical').
-     */	
+     */
     set MenuStyle(style: MenuStyle) {
         this.#style = style;
     }
@@ -50,11 +50,11 @@ export class Menu extends HTMLDivElement {
         this.render();
     }
 
-	/**
+    /**
      * Renders the menu layout and appends button elements.
      */
     render() {
-		this.id = 'menu';
+        this.id = 'menu';
         this.className = 'gap-s box-border grid justify-items-center auto-cols-fr auto-rows-fr';
         if (this.#style === 'horizontal') this.classList.add('grid-flow-col');
         if (this.#style === 'vertical') this.classList.add('grid-flow-rows');
@@ -86,7 +86,7 @@ export class SocialMenu extends Menu {
      */
     set view(v: ProfileView) {
         this.#view = v;
-		this.updateView();
+        this.updateView();
     }
 
     override connectedCallback(): void {
@@ -123,7 +123,7 @@ export class SocialMenu extends Menu {
      * Updates the menu appearance based on current view state.
      */
     updateView() {
-		this.id = 'social-menu';
+        this.id = 'social-menu';
         const icon = this.querySelector('#friendship') as Icon;
         if (!icon) return;
         if (this.#view === 'friend') this.friend(icon);

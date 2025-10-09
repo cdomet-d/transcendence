@@ -9,9 +9,7 @@ import { type InputMetadata } from '../../types-interfaces';
  *
  */
 export function createUploadInput(id: string): fileUpload {
-    const input = document.createElement('input', {
-        is: 'file-upload',
-    }) as fileUpload;
+    const input = document.createElement('input', { is: 'file-upload' }) as fileUpload;
     input.setAttribute('type', 'file');
     input.setAttribute('id', id);
     return input;

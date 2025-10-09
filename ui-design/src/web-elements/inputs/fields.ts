@@ -1,4 +1,4 @@
-import type { InputMetadata } from '../../types-interfaces'
+import type { InputMetadata } from '../../types-interfaces';
 
 /**
  * Custom file upload input element.
@@ -14,7 +14,8 @@ export class fileUpload extends HTMLInputElement {
     }
 
     render() {
-        this.className = 'brdr relative file:absolute file:top-[12%] file:left-[0.5rem] file:w-[5rem] file:h-[75%]';
+        this.className =
+            'brdr relative file:absolute file:top-[12%] file:left-[0.5rem] file:w-[5rem] file:h-[75%]';
     }
 }
 
@@ -100,12 +101,8 @@ export class inputGroup extends HTMLDivElement {
             placeholder: 'Enter your username',
             type: 'text',
         };
-        this.#input = document.createElement('input', {
-            is: 'text-input',
-        }) as textInput;
-        this.#label = document.createElement('label', {
-            is: 'input-label',
-        }) as inputLabel;
+        this.#input = document.createElement('input', { is: 'text-input' }) as textInput;
+        this.#label = document.createElement('label', { is: 'input-label' }) as inputLabel;
 
         this.appendChild(this.#input);
         this.appendChild(this.#label);
