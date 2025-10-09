@@ -1,25 +1,3 @@
-
-interface userInfo {
-    userID?: number,
-    username?: string
-}
-
-interface match {
-    matchID: number,
-    tournamentID: number,
-    remote: boolean,
-    users: userInfo[] | undefined | null,
-    score: string,
-    winnerID: number,
-    loserID: number,
-}
-
-interface tournament {
-    tournamentID: number,
-    winnerID: number | undefined | null,
-    bracket: match[]
-}
-
 let wsInstance: any = null;
 
 function openWsConnection() {

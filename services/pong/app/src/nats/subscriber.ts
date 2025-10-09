@@ -1,24 +1,70 @@
-import 'dotenv/config';
-import { connect, StringCodec } from 'nats';
+import { connect, StringCodec, type NatsConnection } from 'nats';
+import { natsPublish } from './publisher.js'
+import { Game, type gameInfo } from '../classes/game.class.js';
+import type { FastifyInstance } from 'fastify';
 
-export async function natsSubscribtion() {
-  let token = process.env.NATS_SERVER_TOKEN;
-  const nc = await connect({ servers: "nats://nats-server:4222", token: token ?? "" });
+export async function initNatsConnexion(): Promise<NatsConnection> {
+	let token: string | undefined = process.env.NATS_SERVER_TOKEN;
+	if (!token)
+		throw new Error("NATS token undefined");
+	const nc = await connect({ servers: "nats://nats-server:4222", token: token});
+	return (nc);
+}
 
-  const sc = StringCodec();
+export async function natsSubscribtion(serv: FastifyInstance) {
+  	let token = process.env.NATS_SERVER_TOKEN;
+  	const nc = await connect({ servers: "nats://nats-server:4222", token: token ?? "" });
+	const sc = StringCodec();
 
-  const game = nc.subscribe('game.request');
-  (async () => {
-    for await (const msg of game) {
-      // console.log(`Received message: ${sc.decode(msg.data)}`);
-      
-      // approve or decline game start depending on??
-            
-      if (msg.reply)
-        nc.publish(msg.reply, msg.data);
-      console.log(`Pong published to "game.reply"`);
-    }
-  })();
+	const sub = nc.subscribe('game.request');
+	console.log(`Listening for messages on "game.request"...`);
 
-  console.log(`PONG listening on "game.request"`);
+	(async () => {
+		for await (const msg of sub) {
+      		console.log("6");
+
+
+			const _gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
+			serv.gameRegistry.addGame(new Game(_gameInfo));
+			console.log(`Received message: ${JSON.stringify(_gameInfo)}`);
+			
+			if (msg.reply) {
+      		console.log("7");
+
+        console.log("PONG send approved to GM");        
+        const gameReply = {
+          event: "approved",
+          users: _gameInfo._users, // THIS IS UNDEFINED SOMEHOW
+          gameID: _gameInfo._gameID // THIS IS UNDEFINED SOMEHOW
+        }
+        console.log(gameReply);
+				natsPublish(msg.reply, JSON.stringify(gameReply));
+      } else {
+        console.log("Error: No reply subject provided in game.request")
+        return;
+      }
+		}
+	})();
+
+	// serv.gameRegistry.addGame(new Game(gameobj)); //TODO: for testing
 };
+
+import type { user } from '../classes/game.class.js';
+const player1: user = {
+	_username: "cha",
+	_userID: 1
+}
+
+const player2: user = {
+	_username: "sweet",
+	_userID: 2
+}
+
+const gameobj: gameInfo = {
+	_gameID: 1,
+	_score: [],
+	_local: true,
+	_users: [player1, player2],
+	_winner: "",
+	_loser: ""
+}

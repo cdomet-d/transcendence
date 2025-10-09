@@ -11,7 +11,7 @@ sequenceDiagram
 
     create actor U as User
     create participant GM as GameManager
-    U-)GM: Open connection (WS)
+    U-)GM: Open connection /game/lobby (WS)
     Note over GM: 1. Lobby
     GM->GM: Create Lobby
     GM->GM: Setup UserSocketMap
@@ -23,11 +23,12 @@ sequenceDiagram
     GM->GM: Start Tournament
     loop
       Note over GM: 3. Tournament Routine
-      GM--)U: Send gameID (WS)
       create Participant P as Pong
-      GM-)P: Send gameObj (NATS)
+      GM-)P: Send gameObj via "game.request" (NATS)
+      P--)GM: Send confirmation via "game.reply" (NATS)
+      GM--)U: Send gameID (WS)
       P->P: Create Game
-      U-)P: Open connection (WS)
+      U-)P: Open connection /game/match (WS)
       P->P: Bouncer checks userIDs and gameID
       Note over P: Game
       P--)U: Close connection (WS)

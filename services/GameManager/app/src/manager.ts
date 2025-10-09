@@ -2,8 +2,8 @@ import { createTournament } from "./tournament/tournamentCreation.js";
 import { startTournament } from "./tournament/tournamentStart.js";
 
 interface userInfo {
-    userID: number,
-    username: string
+    userID?: number,
+    username?: string
 }
 
 interface lobbyInfo {
@@ -29,6 +29,8 @@ interface tournament {
     bracket: match[]
 }
 
+export type { userInfo, lobbyInfo, match, tournament };
+
 // function receiveLobbyInfo(): lobbyInfo {
 //     const userArray: userInfo[] = [
 //             { userID: 1, username: "sam" },
@@ -42,10 +44,12 @@ interface tournament {
 
 export function processLobbyRequest(lobbyInfo: lobbyInfo) {
     // Filter request
+    console.log("2");
+    console.log("lobby info: ", lobbyInfo);
     if (lobbyInfo.format === "tournament") {
         const tournament: tournament | undefined = createTournament(lobbyInfo);
         if (tournament === undefined) {
-            console.log("Error: tournament Creation");
+            console.log("Error: tournament object undefined!");
             return;
         }
         startTournament(tournament);

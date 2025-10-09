@@ -2,26 +2,7 @@ import { tournamentMap } from "./tournamentStart.js";
 import { Mutex } from 'async-mutex';
 import { startMatch } from "./tournamentStart.js";
 
-interface userInfo {
-    userID?: number,
-    username?: string
-}
-
-interface match {
-    matchID: number,
-    tournamentID: number,
-    remote: boolean,
-    users: userInfo[] | undefined | null,
-    score: string,
-    winnerID: number,
-    loserID: number,
-}
-
-interface tournament {
-    tournamentID: number,
-    winnerID: number | undefined | null,
-    bracket: match[]
-}
+import type { match, tournament } from '../../src/manager.js'
 
 let mutexMap: Map<number, Mutex> = new Map();
 

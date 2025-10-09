@@ -1,36 +1,8 @@
-
-interface userInfo {
-    userID: number,
-    username: string
-}
-
-interface lobbyInfo {
-    users: userInfo[],
-    remote: boolean,
-    format: "quick" | "tournament"
-    // gameSettings: gameSettingsObj
-}
-
-interface match {
-    matchID: number,
-    tournamentID: number,
-    remote: boolean,
-    users: userInfo[] | undefined | null,
-    score: string,
-    winnerID: number,
-    loserID: number,
-}
-
-interface tournament {
-    tournamentID: number,
-    winnerID: number | undefined | null,
-    bracket: match[]
-}
+import type { userInfo, lobbyInfo, match, tournament } from '../../src/manager.js'
 
 export function createTournament(payload: lobbyInfo): tournament | undefined {
     console.log("Creating Tournament");
 
-    // generate tournamentID
     // const tournamentID = generateUniqueID();
     const tournamentID = 99;
 
@@ -64,7 +36,7 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: number): match
         [lobbyInfo.users[2], lobbyInfo.users[3]]
     ];
     
-    // generate gameIDs
+    // need to generate unique gameIDs
     // create nbMatch objects
     let matches: match[] = [
         { matchID: 1, tournamentID: tournamentID, remote: true, users: opponents[0], score: "", winnerID: 0, loserID: 0 },
