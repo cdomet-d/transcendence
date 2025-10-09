@@ -1,4 +1,3 @@
-'use strict'
 /***************** MODULES *********************/
 // Core node modules
 import path from 'path'

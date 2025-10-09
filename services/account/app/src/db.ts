@@ -5,7 +5,7 @@ import { open } from 'sqlite';
 
 const dbpath = '/usr/data/account.db';
 
-async function dbConnector(fastify: FastifyInstance) {
+ async function dbConnector(fastify: FastifyInstance) {
 	try {
 		const db = await open ({
 			filename: dbpath,
@@ -13,18 +13,9 @@ async function dbConnector(fastify: FastifyInstance) {
 
 		});
 
-		//fastify.log.info('Connected to the account.db SQLite database');
-		//fastify.decorate('dbAccount', db);
-//
-
-        // --- ADD THESE LOGS ---
-        console.log('--- Inspecting DB object after creation ---');
-        console.log(db);
-        console.log('--- End Inspection ---');
-        // --- END OF LOG ---
-
-        fastify.log.info('Connected to the account.db SQLite database');
-        fastify.decorate('dbAccount', db);
+		fastify.log.info('Connected to the account.db SQLite database');
+		fastify.decorate('dbAccount', db);
+	
 	} catch (err) {
 		fastify.log.info('Connection to the account.db SQLite database failed');
 		process.exit(1);

@@ -1,7 +1,7 @@
-  CREATE TABLE usersAuth (
+CREATE TABLE usersAuth (
     userID INTEGER PRIMARY KEY,
     hashedPassword TEXT,
-    username TEXT UNIQUE,
+    username TEXT,
     userStatus INTEGER,
-    registerDate TEXT --TODO change this to datetime
-  );
+    registerDate TEXT
+);

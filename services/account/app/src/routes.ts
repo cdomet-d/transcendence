@@ -1,32 +1,36 @@
-import type { FastifyInstance } from "fastify";
-import { checkUsernameUnique } from "./account.service.js";
-import fp from "fastify-plugin"; 
+import type { FastifyInstance } from 'fastify';
 
-export async function minimalRoutes(serv: FastifyInstance) {
-    serv.get('/test-db', async (request, reply) => {
-        try {
-            console.log("--- TESTING DB CONNECTION ---");
-            if (!serv.dbAccount) {
-                console.error("CRITICAL: serv.dbAccount is UNDEFINED!");
-                return reply.code(500).send({ error: "dbAccount not decorated." });
-            }
+export async function accountRoutes(serv: FastifyInstance) {
+	serv.post('/account/register', async (request, reply) => {
+		try {
+			const { username } = request.body as { username: string };
+			const { hashedPass } = request.body as { hashedPass: string };
 
-            // A very simple query
-            const result = await serv.dbAccount.get("SELECT 1 AS test");
-            
-            console.log("DB Query Result:", result);
-            return reply.send({ success: true, data: result });
+			if (!username || !hashedPass)
+				return reply.code(400).send({ message: 'Missing username or hashedPass.' });
 
-        } catch (error) {
-            console.error("Error in /test-db route:", error);
-            return reply.code(500).send({ success: false, error: error});
-        }
-    });
+			const query = `
+				INSERT INTO usersAuth (hashedPassword, username, userStatus, registerDate)
+				VALUES (?, ?, 1, ?)
+			`;
+
+			const params = [
+				hashedPass,
+				username,
+				new Date().toISOString()
+			];
+			
+			const result = await serv.dbAccount.run(query, params);
+
+			return (reply.code(201).send({
+				success: true,
+				message: 'Account registered !'
+			}));
+
+			} catch (error) {
+				serv.log.error(`Error creating user account: ${error}`);
+				return reply.code(500).send({ message: 'Internal server error' });
+			}
+	});
 }
 
-//TODO: check password match when connection
-//TODO: update password
-//TODO: update username BUUUUT we need to match the username in the user table soooooo
-
-
-//export default fp(accountRoutes);
