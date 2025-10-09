@@ -5,7 +5,8 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && postcss ./tailwind.css -o dist/styles.css",
-		"watch": "tsc --watch & postcss ./tailwind.css -o dist/styles.css --watch"
+		"watch": "tsc --watch & postcss ./tailwind.css -o dist/styles.css --watch",
+		"format": "npx prettier --write ./src/**/*.ts"
 	},
 	"keywords": [],
 	"author": "",

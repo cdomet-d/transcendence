@@ -1,9 +1,10 @@
-import { UserCardSocial, Username, UserInline, WinStreak } from './user-atoms';
-import * as types from '../../types-interfaces';
+import { Avatar } from '../typography/images';
 import { createAvatar } from '../typography/helpers';
 import { createSocialMenu } from '../navigation/helpers';
-import { Avatar } from '../typography/images';
-import type { SocialMenu } from '../navigation/menus';
+import { SocialMenu } from '../navigation/menus';
+import { UserCardSocial, UserInline } from './profile';
+import { Biography, Username, Winstreak } from './user-atoms';
+import * as types from '../../types-interfaces';
 
 /**
  * Creates a custom `Username` element displaying specified name and status.
@@ -15,15 +16,22 @@ import type { SocialMenu } from '../navigation/menus';
 export function createUsername(username: string, status: boolean): Username {
     const el = document.createElement('div', { is: 'username-container' }) as Username;
     el.name = username;
-    el.updateStatus = status;
+    el.status = status;
     return el;
 }
 
-export function createWinstreak(val: string): WinStreak {
-    const el = document.createElement('span', { is: 'winstreak-block' }) as WinStreak;
+export function createWinstreak(val: string): Winstreak {
+    const el = document.createElement('span', { is: 'winstreak-block' }) as Winstreak;
     el.winstreakValue = val;
     return el;
 }
+
+export function createBiography(val: string) : Biography {
+	const el = document.createElement('p', {is: 'user-bio'}) as Biography;
+	el.bioContent = val;
+	return el;
+}
+
 
 /**
  * Creates a user card element with avatar, username, and social menu.
@@ -34,13 +42,11 @@ export function createWinstreak(val: string): WinStreak {
  */
 export function createUserCardSocial(
     socialBtns: Array<types.BtnMetadata>,
-    user: types.UserData,
+    user: types.UserData
 ): UserCardSocial {
-    const avatar = createAvatar(user.avatar);
-    const username = createUsername(user.username, user.status);
-    username.fontSize = 'f-m';
-    username.fontWeight = 'f-bold';
-    username.shadow = true;
+    const avatar = createAvatar(user.avatar) as Avatar;
+    const username = createUsername(user.username, user.status) as Username;
+    username.customizeStyle('f-m', 'f-bold', true);
     const menu = createSocialMenu(socialBtns, 'horizontal', 'stranger');
     const card = document.createElement('div', { is: 'user-card-social' }) as UserCardSocial;
     card.id = user.id;
@@ -64,7 +70,7 @@ export function createUserInline(user: types.UserData): UserInline {
     const wstreak = createWinstreak(user.winstreak);
     const card = document.createElement('div', { is: 'user-inline' }) as UserInline;
 
-    username.fontSize = 'f-regular';
+    username.customizeStyle('f-regular');
     card.id = user.id;
     card.appendChild(avatar);
     card.appendChild(username);
@@ -114,8 +120,8 @@ export function updateUserStatus(status: boolean, userId: string) {
     document.addEventListener('DOMContentLoaded', () => {
         const userCard = document.getElementById(userId) as UserCardSocial;
         if (userCard) {
-            const usernm = userCard.querySelector('#username') as Username;
-            usernm.updateStatus = status;
+            const username = userCard.querySelector('#username') as Username;
+            username.status = status;
         }
     });
 }
@@ -130,8 +136,9 @@ export function updateUsername(newUserName: string, userId: string) {
     document.addEventListener('DOMContentLoaded', () => {
         const userCard = document.getElementById(userId) as UserCardSocial;
         if (userCard) {
-            const usernm = userCard.querySelector('#username') as Username;
-            usernm.name = newUserName;
+            const username = userCard.querySelector('#username') as Username;
+            username.name = newUserName;
         }
     });
 }
+

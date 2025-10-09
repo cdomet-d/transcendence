@@ -477,6 +477,16 @@
 		gap: var(--space-xs) var(--space-xs);
 	}
 
+	.biography {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 6;
+		line-clamp: 6;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		padding: var(--space-xxs);
+	}
+
 	.title-shadow {
 		text-shadow: -0px -0px var(--title-shadow),
 			-0.2px -0.1px var(--title-shadow), -0.4px -0.2px var(--title-shadow),

@@ -1,7 +1,6 @@
 import type { FontWeight, FontSize, ImgMetadata } from '../../types-interfaces';
 import { createIcon } from '../typography/helpers';
 import type { Icon } from '../typography/images';
-import { createUserCardSocial, createUserInline } from './helpers';
 
 /**
  * Custom element for displaying a username with status.
@@ -39,27 +38,19 @@ export class Username extends HTMLDivElement {
         this.render();
     }
 
-    set fontSize(val: FontSize) {
-        this.#link.classList.add(val);
-        this.render();
-    }
-
-    set fontWeight(val: FontWeight) {
-        this.#link.classList.add(val);
-        this.render();
-    }
-
-    set shadow(val: boolean) {
-        if (val) this.#link.classList.add('tiny-shadow');
-        this.render();
-    }
-
     /**
      * Updates the login status.
      * @param isLogged - Whether the user is logged in.
      */
-    set updateStatus(isLogged: boolean) {
+    set status(isLogged: boolean) {
         this.#isLogged = isLogged;
+        this.render();
+    }
+
+    customizeStyle(fsize?: FontSize, fweight?: FontWeight, shadow?: boolean) {
+        if (fsize) this.#link.classList.add(fsize);
+        if (fweight) this.#link.classList.add(fweight);
+        if (shadow) this.#link.classList.add('tiny-shadow');
         this.render();
     }
 
@@ -75,19 +66,19 @@ export class Username extends HTMLDivElement {
     render() {
         this.id = 'username';
         this.#status.className = 'user-status';
-        this.className = 'f-yellow f-s grid gap-s username justify-items-center';
+        this.className = 'true false f-yellow f-s grid gap-s username justify-items-center';
         this.#link.classList.add('flex', 'items-center');
         if (this.#isLogged) {
-            this.#status.classList.add('true');
+            this.#status.classList.toggle('true');
         } else {
-            this.#status.classList.add('false');
+            this.#status.classList.toggle('false');
         }
     }
 }
 
 customElements.define('username-container', Username, { extends: 'div' });
 
-export class WinStreak extends HTMLSpanElement {
+export class Winstreak extends HTMLSpanElement {
     #icon: Icon;
     #val: HTMLSpanElement;
 
@@ -114,29 +105,21 @@ export class WinStreak extends HTMLSpanElement {
     }
 
     render() {
-        this.className = 'flex flex-initial gap-xs items-center';
-        this.#val.className = 'username f-yellow text-[16px]';
         this.id = 'winstreak';
+        this.className = 'flex flex-initial gap-xs items-center space-even';
+        this.#val.className = 'f-bold text-[16px]';
     }
 }
 
-customElements.define('winstreak-block', WinStreak, { extends: 'span' });
+customElements.define('winstreak-block', Winstreak, { extends: 'span' });
 
-/**
- * A small user card with a dynamic social menu. It's just a div, styled to hold
- * an avatar, a username and the social menu. The profile card is identified by the userID of the user it represents,
- * to allow later selection and dynamic UI updates (logging in/out, the users becoming friends, avatar or username changes...).
- *
- * @setter Id - used to set the container `id` attribute.
- *
- * @remark You should use {@link createUserCardSocial} which encapsulates creation logic.
- */
-export class UserCardSocial extends HTMLDivElement {
+export class Biography extends HTMLParagraphElement {
     constructor() {
         super();
     }
-    set Id(id: string) {
-        this.id = id;
+    set bioContent(val: string) {
+        this.textContent = val;
+        this.render();
     }
 
     connectedCallback() {
@@ -144,38 +127,9 @@ export class UserCardSocial extends HTMLDivElement {
     }
 
     render() {
-        this.className = 'border-box pad-s grid place-items-center small-user';
+        this.id = 'biography';
+        this.className = 'border-box w-[full] max-h[6.5rem] leading-[1rem] biography';
     }
 }
 
-customElements.define('user-card-social', UserCardSocial, { extends: 'div' });
-
-/**
- * Inline profile for listing users. It's just a div, styled to hold
- * an avatar, a username and the user's winstreak. 
- 
- * Like UserCardSocial, it relies on the user's id for dynamic UI updates.
- *
- * @setter Id - used to set the container `id` attribute.
- *
- * @remark You should use {@link createUserInline} which encapsulates creation logic.
- */
-export class UserInline extends HTMLDivElement {
-    constructor() {
-        super();
-    }
-
-    set Id(id: string) {
-        this.id = id;
-    }
-
-    connectedCallback() {
-        this.render();
-    }
-
-    render() {
-        this.className = 'gap-m box-border flex flex-initial items-center';
-    }
-}
-
-customElements.define('user-inline', UserInline, { extends: 'div' });
+customElements.define('user-bio', Biography, { extends: 'p' });
