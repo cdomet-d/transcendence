@@ -32,12 +32,14 @@ export class Game {
 	#_gameInfo: gameInfo;
 	#_players: playerTab;
 	#_ball: ballObj;
+	#_paddleSpeed: number;
 
     /*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo) {
 		this.#_gameInfo = gameInfo;
 		this.#_players = new Array();
 		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025};
+		this.#_paddleSpeed = 0.2;
 	}
 
     /*                              GETTERS                                  */
@@ -61,6 +63,10 @@ export class Game {
 		return this.#_ball;
 	}
 	
+	get paddleSpeed(): number {
+		return this.#_paddleSpeed;
+	}
+
     /*                              SETTERS                                  */
 	set score(score: Array< number >) {
 		this.#_gameInfo._score = score;

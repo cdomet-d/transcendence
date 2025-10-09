@@ -13,15 +13,10 @@ export interface repObj {
 	ball: coordinates,
 }
 
-// interface speedObj {
-// 	paddle: number,
-// }
-
 export class Player {
 	/*                             PROPERTIES                                */
 	#_userID: number;
 	#_socket: WebSocket;
-	// #_speed: speedObj;
 	#_playerSide: string;
 	#_paddle: coordinates;
 	#_keys: keysObj;
@@ -42,7 +37,6 @@ export class Player {
 			this.#_paddle = {x: 10, y: 108};
 			this.#_playerSide = "left";
 		}
-		// this.#_speed = {paddle: 0.2};
 		this.#_score = 0;
 	}
 
@@ -70,10 +64,6 @@ export class Player {
 			return true;
 		return false;
 	}
-	
-	// get speed(): speedObj {
-	// 	return this.#_speed;
-	// }
 	
 	get score(): number {
 		return this.#_score;
