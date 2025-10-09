@@ -23,8 +23,14 @@ export interface ballObj {
 	y: number,
 	dx: number,
 	dy: number,
+	lastdx: number
 }
 
+interface timeObj {
+	stamp: number,
+	lastFrame: number,
+	delta: number,
+}
 export type playerTab = Array< Player >;
 
 export class Game {
@@ -33,13 +39,15 @@ export class Game {
 	#_players: playerTab;
 	#_ball: ballObj;
 	#_paddleSpeed: number;
+	#_time: timeObj;
 
     /*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo) {
 		this.#_gameInfo = gameInfo;
 		this.#_players = new Array();
-		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025};
+		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3};
 		this.#_paddleSpeed = 0.2;
+		this.#_time = { stamp: 0, lastFrame: 0, delta: 0};
 	}
 
     /*                              GETTERS                                  */
@@ -67,6 +75,9 @@ export class Game {
 		return this.#_paddleSpeed;
 	}
 
+	get time(): timeObj {
+		return this.#_time;
+	}
     /*                              SETTERS                                  */
 	set score(score: Array< number >) {
 		this.#_gameInfo._score = score;
