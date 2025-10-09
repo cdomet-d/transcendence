@@ -205,9 +205,9 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/users/updateProfile/:userID', async(request, reply) => {
+	serv.post('/users/updateProfile', async(request, reply) => {
 		try {
-			const { userID } = request.params as { userID: number };
+			const userID = request.user.userID;
 			const statsToUpdate = request.body as { [key: string]: number };
 
 			const validStatKeys = [

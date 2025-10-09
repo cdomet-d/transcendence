@@ -344,3 +344,68 @@ TODO :
 * Add .env varaible for db setup to ensure flexibility
 * Change all request to https
 * check all internal and external https request
+* Update which routes should or shoudn't have a variable parameter
+
+
+
+Of course. Based on REST API design principles and security best practices, here is a logical breakdown of which routes should and shouldn't use a variable parameter. The key idea is to use URL parameters to **identify a specific public resource** you want to view or act upon, but **not** for actions a user performs on their own account.
+
+---
+
+### ## Routes That Should Logically Have a Variable Parameter ✅
+
+These routes are justified in using a URL parameter because they are for looking up **publicly accessible information** about a specific user. The parameter acts as a public identifier to specify *which* user's data to retrieve.
+
+* `GET /internal/users/by-username/:username`
+    * **Reason:** This is a classic lookup function. You provide a public identifier (`username`) to get a stable one (`userID`). This is a perfect use case.
+* `GET /internal/users/profile/:userID`
+    * **Reason:** Retrieves a specific user's public profile using a stable ID. Correct.
+* `GET /users/activity/:userID`
+    * **Reason:** Fetches a specific piece of public information (activity status) for a given user. Correct.
+* `GET /users/lastConnection/:userID`
+    * **Reason:** Similar to the activity route, this gets a specific public detail about a user. Correct.
+* `GET /users/userStats/:userID`
+    * **Reason:** Retrieves a specific user's public stats. Correct.
+* `POST /internal/users/createProfile/:userID`
+    * **Reason:** This is an internal or admin-style action to create a resource for a *specific* user. The `userID` is necessary to associate the new profile correctly. This is a valid use case for a privileged operation.
+
+---
+
+### ## Routes That Should Not Have a Variable Parameter ❌
+
+These routes all involve a user **updating their own data**. The server should already know *who* the user is from their authentication token (JWT). Adding a `/:userID` parameter is redundant and encourages poor security practices, as a user could try changing the ID in the URL to modify another user's data.
+
+These should be refactored to be generic endpoints where the `userID` is securely retrieved from the user's authenticated session.
+
+* `POST /users/updateProfile/:userID`
+    * **Should be:** `PATCH /users/profile` (The user ID comes from the JWT).
+* `POST /users/updateAvatar/:userID`
+    * **Should be:** `PATCH /users/avatar`
+* `POST /users/updateBio/:userID`
+    * **Should be:** `PATCH /users/bio`
+* `POST /users/updateProfileColor/:userID`
+    * **Should be:** `PATCH /users/profile-color`
+* `POST /users/updateActivityStatus/:userID`
+    * **Should be:** `PATCH /users/activity-status`
+* `POST /users/updateLastConnection/:userID`
+    * **Should be:** `POST /users/last-connection` (This could be a POST as it's creating a new connection record/event).
+* `POST /users/updateUsername/:userID`
+    * **Should be:** `PATCH /users/username`
+* `POST /users/updateAllStats/:userID`
+    * **Should be:** `PATCH /users/stats`
+* `POST /users/updateLonguestMatch/:userID`
+    * **Should be:** `PATCH /users/stats/longest-match`
+* `POST /users/updateShortestMatch/:userID`
+    * **Should be:** `PATCH /users/stats/shortest-match`
+* `POST /users/updateTotalMatch/:userID`
+    * **Should be:** `PATCH /users/stats/total-match`
+* `POST /users/updateWins/:userID`
+    * **Should be:** `PATCH /users/stats/wins`
+* `POST /users/endWinStreak/:userID` (Incorrectly named, seems to increment streak)
+    * **Should be:** `POST /users/stats/win-streak/increment`
+* `POST /users/addWinStreak/:userID` (Incorrectly named, seems to reset streak)
+    * **Should be:** `POST /users/stats/win-streak/reset`
+* `POST /users/updateAverageMatchDuration/:userID`
+    * **Should be:** `PATCH /users/stats/average-match-duration`
+* `POST /users/updateHighestScore/:userID`
+    * **Should be:** `PATCH /users/stats/highest-score`
