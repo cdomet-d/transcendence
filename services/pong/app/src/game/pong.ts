@@ -6,17 +6,13 @@ import { gameLoop } from './game.loop.js';
 export function setUpGame(game: Game) {
 	if (!game.players[0] || !game.players[1])
 		return; //TODO: deal with that
-
 	const player1: Player = game.players[0];
 	const player2: Player = game.players[1];
-	
 	setMessEvent(player1);
 	setMessEvent(player2);
-	if (game.local)
-		gameLoop(game, player1, player2);
-	else
-		gameLoop(game, player1, player2);
-
+	game.time.lastFrame = Date.now();
+	console.log("Starting gameLoop for gameId:", game.gameID);
+	gameLoop(game, player1, player2);
 }
 
 function setMessEvent(player: Player) {
