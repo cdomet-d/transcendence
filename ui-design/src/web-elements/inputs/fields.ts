@@ -108,6 +108,11 @@ export class inputGroup extends HTMLDivElement {
         this.appendChild(this.#label);
     }
 
+    set isSearchbar(val: boolean) {
+        if (val) this.#input.classList.add('searchbar-padding');
+        this.render();
+    }
+
     connectedCallback() {
         this.render();
     }

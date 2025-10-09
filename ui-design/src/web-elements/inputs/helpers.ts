@@ -23,6 +23,7 @@ export function createUploadInput(id: string): fileUpload {
  */
 export function createInputGrp(fieldData: InputMetadata): HTMLDivElement {
     const el = document.createElement('div', { is: 'input-grp' }) as inputGroup;
+    if (fieldData.id === 'search') el.isSearchbar = true;
     el.info = fieldData;
     return el;
 }

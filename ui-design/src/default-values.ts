@@ -1,9 +1,9 @@
-import type { BtnMetadata, UserData } from './types-interfaces';
+import type { buttonData, UserData } from './types-interfaces';
 
-export const socialMenu: Array<BtnMetadata> = [
+export const socialMenu: Array<buttonData> = [
     {
         content: null,
-        role: 'social-menu',
+        type: 'button',
         img: {
             id: 'friendship',
             src: '/assets/icons/add-user.png',
@@ -14,7 +14,7 @@ export const socialMenu: Array<BtnMetadata> = [
     },
     {
         content: null,
-        role: 'social-menu',
+        type: 'button',
         img: {
             id: 'challenge',
             src: '/assets/icons/challenge.png',
@@ -39,3 +39,6 @@ export const userDefault: UserData = {
     id: '256',
     winstreak: '7',
 };
+
+export const usernamePattern: string = '^[a-zA-Z0-9]{4,18}$';
+export const passwordPattern: string = '^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&]).{12,256}$';

@@ -13,23 +13,16 @@ const iMeta: types.ImgMetadata = {
     size: 'imedium',
 };
 
-// const bMeta: types.BtnMetadata = {
-//     role: 'social-menu',
-//     content: 'pp',
-//     ariaLabel: 'pp',
-// 	img: null
-// };
-
 const tabs: Array<types.TabMetadata> = [
     { id: 'history', content: 'Game history', default: true },
     { id: 'stats', content: 'Statistics', default: false },
     { id: 'friends', content: 'Friends', default: false },
 ];
 
-const mainMenu: Array<types.BtnMetadata> = [
-    { content: 'Profile', role: 'menu', img: null, ariaLabel: 'User Profile Button' },
-    { content: 'Play', role: 'menu', img: null, ariaLabel: 'Pong Game' },
-    { content: 'Leaderboard', role: 'menu', img: null, ariaLabel: 'Leaderboard' },
+const mainMenu: Array<types.buttonData> = [
+    { content: 'Profile', type: 'button', img: null, ariaLabel: 'User Profile Menu Button' },
+    { content: 'Play', type: 'button', img: null, ariaLabel: 'Pong Game Menu Button' },
+    { content: 'Leaderboard', type: 'button', img: null, ariaLabel: 'Leaderboard Menu Button' },
 ];
 
 const fieldData: types.InputMetadata = {
@@ -65,6 +58,7 @@ try {
     wrapper.appendChild(nav.createMenu(mainMenu, 'vertical'));
     wrapper.appendChild(user.createUserCardSocial(defaults.socialMenu, defaults.userDefault));
     wrapper.appendChild(user.createUserInline(defaults.userDefault));
+    wrapper.appendChild(nav.createSearchbar());
 } catch (error) {
     console.log('[ERROR]', error);
 }

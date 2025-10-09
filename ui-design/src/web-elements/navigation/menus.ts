@@ -1,5 +1,5 @@
 import { createBtn } from './helpers';
-import type { BtnMetadata, MenuStyle, ProfileView } from '../../types-interfaces';
+import type { buttonData, MenuStyle, ProfileView } from '../../types-interfaces';
 import type { Icon } from '../typography/images';
 
 /**
@@ -8,7 +8,7 @@ import type { Icon } from '../typography/images';
  * @remarks
  * The menu supports two styles: 'horizontal' and 'vertical', which control the grid layout direction.
  * They also support both icons and textual elements.
- * Menu elements are buttons represented by BtnMetadata and generated using the createBtn helper.
+ * Menu elements are buttons represented by buttonData and generated using the createBtn helper.
  *
  * @example
  * ```
@@ -22,7 +22,7 @@ import type { Icon } from '../typography/images';
  * ```
  */
 export class Menu extends HTMLDivElement {
-    #elements: Array<BtnMetadata>;
+    #elements: Array<buttonData>;
     #style: MenuStyle;
 
     constructor() {
@@ -32,9 +32,9 @@ export class Menu extends HTMLDivElement {
     }
     /**
      * Sets the menu's button elements.
-     * @param list - Array of BtnMetadata for menu buttons.
+     * @param list - Array of buttonData for menu buttons.
      */
-    set MenuElements(list: Array<BtnMetadata>) {
+    set MenuElements(list: Array<buttonData>) {
         this.#elements = list;
     }
 
@@ -54,6 +54,7 @@ export class Menu extends HTMLDivElement {
      * Renders the menu layout and appends button elements.
      */
     render() {
+        this.role = 'navigation';
         this.id = 'menu';
         this.className = 'gap-s box-border grid justify-items-center auto-cols-fr auto-rows-fr';
         if (this.#style === 'horizontal') this.classList.add('grid-flow-col');

@@ -30,6 +30,8 @@ export type FontSize = 't1' | 't2' | 't3' | 'f-s' | 'f-m' | 'f-l' | 'f-regular';
  */
 export type FontWeight = 'f-bold';
 
+export type BtnType = 'button' | 'submit' | 'reset';
+
 /**
  * Represents the structure of an input field.
  *
@@ -73,14 +75,14 @@ export interface ImgMetadata {
 /**
  * A button's metadata.
  *
- * @property {string} role - The button's role (for accessibility).
+ * @property {string} type - The button's type (`button` | `submit` | `reset`).
  * @property {string|null} content - The button's text content.
  * @property {ImgMetadata|null} img - Metadata for an associated image.
  * @property {string} ariaLabel - The button's aria-label for accessibility.
  *   See: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-label
  */
-export interface BtnMetadata {
-    role: string;
+export interface buttonData {
+    type: BtnType;
     content: string | null;
     img: ImgMetadata | null;
     ariaLabel: string;

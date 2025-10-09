@@ -1,8 +1,9 @@
 import { menuBtn } from './buttons';
 import { tabWrapper } from './tabs';
 import { Menu, SocialMenu } from './menus';
+import { Searchbar } from './search';
 
-import type { TabMetadata, MenuStyle, BtnMetadata, ProfileView } from '../../types-interfaces';
+import type { TabMetadata, MenuStyle, buttonData, ProfileView } from '../../types-interfaces';
 
 /**
  * Creates a menu button element.
@@ -14,9 +15,9 @@ import type { TabMetadata, MenuStyle, BtnMetadata, ProfileView } from '../../typ
  * const btn = createBtn({ content: "Click me", role: "menuitem" });
  * document.body.appendChild(btn);
  */
-export function createBtn(btn: BtnMetadata): HTMLButtonElement {
+export function createBtn(btn: buttonData): HTMLButtonElement {
     const el = document.createElement('button', { is: 'menu-button' }) as menuBtn;
-    el.btnData = btn;
+    el.btn = btn;
     return el;
 }
 
@@ -35,11 +36,11 @@ export function createTabs(list: Array<TabMetadata>): tabWrapper {
 /**
  * Creates a menu wrapper element with buttons and style.
  *
- * @param content - Array of {@link BtnMetadata} objects to include in the menu.
+ * @param content - Array of {@link buttonData} objects to include in the menu.
  * @param style - Menu style of type {@link MenuStyle}. Can be vertical or horizontal. Defaults to horizontal.
  * @returns A styled {@link Menu} div element.
  */
-export function createMenu(content: Array<BtnMetadata>, style: MenuStyle): Menu {
+export function createMenu(content: Array<buttonData>, style: MenuStyle): Menu {
     const el = document.createElement('div', { is: 'menu-wrapper' }) as Menu;
     el.MenuElements = content;
     el.MenuStyle = style;
@@ -47,7 +48,7 @@ export function createMenu(content: Array<BtnMetadata>, style: MenuStyle): Menu 
 }
 
 export function createSocialMenu(
-    content: Array<BtnMetadata>,
+    content: Array<buttonData>,
     style: MenuStyle,
     v: ProfileView,
 ): SocialMenu {
@@ -55,5 +56,10 @@ export function createSocialMenu(
     el.MenuElements = content;
     el.MenuStyle = style;
     el.view = v;
+    return el;
+}
+
+export function createSearchbar(): Searchbar {
+    const el = document.createElement('form', { is: 'search-form' }) as Searchbar;
     return el;
 }

@@ -26,23 +26,22 @@ export function createWinstreak(val: string): Winstreak {
     return el;
 }
 
-export function createBiography(val: string) : Biography {
-	const el = document.createElement('p', {is: 'user-bio'}) as Biography;
-	el.bioContent = val;
-	return el;
+export function createBiography(val: string): Biography {
+    const el = document.createElement('p', { is: 'user-bio' }) as Biography;
+    el.bioContent = val;
+    return el;
 }
-
 
 /**
  * Creates a user card element with avatar, username, and social menu.
  *
- * @param socialBtns - Array of social button metadata. ({@link types.BtnMetadata})
+ * @param socialBtns - Array of social button metadata. ({@link types.buttonData})
  * @param user - The user data object ({@link types.UserData}).
  * @returns A `UserCardSocial` element populated with user info and social buttons.
  */
 export function createUserCardSocial(
-    socialBtns: Array<types.BtnMetadata>,
-    user: types.UserData
+    socialBtns: Array<types.buttonData>,
+    user: types.UserData,
 ): UserCardSocial {
     const avatar = createAvatar(user.avatar) as Avatar;
     const username = createUsername(user.username, user.status) as Username;
@@ -141,4 +140,3 @@ export function updateUsername(newUserName: string, userId: string) {
         }
     });
 }
-

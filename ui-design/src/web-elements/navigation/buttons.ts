@@ -1,5 +1,5 @@
 import { createIcon } from '../typography/helpers';
-import type { BtnMetadata } from '../../types-interfaces';
+import type { buttonData } from '../../types-interfaces';
 
 /**
  * Custom menu button element extending HTMLButtonElement.
@@ -16,7 +16,7 @@ import type { BtnMetadata } from '../../types-interfaces';
  * document.body.appendChild(btn);
  */
 export class menuBtn extends HTMLButtonElement {
-    #btnData: BtnMetadata;
+    #btn: buttonData;
 
     static get observedAttributes() {
         return ['disabled'];
@@ -24,11 +24,11 @@ export class menuBtn extends HTMLButtonElement {
     constructor() {
         super();
 
-        this.#btnData = { role: '', content: null, ariaLabel: '', img: null };
+        this.#btn = { type: 'button', content: null, ariaLabel: '', img: null };
     }
 
-    set btnData(src: BtnMetadata) {
-        this.#btnData = src;
+    set btn(src: buttonData) {
+        this.#btn = src;
     }
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
@@ -47,11 +47,11 @@ export class menuBtn extends HTMLButtonElement {
     }
 
     renderTextualBtn() {
-        this.textContent = this.#btnData.content;
+        this.textContent = this.#btn.content;
     }
 
     renderIconBtn() {
-        if (this.#btnData.img) this.appendChild(createIcon(this.#btnData.img));
+        if (this.#btn.img) this.appendChild(createIcon(this.#btn.img));
     }
 
     render() {
@@ -62,9 +62,9 @@ export class menuBtn extends HTMLButtonElement {
         } else {
             this.classList.add('yellow-bg');
         }
-        this.role = this.#btnData.role;
-        this.ariaLabel = this.#btnData.ariaLabel;
-        if (this.#btnData.content) this.renderTextualBtn();
+        this.type = this.#btn.type;
+        this.ariaLabel = this.#btn.ariaLabel;
+        if (this.#btn.content) this.renderTextualBtn();
         else this.renderIconBtn();
     }
 }
