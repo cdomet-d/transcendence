@@ -200,6 +200,13 @@ services:
       - ./services/pong/app:/usr/app
     depends_on:
       -  nats-server
+    # healthcheck:
+    #   test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 3
+    #   start_period: 25s
+    # user: "${T_UID}:${T_GID}"
   users:
     build:
       context: ./services/users

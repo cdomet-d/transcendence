@@ -12,3 +12,4 @@ output.css
 package-lock.json
 *.db
 *.log*
+jest.results.txt
