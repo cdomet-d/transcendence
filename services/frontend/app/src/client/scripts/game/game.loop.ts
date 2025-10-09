@@ -3,9 +3,9 @@ import { renderGame } from "./game.render.utils.js";
 import { Game, HEIGHT, WIDTH } from "./game.class.js";
 
 export function startGame(game: Game, ws: WebSocket) {
+	addMessEvent(game, ws);
 	window.addEventListener("keydown", createKeyDownEvent(game.mess._keys));
 	window.addEventListener("keyup", createKeyUpEvent(game.mess._keys));
-	addMessEvent(game, ws);
 	game.frameId = window.requestAnimationFrame(FrameRequestCallback(game, ws));
 }
 
