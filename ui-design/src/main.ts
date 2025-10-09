@@ -5,11 +5,10 @@ import * as nav from './web-elements/navigation/helpers.js';
 import * as user from './web-elements/users/helpers.js';
 import * as defaults from './default-values.js';
 import type * as types from './types-interfaces.js';
-import type { UserCardSocial } from './web-elements/users/user-atoms.js';
 
 const iMeta: types.ImgMetadata = {
     id: 'user-avatar',
-    src: '/assets/icons/magenta-avatar.png',
+    src: '/assets/icons/purple-avatar.png',
     alt: 'pp',
     size: 'imedium',
 };
@@ -64,12 +63,14 @@ try {
     wrapper.appendChild(typography.createAvatar(iMeta));
     wrapper.appendChild(nav.createMenu(mainMenu, 'horizontal'));
     wrapper.appendChild(nav.createMenu(mainMenu, 'vertical'));
-    wrapper.appendChild(user.createUsernameDiv('crimeGoose', false));
+    wrapper.appendChild(user.createUsername('crimeGoose', false));
+	wrapper.appendChild(user.createUserCardSocial(defaults.socialMenu, defaults.userDefault));
+	wrapper.appendChild(user.createUserInline(defaults.userDefault));
 
-    let social = nav.createSocialMenu(defaults.socialMenu, 'horizontal', 'stranger');
-    wrapper.appendChild(social);
-
-    wrapper.appendChild(document.createElement('template', { is: 'user-card-social' }) as UserCardSocial);
+	user.updateUserAvatar(iMeta,'256');
+	user.updateProfileView('stranger','256');
+	user.updateUserStatus(false, '256');
+	user.updateUsername('CringeWolf', '256');
 } catch (error) {
     console.log('[ERROR]', error);
 }

@@ -130,6 +130,11 @@
 		--border: #f7e8c4;
 	}
 
+	.iicon {
+		--image-size: 16px;
+		--image-cont-size: 24px;
+	}
+
 	.ismall {
 		--image-size: 1.5rem;
 		--image-cont-size: 2.5rem;
@@ -335,6 +340,14 @@
 		color: var(--yellow);
 	}
 
+	.f-bold {
+		font-family: PixelOperatorBold;
+	}
+
+	.f-regular {
+		font-size: var(--regular);
+	}
+
 	.f-s {
 		font-size: var(--s);
 	}
@@ -383,6 +396,10 @@
 		height: var(--l);
 	}
 
+	.gap-xs {
+		gap: var(--space-xs) var(--space-xs);
+	}
+
 	.gap-s {
 		gap: var(--space-s) var(--space-s);
 	}
@@ -427,13 +444,20 @@
 	}
 
 	.username {
-		text-shadow: -1px -1px var(--orange), -2px -1px var(--orange);
-		font-family: PixelOperatorBold;
 		grid-template-columns: auto 10%;
 		justify-content: left;
 		justify-items: center;
 		align-items: center;
 		width: fit-content;
+	}
+
+	.tiny-shadow {
+		text-shadow: -1px -1px var(--orange), -2px -1px var(--orange);
+	}
+
+	.username:hover a {
+		text-decoration: underline;
+		background: transparent;
 	}
 
 	.user-status {

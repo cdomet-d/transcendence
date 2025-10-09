@@ -19,7 +19,9 @@ export class Icon extends HTMLImageElement {
 
     set metadata(data: ImgMetadata) {
         this.#data = data;
+        this.render();
     }
+
     connectedCallback() {
         this.render();
     }
@@ -28,7 +30,7 @@ export class Icon extends HTMLImageElement {
         this.className = `${this.#data.size} isize`;
         this.src = this.#data.src;
         this.alt = this.#data.alt;
-		this.setAttribute("id", this.#data.id);
+        this.setAttribute('id', this.#data.id);
     }
 }
 
@@ -51,7 +53,7 @@ export class Avatar extends HTMLDivElement {
         super();
         this.#data = {
             src: '/assets/icons/default-avatar.png',
-			id: 'default-avatar',
+            id: 'default-avatar',
             alt: "A pixel art blue blob with a neutral expression, the site's default avatar",
             size: 'imedium',
         };
@@ -62,6 +64,7 @@ export class Avatar extends HTMLDivElement {
 
     set metadata(data: ImgMetadata) {
         this.#data = data;
+		this.render();
     }
 
     connectedCallback() {
@@ -69,6 +72,7 @@ export class Avatar extends HTMLDivElement {
     }
 
     render() {
+        this.id = 'avatar';
         this.className = `${
             this.#data.size
         } avatar-wrapper flex justify-center overflow-hidden rounded-[100px] box-border`;

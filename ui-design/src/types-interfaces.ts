@@ -1,7 +1,7 @@
 /**
  * Defines size options for {@link Avatar}.
  */
-export type Size = 'ismall' | 'imedium' | 'ilarge';
+export type Size = 'iicon' | 'ismall' | 'imedium' | 'ilarge';
 
 /**
  * Defines menu orientation styles.
@@ -12,6 +12,23 @@ export type MenuStyle = 'vertical' | 'horizontal';
  * Describes the viewing relationship for a profile.
  */
 export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
+/**
+ * Represents allowed font size values for text elements.
+ *
+ * @remarks
+ * - `t1`, `t2`, `t3`: Title sizes (largest to smallest)
+ * - `f-s`, `f-m`, `f-l`: Font sizes (small, medium, large)
+ * - `f-regular`: Regular font size
+ */
+export type FontSize = 't1' | 't2' | 't3' | 'f-s' | 'f-m' | 'f-l' | 'f-regular'
+
+/**
+ * Represents allowed font weight values for text elements.
+ *
+ * @remarks
+ * - `f-bold`: Bold font weight
+ */
+export type FontWeight = 'f-bold'
 
 /**
  * Represents the structure of an input field.
@@ -48,7 +65,7 @@ export interface InputMetadata {
  */
 export interface ImgMetadata {
     src: string;
-	id: string;
+    id: string;
     alt: string;
     size: Size;
 }
@@ -94,18 +111,19 @@ export interface TabMetadata {
  *
  * @property {string} avatar - The user's avatar image URL.
  * @property {string} biography - A short biography or description.
- * @property {string} dateJoined - ISO formatted date when the user joined.
- * @property {boolean} isFriend - Whether the viewing user is a friend.
+ * @property {string} memberSince - ISO formatted date when the user joined.
+ * @property {boolean} relation - Relation between the viewing user and the created card.
  * @property {boolean} status - The user's current status (e.g., online/offline).
  * @property {string} username - The user's display username.
+ * @property {string} userId - The user's id, associated to their card for selection purpose
  * @property {number} winstreak - The user's current winstreak count.
  */
 export interface UserData {
-    avatar: string;
+    avatar: ImgMetadata;
     biography: string;
-    dateJoined: string;
-    isFriend: boolean;
+    relation: ProfileView;
     status: boolean;
     username: string;
-    winstreak: number;
+    id: string;
+    winstreak: string;
 }
