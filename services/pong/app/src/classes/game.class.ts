@@ -45,8 +45,8 @@ export class Game {
 	constructor(gameInfo: gameInfo) {
 		this.#_gameInfo = gameInfo;
 		this.#_players = new Array();
-		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3};
-		this.#_paddleSpeed = 0.2;
+		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.25, dy: 0.025, lastdx: 0.3};
+		this.#_paddleSpeed = 0.15;
 		this.#_time = { stamp: 0, lastFrame: 0, delta: 0};
 	}
 
@@ -78,6 +78,7 @@ export class Game {
 	get time(): timeObj {
 		return this.#_time;
 	}
+
     /*                              SETTERS                                  */
 	set score(score: Array< number >) {
 		this.#_gameInfo._score = score;
