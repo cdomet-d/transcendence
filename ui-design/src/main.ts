@@ -59,6 +59,10 @@ try {
     wrapper.appendChild(user.createUserCardSocial(defaults.socialMenu, defaults.userDefault));
     wrapper.appendChild(user.createUserInline(defaults.userDefault));
     wrapper.appendChild(nav.createSearchbar());
+
+	const bar = nav.getSearchbar();
+	if (bar) bar.displayResults(defaults.users);
+	else console.log("No searchbar found on page");
 } catch (error) {
     console.log('[ERROR]', error);
 }

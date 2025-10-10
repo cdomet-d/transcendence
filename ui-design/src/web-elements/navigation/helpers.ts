@@ -3,7 +3,8 @@ import { tabWrapper } from './tabs';
 import { Menu, SocialMenu } from './menus';
 import { Searchbar } from './search';
 
-import type { TabMetadata, MenuStyle, buttonData, ProfileView } from '../../types-interfaces';
+import type { TabMetadata, MenuStyle, buttonData, ProfileView, UserData } from '../../types-interfaces';
+import { createUserInline } from '../users/helpers';
 
 /**
  * Creates a menu button element.
@@ -62,4 +63,14 @@ export function createSocialMenu(
 export function createSearchbar(): Searchbar {
     const el = document.createElement('form', { is: 'search-form' }) as Searchbar;
     return el;
+}
+
+export function getSearchbar(): Searchbar | null {
+	document.addEventListener('DOMContentLoaded', () => {
+		const s = document.getElementById('search') as Searchbar;
+		console.log(s);
+		return s;
+	})
+	console.log("too far")
+	return null;
 }
