@@ -11,7 +11,6 @@ export function setUpGame(game: Game) {
 	setMessEvent(player1);
 	setMessEvent(player2);
 	game.time.lastFrame = Date.now();
-	console.log("Starting gameLoop for gameId:", game.gameID);
 	gameLoop(game, player1, player2);
 }
 
@@ -22,6 +21,6 @@ function setMessEvent(player: Player) {
 		catch (err) { return; };
 		if (!validMess(mess))
 			return;
-		player.keys = mess._keys;
+		player.keys = { ...mess._keys};
 	})
 }
