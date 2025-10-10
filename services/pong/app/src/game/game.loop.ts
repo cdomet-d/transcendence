@@ -5,7 +5,6 @@ import type { ballObj } from '../classes/game.class.js';
 import { coordinates, Player } from "../classes/player.class.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
-let gameOver: boolean = false;
 
 export function gameLoop(game: Game, player1: Player, player2: Player) {
 	game.time.stamp = Date.now();
@@ -14,16 +13,16 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 	while (game.time.delta >= TIME_STEP) { //TODO: add max num of updates
 		updatePaddlePos(player1, player1.keys, game.paddleSpeed, game.time.delta);
 		updatePaddlePos(player2, player2.keys, game.paddleSpeed, game.time.delta);
-		gameOver = updateBallPos(game.ball, player1, player2, game.time.delta);
-		if (gameOver) { //why couldn't restart game when this was out of loop ?
-			console.log("in game loop");
+		game.status = updateBallPos(game.ball, player1, player2, game.time.delta);
+		if (game.status) {
+			//TODO send status to player with score
 			player1.socket.close();
-			if (player2.socket.readyState === 1)
+			if (!game.local)
 				player2.socket.close();
 			//TODO: send result to gameManager via nats
 			return;
 		}
-	 	game.time.delta -= TIME_STEP;
+		game.time.delta -= TIME_STEP;
 	}
 	sendToPlayer1(player1, player2.paddle, game.ball);
 	if (!game.local)

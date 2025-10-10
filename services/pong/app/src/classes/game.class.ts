@@ -40,10 +40,12 @@ export class Game {
 	#_ball: ballObj;
 	#_paddleSpeed: number;
 	#_time: timeObj;
+	#_status: boolean;
 
     /*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo) {
 		this.#_gameInfo = gameInfo;
+		this.#_status = false;
 		this.#_players = new Array();
 		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.25, dy: 0.025, lastdx: 0.3};
 		this.#_paddleSpeed = 0.15;
@@ -79,6 +81,10 @@ export class Game {
 		return this.#_time;
 	}
 
+	get status(): boolean {
+		return this.#_status;
+	}
+
     /*                              SETTERS                                  */
 	set score(score: Array< number >) {
 		this.#_gameInfo._score = score;
@@ -92,6 +98,9 @@ export class Game {
 		this.#_gameInfo._loser = loser;
 	}
 
+	set status(status: boolean) {
+		this.#_status = status;
+	}
     /*                              METHODS                                  */
 	public addPlayer(player: Player) {
 		this.#_players.push(player);
