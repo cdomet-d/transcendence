@@ -9,7 +9,6 @@ export function updatePaddlePos(player: Player, keys: keysObj, padSpeed: number,
     if ((player.left && keys._s) || (player.right && keys._ArrowDown)) {
         down(player.paddle, padSpeed, delta);
     }
-    keys = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
 }
 
 function up(pad: coordinates, padSpeed: number, delta: number) {
