@@ -44,8 +44,6 @@ export type { userInfo, lobbyInfo, match, tournament };
 
 export function processLobbyRequest(lobbyInfo: lobbyInfo) {
     // Filter request
-    console.log("2");
-    console.log("lobby info: ", lobbyInfo);
     if (lobbyInfo.format === "tournament") {
         const tournament: tournament | undefined = createTournament(lobbyInfo);
         if (tournament === undefined) {

@@ -7,13 +7,13 @@ export async function initNatsConnexion(): Promise<NatsConnection> {
 	let token: string | undefined = process.env.NATS_SERVER_TOKEN;
 	if (!token)
 		throw new Error("NATS token undefined");
-	const nc = await connect({ servers: "nats://nats-server:4222", token: token});
+	const nc = await connect({ servers: "nats://nats-server:4222", token: token });
 	return (nc);
 }
 
 export async function natsSubscribtion(serv: FastifyInstance) {
-  	let token = process.env.NATS_SERVER_TOKEN;
-  	const nc = await connect({ servers: "nats://nats-server:4222", token: token ?? "" });
+	let token = process.env.NATS_SERVER_TOKEN;
+	const nc = await connect({ servers: "nats://nats-server:4222", token: token ?? "" });
 	const sc = StringCodec();
 
 	const sub = nc.subscribe('game.request');
@@ -21,28 +21,22 @@ export async function natsSubscribtion(serv: FastifyInstance) {
 
 	(async () => {
 		for await (const msg of sub) {
-      		console.log("6");
-
 
 			const _gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
 			serv.gameRegistry.addGame(new Game(_gameInfo));
-			console.log(`Received message: ${JSON.stringify(_gameInfo)}`);
-			
-			if (msg.reply) {
-      		console.log("7");
+			// console.log(`Received message: ${JSON.stringify(_gameInfo)}`);
 
-        console.log("PONG send approved to GM");        
-        const gameReply = {
-          event: "approved",
-          users: _gameInfo._users, // THIS IS UNDEFINED SOMEHOW
-          gameID: _gameInfo._gameID // THIS IS UNDEFINED SOMEHOW
-        }
-        console.log(gameReply);
+			if (msg.reply) {
+
+				const gameReply = {
+					event: "approved",
+					match: _gameInfo
+				}
 				natsPublish(msg.reply, JSON.stringify(gameReply));
-      } else {
-        console.log("Error: No reply subject provided in game.request")
-        return;
-      }
+			} else {
+				console.log("Error: No reply subject provided in game.request")
+				return;
+			}
 		}
 	})();
 

@@ -40,8 +40,6 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 			return;
 		}
 
-		console.log("message event: ", event);
-		console.log("1");
 		if (event === "TOURNAMENT_REQUEST") {
 			// req.server.log.info(`server received: ${mess}`);
 			processLobbyRequest(data.payload);
