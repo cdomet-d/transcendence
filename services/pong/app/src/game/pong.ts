@@ -12,18 +12,18 @@ export function setUpGame(game: Game) {
 	setMessEvent(player2);
 	player1.socket.send(1);
 	if (!game.local)
-		player2.socket.send(1);
+		player2.socket.send(-1);
 	game.time.lastFrame = Date.now();
 	gameLoop(game, player1, player2);
 }
 
 function setMessEvent(player: Player) {
 	player.socket.on("message", (payload: string) => {
-		let mess: messObj; //TODO: rm timestamp
-		try { mess = JSON.parse(payload); }
+		// let mess: messObj; //TODO: rm timestamp
+		try { player.clientMess = JSON.parse(payload); }
 		catch (err) { return; };
-		if (!validMess(mess))
+		if (!validMess(player.clientMess))
 			return;
-		player.keys = { ...mess._keys};
+		player.keys = { ...player.clientMess._keys};
 	})
 }
