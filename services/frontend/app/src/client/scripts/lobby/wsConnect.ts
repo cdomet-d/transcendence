@@ -18,15 +18,18 @@ function wsConnect() {
 
     ws.onopen = () => {
         console.log("WebSocket connection established!")
+        
         ws.onmessage = (message: any) => {
             console.log("Client received WS message!");
             
             const gameRequest = JSON.parse(message.data);
-            if (gameRequest.event === "game.ready") {
-                const matchID: number = gameRequest.matchID;
-                console.log("client ready to connect game #", matchID);
-                // connect PONG url with specific matchID
-                ws.close();
+            const gameID: number = gameRequest.gameID;
+            if (gameRequest.event === "declined") {
+                console.log("Error: Failed to start game: #" + gameID);
+            } else {
+                console.log("Client ready to connect game #" + gameID);
+                // ws connect to "/game/match"
+                // send userID + gameID
             }
         }
 
@@ -35,14 +38,15 @@ function wsConnect() {
         if (startButton && ws.readyState === WebSocket.OPEN) {
             startButton.addEventListener('click', () => {
                 const message = createRequestForm();
+                console.log("Client sending following to GM:\n", message);
                 ws.send(message);
-                console.log(message);
             });
         }
     }
 
     ws.onclose = () => {
         console.log("WebSocket connection closed!");
+        // TODO: Check wether deconnection was expected or not 
     }
 }
 

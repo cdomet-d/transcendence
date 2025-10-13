@@ -26,15 +26,20 @@ export async function natsSubscribtion(serv: FastifyInstance) {
 			serv.gameRegistry.addGame(new Game(_gameInfo));
 			// console.log(`Received message: ${JSON.stringify(_gameInfo)}`);
 
+			// Approval given HERE from PONG if game is ok to start
 			if (msg.reply) {
-
 				const gameReply = {
 					event: "approved",
 					match: _gameInfo
 				}
 				natsPublish(msg.reply, JSON.stringify(gameReply));
 			} else {
-				console.log("Error: No reply subject provided in game.request")
+				// const gameReply = {
+				// 	event: "declined",
+				// 	match: _gameInfo
+				// }
+				// natsPublish("game.reply", JSON.stringify(gameReply));
+				console.log(`Error: No reply subject provided in "game.request"`);
 				return;
 			}
 		}

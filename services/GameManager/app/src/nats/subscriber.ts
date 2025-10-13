@@ -15,33 +15,28 @@ export async function natsSubscribe() {
       const payload = JSON.parse(sc.decode(msg.data));
       const match = payload.match;
       // PAYLOAD IS gameRequestObj (see pong/subscriber.ts)
-      		console.log("8");
-
-      console.log(`GM received in "game.reply" : `, payload);
-
-      if (payload.event !== "approved") {
-        console.log("Error: PONG has denied game.request!")
-        return;
-      }
+      // console.log(`GM received in "game.reply" : `, payload);
 
       // signal BOTH client via WS their match is ready
       // parse payload.users and find their IDs
       // parse clientMap to get their socket
 
-
       for (let i = 0; i < match.users.length; i++) {
         const userID = match.users[i].userID;
         const socket = wsClientsMap.get(userID);
+
         const gameSignal = {
+          event: "approved",
           userID: userID,
           gameID: match.matchID
+        }
+        
+        if (payload.event === "declined") {
+          gameSignal.event = "declined";
         }
 
         wsSend(socket, JSON.stringify(gameSignal));
       }
-
-      console.log("9");
-
     }
   })();
 
@@ -50,7 +45,7 @@ export async function natsSubscribe() {
     for await (const msg of postgame) {
       const sc = StringCodec();
       const payload = sc.decode(msg.data);
-      console.log(`GM received in "game.over" : `, payload);
+      console.log(`GM received following in "game.over" :\n`, payload);
 
       tournamentState(payload);
     }

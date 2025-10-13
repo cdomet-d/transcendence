@@ -55,12 +55,13 @@ function getUniqueUserID(): number {
 	return uniqueID;
 }
 
-export function wsSend(userID: number, message: string): void {
-    const ws = wsClientsMap.get(userID);
+export function wsSend(ws: WebSocket, message: string): void {
     if (ws && ws.readyState === ws.OPEN) {
         ws.send(message);
     } else {
-        console.log(`Connection for user ${userID} not found or not open.`);
+		const payload = JSON.parse(message);
+        console.log(`Error: Connection for userID <${payload.userID}> not found or not open...`);
+		console.log(`\tCould not start game with matchID <${payload.gameID}>`);
 		// handle this error 
     }
 }
