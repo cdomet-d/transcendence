@@ -1,7 +1,11 @@
 import { renderGame } from "./game.render.utils.js";
 import { Game } from "./game.class.js";
 
-function pong() {
+// adding parameter to pong() and wsRequest(): gameRequest '{"userID", "gameID"}'
+function pong(gameRequest: string) {
+
+    console.log("game request obj: ", gameRequest);
+
 	const ctx = getCanvasContext();
 	if (!ctx) {
 		console.log("error: context not supported");
@@ -11,7 +15,7 @@ function pong() {
 	renderGame(game); //TODO: before rendering need to receive players names
 	//TODO: should rendering be done after ws connection ?
 	import("./ws.req.js").then(({ wsRequest }) => {
-        wsRequest(game);
+        wsRequest(game, gameRequest);
     }) //TODO: can import fail ?
 }
 

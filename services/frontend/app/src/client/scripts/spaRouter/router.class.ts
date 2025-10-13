@@ -58,7 +58,7 @@ export class Router {
         page.innerHTML = matchedRoute.callback();
 
         if (matchedRoute.path === '/game/match')
-            pong();
+            pong("");
         else if (matchedRoute.path === '/game/lobby')
             lobby();
         //TODO: eventually if other features need their script add an element script to routeInterface

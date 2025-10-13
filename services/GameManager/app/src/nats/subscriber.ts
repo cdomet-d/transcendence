@@ -4,6 +4,13 @@ import { wsSend } from '../lobby/wsHandler.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
 import { wsClientsMap } from '../lobby/wsHandler.js';
 
+// TODO: move to manager.js with others
+export interface gameRequest {
+  event: string,
+  userID: number,
+  gameID: number
+}
+
 export async function natsSubscribe() {
   let token = process.env.NATS_SERVER_TOKEN;
   const nc = await connect({ servers: "nats://nats-server:4222", token: token ?? "" });
@@ -24,17 +31,17 @@ export async function natsSubscribe() {
         const userID = game.users[i].userID;
         const socket = wsClientsMap.get(userID);
 
-        const gameSignal = {
+        const gameRequest: gameRequest = {
           event: "approved",
           userID: userID,
           gameID: game.gameID
         }
-        
+
         if (payload.event === "declined") {
-          gameSignal.event = "declined";
+          gameRequest.event = "declined";
         }
 
-        wsSend(socket, JSON.stringify(gameSignal));
+        wsSend(socket, JSON.stringify(gameRequest));
       }
     }
   })();

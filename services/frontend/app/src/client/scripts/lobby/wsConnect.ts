@@ -1,3 +1,4 @@
+import { pong } from '../game/pong.js';
 let wsInstance: any = null;
 
 function openWsConnection() {
@@ -22,7 +23,7 @@ function wsConnect() {
         ws.onmessage = (message: any) => {
             // console.log("Client received WS message!");
             
-            const gameRequest = JSON.parse(message.data);
+            const gameRequest/* : gameRequest */ = JSON.parse(message.data);
             const gameID: number = gameRequest.gameID;
             if (gameRequest.event === "declined") {
                 console.log("Error: Failed to start game: #" + gameID);
@@ -30,6 +31,7 @@ function wsConnect() {
                 console.log("Client ready to connect game #" + gameID);
                 // ws connect to "/game/match"
                 // send userID + gameID
+                pong(message.data);
             }
         }
 

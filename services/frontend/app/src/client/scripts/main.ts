@@ -32,7 +32,7 @@ window.addEventListener('popstate', () => {
 });
 
 if (router._getCurrentURL() === '/game/match')
-    pong(); //TODO: find a way to render it server side
+    pong(""); //TODO: find a way to render it server side
 else if (router._getCurrentURL() === '/game/lobby')
     lobby(); 
 
