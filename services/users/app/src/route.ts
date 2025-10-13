@@ -39,7 +39,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			const query = `SELECT userID, username FROM userProfile WHERE username = ?`;
 
 			const user = await serv.dbUsers.get<UserRow>(query, [username]);
-
 			if (!user) {
 				return (reply.code(404).send({ 
 					success: false,
@@ -68,7 +67,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			`;
 
 			const userProfile = await serv.dbUsers.get<UserProfile>(query, [userID]);
-
 			if (!userProfile) {
 				return reply.code(404).send({
 					success: false,
@@ -128,13 +126,12 @@ export async function userRoutes(serv: FastifyInstance) {
 			const query = `
 				SELECT lastConnexion FROM userProfile WHERE userID = ?
 			`;
-			
+
 			const params = [
 				newConnection,
 				userID
 			];
 			const lastConnection = await serv.dbUsers.get<UserRowConnection>(query, params);
-		
 			if (!lastConnection)
 				return reply.code(404).send({
 					success: false,
@@ -165,7 +162,6 @@ export async function userRoutes(serv: FastifyInstance) {
 					fetch(`https://users:2626/internal/users/profile/${userID}`),
 					fetch(`https://users:2626/users/userStats/${userID}`)
 				]);
-
 				if (profileResponse.ok) {
 					return reply.code(409).send({
 						success: false,
@@ -208,7 +204,12 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const createProfile = await serv.dbUsers.run(queryProfile, paramsProfile);
-			//TODO: add createProfile check
+			if (createProfile.changes === 0) {
+				return reply.code(404).send({
+					success: false,
+					message: 'Profile could not be created.'
+				});
+			}
 
 			const queryStats = `
 			INSERT INTO userStats (userID, longestMatch, shorestMatch, totalMatch, totalWins,
@@ -255,7 +256,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			`;
 
 			const result = await serv.dbUsers.run(query, params);
-
 			if (result.changes === 0) {
 				return (reply.code(404).send({
 					success: false,
@@ -286,7 +286,6 @@ export async function userRoutes(serv: FastifyInstance) {
 				});
 			}
 
-
 			const query = `
 				UPDATE userProfile SET avatar = ? WHERE userID = ?
 			`;
@@ -297,7 +296,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const result = await serv.dbUsers.run(query, params);
-
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
@@ -334,7 +332,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const result = await serv.dbUsers.run(query, params);
-
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
@@ -378,7 +375,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const result = await serv.dbUsers.run(query, params);
-
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
@@ -422,7 +418,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const result = await serv.dbUsers.run(query, params);
-
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
@@ -471,7 +466,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const result = await serv.dbUsers.run(query, params);
-
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
@@ -505,11 +499,9 @@ export async function userRoutes(serv: FastifyInstance) {
 		
 			return reply.code(200).send({ success: true, message: 'Username in profile updated!' });
 		} catch (error) {
-			// Your existing unique constraint handling is good!
 			if (error && typeof error === 'object' && 'code' in error && error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-				return reply.code(409).send({ success: false, message: 'This username is already taken.' });
+				return (reply.code(409).send({ success: false, message: 'This username is already taken.' }));
 			}
-		
 			serv.log.error(`Error updating username in profile: ${error}`);
 			return reply.code(500).send({ success: false, message: 'Internal server error' });
 		}
@@ -526,12 +518,10 @@ export async function userRoutes(serv: FastifyInstance) {
 			`;
 
 			const userProfile = await serv.dbUsers.get<UserStats>(query, [userID]);
+			if (!userProfile)
+				return (reply.code(404).send({ message: 'User profile not found' }));
 
-			if (!userProfile) {
-				return reply.code(404).send({ message: 'User profile not found' });
-			}
-
-			return reply.code(200).send(userProfile);
+			return (reply.code(200).send(userProfile));
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
 			return reply.code(500).send({ message: 'Internal server error' });
@@ -555,7 +545,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const keysToUpdate = Object.keys(statsToUpdate).filter(key => validStatKeys.includes(key));
-
 			if (keysToUpdate.length === 0) {
 				return (reply.code(400).send({
 					success: false,
@@ -572,7 +561,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			`;
 
 			const result = await serv.dbUsers.run(query, params);
-
 			if (result.changes === 0) {
 				return (reply.code(404).send({
 					success: false,
@@ -598,10 +586,10 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { newLonguestMatch } = request.body as { newLonguestMatch: any };
 
 			if (typeof newLonguestMatch !== 'number' && isNaN(parseInt(newLonguestMatch, 10))) {
-				return reply.code(400).send({
+				return (reply.code(400).send({
 					success: false,
 					message: 'Validation error: newStatus must be a valid number.'
-				});
+				}));
 			}
 
 			const query = `
@@ -614,7 +602,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const result = await serv.dbUsers.run(query, params);
-
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
@@ -639,10 +626,10 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { newShortestMatch } = request.body as { newShortestMatch: any };
 
 			if (typeof newShortestMatch !== 'number' && isNaN(parseInt(newShortestMatch, 10))) {
-				return reply.code(400).send({
+				return (reply.code(400).send({
 					success: false,
 					message: 'Validation error: shorestMatch must be a valid number.'
-				});
+				}));
 			}
 			
 			const query = `
@@ -655,7 +642,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const result = await serv.dbUsers.run(query, params);
-
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
@@ -680,10 +666,10 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { newTotalMatch } = request.body as { newTotalMatch: any };
 
 			if (typeof newTotalMatch !== 'number' && isNaN(parseInt(newTotalMatch, 10))) {
-				return reply.code(400).send({
+				return (reply.code(400).send({
 					success: false,
 					message: 'Validation error: totalMatch must be a valid number.'
-				});
+				}));
 			}
 			
 			const query = `
@@ -696,7 +682,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const result = await serv.dbUsers.run(query, params);
-
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
@@ -710,7 +695,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 
@@ -721,10 +706,10 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { newWins } = request.body as { newWins: any };
 
 			if (typeof newWins !== 'number' && isNaN(parseInt(newWins, 10))) {
-				return reply.code(400).send({
+				return (reply.code(400).send({
 					success: false,
 					message: 'Validation error: totalWins must be a valid number.'
-				});
+				}));
 			}
 			
 			const query = `
@@ -737,7 +722,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const result = await serv.dbUsers.run(query, params);
-
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
@@ -751,7 +735,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 
@@ -765,7 +749,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			`;
 
 			const result = await serv.dbUsers.run(query, userID);
-
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
@@ -779,7 +762,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 
@@ -793,7 +776,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			`;
 
 			const result = await serv.dbUsers.run(query, userID);
-
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
@@ -807,7 +789,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 
@@ -819,10 +801,10 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { newDuration } = request.body as { newDuration: any };
 
 			if (typeof newDuration !== 'number' && isNaN(parseInt(newDuration, 10))) {
-				return reply.code(400).send({
+				return (reply.code(400).send({
 					success: false,
 					message: 'Validation error: averageMatchDuration must be a valid number.'
-				});
+				}));
 			}
 			
 			const query = `
@@ -835,7 +817,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const result = await serv.dbUsers.run(query, params);
-
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
@@ -849,7 +830,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 
@@ -876,7 +857,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const result = await serv.dbUsers.run(query, params);
-
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
@@ -890,7 +870,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 }

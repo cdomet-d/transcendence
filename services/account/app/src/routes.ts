@@ -9,14 +9,14 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const { hashedPass } = request.body as { hashedPass: string };
 
 			if (!username || !hashedPass)
-				return reply.code(400).send({ message: 'Missing username or hashedPass.' });
+				return (reply.code(400).send({ message: 'Missing username or hashedPass.' }));
 
 			const usernameTaken = await checkUsernameUnique(serv.dbAccount ,username);
 			if (usernameTaken) {
-				return reply.code(409).send({
+				return (reply.code(409).send({
 					success: false,
 					message: 'Username taken'
-				});
+				}));
 			}
 
 			const query = `
@@ -33,7 +33,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const resultCreateAccount = await serv.dbAccount.run(query, params);
 			if (resultCreateAccount.changes === 0) {
 				serv.log.error('User registration query succeeded but did not insert a row.');
-				return reply.code(500).send({ message: 'Internal server error during registration.' });
+				return (reply.code(500).send({ message: 'Internal server error during registration.' }));
 			}
 		
 			const queryGetID = `
@@ -42,18 +42,18 @@ export async function accountRoutes(serv: FastifyInstance) {
 
 			const userID = await serv.dbAccount.get(queryGetID, username);
 			if (!userID) {
-				return reply.code(404).send({
+				return (reply.code(404).send({
 					success: false,
 					message: 'Account not found'
-				});
+				}));
 			}
 			
 			const resultCreateProfile = await fetch(`https://users:2626/internal/users/createProfile/:userID/${userID}`);
 			if (!resultCreateProfile) {
-					return reply.code(500).send({
+					return (reply.code(500).send({
 					success: false,
 					message: 'Could not created user profile'
-				});
+				}));
 			}
 
 			return (reply.code(201).send({
@@ -63,7 +63,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 
 			} catch (error) {
 				serv.log.error(`Error creating user account: ${error}`);
-				return reply.code(500).send({ message: 'Internal server error' });
+				return (reply.code(500).send({ message: 'Internal server error' }));
 			}
 	});
 
@@ -73,7 +73,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const { password } = request.body as { password: string };
 
 			if (!username || !password)
-				return reply.code(400).send({ message: 'Missing username or hashedPass.' });
+				return (reply.code(400).send({ message: 'Missing username or hashedPass.' }));
 
 			const query = `
 				SELECT userId, hashedPassword FROM usersAuth WHERE username = ?
@@ -81,20 +81,20 @@ export async function accountRoutes(serv: FastifyInstance) {
 
 			const user = await serv.dbAccount.get(query, [username]);
 			if (!user)
-				return reply.code(401).send({ message: 'Invalid credentials.' });
+				return (reply.code(401).send({ message: 'Invalid credentials.' }));
 			
 			const passwordMatches = await bcrypt.compare(password, user.hashedPassword);
 			if (!passwordMatches) 
-				return reply.code(401).send({ message: 'Invalid credentials.' });
+				return (reply.code(401).send({ message: 'Invalid credentials.' }));
 
-			return reply.code(200).send({
+			return (reply.code(200).send({
 				success: true,
 				message: 'Login successful!',
-			});
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error when trying to login ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 
 	});
@@ -105,7 +105,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const { password } = request.body as { password: string };
 
 			if (!username || !password)
-				return reply.code(400).send({ message: 'Missing username or hashedPass.' });
+				return (reply.code(400).send({ message: 'Missing username or hashedPass.' }));
 
 			const query = `
 				UPDATE userAuth SET hashedPassword = ? WHERE username = ? 
@@ -118,10 +118,10 @@ export async function accountRoutes(serv: FastifyInstance) {
 
 			const result = await serv.dbAccount.run(query, params);
 			if (!result.changes) {
-				return reply.code(500).send({
+				return (reply.code(500).send({
 				success: false,
 				message: 'Could not update user password'
-				});
+				}));
 			}
 
 			return (reply.code(201).send({
@@ -131,7 +131,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		
 		} catch (error) {
 			serv.log.error(`Error when trying to login ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 
@@ -141,7 +141,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const { newUsername, oldUsername } = request.body as { newUsername: string, oldUsername: string };
 			
 			if (!newUsername || !oldUsername)
-				return reply.code(400).send({ message: 'Missing username or hashedPass.' });
+				return (reply.code(400).send({ message: 'Missing username or hashedPass.' }));
 
 			const query = `
 				UPDATE userAuth SET username = ? WHERE userID = ? 
@@ -154,10 +154,10 @@ export async function accountRoutes(serv: FastifyInstance) {
 
 			const result = await serv.dbAccount.run(query, params);
 			if (!result.changes) {
-				return reply.code(500).send({
+				return (reply.code(500).send({
 				success: false,
 				message: 'Could not update username'
-				});
+				}));
 			}
 
 			const response = await fetch(`https://users:2626/users/${userID}/username`, {
@@ -165,15 +165,14 @@ export async function accountRoutes(serv: FastifyInstance) {
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ newUsername: newUsername })
 			});
-
 			if (!response.ok) {
 				serv.log.error(`Profile service failed. Rolling back auth change for userID: ${userID}`);
 				const rollbackQuery = `UPDATE userAuth SET username = ? WHERE userID = ?`;
 				await serv.dbAccount.run(rollbackQuery, [oldUsername, userID]);
-				return reply.code(500).send({
+				return (reply.code(500).send({
 					success: false,
 					message: 'Could not update username in profile service; original change has been rolled back.'
-				});
+				}));
 			}
 
 			return (reply.code(201).send({
@@ -183,7 +182,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		
 		} catch (error) {
 			serv.log.error(`Error when trying to login ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 }
