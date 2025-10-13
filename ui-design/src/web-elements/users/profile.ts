@@ -47,12 +47,26 @@ export class UserInline extends HTMLDivElement {
         this.id = id;
     }
 
+    attachClick() {
+        this.addEventListener('click', (event: MouseEvent) => {
+            const clickedEl = event.target as Element | null;
+            if (!clickedEl) return;
+            const link = clickedEl.closest('a') || this.querySelector('a');
+            if (!link) return;
+            event.preventDefault();
+            // TODO: SPA routing logic goes there
+            // This is a placehold in the meantime
+            window.location.href = link.href;
+        });
+    }
     connectedCallback() {
         this.render();
+        this.attachClick();
     }
 
     render() {
-        this.className = 'gap-m box-border flex flex-initial items-center';
+        this.className =
+            'cursor-pointer gap-m box-border flex flex-initial items-center hover:bg-(--transparent-blue)';
     }
 }
 

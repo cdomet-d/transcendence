@@ -6,6 +6,7 @@ import * as user from './web-elements/users/helpers.js';
 import * as defaults from './default-values.js';
 import type * as types from './types-interfaces.js';
 
+
 const iMeta: types.ImgMetadata = {
     id: 'user-avatar',
     src: '/assets/icons/purple-avatar.png',
@@ -60,9 +61,14 @@ try {
     wrapper.appendChild(user.createUserInline(defaults.userDefault));
     wrapper.appendChild(nav.createSearchbar());
 
-	const bar = nav.getSearchbar();
-	if (bar) bar.displayResults(defaults.users);
-	else console.log("No searchbar found on page");
+    // nav.getSearchbarAsync().then((bar) => {
+    //     try {
+    //         if (bar) bar.displayResults(defaults.users);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // });
+
 } catch (error) {
     console.log('[ERROR]', error);
 }

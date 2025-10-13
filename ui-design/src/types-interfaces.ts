@@ -21,6 +21,7 @@ export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
  * - `f-regular`: Regular font size
  */
 export type FontSize = 't1' | 't2' | 't3' | 'f-s' | 'f-m' | 'f-l' | 'f-regular';
+export type FontColor = 'f-yellow' | 'f-orange';
 
 /**
  * Represents allowed font weight values for text elements.

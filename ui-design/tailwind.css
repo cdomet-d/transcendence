@@ -340,6 +340,10 @@
 		color: var(--yellow);
 	}
 
+	.f-orange {
+		color: var(--shadow-orange);
+	}
+
 	.f-bold {
 		font-family: PixelOperatorBold;
 	}
@@ -412,6 +416,9 @@
 		gap: var(--space-l) var(--space-l);
 	}
 
+	.search-gap {
+		gap: 0 var(--space-s);
+	}
 
 	.pad-s {
 		padding: var(--space-s);

@@ -3,8 +3,12 @@ import { tabWrapper } from './tabs';
 import { Menu, SocialMenu } from './menus';
 import { Searchbar } from './search';
 
-import type { TabMetadata, MenuStyle, buttonData, ProfileView, UserData } from '../../types-interfaces';
-import { createUserInline } from '../users/helpers';
+import type {
+    TabMetadata,
+    MenuStyle,
+    buttonData,
+    ProfileView,
+} from '../../types-interfaces';
 
 /**
  * Creates a menu button element.
@@ -51,7 +55,7 @@ export function createMenu(content: Array<buttonData>, style: MenuStyle): Menu {
 export function createSocialMenu(
     content: Array<buttonData>,
     style: MenuStyle,
-    v: ProfileView,
+    v: ProfileView
 ): SocialMenu {
     const el = document.createElement('div', { is: 'social-menu' }) as SocialMenu;
     el.MenuElements = content;
@@ -65,12 +69,18 @@ export function createSearchbar(): Searchbar {
     return el;
 }
 
-export function getSearchbar(): Searchbar | null {
-	document.addEventListener('DOMContentLoaded', () => {
-		const s = document.getElementById('search') as Searchbar;
-		console.log(s);
-		return s;
-	})
-	console.log("too far")
-	return null;
+export function getSearchbarAsync(timeout: number = 1000): Promise<Searchbar | null> {
+	const start = Date.now();
+    return new Promise((resolve) => {
+        function resolveSearchbar() {
+            const s = document.getElementById('searchbar') as Searchbar | null;
+            if (s) {
+                resolve(s);
+            } else {
+                if (Date.now() - start >= timeout) resolve(null);
+                setTimeout(resolveSearchbar, 100);
+            }
+        }
+        resolveSearchbar();
+    });
 }

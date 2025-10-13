@@ -45,7 +45,7 @@ export function createUserCardSocial(
 ): UserCardSocial {
     const avatar = createAvatar(user.avatar) as Avatar;
     const username = createUsername(user.username, user.status) as Username;
-    username.customizeStyle('f-m', 'f-bold', true);
+    username.customizeStyle('f-yellow', 'f-m', 'f-bold', true);
     const menu = createSocialMenu(socialBtns, 'horizontal', 'stranger');
     const card = document.createElement('div', { is: 'user-card-social' }) as UserCardSocial;
     card.id = user.id;
@@ -69,7 +69,7 @@ export function createUserInline(user: types.UserData): UserInline {
     const wstreak = createWinstreak(user.winstreak);
     const card = document.createElement('div', { is: 'user-inline' }) as UserInline;
 
-    username.customizeStyle('f-regular');
+    username.customizeStyle('f-orange', 'f-regular');
     card.id = user.id;
     card.appendChild(avatar);
     card.appendChild(username);

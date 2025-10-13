@@ -1,4 +1,4 @@
-import type { FontWeight, FontSize, ImgMetadata } from '../../types-interfaces';
+import type { FontWeight, FontSize, FontColor, ImgMetadata } from '../../types-interfaces';
 import { createIcon } from '../typography/helpers';
 import type { Icon } from '../typography/images';
 
@@ -34,7 +34,7 @@ export class Username extends HTMLDivElement {
 
     set name(val: string) {
         this.#link.innerText = val;
-        this.#link.href = `/api/users/${val}`;
+        this.#link.href = `/users/${val}`;
         this.render();
     }
 
@@ -47,8 +47,9 @@ export class Username extends HTMLDivElement {
         this.render();
     }
 
-    customizeStyle(fsize?: FontSize, fweight?: FontWeight, shadow?: boolean) {
+    customizeStyle(fcolor?: FontColor, fsize?: FontSize, fweight?: FontWeight, shadow?: boolean) {
         if (fsize) this.#link.classList.add(fsize);
+        if (fcolor) this.#link.classList.add(fcolor);
         if (fweight) this.#link.classList.add(fweight);
         if (shadow) this.#link.classList.add('tiny-shadow');
         this.render();
