@@ -48,7 +48,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 				});
 			}
 			
-			const resultCreateProfile = await fetch(`http://users:2626/internal/users/createProfile/:userID/${userID}`);
+			const resultCreateProfile = await fetch(`https://users:2626/internal/users/createProfile/:userID/${userID}`);
 			if (!resultCreateProfile) {
 					return reply.code(500).send({
 					success: false,
@@ -136,20 +136,20 @@ export async function accountRoutes(serv: FastifyInstance) {
 	});
 
 	serv.post('/account/updateUsername/', async(request, reply) => {
-			try {
-			const { username } = request.body as { username: string };
-			const { newUsername } = request.body as { newUsername: string };
-
-			if (!username || !newUsername)
+		try {
+			const userID = request.user.userID;
+			const { newUsername, oldUsername } = request.body as { newUsername: string, oldUsername: string };
+			
+			if (!newUsername || !oldUsername)
 				return reply.code(400).send({ message: 'Missing username or hashedPass.' });
 
 			const query = `
-				UPDATE userAuth SET username = ? WHERE username = ? 
+				UPDATE userAuth SET username = ? WHERE userID = ? 
 			`
 
 			const params = [
 				newUsername,
-				username
+				userID
 			];
 
 			const result = await serv.dbAccount.run(query, params);
@@ -160,7 +160,21 @@ export async function accountRoutes(serv: FastifyInstance) {
 				});
 			}
 
-			
+			const response = await fetch(`https://users:2626/users/${userID}/username`, {
+				method: 'PATCH',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ newUsername: newUsername })
+			});
+
+			if (!response.ok) {
+				serv.log.error(`Profile service failed. Rolling back auth change for userID: ${userID}`);
+				const rollbackQuery = `UPDATE userAuth SET username = ? WHERE userID = ?`;
+				await serv.dbAccount.run(rollbackQuery, [oldUsername, userID]);
+				return reply.code(500).send({
+					success: false,
+					message: 'Could not update username in profile service; original change has been rolled back.'
+				});
+			}
 
 			return (reply.code(201).send({
 				success: true,
@@ -173,8 +187,3 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 }
-
-
-
-//TODO: update password
-//TODO: update username BUUUUT we need to match the username in the user table soooooo

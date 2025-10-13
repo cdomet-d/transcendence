@@ -21,12 +21,12 @@ interface UserProfile {
 }
 
 // Reusable function to get a user by their ID from the users service
-export async function getUserID(username: string): Promise<UserData | null> {
+export async function getUserID(username: string): Promise<UserData> {
 	try {
-		const response = await fetch(`http://users:2626/internal/users/by-username/${username}`);
+		const response = await fetch(`https://users:2626/internal/users/by-username/${username}`);
 
 		if (response.status === 404)
-			return (null);
+			throw (new Error(`User with username '${username}' not found.`));
 
 		if (!response.ok)
 			throw new Error(`Users service returned status: ${response.status}`);
@@ -39,12 +39,12 @@ export async function getUserID(username: string): Promise<UserData | null> {
 	}
 }
 
-export async function checkUserExists(userID: number): Promise<UserData | null> {
+export async function checkUserExists(userID: number): Promise<UserData> {
 	try {
-		const response = await fetch(`http://users:2626/internal/users/by-username/${userID}`);
+		const response = await fetch(`https://users:2626/internal/users/by-username/${userID}`);
 
 		if (response.status === 404)
-			return null;
+			throw (new Error(`User with username '${userID}' not found.`));
 
 		if (!response.ok)
 			throw new Error(`Users service returned status: ${response.status}`);
@@ -100,16 +100,17 @@ export async function getFriendship(db: Database, userId: number): Promise<Pendi
 }
 
 // Fetches the full user profile card from the users service
-export async function getUserProfile(userId: number): Promise<UserProfile | null> {
+export async function getUserProfile(userID: number): Promise<UserProfile> {
 	try {
-		const response = await fetch(`http://users:2626/internal/users/profile/${userId}`);
+		const response = await fetch(`https://users:2626/internal/users/profile/${userID}`);
 		
-		if (response.status === 404) return null;
+		if (response.status === 404)
+			throw (new Error(`User with username '${userID}' not found.`));
 		if (!response.ok) throw new Error(`Users service returned status: ${response.status}`);
 
 		return await response.json() as UserProfile;
 	} catch (error) {
-		console.error(`Error fetching profile for user ID ${userId}:`, error);
+		console.error(`Error fetching profile for user ID ${userID}:`, error);
 		throw error;
 	}
 }

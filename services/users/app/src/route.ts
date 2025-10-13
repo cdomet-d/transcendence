@@ -160,19 +160,39 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { userID } = request.params as { userID: number};
 			const { username } = request.params as { username: string};
 
-			const checkProfileExist = await fetch (`https://users:2626/internal/users/profile/:${userID}`);
-			if (checkProfileExist) {
-				return reply.code(409).send({
+			try {
+				const [profileResponse, statsResponse] = await Promise.all([
+					fetch(`https://users:2626/internal/users/profile/${userID}`),
+					fetch(`https://users:2626/users/userStats/${userID}`)
+				]);
+
+				if (profileResponse.ok) {
+					return reply.code(409).send({
+						success: false,
+						message: 'This user profile already exists.'
+					});
+				}
+
+				if (statsResponse.ok) {
+					return reply.code(409).send({
+						success: false,
+						message: 'User stats for this profile already exist.'
+					});
+				}
+
+				if (profileResponse.status !== 404 || statsResponse.status !== 404) {
+					serv.log.error(`Unexpected status from users service. Profile: ${profileResponse.status}, Stats: ${statsResponse.status}`);
+					return reply.code(502).send({
+						success: false,
+						message: 'An unexpected error occurred while checking with the users service.'
+					});
+				}
+
+			} catch (fetchError) {
+				serv.log.error(`Could not connect to the users service: ${fetchError}`);
+				return reply.code(503).send({
 					success: false,
-					message: 'This profile already exists'
-				});
-			}
-			
-			const checkStatsExist = await fetch (`https://users:2626/users/userStats/:${userID}`);
-			if (checkStatsExist) {
-				return reply.code(409).send({
-					success: false,
-					message: 'This profile already exists'
+					message: 'The users service is currently unavailable.'
 				});
 			}
 
@@ -470,46 +490,28 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's username with userID
-	//TODO : update username in the account service
-	serv.post('/users/updateUsername/:userID', async(request, reply) => {
+	serv.patch('/users/:userID/username', async (request, reply) => {
 		try {
-			const { userID } = request.params as { userID: number };
+			const { userID } = request.params as { userID: string };
 			const { newUsername } = request.body as { newUsername: string };
 
-			const query = `
-				UPDATE userProfile SET username = ? WHERE userID = ?
-			`;
-
-			const params = [
-				newUsername,
-				userID
-			];
-
+			const query = `UPDATE userProfile SET username = ? WHERE userID = ?`;
+			const params = [newUsername, userID];
 			const result = await serv.dbUsers.run(query, params);
 
-			if (!result.changes)
-				return (reply.code(404).send({
-					success: false,
-					message: 'User not found or request parameters are wrong'
-				}));
-			
-			return (reply.code(200).send({
-				success: true,
-				message: 'Username updated !'
-			}));
-		} catch (error) {
-			if (error && typeof error === 'object' && 'code' in error && error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-				return reply.code(409).send({
-					success: false,
-					message: 'This username is already taken.'
-				});
+			if (result.changes === 0) {
+				return reply.code(404).send({ success: false, message: 'User profile not found.' });
 			}
 		
-			serv.log.error(`Error updating username: ${error}`);
-			return reply.code(500).send({ 
-				success: false,
-				message: 'Internal server error' 
-			});
+			return reply.code(200).send({ success: true, message: 'Username in profile updated!' });
+		} catch (error) {
+			// Your existing unique constraint handling is good!
+			if (error && typeof error === 'object' && 'code' in error && error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+				return reply.code(409).send({ success: false, message: 'This username is already taken.' });
+			}
+		
+			serv.log.error(`Error updating username in profile: ${error}`);
+			return reply.code(500).send({ success: false, message: 'Internal server error' });
 		}
 	});
 
