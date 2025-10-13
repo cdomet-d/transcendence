@@ -350,3 +350,4 @@ TODO :
 * Plug languageDB route to front to see if translation works
 * Add function for leaderboard (plus de wins all over)
 * Do nginx config
+* Faire function search bar user
