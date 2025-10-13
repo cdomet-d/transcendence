@@ -118,7 +118,7 @@ export class inputGroup extends HTMLDivElement {
     }
 
     render() {
-        this.className = 'w-full box-border relative';
+        this.className = 'w-full box-border relative min-w-[240px]';
         this.#label.for = this.#info.id;
         this.#label.content = this.#info.labelContent;
         this.#input.id = this.#info.id;

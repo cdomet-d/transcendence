@@ -6,7 +6,6 @@ import * as user from './web-elements/users/helpers.js';
 import * as defaults from './default-values.js';
 import type * as types from './types-interfaces.js';
 
-
 const iMeta: types.ImgMetadata = {
     id: 'user-avatar',
     src: '/assets/icons/purple-avatar.png',
@@ -69,6 +68,7 @@ try {
     //     }
     // });
 
+    wrapper.appendChild(user.createUserCardSocial(defaults.socialMenu, defaults.userDefault));
 } catch (error) {
     console.log('[ERROR]', error);
 }

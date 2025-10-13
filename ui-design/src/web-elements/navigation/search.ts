@@ -3,15 +3,17 @@ import { createInputGrp } from '../inputs/helpers';
 import { usernamePattern } from '../../default-values';
 import { createBtn } from './helpers';
 import { createUserInline } from '../users/helpers';
+import type { inputGroup } from '../inputs/fields';
 
 export class Searchbar extends HTMLFormElement {
-    #input: InputMetadata;
+    #inputData: InputMetadata;
     #btn: buttonData;
     #results: HTMLDivElement;
+    searchInput: HTMLDivElement;
 
     constructor() {
         super();
-        this.#input = {
+        this.#inputData = {
             labelContent: 'Search',
             type: 'text',
             id: 'search',
@@ -24,11 +26,21 @@ export class Searchbar extends HTMLFormElement {
             img: null,
             ariaLabel: 'Submit button for the search bar',
         };
+        this.searchInput = createInputGrp(this.#inputData) as inputGroup;
         this.#results = document.createElement('div');
+
+		// bind "this" to this actual instance of the class to avoid 'this' confusion in event listening.
+        this.setResultPos = this.setResultPos.bind(this);
     }
 
     connectedCallback() {
         this.render();
+        window.addEventListener('resize', this.setResultPos);
+        window.addEventListener('scroll', this.setResultPos);
+    }
+
+    disconnectedCallback() {
+        window.removeEventListener('resize', this.setResultPos);
     }
 
     clearResults() {
@@ -56,30 +68,35 @@ export class Searchbar extends HTMLFormElement {
         res.forEach((user) => this.addUser(user));
     }
 
+    setResultPos() {
+        const pos = this.searchInput.getBoundingClientRect();
+		this.#results.style.top = `44px`;
+		this.#results.style.width = `${pos.width}px`;
+    }
+
     styleResultPanel() {
-        this.#results.className =
-            'hidden brdr clear-bg min-h-fit max-h[5rem] pad-s overflow-y-auto';
+        this.#results.className = `hidden absolute brdr clear-bg min-h-fit max-h-[400px] pad-s overflow-y-auto box-border`;
     }
 
     render() {
         this.role = 'search';
         this.id = 'searchbar';
 
-        const img = this.createSearchIcon();
-        const input = createInputGrp(this.#input);
-        const submit = createBtn(this.#btn);
+        const img = this.createSearchIcon() as HTMLImageElement;
+        const submit = createBtn(this.#btn) as HTMLButtonElement;
 
         this.action = '/';
         this.method = 'get';
-        this.className = 'items-center box-border grid grid-cols-[61%_37.8%] search-gap w-[100%]';
+        this.className = 'items-center box-border grid grid-cols-[61%_37.8%] search-gap w-[100%] relative';
 
-        input.appendChild(img);
-        this.appendChild(input);
+        console.log(this.searchInput);
+
+        this.searchInput.appendChild(img);
+        this.appendChild(this.searchInput);
         this.appendChild(submit);
-
-        this.styleResultPanel();
         this.appendChild(this.#results);
-
+        this.styleResultPanel();
+        this.setResultPos();
     }
 }
 

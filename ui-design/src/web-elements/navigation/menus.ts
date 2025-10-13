@@ -56,7 +56,7 @@ export class Menu extends HTMLDivElement {
     render() {
         this.role = 'navigation';
         this.id = 'menu';
-        this.className = 'gap-s box-border grid justify-items-center auto-cols-fr auto-rows-fr';
+        this.className = 'gap-s box-border grid justify-items-center auto-cols-fr grid-rows-(--s)';
         if (this.#style === 'horizontal') this.classList.add('grid-flow-col');
         if (this.#style === 'vertical') this.classList.add('grid-flow-rows');
         this.#elements.forEach((item) => this.appendChild(createBtn(item)));
