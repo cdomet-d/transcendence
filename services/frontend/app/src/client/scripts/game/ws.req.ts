@@ -1,11 +1,8 @@
 import { startGame } from './game.loop.js';
 import { Game } from './game.class.js';
-// import type { gameRequest } from '../../../../../../GameManager/app/src/nats/subscriber.js';
 
 function wsRequest(game: Game, gameRequest: string) {
     const ws = new WebSocket('wss://localhost:8443/api/game/match');
-
-    console.log("game request obj: ", gameRequest);
 
     ws.onerror = (err) => {
         console.log("error:", err);
@@ -16,7 +13,9 @@ function wsRequest(game: Game, gameRequest: string) {
         console.log("WebSocket connection established!")
 
         // HERE send gameRequest
-        ws.send(gameRequest); //TODO: only for testing
+        if (ws && ws.readyState === ws.OPEN) {
+            ws.send(gameRequest); //TODO: only for testing
+        }
     }
 
     ws.addEventListener('message', (event) => {

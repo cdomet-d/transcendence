@@ -21,6 +21,11 @@ function pong(gameRequest: string) {
 
 function getCanvasContext(): CanvasRenderingContext2D | null {
 	const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+	if (!canvas) {
+		console.log("%c Error: could not get 'canvas' HTMLElement!", "color:red;") // TODO: Make colourLog(text, colour)
+		return null;
+	}
+
 	const ctx = canvas.getContext('2d');
 	return ctx;
 }
