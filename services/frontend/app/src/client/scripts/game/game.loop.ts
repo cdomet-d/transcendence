@@ -20,6 +20,8 @@ export function startGame(game: Game, ws: WebSocket) {
 function FrameRequestCallback(game: Game, lastServerState: serverReplyObj, ws: WebSocket) {
 	return function gameLoop(timestamp: number) {
 		ws.send(JSON.stringify(game.mess));
+		reconciliation(game, lastServerState);
+		game.mess._ID += 1; //TODO: overflow
 		game.mess._timeStamp = timestamp;
 		game.delta += (timestamp - game.lastFrameTime);
 		game.lastFrameTime = timestamp;
@@ -28,7 +30,6 @@ function FrameRequestCallback(game: Game, lastServerState: serverReplyObj, ws: W
 			updateBallPos(game, TIME_STEP);
 			game.delta -= TIME_STEP;
 		}
-		reconciliation(game, lastServerState);
 		lastServerState = { ...game.servReply };
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
 		renderGame(game);
@@ -37,15 +38,22 @@ function FrameRequestCallback(game: Game, lastServerState: serverReplyObj, ws: W
 }
 
 function reconciliation(game: Game, lastServerState: serverReplyObj) {
-	if (lastServerState.leftPaddle.y != game.servReply.leftPaddle.y)
-		game.leftPad.y += (game.servReply.leftPaddle.y - game.leftPad.y) * 0.2;
+	if (lastServerState.leftPaddle.y != game.servReply.leftPaddle.y) {
+		// game.leftPad.y += (game.servReply.leftPaddle.y - game.leftPad.y) * 0.2;
+		for (let i = game.servReply.ID; i < game.messHistory.length; i++) {
+			
+		}
+	}
 
-	if (lastServerState.rightPaddle.y != game.servReply.rightPaddle.y) //&& if local
-		game.rightPad.y += (game.servReply.rightPaddle.y - game.rightPad.y) * 0.2;
-	
+	if (game.local) {
+		if (lastServerState.rightPaddle.y != game.servReply.rightPaddle.y)
+			game.rightPad.y += (game.servReply.rightPaddle.y - game.rightPad.y) * 0.2;
+	}
+	else
+		game.rightPad.y = game.servReply.rightPaddle.y;
 	if (lastServerState.ball.x != game.servReply.ball.x)
 		game.ball.x += (game.servReply.ball.x - game.ball.x) * 0.2;
 	if (lastServerState.ball.y != game.servReply.ball.y)
 		game.ball.y += (game.servReply.ball.y - game.ball.y) * 0.2;
-}
 
+}

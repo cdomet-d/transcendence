@@ -6,9 +6,9 @@ export function updatePaddlePos(game: Game, keys: keysObj, delta: number) {
         up(game.leftPad, game.paddleSpeed, delta);
     if (keys._s)
         down(game.leftPad, game.paddleSpeed, delta);
-    if (keys._ArrowUp /*&& local*/)
+    if (keys._ArrowUp && game.local)
         up(game.rightPad, game.paddleSpeed, delta);
-    if (keys._ArrowDown /*&& local*/)
+    if (keys._ArrowDown && game.local)
         down(game.rightPad, game.paddleSpeed, delta);
 }
 

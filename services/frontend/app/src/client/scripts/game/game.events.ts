@@ -4,10 +4,10 @@ import { validRep, type repObj } from './mess.validation.js';
 export function addMessEvent(game: Game, ws: WebSocket) {
 	ws.onmessage = (event) => {
 		const rep: repObj = JSON.parse(event.data);
-		if (!validRep(rep)) {
-			console.log("Error: invalid reply:", JSON.stringify(rep));
-			return
-		}
+		// if (!validRep(rep)) {
+		// 	console.log("Error: invalid reply:", JSON.stringify(rep));
+		// 	return
+		// } //TODO: fix validRep
 		game.servReply.leftPaddle.y = rep.leftPad.y;
 		game.servReply.rightPaddle.y = rep.rightPad.y;
 		game.servReply.ball = { ...rep.ball };

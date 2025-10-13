@@ -5,6 +5,7 @@ export interface coordinates {
 }
 
 export interface repObj {
+	ID: number,
 	leftPad: coordinates,
 	rightPad: coordinates,
 	ball: coordinates,
@@ -22,8 +23,9 @@ const coordSchema = {
 
 const repObjSchema = {
 	type: 'object',
-	required: ['leftPad', 'rightPad', 'ball'],
+	required: ['ID', 'leftPad', 'rightPad', 'ball'],
 	properties: {
+		ID: 'number',
 		leftPad: coordSchema,
 		rightPad: coordSchema,
 		ball: coordSchema,
