@@ -11,11 +11,11 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 	game.time.delta += (game.time.stamp - game.time.lastFrame);
 	game.time.lastFrame = game.time.stamp;
 	while (game.time.delta >= TIME_STEP) { //TODO: add max num of updates
-		updatePaddlePos(player1, player1.keys, game.paddleSpeed, game.time.delta);
-		updatePaddlePos(player2, player2.keys, game.paddleSpeed, game.time.delta);
-		game.status = updateBallPos(game.ball, player1, player2, game.time.delta);
+		updatePaddlePos(player1, player1.keys, game.paddleSpeed, TIME_STEP);
+		updatePaddlePos(player2, player2.keys, game.paddleSpeed, TIME_STEP);
+		game.status = updateBallPos(game.ball, player1, player2, TIME_STEP);
 		if (game.status) {
-			//TODO send status to player with score
+			//TODO send pos to player with score
 			player1.socket.close();
 			if (!game.local)
 				player2.socket.close();
