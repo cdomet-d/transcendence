@@ -3,12 +3,7 @@ import { tabWrapper } from './tabs';
 import { Menu, SocialMenu } from './menus';
 import { Searchbar } from './search';
 
-import type {
-    TabMetadata,
-    MenuStyle,
-    buttonData,
-    ProfileView,
-} from '../../types-interfaces';
+import type { TabMetadata, MenuStyle, buttonData, ProfileView } from '../../types-interfaces';
 
 /**
  * Creates a menu button element.
@@ -55,7 +50,7 @@ export function createMenu(content: Array<buttonData>, style: MenuStyle): Menu {
 export function createSocialMenu(
     content: Array<buttonData>,
     style: MenuStyle,
-    v: ProfileView
+    v: ProfileView,
 ): SocialMenu {
     const el = document.createElement('div', { is: 'social-menu' }) as SocialMenu;
     el.MenuElements = content;
@@ -70,7 +65,7 @@ export function createSearchbar(): Searchbar {
 }
 
 export function getSearchbarAsync(timeout: number = 1000): Promise<Searchbar | null> {
-	const start = Date.now();
+    const start = Date.now();
     return new Promise((resolve) => {
         function resolveSearchbar() {
             const s = document.getElementById('searchbar') as Searchbar | null;

@@ -42,6 +42,7 @@
 		/* Font sizing */
 		--regular: 1rem;
 		--s: 1.62rem;
+		--sm: 1.84rem;
 		--m: 2.62rem;
 		--ml: 4.24rem;
 		--l: 6.86rem;
@@ -266,6 +267,10 @@
 		margin: 0;
 	}
 
+	input[type="range"]{
+		height: 20.5px;
+		margin-top: 8px;
+	}
 	input[type="range"]::-moz-range-thumb {
 		box-sizing: border-box;
 		cursor: pointer;
@@ -273,7 +278,7 @@
 		border: none;
 		border-radius: 0;
 		width: var(--space-s);
-		height: var(--s);
+		height: var(--sm);
 		background-color: var(--orange);
 		border-top: 2px solid var(--highlight-orange);
 		border-bottom: 2px solid var(--shadow-orange);

@@ -57,6 +57,9 @@ export interface InputMetadata {
     pattern: string;
     placeholder: string;
     type: string;
+    max?: string;
+    min?: string;
+    step?: string;
 }
 
 /**

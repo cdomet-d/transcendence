@@ -46,8 +46,10 @@ customElements.define('text-input', textInput, { extends: 'input' });
  * Extends native HTMLLabelElement.
  */
 export class inputLabel extends HTMLLabelElement {
+    #type: string;
     constructor() {
         super();
+        this.#type = 'text';
     }
 
     connectedCallback() {
@@ -67,9 +69,15 @@ export class inputLabel extends HTMLLabelElement {
         this.setAttribute('for', val);
     }
 
+    set type(type: string) {
+        this.#type = type;
+    }
+
     render() {
-        this.className =
-            'min-w-[fit-content] flex justify-center brdr clear-bg thin absolute right-[8px] -top-[8px] w-[10%]';
+        this.className = 'min-w-[fit-content] flex justify-center brdr clear-bg thin w-[10%]';
+        if (this.#type != 'range') {
+            this.classList.add('absolute', 'right-[8px]', '-top-[10px]');
+        }
     }
 }
 
@@ -104,13 +112,15 @@ export class inputGroup extends HTMLDivElement {
         this.#input = document.createElement('input', { is: 'text-input' }) as textInput;
         this.#label = document.createElement('label', { is: 'input-label' }) as inputLabel;
 
-        this.appendChild(this.#input);
         this.appendChild(this.#label);
+        this.appendChild(this.#input);
     }
 
     set isSearchbar(val: boolean) {
-        if (val) this.#input.classList.add('searchbar-padding');
-        this.render();
+        if (val) {
+            this.#input.classList.add('searchbar-padding');
+            this.render();
+        }
     }
 
     connectedCallback() {
@@ -118,13 +128,20 @@ export class inputGroup extends HTMLDivElement {
     }
 
     render() {
+        console.log('For', this.#info.type);
         this.className = 'w-full box-border relative min-w-[240px]';
         this.#label.for = this.#info.id;
+        this.#label.type = this.#info.type;
         this.#label.content = this.#info.labelContent;
         this.#input.id = this.#info.id;
         this.#input.placeholder = this.#info.placeholder;
         this.#input.pattern = this.#info.pattern;
         this.#input.type = this.#info.type;
+        if (this.#info.type === 'range') {
+            if (this.#info.min) this.#input.min = this.#info.min;
+            if (this.#info.max) this.#input.max = this.#info.max;
+            if (this.#info.step) this.#input.step = this.#info.step;
+        }
     }
 }
 

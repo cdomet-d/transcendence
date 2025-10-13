@@ -29,7 +29,7 @@ export class Searchbar extends HTMLFormElement {
         this.searchInput = createInputGrp(this.#inputData) as inputGroup;
         this.#results = document.createElement('div');
 
-		// bind "this" to this actual instance of the class to avoid 'this' confusion in event listening.
+        // bind "this" to this actual instance of the class to avoid 'this' confusion in event listening.
         this.setResultPos = this.setResultPos.bind(this);
     }
 
@@ -70,8 +70,8 @@ export class Searchbar extends HTMLFormElement {
 
     setResultPos() {
         const pos = this.searchInput.getBoundingClientRect();
-		this.#results.style.top = `44px`;
-		this.#results.style.width = `${pos.width}px`;
+        this.#results.style.top = `44px`;
+        this.#results.style.width = `${pos.width}px`;
     }
 
     styleResultPanel() {
@@ -87,9 +87,8 @@ export class Searchbar extends HTMLFormElement {
 
         this.action = '/';
         this.method = 'get';
-        this.className = 'items-center box-border grid grid-cols-[61%_37.8%] search-gap w-[100%] relative';
-
-        console.log(this.searchInput);
+        this.className =
+            'items-center box-border grid grid-cols-[61%_37.8%] search-gap w-[100%] relative';
 
         this.searchInput.appendChild(img);
         this.appendChild(this.searchInput);

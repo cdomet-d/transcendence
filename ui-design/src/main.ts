@@ -25,12 +25,31 @@ const mainMenu: Array<types.buttonData> = [
     { content: 'Leaderboard', type: 'button', img: null, ariaLabel: 'Leaderboard Menu Button' },
 ];
 
-const fieldData: types.InputMetadata = {
+const textData: types.InputMetadata = {
     type: 'text',
-    pattern: '^[a-zA-Z0-9]{4,18}$',
+    pattern: defaults.usernamePattern,
     id: 'username',
-    placeholder: 'Enter your username [Aa - Zz, 4 - 18 char]',
+    placeholder: 'Enter your username!',
     labelContent: 'Username',
+};
+
+const pwData: types.InputMetadata = {
+    type: 'password',
+    pattern: defaults.passwordPattern,
+    id: 'password',
+    placeholder: 'Enter your password!',
+    labelContent: 'Password',
+};
+
+const slider: types.InputMetadata = {
+    type: 'range',
+    pattern: '',
+    id: 'paddle-speed',
+    placeholder: '',
+    labelContent: 'Paddle speed',
+    min: '0',
+    max: '5',
+    step: '1',
 };
 
 window.addEventListener('error', (e) => {
@@ -49,7 +68,9 @@ try {
     wrapper.appendChild(typography.createHeading('2', 'Heading 2'));
     wrapper.appendChild(typography.createHeading('3', 'Heading 3'));
     wrapper.appendChild(inputs.createUploadInput('upload'));
-    wrapper.appendChild(inputs.createInputGrp(fieldData));
+    wrapper.appendChild(inputs.createInputGrp(textData));
+    wrapper.appendChild(inputs.createInputGrp(pwData));
+    wrapper.appendChild(inputs.createInputGrp(slider));
     wrapper.appendChild(formBtns.createRadioBtn('radio', 'test'));
     wrapper.appendChild(formBtns.createCheckbox('check', 'test'));
     wrapper.appendChild(nav.createTabs(tabs));
