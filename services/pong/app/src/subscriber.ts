@@ -42,7 +42,7 @@ const player2: user = {
 const gameobj: gameInfo = {
 	_gameID: 1,
 	_score: [],
-	_local: false,
+	_local: true,
 	_users: [player1, player2],
 	_winner: 0,
 	_loser: 0,
