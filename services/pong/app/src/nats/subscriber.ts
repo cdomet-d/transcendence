@@ -11,7 +11,7 @@ export async function initNatsConnexion(): Promise<NatsConnection> {
 	return (nc);
 }
 
-export async function natsSubscribtion(serv: FastifyInstance) {
+export async function natsSubscription(serv: FastifyInstance) {
 	let token = process.env.NATS_SERVER_TOKEN;
 	const nc = await connect({ servers: "nats://nats-server:4222", token: token ?? "" });
 	const sc = StringCodec();

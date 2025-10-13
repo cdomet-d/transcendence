@@ -8,7 +8,7 @@ import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 // Local modules
 import { wsRoute } from './ws.route.js';
 import { options } from './serv.conf.js'
-import { natsSubscribtion } from './nats/subscriber.js';
+import { natsSubscription } from './nats/subscriber.js';
 import { GameRegistry } from './classes/gameRegistry.class.js';
 
 (async () => {
@@ -29,7 +29,7 @@ export async function init(): Promise<FastifyInstance> {
 	//nats
 	// const nc = await initNatsConnexion(); //TODO: use await ?
 	// serv.decorate("nc", nc);
-	natsSubscribtion(serv);
+	natsSubscription(serv);
 
 	//plugins
 	addPlugins(serv);
