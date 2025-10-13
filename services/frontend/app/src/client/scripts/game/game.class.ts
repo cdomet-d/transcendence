@@ -14,28 +14,50 @@ export interface messObj {
 	_timeStamp: number,
 }
 
+export interface ballObj {
+	x: number,
+	y: number,
+	dx: number,
+	dy: number,
+	lastdx: number
+}
+
+export interface serverReplyObj {
+	leftPaddle: coordinates;
+	rightPaddle: coordinates;
+	ball: coordinates;
+}
+
 export class Game {
 	/*                             PROPERTIES                                */
 	#_ctx: CanvasRenderingContext2D;
 	#_leftPaddle: coordinates;
 	#_rightPaddle: coordinates;
-	#_ball: coordinates;
+	#_paddleSpeed: number;
+	#_ball: ballObj;
 	#_mess: messObj;
+	#_servReply: serverReplyObj;
 	#_frameId: number;
+	#_delta: number;
+	#_lastFrameTime: number;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(ctx: CanvasRenderingContext2D) {
 		this.#_ctx = ctx;
-		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2};
+		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3};
 		this.#_leftPaddle = {x: 10, y: 108}; //TODO: put operation
 		this.#_rightPaddle = {x: 460, y: 108};
+		this.#_paddleSpeed = 0.15;
 		let keys: keysObj = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
 		this.#_mess = { _keys: keys, _timeStamp: 0 };
 		this.#_frameId = 0
+		this.#_delta = 0;
+		this.#_lastFrameTime = 0;
+		this.#_servReply = { leftPaddle: {x: 10, y: 108}, rightPaddle: {x: 460, y: 108},ball: {x: WIDTH / 2, y: HEIGHT / 2}};
 	}
 
 	/*                              GETTERS                                  */
-	get ball(): coordinates {
+	get ball(): ballObj {
 		return this.#_ball;
 	}
 
@@ -45,6 +67,10 @@ export class Game {
 
 	get rightPad(): coordinates {
 		return this.#_rightPaddle;
+	}
+
+	get paddleSpeed(): number {
+		return this.#_paddleSpeed;
 	}
 
 	get mess(): messObj {
@@ -57,6 +83,18 @@ export class Game {
 
 	get frameId(): number {
 		return this.#_frameId;
+	}
+
+	get delta(): number {
+		return this.#_delta;
+	}
+
+	get lastFrameTime(): number {
+		return this.#_lastFrameTime;
+	}
+
+	get servReply(): serverReplyObj {
+		return this.#_servReply;
 	}
 
 	/*                              SETTERS                                  */
@@ -75,5 +113,13 @@ export class Game {
 
 	set frameId(id: number) {
 		this.#_frameId = id;
+	}
+
+	set delta(val: number) {
+		this.#_delta = val;
+	}
+
+	set lastFrameTime(val: number) {
+		this.#_lastFrameTime = val;
 	}
 }

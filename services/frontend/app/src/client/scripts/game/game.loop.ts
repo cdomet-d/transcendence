@@ -1,20 +1,46 @@
 import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from "./game.events.js";
 import { renderGame } from "./game.render.utils.js";
-import { Game, HEIGHT, WIDTH } from "./game.class.js";
+import { Game, HEIGHT, WIDTH, type serverReplyObj } from "./game.class.js";
+import { updatePaddlePos } from "./paddle.js";
+import { updateBallPos } from "./ball.js";
+
+const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function startGame(game: Game, ws: WebSocket) {
 	addMessEvent(game, ws);
 	window.addEventListener("keydown", createKeyDownEvent(game.mess._keys));
 	window.addEventListener("keyup", createKeyUpEvent(game.mess._keys));
-	game.frameId = window.requestAnimationFrame(FrameRequestCallback(game, ws));
+	game.lastFrameTime = Date.now();
+	const lastServerState: serverReplyObj = { ...game.servReply };
+	game.frameId = window.requestAnimationFrame(FrameRequestCallback(game, lastServerState, ws));
 }
 
-function FrameRequestCallback(game: Game, ws: WebSocket) {
+function FrameRequestCallback(game: Game, lastServerState: serverReplyObj, ws: WebSocket) {
 	return function gameLoop(timestamp: number) {
-		game.mess._timeStamp = timestamp;
 		ws.send(JSON.stringify(game.mess));
+		game.mess._timeStamp = timestamp;
+		game.delta += (timestamp - game.lastFrameTime);
+		game.lastFrameTime = timestamp;
+		while (game.delta >= TIME_STEP) { //prediction
+			updatePaddlePos(game, game.mess._keys, TIME_STEP);
+			updateBallPos(game, TIME_STEP);
+			game.delta -= TIME_STEP;
+		}
+		if (lastServerState !== game.servReply) {
+			reconciliation(game);
+			lastServerState = { ...game.servReply };
+		}
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
 		renderGame(game);
-		game.frameId = window.requestAnimationFrame(FrameRequestCallback(game, ws));
+		game.frameId = window.requestAnimationFrame(FrameRequestCallback(game, lastServerState, ws));
 	}
 }
+
+function reconciliation(game: Game) {
+	game.leftPad.y += (game.servReply.leftPaddle.y - game.leftPad.y) * 0.2;
+	//if local
+		game.rightPad.y += (game.servReply.rightPaddle.y - game.rightPad.y) * 0.2;
+	game.ball.x   += (game.servReply.ball.x - game.ball.x) * 0.2;
+	game.ball.y   += (game.servReply.ball.y - game.ball.y) * 0.2;
+}
+
