@@ -348,3 +348,5 @@ TODO :
 * Add .env varaible for db setup to ensure flexibility
 * check batch-fechting endpoint
 * Plug languageDB route to front to see if translation works
+* Add function for leaderboard (plus de wins all over)
+* Do nginx config

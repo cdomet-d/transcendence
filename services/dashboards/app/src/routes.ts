@@ -1,8 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 
 export async function dashboardRoutes(serv: FastifyInstance) {
-
-
 	//post a game
 	serv.post('/internal/dashboard/createGame', async (request, reply) => {});
 	//post a tournament
