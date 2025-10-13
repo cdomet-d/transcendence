@@ -24,9 +24,12 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 		}
 		game.time.delta -= TIME_STEP;
 	}
+	player1.rep.ID = player1.clientMess._ID;
 	sendToPlayer1(player1, player2.paddle, game.ball);
-	if (!game.local)
+	if (!game.local) {
+		player2.rep.ID = player2.clientMess._ID;
 		sendToPlayer2(player2, player1.paddle, game.ball);
+	}
 	setTimeout(gameLoop, TIME_STEP, game, player1, player2);
 }
 

@@ -9,6 +9,7 @@ export interface keysObj {
 }
 
 export interface messObj {
+    _ID: number,
     _keys: keysObj,
     _timeStamp: number,
 }
@@ -29,8 +30,9 @@ const idsObjSchema = {
 
 const messObjSchema = {
     type: 'object',
-    required: ['_keys', '_timeStamp'],
+    required: ['_ID', '_keys', '_timeStamp'],
     properties: {
+        _ID: { type: 'number' },
         _timeStamp: { type: 'number' },
         _keys: {
             type: 'object',
