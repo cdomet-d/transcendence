@@ -13,21 +13,21 @@ export async function natsSubscribe() {
     for await (const msg of pregame) {
       const sc = StringCodec();
       const payload = JSON.parse(sc.decode(msg.data));
-      const match = payload.match;
+      const game = payload.game;
       // console.log(`GM received in "game.reply" : `, payload);
 
-      // signal BOTH client via WS their match is ready
+      // signal BOTH client via WS their game is ready
       // parse payload.users and find their IDs
       // parse clientMap to get their socket
 
-      for (let i = 0; i < match.users.length; i++) {
-        const userID = match.users[i].userID;
+      for (let i = 0; i < game.users.length; i++) {
+        const userID = game.users[i].userID;
         const socket = wsClientsMap.get(userID);
 
         const gameSignal = {
           event: "approved",
           userID: userID,
-          gameID: match.matchID
+          gameID: game.gameID
         }
         
         if (payload.event === "declined") {

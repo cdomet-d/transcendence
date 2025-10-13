@@ -30,13 +30,13 @@ export async function natsSubscription(serv: FastifyInstance) {
 			if (msg.reply) {
 				const gameReply = {
 					event: "approved",
-					match: _gameInfo
+					game: _gameInfo
 				}
 				natsPublish(msg.reply, JSON.stringify(gameReply));
 			} else { // Real question is: What could go wrong? Honestly? I'd like to know, I'm being serious
 				// const gameReply = {
 				// 	event: "declined",
-				// 	match: _gameInfo
+				// 	game: _gameInfo
 				// }
 				// natsPublish("game.reply", JSON.stringify(gameReply));
 				console.log(`Error: No reply subject provided in "game.request"`);

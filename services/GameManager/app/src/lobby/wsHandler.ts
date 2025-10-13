@@ -15,7 +15,7 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 	// handle LOBBY creation CLIENT SIDE
 		// room info
 		// when they're sent (ex: Friend joins Lobby >> Others must see user appear in Lobby)
-		// store user sockets until end of tournament (or match)
+		// store user sockets until end of tournament (or game)
 	
 	// HERE handle info Lobby sends
 		// new Lobby
@@ -61,7 +61,7 @@ export function wsSend(ws: WebSocket, message: string): void {
     } else {
 		const payload = JSON.parse(message);
         console.log(`Error: Connection for userID <${payload.userID}> not found or not open...`);
-		console.log(`\tCould not start game with matchID <${payload.gameID}>`);
+		console.log(`\tCould not start game with gameID <${payload.gameID}>`);
 		// handle this error 
     }
 }

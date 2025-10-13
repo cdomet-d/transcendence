@@ -31,13 +31,13 @@ tournament || ##### |  4/8  |
 tournament {
     - tournamentID
     - winnerID
-    - match[] <!-- THIS IS THE BRACKET -->
+    - games[] <!-- THIS IS THE BRACKET -->
 }
 
 {
-    match:
-    -   matchID
-    -   tournamentID <!-- 0 if quick match -->
+    game:
+    -   gameID
+    -   tournamentID <!-- 0 if quick game -->
     -   remote: bool
     -   userIDs[]
     -   score 

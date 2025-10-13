@@ -1,8 +1,8 @@
 import { tournamentMap } from "./tournamentStart.js";
 import { Mutex } from 'async-mutex';
-import { startMatch } from "./tournamentStart.js";
+import { startGame } from "./tournamentStart.js";
 
-import type { match, tournament } from '../../src/manager.js'
+import type { game, tournament } from '../../src/manager.js'
 
 let mutexMap: Map<number, Mutex> = new Map();
 
@@ -15,35 +15,35 @@ function getTournamentMutex(tournamentID: number): Mutex {
 
 // Mutex zone
 export async function tournamentState(payload: string) {
-    const previousMatch: match = JSON.parse(payload);
-    const tournamentID: number = previousMatch.tournamentID;
+    const previousGame: game = JSON.parse(payload);
+    const tournamentID: number = previousGame.tournamentID;
 
     const mutex = getTournamentMutex(tournamentID);
     const release = await mutex.acquire(tournamentID);
 
     // TODO: Throw new Error inside try block
     try {
-        const tournamentObj = tournamentMap.get(previousMatch.tournamentID);
+        const tournamentObj = tournamentMap.get(previousGame.tournamentID);
         if (!tournamentObj) {
             console.log("Error: Could not make tournamentObj!");
             return;
         }
 
-        // find match object in bracket
-        const index = tournamentObj.bracket.findIndex((match) => match.matchID === previousMatch.matchID);
+        // find game object in bracket
+        const index = tournamentObj.bracket.findIndex((game) => game.gameID === previousGame.gameID);
         if (index !== -1) {
-            // update previousMatch info
-            tournamentObj.bracket[index] = previousMatch;
+            // update previousGame info
+            tournamentObj.bracket[index] = previousGame;
         } else {
-            console.log("Error: previousMatch not found in tournament bracket!");
+            console.log("Error: previousGame not found in tournament bracket!");
             return;
         }
 
-        // TODO: send full matchObj to DB??
+        // TODO: send full GameObj to DB??
 
-        // get next matchObj
-        const nextMatch = getNextMatchInBracket(tournamentObj);
-        if (nextMatch === undefined) { // Means previousMatch was the tournament final
+        // get next GameObj
+        const nextGame = getNextGameInBracket(tournamentObj);
+        if (nextGame === undefined) { // Means previousGame was the tournament final
             // handle end of tournament
                 // winner screen
                 // loser screen
@@ -51,22 +51,22 @@ export async function tournamentState(payload: string) {
             return;
         }
 
-        // set up nextMatch
-        const nextPlayer: string = getUsernameFromID(previousMatch.winnerID, previousMatch);
-        if (nextMatch?.users === null) { // assign winnerID to player1 of next match
-            nextMatch.users = [
-                { userID: previousMatch.winnerID, username: nextPlayer },
+        // set up nextGame
+        const nextPlayer: string = getUsernameFromID(previousGame.winnerID, previousGame);
+        if (nextGame?.users === null) { // assign winnerID to player1 of next game
+            nextGame.users = [
+                { userID: previousGame.winnerID, username: nextPlayer },
                 {}
             ];
-        } else if (nextMatch?.users && nextMatch?.users[1] === null) { // assign winnerID to player2 of next match
-            nextMatch.users[1] = { userID: previousMatch.winnerID, username: nextPlayer };
+        } else if (nextGame?.users && nextGame?.users[1] === null) { // assign winnerID to player2 of next game
+            nextGame.users[1] = { userID: previousGame.winnerID, username: nextPlayer };
         } else {
             // TODO: handle error
             return;
         }
 
-        // start next match
-        startMatch(nextMatch);
+        // start next game
+        startGame(nextGame);
     } finally {
         release();
     }
@@ -74,20 +74,20 @@ export async function tournamentState(payload: string) {
     // back to menu for loser
 }
 
-function getUsernameFromID(winnerID: number, previousMatch: match): string {
-    if (previousMatch.users?.length === 2) {
-        if (previousMatch.users[0]?.userID === winnerID)
-            return previousMatch.users[0]?.username!;
+function getUsernameFromID(winnerID: number, previousGame: game): string {
+    if (previousGame.users?.length === 2) {
+        if (previousGame.users[0]?.userID === winnerID)
+            return previousGame.users[0]?.username!;
         else
-            return previousMatch.users[1]?.username!;
+            return previousGame.users[1]?.username!;
     }
-    return "Error: Couldn't find username from userID in previousMatchObj!";
+    return "Error: Couldn't find username from userID in previousGameObj!";
 }
 
-function getNextMatchInBracket(tournament: tournament): match | undefined {
-    tournament.bracket.forEach((matchObj) => {
-        if (matchObj.users === null || (matchObj.users && matchObj.users[1] === null)) {
-            return matchObj;
+function getNextGameInBracket(tournament: tournament): game | undefined {
+    tournament.bracket.forEach((GameObj) => {
+        if (GameObj.users === null || (GameObj.users && GameObj.users[1] === null)) {
+            return GameObj;
         }
     });
     return undefined;

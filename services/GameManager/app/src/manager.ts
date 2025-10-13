@@ -13,8 +13,8 @@ interface lobbyInfo {
     // gameSettings: gameSettingsObj
 }
 
-interface match {
-    matchID: number,
+interface game {
+    gameID: number,
     tournamentID: number,
     remote: boolean,
     users: userInfo[] | undefined | null,
@@ -26,10 +26,10 @@ interface match {
 interface tournament {
     tournamentID: number,
     winnerID: number | undefined | null,
-    bracket: match[]
+    bracket: game[]
 }
 
-export type { userInfo, lobbyInfo, match, tournament };
+export type { userInfo, lobbyInfo, game, tournament };
 
 // function receiveLobbyInfo(): lobbyInfo {
 //     const userArray: userInfo[] = [
@@ -52,9 +52,9 @@ export function processLobbyRequest(lobbyInfo: lobbyInfo) {
         }
         startTournament(tournament);
     } else if (lobbyInfo.format === "quick") {
-        // create matchObj
+        // create gameObj
         // send it to PONG
         // wait for approval from PONG
-        // signal involved clients match ready for them
+        // signal involved clients game ready for them
     }
 }

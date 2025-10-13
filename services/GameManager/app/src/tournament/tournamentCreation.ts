@@ -1,4 +1,4 @@
-import type { userInfo, lobbyInfo, match, tournament } from '../../src/manager.js'
+import type { userInfo, lobbyInfo, game, tournament } from '../../src/manager.js'
 
 export function createTournament(payload: lobbyInfo): tournament | undefined {
     console.log("Creating Tournament");
@@ -7,20 +7,20 @@ export function createTournament(payload: lobbyInfo): tournament | undefined {
     const tournamentID = 99;
 
     // create bracket
-    const matches: match[] | undefined = createBracket(payload, tournamentID);
-    if (matches === undefined) {
+    const games: game[] | undefined = createBracket(payload, tournamentID);
+    if (games === undefined) {
         console.log("Error: createBracket()")
         return undefined;
     }
 
     // create tournament
-    const tournamentObj = makeTournamentObj(tournamentID, matches);
+    const tournamentObj = makeTournamentObj(tournamentID, games);
     return tournamentObj;
 }
 
-export function createBracket(lobbyInfo: lobbyInfo, tournamentID: number): match[] | undefined {
+export function createBracket(lobbyInfo: lobbyInfo, tournamentID: number): game[] | undefined {
     console.log("Creating Bracket");
-    // const nBmatches = lobbyInfo.users.length - 1;
+    // const nBgames = lobbyInfo.users.length - 1;
 
     // Basic bracket format is: | A vs B | C vs D | winner of each goes to FINAL
     // TODO: this ugly af
@@ -36,21 +36,21 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: number): match
     ];
     
     // TODO: need to generate unique gameIDs (fetch DB?)
-    // create nbMatch objects
-    let matches: match[] = [
-        { matchID: 1, tournamentID: tournamentID, remote: true, users: opponents[0], score: "", winnerID: 0, loserID: 0 },
-        { matchID: 2, tournamentID: tournamentID, remote: true, users: opponents[1], score: "", winnerID: 0, loserID: 0 },
-        { matchID: 3, tournamentID: tournamentID, remote: true, users: null, score: "", winnerID: 0, loserID: 0 },
+    // create nbgame objects
+    let games: game[] = [
+        { gameID: 1, tournamentID: tournamentID, remote: true, users: opponents[0], score: "", winnerID: 0, loserID: 0 },
+        { gameID: 2, tournamentID: tournamentID, remote: true, users: opponents[1], score: "", winnerID: 0, loserID: 0 },
+        { gameID: 3, tournamentID: tournamentID, remote: true, users: null, score: "", winnerID: 0, loserID: 0 },
     ];
 
-    return matches;
+    return games;
 }
 
-export function makeTournamentObj(tournamentID: number, matches: match[]): tournament {
+export function makeTournamentObj(tournamentID: number, games: game[]): tournament {
     const tournament: tournament = {
         tournamentID: tournamentID,
         winnerID: null,
-        bracket: matches
+        bracket: games
     }
     return tournament;
 }
