@@ -3,7 +3,7 @@ import { checkUsernameUnique } from './account.service.js'
 import * as bcrypt from 'bcrypt';
 
 export async function accountRoutes(serv: FastifyInstance) {
-	serv.post('/account/register', async (request, reply) => {
+	serv.post('/internal/account/register', async (request, reply) => {
 		try {
 			const { username } = request.body as { username: string };
 			const { hashedPass } = request.body as { hashedPass: string };
@@ -67,7 +67,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			}
 	});
 
-	serv.get('/account/login', async (request, reply) => {
+	serv.get('/internal/account/login', async (request, reply) => {
 		try {
 			const { username } = request.body as { username: string };
 			const { password } = request.body as { password: string };
@@ -99,7 +99,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 
 	});
 
-	serv.post('/account/updatePass', async(request, reply) => {
+	serv.post('/internal/account/updatePass', async(request, reply) => {
 		try {
 			const { username } = request.body as { username: string };
 			const { password } = request.body as { password: string };
@@ -135,7 +135,8 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/account/updateUsername/', async(request, reply) => {
+	//TODO : internal ? handled by authentification ?
+	serv.post('/internal/account/updateUsername/', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newUsername, oldUsername } = request.body as { newUsername: string, oldUsername: string };

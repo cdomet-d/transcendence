@@ -1,5 +1,4 @@
 import type { FastifyInstance } from 'fastify';
-import { isPropertyAccessOrQualifiedName } from 'typescript';
 
 interface UserProfile {
 	userID: number;
@@ -88,7 +87,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//get user's activity with userID
-	serv.get('/users/activity/:userID', async(request, reply) => {
+	serv.get('/internal/users/activity/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
 
@@ -118,7 +117,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//get user's lastConnextion with userID
-	serv.get('/users/lastConnection/:userID', async(request, reply) => {
+	serv.get('/internal/users/lastConnection/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
 			const newConnection = parseInt((request.params as { newConnection: string }).newConnection, 10);
@@ -226,7 +225,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/users/updateProfile', async(request, reply) => {
+	serv.post('/internal/users/updateProfile', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const statsToUpdate = request.body as { [key: string]: number };
@@ -274,7 +273,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's avatar with userID
-	serv.patch('/users/updateAvatar', async(request, reply) => {
+	serv.patch('/internal/users/updateAvatar', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newAvatar } = request.params as { newAvatar: string };
@@ -317,7 +316,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's bio with userID
-	serv.patch('/users/updateBio', async(request, reply) => {
+	serv.patch('/internal/users/updateBio', async(request, reply) => {
 		try {
 			const userID = request.user.userID; 
 			const { newBio } = request.params as { newBio: string };
@@ -353,7 +352,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's profile color with userID
-	serv.patch('/users/updateProfileColor', async(request, reply) => {
+	serv.patch('/internal/users/updateProfileColor', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newProfileColor } = request.params as { newProfileColor: string };
@@ -393,7 +392,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's activity with userID
-	serv.patch('/users/updateActivityStatus', async(request, reply) => {
+	serv.patch('/internal/users/updateActivityStatus', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newStatus } = request.body as { newStatus: any };
@@ -435,7 +434,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's last connextion with userID
-	serv.patch('/users/updateLastConnection', async(request, reply) => {
+	serv.patch('/internal/users/updateLastConnection', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newConnection } = request.body as { newConnection: any };
@@ -510,7 +509,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//USER STATS
 	//get all user's stats with userID
-	serv.get('/users/userStats/:userID', async(request, reply) => {
+	serv.get('/internal/users/userStats/:userID', async(request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
 
@@ -530,7 +529,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update all stats of a user
-	serv.post('/users/updateAllStats', async(request, reply) => {
+	serv.post('/internal/users/updateAllStats', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const statsToUpdate = request.body as { [key: string]: number };
@@ -581,7 +580,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	// TODO: Should we check the value of the current longuest match here or before calling the function altogether ? 
 	//update user's longuest match with userID
-	serv.patch('/users/updateLonguestMatch', async(request, reply) => {
+	serv.patch('/internal/users/updateLonguestMatch', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newLonguestMatch } = request.body as { newLonguestMatch: any };
@@ -621,7 +620,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's shortest match with userID
-	serv.patch('/users/updateShortestMatch', async(request, reply) => {
+	serv.patch('/internal/users/updateShortestMatch', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newShortestMatch } = request.body as { newShortestMatch: any };
@@ -661,7 +660,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's total match with userID
-	serv.patch('/users/updateTotalMatch', async(request, reply) => {
+	serv.patch('/internal/users/updateTotalMatch', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newTotalMatch } = request.body as { newTotalMatch: any };
@@ -701,7 +700,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's total wins with userID
-	serv.patch('/users/updateWins', async(request, reply) => {
+	serv.patch('/internal/users/updateWins', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newWins } = request.body as { newWins: any };
@@ -741,7 +740,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//add one to user's win streak with userID
-	serv.post('/users/endWinStreak', async(request, reply) => {
+	serv.post('/internal/users/endWinStreak', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 
@@ -768,7 +767,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//set user's win streak to zero with userID
-	serv.patch('/users/addWinStreak', async(request, reply) => {
+	serv.patch('/internal/users/addWinStreak', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			
@@ -796,7 +795,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//update user's average match duration with userID
 	//TODO: do I code average calculation logic here, or just worry about updating the value in the DB ?
-	serv.patch('/users/updateAverageMatchDuration', async(request, reply) => {
+	serv.patch('/internal/users/updateAverageMatchDuration', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newDuration } = request.body as { newDuration: any };
@@ -836,7 +835,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's highest score with userID
-	serv.patch('/users/updateHighestScore', async(request, reply) => {
+	serv.patch('/internal/users/updateHighestScore', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newHighScore } = request.body as { newHighScore: any };

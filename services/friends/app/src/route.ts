@@ -15,9 +15,8 @@ interface userData {
 
 export async function friendRoutes(serv: FastifyInstance) {
 
-	//TODO : check formatting of this route
 	// Send a friend request to another user with username, parameter : username of sender and receiver
-	serv.post('/friends/send-friends-requests', async (request, reply) => {
+	serv.post('/internal/friends/send-friends-requests', async (request, reply) => {
 		try {
 			const senderId = request.user.userID;
 			const { username: receiverUsername } = request.params as { username: string };
@@ -76,7 +75,7 @@ export async function friendRoutes(serv: FastifyInstance) {
 	});
 
 	//accept a friend request
-	serv.post('/friends/friends-request/:requestID', async (request, reply) => {
+	serv.post('/internal/friends/friends-request/:requestID', async (request, reply) => {
 		try {
 			const currentUserId = request.user.userID;
 			const {requestID : requestID } = request.params as { requestID : number};
@@ -123,7 +122,7 @@ export async function friendRoutes(serv: FastifyInstance) {
 	});
 
 	//delete a frienship
-	serv.delete('/friends/:username', async (request, reply) => {
+	serv.delete('/internal/friends/:username', async (request, reply) => {
 		try {
 			const removerId = request.user.userID;
 			const { username: friendUsername } = request.params as { username: string };
@@ -160,7 +159,7 @@ export async function friendRoutes(serv: FastifyInstance) {
 
 
 	//return all friendship
-	serv.get('/friends/friendslist', async (request, reply) => {
+	serv.get('/internal/friends/friendslist', async (request, reply) => {
 		try {
 			const userID = request.user.userID;
 
@@ -202,7 +201,7 @@ export async function friendRoutes(serv: FastifyInstance) {
 
 	//TODO: do we really need all this information for the friend-request list ? How will the UI looks like ?
 	//return all pending friendship
-	serv.get('/friends/friend-request-list', async (request, reply) => {
+	serv.get('/internal/friends/friend-request-list', async (request, reply) => {
 		try {
 			const userID = request.user.userID;
 
