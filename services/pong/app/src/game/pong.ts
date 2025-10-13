@@ -10,6 +10,9 @@ export function setUpGame(game: Game) {
 	const player2: Player = game.players[1];
 	setMessEvent(player1);
 	setMessEvent(player2);
+	player1.socket.send(1);
+	if (!game.local)
+		player2.socket.send(1);
 	game.time.lastFrame = Date.now();
 	gameLoop(game, player1, player2);
 }
