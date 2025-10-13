@@ -10,9 +10,11 @@ export function startGame(game: Game, ws: WebSocket) {
 	addMessEvent(game, ws);
 	window.addEventListener("keydown", createKeyDownEvent(game.mess._keys));
 	window.addEventListener("keyup", createKeyUpEvent(game.mess._keys));
-	game.lastFrameTime = Date.now();
 	const lastServerState: serverReplyObj = { ...game.servReply };
-	game.frameId = window.requestAnimationFrame(FrameRequestCallback(game, lastServerState, ws));
+	game.frameId = requestAnimationFrame((timestamp) => {
+		game.lastFrameTime = timestamp;
+		game.frameId = requestAnimationFrame(FrameRequestCallback(game, lastServerState, ws));
+	});
 }
 
 function FrameRequestCallback(game: Game, lastServerState: serverReplyObj, ws: WebSocket) {
@@ -26,21 +28,24 @@ function FrameRequestCallback(game: Game, lastServerState: serverReplyObj, ws: W
 			updateBallPos(game, TIME_STEP);
 			game.delta -= TIME_STEP;
 		}
-		if (lastServerState !== game.servReply) {
-			reconciliation(game);
-			lastServerState = { ...game.servReply };
-		}
+		reconciliation(game, lastServerState);
+		lastServerState = { ...game.servReply };
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
 		renderGame(game);
 		game.frameId = window.requestAnimationFrame(FrameRequestCallback(game, lastServerState, ws));
 	}
 }
 
-function reconciliation(game: Game) {
-	game.leftPad.y += (game.servReply.leftPaddle.y - game.leftPad.y) * 0.2;
-	//if local
+function reconciliation(game: Game, lastServerState: serverReplyObj) {
+	if (lastServerState.leftPaddle.y != game.servReply.leftPaddle.y)
+		game.leftPad.y += (game.servReply.leftPaddle.y - game.leftPad.y) * 0.2;
+
+	if (lastServerState.rightPaddle.y != game.servReply.rightPaddle.y) //&& if local
 		game.rightPad.y += (game.servReply.rightPaddle.y - game.rightPad.y) * 0.2;
-	game.ball.x   += (game.servReply.ball.x - game.ball.x) * 0.2;
-	game.ball.y   += (game.servReply.ball.y - game.ball.y) * 0.2;
+	
+	if (lastServerState.ball.x != game.servReply.ball.x)
+		game.ball.x += (game.servReply.ball.x - game.ball.x) * 0.2;
+	if (lastServerState.ball.y != game.servReply.ball.y)
+		game.ball.y += (game.servReply.ball.y - game.ball.y) * 0.2;
 }
 
