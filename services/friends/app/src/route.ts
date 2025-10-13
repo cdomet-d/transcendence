@@ -15,19 +15,23 @@ interface userData {
 
 export async function friendRoutes(serv: FastifyInstance) {
 
+	//TODO : check formatting of this route
 	// Send a friend request to another user with username, parameter : username of sender and receiver
-	serv.post('/friends/send-friends-requests/:username', async (request, reply) => {
+	serv.post('/friends/send-friends-requests', async (request, reply) => {
 		try {
+			const senderId = request.user.userID;
 			const { username: receiverUsername } = request.params as { username: string };
-			const { userID: senderId } = request.body as { userID: number };
 			
-			if (!senderId || !receiverUsername)
+			if (!receiverUsername)
 				return reply.code(400).send({ message: 'Missing sender ID or receiver username.' });
+			
+			if (request.user.username === receiverUsername)
+				return reply.code(400).send({ message: 'You cannot send a friend request to yourself.' });
 
 			const receiverUser = await getUserID(receiverUsername);
-			if (!receiverUser) {
+			if (!receiverUser)
 				return reply.code(404).send({ message: `User '${receiverUsername}' not found` });
-			}
+
 			const receiverId = receiverUser.userID;
 
 			const alreadyExists = await friendshipExistsUsersID(serv.dbFriends, senderId, receiverId);
@@ -74,6 +78,7 @@ export async function friendRoutes(serv: FastifyInstance) {
 	//accept a friend request
 	serv.post('/friends/friends-request/:requestID', async (request, reply) => {
 		try {
+			const currentUserId = request.user.userID;
 			const {requestID : requestID } = request.params as { requestID : number};
 
 			if (!requestID)
@@ -89,10 +94,14 @@ export async function friendRoutes(serv: FastifyInstance) {
 			}
 
 			const query = 
-			` UPDATE friendship SET statusFrienship = true WHERE friendshipID = ?
+			`UPDATE friendship SET statusFrienship = true WHERE friendshipID = ? AND friendID = ?
 			`;
 			
-			const result = await serv.dbFriends.run(query, [requestID]);
+			const params =
+				[requestID,
+				currentUserId];
+			
+			const result = await serv.dbFriends.run(query, params);
 			if (result.changes === 0) {
 				return reply.code(404).send({
 					success: false,
@@ -116,95 +125,69 @@ export async function friendRoutes(serv: FastifyInstance) {
 	//delete a frienship
 	serv.delete('/friends/:username', async (request, reply) => {
 		try {
+			const removerId = request.user.userID;
 			const { username: friendUsername } = request.params as { username: string };
-			const { userID: senderId } = request.body as { userID: number };
-			
-			if (!senderId || !friendUsername)
-				return reply.code(400).send({ message: 'Missing sender ID or receiver username.' });
 
-			const usersResponse = await fetch(`https://users:2626/internal/users/by-username/${friendUsername}`);
-			if (usersResponse.status === 404)
-				return (reply.code(404).send({message: `User '${friendUsername}'`}));
+			const friendUser = await getUserID(friendUsername);
+			if (!friendUser)
+				return (reply.code(404).send({ message: `User '${friendUsername}' not found.` }));
 
-			if (!usersResponse.ok)
-				return reply.code(502).send({ message: 'The user service returned an error.' });
-			
-			const receiverUser = (await usersResponse.json()) as { userID: number };
-			const receiverId = receiverUser.userID;
-
-			const alreadyExists = await friendshipExistsUsersID(serv.dbFriends, senderId, receiverId);
-			if (!alreadyExists) {
-				return reply.code(404).send({
-					success: false,
-					message: 'Friendship doesnt exists!'
-				});
-			}
-
+			const friendId = friendUser.userID;
+		
 			const query = `
 				DELETE FROM friendship 
 				WHERE (userID = ? AND friendID = ?) 
-				   OR (userID = ? AND friendID = ?);
+					OR (userID = ? AND friendID = ?);
 			`;
-
-			const params = [
-				senderId,
-				receiverId,
-			];
-
+			const params = [removerId, friendId, friendId, removerId];
 			const result = await serv.dbFriends.run(query, params);
-			if (result.changes === 0) {
-				return reply.code(404).send({
-					success: false,
-					message: 'Friendship could not be found for deletion.'
-				});
-			}
-
-			return reply.code(201).send({
+		
+			if (result.changes === 0)
+				return (reply.code(404).send({ message: 'Friendship not found.' }));
+		
+			return (reply.code(200).send({
 				success: true,
-				message: `Friendship deleted`
-			});
-
+				message: `Friendship deleted !`
+			}));		
 		} catch (error) {
-			console.error('[Friends Service] Error processing friend request:', error);
-			return reply.code(500).send({
-			success: false,
-			message: 'An internal error occurred.'
-			});
+			serv.log.error(`[Friends Service] Error deleting friendship: ${error}`);
+			return (reply.code(500).send({
+				success: false,
+				message: 'An internal error occured.'
+			}));	
 		}
 	});
 
 
 	//return all friendship
-	serv.get('/friends/friendslist/:userID', async (request, reply) => {
+	serv.get('/friends/friendslist', async (request, reply) => {
 		try {
-		console.log("In the friend-list");
-		const { userID } = request.params as { userID: number };
+			const userID = request.user.userID;
 
-		const pendingRequests = await getFriendship(serv.dbFriends, userID);
+			const pendingRequests = await getFriendship(serv.dbFriends, userID);
+			if (pendingRequests.length === 0)
+				return reply.code(200).send([]); // Return empty array if no requests
 
-		if (pendingRequests.length === 0)
-			return reply.code(200).send([]); // Return empty array if no requests
-
-		const profileCardPromises = pendingRequests.map(async (request) => {
-			try {
-				const senderProfile = await getUserProfile(request.otherUserID);
-				if (!senderProfile)
-					return (null); // Skip if a profile can't be fetched
-				return {
-					avatar: senderProfile.avatar,
-					biography: senderProfile.biography,
-					friendship: {
-						friendsSince: request.startTime, 
-					},
-					profileColor: senderProfile.profileColor,
-					rank: senderProfile.rank,
-					username: senderProfile.username
-				};
-			} catch (error) {
-				console.error(`Failed to fetch profile for user ${request.otherUserID}:`, error);
-				return (null); // Return null on error so it gets filtered out
-			}
-		});
+			const profileCardPromises = pendingRequests.map(async (request) => {
+				try {
+					const senderProfile = await getUserProfile(request.otherUserID);
+					if (!senderProfile)
+						return (null); // Skip if a profile can't be fetched
+					return {
+						avatar: senderProfile.avatar,
+						biography: senderProfile.biography,
+						friendship: {
+							friendsSince: request.startTime, 
+						},
+						profileColor: senderProfile.profileColor,
+						rank: senderProfile.rank,
+						username: senderProfile.username
+					};
+		} catch (error) {
+			console.error(`Failed to fetch profile for user ${request.otherUserID}:`, error);
+			return (null); // Return null on error so it gets filtered out
+		}
+	});
 
 		const profileCards = (await Promise.all(profileCardPromises))
 							.filter(card => card !== null);
@@ -219,13 +202,11 @@ export async function friendRoutes(serv: FastifyInstance) {
 
 	//TODO: do we really need all this information for the friend-request list ? How will the UI looks like ?
 	//return all pending friendship
-	serv.get('/friends/friend-request-list/:userID', async (request, reply) => {
+	serv.get('/friends/friend-request-list', async (request, reply) => {
 		try {
-			console.log("In the friend-request-list");
-			const { userID } = request.params as { userID: number };
+			const userID = request.user.userID;
 
 			const pendingRequests = await getPendingFriendRequests(serv.dbFriends, userID);
-
 			if (pendingRequests.length === 0)
 				return reply.code(200).send([]); // Return empty array if no requests
 

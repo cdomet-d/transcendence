@@ -344,9 +344,10 @@ TODO :
 * Add .env varaible for db setup to ensure flexibility
 * ~~Change all request to https~~
 * check all internal and external https request
-* Update which routes should or shoudn't have a variable parameter
-* Check correct error returns for await fecth
-* ~~Add check for eevery serv.run~~
+* ~~Update which routes should or shoudn't have a variable parameter~~
+* ~~Check correct error returns for await fecth~~
+* ~~Add check for every serv.run~~
+* check batch-fechting endpoint
 
 
 Of course. Based on REST API design principles and security best practices, here is a logical breakdown of which routes should and shouldn't use a variable parameter. The key idea is to use URL parameters to **identify a specific public resource** you want to view or act upon, but **not** for actions a user performs on their own account.
