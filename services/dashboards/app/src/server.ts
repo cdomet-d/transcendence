@@ -2,12 +2,12 @@ import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
 import { options } from './serv.conf.js';
 import dbConnector from "./db.js"
-//import { dashboardRoutes } from './routes.js';
+import { dashboardRoutes } from './routes.js';
 
 const serv: FastifyInstance = Fastify(options);
 
 serv.register(dbConnector);
-//serv.register(dashboardRoutes);
+serv.register(dashboardRoutes);
 
 const start = async () => {
 	try {

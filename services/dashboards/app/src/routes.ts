@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 
-export async function dashboardRoute(serv: FastifyInstance) {
+export async function dashboardRoutes(serv: FastifyInstance) {
 
 	//post a game
 	//post a tournament
@@ -16,5 +16,5 @@ export async function dashboardRoute(serv: FastifyInstance) {
 	//get all tournamenet of a player
 	//get all game of a tournamenent
 	//get stats of a game
-	
+
 }
