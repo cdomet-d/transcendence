@@ -25,7 +25,7 @@ export async function tournamentState(payload: string) {
     try {
         const tournamentObj = tournamentMap.get(previousMatch.tournamentID);
         if (!tournamentObj) {
-            console.log("No tournamentObj qué?");
+            console.log("Error: Could not make tournamentObj!");
             return;
         }
 
@@ -35,11 +35,11 @@ export async function tournamentState(payload: string) {
             // update previousMatch info
             tournamentObj.bracket[index] = previousMatch;
         } else {
-            console.log("Match not found in tournament bracket qué?");
+            console.log("Error: previousMatch not found in tournament bracket!");
             return;
         }
 
-        // send full matchObj to DB??
+        // TODO: send full matchObj to DB??
 
         // get next matchObj
         const nextMatch = getNextMatchInBracket(tournamentObj);
@@ -60,6 +60,9 @@ export async function tournamentState(payload: string) {
             ];
         } else if (nextMatch?.users && nextMatch?.users[1] === null) { // assign winnerID to player2 of next match
             nextMatch.users[1] = { userID: previousMatch.winnerID, username: nextPlayer };
+        } else {
+            // TODO: handle error
+            return;
         }
 
         // start next match
@@ -72,15 +75,13 @@ export async function tournamentState(payload: string) {
 }
 
 function getUsernameFromID(winnerID: number, previousMatch: match): string {
-
-    
     if (previousMatch.users?.length === 2) {
         if (previousMatch.users[0]?.userID === winnerID)
             return previousMatch.users[0]?.username!;
         else
             return previousMatch.users[1]?.username!;
     }
-    return "USER NOT FOUND";
+    return "Error: Couldn't find username from userID in previousMatchObj!";
 }
 
 function getNextMatchInBracket(tournament: tournament): match | undefined {

@@ -14,7 +14,6 @@ export async function natsSubscribe() {
       const sc = StringCodec();
       const payload = JSON.parse(sc.decode(msg.data));
       const match = payload.match;
-      // PAYLOAD IS gameRequestObj (see pong/subscriber.ts)
       // console.log(`GM received in "game.reply" : `, payload);
 
       // signal BOTH client via WS their match is ready

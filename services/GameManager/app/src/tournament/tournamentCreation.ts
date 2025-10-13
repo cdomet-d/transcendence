@@ -22,21 +22,20 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: number): match
     console.log("Creating Bracket");
     // const nBmatches = lobbyInfo.users.length - 1;
 
-    
-    // Basic format is A vs B and C vs D then winner of each goes to FINAL
+    // Basic bracket format is: | A vs B | C vs D | winner of each goes to FINAL
     // TODO: this ugly af
     if (!lobbyInfo.users[0] || !lobbyInfo.users[1] || !lobbyInfo.users[2] || !lobbyInfo.users[3]) {
         console.log("Error: Empty userInfo");
         return undefined;
     }
     
-    // suffle players in an array then assign them opponents for smoking hot brackets
+    // TODO: suffle players in an array then assign opponents for smoking hot brackets
     let opponents: userInfo[][] = [
         [lobbyInfo.users[0], lobbyInfo.users[1]],
         [lobbyInfo.users[2], lobbyInfo.users[3]]
     ];
     
-    // need to generate unique gameIDs
+    // TODO: need to generate unique gameIDs (fetch DB?)
     // create nbMatch objects
     let matches: match[] = [
         { matchID: 1, tournamentID: tournamentID, remote: true, users: opponents[0], score: "", winnerID: 0, loserID: 0 },

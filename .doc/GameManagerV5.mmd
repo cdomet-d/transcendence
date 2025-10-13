@@ -26,7 +26,7 @@ sequenceDiagram
       create Participant P as Pong
       GM-)P: Send gameObj via "game.request" (NATS)
       P--)GM: Send confirmation via "game.reply" (NATS)
-      GM--)U: Send gameID (WS)
+      GM--)U: Send userID + gameID(WS)
       P->P: Create Game
       U-)P: Open connection /game/match (WS)
       P->P: Bouncer checks userIDs and gameID

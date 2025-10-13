@@ -18,9 +18,9 @@ function wsConnect() {
 
     ws.onopen = () => {
         console.log("WebSocket connection established!")
-        
+
         ws.onmessage = (message: any) => {
-            console.log("Client received WS message!");
+            // console.log("Client received WS message!");
             
             const gameRequest = JSON.parse(message.data);
             const gameID: number = gameRequest.gameID;

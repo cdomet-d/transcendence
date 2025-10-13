@@ -17,7 +17,7 @@ export async function natsSubscription(serv: FastifyInstance) {
 	const sc = StringCodec();
 
 	const sub = nc.subscribe('game.request');
-	console.log(`Listening for messages on "game.request"...`);
+	// console.log(`Listening for messages on "game.request"...`);
 
 	(async () => {
 		for await (const msg of sub) {
@@ -33,7 +33,7 @@ export async function natsSubscription(serv: FastifyInstance) {
 					match: _gameInfo
 				}
 				natsPublish(msg.reply, JSON.stringify(gameReply));
-			} else {
+			} else { // Real question is: What could go wrong? Honestly? I'd like to know, I'm being serious
 				// const gameReply = {
 				// 	event: "declined",
 				// 	match: _gameInfo
@@ -59,6 +59,7 @@ const player2: user = {
 	_userID: 2
 }
 
+// TODO: SLight type conflict to resolve between Charlotte and I
 const gameobj: gameInfo = {
 	_gameID: 1,
 	_score: [],
