@@ -131,7 +131,7 @@ services:
       - ssl-key.pem
       - ssl-cert.pem
     volumes:
-      - ./services/gateway/app:/app
+      - ./services/gateway/app:/usr/app
     # user: "${T_UID}:${T_GID}"
   matchmaking:
     build:

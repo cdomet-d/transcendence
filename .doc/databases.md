@@ -352,4 +352,5 @@ TODO :
 * Do nginx config
 * Faire function search bar user
 * check all get to see if they do return the value they get from db
-* add a Orchestration Service 
+* ~~add a Orchestration Service~~
+* fix the user interface registered in fastify that causes error in multiple route.ts
