@@ -1,56 +1,89 @@
-/**
- * Defines size options for {@link Avatar}.
+/** 
+ * Size options for Avatar components.
+ * 
+ * @remarks
+ * - `iicon`: Extra small, icon size
+ * - `ismall`: Small size
+ * - `imedium`: Medium size
+ * - `ilarge`: Large size
  */
 export type Size = 'iicon' | 'ismall' | 'imedium' | 'ilarge';
 
-/**
- * Defines menu orientation styles.
+/** 
+ * Menu orientation styles for layout rendering.
+ * 
+ * @remarks
+ * - `vertical`: Stacked menu items
+ * - `horizontal`: Inline menu items
  */
 export type MenuStyle = 'vertical' | 'horizontal';
+
+/**
+ * Menu sizing scale.
+ * 
+ * @remarks
+ * - `m`: Medium size
+ * - `l`: Large size
+ */
 export type MenuSize = 'm' | 'l';
 
-/**
- * Describes the viewing relationship for a profile.
+/** 
+ * Relationship between viewer and a profile.
+ * 
+ * @remarks
+ * - `self`: Profile belongs to the viewer
+ * - `friend`: Viewer is friends with the profile owner
+ * - `pending`: Friend request pending
+ * - `stranger`: No established relationship
  */
 export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
-/**
- * Represents allowed font size values for text elements.
- *
- * @remarks
- * - `t1`, `t2`, `t3`: Title sizes (largest to smallest)
- * - `f-s`, `f-m`, `f-l`: Font sizes (small, medium, large)
- * - `f-regular`: Regular font size
- */
-export type FontSize = 't1' | 't2' | 't3' | 'f-s' | 'f-m' | 'f-l' | 'f-regular';
-export type FontColor = 'f-yellow' | 'f-orange';
 
 /**
- * Represents allowed font weight values for text elements.
- *
+ * Allowed font sizes for text styling.
+ * 
+ * @remarks
+ * - `t1`, `t2`, `t3`: Title sizes (largest to smallest)
+ * - `f-s`, `f-m`, `f-l`: Font sizes small → large
+ * - `f-regular`: Regular text size
+ */
+export type FontSize = 't1' | 't2' | 't3' | 'f-s' | 'f-m' | 'f-l' | 'f-regular';
+
+/** 
+ * Font color style names used in UI themes.
+ * 
+ * @remarks
+ * - `f-yellow`: Yellow text color
+ * - `f-orange`: Orange text color
+ */
+export type FontColor = 'f-yellow' | 'f-orange';
+
+/** 
+ * Font weight options.
+ * 
  * @remarks
  * - `f-bold`: Bold font weight
  */
 export type FontWeight = 'f-bold';
 
+/**
+ * HTML button type attribute values.
+ * 
+ * @remarks
+ * Matches native `<button type="...">` options.
+ */
 export type BtnType = 'button' | 'submit' | 'reset';
 
 /**
- * Represents the structure of an input field.
- *
- * @property {string} labelContent - Text for the input's label.
- * @property {string} id - Unique input element identifier.
- * @property {string} pattern - Regex pattern for input validation.
- * @property {string} placeholder - Placeholder text inside the input.
- * @property {string} type - Input type attribute (e.g., "text", "email").
- *
- * @example
- * const InputMetadata: InputMetadata = {
- *   labelContent: "Username",
- *   id: "username",
- *   pattern: "^[a-zA-Z0-9]{3,10}$",
- *   placeholder: "Enter your username",
- *   type: "text"
- * };
+ * Metadata describing an HTML input field.
+ * 
+ * @property labelContent - Visible text for the label element.
+ * @property id - Unique identifier for the input element.
+ * @property pattern - Regular expression string for validating input value.
+ * @property placeholder - Placeholder hint text inside the input.
+ * @property type - Input type attribute (`text`, `email`, etc.).
+ * @property max - Optional, defines maximum numeric/date value.
+ * @property min - Optional, defines minimum numeric/date value.
+ * @property step - Optional, step size for increment/decrement.
  */
 export interface InputMetadata {
     labelContent: string;
@@ -64,11 +97,12 @@ export interface InputMetadata {
 }
 
 /**
- * An image's metadata.
- *
- * @property {string} src - The image's source URL.
- * @property {string} alt - The image's alt text.
- * @property {Size} size - The size of the image.
+ * Image metadata for display elements.
+ * 
+ * @property src - Image source URL.
+ * @property id - Unique identifier for the image resource.
+ * @property alt - Alt text for accessibility.
+ * @property size - Predefined image size variant.
  */
 export interface ImgMetadata {
     src: string;
@@ -78,13 +112,12 @@ export interface ImgMetadata {
 }
 
 /**
- * A button's metadata.
- *
- * @property {string} type - The button's type (`button` | `submit` | `reset`).
- * @property {string|null} content - The button's text content.
- * @property {ImgMetadata|null} img - Metadata for an associated image.
- * @property {string} ariaLabel - The button's aria-label for accessibility.
- *   See: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-label
+ * Button metadata used in UI rendering.
+ * 
+ * @property type - Button functional type (`button`, `submit`, or `reset`).
+ * @property content - Optional text content of the button.
+ * @property img - Optional associated image metadata.
+ * @property ariaLabel - Accessibility label for screen readers.
  */
 export interface buttonData {
     type: BtnType;
@@ -94,18 +127,11 @@ export interface buttonData {
 }
 
 /**
- * Represents a tab with identifying data and display content.
- *
- * @property {string} id - The identifier for the tab. Must be unique.
- * @property {string} content - The visible text or content for the tab.
- * @property {boolean} default - Indicates the default tab to be displayed on page load. Should be unique, but if it's not, the default tab will be the first which has `default: true`.
- *
- * @example
- * const exampleTab: TabMetadata = {
- *   id: "home",
- *   content: "Home",
- *   default: true
- * };
+ * Metadata describing a tab component.
+ * 
+ * @property id - Unique tab identifier.
+ * @property content - Visible text or HTML content within the tab.
+ * @property default - Whether this is the default active tab on load.
  */
 export interface TabMetadata {
     id: string;
@@ -114,16 +140,15 @@ export interface TabMetadata {
 }
 
 /**
- * Describes user profile data.
- *
- * @property {string} avatar - The user's avatar image URL.
- * @property {string} biography - A short biography or description.
- * @property {string} memberSince - ISO formatted date when the user joined.
- * @property {boolean} relation - Relation between the viewing user and the created card.
- * @property {boolean} status - The user's current status (e.g., online/offline).
- * @property {string} username - The user's display username.
- * @property {string} userId - The user's id, associated to their card for selection purpose
- * @property {number} winstreak - The user's current winstreak count.
+ * User profile data model.
+ * 
+ * @property avatar - User's avatar image metadata.
+ * @property biography - Short biography text.
+ * @property relation - Relationship between viewer and this user.
+ * @property status - Boolean indicating online/offline status.
+ * @property username - Display username.
+ * @property id - Unique user identifier string.
+ * @property winstreak - Current consecutive wins count (stringified).
  */
 export interface UserData {
     avatar: ImgMetadata;

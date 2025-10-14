@@ -7,39 +7,48 @@ import type { buttonData } from '../../types-interfaces';
  *
  * Observed attribute: "disabled"
  *
- * @property content - Setter to update the button's text content.
- *
- * @example
- * const btn = document.createElement("button", { is: "menu-button" }) as menuBtn;
- * btn.content = "Click me";
- * btn.disabled = true;
- * document.body.appendChild(btn);
+ * @property {buttonData} btn - Button configuration data.
+ * @property {boolean} animation - Controls animated text rendering.
  */
 export class menuBtn extends HTMLButtonElement {
     #btn: buttonData;
     #animated: boolean;
 
-    static get observedAttributes() {
+    static get observedAttributes(): string[] {
         return ['disabled'];
     }
+
     constructor() {
         super();
-
         this.#btn = { type: 'button', content: null, ariaLabel: '', img: null };
         this.#animated = false;
     }
 
+    /**
+     * Sets button metadata.
+     * @param {buttonData} src - The new button configuration.
+     */
     set btn(src: buttonData) {
         this.#btn = src;
     }
 
+    /**
+     * Enables or disables animated text rendering.
+     * @param {boolean} b - Animation toggle flag.
+     */
     set animation(b: boolean) {
         this.#animated = b;
     }
 
-    attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    /**
+     * Handles attribute changes for observed attributes.
+     * @param {string} name - The attribute name.
+     * @param {string} oldValue - The previous value of the attribute.
+     * @param {string} newValue - The new value of the attribute.
+     */
+    attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
         if (oldValue === newValue) return;
-        if (name === 'disabled')
+        if (name === 'disabled') {
             if (this.disabled) {
                 this.classList.add('disabled', 'clear-bg');
                 this.classList.remove('yellow-bg');
@@ -47,49 +56,60 @@ export class menuBtn extends HTMLButtonElement {
                 this.classList.remove('disabled', 'clear-bg');
                 this.classList.add('yellow-bg');
             }
+        }
     }
 
-    connectedCallback() {
+    /** Called when element is inserted into the DOM. */
+    connectedCallback(): void {
         this.render();
     }
 
-    renderTextualBtn() {
+    /** Renders simple textual button content. */
+    renderTextualBtn(): void {
         this.textContent = this.#btn.content;
     }
 
-    renderAnimatedBtn() {
-		let index: number = 0;
+    /** Renders animated button text letter-by-letter. */
+    renderAnimatedBtn(): void {
+        let index: number = 0;
         for (const char of this.#btn.content!) {
             const letterSpan = document.createElement('span');
             letterSpan.textContent = char;
             letterSpan.style.animationDelay = `${index}s`;
-			letterSpan.classList.add('f-brown', 'f-bold', 'whitespace-pre');
+            letterSpan.classList.add('f-brown', 'f-bold', 'whitespace-pre');
             this.appendChild(letterSpan);
             index += 0.1;
         }
     }
 
-    renderIconBtn() {
+    /** Renders button icon if image metadata is provided. */
+    renderIconBtn(): void {
         if (this.#btn.img) this.appendChild(createIcon(this.#btn.img));
     }
 
-    render() {
+    /** Updates button styles and content according to current state. */
+    render(): void {
         this.className =
             'border-box brdr h-[90%] input-emphasis min-w-[4rem] outline-hidden overflow-hidden w-[100%] whitespace-nowrap cursor-pointer';
+
         if (this.#btn.content && !this.#animated) {
             this.renderTextualBtn();
             this.classList.add('hover:transform', 'hover:scale-[1.02]');
-        } else if (this.#btn.img) this.renderIconBtn();
-        else if (this.#btn.content && this.#animated) {
+        } else if (this.#btn.img) {
+            this.renderIconBtn();
+        } else if (this.#btn.content && this.#animated) {
             this.renderAnimatedBtn();
             this.classList.add('t2', 'button-shadow');
         }
+
         if (this.disabled) this.classList.add('disabled', 'clear-bg');
         else this.classList.add('yellow-bg');
+
         this.type = this.#btn.type;
         this.ariaLabel = this.#btn.ariaLabel;
     }
 }
+
 customElements.define('menu-button', menuBtn, { extends: 'button' });
 
 /**
@@ -98,25 +118,26 @@ customElements.define('menu-button', menuBtn, { extends: 'button' });
  *
  * Observed attribute: "selected"
  *
- * @property content - Setter to update the button's text content.
- *
- * @example
- * const tab = document.createElement("button", { is: "tab" }) as tab;
- * tab.content = "Home";
- * tab.setAttribute("selected", "");
- * document.body.appendChild(tab);
+ * @property {string} content - Text content of the tab button.
  */
 export class tabBtn extends HTMLButtonElement {
-    static get observedAttributes() {
+    static get observedAttributes(): string[] {
         return ['selected'];
     }
+
     constructor() {
         super();
     }
 
-    attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    /**
+     * Handles attribute changes for observed attributes.
+     * @param {string} name - The attribute name.
+     * @param {string} oldValue - The previous value of the attribute.
+     * @param {string} newValue - The new value of the attribute.
+     */
+    attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
         if (oldValue === newValue) return;
-        if (name === 'selected')
+        if (name === 'selected') {
             if (this.hasAttribute('selected')) {
                 this.classList.remove('yellow-bg', 'brdr', 'z-2');
                 this.classList.add('z-1');
@@ -124,18 +145,27 @@ export class tabBtn extends HTMLButtonElement {
                 this.classList.remove('z-1');
                 this.classList.add('yellow-bg', 'brdr', 'z-2');
             }
+        }
     }
-    connectedCallback() {
+
+    /** Called when element is inserted into the DOM. */
+    connectedCallback(): void {
         this.render();
     }
 
+    /**
+     * Sets the displayed text content.
+     * @param {string} val - The text content to display.
+     */
     set content(val: string) {
         this.textContent = val;
     }
 
-    render() {
+    /** Updates styles depending on selection state. */
+    render(): void {
         this.className =
             'tab z-2 w-[100%] h-[100%] thin brdr overflow-hidden outline-hidden border-box flex justify-center items-center hover:transform-none';
+
         if (this.hasAttribute('selected')) {
             this.classList.remove('yellow-bg', 'brdr', 'z-2');
             this.classList.add('z-1');
@@ -149,27 +179,21 @@ export class tabBtn extends HTMLButtonElement {
 customElements.define('tab-button', tabBtn, { extends: 'button' });
 
 /**
- * Custom tab group extending HTMLDivElement.
- * Manages a collection of tab buttons.
- *
- * @example
- * const tabs: Tab[] = [
- *   { data: "home", content: "Home" },
- *   { data: "profile", content: "Profile" },
- * ];
- * const tabGroup = document.createElement("div", { is: "tab-group" }) as tabGroup;
- * document.body.appendChild(tabGroup);
+ * Custom tab group container element extending HTMLDivElement.
+ * Manages and styles a group of tab buttons.
  */
 export class tabGroup extends HTMLDivElement {
     constructor() {
         super();
     }
 
-    connectedCallback() {
+    /** Called when element is inserted into the DOM. */
+    connectedCallback(): void {
         this.render();
     }
 
-    render() {
+    /** Applies grid layout styling to the tab group container. */
+    render(): void {
         this.className =
             'tab-group w-[100%] h-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center';
     }
