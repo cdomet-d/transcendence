@@ -15,7 +15,7 @@ export class tabPanel extends HTMLDivElement {
 
     /**
      * Adds a CSS class name to the class list.
-     * 
+     *
      * @param {string} newClass - The class name to add.
      */
     updateClassList(newClass: string) {
@@ -24,7 +24,7 @@ export class tabPanel extends HTMLDivElement {
 
     /**
      * Called when an observed attribute changes.
-     * 
+     *
      * @param {string} name - The attribute name that changed.
      * @param {string} oldValue - The old attribute value.
      * @param {string} newValue - The new attribute value.
@@ -85,7 +85,7 @@ export class tabWrapper extends HTMLDivElement {
     /**
      * Sets the list of tab metadata.
      * Throws if duplicate IDs are found.
-     * 
+     *
      * @param {Array<TabMetadata>} tabList
      */
     set tabList(tabList: Array<TabMetadata>) {
@@ -131,7 +131,7 @@ export class tabWrapper extends HTMLDivElement {
 
     /**
      * Validates uniqueness of tab IDs.
-     * 
+     *
      * @param {Array<TabMetadata>} tabList
      * @returns {boolean} True if no duplicates exist.
      */
@@ -141,7 +141,7 @@ export class tabWrapper extends HTMLDivElement {
 
     /**
      * Handles activating the clicked tab and corresponding panel.
-     * 
+     *
      * @param {Element} tab - The tab element clicked.
      */
     private animateTab(tab: Element) {
@@ -159,7 +159,7 @@ export class tabWrapper extends HTMLDivElement {
 
     /**
      * Creates the tab buttons container element.
-     * 
+     *
      * @returns {HTMLDivElement} The container for tab buttons.
      */
     private createTabButtons(): HTMLDivElement {

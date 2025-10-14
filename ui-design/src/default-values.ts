@@ -60,10 +60,5 @@ export const mainMenu: Array<buttonData> = [
 
 export const gameMenu: Array<buttonData> = [
     { content: 'Local game', type: 'button', img: null, ariaLabel: 'Play a local game' },
-    {
-        content: 'Remote game',
-        type: 'button',
-        img: null,
-        ariaLabel: 'Play a remote game',
-    },
+    { content: 'Remote game', type: 'button', img: null, ariaLabel: 'Play a remote game' },
 ];

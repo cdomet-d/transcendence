@@ -4,6 +4,7 @@ import * as formBtns from './web-elements/inputs/helpers.js';
 import * as nav from './web-elements/navigation/helpers.js';
 import * as user from './web-elements/users/helpers.js';
 import * as defaults from './default-values.js';
+import { Notification } from './web-elements/users/notifications.js';
 import type * as types from './types-interfaces.js';
 
 const iMeta: types.ImgMetadata = {
@@ -55,7 +56,14 @@ window.addEventListener('unhandledrejection', (e) => {
 
 const innerW = window.innerWidth;
 const wrapper = document.createElement('div');
-wrapper.classList.add('border-box', 'grid', 'gap-6', `w-[${innerW}]`, 'pad-sm');
+wrapper.classList.add(
+    'border-box',
+    'justify-items-center',
+    'grid',
+    'gap-6',
+    `w-[${innerW}]`,
+    'pad-sm',
+);
 
 try {
     wrapper.appendChild(typography.createHeading('1', 'Heading 1'));
@@ -84,6 +92,8 @@ try {
     //     }
     // });
 
+    const n = document.createElement('div', { is: 'notification-container' }) as Notification;
+    wrapper.appendChild(n);
     wrapper.appendChild(user.createUserCardSocial(defaults.socialMenu, defaults.userDefault));
 } catch (error) {
     console.log('[ERROR]', error);

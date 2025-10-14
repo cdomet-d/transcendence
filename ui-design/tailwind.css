@@ -427,6 +427,10 @@
 	.gap-s {
 		gap: var(--space-s) var(--space-s);
 	}
+	
+	.gap-sm {
+		gap: var(--space-sm) var(--space-sm);
+	}
 
 	.gap-m {
 		gap: var(--space-m) var(--space-m);

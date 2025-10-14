@@ -3,7 +3,13 @@ import { tabWrapper } from './tabs';
 import { Menu, SocialMenu } from './menus';
 import { Searchbar } from './search';
 
-import type { TabMetadata, MenuStyle, buttonData, ProfileView, MenuSize } from '../../types-interfaces';
+import type {
+    TabMetadata,
+    MenuStyle,
+    buttonData,
+    ProfileView,
+    MenuSize,
+} from '../../types-interfaces';
 
 /**
  * Creates a menu button element configured with provided button data.
@@ -66,7 +72,12 @@ export function createTabs(list: Array<TabMetadata>): tabWrapper {
  * const menu = createMenu(buttons, 'horizontal', 'm', true);
  * document.body.appendChild(menu);
  */
-export function createMenu(content: Array<buttonData>, style: MenuStyle, size?: MenuSize, animated?: boolean): Menu {
+export function createMenu(
+    content: Array<buttonData>,
+    style: MenuStyle,
+    size?: MenuSize,
+    animated?: boolean,
+): Menu {
     const el = document.createElement('div', { is: 'menu-wrapper' }) as Menu;
     el.MenuElements = content;
     el.MenuStyle = style;
