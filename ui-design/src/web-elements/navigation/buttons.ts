@@ -58,10 +58,14 @@ export class menuBtn extends HTMLButtonElement {
     }
 
     renderAnimatedBtn() {
+		let index: number = 0;
         for (const char of this.#btn.content!) {
             const letterSpan = document.createElement('span');
             letterSpan.textContent = char;
+            letterSpan.style.animationDelay = `${index}s`;
+			letterSpan.classList.add('f-brown', 'f-bold', 'whitespace-pre');
             this.appendChild(letterSpan);
+            index += 0.1;
         }
     }
 
@@ -71,15 +75,14 @@ export class menuBtn extends HTMLButtonElement {
 
     render() {
         this.className =
-            'border-box brdr flex h-[90%] input-emphasis items-center justify-center min-w-[4rem] outline-hidden overflow-hidden w-[100%] whitespace-nowrap';
+            'border-box brdr h-[90%] input-emphasis min-w-[4rem] outline-hidden overflow-hidden w-[100%] whitespace-nowrap cursor-pointer';
         if (this.#btn.content && !this.#animated) {
-			this.renderTextualBtn();
-			this.classList.add('hover:transform', 'hover:scale-[1.02]')
-		} 
-        else if (this.#btn.img) this.renderIconBtn();
+            this.renderTextualBtn();
+            this.classList.add('hover:transform', 'hover:scale-[1.02]');
+        } else if (this.#btn.img) this.renderIconBtn();
         else if (this.#btn.content && this.#animated) {
             this.renderAnimatedBtn();
-            this.classList.add('hover:hover-dance');
+            this.classList.add('t2', 'button-shadow');
         }
         if (this.disabled) this.classList.add('disabled', 'clear-bg');
         else this.classList.add('yellow-bg');

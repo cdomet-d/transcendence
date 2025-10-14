@@ -322,10 +322,12 @@
 		justify-content: center;
 	}
 
-	/* button:hover {
+	button:hover>span {
+		display: inline-block;
+		transform-origin: bottom center;
+		animation: dance 1.2s ease-in-out infinite;
 		cursor: pointer;
-		transform: scale(1.02);
-	} */
+	}
 
 	button:active {
 		cursor: pointer;
@@ -356,6 +358,10 @@
 
 	.f-orange {
 		color: var(--shadow-orange);
+	}
+
+	.f-brown {
+		color: var(--border);
 	}
 
 	.f-bold {
@@ -476,6 +482,9 @@
 		text-shadow: -1px -1px var(--orange), -2px -1px var(--orange);
 	}
 
+	.button-shadow {
+		text-shadow: 1px 1px var(--highlight), 2px 1px var(--highlight);
+	}
 	.username:hover a {
 		text-decoration: underline;
 		background: transparent;
