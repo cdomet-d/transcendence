@@ -8,9 +8,10 @@ const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function startGame(game: Game, ws: WebSocket) {
 	addMessEvent(game, ws);
-	window.addEventListener("keydown", createKeyDownEvent(game.mess._keys));
-	window.addEventListener("keyup", createKeyUpEvent(game.mess._keys));
+	window.addEventListener("keydown", createKeyDownEvent(game.req._keys));
+	window.addEventListener("keyup", createKeyUpEvent(game.req._keys));
 	const lastServerState: serverReplyObj = { ...game.servReply };
+	ws.send("1");
 	game.frameId = requestAnimationFrame((timestamp) => {
 		game.lastFrameTime = timestamp;
 		game.frameId = requestAnimationFrame(FrameRequestCallback(game, lastServerState, ws));
@@ -19,14 +20,15 @@ export function startGame(game: Game, ws: WebSocket) {
 
 function FrameRequestCallback(game: Game, lastServerState: serverReplyObj, ws: WebSocket) {
 	return function gameLoop(timestamp: number) {
-		ws.send(JSON.stringify(game.mess));
+		ws.send(JSON.stringify(game.req));
+		game.addReq(game.req);
 		reconciliation(game, lastServerState);
-		game.mess._ID += 1; //TODO: overflow
-		game.mess._timeStamp = timestamp;
+		game.req._ID += 1; //TODO: overflow
+		game.req._timeStamp = timestamp;
 		game.delta += (timestamp - game.lastFrameTime);
 		game.lastFrameTime = timestamp;
 		while (game.delta >= TIME_STEP) { //prediction
-			updatePaddlePos(game, game.mess._keys, TIME_STEP);
+			updatePaddlePos(game, game.req._keys, TIME_STEP);
 			updateBallPos(game, TIME_STEP);
 			game.delta -= TIME_STEP;
 		}
@@ -36,24 +38,45 @@ function FrameRequestCallback(game: Game, lastServerState: serverReplyObj, ws: W
 		game.frameId = window.requestAnimationFrame(FrameRequestCallback(game, lastServerState, ws));
 	}
 }
-
+   
 function reconciliation(game: Game, lastServerState: serverReplyObj) {
-	if (lastServerState.leftPaddle.y != game.servReply.leftPaddle.y) {
-		// game.leftPad.y += (game.servReply.leftPaddle.y - game.leftPad.y) * 0.2;
-		for (let i = game.servReply.ID; i < game.messHistory.length; i++) {
-			
-		}
+	const id: number = game.servReply._ID;
+	game.deleteReq(id);
+
+	let fixLefty: number = 0;
+	let fixRighty: number = 0;
+	let fixBallx: number = 0;
+	let fixBally: number = 0;
+
+	if (lastServerState._leftPaddle.y != game.servReply._leftPaddle.y)
+		fixLefty = game.servReply._leftPaddle.y - game.reqHistory[id]!._leftPaddle.y;
+	if (lastServerState._rightPaddle.y != game.servReply._rightPaddle.y)
+		fixRighty = game.servReply._rightPaddle.y - game.reqHistory[id]!._rightPaddle.y;
+	if (lastServerState._ball.x != game.servReply._ball.x)
+		fixBallx = game.servReply._ball.x - game.reqHistory[id]!._ball.x;
+	if (lastServerState._ball.y != game.servReply._ball.y)
+		fixBally = game.servReply._ball.y - game.reqHistory[id]!._ball.y;
+
+	for (let i = 0; i < game.reqHistory.length; i++) {
+		game.reqHistory[i]!._leftPaddle.y += fixLefty; //TODO: fix !
+		if (game.local)
+			game.reqHistory[i]!._rightPaddle.y += fixRighty;
+		else
+			game.reqHistory[i]!._rightPaddle.y = game.servReply._rightPaddle.y;
+		game.reqHistory[i]!._ball.x += fixBallx;
+		game.reqHistory[i]!._ball.y += fixBally;
 	}
 
-	if (game.local) {
-		if (lastServerState.rightPaddle.y != game.servReply.rightPaddle.y)
-			game.rightPad.y += (game.servReply.rightPaddle.y - game.rightPad.y) * 0.2;
-	}
+	game.leftPad.y += fixLefty;
+	if (game.local)
+		game.rightPad.y += fixRighty;
 	else
-		game.rightPad.y = game.servReply.rightPaddle.y;
-	if (lastServerState.ball.x != game.servReply.ball.x)
-		game.ball.x += (game.servReply.ball.x - game.ball.x) * 0.2;
-	if (lastServerState.ball.y != game.servReply.ball.y)
-		game.ball.y += (game.servReply.ball.y - game.ball.y) * 0.2;
+		game.rightPad.y = game.servReply._rightPaddle.y;
+	game.ball.x += fixBallx;
+	game.ball.y += fixBally;
 
+	// game.leftPad.y += (game.servReply._leftPaddle.y - game.leftPad.y) * 0.2;
+	// game.rightPad.y += (game.servReply._rightPaddle.y - game.rightPad.y) * 0.2;
+	// game.ball.x += (game.servReply._ball.x - game.ball.x) * 0.2;
+	// game.ball.y += (game.servReply._ball.y - game.ball.y) * 0.2;
 }
