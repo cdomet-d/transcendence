@@ -30,7 +30,7 @@ export interface serverReplyObj {
 	_ball: coordinates;
 }
 
-type reqMap = Array< reqObj >;
+type reqMap = Map< number, reqObj >;
 
 export class Game {
 	/*                             PROPERTIES                                */
@@ -57,7 +57,7 @@ export class Game {
 		this.#_paddleSpeed = 0.15;
 		let keys: keysObj = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
 		this.#_req = { _ID: 0, _keys: keys, _timeStamp: 0 };
-		this.#_reqHistory = new Array();
+		this.#_reqHistory = new Map();
 		this.#_frameId = 0
 		this.#_delta = 0;
 		this.#_lastFrameTime = 0;
@@ -142,18 +142,13 @@ export class Game {
     /*                              METHODS                                  */
 	public addReq(req: reqObj) {
 		const newReq: reqObj = { _ID: req._ID, _keys: { ...req._keys }, _timeStamp: req._timeStamp };
-		this.#_reqHistory.push(newReq);
+		this.#_reqHistory.set(req._ID, newReq);
 	}
 
-	public deleteReq(end: number) {
-		this.#_reqHistory.splice(0, end);
+	public deleteReq(id: number) {
+		while (id >= 0) {
+			this.#_reqHistory.delete(id);
+			id--;
+		}
 	}
-
-	// public findState(id: number): gameState | null {
-	// 	for (let state of this.#_history) {
-	// 		if (state._ID === id)
-	// 			return state;
-	// 	}
-	// 	return null;
-	// }
 }
