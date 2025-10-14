@@ -10,3 +10,5 @@ dist/
 output.css
 package-lock.json
 jest.results.txt
+.vscode/
+ok

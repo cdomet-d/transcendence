@@ -1,4 +1,4 @@
-import { Game, type keysObj} from './game.class.js'
+import { Game, type keysObj } from './game.class.js'
 
 interface repObj {
 	leftPadY: number,
@@ -13,7 +13,7 @@ export function addMessEvent(game: Game, ws: WebSocket) {
 	};
 }
 
-export function createKeyDownEvent(keys: keysObj)  {
+export function createKeyDownEvent(keys: keysObj) {
 	return function keyDownEvent(event: KeyboardEvent): void {
 		if (event.key === "w")
 			keys._w = true;
@@ -30,7 +30,7 @@ export function createKeyDownEvent(keys: keysObj)  {
 	}
 }
 
-export function createKeyUpEvent(keys: keysObj)  {
+export function createKeyUpEvent(keys: keysObj) {
 	return function keyUpEvent(event: KeyboardEvent): void {
 		event.preventDefault();
 		if (event.key === "w")

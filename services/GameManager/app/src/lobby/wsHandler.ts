@@ -13,14 +13,14 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 	req.server.log.info("User" + userID + " added to clientMap");
 
 	// handle LOBBY creation CLIENT SIDE
-		// room info
-		// when they're sent (ex: Friend joins Lobby >> Others must see user appear in Lobby)
-		// store user sockets until end of tournament (or game)
-	
+	// room info
+	// when they're sent (ex: Friend joins Lobby >> Others must see user appear in Lobby)
+	// store user sockets until end of tournament (or game)
+
 	// HERE handle info Lobby sends
-		// new Lobby
-		// user joined Lobby (UI + add client to wsClientsMap)
-		// Tournament or Game request
+	// new Lobby
+	// user joined Lobby (UI + add client to wsClientsMap)
+	// Tournament or Game request
 
 
 	socket.on('message', (message: any) => {
@@ -56,12 +56,12 @@ function getUniqueUserID(): number {
 }
 
 export function wsSend(ws: WebSocket, message: string): void {
-    if (ws && ws.readyState === ws.OPEN) {
-        ws.send(message);
-    } else {
+	if (ws && ws.readyState === ws.OPEN) {
+		ws.send(message);
+	} else {
 		const payload = JSON.parse(message);
-        console.log(`Error: Connection for userID <${payload.userID}> not found or not open...`);
+		console.log(`Error: Connection for userID <${payload.userID}> not found or not open...`);
 		console.log(`\tCould not start game with gameID <${payload.gameID}>`);
 		// handle this error 
-    }
+	}
 }

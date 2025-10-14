@@ -42,12 +42,12 @@ export async function init(): Promise<FastifyInstance> {
 function addPlugins(serv: FastifyInstance) {
 	serv.register(websocket, {
 		errorHandler: function (error, socket: WebSocket, req: FastifyRequest, reply: FastifyReply) {
-						//TODO: send html error page ?
-						serv.log.error(error);
-						socket.close()
-					},
+			//TODO: send html error page ?
+			serv.log.error(error);
+			socket.close()
+		},
 		options: {},
-		});
+	});
 	serv.register(wsRoute);
 	// serv.register(cookie);
 }

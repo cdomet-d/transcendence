@@ -30,11 +30,11 @@ function runServ(serv: FastifyInstance): void {
 	}
 
 	serv.listen({ port: port, host: '0.0.0.0' })
-			.then((address) => {
-				serv.log.info(`GameManager Microservice listening on ${port} at ${address}`);
-			})
-			.catch((err) => { throw err; });
-	
+		.then((address) => {
+			serv.log.info(`GameManager Microservice listening on ${port} at ${address}`);
+		})
+		.catch((err) => { throw err; });
+
 	natsSubscribe();
 	natsConnect();
 }
