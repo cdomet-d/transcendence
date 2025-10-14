@@ -116,6 +116,22 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/frontend/app:/app
+  gateway:
+    build:
+      context: ./services/gateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    image: gateway:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    volumes:
+      - ./services/gateway/app:/app
     # user: "${T_UID}:${T_GID}"
   matchmaking:
     build:

@@ -52,3 +52,4 @@ Cybersec is handled into each container
 - ./services/users: 2626
 - ./services/ssr: 3838
 - ./services/auth : 3939
+- ./services/gateway : 4040
