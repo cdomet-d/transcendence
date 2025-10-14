@@ -18,12 +18,12 @@ sequenceDiagram
     GM->GM: Host joins
     GM->GM: Host invites friends
     GM->GM: Send Tournament/Game request (lobbyInfo)
-    Note over GM: 2. Tournament Creation
+    Note over GM: 2.  Tournament Creation
     GM->GM: Create Bracket + tournamentObj<br> (ask DB for unique gameIDs)
     GM->GM: Start Tournament
     loop
-      Note over GM: 3. Tournament Routine
-      create Participant P as Pong
+      Note over GM: 3.  Tournament Routine
+      create participant P as Pong
       GM-)P: Send gameObj via "game.request" (NATS)
       P--)GM: Send confirmation via "game.reply" (NATS)
       GM--)U: Send userID + gameID(WS)
@@ -32,14 +32,15 @@ sequenceDiagram
       P->P: Bouncer checks userIDs and gameID
       Note over P: Game
       P--)U: Close connection (WS)
+	  destroy P
       P--)GM: Send updated gameObj (NATS)
       GM->GM: Show EndOfMatch screen
 
       create participant DB as Database
       GM-)DB: Send gameObj (NATS)
-      Note over GM: 3.1 Tournament continues
+      Note over GM: 3.1  Tournament continues
       Note over GM: Back to Step 9
     end
-      Note over GM: 3.2 Tournament Over
+      Note over GM: 3.2  Tournament Over
       GM--)U: Close all connections (WS)
       Note over DB: Store result
