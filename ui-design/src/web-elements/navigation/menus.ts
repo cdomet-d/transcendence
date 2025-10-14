@@ -1,5 +1,5 @@
 import { createBtn } from './helpers';
-import type { buttonData, MenuStyle, ProfileView } from '../../types-interfaces';
+import type { buttonData, MenuStyle, ProfileView, MenuSize } from '../../types-interfaces';
 import type { Icon } from '../typography/images';
 
 /**
@@ -22,13 +22,17 @@ import type { Icon } from '../typography/images';
  * ```
  */
 export class Menu extends HTMLDivElement {
-    #elements: Array<buttonData>;
+    #size: MenuSize;
+	#animated: boolean;
     #style: MenuStyle;
+    #elements: Array<buttonData>;
 
     constructor() {
         super();
         this.#elements = [];
         this.#style = 'horizontal';
+        this.#size = 'm';
+		this.#animated = false;
     }
     /**
      * Sets the menu's button elements.
@@ -46,20 +50,30 @@ export class Menu extends HTMLDivElement {
         this.#style = style;
     }
 
+    set MenuSize(size: MenuSize) {
+        this.#size = size;
+    }
+
+	set animation(b: boolean) {
+		this.#animated = b;
+	}
+
     connectedCallback() {
         this.render();
     }
+
 
     /**
      * Renders the menu layout and appends button elements.
      */
     render() {
+		console.log(this.#animated, this.#size);
         this.role = 'navigation';
         this.id = 'menu';
-        this.className = 'gap-s box-border grid justify-items-center auto-cols-fr grid-rows-(--s)';
+        this.className = `gap-s box-border grid justify-items-center auto-cols-fr row-${this.#size}`;
         if (this.#style === 'horizontal') this.classList.add('grid-flow-col');
         if (this.#style === 'vertical') this.classList.add('grid-flow-rows');
-        this.#elements.forEach((item) => this.appendChild(createBtn(item)));
+        this.#elements.forEach((item) => this.appendChild(createBtn(item, this.#animated)));
     }
 }
 

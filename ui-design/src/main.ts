@@ -19,12 +19,6 @@ const tabs: Array<types.TabMetadata> = [
     { id: 'friends', content: 'Friends', default: false },
 ];
 
-const mainMenu: Array<types.buttonData> = [
-    { content: 'Profile', type: 'button', img: null, ariaLabel: 'User Profile Menu Button' },
-    { content: 'Play', type: 'button', img: null, ariaLabel: 'Pong Game Menu Button' },
-    { content: 'Leaderboard', type: 'button', img: null, ariaLabel: 'Leaderboard Menu Button' },
-];
-
 const textData: types.InputMetadata = {
     type: 'text',
     pattern: defaults.usernamePattern,
@@ -75,8 +69,9 @@ try {
     wrapper.appendChild(formBtns.createCheckbox('check', 'test'));
     wrapper.appendChild(nav.createTabs(tabs));
     wrapper.appendChild(typography.createAvatar(iMeta));
-    wrapper.appendChild(nav.createMenu(mainMenu, 'horizontal'));
-    wrapper.appendChild(nav.createMenu(mainMenu, 'vertical'));
+    wrapper.appendChild(nav.createMenu(defaults.mainMenu, 'horizontal'));
+    wrapper.appendChild(nav.createMenu(defaults.mainMenu, 'vertical'));
+    wrapper.appendChild(nav.createMenu(defaults.gameMenu, 'vertical', 'l', true));
     wrapper.appendChild(user.createUserCardSocial(defaults.socialMenu, defaults.userDefault));
     wrapper.appendChild(user.createUserInline(defaults.userDefault));
     wrapper.appendChild(nav.createSearchbar());

@@ -3,7 +3,7 @@ import { tabWrapper } from './tabs';
 import { Menu, SocialMenu } from './menus';
 import { Searchbar } from './search';
 
-import type { TabMetadata, MenuStyle, buttonData, ProfileView } from '../../types-interfaces';
+import type { TabMetadata, MenuStyle, buttonData, ProfileView, MenuSize } from '../../types-interfaces';
 
 /**
  * Creates a menu button element.
@@ -15,9 +15,10 @@ import type { TabMetadata, MenuStyle, buttonData, ProfileView } from '../../type
  * const btn = createBtn({ content: "Click me", role: "menuitem" });
  * document.body.appendChild(btn);
  */
-export function createBtn(btn: buttonData): HTMLButtonElement {
+export function createBtn(btn: buttonData, animated?: boolean): HTMLButtonElement {
     const el = document.createElement('button', { is: 'menu-button' }) as menuBtn;
     el.btn = btn;
+	if (animated) el.animation = animated;
     return el;
 }
 
@@ -40,10 +41,12 @@ export function createTabs(list: Array<TabMetadata>): tabWrapper {
  * @param style - Menu style of type {@link MenuStyle}. Can be vertical or horizontal. Defaults to horizontal.
  * @returns A styled {@link Menu} div element.
  */
-export function createMenu(content: Array<buttonData>, style: MenuStyle): Menu {
+export function createMenu(content: Array<buttonData>, style: MenuStyle, size?: MenuSize, animated?: boolean): Menu {
     const el = document.createElement('div', { is: 'menu-wrapper' }) as Menu;
     el.MenuElements = content;
     el.MenuStyle = style;
+	if (size) el.MenuSize = size;
+	if (animated) el.animation = animated;
     return el;
 }
 
@@ -58,6 +61,7 @@ export function createSocialMenu(
     el.view = v;
     return el;
 }
+
 
 export function createSearchbar(): Searchbar {
     const el = document.createElement('form', { is: 'search-form' }) as Searchbar;

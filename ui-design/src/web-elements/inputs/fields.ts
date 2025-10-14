@@ -128,7 +128,6 @@ export class inputGroup extends HTMLDivElement {
     }
 
     render() {
-        console.log('For', this.#info.type);
         this.className = 'w-full box-border relative min-w-[240px]';
         this.#label.for = this.#info.id;
         this.#label.type = this.#info.type;

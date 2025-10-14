@@ -7,6 +7,7 @@ export type Size = 'iicon' | 'ismall' | 'imedium' | 'ilarge';
  * Defines menu orientation styles.
  */
 export type MenuStyle = 'vertical' | 'horizontal';
+export type MenuSize = 'm' | 'l';
 
 /**
  * Describes the viewing relationship for a profile.

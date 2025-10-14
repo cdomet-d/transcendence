@@ -267,10 +267,11 @@
 		margin: 0;
 	}
 
-	input[type="range"]{
+	input[type="range"] {
 		height: 20.5px;
 		margin-top: 8px;
 	}
+
 	input[type="range"]::-moz-range-thumb {
 		box-sizing: border-box;
 		cursor: pointer;
@@ -321,10 +322,10 @@
 		justify-content: center;
 	}
 
-	button:hover {
+	/* button:hover {
 		cursor: pointer;
 		transform: scale(1.02);
-	}
+	} */
 
 	button:active {
 		cursor: pointer;
@@ -341,6 +342,14 @@
 @layer components {}
 
 @layer utilities {
+	.row-l {
+		grid-auto-rows: var(--l);
+	}
+
+	.row-m {
+		grid-auto-rows: var(--m);
+	}
+
 	.f-yellow {
 		color: var(--yellow);
 	}

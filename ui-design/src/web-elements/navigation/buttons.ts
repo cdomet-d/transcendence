@@ -17,6 +17,7 @@ import type { buttonData } from '../../types-interfaces';
  */
 export class menuBtn extends HTMLButtonElement {
     #btn: buttonData;
+    #animated: boolean;
 
     static get observedAttributes() {
         return ['disabled'];
@@ -25,10 +26,15 @@ export class menuBtn extends HTMLButtonElement {
         super();
 
         this.#btn = { type: 'button', content: null, ariaLabel: '', img: null };
+        this.#animated = false;
     }
 
     set btn(src: buttonData) {
         this.#btn = src;
+    }
+
+    set animation(b: boolean) {
+        this.#animated = b;
     }
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
@@ -42,12 +48,21 @@ export class menuBtn extends HTMLButtonElement {
                 this.classList.add('yellow-bg');
             }
     }
+
     connectedCallback() {
         this.render();
     }
 
     renderTextualBtn() {
         this.textContent = this.#btn.content;
+    }
+
+    renderAnimatedBtn() {
+        for (const char of this.#btn.content!) {
+            const letterSpan = document.createElement('span');
+            letterSpan.textContent = char;
+            this.appendChild(letterSpan);
+        }
     }
 
     renderIconBtn() {
@@ -57,15 +72,19 @@ export class menuBtn extends HTMLButtonElement {
     render() {
         this.className =
             'border-box brdr flex h-[90%] input-emphasis items-center justify-center min-w-[4rem] outline-hidden overflow-hidden w-[100%] whitespace-nowrap';
-        if (this.disabled) {
-            this.classList.add('disabled', 'clear-bg');
-        } else {
-            this.classList.add('yellow-bg');
+        if (this.#btn.content && !this.#animated) {
+			this.renderTextualBtn();
+			this.classList.add('hover:transform', 'hover:scale-[1.02]')
+		} 
+        else if (this.#btn.img) this.renderIconBtn();
+        else if (this.#btn.content && this.#animated) {
+            this.renderAnimatedBtn();
+            this.classList.add('hover:hover-dance');
         }
+        if (this.disabled) this.classList.add('disabled', 'clear-bg');
+        else this.classList.add('yellow-bg');
         this.type = this.#btn.type;
         this.ariaLabel = this.#btn.ariaLabel;
-        if (this.#btn.content) this.renderTextualBtn();
-        else this.renderIconBtn();
     }
 }
 customElements.define('menu-button', menuBtn, { extends: 'button' });

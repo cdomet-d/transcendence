@@ -50,26 +50,20 @@ export const users: Array<UserData> = [
     userDefault,
     userDefault,
     userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
+];
+
+export const mainMenu: Array<buttonData> = [
+    { content: 'Profile', type: 'button', img: null, ariaLabel: 'User Profile Menu Button' },
+    { content: 'Play', type: 'button', img: null, ariaLabel: 'Pong Game Menu Button' },
+    { content: 'Leaderboard', type: 'button', img: null, ariaLabel: 'Leaderboard Menu Button' },
+];
+
+export const gameMenu: Array<buttonData> = [
+    { content: 'Local game', type: 'button', img: null, ariaLabel: 'Play a local game' },
+    {
+        content: 'Remote game',
+        type: 'button',
+        img: null,
+        ariaLabel: 'Play a remote game',
+    },
 ];
