@@ -31,9 +31,9 @@ export async function accountRoutes(serv: FastifyInstance) {
 			];
 			
 			const resultCreateAccount = await serv.dbAccount.run(query, params);
-			if (resultCreateAccount.changes === 0) {
-				serv.log.error('User registration query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: 'Internal server error during registration.' }));
+			if (!resultCreateAccount.changes) {
+				serv.log.error('User registration query succeeded but did not insert a row');
+				return (reply.code(500).send({ message: 'Internal server error during registration' }));
 			}
 		
 			const queryGetID = `
@@ -99,7 +99,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 
 	});
 
-	serv.post('/internal/account/updatePass', async(request, reply) => {
+	serv.patch('/internal/account/updatePass', async(request, reply) => {
 		try {
 			const { username } = request.body as { username: string };
 			const { password } = request.body as { password: string };
@@ -136,7 +136,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 	});
 
 	//TODO : internal ? handled by authentification ?
-	serv.post('/internal/account/updateUsername/', async(request, reply) => {
+	serv.patch('/internal/account/updateUsername/', async(request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newUsername, oldUsername } = request.body as { newUsername: string, oldUsername: string };

@@ -351,3 +351,4 @@ TODO :
 * Add function for leaderboard (plus de wins all over)
 * Do nginx config
 * Faire function search bar user
+* check all get to see if they do return the value they get from db

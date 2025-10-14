@@ -5,7 +5,7 @@ CREATE TABLE gameMatchInfo (
   gameStatus INTEGER, --game is still in lobby, game started, game ended
   winnerID INTEGER,
   loserID INTEGER,
-  tournamentID INTEGER,
+  tournamentID INTEGER, --zero == no tournament 
   localGame BOOLEAN, --zero == local, 1 == remote
   scoreWinner INTEGER,
   scoreLoser INTEGER
