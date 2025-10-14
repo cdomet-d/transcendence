@@ -2,10 +2,10 @@ CREATE TABLE gameMatchInfo (
   gameID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   duration INTEGER,
   startTime DATETIME,
-  gameStatus INTEGER, --game is still in lobby, game started, game ended
+  gameStatus INTEGER, --game is still in lobby == 0, game started == 1, game ended == 2
   winnerID INTEGER,
   loserID INTEGER,
-  tournamentID INTEGER, --zero == no tournament 
+  tournamentID INTEGER, --zero == no tournament
   localGame BOOLEAN, --zero == local, 1 == remote
   scoreWinner INTEGER,
   scoreLoser INTEGER

@@ -1,4 +1,17 @@
 import type { FastifyInstance } from 'fastify';
+import { getGame } from './dashboard.service.js';
+import { getGameHistory } from './dashboard.service.js';
+
+interface Match {
+	gameID: number;
+	duration: number;
+	startTime: string;
+	winnerID: number;
+	loserID: number;
+	scoreWinner: number;
+	scoreLoser: number;
+	opponentID: number;
+}
 
 export async function dashboardRoutes(serv: FastifyInstance) {
 	//post a game
@@ -282,38 +295,55 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 		}});
 
 	//get all game of a player
-	serv.get('/internal/dashboard/playerGame', async (request, reply) => {
-		try {
-			
+	serv.get('/internal/dashboard/gameHistory', async (request, reply) => {
+/* 	try {
+		const userID = request.user.userID;
 
-			const query =
-			`
-			`;
+		const games = await getGameHistory(serv.dbStats, userID);
 
-			const params = [
+		if (games.length === 0)
+			return (reply.code(200).send([]));
 
-			];
-			
-			const result = await serv.dbStats.run(query, params);
-			if (!result.changes) {
-				serv.log.error('Tournament creation query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: 'Internal server error during game creation' }));
-			}
+		const gameCardPromises = games.map(async (game) => {
+			try {
+				const opponentProfile = await fetch(`https://2626/internal/users/by-userID${game.opponentID}`);
+				if (!opponentProfile)
+					return (null);
 
-			return (reply.code(201).send({
-				success: true,
-				message: 'Tournament created!'
-			}));
+				return {
+					gameID: game.gameID,
+					startTime: game.startTime,
+					duration: game.duration,
+					userScore: game.winnerID === userID ? game.scoreWinner : game.scoreLoser,
+					opponentScore: game.winnerID === userID ? game.scoreLoser : game.scoreWinner,
+					isWin: game.winnerID === userID,
+					opponent: {
+				        username: opponentProfile.username,
+				        avatar: opponentProfile.avatar,
+				        rank: opponentProfile.rank
+				    }
+				};
+            } catch (error) {
+                console.error(`Failed to fetch profile for opponent ${game.opponentID}:`, error);
+                return null; // Return null on error so it gets filtered out
+            }
+        });
 
-		} catch (error) {
-			serv.log.error(`Error creating user account: ${error}`);
-			return (reply.code(500).send({ message: 'Internal server error' }));
-		}
-	});
+        const gameCards = (await Promise.all(gameCardPromises))
+                          .filter(card => card !== null);
+
+        return reply.code(200).send(gameCards);
+
+    } catch (error) {
+        serv.log.error(`[Stats Service] Error fetching match history: ${error}`);
+        return reply.code(500).send({ message: 'An internal error occurred.' });
+    } */
+});
 
 	//get all tournamenet of a player
-	serv.get('/internal/dashboard/playerTournament', async (request, reply) => {
+	serv.get('/internal/dashboard/playerTournaments', async (request, reply) => {
 		try {
+			const { userID } = request.body as { userID: number}
 			
 
 			const query =
@@ -376,8 +406,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 		try {
 			
 
-			const query =
-			`
+			const query = `
 			`;
 
 			const params = [

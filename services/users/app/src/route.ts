@@ -44,8 +44,71 @@ export async function userRoutes(serv: FastifyInstance) {
 					message: 'User not found'
 				}));
 			}
-			//TODO: add success in this reply
-			return (reply.code(200).send(user));
+
+			return reply.code(200).send({
+				success: true,
+				message: "userID found!",
+				user
+			});
+
+		} catch (error) {
+			serv.log.error(error);
+			return reply.code(500).send({
+				success: false,
+				message: 'Internal server error'
+			});
+		}
+	});
+
+	serv.get('/internal/users/profiles-by-ids', async (request, reply) => {
+		try {
+			const { userIDs } = request.body as { userIDs: number[] };
+
+		if (!Array.isArray(userIDs) || userIDs.length === 0)
+			return (reply.code(400).send({ message: 'userIDs must be a non-empty array.' }));
+
+		const placeholders = userIDs.map(() => '?').join(',');
+
+		const query = `
+			SELECT * FROM userProfile WHERE userID IN (${placeholders})
+		`;
+
+		const profiles = await serv.dbUsers.all<UserProfile[]>(query, userIDs);
+
+		return reply.code(200).send({
+			success: true,
+			message: "Profiles found!",
+			profiles
+		});
+
+		} catch (error) {
+			serv.log.error(`Error fetching user profiles by IDs: ${error}`);
+			return (reply.code(500).send({
+				success: false,
+				message: 'Internal server error'
+			}));
+		}
+	});
+
+	//get username by userID
+	serv.get('/internal/users/by-userID/:userID', async (request, reply) => {
+		try {
+			const { userID } = request.params as { userID: string };
+			const query = `SELECT username FROM userProfile WHERE userID = ?`;
+
+			const user = await serv.dbUsers.get<UserRow>(query, [userID]);
+			if (!user) {
+				return (reply.code(404).send({ 
+					success: false,
+					message: 'User not found'
+				}));
+			}
+
+			return reply.code(200).send({
+				success: true,
+				message: "Username found!",
+				user
+			});
 
 		} catch (error) {
 			serv.log.error(error);
