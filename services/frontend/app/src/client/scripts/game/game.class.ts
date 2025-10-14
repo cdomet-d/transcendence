@@ -9,7 +9,7 @@ export interface keysObj {
 	_ArrowDown: boolean,
 }
 
-export interface messObj {
+export interface reqObj {
 	_ID: number,
 	_keys: keysObj,
 	_timeStamp: number,
@@ -24,13 +24,13 @@ export interface ballObj {
 }
 
 export interface serverReplyObj {
-	ID: number;
-	leftPaddle: coordinates;
-	rightPaddle: coordinates;
-	ball: coordinates;
+	_ID: number;
+	_leftPaddle: coordinates;
+	_rightPaddle: coordinates;
+	_ball: coordinates;
 }
 
-type messMap = Array< [number, messObj] >;
+type reqMap = Array< reqObj >;
 
 export class Game {
 	/*                             PROPERTIES                                */
@@ -40,8 +40,8 @@ export class Game {
 	#_rightPaddle: coordinates;
 	#_paddleSpeed: number;
 	#_ball: ballObj;
-	#_mess: messObj;
-	#_messHistory: messMap;
+	#_req: reqObj;
+	#_reqHistory: reqMap;
 	#_servReply: serverReplyObj;
 	#_frameId: number;
 	#_delta: number;
@@ -56,12 +56,12 @@ export class Game {
 		this.#_rightPaddle = {x: 460, y: 108};
 		this.#_paddleSpeed = 0.15;
 		let keys: keysObj = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
-		this.#_mess = { _ID: 0, _keys: keys, _timeStamp: 0 };
-		this.#_messHistory = new Array();
+		this.#_req = { _ID: 0, _keys: keys, _timeStamp: 0 };
+		this.#_reqHistory = new Array();
 		this.#_frameId = 0
 		this.#_delta = 0;
 		this.#_lastFrameTime = 0;
-		this.#_servReply = { ID: 0, leftPaddle: {x: 10, y: 108}, rightPaddle: {x: 460, y: 108},ball: {x: WIDTH / 2, y: HEIGHT / 2}};
+		this.#_servReply = { _ID: 0, _leftPaddle: {x: 10, y: 108}, _rightPaddle: {x: 460, y: 108},_ball: {x: WIDTH / 2, y: HEIGHT / 2}};
 	}
 
 	/*                              GETTERS                                  */
@@ -81,8 +81,8 @@ export class Game {
 		return this.#_paddleSpeed;
 	}
 
-	get mess(): messObj {
-		return this.#_mess;
+	get req(): reqObj {
+		return this.#_req;
 	}
 
 	get ctx(): CanvasRenderingContext2D {
@@ -109,8 +109,8 @@ export class Game {
 		return this.#_local;
 	}
 
-	get messHistory(): messMap {
-		return this.#_messHistory;
+	get reqHistory(): reqMap {
+		return this.#_reqHistory;
 	}
 
 	/*                              SETTERS                                  */
@@ -140,14 +140,20 @@ export class Game {
 	}
 
     /*                              METHODS                                  */
-	public addMess(mess: messObj) {
-		this.#_messHistory.push([mess._ID, mess]);
+	public addReq(req: reqObj) {
+		const newReq: reqObj = { _ID: req._ID, _keys: { ...req._keys }, _timeStamp: req._timeStamp };
+		this.#_reqHistory.push(newReq);
 	}
 
-	public deleteMess(start: number, end: number) {
-		while (start < end) {
-			this.#_messHistory.splice(start, end - start);
-			start++;
-		}
+	public deleteReq(end: number) {
+		this.#_reqHistory.splice(0, end);
 	}
+
+	// public findState(id: number): gameState | null {
+	// 	for (let state of this.#_history) {
+	// 		if (state._ID === id)
+	// 			return state;
+	// 	}
+	// 	return null;
+	// }
 }

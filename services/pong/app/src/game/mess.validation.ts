@@ -8,7 +8,7 @@ export interface keysObj {
     [key: string]: boolean,
 }
 
-export interface messObj {
+export interface reqObj {
     _ID: number,
     _keys: keysObj,
     _timeStamp: number,
@@ -28,7 +28,7 @@ const idsObjSchema = {
     }
 }
 
-const messObjSchema = {
+const reqObjSchema = {
     type: 'object',
     required: ['_ID', '_keys', '_timeStamp'],
     properties: {
@@ -50,6 +50,6 @@ const messObjSchema = {
 
 const ajv = new Ajv();
 
-export const validMess = ajv.compile(messObjSchema);
+export const validMess = ajv.compile(reqObjSchema);
 
 export const validIds = ajv.compile(idsObjSchema);

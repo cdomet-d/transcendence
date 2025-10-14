@@ -1,6 +1,6 @@
 import type { WebSocket } from '@fastify/websocket';
 import { HEIGHT, WIDTH, type ballObj } from './game.class.js';
-import { messObj, type keysObj } from '../game/mess.validation.js';
+import type { reqObj, keysObj } from '../game/mess.validation.js';
 
 export interface coordinates {
 	x: number;
@@ -23,7 +23,7 @@ export class Player {
 	#_keys: keysObj;
 	#_rep: repObj;
 	#_score: number;
-	#_clientMess: messObj;
+	#_clientReq: reqObj;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(userID: number, socket: WebSocket, random: boolean) {
@@ -40,6 +40,7 @@ export class Player {
 			this.#_playerSide = "left";
 		}
 		this.#_score = 0;
+		this.#_clientReq = { _ID: 0, _keys: { ...this.#_keys }, _timeStamp: 0};
 	}
 
 	/*                              GETTERS                                  */
@@ -75,8 +76,8 @@ export class Player {
 		return this.#_keys;
 	}
 
-	get clientMess(): messObj {
-		return this.#_clientMess;
+	get clientReq(): reqObj {
+		return this.#_clientReq;
 	}
 
 	/*                              SETTERS                                  */
@@ -84,8 +85,8 @@ export class Player {
 		this.#_keys = keys;
 	}
 
-	set clientMess(mess: messObj) {
-		this.#_clientMess = mess;
+	set clientReq(mess: reqObj) {
+		this.#_clientReq = mess;
 	}
 
 	/*                              METHODS                                  */
