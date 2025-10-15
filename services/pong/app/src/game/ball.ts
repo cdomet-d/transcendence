@@ -5,7 +5,7 @@ export function updateBallPos(ball: ballObj, player1: Player, player2: Player, d
 	let newX: number = ball.x + (ball.dx * delta);
 	let newY: number = ball.y + (ball.dy * delta);
 
-	if (newX - 10 > WIDTH || newX + 10 < 0) {
+	if (newX - 10 >= WIDTH || newX + 10 <= 0) {
 		if (updateScore(player1, player2, newX))
 			return true;
 		ball.x = WIDTH / 2;
@@ -16,7 +16,7 @@ export function updateBallPos(ball: ballObj, player1: Player, player2: Player, d
 		return false;
 	}
 
-	if ((newY + 10) > HEIGHT || (newY - 10) < 0 ) {
+	if ((newY + 10) >= HEIGHT || (newY - 10) <= 0 ) {
 		ball.dy *= -1;
 		newY = ball.y + (ball.dy * delta);
 	}
@@ -33,11 +33,11 @@ export function updateBallPos(ball: ballObj, player1: Player, player2: Player, d
 const maxScore: number = 3;
 
 function updateScore(player1: Player, player2: Player, newX: number): boolean {
-	if (newX - 10 > WIDTH) {
+	if (newX - 10 >= WIDTH) {
 		player1.incScore();
 		console.log("PLAYER:", player1.score);
 	}
-	if (newX + 10 < 0) {
+	if (newX + 10 <= 0) {
 		player2.incScore();
 		console.log("OPPONENT:", player2.score);
 	}
@@ -48,9 +48,9 @@ function updateScore(player1: Player, player2: Player, newX: number): boolean {
 
 function touchesPad(leftPad: coordinates, rightPad: coordinates, newX: number, newY: number): boolean {
 	//TODO: fix 460
-	if (newX + 10 > 460 && (newY + 10 > rightPad.y && newY - 10 < rightPad.y + 54))
+	if (newX + 10 >= 460 && (newY + 10 >= rightPad.y && newY - 10 <= rightPad.y + 54))
 		return true;
-	if (newX - 10 < leftPad.x + 10 && (newY + 10 > leftPad.y && newY - 10 < leftPad.y + 54))
+	if (newX - 10 <= leftPad.x + 10 && (newY + 10 >= leftPad.y && newY - 10 <= leftPad.y + 54))
 		return true;
 	//TODO: check top of paddle
 	return false;
