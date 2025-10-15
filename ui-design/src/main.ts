@@ -83,7 +83,7 @@ try {
     wrapper.appendChild(user.createUserCardSocial(defaults.socialMenu, defaults.userDefault));
     wrapper.appendChild(user.createUserInline(defaults.userDefault));
     wrapper.appendChild(nav.createSearchbar());
-    // wrapper.appendChild(user.createNotificationBox());
+    wrapper.appendChild(user.createNotificationBox());
 
     // nav.getSearchbarAsync().then((bar) => {
     //     try {
@@ -93,20 +93,20 @@ try {
     //     }
     // });
 
-    // user.getcreateNotificationBoxAsync().then((n) => {
-    //     try {
-    //         if (n) {
-    //             setTimeout(() => {
-    //                 n.newFriendRequest('CrimeGoose');
-    //             }, 2000);
-    //             setTimeout(() => {
-    //                 n.newGameInvitation('ShyElephant', 'tournament');
-    //             }, 6000);
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // });
+    user.getcreateNotificationBoxAsync().then((n) => {
+        try {
+            if (n) {
+                setTimeout(() => {
+                    n.newFriendRequest('CrimeGoose');
+                }, 2000);
+                setTimeout(() => {
+                    n.newGameInvitation('ShyElephant', 'tournament');
+                }, 6000);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    });
 
     wrapper.appendChild(user.createUserCardSocial(defaults.socialMenu, defaults.userDefault));
 } catch (error) {

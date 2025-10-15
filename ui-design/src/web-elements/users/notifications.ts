@@ -20,15 +20,12 @@ const notificationBtns: Array<buttonData> = [
 
 //TODO: determine if we want to keep notifications forever or delete them as the users "validates" them.
 // - if we keep them: set a timeout on the menu to avoid the user attempting to reach a lobby that was closed
-// - if we don't keep them: how do we decide that the user processed the notification ? 
+// - if we don't keep them: how do we decide that the user processed the notification ?
 class NotifContent extends HTMLDivElement {
     #text: HTMLParagraphElement;
     constructor() {
         super();
         this.#text = document.createElement('p');
-        const buttons = createMenu(notificationBtns, 'horizontal', 's');
-        this.appendChild(this.#text);
-        this.appendChild(buttons);
     }
 
     set notifContent(str: string) {
@@ -36,6 +33,9 @@ class NotifContent extends HTMLDivElement {
     }
 
     connectedCallback() {
+        const buttons = createMenu(notificationBtns, 'horizontal', 's');
+        this.appendChild(this.#text);
+        this.appendChild(buttons);
         this.className = 'grid grid-cols-[65%_32%] gap-xs';
         this.id = 'notification';
         this.setAttribute('unread', '');
@@ -139,7 +139,7 @@ class NotifPanel extends HTMLDivElement {
     }
 
     newNotification(el: NotifContent) {
-		this.#content.querySelector('#default')?.remove();
+        this.#content.querySelector('#default')?.remove();
         this.#content.insertBefore(el, this.#content.firstChild);
     }
     attributeChangedCallback() {
@@ -159,16 +159,13 @@ export class Notification extends HTMLDivElement {
     #toggle: NotifToggle;
     #popup: NotifPanel;
     #newNotifIntervalId!: NodeJS.Timeout;
+	#boundEventCallback: () => void
 
     constructor() {
         super();
         this.#toggle = document.createElement('div', { is: 'notif-toggle' }) as NotifToggle;
         this.#popup = document.createElement('div', { is: 'notif-panel' }) as NotifPanel;
-
-        this.appendChild(this.#popup);
-        this.appendChild(this.#toggle);
-
-		this.id = 'notificationWrapper'
+		this.#boundEventCallback = this.#computePanelPos.bind(this);
     }
 
     #computePanelPos() {
@@ -197,29 +194,38 @@ export class Notification extends HTMLDivElement {
         this.#popup.newNotification(notif);
         this.#computePanelPos();
     }
+
+    handleClick(event: MouseEvent) {
+        const target = event.target as Element | null;
+        if (target && target.matches('#notifToggle')) {
+            this.#popup.updateVisibility();
+            this.#popup.clearStaleNotifications();
+            this.#toggle.toggleAlert(this.#popup.checkUnreadNotification());
+            this.#computePanelPos();
+        }
+    }
     connectedCallback() {
         this.#newNotifIntervalId = setInterval(() => {
             this.#toggle.toggleAlert(this.#popup.checkUnreadNotification());
         }, 5000);
-        this.addEventListener('click', (event: MouseEvent) => {
-            const target = event.target as Element | null;
-            if (target && target.matches('#notifToggle')) {
-                this.#popup.updateVisibility();
-                this.#popup.clearStaleNotifications();
-                this.#toggle.toggleAlert(this.#popup.checkUnreadNotification());
-                this.#computePanelPos();
-            }
-        });
-        window.addEventListener('resize', this.#computePanelPos.bind(this));
-        window.addEventListener('scroll', this.#computePanelPos.bind(this));
+        this.addEventListener('click', (event: MouseEvent) => this.handleClick(event));
+        window.addEventListener('resize', this.#boundEventCallback);
+        window.addEventListener('scroll', this.#boundEventCallback);
         this.render();
     }
 
     disconnectedCallback() {
         clearInterval(this.#newNotifIntervalId);
+        window.removeEventListener('resize', this.#boundEventCallback);
+        window.removeEventListener('scroll', this.#boundEventCallback);
+        this.removeEventListener('click', (event: MouseEvent) => this.handleClick(event));
     }
 
     render() {
+        this.appendChild(this.#popup);
+        this.appendChild(this.#toggle);
+
+        this.id = 'notificationWrapper';
         this.className = 'relative box-border w-fit flex items-start gap-m';
     }
 }
