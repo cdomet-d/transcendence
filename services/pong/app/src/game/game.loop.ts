@@ -8,29 +8,28 @@ const SERVER_TICK: number = 1000 / 10; // 10FPS
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function gameLoop(game: Game, player1: Player, player2: Player) {
-	const start: number = Date.now();
+	const start = Date.now();
+    const tickStart = game.time.lastFrame ?? start;
+    const tickEnd = tickStart + SERVER_TICK;
+    game.time.lastFrame = tickEnd;
 
-	let elapsed: number = 0;
-	let i: number = 0;
-	while (elapsed < SERVER_TICK && i < game.reqHistory.length) /*TODO: this is shit, need to use timestamp*/ {
-		if (game.reqHistory[i]._playerId === 1) {
-			updatePaddlePos(player1, game.reqHistory[i]._req._keys, game.paddleSpeed, TIME_STEP);
-			player1.reply.ID = game.reqHistory[i]._req._ID;
-		}
-		else {
-			updatePaddlePos(player2, game.reqHistory[i]._req._keys, game.paddleSpeed, TIME_STEP);
-			player2.reply.ID = game.reqHistory[i]._req._ID;
-		}
+    const toProcess = game.reqHistory.filter(playerReq => playerReq._req._timeStamp < tickEnd);
+    const futureReqs = game.reqHistory.filter(playerReq => playerReq._req._timeStamp >= tickEnd);
+
+    toProcess.sort((a, b) => a._req._timeStamp - b._req._timeStamp);
+
+	// let elapsed = 0;
+    for (const req of toProcess) {
+		const player: Player = req._playerId === 1 ? player1 : player2;
+		updatePaddlePos(player, req._req._keys, game.paddleSpeed, TIME_STEP);
 		game.status = updateBallPos(game.ball, player1, player2, TIME_STEP);
 		if (game.status) {
 			endGame(player1, player2, game);
 			return;
 		}
-		elapsed += TIME_STEP;
-		i++;
+		// elapsed += TIME_STEP;
 	}
-
-	game.deleteReq(i);
+	game.reqHistory = futureReqs;
 
 	sendToPlayer(player1, player2.paddle, game.ball, "left");
 	if (!game.local)
