@@ -4,7 +4,7 @@ import * as formBtns from './web-elements/inputs/helpers.js';
 import * as nav from './web-elements/navigation/helpers.js';
 import * as user from './web-elements/users/helpers.js';
 import * as defaults from './default-values.js';
-import { Notification } from './web-elements/users/notifications.js';
+// import { Notification } from './web-elements/users/notifications.js';
 import type * as types from './types-interfaces.js';
 
 const iMeta: types.ImgMetadata = {
@@ -62,7 +62,7 @@ wrapper.classList.add(
     'grid',
     'gap-6',
     `w-[${innerW}]`,
-    'pad-sm',
+    'pad-sm'
 );
 
 try {
@@ -83,6 +83,7 @@ try {
     wrapper.appendChild(user.createUserCardSocial(defaults.socialMenu, defaults.userDefault));
     wrapper.appendChild(user.createUserInline(defaults.userDefault));
     wrapper.appendChild(nav.createSearchbar());
+    // wrapper.appendChild(user.createNotificationBox());
 
     // nav.getSearchbarAsync().then((bar) => {
     //     try {
@@ -92,8 +93,21 @@ try {
     //     }
     // });
 
-    const n = document.createElement('div', { is: 'notification-container' }) as Notification;
-    wrapper.appendChild(n);
+    // user.getcreateNotificationBoxAsync().then((n) => {
+    //     try {
+    //         if (n) {
+    //             setTimeout(() => {
+    //                 n.newFriendRequest('CrimeGoose');
+    //             }, 2000);
+    //             setTimeout(() => {
+    //                 n.newGameInvitation('ShyElephant', 'tournament');
+    //             }, 6000);
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // });
+
     wrapper.appendChild(user.createUserCardSocial(defaults.socialMenu, defaults.userDefault));
 } catch (error) {
     console.log('[ERROR]', error);

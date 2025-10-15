@@ -22,10 +22,11 @@ export type MenuStyle = 'vertical' | 'horizontal';
  * Menu sizing scale.
  *
  * @remarks
+ * - `s`: Small size
  * - `m`: Medium size
  * - `l`: Large size
  */
-export type MenuSize = 'm' | 'l';
+export type MenuSize = 's' | 'm' | 'l';
 
 /**
  * Relationship between viewer and a profile.
@@ -72,6 +73,9 @@ export type FontWeight = 'f-bold';
  * Matches native `<button type="...">` options.
  */
 export type BtnType = 'button' | 'submit' | 'reset';
+export type BtnStyles = 'green' | 'red';
+
+export type GameType = '1 vs 1' | 'tournament'
 
 /**
  * Metadata describing an HTML input field.
@@ -124,6 +128,7 @@ export interface buttonData {
     content: string | null;
     img: ImgMetadata | null;
     ariaLabel: string;
+	style?: BtnStyles; 
 }
 
 /**

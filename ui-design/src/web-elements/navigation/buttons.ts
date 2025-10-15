@@ -103,7 +103,11 @@ export class menuBtn extends HTMLButtonElement {
         }
 
         if (this.disabled) this.classList.add('disabled', 'clear-bg');
-        else this.classList.add('yellow-bg');
+        else if (this.#btn.style) {
+            this.#btn.style === 'green'
+                ? this.classList.add('valid', 'green-bg')
+                : this.classList.add('invalid', 'red-bg');
+        } else this.classList.add('yellow-bg');
 
         this.type = this.#btn.type;
         this.ariaLabel = this.#btn.ariaLabel;

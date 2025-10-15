@@ -111,7 +111,7 @@
 
 	.invalid {
 		--border: #6b1d00;
-		--highlight: #e37248;
+		--highlight: #f9865c;
 		--shadow: #9a3e1c;
 		color: var(--red);
 	}
@@ -350,6 +350,10 @@
 
 	.row-m {
 		grid-auto-rows: var(--m);
+	}
+
+	.row-s {
+		grid-auto-rows: var(--s);
 	}
 
 	.f-yellow {
