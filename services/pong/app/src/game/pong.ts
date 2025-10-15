@@ -1,6 +1,6 @@
 import type { Game } from '../classes/game.class.js';
-import type { Player } from '../classes/player.class.js';
-import { validMess, type reqObj } from './mess.validation.js';
+import type { Player, repObj } from '../classes/player.class.js';
+import { validRequest, type reqObj } from './mess.validation.js';
 import { gameLoop } from './game.loop.js';
 import type { WebSocket } from '@fastify/websocket';
 
@@ -9,8 +9,8 @@ export async function setUpGame(game: Game) {
 		return; //TODO: deal with that
 	const player1: Player = game.players[0];
 	const player2: Player = game.players[1];
-	setMessEvent(player1);
-	setMessEvent(player2);
+	setMessEvent(player1, 1, game);
+	setMessEvent(player2, 2, game);
 	player1.socket.send(1);
 	if (!game.local)
 		player2.socket.send(-1);
@@ -25,14 +25,15 @@ export async function setUpGame(game: Game) {
 		gameLoop(game, player1, player2);
 }
 
-function setMessEvent(player: Player) {
+function setMessEvent(player: Player, playerNbr: number, game: Game) {
 	player.socket.on("message", (payload: string) => {
-		// let mess: messObj; //TODO: rm timestamp
-		try { player.clientReq = JSON.parse(payload); }
+		let req: reqObj; //TODO: rm timestamp
+		try { req = JSON.parse(payload); }
 		catch (err) { return; };
-		if (!validMess(player.clientReq))
+		if (!validRequest(req))
 			return;
-		player.keys = { ...player.clientReq._keys};
+		game.addReq(req, playerNbr);
+		player.keys = { ...req._keys};
 	})
 }
 

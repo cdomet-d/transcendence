@@ -1,4 +1,5 @@
 import type { Player } from './player.class.js';
+import type { reqObj } from '../game/mess.validation.js';
 
 export const HEIGHT = 270;
 export const WIDTH = 480;
@@ -31,7 +32,14 @@ interface timeObj {
 	lastFrame: number,
 	delta: number,
 }
+
+interface playerReq {
+	_playerId: number,
+	_req: reqObj,
+}
+
 export type playerTab = Array< Player >;
+type reqTab = Array< playerReq >;
 
 export class Game {
     /*                             PROPERTIES                                */
@@ -41,6 +49,7 @@ export class Game {
 	#_paddleSpeed: number;
 	#_time: timeObj;
 	#_status: boolean;
+	#_reqHistory: reqTab;
 
     /*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo) {
@@ -50,6 +59,8 @@ export class Game {
 		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3};
 		this.#_paddleSpeed = 0.15;
 		this.#_time = { stamp: 0, lastFrame: 0, delta: 0};
+		this.#_reqHistory = new Array();
+
 	}
 
     /*                              GETTERS                                  */
@@ -85,6 +96,10 @@ export class Game {
 		return this.#_status;
 	}
 
+	get reqHistory(): reqTab {
+		return this.#_reqHistory;
+	}
+		
     /*                              SETTERS                                  */
 	set score(score: Array< number >) {
 		this.#_gameInfo._score = score;
@@ -114,4 +129,13 @@ export class Game {
 		this.#_players.splice(0, this.#_players.length);
 
 	} //TODO: to be removed. only for testing
+
+	public addReq(req: reqObj, id: number) {
+		const newReq: playerReq = {_playerId: id, _req: { _ID: req._ID, _keys: { ...req._keys }, _timeStamp: req._timeStamp} };
+		this.#_reqHistory.push(newReq);
+	}
+
+	public deleteReq(deleteCount: number) {
+		this.#_reqHistory.splice(0, deleteCount);
+	}
 }
