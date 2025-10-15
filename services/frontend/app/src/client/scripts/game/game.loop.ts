@@ -33,10 +33,10 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		}
 
 		//req to server
+		game.req._timeStamp = timestamp;
 		ws.send(JSON.stringify(game.req));
 		game.addReq(game.req);
 		game.req._ID += 1; //TODO: overflow
-		// game.req._timeStamp = timestamp;
 
 		//new frame
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
