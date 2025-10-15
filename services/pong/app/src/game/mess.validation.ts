@@ -50,6 +50,6 @@ const reqObjSchema = {
 
 const ajv = new Ajv();
 
-export const validMess = ajv.compile(reqObjSchema);
+export const validRequest = ajv.compile(reqObjSchema);
 
 export const validIds = ajv.compile(idsObjSchema);
