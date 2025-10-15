@@ -333,6 +333,8 @@ UPDATE userStats
 SET totalPlayedGame = totalPlayedGame + 1 
 WHERE userID = 101;
 ```
+
+
 TODO :
 * ~~Change the way the database in instancieted in the code (connect db to fastify like in accessibility container)~~
 * ~~For larger GET API calls, should make a get function per column or can a function that gets all the needed informations will be better ? Maybe even both ?~~ (I did both)
@@ -355,3 +357,14 @@ TODO :
 * Add function for leaderboard (plus de wins all over)
 * Faire function search bar user
 * check all get to see if they do return the value they get from db
+
+
+
+
+FRIENDS: 
+    gateway :
+        ~~send request~~
+        ~~accept request~~
+        get friend list
+        get pending list
+        delete friendship
