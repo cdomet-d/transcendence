@@ -83,8 +83,10 @@ export class Menu extends HTMLDivElement {
 }
 
 customElements.define('menu-wrapper', Menu, { extends: 'div' });
+
 //TODO: update SocialMenu to Setting button when view is 'self'
 //TODO: is the UI update as smooth as it could be ?
+
 /**
  * Represents a social menu with dynamic view state for user relationships.
  *

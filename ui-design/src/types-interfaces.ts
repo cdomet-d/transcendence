@@ -75,7 +75,7 @@ export type FontWeight = 'f-bold';
 export type BtnType = 'button' | 'submit' | 'reset';
 export type BtnStyles = 'green' | 'red';
 
-export type GameType = '1 vs 1' | 'tournament'
+export type GameType = '1 vs 1' | 'tournament';
 
 /**
  * Metadata describing an HTML input field.
@@ -128,7 +128,7 @@ export interface buttonData {
     content: string | null;
     img: ImgMetadata | null;
     ariaLabel: string;
-	style?: BtnStyles; 
+    style?: BtnStyles;
 }
 
 /**

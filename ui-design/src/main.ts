@@ -62,7 +62,7 @@ wrapper.classList.add(
     'grid',
     'gap-6',
     `w-[${innerW}]`,
-    'pad-sm'
+    'pad-sm',
 );
 
 try {
@@ -93,7 +93,7 @@ try {
     //     }
     // });
 
-    user.getcreateNotificationBoxAsync().then((n) => {
+    user.getNotificationBoxAsync().then((n) => {
         try {
             if (n) {
                 setTimeout(() => {
