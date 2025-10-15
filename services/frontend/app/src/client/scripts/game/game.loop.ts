@@ -26,7 +26,7 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		//prediction
 		game.delta += (timestamp - game.lastFrameTime);
 		game.lastFrameTime = timestamp;
-		while (game.delta >= TIME_STEP) {
+		while (game.delta >= TIME_STEP) { //TODO: add update limit
 			updatePaddlePos(game, game.req._keys, TIME_STEP);
 			updateBallPos(game, TIME_STEP);
 			game.delta -= TIME_STEP;
