@@ -3,7 +3,7 @@ import { natsPublish } from './publisher.js'
 import { Game, type gameInfo } from '../classes/game.class.js';
 import type { FastifyInstance } from 'fastify';
 
-export async function initNatsConnexion(): Promise<NatsConnection> {
+export async function initNatsConnection(): Promise<NatsConnection> {
 	let token: string | undefined = process.env.NATS_SERVER_TOKEN;
 	if (!token)
 		throw new Error("NATS token undefined");
@@ -12,10 +12,9 @@ export async function initNatsConnexion(): Promise<NatsConnection> {
 }
 
 export async function natsSubscription(serv: FastifyInstance) {
-	let token = process.env.NATS_SERVER_TOKEN;
-	const nc = await connect({ servers: "nats://nats-server:4222", token: token ?? "" });
 	const sc = StringCodec();
 
+	const nc = serv.nc;
 	const sub = nc.subscribe('game.request');
 	// console.log(`Listening for messages on "game.request"...`);
 

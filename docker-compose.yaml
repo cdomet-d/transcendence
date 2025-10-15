@@ -5,9 +5,9 @@ networks:
 
 secrets:
   ssl-cert.pem:
-    file: .secrets/ssl-cert.pem
+    file: ${TSECRETS}/ssl-cert.pem
   ssl-key.pem:
-    file: .secrets/ssl-key.pem
+    file: ${TSECRETS}/ssl-key.pem
 
 services:
   accessibility:

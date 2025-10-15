@@ -1,6 +1,6 @@
 import * as page from '../../pages/html.pages.js'
 
-interface routeInterface {
+export interface routeInterface {
 	path: string;
 	callback: () => string;
 }
