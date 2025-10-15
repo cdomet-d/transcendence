@@ -3,68 +3,35 @@ import { checkUsernameUnique } from './account.service.js'
 import * as bcrypt from 'bcrypt';
 
 export async function accountRoutes(serv: FastifyInstance) {
+
+	//TODO: usersStatus is always 1 for now, not even sure to keep it honestly
 	serv.post('/internal/account/register', async (request, reply) => {
 		try {
-			const { username } = request.body as { username: string };
-			const { hashedPass } = request.body as { hashedPass: string };
+			const { username, hashedPassword } = request.body as { username: string, hashedPassword: string };
 
-			if (!username || !hashedPass)
-				return (reply.code(400).send({ message: 'Missing username or hashedPass.' }));
-
-			const usernameTaken = await checkUsernameUnique(serv.dbAccount ,username);
-			if (usernameTaken) {
-				return (reply.code(409).send({
-					success: false,
-					message: 'Username taken'
-				}));
-			}
+			const usernameTaken = await checkUsernameUnique(serv.dbAccount, username);
+			if (usernameTaken)
+				return reply.code(409).send({ message: 'Username taken' });
 
 			const query = `
 				INSERT INTO usersAuth (hashedPassword, username, userStatus, registerDate)
 				VALUES (?, ?, 1, ?)
 			`;
+			const params = [hashedPassword, username, new Date().toISOString()];
+			const result = await serv.dbAccount.run(query, params);
 
-			const params = [
-				hashedPass,
-				username,
-				new Date().toISOString()
-			];
-			
-			const resultCreateAccount = await serv.dbAccount.run(query, params);
-			if (!resultCreateAccount.changes) {
-				serv.log.error('User registration query succeeded but did not insert a row');
-				return (reply.code(500).send({ message: 'Internal server error during registration' }));
-			}
-		
-			const queryGetID = `
-				SELECT userID FROM usersAuth WHERE username = ?
-			`
+			if (result.changes === 0 || !result.lastID)
+				return reply.code(500).send({ message: 'Failed to create account record.' });
 
-			const userID = await serv.dbAccount.get(queryGetID, username);
-			if (!userID) {
-				return (reply.code(404).send({
-					success: false,
-					message: 'Account not found'
-				}));
-			}
-			
-			const resultCreateProfile = await fetch(`https://users:2626/internal/users/createProfile/:userID/${userID}`);
-			if (!resultCreateProfile) {
-					return (reply.code(500).send({
-					success: false,
-					message: 'Could not created user profile'
-				}));
-			}
+			return reply.code(201).send({
+				userID: result.lastID,
+				username: username
+			});
 
-			return (reply.code(201).send({
-				success: true,
-				message: 'Account registered and profile created!'
-			}));
-
-			} catch (error) {
-				serv.log.error(`Error creating user account: ${error}`);
-				return (reply.code(500).send({ message: 'Internal server error' }));
-			}
+		} catch (error) {
+			serv.log.error(`Error creating account record: ${error}`);
+			return reply.code(500).send({ message: 'Internal server error' });
+		}
 	});
 
 	serv.get('/internal/account/login', async (request, reply) => {
@@ -96,7 +63,6 @@ export async function accountRoutes(serv: FastifyInstance) {
 			serv.log.error(`Error when trying to login ${error}`);
 			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
-
 	});
 
 	serv.patch('/internal/account/updatePass', async(request, reply) => {

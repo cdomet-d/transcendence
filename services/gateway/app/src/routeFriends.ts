@@ -95,7 +95,7 @@ export async function gatewayFriendRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/api/friends', async (request, reply) => {
+	serv.get('/friends/friendlist', async (request, reply) => {
 	try {
 			 const userID = request.user.userID;
 
@@ -130,7 +130,7 @@ export async function gatewayFriendRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/api/friends/requests', async (request, reply) => {
+	serv.get('/friends/requestlist', async (request, reply) => {
 		try {
 			const userID = request.user.userID;
 

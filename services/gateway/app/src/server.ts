@@ -1,7 +1,7 @@
 import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
-import { gatewayFriendRoutes } from './route.js';
+import { gatewayFriendRoutes } from './routeFriends.js';
 import { options } from './serv.conf.js'; // 1. Import your options
 
 const serv: FastifyInstance = Fastify(options); 

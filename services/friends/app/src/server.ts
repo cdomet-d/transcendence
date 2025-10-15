@@ -1,8 +1,8 @@
 import type { FastifyInstance } from 'fastify';
 
 import Fastify from 'fastify'
-import { routeFriend } from './routeFriends.js';
-import { routeAccount } from './routeAccount.js';
+import { routeFriend } from './route.js';
+import { routeAccount } from '../../../gateway/app/src/routeAccount.js';
 import cors from '@fastify/cors';
 import dbConnector from "./db.js"
 

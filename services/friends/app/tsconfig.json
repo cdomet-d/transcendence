@@ -37,6 +37,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../../gateway/app/src/routeAccount.ts"],
   "exclude": ["node_modules"]
 }
