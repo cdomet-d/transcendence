@@ -14,6 +14,7 @@ export interface repObj {
 	ball: coordinates,
 }
 
+
 export class Player {
 	/*                             PROPERTIES                                */
 	#_userID: number;
@@ -21,16 +22,15 @@ export class Player {
 	#_playerSide: string;
 	#_paddle: coordinates;
 	#_keys: keysObj;
-	#_rep: repObj;
 	#_score: number;
-	#_clientReq: reqObj;
+	#_reply: repObj;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(userID: number, socket: WebSocket, random: boolean) {
 		this.#_userID = userID;
 		this.#_socket = socket;
 		this.#_keys = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
-		this.#_rep = {ID: 0, leftPad: {x: 10, y: 108}, rightPad: {x: 460, y: 108}, ball: {x: WIDTH / 2, y: HEIGHT / 2}};
+		this.#_reply = {ID: 0, leftPad: {x: 10, y: 108}, rightPad: {x: 460, y: 108}, ball: {x: WIDTH / 2, y: HEIGHT / 2}};
 		if (random) {
 			this.#_paddle = {x: 460, y: 108};
 			this.#_playerSide = "right";
@@ -40,7 +40,6 @@ export class Player {
 			this.#_playerSide = "left";
 		}
 		this.#_score = 0;
-		this.#_clientReq = { _ID: 0, _keys: { ...this.#_keys }, _timeStamp: 0};
 	}
 
 	/*                              GETTERS                                  */
@@ -52,8 +51,8 @@ export class Player {
 		return this.#_paddle;
 	}
 
-	get rep(): repObj {
-		return this.#_rep;
+	get reply(): repObj {
+		return this.#_reply;
 	}
 
 	get left(): boolean {
@@ -76,36 +75,29 @@ export class Player {
 		return this.#_keys;
 	}
 
-	get clientReq(): reqObj {
-		return this.#_clientReq;
-	}
-
 	/*                              SETTERS                                  */
 	set keys(keys: keysObj) {
 		this.#_keys = keys;
 	}
 
-	set clientReq(mess: reqObj) {
-		this.#_clientReq = mess;
-	}
-
 	/*                              METHODS                                  */
 	public setMessPad(side: string, newPos: number) {
 		if (side === "left")
-			this.#_rep.leftPad.y = newPos;
+			this.#_reply.leftPad.y = newPos;
 		else
-			this.#_rep.rightPad.y = newPos;
+			this.#_reply.rightPad.y = newPos;
 	}
 
 	public setMessBall(side: string, ball: ballObj) {
-		this.#_rep.ball.y = ball.y;
+		this.#_reply.ball.y = ball.y;
 		if (side === "left")
-			this.#_rep.ball.x = ball.x;
+			this.#_reply.ball.x = ball.x;
 		else
-			this.#_rep.ball.x = WIDTH - ball.x;
+			this.#_reply.ball.x = WIDTH - ball.x;
 	}
 
 	public incScore() {
 		this.#_score += 1;
 	}
+
 }
