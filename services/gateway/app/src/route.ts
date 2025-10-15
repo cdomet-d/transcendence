@@ -23,17 +23,7 @@ async function createFriendRequest(senderId: number, receiverId: number): Promis
 	});
 }
 
-
 export async function gatewayFriendRoutes(serv: FastifyInstance) {
-
-serv.get('/health', async (request, reply) => {
-	return reply.code(200).send({
-		status: 'ok',
-		service: 'api-gateway',
-		message: 'Health check successful!'
-	});
-});
-
 
  	serv.post('/api/friends/requests', async (request, reply) => {
 		try {
@@ -64,3 +54,4 @@ serv.get('/health', async (request, reply) => {
 		}
 	});
 }
+

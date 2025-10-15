@@ -339,18 +339,19 @@ TODO :
 * ~~Clean code in friends container's routes.ts file~~ 
 * ~~check all reply to add success of the request~~
 * ~~Change all request to https~~
-* check all internal and external https request
 * ~~Update which routes should or shoudn't have a variable parameter~~
 * ~~Check correct error returns for await fecth~~
 * ~~Add check for every serv.run~~
 * ~~add the "user" to container~~
+* ~~add a Orchestration Service~~
+* ~~Do nginx config~~
+* ~~fix the user interface registered in fastify that causes error in multiple route.ts~~
+
 * secure extern API calls and understand what it actually means
+* check all internal and external https request
 * Add .env varaible for db setup to ensure flexibility
 * check batch-fechting endpoint
 * Plug languageDB route to front to see if translation works
 * Add function for leaderboard (plus de wins all over)
-* Do nginx config
 * Faire function search bar user
 * check all get to see if they do return the value they get from db
-* ~~add a Orchestration Service~~
-* fix the user interface registered in fastify that causes error in multiple route.ts
