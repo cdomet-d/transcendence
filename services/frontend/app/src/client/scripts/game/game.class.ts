@@ -146,9 +146,10 @@ export class Game {
 	}
 
 	public deleteReq(id: number) {
-		while (id >= 0) {
-			this.#_reqHistory.delete(id);
-			id--;
+		for (const key of this.#_reqHistory.keys()) {
+			if (key <= id) {
+				this.#_reqHistory.delete(key);
+			}
 		}
 	}
 }
