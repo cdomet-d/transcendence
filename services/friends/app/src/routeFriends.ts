@@ -4,7 +4,7 @@ import { getPendingFriendRequests } from './friends.service.js'
 import { getFriendship } from './friends.service.js'
 import { friendshipExistsUsersID } from './friends.service.js'
 
-export async function friendRoutes(serv: FastifyInstance) {
+export async function routeFriend(serv: FastifyInstance) {
 
 	// Send a friend request to another user with username, parameter : username of sender and receiver
 	serv.post('/internal/friends/sendrequest', async (request, reply) => {

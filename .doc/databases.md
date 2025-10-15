@@ -357,14 +357,3 @@ TODO :
 * Add function for leaderboard (plus de wins all over)
 * Faire function search bar user
 * check all get to see if they do return the value they get from db
-
-
-
-
-FRIENDS: 
-    gateway :
-        ~~send request~~
-        ~~accept request~~
-        get friend list
-        get pending list
-        delete friendship
