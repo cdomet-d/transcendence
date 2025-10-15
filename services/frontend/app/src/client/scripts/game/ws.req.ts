@@ -20,6 +20,7 @@ function wsRequest(game: Game) {
             startGame(game, ws);
         else if (signal === -1) {
             game.ball.dx *= -1;
+            game.ball.lastdx *= -1;
             startGame(game, ws);
         }
     }, { once: true });
