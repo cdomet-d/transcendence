@@ -116,6 +116,11 @@ export class Game {
 	set status(status: boolean) {
 		this.#_status = status;
 	}
+
+	set reqHistory(reqTab: reqTab) {
+		this.#_reqHistory = reqTab;
+	}
+
     /*                              METHODS                                  */
 	public addPlayer(player: Player) {
 		this.#_players.push(player);
