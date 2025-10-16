@@ -25,8 +25,9 @@ export async function updateUserProfileField(userID: number, field: string, valu
 	});
 }
 
+//TODO :
+//export async function fetchUserProfile(userID: number): Promise<RawUserProfile | null> { }
 
-export async function fetchUserProfile(userID: number): Promise<RawUserProfile | null> { }
-
-export async function findUserByUsername(username: string): Promise<{ userID: number } | null> { /* ... */ }
+//TODO: 
+//export async function findUserByUsername(username: string): Promise<{ userID: number } | null> { /* ... */ }
 
