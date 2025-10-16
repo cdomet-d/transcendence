@@ -3,7 +3,7 @@ import { renderGame } from "./game.render.utils.js";
 import { Game, HEIGHT, WIDTH } from "./game.class.js";
 import { updatePaddlePos } from "./paddle.js";
 import { updateBallPos } from "./ball.js";
-import type { startObj } from "./mess.validation.js";
+import type { coordinates, startObj } from "./mess.validation.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
@@ -25,6 +25,7 @@ export async function startGame(game: Game, ws: WebSocket) {
 	// start game
 	game.frameId = requestAnimationFrame((timestamp) => {
 		game.lastFrameTime = timestamp;
+		// game.lastUpdateTime = performance.now();
 		game.frameId = requestAnimationFrame(FrameRequestCallback(game, ws, offset));
 	});
 }
@@ -63,9 +64,19 @@ function FrameRequestCallback(game: Game, ws: WebSocket, offset: number) {
 		game.lastFrameTime = timestamp;
 		while (game.delta >= TIME_STEP) { //TODO: add update limit
 			updatePaddlePos(game, game.req._keys, TIME_STEP);
-			updateBallPos(game, TIME_STEP);
+			// updateBallPos(game, TIME_STEP);
 			game.delta -= TIME_STEP;
 		}
+
+		// ball dead reckoning
+		// let timeSinceLastServerUpdate: number = 0;
+		// if (game.lastUpdateTime > 0)
+		// 	timeSinceLastServerUpdate = (performance.now() - game.lastUpdateTime) / 1000;
+		// game.predictedBall.x = game.servReply._ball.x + game.servReply._ball.dx * timeSinceLastServerUpdate;
+		// game.predictedBall.y = game.servReply._ball.y + game.servReply._ball.dy * timeSinceLastServerUpdate;
+		// game.lastUpdateTime = performance.now();
+		// game.ball.x += (game.predictedBall.x - game.ball.x) * 0.2;
+  		// game.ball.y += (game.predictedBall.y - game.ball.y) * 0.2;
 
 		//req to server
 		game.req._timeStamp = Date.now() + offset;
@@ -84,13 +95,13 @@ function reconciliation(game: Game) {
 	const id: number = game.servReply._ID;
 	game.deleteReq(id);
 
-	game.leftPad.y = game.servReply._leftPaddle.y;
-	game.rightPad.y = game.servReply._rightPaddle.y;
-	game.ball.x = game.servReply._ball.x;
-	game.ball.y = game.servReply._ball.y;
+	game.leftPad.y = game.servReply._leftPad.y;
+	game.rightPad.y = game.servReply._rightPad.y;
+	// game.ball.x = game.servReply._ball.x;
+	// game.ball.y = game.servReply._ball.y;
 
 	for (let i = id + 1; game.reqHistory.has(i); i++) {
 		updatePaddlePos(game, game.reqHistory.get(i)!._keys, TIME_STEP)
-		updateBallPos(game, TIME_STEP);
+		// updateBallPos(game, TIME_STEP);
 	}
 }
