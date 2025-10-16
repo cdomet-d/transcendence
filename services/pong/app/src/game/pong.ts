@@ -43,9 +43,7 @@ export async function setUpGame(game: Game) {
 	}
 
 	// start game
-	while (start.delay > 0) {
-		start.delay -= (Date.now() - start.serverTimeStamp);
-	}
+	await new Promise(res => setTimeout(res, start.delay));
 	gameLoop(game, player1, player2);
 }
 

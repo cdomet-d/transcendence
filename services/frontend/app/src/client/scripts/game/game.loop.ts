@@ -19,10 +19,8 @@ export async function startGame(game: Game, ws: WebSocket) {
 
 	// wait
 	setUpGame(game, ws, start);
-	let wait: number = start.delay - halfTripTime + offset;
-	while (wait > 0) {
-		wait -= (Date.now() - recvTime);
-	}
+	const waitTime = Math.max(0, start.delay - halfTripTime);
+	await new Promise(res => setTimeout(res, waitTime));
 
 	// start game
 	game.frameId = requestAnimationFrame((timestamp) => {
