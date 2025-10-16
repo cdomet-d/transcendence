@@ -32,7 +32,7 @@ const payload = { userID: 123 };
 const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 */
 
-export async function routeAccount(serv: FastifyInstance) {
+export async function gatewayAccountRoutes(serv: FastifyInstance) {
 
 	serv.post('/account/login', async (request, reply) => {
 		try {
