@@ -2,7 +2,7 @@ import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import { gatewayFriendRoutes } from './routeFriends.js';
-import { gatewayStatsRoutes } from './routeUser.js';
+import { gatewayStatsRoutes } from './routeStats.js';
 import { gatewayAccessibilityRoutes } from './routeAccessibility.js';
 import { gatewayAccountRoutes } from './routeAccount.js';
 import { options } from './serv.conf.js'; 
