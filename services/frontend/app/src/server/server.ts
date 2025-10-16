@@ -23,39 +23,39 @@ catch (err) {
 
 function error404Handler(request: FastifyRequest, reply: FastifyReply) {
 	reply.code(404)
-		 .header('Content-Type', 'text/html')
-		 .send(render404());
+		.header('Content-Type', 'text/html')
+		.send(render404());
 }
 
 async function addPlugins(serv: FastifyInstance) {
 	await serv.register(servRoutes)
-				.register(fastifyStatic, {
-					root: "/app/dist/client/scripts",
-					prefix: "/scripts/",
-				})
-				.register(fastifyStatic, {
-					root: "/app/dist/client/pages",
-					prefix: "/pages/",
-					decorateReply: false
-				})
-				.register(fastifyStatic, {
-					root: "/app/dist/client/assets/",
-					prefix: "/assets/",
-					decorateReply: false
-				})
-				.register(fastifyStatic, {
-					root: [
-						"/app/src/css",
-						"/app/src/images",
-					],
-					prefix: "/",
-					decorateReply: false
-				})
-				.register(cookie/*, {
+		.register(fastifyStatic, {
+			root: "/app/dist/client/scripts",
+			prefix: "/scripts/",
+		})
+		.register(fastifyStatic, {
+			root: "/app/dist/client/pages",
+			prefix: "/pages/",
+			decorateReply: false
+		})
+		.register(fastifyStatic, {
+			root: "/app/dist/client/assets/",
+			prefix: "/assets/",
+			decorateReply: false
+		})
+		.register(fastifyStatic, {
+			root: [
+				"/app/src/css",
+				"/app/src/images",
+			],
+			prefix: "/",
+			decorateReply: false
+		})
+		.register(cookie/*, {
 					secret: "", //TODO: add secret ?
 				}*/)
-				// .register(fastifyVite, {
-				// 	root: "/app",
-				// 	dev: process.argv.includes('--dev'),
-				// });
+	// .register(fastifyVite, {
+	// 	root: "/app",
+	// 	dev: process.argv.includes('--dev'),
+	// });
 }

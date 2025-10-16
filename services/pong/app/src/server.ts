@@ -8,7 +8,7 @@ import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 // Local modules
 import { wsRoute } from './ws.route.js';
 import { options } from './serv.conf.js'
-import { initNatsConnexion, natsSubscribtion } from './subscriber.js';
+import { initNatsConnection, natsSubscription } from './nats/subscriber.js';
 import { GameRegistry } from './classes/gameRegistry.class.js';
 
 (async () => {
@@ -27,9 +27,9 @@ export async function init(): Promise<FastifyInstance> {
 	serv.decorate("gameRegistry", new GameRegistry());
 
 	//nats
-	// const nc = await initNatsConnexion(); //TODO: use await ?
-	// serv.decorate("nc", nc);
-	natsSubscribtion(serv);
+	const nc = await initNatsConnection();
+	serv.decorate("nc", nc);
+	await natsSubscription(serv);
 
 	//plugins
 	addPlugins(serv);
@@ -42,12 +42,12 @@ export async function init(): Promise<FastifyInstance> {
 function addPlugins(serv: FastifyInstance) {
 	serv.register(websocket, {
 		errorHandler: function (error, socket: WebSocket, req: FastifyRequest, reply: FastifyReply) {
-						//TODO: send html error page ?
-						serv.log.error(error);
-						socket.close()
-					},
+			//TODO: send html error page ?
+			serv.log.error(error);
+			socket.close()
+		},
 		options: {},
-		});
+	});
 	serv.register(wsRoute);
 	// serv.register(cookie);
 }

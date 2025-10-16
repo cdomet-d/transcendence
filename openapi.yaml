@@ -162,7 +162,7 @@ components:
             endAt: "2025-08-19T16:00:46.000Z"
             secDuration: 120
           loser: loserLoon
-          matchId: 569741
+          gameID: 569741
           score:
             loserLoon: 2
             winningWolf: 5
@@ -174,7 +174,7 @@ components:
                 endAt: "2025-08-19T15:59:15.000Z"
                 secDuration: 29
               loser: loserLion
-              matchId: 569741
+              gameID: 569741
               score:
                 loserLion: 1
                 winningWeasel: 3
@@ -184,7 +184,7 @@ components:
                 endAt: "2025-08-19T16:01:30.000Z"
                 secDuration: 120
               loser: loserLoon
-              matchId: 569741
+              gameID: 569741
               score:
                 loserLoon: 2
                 winningWolf: 7
@@ -194,7 +194,7 @@ components:
                 endAt: "2025-08-19T16:07:00.000Z"
                 secDuration: 300
               loser: winningWeasel
-              matchId: 784512
+              gameID: 784512
               score:
                 winningWeasel: 1
                 winningWolf: 4
@@ -207,7 +207,7 @@ components:
             endAt: "2025-08-19T17:20:30.000Z"
             secDuration: 330
           loser: speedySnake
-          matchId: 991287
+          gameID: 991287
           score:
             cleverCrow: 6
             speedySnake: 3
@@ -384,7 +384,7 @@ components:
           endAt: "2025-08-19T15:58:46.000Z"
           secDuration: 120
         loser: loserLoon
-        matchId: 569741
+        gameID: 569741
         score:
           loserLoon: 2
           winningWolf: 5
@@ -394,14 +394,14 @@ components:
           $ref: "#/components/schemas/duration"
         loser:
           $ref: "#/components/schemas/loser"
-        matchId:
+        gameID:
           $ref: "#/components/schemas/id"
         score:
           $ref: "#/components/schemas/score"
         winner:
           $ref: "#/components/schemas/winner"
       required:
-        - matchId
+        - gameID
         - winner
         - loser
         - duration
@@ -538,7 +538,7 @@ components:
               endAt: "2025-08-19T15:58:46.000Z"
               secDuration: 89
             loser: loserLion
-            matchId: 569741
+            gameID: 569741
             score:
               loserLion: 1
               winningWeasel: 3
@@ -548,7 +548,7 @@ components:
               endAt: 2025-08-19T15:58:46.000Z"
               secDuration: 120
             loser: loserLoon
-            matchId: 569741
+            gameID: 569741
             score:
               loserLoon: 2
               winningWolf: 7
@@ -558,7 +558,7 @@ components:
               endAt: 2025-08-19T15:58:46.000Z"
               secDuration: 295
             loser: winningWeasel
-            matchId: 784512
+            gameID: 784512
             score:
               winningWeasel: 1
               winningWolf: 4

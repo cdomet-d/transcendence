@@ -4,7 +4,7 @@ import es from '../../assets/locales/es.json' with { type: "json" };
 
 type TranslationMap = Record<string, string>;
 
-const resources: Record<string, TranslationMap> = { en ,fr, es };
+const resources: Record<string, TranslationMap> = { en, fr, es };
 export let currentLang: string = "en";
 let translation: TranslationMap = en;
 

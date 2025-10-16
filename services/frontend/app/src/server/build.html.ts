@@ -11,7 +11,7 @@ function buildHtmlPage(url: string): string {
 		header = renderHeader();
 
 	const langDropdown = renderLanguageDropdownButton();
-	
+
 	const html: string = `
 	<!doctype html>
 	<html lang="en">

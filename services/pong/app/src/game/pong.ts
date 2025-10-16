@@ -8,7 +8,7 @@ export function setUpGame(game: Game) {
 		return; //TODO: deal with that
 	const player1: Player = game.players[0];
 	const player2: Player = game.players[1];
-	
+
 	if (game.local) {
 		setMessEvent(player1, player2, local);
 		player1.socket.send(1);
