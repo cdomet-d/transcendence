@@ -1,3 +1,5 @@
+import type { ballObj } from "./game.class.js";
+
 export interface coordinates {
 	x: number,
 	y: number,
@@ -5,10 +7,10 @@ export interface coordinates {
 }
 
 export interface repObj {
-	ID: number,
-	leftPad: coordinates,
-	rightPad: coordinates,
-	ball: coordinates,
+	_ID: number,
+	_leftPad: coordinates,
+	_rightPad: coordinates,
+	_ball: ballObj,
 }
 
 export interface startObj {

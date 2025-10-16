@@ -11,7 +11,7 @@ export interface repObj {
 	ID: number,
 	leftPad: coordinates,
 	rightPad: coordinates,
-	ball: coordinates,
+	ball: ballObj,
 }
 
 
@@ -30,7 +30,7 @@ export class Player {
 		this.#_userID = userID;
 		this.#_socket = socket;
 		this.#_keys = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
-		this.#_reply = {ID: 0, leftPad: {x: 10, y: 108}, rightPad: {x: 460, y: 108}, ball: {x: WIDTH / 2, y: HEIGHT / 2}};
+		this.#_reply = {ID: 0, leftPad: {x: 10, y: 108}, rightPad: {x: 460, y: 108}, ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3}};
 		if (random) {
 			this.#_paddle = {x: 460, y: 108};
 			this.#_playerSide = "right";
@@ -90,10 +90,15 @@ export class Player {
 
 	public setMessBall(side: string, ball: ballObj) {
 		this.#_reply.ball.y = ball.y;
+		this.#_reply.ball.dx = ball.dx;
+		this.#_reply.ball.dy = ball.dy;
 		if (side === "left")
 			this.#_reply.ball.x = ball.x;
-		else
+		else {
 			this.#_reply.ball.x = WIDTH - ball.x;
+			this.#_reply.ball.dx *= -1;
+		}
+
 	}
 
 	public incScore() {

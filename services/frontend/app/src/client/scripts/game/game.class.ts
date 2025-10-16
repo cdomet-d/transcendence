@@ -1,6 +1,6 @@
 export const HEIGHT = 270;
 export const WIDTH = 480;
-import type { coordinates } from "./mess.validation.js";
+import type { coordinates, repObj } from "./mess.validation.js";
 
 export interface keysObj {
 	_w: boolean,
@@ -42,10 +42,12 @@ export class Game {
 	#_ball: ballObj;
 	#_req: reqObj;
 	#_reqHistory: reqMap;
-	#_servReply: serverReplyObj;
+	#_servReply: repObj;
 	#_frameId: number;
 	#_delta: number;
 	#_lastFrameTime: number;
+	#_lastUpdateTime: number;
+	#_predictedBall: coordinates;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(ctx: CanvasRenderingContext2D, local: boolean) {
@@ -61,7 +63,9 @@ export class Game {
 		this.#_frameId = 0
 		this.#_delta = 0;
 		this.#_lastFrameTime = 0;
-		this.#_servReply = { _ID: 0, _leftPaddle: {x: 10, y: 108}, _rightPaddle: {x: 460, y: 108},_ball: {x: WIDTH / 2, y: HEIGHT / 2}};
+		this.#_servReply = { _ID: 0, _leftPad: {x: 10, y: 108}, _rightPad: {x: 460, y: 108}, _ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3}};
+		this.#_lastUpdateTime = 0;
+		this.#_predictedBall = {x: 0, y: 0};
 	}
 
 	/*                              GETTERS                                  */
@@ -101,7 +105,7 @@ export class Game {
 		return this.#_lastFrameTime;
 	}
 
-	get servReply(): serverReplyObj {
+	get servReply(): repObj {
 		return this.#_servReply;
 	}
 
@@ -111,6 +115,14 @@ export class Game {
 
 	get reqHistory(): reqMap {
 		return this.#_reqHistory;
+	}
+
+	get lastUpdateTime(): number {
+		return this.#_lastUpdateTime;
+	}
+
+	get predictedBall(): coordinates {
+		return this.#_predictedBall;
 	}
 
 	/*                              SETTERS                                  */
@@ -137,6 +149,10 @@ export class Game {
 
 	set lastFrameTime(val: number) {
 		this.#_lastFrameTime = val;
+	}
+
+	set lastUpdateTime(time: number) {
+		this.#_lastUpdateTime = time;
 	}
 
     /*                              METHODS                                  */

@@ -8,10 +8,10 @@ export function addMessEvent(game: Game, ws: WebSocket) {
 		// 	console.log("Error: invalid reply:", JSON.stringify(rep));
 		// 	return
 		// } //TODO: fix validRep
-		game.servReply._ID = rep.ID;
-		game.servReply._leftPaddle.y = rep.leftPad.y;
-		game.servReply._rightPaddle.y = rep.rightPad.y;
-		game.servReply._ball = { ...rep.ball };
+		game.servReply._ID = rep._ID;
+		game.servReply._leftPad.y = rep._leftPad.y;
+		game.servReply._rightPad.y = rep._rightPad.y;
+		game.servReply._ball = { ...rep._ball };
 	};
 }
 
