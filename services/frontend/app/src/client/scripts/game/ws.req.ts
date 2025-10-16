@@ -11,17 +11,17 @@ function wsRequest(game: Game) {
 
     ws.onopen = () => {
         console.log("WebSocket connection established!")
+        ws.addEventListener('message', (event) => {
+            const signal: number = JSON.parse(event.data);
+            console.log("SIGNAL:", signal, "TYPE", typeof(signal));
+            if (signal === 1) {
+                console.log("IN");
+                startGame(game, ws);
+            }
+        }, { once: true });
         ws.send(JSON.stringify({gameID: 1, userID: 1})); //TODO: only for testing
     }
 
-    ws.addEventListener('message', (event) => {
-        const signal: string = JSON.parse(event.data);
-        console.log("SIGNAL:", signal);
-        if (signal === "1") {
-            console.log("IN");
-            startGame(game, ws);
-        }
-    }, { once: true });
 
     ws.onclose = () => {
         window.cancelAnimationFrame(game.frameId);
