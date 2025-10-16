@@ -36,7 +36,7 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 		sendToPlayer(player2, player1.paddle, game.ball, "right");
 
 	const delay: number = SERVER_TICK - (Date.now() - start);
-	setTimeout(gameLoop, delay, game, player1, player2);
+	setTimeout(gameLoop, Math.max(0, delay), game, player1, player2);
 }
 
 function sendToPlayer(player: Player, opponentPaddle: coordinates, ball: ballObj, side: string) {
