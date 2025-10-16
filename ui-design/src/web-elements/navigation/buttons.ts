@@ -94,7 +94,7 @@ export class menuBtn extends HTMLButtonElement {
 
         if (this.#btn.content && !this.#animated) {
             this.renderTextualBtn();
-            this.classList.add('hover:transform', 'hover:scale-[1.02]');
+            this.classList.add('hover:transform', 'hover:scale-[1.02]', 'focus-visible:transform', 'focus-visible:scale-[1.02]');
         } else if (this.#btn.img) {
             this.renderIconBtn();
         } else if (this.#btn.content && this.#animated) {

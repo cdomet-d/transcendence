@@ -44,7 +44,8 @@
 			#f4b000 0 100%);
 }
 
-.yellow-bg:hover {
+.yellow-bg:hover,
+.yellow-bg:focus-visible {
 	background: linear-gradient(180deg,
 			#ffc245 0 10%,
 			#ffc652 0 20%,
@@ -102,7 +103,8 @@
 			#ce633b 0 100%);
 }
 
-.red-bg:hover {
+.red-bg:hover,
+.red-bg:focus-visible {
 	background: linear-gradient(180deg,
 			#ce633b 0 10%,
 			#d3673f 0 20%,
@@ -144,7 +146,8 @@
 			#42b143 0 100%);
 }
 
-.green-bg:hover {
+.green-bg:hover,
+.green-bg:focus-visible {
 	background: linear-gradient(180deg,
 			#42b143 0 10%,
 			#57b946 0 20%,

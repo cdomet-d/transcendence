@@ -322,7 +322,7 @@
 		justify-content: center;
 	}
 
-	button:hover>span {
+	button:hover>span, button:focus-visible>span {
 		display: inline-block;
 		transform-origin: bottom center;
 		animation: dance 1.2s ease-in-out infinite;

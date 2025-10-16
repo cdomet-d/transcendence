@@ -41,7 +41,7 @@ export const userDefault: UserData = {
 };
 
 export const usernamePattern: string = '^[a-zA-Z0-9]{4,18}$';
-export const passwordPattern: string = '^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&]).{12,256}$';
+export const passwordPattern: string = '^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&]).{12,64}$';
 
 export const users: Array<UserData> = [
     userDefault,

@@ -26,11 +26,30 @@ customElements.define('file-upload', fileUpload, { extends: 'input' });
  * Extends native HTMLInputElement.
  */
 export class textInput extends HTMLInputElement {
+    #inputCallback: (event: Event) => void;
     constructor() {
         super();
+        this.#inputCallback = (event) => this.inputFeedback(event);
+    }
+
+    inputFeedback(event: Event) {
+        if (this.getAttribute('type') === 'password') {
+            const el = event.target as HTMLInputElement;
+            const pw = el.value;
+            let feedback: Array<string> = [];
+            if (!/[A-Z]/.test(pw)) feedback.push('missing an uppercase letter');
+            if (!/[a-z]/.test(pw)) feedback.push('missing an lowercase letter');
+            if (!/[0-9]/.test(pw)) feedback.push('missing an number');
+            if (!/[!@#$%^&*()\-_=+{};:,<.>]/.test(pw)) feedback.push('missing a special character');
+            if (pw.length < 8 || pw.length > 64)
+                feedback.push(`Range for pw is 12-64, current length is: ${pw.length}`);
+			
+            this.dispatchEvent(new CustomEvent('validation', {detail: { feedback }, bubbles: true}));
+        }
     }
 
     connectedCallback() {
+        this.addEventListener('input', this.#inputCallback);
         this.render();
     }
 
@@ -90,6 +109,7 @@ customElements.define('input-label', inputLabel, { extends: 'label' });
 export class inputGroup extends HTMLDivElement {
     #input: textInput;
     #label: inputLabel;
+	#validationCallback: (error: string[]) => void
     #info: InputMetadata;
 
     /**
@@ -101,7 +121,6 @@ export class inputGroup extends HTMLDivElement {
 
     constructor() {
         super();
-
         this.#info = {
             labelContent: 'Username',
             id: 'username',
@@ -111,11 +130,14 @@ export class inputGroup extends HTMLDivElement {
         };
         this.#input = document.createElement('input', { is: 'text-input' }) as textInput;
         this.#label = document.createElement('label', { is: 'input-label' }) as inputLabel;
-
+		this.#validationCallback = (error: string[]) => this.displayInputFeedback(error)
         this.appendChild(this.#label);
         this.appendChild(this.#input);
     }
 
+	displayInputFeedback(error: Array<string>) {
+	
+	}
     set isSearchbar(val: boolean) {
         if (val) {
             this.#input.classList.add('searchbar-padding');
@@ -124,6 +146,7 @@ export class inputGroup extends HTMLDivElement {
     }
 
     connectedCallback() {
+		this.addEventListener('validation', this.#validationCallback);
         this.render();
     }
 
