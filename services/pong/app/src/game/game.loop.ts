@@ -9,7 +9,7 @@ const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function gameLoop(game: Game, player1: Player, player2: Player) {
 	const start = Date.now();
-    const tickStart = game.time.lastFrame ?? start;
+    const tickStart = game.time.lastFrame === 0 ? start : game.time.lastFrame;
     const tickEnd = tickStart + SERVER_TICK;
     game.time.lastFrame = tickEnd;
 
