@@ -14,7 +14,7 @@ interface UserRow {
 }
 
 interface UserRowConnection {
-  lastConnexion: string;
+	lastConnexion: string;
 }
 
 interface UserStats {
@@ -26,6 +26,7 @@ interface UserStats {
 	winStreak: number;
 	averageMatchDuration: number;
 	highestScore: number;
+	[key: string]: number;
 }
 
 export async function userRoutes(serv: FastifyInstance) {
@@ -39,7 +40,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const user = await serv.dbUsers.get<UserRow>(query, [username]);
 			if (!user) {
-				return (reply.code(404).send({ 
+				return (reply.code(404).send({
 					success: false,
 					message: 'User not found'
 				}));
@@ -64,22 +65,22 @@ export async function userRoutes(serv: FastifyInstance) {
 		try {
 			const { userIDs } = request.body as { userIDs: number[] };
 
-		if (!Array.isArray(userIDs) || userIDs.length === 0)
-			return (reply.code(400).send({ message: 'userIDs must be a non-empty array.' }));
+			if (!Array.isArray(userIDs) || userIDs.length === 0)
+				return (reply.code(400).send({ message: 'userIDs must be a non-empty array.' }));
 
-		const placeholders = userIDs.map(() => '?').join(',');
+			const placeholders = userIDs.map(() => '?').join(',');
 
-		const query = `
+			const query = `
 			SELECT * FROM userProfile WHERE userID IN (${placeholders})
 		`;
 
-		const profiles = await serv.dbUsers.all<UserProfile[]>(query, userIDs);
+			const profiles = await serv.dbUsers.all<UserProfile[]>(query, userIDs);
 
-		return reply.code(200).send({
-			success: true,
-			message: "Profiles found!",
-			profiles
-		});
+			return reply.code(200).send({
+				success: true,
+				message: "Profiles found!",
+				profiles
+			});
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profiles by IDs: ${error}`);
@@ -98,7 +99,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const user = await serv.dbUsers.get<UserRow>(query, [userID]);
 			if (!user) {
-				return (reply.code(404).send({ 
+				return (reply.code(404).send({
 					success: false,
 					message: 'User not found'
 				}));
@@ -132,7 +133,8 @@ export async function userRoutes(serv: FastifyInstance) {
 			if (!userProfile) {
 				return reply.code(404).send({
 					success: false,
-					message: 'User profile not found' });
+					message: 'User profile not found'
+				});
 			}
 
 			return reply.code(200).send({
@@ -150,7 +152,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//get user's activity with userID
-	serv.get('/internal/users/activity/:userID', async(request, reply) => {
+	serv.get('/internal/users/activity/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
 
@@ -180,7 +182,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//get user's lastConnextion with userID
-	serv.get('/internal/users/lastConnection/:userID', async(request, reply) => {
+	serv.get('/internal/users/lastConnection/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
 			const newConnection = parseInt((request.params as { newConnection: string }).newConnection, 10);
@@ -214,10 +216,10 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/internal/users/createProfile/:userID', async(request, reply) => {
+	serv.post('/internal/users/createProfile/:userID', async (request, reply) => {
 		try {
-			const { userID } = request.params as { userID: number};
-			const { username } = request.params as { username: string};
+			const { userID } = request.params as { userID: number };
+			const { username } = request.params as { username: string };
 
 			try {
 				const [profileResponse, statsResponse] = await Promise.all([
@@ -279,7 +281,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			VALUES (?, 0, 0, 0, 0, 0, 0, 0)
 			`
 			const createStats = await serv.dbUsers.run(queryStats, userID);
-		} catch (error ) {
+		} catch (error) {
 			console.error('[Friend service] Error accepting friend request', error);
 			return (reply.code(500).send({
 				success: false,
@@ -288,7 +290,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/internal/users/updateProfile', async(request, reply) => {
+	serv.post('/internal/users/updateProfile', async (request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const statsToUpdate = request.body as { [key: string]: number };
@@ -336,7 +338,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's avatar with userID
-	serv.patch('/internal/users/updateAvatar', async(request, reply) => {
+	serv.patch('/internal/users/updateAvatar', async (request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newAvatar } = request.params as { newAvatar: string };
@@ -363,7 +365,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					success: false,
 					message: 'User not found or request parameters are wrong'
 				}));
-			
+
 			return (reply.code(200).send({
 				success: true,
 				message: 'Avatar updated !'
@@ -379,9 +381,9 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's bio with userID
-	serv.patch('/internal/users/updateBio', async(request, reply) => {
+	serv.patch('/internal/users/updateBio', async (request, reply) => {
 		try {
-			const userID = request.user.userID; 
+			const userID = request.user.userID;
 			const { newBio } = request.params as { newBio: string };
 
 			const query = `
@@ -399,7 +401,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					success: false,
 					message: 'User not found or request parameters are wrong'
 				}));
-			
+
 			return (reply.code(200).send({
 				success: true,
 				message: 'Bio updated !'
@@ -415,7 +417,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's profile color with userID
-	serv.patch('/internal/users/updateProfileColor', async(request, reply) => {
+	serv.patch('/internal/users/updateProfileColor', async (request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newProfileColor } = request.params as { newProfileColor: string };
@@ -442,7 +444,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					success: false,
 					message: 'User not found or request parameters are wrong'
 				}));
-			
+
 			return (reply.code(200).send({
 				success: true,
 				message: 'Profile Color updated !'
@@ -455,7 +457,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's activity with userID
-	serv.patch('/internal/users/updateActivityStatus', async(request, reply) => {
+	serv.patch('/internal/users/updateActivityStatus', async (request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newStatus } = request.body as { newStatus: any };
@@ -485,7 +487,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					success: false,
 					message: 'User not found or request parameters are wrong'
 				}));
-			
+
 			return (reply.code(200).send({
 				success: true,
 				message: 'Activity status updated !'
@@ -497,7 +499,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's last connextion with userID
-	serv.patch('/internal/users/updateLastConnection', async(request, reply) => {
+	serv.patch('/internal/users/updateLastConnection', async (request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newConnection } = request.body as { newConnection: any };
@@ -508,7 +510,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					success: false,
 					message: 'Validation error: newConnection must be in YYYY-MM-DD HH:MM:SS format.'
 				});
-			}			
+			}
 
 			const date = new Date(newConnection);
 			if (isNaN(date.getTime())) {
@@ -533,7 +535,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					success: false,
 					message: 'User not found or request parameters are wrong'
 				}));
-			
+
 			return (reply.code(200).send({
 				success: true,
 				message: 'Last connection updated !'
@@ -559,7 +561,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			if (result.changes === 0) {
 				return reply.code(404).send({ success: false, message: 'User profile not found.' });
 			}
-		
+
 			return reply.code(200).send({ success: true, message: 'Username in profile updated!' });
 		} catch (error) {
 			if (error && typeof error === 'object' && 'code' in error && error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
@@ -572,7 +574,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//USER STATS
 	//get all user's stats with userID
-	serv.get('/internal/users/userStats/:userID', async(request, reply) => {
+	serv.get('/internal/users/:userID/stats', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
 
@@ -592,68 +594,69 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update all stats of a user
-	serv.post('/internal/users/updateAllStats', async(request, reply) => {
+	serv.patch('/internal/users/:userID/stats', async (request, reply) => {
 		try {
-			const userID = request.user.userID;
-			const statsToUpdate = request.body as { [key: string]: number };
+			const { userID } = request.params as { userID: number };
+			const actions = request.body as { action: string, field: string, value: number }[];
 
-			const validStatKeys = [
-				'longestMatch',
-				'shorestMatch',
-				'totalMatch',
-				'totalWins',
-				'winStreak',
-				'averageMatchDuration',
-				'highestScore'
-			];
+			const currentStats = await serv.dbUsers.get<UserStats>('SELECT * FROM userStats WHERE userID = ?', [userID]);
+			if (!currentStats)
+				return reply.code(404).send({ message: 'User not found.' });
 
-			const keysToUpdate = Object.keys(statsToUpdate).filter(key => validStatKeys.includes(key));
-			if (keysToUpdate.length === 0) {
-				return (reply.code(400).send({
-					success: false,
-					message: 'No valid stat fields provided for update.'
-				}));
+			const updates: { [key: string]: number } = {};
+			const validFields = ['totalMatch', 'totalWins', 'longestMatch', 'shortestMatch', 'highestScore'];
+
+			for (const action of actions) {
+				if (!validFields.includes(action.field))
+					continue;
+
+				switch (action.action) {
+					case 'increment': {
+						updates[action.field] = (currentStats[action.field] || 0) + action.value;
+						break;
+					}
+					case 'setIfGreater': {
+						if (action.value > (currentStats[action.field] || 0))
+							updates[action.field] = action.value;
+						break;
+					}
+					case 'setIfLess': {
+						const currentValue = currentStats[action.field];
+						if (currentValue === undefined || currentValue === 0 || action.value < currentValue)
+							updates[action.field] = action.value;
+						break;
+					}
+				}
 			}
 
-			const setClauses = keysToUpdate.map(key => `${key} = ?`).join(', ');
-			const params = keysToUpdate.map(key => statsToUpdate[key]);
-			params.push(userID);
+			if (Object.keys(updates).length === 0)
+				return reply.code(200).send({ message: 'No stats were updated.' });
 
-			const query = `
-				UPDATE userStats SET ${setClauses} WHERE userID = ?
-			`;
+			const setClauses = Object.keys(updates).map(key => `${key} = ?`).join(', ');
+			const params = [...Object.values(updates), userID];
+			const query = `UPDATE userStats SET ${setClauses} WHERE userID = ?`;
 
 			const result = await serv.dbUsers.run(query, params);
-			if (result.changes === 0) {
+			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found'
 				}));
-			}
+			
+			return reply.code(200).send({ message: 'User stats updated successfully.' });
 
-			return (reply.code(200).send({
-				success: true,
-				message: 'User stats updated successfully!'
-			}));
 		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
-			return (reply.code(500).send({ message: 'Internal server error' }));
+			serv.log.error(`Error updating user stats: ${error}`);
+			return reply.code(500).send({ message: 'Internal server error' });
 		}
 	});
 
 	// TODO: Should we check the value of the current longuest match here or before calling the function altogether ? 
 	//update user's longuest match with userID
-	serv.patch('/internal/users/updateLonguestMatch', async(request, reply) => {
+	serv.patch('/internal/users/:userID/stats/longest-match', async (request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newLonguestMatch } = request.body as { newLonguestMatch: any };
-
-			if (typeof newLonguestMatch !== 'number' && isNaN(parseInt(newLonguestMatch, 10))) {
-				return (reply.code(400).send({
-					success: false,
-					message: 'Validation error: newStatus must be a valid number.'
-				}));
-			}
 
 			const query = `
 				UPDATE userStats SET longestMatch = ? WHERE userID = ?
@@ -668,33 +671,26 @@ export async function userRoutes(serv: FastifyInstance) {
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
-					message: 'User not found or request parameters are wrong'
+					message: 'User not found'
 				}));
-			
+
 			return (reply.code(200).send({
 				success: true,
 				message: 'Longuest match updated !'
 			}));
 
 		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
+			serv.log.error(`Error updating longest match: ${error}`);
 			return reply.code(500).send({ message: 'Internal server error' });
 		}
 	});
 
 	//update user's shortest match with userID
-	serv.patch('/internal/users/updateShortestMatch', async(request, reply) => {
+	serv.patch('/internal/users/:userID/stats/shortest-match', async (request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const { newShortestMatch } = request.body as { newShortestMatch: any };
 
-			if (typeof newShortestMatch !== 'number' && isNaN(parseInt(newShortestMatch, 10))) {
-				return (reply.code(400).send({
-					success: false,
-					message: 'Validation error: shorestMatch must be a valid number.'
-				}));
-			}
-			
 			const query = `
 				UPDATE userStats SET shorestMatch = ? WHERE userID = ?
 			`;
@@ -708,104 +704,78 @@ export async function userRoutes(serv: FastifyInstance) {
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
-					message: 'User not found or request parameters are wrong'
+					message: 'User not found or'
 				}));
-			
+
 			return (reply.code(200).send({
 				success: true,
 				message: 'Shortest match updated !'
 			}));
 
 		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
+			serv.log.error(`Error updating shorest match: ${error}`);
 			return reply.code(500).send({ message: 'Internal server error' });
 		}
 	});
 
 	//update user's total match with userID
-	serv.patch('/internal/users/updateTotalMatch', async(request, reply) => {
+	serv.patch('/internal/users/:userID/stats/total-match', async (request, reply) => {
 		try {
-			const userID = request.user.userID;
-			const { newTotalMatch } = request.body as { newTotalMatch: any };
+			const { userID } = request.params as { userID: number };
 
-			if (typeof newTotalMatch !== 'number' && isNaN(parseInt(newTotalMatch, 10))) {
-				return (reply.code(400).send({
-					success: false,
-					message: 'Validation error: totalMatch must be a valid number.'
-				}));
-			}
-			
 			const query = `
-				UPDATE userStats SET totalMatch = ? WHERE userID = ?
+				UPDATE userStats SET totalMatch = totalMatch + 1 WHERE userID = ?
 			`;
 
-			const params = [
-				newTotalMatch,
-				userID
-			];
-
-			const result = await serv.dbUsers.run(query, params);
+			const result = await serv.dbUsers.run(query, [userID]);
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
-					message: 'User not found or request parameters are wrong'
+					message: 'User not found'
 				}));
-			
+
 			return (reply.code(200).send({
 				success: true,
 				message: 'Total matches updated !'
 			}));
 
 		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
+			serv.log.error(`Error updating total match: ${error}`);
 			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 
 	//update user's total wins with userID
-	serv.patch('/internal/users/updateWins', async(request, reply) => {
+	serv.patch('/internal/users/:userID/stats/total-wins', async (request, reply) => {
 		try {
-			const userID = request.user.userID;
-			const { newWins } = request.body as { newWins: any };
+			const { userID } = request.params as { userID: number };
 
-			if (typeof newWins !== 'number' && isNaN(parseInt(newWins, 10))) {
-				return (reply.code(400).send({
-					success: false,
-					message: 'Validation error: totalWins must be a valid number.'
-				}));
-			}
-			
 			const query = `
-				UPDATE userStats SET totalWins = ? WHERE userID = ?
+				UPDATE userStats SET totalWins = totalWins + 1 WHERE userID = ?
 			`;
 
-			const params = [
-				newWins,
-				userID
-			];
-
-			const result = await serv.dbUsers.run(query, params);
+			const result = await serv.dbUsers.run(query, [userID]);
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
-					message: 'User not found or request parameters are wrong'
+					message: 'User not found'
 				}));
-			
+
 			return (reply.code(200).send({
 				success: true,
 				message: 'Total wins updated !'
 			}));
 
 		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
+			serv.log.error(`Error updating total wins: ${error}`);
 			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 
 	//add one to user's win streak with userID
-	serv.post('/internal/users/endWinStreak', async(request, reply) => {
+	serv.post('/internal/users/:userID/stats/win-streak/increment', async (request, reply) => {
 		try {
-			const userID = request.user.userID;
+			const { userID } = request.params as { userID: number };
 
 			const query = `
 				UPDATE userStats SET winStreak = winStreak + 1 WHERE userID = ?
@@ -815,25 +785,25 @@ export async function userRoutes(serv: FastifyInstance) {
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
-					message: 'User not found or request parameters are wrong'
+					message: 'User not found'
 				}));
-			
+
 			return (reply.code(200).send({
 				success: true,
-				message: 'Total wins updated !'
+				message: 'Win streak incremented!'
 			}));
 
 		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
+			serv.log.error(`Error incrementing win streak: ${error}`);
 			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 
 	//set user's win streak to zero with userID
-	serv.patch('/internal/users/addWinStreak', async(request, reply) => {
+	serv.patch('/internal/users/:userID/stats/win-streak/reset', async (request, reply) => {
 		try {
-			const userID = request.user.userID;
-			
+			const { userID } = request.params as { userID: number };
+
 			const query = `
 				UPDATE userStats SET winStreak = 0 WHERE userID = ?
 			`;
@@ -842,34 +812,26 @@ export async function userRoutes(serv: FastifyInstance) {
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
-					message: 'User not found or request parameters are wrong'
+					message: 'User not found'
 				}));
-			
+
 			return (reply.code(200).send({
 				success: true,
-				message: 'Total wins updated !'
+				message: 'Win streak reset!'
 			}));
 
 		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
+			serv.log.error(`Error resetting win streak: ${error}`);
 			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 
 	//update user's average match duration with userID
-	//TODO: do I code average calculation logic here, or just worry about updating the value in the DB ?
-	serv.patch('/internal/users/updateAverageMatchDuration', async(request, reply) => {
+	serv.patch('/internal/users/:userID/stats/average-match-duration', async (request, reply) => {
 		try {
-			const userID = request.user.userID;
+			const { userID } = request.params as { userID: number };
 			const { newDuration } = request.body as { newDuration: any };
 
-			if (typeof newDuration !== 'number' && isNaN(parseInt(newDuration, 10))) {
-				return (reply.code(400).send({
-					success: false,
-					message: 'Validation error: averageMatchDuration must be a valid number.'
-				}));
-			}
-			
 			const query = `
 				UPDATE userStats SET averageMatchDuration = ? WHERE userID = ?
 			`;
@@ -883,33 +845,26 @@ export async function userRoutes(serv: FastifyInstance) {
 			if (!result.changes)
 				return (reply.code(404).send({
 					success: false,
-					message: 'User not found or request parameters are wrong'
+					message: 'User not found'
 				}));
-			
+
 			return (reply.code(200).send({
 				success: true,
 				message: 'Average game duration updated !'
 			}));
 
 		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
+			serv.log.error(`Error updating average match duration: ${error}`);
 			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 
 	//update user's highest score with userID
-	serv.patch('/internal/users/updateHighestScore', async(request, reply) => {
+	serv.patch('/internal/users/:userID/stats/highest-score', async (request, reply) => {
 		try {
-			const userID = request.user.userID;
+			const { userID } = request.params as { userID: number };
 			const { newHighScore } = request.body as { newHighScore: any };
 
-			if (typeof newHighScore !== 'number' && isNaN(parseInt(newHighScore, 10))) {
-				return reply.code(400).send({
-					success: false,
-					message: 'Validation error: highestScore must be a valid number.'
-				});
-			}
-			
 			const query = `
 				UPDATE userStats SET highestScore = ? WHERE userID = ?
 			`;
@@ -925,14 +880,14 @@ export async function userRoutes(serv: FastifyInstance) {
 					success: false,
 					message: 'User not found or request parameters are wrong'
 				}));
-			
+
 			return (reply.code(200).send({
 				success: true,
 				message: 'Highest score updated !'
 			}));
 
 		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
+			serv.log.error(`Error updating highest score: ${error}`);
 			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});

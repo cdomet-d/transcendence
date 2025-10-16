@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 
 export async function accountRoutes(serv: FastifyInstance) {
 
-	//TODO: usersStatus is always 1 for now, not even sure to keep it honestly
+	//TODO: usersStatus is always a hardcoded 1 for now, not even sure to keep it honestly
 	serv.post('/internal/account/register', async (request, reply) => {
 		try {
 			const { username, hashedPassword } = request.body as { username: string, hashedPassword: string };
@@ -39,19 +39,15 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const { username } = request.body as { username: string };
 			const { password } = request.body as { password: string };
 
-			if (!username || !password)
-				return (reply.code(400).send({ message: 'Missing username or hashedPass.' }));
-
 			const query = `
 				SELECT userId, hashedPassword FROM usersAuth WHERE username = ?
 			`
-
 			const user = await serv.dbAccount.get(query, [username]);
 			if (!user)
 				return (reply.code(401).send({ message: 'Invalid credentials.' }));
-			
+
 			const passwordMatches = await bcrypt.compare(password, user.hashedPassword);
-			if (!passwordMatches) 
+			if (!passwordMatches)
 				return (reply.code(401).send({ message: 'Invalid credentials.' }));
 
 			return (reply.code(200).send({
@@ -65,91 +61,57 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.patch('/internal/account/updatePass', async(request, reply) => {
+	serv.patch('/internal/accounts/:userID/password', async (request, reply) => {
 		try {
-			const { username } = request.body as { username: string };
-			const { password } = request.body as { password: string };
+			const { userID } = request.params as { userID: number };
+			const { newHashedPassword } = request.body as { newHashedPassword: string };
 
-			if (!username || !password)
-				return (reply.code(400).send({ message: 'Missing username or hashedPass.' }));
+			const query = `UPDATE userAuth SET hashedPassword = ? WHERE userID = ?`;
+			const result = await serv.dbAccount.run(query, [newHashedPassword, userID]);
 
-			const query = `
-				UPDATE userAuth SET hashedPassword = ? WHERE username = ? 
-			`
+			if (result.changes === 0)
+				return reply.code(404).send({ message: 'User not found for password update.' });
 
-			const params = [
-				password,
-				username
-			];
-
-			const result = await serv.dbAccount.run(query, params);
-			if (!result.changes) {
-				return (reply.code(500).send({
-				success: false,
-				message: 'Could not update user password'
-				}));
-			}
-
-			return (reply.code(201).send({
-				success: true,
-				message: 'Password updated!'
-			}));
-		
+			return reply.code(200).send({ message: 'Account password updated.' });
 		} catch (error) {
-			serv.log.error(`Error when trying to login ${error}`);
-			return (reply.code(500).send({ message: 'Internal server error' }));
+			serv.log.error(`Error updating account password: ${error}`);
+			return reply.code(500).send({ message: 'Internal server error' });
 		}
 	});
 
-	//TODO : internal ? handled by authentification ?
-	serv.patch('/internal/account/updateUsername/', async(request, reply) => {
+	serv.patch('/internal/accounts/:userID/username', async (request, reply) => {
 		try {
-			const userID = request.user.userID;
-			const { newUsername, oldUsername } = request.body as { newUsername: string, oldUsername: string };
-			
-			if (!newUsername || !oldUsername)
-				return (reply.code(400).send({ message: 'Missing username or hashedPass.' }));
+			const { userID } = request.params as { userID: number };
+			const { newUsername } = request.body as { newUsername: string };
 
-			const query = `
-				UPDATE userAuth SET username = ? WHERE userID = ? 
-			`
+			const query = `UPDATE usersAuth SET username = ? WHERE userID = ?`;
+			const result = await serv.dbAccount.run(query, [newUsername, userID]);
 
-			const params = [
-				newUsername,
-				userID
-			];
+			if (result.changes === 0)
+				return reply.code(404).send({ message: 'User not found for username update.' });
 
-			const result = await serv.dbAccount.run(query, params);
-			if (!result.changes) {
-				return (reply.code(500).send({
-				success: false,
-				message: 'Could not update username'
-				}));
-			}
-
-			const response = await fetch(`https://users:2626/users/${userID}/username`, {
-				method: 'PATCH',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ newUsername: newUsername })
-			});
-			if (!response.ok) {
-				serv.log.error(`Profile service failed. Rolling back auth change for userID: ${userID}`);
-				const rollbackQuery = `UPDATE userAuth SET username = ? WHERE userID = ?`;
-				await serv.dbAccount.run(rollbackQuery, [oldUsername, userID]);
-				return (reply.code(500).send({
-					success: false,
-					message: 'Could not update username in profile service; original change has been rolled back.'
-				}));
-			}
-
-			return (reply.code(201).send({
-				success: true,
-				message: 'Username updated!'
-			}));
-		
+			return reply.code(200).send({ message: 'Account username updated.' });
 		} catch (error) {
-			serv.log.error(`Error when trying to login ${error}`);
-			return (reply.code(500).send({ message: 'Internal server error' }));
+			if (error && typeof error === 'object' && 'code' in error && (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE')
+				return reply.code(409).send({ message: 'Username is already taken.' });
+
+			serv.log.error(`Error updating account username: ${error}`);
+			return reply.code(500).send({ message: 'Internal server error' });
+		}
+	});
+
+	serv.delete('/internal/accounts/:userID', async (request, reply) => {
+		try {
+			const { userID } = request.params as { userID: number };
+
+			const query = `DELETE FROM usersAuth WHERE userID = ?`;
+
+			await serv.dbAccount.run(query, [userID]);
+
+			return (reply.code(204).send());
+		} catch (error) {
+			serv.log.error(`Error deleting account: ${error}`);
+			return reply.code(500).send({ message: 'Internal server error' });
 		}
 	});
 }
