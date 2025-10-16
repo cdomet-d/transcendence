@@ -1,6 +1,6 @@
-import type { UserData } from './gatewayFriends.interface.js';
-import type { RawFriend } from './gatewayFriends.interface.js';
-import type { UserProfile } from './gatewayFriends.interface.js';
+import type { UserData } from './gateway.interface.js';
+import type { RawFriend } from './gateway.interface.js';
+import type { UserProfile } from './gateway.interface.js';
 
 export async function findUserByUsername(username: string): Promise<UserData | null> {
 	const response = await fetch(`http://users-service:3000/internal/users/by-username/${username}`);

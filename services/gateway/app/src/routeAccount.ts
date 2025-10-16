@@ -1,6 +1,36 @@
 import type { FastifyInstance } from 'fastify';
-import * as bcrypt from 'bcrypt';
+import type { UserData } from './gateway.interface.js';
 
+import * as bcrypt from 'bcrypt';
+//import * as jwt from 'jsonwebtoken';
+import { validateCredentials } from './gatewayAccount.service.js';
+import { updateAccountUsername } from './gatewayAccount.service.js';
+import { updateAccountPassword } from './gatewayAccount.service.js';
+import { updateUserProfileUsername } from './gatewayAccount.service.js';
+
+//TODO: find a secure way to handle JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-and-long-key-for-development';
+
+/*
+//Install the dotenv package
+npm install dotenv
+
+// At the very top of your main server file
+import 'dotenv/config';
+
+// Now, process.env is populated with variables from your .env file
+const JWT_SECRET = process.env.JWT_SECRET;
+
+// You can now use this variable throughout your file
+console.log(`Successfully loaded JWT_SECRET: ${JWT_SECRET}`);
+
+// --- Example of using it in your code ---
+import * as jwt from 'jsonwebtoken';
+
+// ... inside a function
+const payload = { userID: 123 };
+const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+*/
 
 export async function routeAccount(serv: FastifyInstance) {
 
@@ -13,9 +43,9 @@ export async function routeAccount(serv: FastifyInstance) {
 			if (!validationResponse.ok)
 				return reply.code(validationResponse.status).send({ message: 'Invalid credentials.' });
 
-			const userData = await validationResponse.json();
+			const UserData = await validationResponse.json() as UserData;
 
-			const payload = { userID: userData.userID, username: userData.username };
+			const payload = { userID: UserData.userID, username: UserData.username };
 			const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 
 			return reply.code(200).send({ token: token });

@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import type { FriendProfileCard } from './gatewayFriends.interface.js';
+import type { FriendProfileCard } from './gateway.interface.js';
 
 import { findUserByUsername } from './gatewayFriends.service.js';
 import { createFriendRequest } from './gatewayFriends.service.js';
