@@ -358,3 +358,4 @@ TODO :
 * Faire function search bar user
 * check all get to see if they do return the value they get from db
 * check all fetch in gateway to see if they actually match route they mean to call
+* clean all unused functions in all route.ts files
