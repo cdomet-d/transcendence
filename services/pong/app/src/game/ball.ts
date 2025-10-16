@@ -12,6 +12,8 @@ export function updateBallPos(ball: ballObj, player1: Player, player2: Player, d
 		ball.y = HEIGHT / 2;
 		if (ball.dx === ball.lastdx)
 			ball.dx *= -1;
+		if (ball.dy < 0)
+			ball.dy *= -1;
 		ball.lastdx = ball.dx;
 		return false;
 	}

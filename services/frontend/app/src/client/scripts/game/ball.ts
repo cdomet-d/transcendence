@@ -10,6 +10,8 @@ export function updateBallPos(game: Game, delta: number): boolean {
 		game.ball.y = HEIGHT / 2;
 		if (game.ball.dx === game.ball.lastdx)
 			game.ball.dx *= -1;
+		if (game.ball.dy < 0)
+			game.ball.dy *= -1;
 		game.ball.lastdx = game.ball.dx;
 		return false;
 	}
