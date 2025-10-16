@@ -11,6 +11,13 @@ export interface repObj {
 	ball: coordinates,
 }
 
+export interface startObj {
+	clientTimeStamp: number,
+	serverTimeStamp: number,
+	delay: number,
+	ballDir: number,
+}
+
 const coordSchema = {
 	type: 'object',
 	additionalProperties: { type: 'number' },

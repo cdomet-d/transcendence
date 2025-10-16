@@ -3,21 +3,58 @@ import { renderGame } from "./game.render.utils.js";
 import { Game, HEIGHT, WIDTH } from "./game.class.js";
 import { updatePaddlePos } from "./paddle.js";
 import { updateBallPos } from "./ball.js";
+import type { startObj } from "./mess.validation.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
-export function startGame(game: Game, ws: WebSocket) {
-	addMessEvent(game, ws);
-	window.addEventListener("keydown", createKeyDownEvent(game.req._keys));
-	window.addEventListener("keyup", createKeyUpEvent(game.req._keys));
-	ws.send("1");
+export async function startGame(game: Game, ws: WebSocket) {
+	//send client timestamp
+	ws.send(JSON.stringify(Date.now()));
+
+	// wait for server timestamp and delay
+	const start: startObj = await waitForMessage(ws);
+	const recvTime: number = Date.now();
+	const halfTripTime: number = (recvTime - start.clientTimeStamp) / 2;
+	const offset: number = start.serverTimeStamp + halfTripTime - recvTime;
+
+	// wait
+	setUpGame(game, ws, start);
+	let wait: number = start.delay - halfTripTime + offset;
+	while (wait > 0) {
+		wait -= (Date.now() - recvTime);
+	}
+
+	// start game
 	game.frameId = requestAnimationFrame((timestamp) => {
 		game.lastFrameTime = timestamp;
-		game.frameId = requestAnimationFrame(FrameRequestCallback(game, ws));
+		game.frameId = requestAnimationFrame(FrameRequestCallback(game, ws, offset));
 	});
 }
 
-function FrameRequestCallback(game: Game, ws: WebSocket) {
+function setUpGame(game: Game, ws: WebSocket, start: startObj) {
+	game.ball.dx *= start.ballDir;
+	game.ball.lastdx *= start.ballDir;
+	addMessEvent(game, ws);
+	window.addEventListener("keydown", createKeyDownEvent(game.req._keys));
+	window.addEventListener("keyup", createKeyUpEvent(game.req._keys));
+}
+
+function waitForMessage(socket: WebSocket): Promise< startObj > {
+	return new Promise((resolve, reject) => {
+		socket.addEventListener('message', (event) => {
+			try {
+				const start: startObj = JSON.parse(event.data);
+				// if (!validStart())
+				// 	reject(new Error("Invalid start"));
+				resolve(start);
+			} catch (err) {
+				reject(err);
+			}
+		}, { once: true });
+	});
+}
+
+function FrameRequestCallback(game: Game, ws: WebSocket, offset: number) {
 	return function gameLoop(timestamp: number) {
 		//reconciliation
 		if (game.reqHistory.has(game.servReply._ID))
@@ -33,7 +70,7 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		}
 
 		//req to server
-		game.req._timeStamp = timestamp;
+		game.req._timeStamp = Date.now() + offset;
 		ws.send(JSON.stringify(game.req));
 		game.addReq(game.req);
 		game.req._ID += 1; //TODO: overflow
@@ -41,7 +78,7 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		//new frame
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
 		renderGame(game);
-		game.frameId = window.requestAnimationFrame(FrameRequestCallback(game, ws));
+		game.frameId = window.requestAnimationFrame(FrameRequestCallback(game, ws, offset));
 	}
 }
 

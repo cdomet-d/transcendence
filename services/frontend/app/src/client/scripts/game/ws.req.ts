@@ -15,12 +15,10 @@ function wsRequest(game: Game) {
     }
 
     ws.addEventListener('message', (event) => {
-        const signal = Number(event.data);
-        if (signal === 1)
-            startGame(game, ws);
-        else if (signal === -1) {
-            game.ball.dx *= -1;
-            game.ball.lastdx *= -1;
+        const signal: string = JSON.parse(event.data);
+        console.log("SIGNAL:", signal);
+        if (signal === "1") {
+            console.log("IN");
             startGame(game, ws);
         }
     }, { once: true });
