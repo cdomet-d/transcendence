@@ -15,20 +15,20 @@ export interface gameInfo {
 	_loser: string
 }
 
-export type playerTab = Array< Player >;
+export type playerTab = Array<Player>;
 
 export class Game {
-    /*                             PROPERTIES                                */
+	/*                             PROPERTIES                                */
 	#_gameInfo: gameInfo;
 	#_players: playerTab;
 
-    /*                            CONSTRUCTORS                               */
+	/*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo) {
 		this.#_gameInfo = gameInfo;
 		this.#_players = new Array();
 	}
 
-    /*                              GETTERS                                  */
+	/*                              GETTERS                                  */
 	get gameID(): number {
 		return this.#_gameInfo._gameID;
 	}
@@ -45,8 +45,8 @@ export class Game {
 		return this.#_gameInfo._users[1]!._userID;
 	}
 
-    /*                              SETTERS                                  */
-	set score(score: Array< number >) {
+	/*                              SETTERS                                  */
+	set score(score: Array<number>) {
 		this.#_gameInfo._score = score;
 	}
 
@@ -58,7 +58,7 @@ export class Game {
 		this.#_gameInfo._loser = loser;
 	}
 
-    /*                              METHODS                                  */
+	/*                              METHODS                                  */
 	public addPlayer(player: Player) {
 		this.#_players.push(player);
 	}

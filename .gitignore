@@ -5,11 +5,12 @@ _logs/
 .notes/
 node_modules/
 .env
-server.log
-nats.log
+*.log*
 dist/
 output.css
 package-lock.json
 *.db
 *.log*
 jest.results.txt
+.vscode/
+ok

@@ -5,19 +5,19 @@ import type { Game } from '../classes/game.class.js';
 import { setUpGame } from './pong.js';
 import { validIds, type idsObj } from './mess.validation.js';
 
-async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): Promise< void > {
+async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): Promise<void> {
 	this.log.info('WebSocket connection established');
 
 	const ids: idsObj = await waitForMessage(socket);
 
 	const game: Game | undefined = this.gameRegistry.findGame(ids.gameID);
-	if (!game) 
+	if (!game)
 		throw new Error("game " + ids.gameID + " not found"); //TODO: send nats message ?
 	if (game.players.length === 2)
 		throw new Error("not allowed");
 
 	getPlayersInGame(game, ids.userID, socket);
-	
+
 	socket.on('close', () => {
 		if (game)
 			game.deletePlayers(); //TODO: to be rm
@@ -25,7 +25,7 @@ async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyR
 	});
 }
 
-export function waitForMessage(socket: WebSocket): Promise< idsObj > {
+export function waitForMessage(socket: WebSocket): Promise<idsObj> {
 	return new Promise((resolve, reject) => {
 		socket.once('message', (payload: string) => {
 			try {

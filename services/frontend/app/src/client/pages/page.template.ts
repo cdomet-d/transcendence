@@ -12,14 +12,13 @@ interface Element {
 	homeHref?: string;
 }
 
-export function renderPageTemplate({ 
-title,
-nextButtons = [],
-backHref,
-showBack = true,
-homeHref = "/"
-}: Element) : string
-{
+export function renderPageTemplate({
+	title,
+	nextButtons = [],
+	backHref,
+	showBack = true,
+	homeHref = "/"
+}: Element): string {
 	const htmlPage = `
 		<div class="pt-12 text-center text-2xl font-bold">${title}</div>
 		<div class="flex justify-center mt-32 gap-8">

@@ -62,5 +62,5 @@ websocket -- GET --> game
 game -- POST --> generalleaderboard
 game -- POST --> tournament -- POST --> matchmaking
 matchmaking -- POST --> match -- POST --> 
-:matchId -- GET --> endGame
+:gameID -- GET --> endGame
 ```
