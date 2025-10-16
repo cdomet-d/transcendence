@@ -7,7 +7,7 @@ const dbpath = '/usr/data/users.db';
 
 async function dbConnector(fastify: FastifyInstance) {
 	try {
-		const db = await open ({
+		const db = await open({
 			filename: dbpath,
 			driver: sqlite3.Database
 
@@ -15,7 +15,7 @@ async function dbConnector(fastify: FastifyInstance) {
 
 		fastify.log.info('Connected to the users.db SQLite database');
 		fastify.decorate('dbUsers', db);
-	
+
 	} catch (err) {
 		fastify.log.info('Connection to the users.db SQLite database failed');
 		process.exit(1);

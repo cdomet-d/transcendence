@@ -7,7 +7,7 @@ const dbpath = '/usr/data/language.db';
 
 async function dbConnector(fastify: FastifyInstance) {
 	try {
-		const db = await open ({
+		const db = await open({
 			filename: dbpath,
 			driver: sqlite3.Database
 
@@ -17,7 +17,7 @@ async function dbConnector(fastify: FastifyInstance) {
 
 		//Attaching db connection to fastify
 		fastify.decorate('dbLanguage', db);
-	
+
 	} catch (err) {
 		fastify.log.info('Connection to the language.db SQLite database failed');
 		process.exit(1);

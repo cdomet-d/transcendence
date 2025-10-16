@@ -31,7 +31,6 @@ interface UserStats {
 
 export async function userRoutes(serv: FastifyInstance) {
 	//USER PROFILE
-
 	//get userID by username
 	serv.get('/internal/users/:username/userID', async (request, reply) => {
 		try {
@@ -342,7 +341,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		try {
 			const userID = request.user.userID;
 			const { value } = request.body as { value: string };
-			
+
 			if (typeof value !== 'string') {
 				return reply.code(400).send({
 					success: false,
@@ -642,7 +641,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					success: false,
 					message: 'User not found'
 				}));
-			
+
 			return reply.code(200).send({ message: 'User stats updated successfully.' });
 
 		} catch (error) {

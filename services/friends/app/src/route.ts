@@ -47,8 +47,8 @@ export async function routeFriend(serv: FastifyInstance) {
 		} catch (error) {
 			console.error('[Friends Service] Error processing friend request:', error);
 			return reply.code(500).send({
-			success: false,
-			message: 'An internal error occurred.'
+				success: false,
+				message: 'An internal error occurred.'
 			});
 		}
 	});
@@ -67,14 +67,14 @@ export async function routeFriend(serv: FastifyInstance) {
 				});
 			}
 
-			const query = 
-			`UPDATE friendship SET statusFrienship = true WHERE friendshipID = ? AND friendID = ?
+			const query =
+				`UPDATE friendship SET statusFrienship = true WHERE friendshipID = ? AND friendID = ?
 			`;
 
 			const params =
 				[friendshipID,
-				receiverID];
-			
+					receiverID];
+
 			const result = await serv.dbFriends.run(query, params);
 			if (result.changes === 0) {
 				return reply.code(404).send({
@@ -111,7 +111,7 @@ export async function routeFriend(serv: FastifyInstance) {
 
 			const params = [removerId, friendID, friendID, removerId];
 			const result = await serv.dbFriends.run(query, params);
-		
+
 			if (result.changes === 0)
 				return (reply.code(404).send({ message: 'Friendship not found.' }));
 
@@ -125,10 +125,10 @@ export async function routeFriend(serv: FastifyInstance) {
 			return (reply.code(500).send({
 				success: false,
 				message: 'An internal error occured.'
-			}));	
+			}));
 		}
 	});
- 
+
 	serv.get('/internal/users/:userID/friendslist', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };

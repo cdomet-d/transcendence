@@ -11,7 +11,7 @@ import { fetchUserProfiles } from './gatewayFriends.service.js';
 
 export async function gatewayFriendRoutes(serv: FastifyInstance) {
 
- 	serv.post('/friends/sendrequest', async (request, reply) => {
+	serv.post('/friends/sendrequest', async (request, reply) => {
 		try {
 			const senderID = request.user.userID;
 			const senderUsername = request.user.username;
@@ -60,14 +60,14 @@ export async function gatewayFriendRoutes(serv: FastifyInstance) {
 			return (reply
 				.code(friendsServiceResponse.status)
 				.send(await friendsServiceResponse.json()));
-	
+
 		} catch (error) {
 			serv.log.error(`[API Gateway] Error accepting friend request: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is currently unavailable.' });
 		}
 	});
 
-	serv.delete('/friends/deletefriendship', async (request,reply) => {
+	serv.delete('/friends/deletefriendship', async (request, reply) => {
 		try {
 			const removerID = request.user.userID;
 			const removerUsername = request.user.username;
@@ -96,8 +96,8 @@ export async function gatewayFriendRoutes(serv: FastifyInstance) {
 	});
 
 	serv.get('/friends/friendlist', async (request, reply) => {
-	try {
-			 const userID = request.user.userID;
+		try {
+			const userID = request.user.userID;
 
 			const friends = await fetchRawFriends(userID);
 			if (friends.length === 0)
@@ -121,12 +121,12 @@ export async function gatewayFriendRoutes(serv: FastifyInstance) {
 					},
 				};
 			}).filter((card): card is FriendProfileCard => card !== null);
-			
+
 			return (reply.code(200).send(friendCards));
 
 		} catch (error) {
-				serv.log.error(`[API Gateway] Error fetching friends list: ${error}`);
-				return (reply.code(503).send({ message: 'A backend service is currently unavailable.' }));
+			serv.log.error(`[API Gateway] Error fetching friends list: ${error}`);
+			return (reply.code(503).send({ message: 'A backend service is currently unavailable.' }));
 		}
 	});
 

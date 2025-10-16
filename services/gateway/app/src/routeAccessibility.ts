@@ -21,7 +21,7 @@ export async function gatewayAccessibilityRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[API Gateway] Error getting translation: ${error}`);
-			return( reply.code(503).send({ message: 'The translation service is currently unavailable.' }));
+			return (reply.code(503).send({ message: 'The translation service is currently unavailable.' }));
 		}
 	});
 }

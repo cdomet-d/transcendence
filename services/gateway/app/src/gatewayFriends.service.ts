@@ -7,10 +7,10 @@ export async function findUserByUsername(username: string): Promise<UserData | n
 
 	if (response.status === 404)
 		return (null);
-	
+
 	if (!response.ok)
 		throw (new Error('Users service failed.'));
-	
+
 	return (response.json() as Promise<UserData>);
 }
 
@@ -40,34 +40,34 @@ export async function deleteFriendRequest(removerID: number, friendID: number): 
 
 export async function fetchRawFriends(userID: number): Promise<RawFriend[]> {
 	const response = await fetch(`http://friends-service:3000/internal/users/${userID}/friends`);
-	
+
 	if (!response.ok)
 		throw (new Error('Friends service failed.'));
-	
+
 	return (response.json() as Promise<RawFriend[]>);
 }
 
 export async function fetchRawFriendRequests(userID: number): Promise<RawFriend[]> {
 	const response = await fetch(`http://friends-service:3000/internal/users/${userID}/friend-requests`);
-	
+
 	if (!response.ok)
 		throw (new Error('Friends service failed.'));
-	
+
 	return (response.json() as Promise<RawFriend[]>);
 }
 
 export async function fetchUserProfiles(userIDs: number[]): Promise<UserProfile[]> {
 	if (userIDs.length === 0)
 		return [];
-	
+
 	const response = await fetch('http://users-service:3000/internal/users/profiles-by-ids', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ userIDs })
 	});
-	
+
 	if (!response.ok)
 		throw (new Error('Users service failed.'));
-	
+
 	return (response.json() as Promise<UserProfile[]>);
 }

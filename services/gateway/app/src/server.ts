@@ -5,7 +5,7 @@ import { gatewayFriendRoutes } from './routeFriends.js';
 import { gatewayStatsRoutes } from './routeStats.js';
 import { gatewayAccessibilityRoutes } from './routeAccessibility.js';
 import { gatewayAccountRoutes } from './routeAccount.js';
-import { options } from './serv.conf.js'; 
+import { options } from './serv.conf.js';
 
 const serv: FastifyInstance = Fastify(options);
 

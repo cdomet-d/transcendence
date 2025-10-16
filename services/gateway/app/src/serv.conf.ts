@@ -6,7 +6,7 @@ function getNginxIP(): string | null {
   if (ip === undefined)
     throw new Error('NGINXIP is undefined');
   dns.lookup(ip, (err, address) => {
-    if (err) 
+    if (err)
       throw new Error('failed to resolve nginx IP address');
     return address;
   });

@@ -47,7 +47,7 @@ export async function getFriendship(db: Database, userId: number): Promise<Frien
 	return (requests);
 }
 
-export async function friendshipExistsUsersID(db: Database, userA_ID: number, userB_ID: number): Promise <number | null> {
+export async function friendshipExistsUsersID(db: Database, userA_ID: number, userB_ID: number): Promise<number | null> {
 	const query = `
 		SELECT 1 FROM friendship 
 		WHERE (userID = ? AND friendID = ?) 

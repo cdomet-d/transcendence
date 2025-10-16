@@ -44,7 +44,7 @@ export interface UserProfile {
 export interface FriendProfileCard {
 	username: string;
 	avatar: string;
-	biography:string;
+	biography: string;
 	//TODO: complete with all the profile card parameters
 	friendship: {
 		friendsSince: string;
