@@ -1,5 +1,5 @@
 export async function validateCredentials(username: string, password: string): Promise<Response> {
-	const url = 'http://account-service:3000/internal/accounts/validate';
+	const url = 'http://account-service:3000/internal/accounts/login';
 	return fetch(url, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },

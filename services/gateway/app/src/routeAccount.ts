@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import type { UserData } from './gateway.interface.js';
 
 import * as bcrypt from 'bcrypt';
-//import * as jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import { validateCredentials } from './gatewayAccount.service.js';
 import { updateAccountUsername } from './gatewayAccount.service.js';
 import { updateAccountPassword } from './gatewayAccount.service.js';
@@ -116,7 +116,7 @@ export async function routeAccount(serv: FastifyInstance) {
 
 			const hashedPassword = await bcrypt.hash(password, 10);
 
-			const accountResponse = await fetch('http://account-service:3000/internal/accounts', {
+			const accountResponse = await fetch('http://account-service:3000/internal/account/register', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ username, hashedPassword })
@@ -151,4 +151,6 @@ export async function routeAccount(serv: FastifyInstance) {
 			return (reply.code(503).send({ message: 'A backend service failed during registration.' }));
 		}
 	});
+
+	//TOOD: delete account
 }
