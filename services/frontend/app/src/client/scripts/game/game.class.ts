@@ -23,14 +23,8 @@ export interface ballObj {
 	lastdx: number
 }
 
-export interface serverReplyObj {
-	_ID: number;
-	_leftPaddle: coordinates;
-	_rightPaddle: coordinates;
-	_ball: coordinates;
-}
-
-type reqMap = Map< number, reqObj >;
+type requestMap = Map< number, reqObj >;
+type replyTab = Array< repObj >;
 
 export class Game {
 	/*                             PROPERTIES                                */
@@ -41,13 +35,13 @@ export class Game {
 	#_paddleSpeed: number;
 	#_ball: ballObj;
 	#_req: reqObj;
-	#_reqHistory: reqMap;
-	#_servReply: repObj;
+	#_reqHistory: requestMap;
 	#_frameId: number;
 	#_delta: number;
 	#_lastFrameTime: number;
 	#_lastUpdateTime: number;
 	#_predictedBall: coordinates;
+	#_replyHistory: replyTab;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(ctx: CanvasRenderingContext2D, local: boolean) {
@@ -63,9 +57,9 @@ export class Game {
 		this.#_frameId = 0
 		this.#_delta = 0;
 		this.#_lastFrameTime = 0;
-		this.#_servReply = { _ID: 0, _leftPad: {x: 10, y: 108}, _rightPad: {x: 460, y: 108}, _ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3}};
 		this.#_lastUpdateTime = 0;
 		this.#_predictedBall = {x: 0, y: 0};
+		this.#_replyHistory = new Array();
 	}
 
 	/*                              GETTERS                                  */
@@ -105,15 +99,11 @@ export class Game {
 		return this.#_lastFrameTime;
 	}
 
-	get servReply(): repObj {
-		return this.#_servReply;
-	}
-
 	get local(): boolean {
 		return this.#_local;
 	}
 
-	get reqHistory(): reqMap {
+	get reqHistory(): requestMap {
 		return this.#_reqHistory;
 	}
 
@@ -123,6 +113,10 @@ export class Game {
 
 	get predictedBall(): coordinates {
 		return this.#_predictedBall;
+	}
+
+	get replyHistory(): replyTab {
+		return this.#_replyHistory;
 	}
 
 	/*                              SETTERS                                  */
@@ -167,5 +161,23 @@ export class Game {
 				this.#_reqHistory.delete(key);
 			}
 		}
+	}
+
+	public addReply(reply: repObj) {
+		const newReply: repObj = { _ID: reply._ID, _timestamp: reply._timestamp, _leftPad: { ...reply._leftPad}, _rightPad: { ...reply._rightPad}, _ball: { ...reply._ball} };
+		this.#_replyHistory.push(newReply);
+	}
+
+	public deleteReplies(length: number) {
+		this.#_replyHistory.splice(0, length);
+	}
+
+	public getReply(renderTime: number): [repObj, repObj] | null {
+		for (let i = 0; i < this.#_replyHistory.length - 1; i++) {
+			if (this.#_replyHistory[i]!._timestamp <= renderTime
+				&& this.#_replyHistory[i + 1]!._timestamp >= renderTime)
+				return [this.#_replyHistory[i]!, this.#_replyHistory[i + 1]!];
+		} //TODO: fix !
+		return null;
 	}
 }
