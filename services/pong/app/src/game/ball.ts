@@ -32,7 +32,7 @@ export function updateBallPos(ball: ballObj, player1: Player, player2: Player, d
 	return false
 }
 
-const maxScore: number = 3;
+const maxScore: number = 5;
 
 function updateScore(player1: Player, player2: Player, newX: number): boolean {
 	if (newX - 10 >= WIDTH) {
