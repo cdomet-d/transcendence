@@ -1,7 +1,7 @@
-import type { Player } from './player.class.js';
+import type { Player, coordinates } from './player.class.js';
 import type { reqObj } from '../game/mess.validation.js';
 
-export const HEIGHT = 270;
+ export const HEIGHT = 270;
 export const WIDTH = 480;
 
 export interface user {
@@ -38,11 +38,19 @@ interface playerReq {
 	_req: reqObj,
 }
 
+interface stateObj {
+	_timestamp: number,
+	_leftPad: coordinates,
+	_rightPad: coordinates,
+	_ball: ballObj,
+}
+
 export type playerTab = Array< Player >;
 type reqTab = Array< playerReq >;
+type stateTab = Array< stateObj >;
 
 export class Game {
-    /*                             PROPERTIES                                */
+	/*                             PROPERTIES                                */
 	#_gameInfo: gameInfo;
 	#_players: playerTab;
 	#_ball: ballObj;
@@ -50,8 +58,9 @@ export class Game {
 	#_time: timeObj;
 	#_status: boolean;
 	#_reqHistory: reqTab;
+	#_stateHistory: stateTab;
 
-    /*                            CONSTRUCTORS                               */
+	/*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo) {
 		this.#_gameInfo = gameInfo;
 		this.#_status = false;
@@ -60,10 +69,10 @@ export class Game {
 		this.#_paddleSpeed = 0.15;
 		this.#_time = { stamp: 0, lastFrame: 0, delta: 0};
 		this.#_reqHistory = new Array();
-
+		this.#_stateHistory = new Array();
 	}
 
-    /*                              GETTERS                                  */
+	/*                              GETTERS                                  */
 	get gameID(): number {
 		return this.#_gameInfo._gameID;
 	}
@@ -99,8 +108,12 @@ export class Game {
 	get reqHistory(): reqTab {
 		return this.#_reqHistory;
 	}
-		
-    /*                              SETTERS                                  */
+	
+	get statusHistory(): stateTab {
+		return this.#_stateHistory;
+	}
+
+	/*                              SETTERS                                  */
 	set score(score: Array< number >) {
 		this.#_gameInfo._score = score;
 	}
@@ -121,7 +134,7 @@ export class Game {
 		this.#_reqHistory = reqTab;
 	}
 
-    /*                              METHODS                                  */
+	/*                              METHODS                                  */
 	public addPlayer(player: Player) {
 		this.#_players.push(player);
 	}
@@ -142,5 +155,14 @@ export class Game {
 
 	public deleteReq(deleteCount: number) {
 		this.#_reqHistory.splice(0, deleteCount);
+	}
+
+	public addState(state: stateObj) {
+		const newState: stateObj = { _timestamp: state._timestamp, _leftPad: { ...state._leftPad }, _rightPad: { ...state._rightPad }, _ball: { ...state._ball } };
+		this.#_stateHistory.push(newState);
+	}
+
+	public deleteStates(length: number) {
+		this.#_stateHistory.splice(0, length);
 	}
 }
