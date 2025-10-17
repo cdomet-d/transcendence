@@ -360,3 +360,7 @@ TODO :
 * check all fetch in gateway to see if they actually match route they mean to call
 * clean all unused functions in all route.ts files
 * add the creation of a profile and stat when creting account in the gateway
+* Define game card object w/ Coralie
+* Define friendsList card object w/ Coralie
+
+notion : https://www.notion.so/28fec36dccef8049863ee403e618e675?v=28fec36dccef804badbc000c4d0f3703&source=copy_link

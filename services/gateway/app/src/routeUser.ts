@@ -13,7 +13,7 @@ import { fetchFriendshipStatus } from './gatewayUser.service.js'
 modify all user card info individualy
 get userID by username 
 get username by userID
-get status user 
+get status user
 
 export interface UserData {
 	avatar: ImgMetadata;
