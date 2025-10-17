@@ -8,10 +8,11 @@ export interface coordinates {
 }
 
 export interface repObj {
-	ID: number,
-	leftPad: coordinates,
-	rightPad: coordinates,
-	ball: ballObj,
+	_ID: number,
+	_timestamp: number,
+	_leftPad: coordinates,
+	_rightPad: coordinates,
+	_ball: ballObj,
 }
 
 
@@ -30,7 +31,7 @@ export class Player {
 		this.#_userID = userID;
 		this.#_socket = socket;
 		this.#_keys = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
-		this.#_reply = {ID: 0, leftPad: {x: 10, y: 108}, rightPad: {x: 460, y: 108}, ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3}};
+		this.#_reply = {_ID: 0, _timestamp: 0, _leftPad: {x: 10, y: 108}, _rightPad: {x: 460, y: 108}, _ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3}};
 		if (random) {
 			this.#_paddle = {x: 460, y: 108};
 			this.#_playerSide = "right";
@@ -83,20 +84,20 @@ export class Player {
 	/*                              METHODS                                  */
 	public setMessPad(side: string, newPos: number) {
 		if (side === "left")
-			this.#_reply.leftPad.y = newPos;
+			this.#_reply._leftPad.y = newPos;
 		else
-			this.#_reply.rightPad.y = newPos;
+			this.#_reply._rightPad.y = newPos;
 	}
 
 	public setMessBall(side: string, ball: ballObj) {
-		this.#_reply.ball.y = ball.y;
-		this.#_reply.ball.dx = ball.dx;
-		this.#_reply.ball.dy = ball.dy;
+		this.#_reply._ball.y = ball.y;
+		this.#_reply._ball.dx = ball.dx;
+		this.#_reply._ball.dy = ball.dy;
 		if (side === "left")
-			this.#_reply.ball.x = ball.x;
+			this.#_reply._ball.x = ball.x;
 		else {
-			this.#_reply.ball.x = WIDTH - ball.x;
-			this.#_reply.ball.dx *= -1;
+			this.#_reply._ball.x = WIDTH - ball.x;
+			this.#_reply._ball.dx *= -1;
 		}
 
 	}
