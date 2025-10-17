@@ -1,5 +1,5 @@
-import { menuBtn } from './buttons';
-import { tabWrapper } from './tabs';
+import { CustomButton } from './buttons';
+import { TabContainer } from './tabs';
 import { Menu, SocialMenu } from './menus';
 import { Searchbar } from './search';
 
@@ -16,7 +16,7 @@ import type {
  *
  * @param {buttonData} btn - Object containing button text, type, image, and aria-label.
  * @param {boolean} [animated] - Optional flag to enable text animation on the button.
- * @returns {HTMLButtonElement} The created {@link menuBtn} element.
+ * @returns {HTMLButtonElement} The created {@link CustomButton} element.
  *
  * @example
  * const btnData = {
@@ -29,7 +29,7 @@ import type {
  * document.body.appendChild(btn);
  */
 export function createBtn(btn: buttonData, animated?: boolean): HTMLButtonElement {
-    const el = document.createElement('button', { is: 'menu-button' }) as menuBtn;
+    const el = document.createElement('button', { is: 'custom-button' }) as CustomButton;
     el.btn = btn;
     if (animated) el.animation = animated;
     return el;
@@ -39,7 +39,7 @@ export function createBtn(btn: buttonData, animated?: boolean): HTMLButtonElemen
  * Creates a tab wrapper element containing an array of tabs.
  *
  * @param {Array<TabMetadata>} list - Array of tab metadata objects to create tabs.
- * @returns {tabWrapper} A {@link tabWrapper} div element containing the tabs.
+ * @returns {TabContainer} A {@link TabContainer} div element containing the tabs.
  *
  * @example
  * const tabsList = [
@@ -49,8 +49,8 @@ export function createBtn(btn: buttonData, animated?: boolean): HTMLButtonElemen
  * const tabs = createTabs(tabsList);
  * document.body.appendChild(tabs);
  */
-export function createTabs(list: Array<TabMetadata>): tabWrapper {
-    const el = document.createElement('div', { is: 'tab-wrapper' }) as tabWrapper;
+export function createTabs(list: Array<TabMetadata>): TabContainer {
+    const el = document.createElement('div', { is: 'tab-container' }) as TabContainer;
     el.tabList = list;
     return el;
 }

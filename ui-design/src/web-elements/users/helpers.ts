@@ -143,7 +143,7 @@ export function updateUsername(newUserName: string, userId: string) {
 }
 
 export function createNotificationBox(): Notification {
-    const el = document.createElement('div', { is: 'notification-container' }) as Notification;
+    const el = document.createElement('div', { is: 'notif-container' }) as Notification;
     return el;
 }
 

@@ -29,7 +29,9 @@ export class Icon extends HTMLImageElement {
     }
 }
 
-customElements.define('custom-icon', Icon, { extends: 'img' });
+if (!customElements.get('custom-icon')) {
+    customElements.define('custom-icon', Icon, { extends: 'img' });
+}
 
 /**
  * Custom avatar container element with three size options.
@@ -75,4 +77,6 @@ export class Avatar extends HTMLDivElement {
     }
 }
 
-customElements.define('user-avatar', Avatar, { extends: 'div' });
+if (!customElements.get('user-avatar')) {
+    customElements.define('user-avatar', Avatar, { extends: 'div' });
+}

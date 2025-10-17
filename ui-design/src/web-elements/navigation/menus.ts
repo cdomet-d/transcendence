@@ -82,7 +82,9 @@ export class Menu extends HTMLDivElement {
     }
 }
 
-customElements.define('menu-wrapper', Menu, { extends: 'div' });
+if (!customElements.get('menu-wrapper')) {
+    customElements.define('menu-wrapper', Menu, { extends: 'div' });
+}
 
 //TODO: update SocialMenu to Setting button when view is 'self'
 //TODO: is the UI update as smooth as it could be ?
@@ -157,4 +159,6 @@ export class SocialMenu extends Menu {
     }
 }
 
-customElements.define('social-menu', SocialMenu, { extends: 'div' });
+if (!customElements.get('social-menu')) {
+    customElements.define('social-menu', SocialMenu, { extends: 'div' });
+}

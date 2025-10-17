@@ -1,9 +1,9 @@
 import type { buttonData, InputMetadata, UserData } from '../../types-interfaces';
-import { createInputGrp } from '../inputs/helpers';
+import { createInputGroup } from '../inputs/helpers';
 import { usernamePattern } from '../../default-values';
 import { createBtn } from './helpers';
 import { createUserInline } from '../users/helpers';
-import type { inputGroup } from '../inputs/fields';
+import type { InputGroup } from '../inputs/fields';
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -47,9 +47,9 @@ export class Searchbar extends HTMLFormElement {
 
         /**
          * Container for the search input field group.
-         * @type {inputGroup}
+         * @type {InputGroup}
          */
-        this.#searchInput = createInputGrp(this.#inputData) as inputGroup;
+        this.#searchInput = createInputGroup(this.#inputData) as InputGroup;
 
         /**
          * Container div for showing search results.
@@ -161,4 +161,6 @@ export class Searchbar extends HTMLFormElement {
     }
 }
 
-customElements.define('search-form', Searchbar, { extends: 'form' });
+if (!customElements.get('search-form')) {
+    customElements.define('search-form', Searchbar, { extends: 'form' });
+}

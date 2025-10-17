@@ -10,7 +10,7 @@ import type { buttonData } from '../../types-interfaces';
  * @property {buttonData} btn - Button configuration data.
  * @property {boolean} animation - Controls animated text rendering.
  */
-export class menuBtn extends HTMLButtonElement {
+export class CustomButton extends HTMLButtonElement {
     #btn: buttonData;
     #animated: boolean;
 
@@ -90,11 +90,16 @@ export class menuBtn extends HTMLButtonElement {
     /** Updates button styles and content according to current state. */
     render(): void {
         this.className =
-            'border-box brdr h-[90%] input-emphasis min-w-[4rem] outline-hidden overflow-hidden w-[100%] whitespace-nowrap cursor-pointer';
+            'border-box brdr h-[90%] pad-xs input-emphasis min-w-[4rem] outline-hidden overflow-hidden w-[100%] whitespace-nowrap cursor-pointer';
 
         if (this.#btn.content && !this.#animated) {
             this.renderTextualBtn();
-            this.classList.add('hover:transform', 'hover:scale-[1.02]', 'focus-visible:transform', 'focus-visible:scale-[1.02]');
+            this.classList.add(
+                'hover:transform',
+                'hover:scale-[1.02]',
+                'focus-visible:transform',
+                'focus-visible:scale-[1.02]',
+            );
         } else if (this.#btn.img) {
             this.renderIconBtn();
         } else if (this.#btn.content && this.#animated) {
@@ -114,7 +119,9 @@ export class menuBtn extends HTMLButtonElement {
     }
 }
 
-customElements.define('menu-button', menuBtn, { extends: 'button' });
+if (!customElements.get('custom-button')) {
+    customElements.define('custom-button', CustomButton, { extends: 'button' });
+}
 
 /**
  * Custom tab button element extending HTMLButtonElement.
@@ -124,7 +131,7 @@ customElements.define('menu-button', menuBtn, { extends: 'button' });
  *
  * @property {string} content - Text content of the tab button.
  */
-export class tabBtn extends HTMLButtonElement {
+export class TabButton extends HTMLButtonElement {
     static get observedAttributes(): string[] {
         return ['selected'];
     }
@@ -168,7 +175,7 @@ export class tabBtn extends HTMLButtonElement {
     /** Updates styles depending on selection state. */
     render(): void {
         this.className =
-            'tab z-2 w-[100%] h-[100%] thin brdr overflow-hidden outline-hidden border-box flex justify-center items-center hover:transform-none';
+            'tab z-2 w-[100%] h-[100%] pad-xs thin brdr overflow-hidden outline-hidden border-box flex justify-center items-center hover:transform-none';
 
         if (this.hasAttribute('selected')) {
             this.classList.remove('yellow-bg', 'brdr', 'z-2');
@@ -180,13 +187,15 @@ export class tabBtn extends HTMLButtonElement {
     }
 }
 
-customElements.define('tab-button', tabBtn, { extends: 'button' });
+if (!customElements.get('tab-button')) {
+    customElements.define('tab-button', TabButton, { extends: 'button' });
+}
 
 /**
  * Custom tab group container element extending HTMLDivElement.
  * Manages and styles a group of tab buttons.
  */
-export class tabGroup extends HTMLDivElement {
+export class TabButtonWrapper extends HTMLDivElement {
     constructor() {
         super();
     }
@@ -199,8 +208,10 @@ export class tabGroup extends HTMLDivElement {
     /** Applies grid layout styling to the tab group container. */
     render(): void {
         this.className =
-            'tab-group w-[100%] h-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center';
+            'tab-button-wrapper w-[100%] h-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center';
     }
 }
 
-customElements.define('tab-group', tabGroup, { extends: 'div' });
+if (!customElements.get('tab-button-wrapper')) {
+    customElements.define('tab-button-wrapper', TabButtonWrapper, { extends: 'div' });
+}

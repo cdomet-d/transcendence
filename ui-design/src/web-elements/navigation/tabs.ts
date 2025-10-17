@@ -1,10 +1,10 @@
-import { tabBtn, tabGroup } from './buttons';
+import { TabButton, TabButtonWrapper } from './buttons';
 import type { TabMetadata } from '../../types-interfaces';
 
 /**
  * Creates a tab panel extending HTMLDivElement.
  */
-export class tabPanel extends HTMLDivElement {
+export class TabPanel extends HTMLDivElement {
     static get observedAttributes() {
         return ['selected'];
     }
@@ -66,7 +66,9 @@ export class tabPanel extends HTMLDivElement {
     }
 }
 
-customElements.define('tab-panel', tabPanel, { extends: 'div' });
+if (!customElements.get('tab-panel')) {
+    customElements.define('tab-panel', TabPanel, { extends: 'div' });
+}
 
 /**
  * Custom element extending HTMLDivElement to create a tab container.
@@ -74,7 +76,7 @@ customElements.define('tab-panel', tabPanel, { extends: 'div' });
  *
  * @extends {HTMLDivElement}
  */
-export class tabWrapper extends HTMLDivElement {
+export class TabContainer extends HTMLDivElement {
     #tabList: Array<TabMetadata>;
 
     constructor() {
@@ -164,10 +166,12 @@ export class tabWrapper extends HTMLDivElement {
      */
     private createTabButtons(): HTMLDivElement {
         let isSet: boolean = false;
-        const tabHeader = document.createElement('div', { is: 'tab-group' }) as tabGroup;
+        const tabHeader = document.createElement('div', {
+            is: 'tab-button-wrapper',
+        }) as TabButtonWrapper;
 
         this.#tabList.forEach((tab) => {
-            const el = document.createElement('button', { is: 'tab-button' }) as tabBtn;
+            const el = document.createElement('button', { is: 'tab-button' }) as TabButton;
             el.setAttribute('data-tab', tab.id);
             el.textContent = tab.content;
             if (tab.default && !isSet) {
@@ -185,7 +189,7 @@ export class tabWrapper extends HTMLDivElement {
     private createPanels() {
         let isSet: boolean = false;
         this.#tabList.forEach((tab) => {
-            const el = document.createElement('div', { is: 'tab-panel' }) as tabPanel;
+            const el = document.createElement('div', { is: 'tab-panel' }) as TabPanel;
             el.setAttribute('data-content', tab.id);
             el.textContent = tab.content;
             if (tab.default && !isSet) {
@@ -197,4 +201,6 @@ export class tabWrapper extends HTMLDivElement {
     }
 }
 
-customElements.define('tab-wrapper', tabWrapper, { extends: 'div' });
+if (!customElements.get('tab-container')) {
+    customElements.define('tab-container', TabContainer, { extends: 'div' });
+}

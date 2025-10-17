@@ -77,7 +77,9 @@ export class Username extends HTMLDivElement {
     }
 }
 
-customElements.define('username-container', Username, { extends: 'div' });
+if (!customElements.get('username-container')) {
+    customElements.define('username-container', Username, { extends: 'div' });
+}
 
 export class Winstreak extends HTMLSpanElement {
     #icon: Icon;
@@ -112,7 +114,9 @@ export class Winstreak extends HTMLSpanElement {
     }
 }
 
-customElements.define('winstreak-block', Winstreak, { extends: 'span' });
+if (!customElements.get('winstreak-block')) {
+    customElements.define('winstreak-block', Winstreak, { extends: 'span' });
+}
 
 export class Biography extends HTMLParagraphElement {
     constructor() {
@@ -133,4 +137,6 @@ export class Biography extends HTMLParagraphElement {
     }
 }
 
-customElements.define('user-bio', Biography, { extends: 'p' });
+if (!customElements.get('user-bio')) {
+    customElements.define('user-bio', Biography, { extends: 'p' });
+}

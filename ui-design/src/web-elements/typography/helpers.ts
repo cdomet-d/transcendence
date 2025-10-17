@@ -1,4 +1,4 @@
-import { cTitle } from './typography';
+import { CustomTitle } from './typography';
 import { Icon, Avatar } from './images';
 import * as types from '../../types-interfaces';
 
@@ -7,14 +7,14 @@ import * as types from '../../types-interfaces';
  *
  * @param level - Heading level ('1', '2', '3'); defaults to '1'.
  * @param content - Text content of the heading.
- * @returns The created {@link cTitle} element.
+ * @returns The created {@link CustomTitle} element.
  *
  * @example
  * const heading = createHeading("3", "Section Title");
  * document.body.appendChild(heading);
  */
-export function createHeading(level: string, content: string): cTitle {
-    const el = document.createElement('c-title') as cTitle;
+export function createHeading(level: string, content: string): CustomTitle {
+    const el = document.createElement('custom-title') as CustomTitle;
     el.setAttribute('level', level);
     el.content = content;
 

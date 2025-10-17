@@ -109,6 +109,10 @@
 		--shadow: #04983a;
 	}
 
+	.yellow-border {
+		--border: #ffb800;
+	}
+
 	.invalid {
 		--border: #6b1d00;
 		--highlight: #f9865c;
@@ -204,7 +208,7 @@
 	a:active,
 	a:focus {
 		text-decoration: none;
-		background: linear-gradient(to left, transparent 50%, var(--yellow) 50%);
+		background: linear-gradient(to left, transparent 50%, var(--gradient4) 50%);
 		background-size: 200% 100%;
 		background-position: 100% 0;
 		animation: a-grow 0.2s 1 linear forwards;
@@ -235,13 +239,20 @@
 	}
 
 	input[type="text"],
-	input[type="password"],
-	input[type=file] {
-		padding: var(--space-xs) var(--space-s) var(--space-xs) var(--space-s);
+	input[type="password"] {
+		padding: var(--space-xs);
+	}
+
+	input#search {
+		padding: var(--space-xs) var(--space-xs) var(--space-xs) var(--space-m);
+	}
+
+	input#upload {
+		padding: var(--space-xs) var(--space-xs) var(--space-xs) var(--space-l);
 	}
 
 	input[type="text"]:invalid,
-	input[type="password"]:invalid {
+	input[type="password"]:invalid textarea:invalid {
 		background: linear-gradient(180deg,
 				#ce633b 0 10%,
 				#d3673f 0 20%,
@@ -258,8 +269,15 @@
 
 	input:hover,
 	input:active,
-	input:focus {
+	input:focus,
+	input:focus-visible,
+	textarea:hover,
+	textarea:active,
+	textarea:focus,
+	textarea:focus-visible {
+		/* outline: 2px var(--yellow) solid; */
 		outline: none;
+		border: none;
 	}
 
 	input[type="radio"] {
@@ -268,8 +286,7 @@
 	}
 
 	input[type="range"] {
-		height: 20.5px;
-		margin-top: 8px;
+		height: 18.5px;
 	}
 
 	input[type="range"]::-moz-range-thumb {
@@ -285,11 +302,6 @@
 		border-bottom: 2px solid var(--shadow-orange);
 		box-shadow: -2px 0 0 0 var(--border), 2px 0 0 0 var(--border),
 			0 -2px 0 0 var(--border), 0 2px 0 0 var(--border);
-	}
-
-	input[type=file] {
-		padding-left: 6rem;
-		height: 90%
 	}
 
 	input::file-selector-button {
@@ -311,18 +323,14 @@
 				#f4b000 0 100%);
 	}
 
-	label {
-		color: var(--shadow-2);
-		padding: 0px var(--space-xs) 0px var(--space-xs);
-	}
-
 	button {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
-	button:hover>span, button:focus-visible>span {
+	button:hover>span,
+	button:focus-visible>span {
 		display: inline-block;
 		transform-origin: bottom center;
 		animation: dance 1.2s ease-in-out infinite;
@@ -431,7 +439,7 @@
 	.gap-s {
 		gap: var(--space-s) var(--space-s);
 	}
-	
+
 	.gap-sm {
 		gap: var(--space-sm) var(--space-sm);
 	}
@@ -446,6 +454,10 @@
 
 	.search-gap {
 		gap: 0 var(--space-s);
+	}
+
+	.pad-xs {
+		padding: var(--space-xs);
 	}
 
 	.pad-s {
@@ -493,6 +505,7 @@
 	.button-shadow {
 		text-shadow: 1px 1px var(--highlight), 2px 1px var(--highlight);
 	}
+
 	.username:hover a {
 		text-decoration: underline;
 		background: transparent;
@@ -562,9 +575,9 @@
 			0 var(--n-border-w) 0 0 var(--border), 0 var(--border-w) 0 0 var(--border);
 	}
 
-	.searchbar-padding {
-		padding: var(--space-xs) var(--space-s) var(--space-xs) var(--space-m);
-	}
+	/* .searchbar-padding {
+		padding: var(--space-xs) var(--space-s) var(--space-xs) var(--space-l);
+	} */
 
 	.input-emphasis {
 		border-top: 2px solid var(--highlight);

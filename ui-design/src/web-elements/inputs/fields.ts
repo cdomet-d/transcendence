@@ -1,31 +1,10 @@
 import type { InputMetadata } from '../../types-interfaces';
 
 /**
- * Custom file upload input element.
+ * Custom input element.
  * Extends native HTMLInputElement.
  */
-export class fileUpload extends HTMLInputElement {
-    constructor() {
-        super();
-    }
-
-    connectedCallback() {
-        this.render();
-    }
-
-    render() {
-        this.className =
-            'brdr relative file:absolute file:top-[12%] file:left-[0.5rem] file:w-[5rem] file:h-[75%]';
-    }
-}
-
-customElements.define('file-upload', fileUpload, { extends: 'input' });
-
-/**
- * Custom text input element.
- * Extends native HTMLInputElement.
- */
-export class textInput extends HTMLInputElement {
+export class CustomInput extends HTMLInputElement {
     #inputCallback: (event: Event) => void;
     constructor() {
         super();
@@ -35,16 +14,19 @@ export class textInput extends HTMLInputElement {
     inputFeedback(event: Event) {
         if (this.getAttribute('type') === 'password') {
             const el = event.target as HTMLInputElement;
+            console.log(el.validity);
             const pw = el.value;
             let feedback: Array<string> = [];
             if (!/[A-Z]/.test(pw)) feedback.push('missing an uppercase letter');
             if (!/[a-z]/.test(pw)) feedback.push('missing an lowercase letter');
             if (!/[0-9]/.test(pw)) feedback.push('missing an number');
             if (!/[!@#$%^&*()\-_=+{};:,<.>]/.test(pw)) feedback.push('missing a special character');
-            if (pw.length < 8 || pw.length > 64)
+            if (pw.length < 12 || pw.length > 64)
                 feedback.push(`Range for pw is 12-64, current length is: ${pw.length}`);
-			
-            this.dispatchEvent(new CustomEvent('validation', {detail: { feedback }, bubbles: true}));
+
+            this.dispatchEvent(
+                new CustomEvent('validation', { detail: { feedback }, bubbles: true }),
+            );
         }
     }
 
@@ -53,22 +35,28 @@ export class textInput extends HTMLInputElement {
         this.render();
     }
 
+    disconnectedCallback() {
+        this.removeEventListener('input', this.#inputCallback);
+    }
+
     render() {
-        this.classList.add('brdr');
+        //TODO: border color change on focus not working
+        this.className =
+            'active:yellow-border hover:yellow-border focus:yellow-border focus-visible:yellow-border brdr';
     }
 }
 
-customElements.define('text-input', textInput, { extends: 'input' });
+if (!customElements.get('custom-input')) {
+    customElements.define('custom-input', CustomInput, { extends: 'input' });
+}
 
 /**
  * Custom input label element.
  * Extends native HTMLLabelElement.
  */
-export class inputLabel extends HTMLLabelElement {
-    #type: string;
+export class InputLabel extends HTMLLabelElement {
     constructor() {
         super();
-        this.#type = 'text';
     }
 
     connectedCallback() {
@@ -88,28 +76,24 @@ export class inputLabel extends HTMLLabelElement {
         this.setAttribute('for', val);
     }
 
-    set type(type: string) {
-        this.#type = type;
-    }
-
     render() {
-        this.className = 'min-w-[fit-content] flex justify-center brdr clear-bg thin w-[10%]';
-        if (this.#type != 'range') {
-            this.classList.add('absolute', 'right-[8px]', '-top-[10px]');
-        }
+        this.className = 'min-w-[fit-content] w-[10%] absolute left-[0px] -top-[25px]';
     }
 }
 
-customElements.define('input-label', inputLabel, { extends: 'label' });
+if (!customElements.get('input-label')) {
+    customElements.define('input-label', InputLabel, { extends: 'label' });
+}
 
 /**
  * Container element grouping input and label.
  * Extends native HTMLDivElement.
  */
-export class inputGroup extends HTMLDivElement {
-    #input: textInput;
-    #label: inputLabel;
-	#validationCallback: (error: string[]) => void
+export class InputGroup extends HTMLDivElement {
+    #input: CustomInput;
+    #label: InputLabel;
+    #inputFeedback: HTMLDivElement;
+    #validationCallback: (event: Event) => void;
     #info: InputMetadata;
 
     /**
@@ -128,32 +112,47 @@ export class inputGroup extends HTMLDivElement {
             placeholder: 'Enter your username',
             type: 'text',
         };
-        this.#input = document.createElement('input', { is: 'text-input' }) as textInput;
-        this.#label = document.createElement('label', { is: 'input-label' }) as inputLabel;
-		this.#validationCallback = (error: string[]) => this.displayInputFeedback(error)
-        this.appendChild(this.#label);
-        this.appendChild(this.#input);
+        this.#input = document.createElement('input', { is: 'custom-input' }) as CustomInput;
+        this.#label = document.createElement('label', { is: 'input-label' }) as InputLabel;
+        this.#inputFeedback = document.createElement('div');
+        this.#validationCallback = (event: Event) => this.displayInputFeedback(event);
     }
 
-	displayInputFeedback(error: Array<string>) {
-	
-	}
-    set isSearchbar(val: boolean) {
-        if (val) {
-            this.#input.classList.add('searchbar-padding');
-            this.render();
+    displayInputFeedback(event: Event) {
+        const ev = event as CustomEvent;
+        if (ev.detail.feedback.length > 0) this.#inputFeedback.classList.remove('hidden');
+        else this.#inputFeedback.classList.add('hidden');
+        if (this.#inputFeedback.firstChild)
+            this.#inputFeedback.removeChild(this.#inputFeedback.firstChild);
+        const list = document.createElement('ul');
+        list.className = 'pad-s list-inside';
+        for (let i: number = 0; i < ev.detail.feedback.length; i++) {
+            const ul = document.createElement('li');
+            ul.innerText = ev.detail.feedback[i];
+            ul.className = 'list-disc';
+            list.append(ul);
         }
+        this.#inputFeedback.append(list);
     }
 
     connectedCallback() {
-		this.addEventListener('validation', this.#validationCallback);
+        this.addEventListener('validation', this.#validationCallback);
+        this.#input.addEventListener('blur', () => {
+            this.#inputFeedback.classList.add('hidden');
+        });
+        this.#input.addEventListener('focus', () => {
+            if (this.#inputFeedback.firstChild) this.#inputFeedback.classList.remove('hidden');
+        });
         this.render();
     }
 
     render() {
+        this.appendChild(this.#label);
+        this.appendChild(this.#input);
+        this.appendChild(this.#inputFeedback);
         this.className = 'w-full box-border relative min-w-[240px]';
+        this.#inputFeedback.className = 'brdr bg hidden';
         this.#label.for = this.#info.id;
-        this.#label.type = this.#info.type;
         this.#label.content = this.#info.labelContent;
         this.#input.id = this.#info.id;
         this.#input.placeholder = this.#info.placeholder;
@@ -164,7 +163,92 @@ export class inputGroup extends HTMLDivElement {
             if (this.#info.max) this.#input.max = this.#info.max;
             if (this.#info.step) this.#input.step = this.#info.step;
         }
+        if (this.#info.type === 'file') console.log('were never here right');
+        this.#input.classList.add(
+            'pl-(24px)',
+            'file:absolute',
+            'file:top-[3px]',
+            'file:left-[4px]',
+            'file:w-[5rem]',
+            'file:h-[75%]',
+        );
+    }
+}
+if (!customElements.get('input-and-label')) {
+    customElements.define('input-and-label', InputGroup, { extends: 'div' });
+}
+export class TextAreaGroup extends HTMLDivElement {
+    #input: HTMLTextAreaElement;
+    #label: InputLabel;
+    #info: InputMetadata;
+    #inputFeedback: HTMLDivElement;
+    #validationCallback: (event: Event) => void;
+
+    /**
+     * Sets input field information for label & input configuration.
+     */
+    set info(data: InputMetadata) {
+        this.#info = data;
+    }
+
+    constructor() {
+        super();
+        this.#info = {
+            labelContent: 'Username',
+            id: 'username',
+            pattern: '^[a-zA-Z0-9]{3,10}$',
+            placeholder: 'Enter your username',
+            type: 'text',
+        };
+        this.#input = document.createElement('textarea') as HTMLTextAreaElement;
+        this.#label = document.createElement('label', { is: 'input-label' }) as InputLabel;
+        this.#inputFeedback = document.createElement('div');
+        this.#validationCallback = (event: Event) => this.displayInputFeedback(event);
+    }
+
+    displayInputFeedback(event: Event) {
+        const ev = event as CustomEvent;
+        if (ev.detail.feedback.length > 0) this.#inputFeedback.classList.remove('hidden');
+        else this.#inputFeedback.classList.add('hidden');
+        if (this.#inputFeedback.firstChild)
+            this.#inputFeedback.removeChild(this.#inputFeedback.firstChild);
+        const list = document.createElement('ul');
+        list.className = 'pad-s list-inside';
+        for (let i: number = 0; i < ev.detail.feedback.length; i++) {
+            const ul = document.createElement('li');
+            ul.innerText = ev.detail.feedback[i];
+            ul.className = 'list-disc';
+            list.append(ul);
+        }
+        this.#inputFeedback.append(list);
+    }
+
+    connectedCallback() {
+        this.addEventListener('validation', this.#validationCallback);
+        this.#input.addEventListener('blur', () => {
+            this.#inputFeedback.classList.add('hidden');
+        });
+        this.#input.addEventListener('focus', () => {
+            if (this.#inputFeedback.firstChild) this.#inputFeedback.classList.remove('hidden');
+        });
+        this.render();
+    }
+
+    render() {
+        this.#input.className = 'resize-y brdr w-full clear-bg pad-s min-h-fit';
+        this.#input.id = this.#info.id;
+        this.#input.maxLength = 256;
+        this.#input.placeholder = this.#info.placeholder;
+        this.#inputFeedback.className = 'brdr bg hidden';
+        this.#label.content = this.#info.labelContent;
+        this.#label.for = this.#info.id;
+        this.className = 'w-full box-border relative min-w-[240px]';
+        this.appendChild(this.#label);
+        this.appendChild(this.#input);
+        this.appendChild(this.#inputFeedback);
     }
 }
 
-customElements.define('input-grp', inputGroup, { extends: 'div' });
+if (!customElements.get('textarea-and-label')) {
+    customElements.define('textarea-and-label', TextAreaGroup, { extends: 'div' });
+}

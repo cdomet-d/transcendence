@@ -1,4 +1,4 @@
-export class cTitle extends HTMLElement {
+export class CustomTitle extends HTMLElement {
     constructor() {
         super();
     }
@@ -21,4 +21,6 @@ export class cTitle extends HTMLElement {
 		leading-[130%]">${this.textContent}</h${validLevel}>`;
     }
 }
-customElements.define('c-title', cTitle);
+if (!customElements.get('custom-title')) {
+    customElements.define('custom-title', CustomTitle);
+}

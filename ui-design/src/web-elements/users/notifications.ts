@@ -64,7 +64,9 @@ class NotifContent extends HTMLDivElement {
     }
 }
 
-customElements.define('notif-content', NotifContent, { extends: 'div' });
+if (!customElements.get('notif-content')) {
+    customElements.define('notif-content', NotifContent, { extends: 'div' });
+}
 
 /**
  * Represents a clickable notification icon toggle.
@@ -115,7 +117,9 @@ class NotifToggle extends HTMLDivElement {
     }
 }
 
-customElements.define('notif-toggle', NotifToggle, { extends: 'div' });
+if (!customElements.get('notif-toggle')) {
+    customElements.define('notif-toggle', NotifToggle, { extends: 'div' });
+}
 
 /**
  * Represents the notification panel popup that lists all notifications.
@@ -215,10 +219,12 @@ class NotifPanel extends HTMLDivElement {
     }
 }
 
-customElements.define('notif-panel', NotifPanel, { extends: 'div' });
+if (!customElements.get('notif-panel')) {
+    customElements.define('notif-panel', NotifPanel, { extends: 'div' });
+}
 
 /**
- * Defines the 'notification-container' custom element, which displays user notifications.
+ * Defines the 'notif-container' custom element, which displays user notifications.
  *
  * @remarks
  * Aggregates {@link NotifToggle}, {@link NotifPanel}, and {@link NotifContent} components.
@@ -320,4 +326,5 @@ export class Notification extends HTMLDivElement {
     }
 }
 
-customElements.define('notification-container', Notification, { extends: 'div' });
+if (!customElements.get('notif-container'))
+    customElements.define('notif-container', Notification, { extends: 'div' });

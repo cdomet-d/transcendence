@@ -26,7 +26,9 @@ export class UserCardSocial extends HTMLDivElement {
     }
 }
 
-customElements.define('user-card-social', UserCardSocial, { extends: 'div' });
+if (!customElements.get('user-card-social')) {
+    customElements.define('user-card-social', UserCardSocial, { extends: 'div' });
+}
 
 /**
  * Inline profile for listing users. It's just a div, styled to hold
@@ -70,4 +72,6 @@ export class UserInline extends HTMLDivElement {
     }
 }
 
-customElements.define('user-inline', UserInline, { extends: 'div' });
+if (!customElements.get('user-inline')) {
+    customElements.define('user-inline', UserInline, { extends: 'div' });
+}
