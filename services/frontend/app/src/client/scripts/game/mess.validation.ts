@@ -8,6 +8,7 @@ export interface coordinates {
 
 export interface repObj {
 	_ID: number,
+	_timestamp: number,
 	_leftPad: coordinates,
 	_rightPad: coordinates,
 	_ball: ballObj,
