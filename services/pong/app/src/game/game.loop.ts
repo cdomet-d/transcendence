@@ -57,7 +57,7 @@ function sendToPlayer(player: Player, opponentPaddle: coordinates, ball: ballObj
 	player.setMessPad("left", player.paddle.y);
 	player.setMessPad("right", opponentPaddle.y);
 	player.setMessBall(side, ball);
-	player.reply._timestamp = performance.now();
+	// player.reply._timestamp = 0;
 	//TODO: add score
 	if (player.socket.readyState === 1)
 		player.socket.send(JSON.stringify(player.reply));
