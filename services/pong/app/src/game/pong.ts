@@ -34,7 +34,7 @@ export async function setUpGame(game: Game) {
 	} //TODO: add try catch ?
 
 	// send back server timestamp and delay
-	const start: startObj = { clientTimeStamp: player1Timestamp, serverTimeStamp: Date.now(), delay: 500, ballDir: 1}
+	const start: startObj = { clientTimeStamp: player1Timestamp, serverTimeStamp: performance.now(), delay: 500, ballDir: 1}
 	player1.socket.send(JSON.stringify(start));
 	if (!game.local) {
 		start.ballDir = -1;
@@ -55,7 +55,7 @@ function setMessEvent(player: Player, playerNbr: number, game: Game) {
 		if (!validRequest(req))
 			return;
 		game.addReq(req, playerNbr);
-		player.keys = { ...req._keys};
+		// player.keys = { ...req._keys};
 	})
 }
 
