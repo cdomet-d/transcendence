@@ -34,7 +34,7 @@ export const userDefault: types.UserData = {
         id: 'user-avatar',
         src: '/assets/icons/magenta-avatar.png',
         alt: 'pp',
-        size: 'imedium',
+        size: 'ilarge',
     },
     biography: '¯\\_(ツ)_/¯',
     relation: 'stranger',

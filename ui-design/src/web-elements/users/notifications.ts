@@ -1,6 +1,7 @@
 import type { buttonData, GameType } from '../../types-interfaces';
 import { createMenu } from '../navigation/helpers';
 
+//TODO: Make notifications tab-focusable
 /**
  * Defines default button data used inside notifications (e.g., invitations).
  *

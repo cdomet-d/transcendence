@@ -68,7 +68,9 @@ try {
     wrapper.appendChild(nav.createMenu(defaults.mainMenu, 'horizontal'));
     wrapper.appendChild(nav.createMenu(defaults.mainMenu, 'vertical'));
     wrapper.appendChild(nav.createMenu(defaults.gameMenu, 'vertical', 'l', true));
-    wrapper.appendChild(user.createUserCardSocial(defaults.socialMenu, defaults.userDefault));
+    wrapper.appendChild(
+        user.createUserCardSocial(defaults.socialMenu, defaults.userDefault, 'stranger'),
+    );
     wrapper.appendChild(user.createUserInline(defaults.userDefault));
     wrapper.appendChild(nav.createSearchbar());
     wrapper.appendChild(user.createNotificationBox());

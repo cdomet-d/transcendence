@@ -43,16 +43,17 @@ export function createBiography(val: string): Biography {
 export function createUserCardSocial(
     socialBtns: Array<types.buttonData>,
     user: types.UserData,
+    view: types.ProfileView,
 ): UserCardSocial {
     const avatar = createAvatar(user.avatar) as Avatar;
     const username = createUsername(user.username, user.status) as Username;
-    username.customizeStyle('f-yellow', 'f-m', 'f-bold', true);
-    const menu = createSocialMenu(socialBtns, 'horizontal', 'stranger');
+    const menu = createSocialMenu(socialBtns, 'horizontal', view);
     const card = document.createElement('div', { is: 'user-card-social' }) as UserCardSocial;
-    card.id = user.id;
     card.appendChild(avatar);
     card.appendChild(username);
     card.appendChild(menu);
+    username.customizeStyle('f-yellow', 'f-m', 'f-bold', true);
+    card.id = user.id;
     return card;
 }
 

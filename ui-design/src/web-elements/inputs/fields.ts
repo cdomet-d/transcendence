@@ -14,7 +14,6 @@ export class CustomInput extends HTMLInputElement {
     inputFeedback(event: Event) {
         if (this.getAttribute('type') === 'password') {
             const el = event.target as HTMLInputElement;
-            console.log(el.validity);
             const pw = el.value;
             let feedback: Array<string> = [];
             if (!/[A-Z]/.test(pw)) feedback.push('missing an uppercase letter');
@@ -163,15 +162,16 @@ export class InputGroup extends HTMLDivElement {
             if (this.#info.max) this.#input.max = this.#info.max;
             if (this.#info.step) this.#input.step = this.#info.step;
         }
-        if (this.#info.type === 'file') console.log('were never here right');
-        this.#input.classList.add(
-            'pl-(24px)',
-            'file:absolute',
-            'file:top-[3px]',
-            'file:left-[4px]',
-            'file:w-[5rem]',
-            'file:h-[75%]',
-        );
+        if (this.#info.type === 'file') {
+            this.#input.classList.add(
+                'pl-(24px)',
+                'file:absolute',
+                'file:top-[5px]',
+                'file:left-[4px]',
+                'file:w-[5rem]',
+                'file:h-[31.91px]',
+            );
+        }
     }
 }
 if (!customElements.get('input-and-label')) {
@@ -242,7 +242,7 @@ export class TextAreaGroup extends HTMLDivElement {
         this.#inputFeedback.className = 'brdr bg hidden';
         this.#label.content = this.#info.labelContent;
         this.#label.for = this.#info.id;
-        this.className = 'w-full box-border relative min-w-[240px]';
+        this.className = 'w-full box-border relative min-w-fit';
         this.appendChild(this.#label);
         this.appendChild(this.#input);
         this.appendChild(this.#inputFeedback);

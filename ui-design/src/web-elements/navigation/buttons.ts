@@ -111,7 +111,7 @@ export class CustomButton extends HTMLButtonElement {
         else if (this.#btn.style) {
             this.#btn.style === 'green'
                 ? this.classList.add('valid', 'green-bg')
-                : this.classList.add('invalid', 'red-bg');
+                : this.classList.add('invalid', 'red-bg', 'text-white');
         } else this.classList.add('yellow-bg');
 
         this.type = this.#btn.type;
