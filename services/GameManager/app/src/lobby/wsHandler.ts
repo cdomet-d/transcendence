@@ -2,6 +2,7 @@ import type { FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 import { processLobbyRequest } from '../manager.js';
 import type { lobbyInfo } from '../manager.js'
+import { createLobby } from './lobby.js';
 
 export const wsClientsMap: Map<Number, WebSocket> = new Map();
 
@@ -11,6 +12,8 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 	const userID = getUniqueUserID();
 	wsClientsMap.set(userID, socket);
 	req.server.log.info("User" + userID + " added to clientMap");
+
+	createLobby(userID);
 
 	// handle LOBBY creation CLIENT SIDE
 	// room info

@@ -56,7 +56,7 @@ function wsConnect() {
 	}
 }
 
-// TODO: this ugly, make pretty
+// TODO: requestForm should be filled with lobbyInfo
 function createRequestForm(): string {
 	const requestForm = {
 		event: "TOURNAMENT_REQUEST",

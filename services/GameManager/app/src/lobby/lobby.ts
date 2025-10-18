@@ -1,3 +1,4 @@
+
 interface userInfo {
 	userID?: number,
 	username?: string,
@@ -5,11 +6,12 @@ interface userInfo {
 }
 
 interface lobbyInfo {
-	lobbyId: number,
+	lobbyID: number,
 	whitelist: whitelist,
 	userList: userInfo[],
     remote: boolean,
     format: "quick" | "tournament",
+	players: number
     // gameSettings?: string
 }
 
@@ -19,7 +21,7 @@ interface whitelist {
 	userIDs: number[]
 }
 
-export let lobbyMap: Map<number, lobbyInfo> = new Map();
+export const lobbyMap: Map<number, lobbyInfo> = new Map();
 
 // Lobby management
 /*
@@ -28,26 +30,58 @@ LobbyMap
 	as long as there are still users inside
 	(if host leaves, next user in list becomes host)
 
-	contains LobbyID and LobbyInfoObj
+	Map<number: LobbyID, lobbyInfo: lobbyInfo>
 */
 
 
-// CREATE LOBBY
-/* On click >> create Lobby
-
-BACK:
-compose lobby Obj
-add host to whitelist
-
-
+/*
 FRONT:
 show Lobby Room
 	LobbyID
 	participants
 	game settings
-	Start button greyed out while Lobby != full
+	Start button greyed out while Lobby != full (HOST ONLY CAN START GAME?)
 
 */
+
+// upon ws connection to GM with
+export function createLobby(hostID: number) {
+
+	const lobbyObj: lobbyInfo = makeLobbyInfo(hostID);
+	lobbyMap.set(lobbyObj.lobbyID, lobbyObj);
+
+	// we have lobby :)
+}
+
+function makeLobbyInfo(hostID: number): lobbyInfo {
+
+	const lobbyID: number = getUniqueLobbyID();
+
+	const lobby: lobbyInfo = {
+		lobbyID: lobbyID,
+		whitelist: {
+			lobbyId: lobbyID,
+			hostID: hostID,
+			userIDs: [hostID] // put invitees here
+		},
+		userList: [
+			{userID: hostID} // and add them there when they join
+		],
+		remote: true,
+		format: "tournament",
+		players: 4
+	}
+
+	return lobby;
+}
+
+// TODO: same as getUniqueUserID(), need DB for lobby IDs ?
+let idIndex: number = 1;
+
+function getUniqueLobbyID(): number {
+	const uniqueID = idIndex++;
+	return uniqueID;
+}
 
 
 // JOIN LOBBY
