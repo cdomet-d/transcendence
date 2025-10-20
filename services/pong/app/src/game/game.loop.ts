@@ -1,8 +1,9 @@
-import type { Game } from "../classes/game.class.js";
-import { updateBallPos } from './ball.js';
+import type { Game, stateObj } from "../classes/game.class.js";
+import { updateBallPos, touchesPad } from './ball.js';
 import { updatePaddlePos } from './paddle.js';
 import type { ballObj } from '../classes/game.class.js';
 import { coordinates, Player } from "../classes/player.class.js";
+import { reqObj } from "./mess.validation.js";
 
 const SERVER_TICK: number = 1000 / 20; // 20FPS
 const TIME_STEP: number = 1000 / 60; // 60FPS
@@ -22,6 +23,7 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 
 	for (const req of toProcess) {
 		const player: Player = req._playerId === 1 ? player1 : player2;
+		rewind(game, player, req._req);
 		while(simulatedTime + TIME_STEP <= req._req._timeStamp - tickStart) {
 			game.status = updateBallPos(game.ball, player1, player2, TIME_STEP);
 			if (game.status) {
@@ -54,6 +56,46 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 
 	const delay: number = SERVER_TICK - (performance.now() - start);
 	setTimeout(gameLoop, Math.max(0, delay), game, player1, player2);
+}
+
+function rewind(game: Game, player: Player, req: reqObj) {
+	let state: stateObj | undefined = undefined;
+	const timestamp: number = req._timeStamp - 100
+	let i: number = 0;
+	while( i < game.stateHistory.length - 1) {
+		if (timestamp >= game.stateHistory[i]!._timestamp
+			&& timestamp <= game.stateHistory[i + 1]!._timestamp) {
+				state = game.stateHistory[i];
+				break;
+			}
+		i++;
+	}
+	if (state === undefined)
+		return;
+	const playerPad: coordinates = { ...player.paddle };
+	updatePaddlePos(player, req._keys, game.paddleSpeed, TIME_STEP);
+	let newX: number = state._ball.x + (state._ball.dx * TIME_STEP);
+	let newY: number = state._ball.y + (state._ball.dy * TIME_STEP);
+	if (touchesPad(game.players[0]!.paddle, game.players[1]!.paddle, newX, newY)) {
+		game.ball.x = state._ball.x;
+		game.ball.y = state._ball.y;
+		while (i < game.stateHistory.length) {
+			let simulatedTime: number = 0;
+			while(simulatedTime + TIME_STEP <= SERVER_TICK) {
+				game.status = updateBallPos(game.ball, game.players[0]!, game.players[1]!, TIME_STEP);
+				if (game.status) {
+					endGame(game.players[0]!, game.players[1]!, game);
+					return;
+				}
+				simulatedTime += TIME_STEP;
+			}
+			game.updateState(i);
+		}
+	}
+	else {
+		player.paddle.x = playerPad.x;
+		player.paddle.y = playerPad.y;
+	}
 }
 
 function sendToPlayer(player: Player, opponentPaddle: coordinates, ball: ballObj, side: string) {
