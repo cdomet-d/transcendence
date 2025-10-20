@@ -38,7 +38,7 @@ interface playerReq {
 	_req: reqObj,
 }
 
-interface stateObj {
+export interface stateObj {
 	_timestamp: number,
 	_leftPad: coordinates,
 	_rightPad: coordinates,
@@ -109,7 +109,7 @@ export class Game {
 		return this.#_reqHistory;
 	}
 	
-	get statusHistory(): stateTab {
+	get stateHistory(): stateTab {
 		return this.#_stateHistory;
 	}
 
@@ -149,7 +149,7 @@ export class Game {
 	} //TODO: to be removed. only for testing
 
 	public addReq(req: reqObj, id: number) {
-		const newReq: playerReq = {_playerId: id, _req: { _ID: req._ID, _keys: { ...req._keys }, _timeStamp: req._timeStamp} };
+		const newReq: playerReq = { _playerId: id, _req: structuredClone(req)};
 		this.#_reqHistory.push(newReq);
 	}
 
@@ -158,11 +158,19 @@ export class Game {
 	}
 
 	public addState(timestamp: number) {
-		const newState: stateObj = { _timestamp: timestamp, _leftPad: this.#_players[0]!.paddle, _rightPad: this.#_players[1]!.paddle, _ball: this.#_ball };
+		if (!this.#_players[0] || !this.#_players[1]) return;
+			return;
+		const newState: stateObj = { _timestamp: timestamp, _leftPad: { ...this.#_players[0]!.paddle}, _rightPad: { ...this.#_players[1]!.paddle}, _ball: { ...this.#_ball} };
 		this.#_stateHistory.push(newState);
 	}
 
 	public deleteStates(length: number) {
 		this.#_stateHistory.splice(0, length);
+	}
+
+	public updateState(idx: number) {
+		this.#_stateHistory[idx]!._leftPad = { ...this.#_players[0]!.paddle};
+		this.#_stateHistory[idx]!._rightPad = { ...this.#_players[1]!.paddle};
+		this.#_stateHistory[idx]!._ball = { ...this.#_ball};
 	}
 }
