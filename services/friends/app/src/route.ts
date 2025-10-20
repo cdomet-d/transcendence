@@ -4,9 +4,37 @@ import { getPendingFriendRequests } from './friends.service.js'
 import { getFriendship } from './friends.service.js'
 import { friendshipExistsUsersID } from './friends.service.js'
 
+export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
+
 export async function routeFriend(serv: FastifyInstance) {
 
-	// Send a friend request to another user with username, parameter : username of sender and receiver
+	serv.get('/internal/relationship', async (request, reply) => {
+		try {
+			const { userA, userB } = request.query as { userA: number, userB: number };
+
+			if (!userA || !userB)
+				return reply.code(400).send({ message: 'Missing userA or userB query parameter.' });
+
+			const query = `
+				SELECT statusFrienship FROM friendship 
+				WHERE (userID = ? AND friendID = ?) 
+					OR (userID = ? AND friendID = ?)
+				LIMIT 1;
+				`;
+			const params = [userA, userB, userB, userA];
+			const result = await serv.dbFriends.get<{ statusFrienship: boolean }>(query, params);
+			let status: ProfileView = 'stranger';
+			if (result)
+				status = result.statusFrienship ? 'friend' : 'pending';
+
+			return (reply.code(200).send({ status: status }));
+
+		} catch (error) {
+			serv.log.error(`[Friends Service] Error checking relationship: ${error}`);
+			return reply.code(500).send({ message: 'Internal server error.' });
+		}
+	});
+
 	serv.post('/internal/friends/sendrequest', async (request, reply) => {
 		try {
 			const { senderID: senderID } = request.body as { senderID: number };
@@ -157,9 +185,9 @@ export async function routeFriend(serv: FastifyInstance) {
 
 	serv.delete('/internal/friends/:userID:/friendships', async (request, reply) => {
 		try {
-			const { userID } = request.params as { userID: number};
+			const { userID } = request.params as { userID: number };
 
-			const query= `
+			const query = `
 				DELETE FROM friendship 
 				WHERE (userID = ?) 
 					OR (friendID = ?);

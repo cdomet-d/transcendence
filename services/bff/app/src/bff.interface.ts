@@ -11,13 +11,6 @@ export interface UserCard {
 	relation: ProfileView;
 }
 
-export interface RawUserProfile {
-	userID: number;
-	username: string;
-	avatar: string;
-	biography: string;
-}
-
 export interface RawUserStats { winStreak: number; }
 export interface RawUserActivity { activityStatus: StatusUser; }
 export interface FriendshipStatus { status: ProfileView; }
@@ -38,7 +31,6 @@ export interface UserProfile {
 	avatar: string;
 	biography: string;
 	profileColor: string;
-	rank: number;
 }
 
 //TODO: complete with all the profile card parameters

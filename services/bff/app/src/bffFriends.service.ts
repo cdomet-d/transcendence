@@ -3,14 +3,11 @@ import type { RawFriend } from './bff.interface.js';
 import type { UserProfile } from './bff.interface.js';
 
 export async function findUserByUsername(username: string): Promise<UserData | null> {
-	const response = await fetch(`http://users:1616/internal/users/by-username/${username}`);
-
+	const response = await fetch(`http://users:2626/internal/users/${username}/userID`);
 	if (response.status === 404)
 		return (null);
-
 	if (!response.ok)
 		throw (new Error('Users service failed.'));
-
 	return (response.json() as Promise<UserData>);
 }
 
@@ -39,7 +36,7 @@ export async function deleteFriendRequest(removerID: number, friendID: number): 
 }
 
 export async function fetchRawFriends(userID: number): Promise<RawFriend[]> {
-	const response = await fetch(`http://friends:1616/internal/users/${userID}/friends`);
+	const response = await fetch(`http://friends:1616/internal/friends/${userID}/friends`);
 
 	if (!response.ok)
 		throw (new Error('Friends service failed.'));
@@ -48,7 +45,7 @@ export async function fetchRawFriends(userID: number): Promise<RawFriend[]> {
 }
 
 export async function fetchRawFriendRequests(userID: number): Promise<RawFriend[]> {
-	const response = await fetch(`http://friends:1616/internal/users/${userID}/friend-requests`);
+	const response = await fetch(`http://friends:1616/internal/friends/${userID}/friend-requests`);
 
 	if (!response.ok)
 		throw (new Error('Friends service failed.'));
@@ -56,18 +53,4 @@ export async function fetchRawFriendRequests(userID: number): Promise<RawFriend[
 	return (response.json() as Promise<RawFriend[]>);
 }
 
-export async function fetchUserProfiles(userIDs: number[]): Promise<UserProfile[]> {
-	if (userIDs.length === 0)
-		return [];
 
-	const response = await fetch('http://users:1616/internal/users/profiles-by-ids', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ userIDs })
-	});
-
-	if (!response.ok)
-		throw (new Error('Users service failed.'));
-
-	return (response.json() as Promise<UserProfile[]>);
-}

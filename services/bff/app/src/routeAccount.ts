@@ -116,7 +116,7 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 
 			const hashedPassword = await bcrypt.hash(password, 10);
 
-			const accountResponse = await fetch('https://account:3000/internal/account/register', {
+			const accountResponse = await fetch('https://account:1414/internal/account/register', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ username, hashedPassword })
@@ -128,7 +128,7 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 			const newAccount = await accountResponse.json() as { userID: number, username: string };
 			newAccountId = newAccount.userID;
 
-			const profileResponse = await fetch(`https://users:3000/internal/users/${newAccountId}/profile`, {
+			const profileResponse = await fetch(`https://users:2626/internal/users/${newAccountId}/profile`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ username: newAccount.username })
@@ -165,8 +165,8 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 
 			const deletionResults = await Promise.allSettled([
 				fetch(`http://friends:1616/internal/friends/${userID}/friendships`, { method: 'DELETE' }),
-				fetch(`http://users:3000/internal/users/${userID}/profile`, { method: 'DELETE' }),
-				fetch(`http://account:3000/internal/account/${userID}`, { method: 'DELETE' })
+				fetch(`http://users:2626/internal/users/${userID}`, { method: 'DELETE' }),
+				fetch(`http://account:1414/internal/account/${userID}`, { method: 'DELETE' })
 			]);
 			const failures = deletionResults.filter(result => result.status === 'rejected' || (result.status === 'fulfilled' && !result.value.ok));
 

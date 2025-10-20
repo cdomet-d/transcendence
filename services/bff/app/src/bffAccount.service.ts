@@ -26,7 +26,7 @@ export async function updateAccountPassword(userID: number, newHashedPassword: s
 }
 
 export async function updateUserProfileUsername(userID: number, newUsername: string): Promise<Response> {
-	const url = `http://users:1414/internal/users/${userID}/username`;
+	const url = `http://users:2626/internal/users/${userID}/username`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
