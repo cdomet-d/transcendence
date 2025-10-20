@@ -157,8 +157,8 @@ export class Game {
 		this.#_reqHistory.splice(0, deleteCount);
 	}
 
-	public addState(state: stateObj) {
-		const newState: stateObj = { _timestamp: state._timestamp, _leftPad: { ...state._leftPad }, _rightPad: { ...state._rightPad }, _ball: { ...state._ball } };
+	public addState(timestamp: number) {
+		const newState: stateObj = { _timestamp: timestamp, _leftPad: this.#_players[0]!.paddle, _rightPad: this.#_players[1]!.paddle, _ball: this.#_ball };
 		this.#_stateHistory.push(newState);
 	}
 

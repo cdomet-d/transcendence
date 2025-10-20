@@ -24,7 +24,7 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 		const player: Player = req._playerId === 1 ? player1 : player2;
 		while(simulatedTime + TIME_STEP <= req._req._timeStamp - tickStart) {
 			game.status = updateBallPos(game.ball, player1, player2, TIME_STEP);
-			if(game.status){
+			if (game.status) {
 				endGame(player1, player2, game);
 				return;
 			}
@@ -44,6 +44,9 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 	}
 
 	game.reqHistory = futureReqs;
+
+	const timestamp: number = performance.now();
+	game.addState(timestamp);
 
 	sendToPlayer(player1, player2.paddle, game.ball, "left");
 	if (!game.local)
