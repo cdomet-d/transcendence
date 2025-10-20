@@ -34,7 +34,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 				.send(await friendsServiceResponse.json()));
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error sending friend request: ${error}`);
+			serv.log.error(`[BFF] Error sending friend request: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is currently unavailable.' });
 		}
 	});
@@ -62,7 +62,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 				.send(await friendsServiceResponse.json()));
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error accepting friend request: ${error}`);
+			serv.log.error(`[BFF] Error accepting friend request: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is currently unavailable.' });
 		}
 	});
@@ -90,7 +90,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 				.send(await friendsServiceResponse.json()));
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error deleting friend request: ${error}`);
+			serv.log.error(`[BFF] Error deleting friend request: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is currently unavailable.' });
 		}
 	});
@@ -125,7 +125,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			return (reply.code(200).send(friendCards));
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error fetching friends list: ${error}`);
+			serv.log.error(`[BFF] Error fetching friends list: ${error}`);
 			return (reply.code(503).send({ message: 'A backend service is currently unavailable.' }));
 		}
 	});
@@ -159,7 +159,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			return (reply.code(200).send(requestCards));
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error fetching friend request list: ${error}`);
+			serv.log.error(`[BFF] Error fetching friend request list: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is currently unavailable.' });
 		}
 	});

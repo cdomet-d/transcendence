@@ -45,18 +45,18 @@ export async function userRoutes(serv: FastifyInstance) {
 				}));
 			}
 
-			return reply.code(200).send({
+			return (reply.code(200).send({
 				success: true,
 				message: "userID found!",
 				user
-			});
+			}));
 
 		} catch (error) {
 			serv.log.error(error);
-			return reply.code(500).send({
+			return (reply.code(500).send({
 				success: false,
 				message: 'Internal server error'
-			});
+			}));
 		}
 	});
 
@@ -75,11 +75,11 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const profiles = await serv.dbUsers.all<UserProfile[]>(query, userIDs);
 
-			return reply.code(200).send({
+			return (reply.code(200).send({
 				success: true,
 				message: "Profiles found!",
 				profiles
-			});
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profiles by IDs: ${error}`);
@@ -93,7 +93,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//get username by userID
 	serv.get('/internal/users/:userID/username', async (request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			const query = `SELECT username FROM userProfile WHERE userID = ?`;
 
 			const user = await serv.dbUsers.get<UserRow>(query, [userID]);
@@ -104,18 +104,18 @@ export async function userRoutes(serv: FastifyInstance) {
 				}));
 			}
 
-			return reply.code(200).send({
+			return (reply.code(200).send({
 				success: true,
 				message: "Username found!",
 				user
-			});
+			}));
 
 		} catch (error) {
 			serv.log.error(error);
-			return reply.code(500).send({
+			return (reply.code(500).send({
 				success: false,
 				message: 'Internal server error'
-			});
+			}));
 		}
 	});
 
@@ -130,23 +130,23 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const userProfile = await serv.dbUsers.get<UserProfile>(query, [userID]);
 			if (!userProfile) {
-				return reply.code(404).send({
+				return (reply.code(404).send({
 					success: false,
 					message: 'User profile not found'
-				});
+				}));
 			}
 
-			return reply.code(200).send({
+			return (reply.code(200).send({
 				success: true,
 				profile: userProfile
-			});
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({
+			return (reply.code(500).send({
 				success: false,
 				message: 'Internal server error'
-			});
+			}));
 		}
 	});
 
@@ -173,10 +173,10 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({
+			return (reply.code(500).send({
 				success: false,
 				message: 'Internal server error'
-			});
+			}));
 		}
 	});
 
@@ -196,22 +196,22 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 			const lastConnection = await serv.dbUsers.get<UserRowConnection>(query, params);
 			if (!lastConnection)
-				return reply.code(404).send({
+				return (reply.code(404).send({
 					success: false,
 					message: 'User not found'
-				});
+				}));
 
-			return reply.code(200).send({
+			return (reply.code(200).send({
 				success: true,
 				lastConnection: lastConnection
-			});
+			}));
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({
+			return (reply.code(500).send({
 				success: false,
 				message: 'Internal server error'
-			});
+			}));
 		}
 	});
 
@@ -226,33 +226,33 @@ export async function userRoutes(serv: FastifyInstance) {
 					fetch(`https://users:2626/users/userStats/${userID}`)
 				]);
 				if (profileResponse.ok) {
-					return reply.code(409).send({
+					return (reply.code(409).send({
 						success: false,
 						message: 'This user profile already exists.'
-					});
+					}));
 				}
 
 				if (statsResponse.ok) {
-					return reply.code(409).send({
+					return (reply.code(409).send({
 						success: false,
 						message: 'User stats for this profile already exist.'
-					});
+					}));
 				}
 
 				if (profileResponse.status !== 404 || statsResponse.status !== 404) {
 					serv.log.error(`Unexpected status from users service. Profile: ${profileResponse.status}, Stats: ${statsResponse.status}`);
-					return reply.code(502).send({
+					return (reply.code(502).send({
 						success: false,
 						message: 'An unexpected error occurred while checking with the users service.'
-					});
+					}));
 				}
 
 			} catch (fetchError) {
 				serv.log.error(`Could not connect to the users service: ${fetchError}`);
-				return reply.code(503).send({
+				return (reply.code(503).send({
 					success: false,
 					message: 'The users service is currently unavailable.'
-				});
+				}));
 			}
 
 			const queryProfile = `
@@ -268,10 +268,10 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const createProfile = await serv.dbUsers.run(queryProfile, paramsProfile);
 			if (createProfile.changes === 0) {
-				return reply.code(404).send({
+				return (reply.code(404).send({
 					success: false,
 					message: 'Profile could not be created.'
-				});
+				}));
 			}
 
 			const queryStats = `
@@ -343,10 +343,10 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { value } = request.body as { value: string };
 
 			if (typeof value !== 'string') {
-				return reply.code(400).send({
+				return (reply.code(400).send({
 					success: false,
 					message: 'Validation error: newStatus must be a number.'
-				});
+				}));
 			}
 
 			const query = `
@@ -372,10 +372,10 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({
+			return (reply.code(500).send({
 				success: false,
 				message: 'Internal server error'
-			});
+			}));
 		}
 	});
 
@@ -408,10 +408,10 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({
+			return (reply.code(500).send({
 				success: false,
 				message: 'Internal server error'
-			});
+			}));
 		}
 	});
 
@@ -422,10 +422,10 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { newProfileColor } = request.params as { newProfileColor: string };
 
 			if (typeof newProfileColor !== 'string') {
-				return reply.code(400).send({
+				return (reply.code(400).send({
 					success: false,
 					message: 'Validation error: newStatus must be a number.'
-				});
+				}));
 			}
 
 			const query = `
@@ -465,10 +465,10 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const validStatuses = [0, 1, 2];
 			if (isNaN(statusAsNumber) || !validStatuses.includes(statusAsNumber)) {
-				return reply.code(400).send({
+				return (reply.code(400).send({
 					success: false,
 					message: 'Validation error: newStatus must be 0, 1, or 2.'
-				});
+				}));
 			}
 
 			const query = `
@@ -493,7 +493,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			}));
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 
@@ -505,18 +505,18 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
 			if (typeof newConnection !== 'string' || !dateTimeRegex.test(newConnection)) {
-				return reply.code(400).send({
+				return (reply.code(400).send({
 					success: false,
 					message: 'Validation error: newConnection must be in YYYY-MM-DD HH:MM:SS format.'
-				});
+				}));
 			}
 
 			const date = new Date(newConnection);
 			if (isNaN(date.getTime())) {
-				return reply.code(400).send({
+				return (reply.code(400).send({
 					success: false,
 					message: 'Validation error: The provided date is not a valid calendar date.'
-				});
+				}));
 			}
 
 			const query = `
@@ -542,7 +542,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 
@@ -550,7 +550,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//update user's username with userID
 	serv.patch('/internal/users/:userID/username', async (request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: number };
 			const { newUsername } = request.body as { newUsername: string };
 
 			const query = `UPDATE userProfile SET username = ? WHERE userID = ?`;
@@ -558,7 +558,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			const result = await serv.dbUsers.run(query, params);
 
 			if (result.changes === 0) {
-				return reply.code(404).send({ success: false, message: 'User profile not found.' });
+				return (reply.code(404).send({ success: false, message: 'User profile not found.' }));
 			}
 
 			return reply.code(200).send({ success: true, message: 'Username in profile updated!' });
@@ -567,9 +567,32 @@ export async function userRoutes(serv: FastifyInstance) {
 				return (reply.code(409).send({ success: false, message: 'This username is already taken.' }));
 			}
 			serv.log.error(`Error updating username in profile: ${error}`);
-			return reply.code(500).send({ success: false, message: 'Internal server error' });
+			return (reply.code(500).send({ success: false, message: 'Internal server error' }));
 		}
 	});
+
+	serv.delete('/internal/users/:userID', async (request, reply) => {
+		try {
+			const { userID } = request.params as { userID: number};
+
+			const query = `
+				DELETE FROM userProfile WHERE userID = ?;
+				DELETE FROM userStats WHERE userID = ?;
+			`
+
+			const params = [
+				userID,
+				userID
+			];
+			const result = await serv.dbUsers.run(query, params);
+			if (!result.changes)
+				return (reply.code(404).send({ success: false, message: 'User profile/stats not found.' }));
+			return (reply.code(204).send({success: true, message: 'User profile and stats deleted !'}))
+		} catch (error) {
+			serv.log.error(`Error deleting user profile: ${error}`);
+			return (reply.code(500).send({ success: false, message: 'Internal server error' }));
+		}
+	})
 
 	//USER STATS
 	//get all user's stats with userID

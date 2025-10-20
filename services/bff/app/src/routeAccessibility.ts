@@ -20,7 +20,7 @@ export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 				.send(await translationResponse.json()));
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error getting translation: ${error}`);
+			serv.log.error(`[BFF] Error getting translation: ${error}`);
 			return (reply.code(503).send({ message: 'The translation service is currently unavailable.' }));
 		}
 	});

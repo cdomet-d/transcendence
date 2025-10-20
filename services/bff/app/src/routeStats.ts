@@ -21,7 +21,7 @@ export async function bffStatsRoutes(serv: FastifyInstance) {
 			return reply.code(statsResponse.status).send(await statsResponse.json());
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error getting user stats: ${error}`);
+			serv.log.error(`[BFF] Error getting user stats: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is unavailable.' });
 		}
 	});
@@ -35,7 +35,7 @@ export async function bffStatsRoutes(serv: FastifyInstance) {
 			return reply.code(statsResponse.status).send(await statsResponse.json());
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error getting own stats: ${error}`);
+			serv.log.error(`[BFF] Error getting own stats: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is unavailable.' });
 		}
 	});
@@ -68,7 +68,7 @@ export async function bffStatsRoutes(serv: FastifyInstance) {
 
 			return reply.code(200).send({ message: 'Game results processed.' });
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error processing game results: ${error}`);
+			serv.log.error(`[BFF] Error processing game results: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is unavailable.' });
 		}
 	});

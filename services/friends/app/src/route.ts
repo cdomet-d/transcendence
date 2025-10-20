@@ -115,7 +115,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			if (result.changes === 0)
 				return (reply.code(404).send({ message: 'Friendship not found.' }));
 
-			return (reply.code(200).send({
+			return (reply.code(204).send({
 				success: true,
 				message: `Friendship deleted !`
 			}));
@@ -129,7 +129,7 @@ export async function routeFriend(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/internal/users/:userID/friendslist', async (request, reply) => {
+	serv.get('/internal/friends/:userID/friendslist', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
 
@@ -151,6 +151,35 @@ export async function routeFriend(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[Friends Service] Error fetching friend request list: ${error}`);
+			return reply.code(500).send({ message: 'Internal server error.' });
+		}
+	});
+
+	serv.delete('/internal/friends/:userID:/friendships', async (request, reply) => {
+		try {
+			const { userID } = request.params as { userID: number};
+
+			const query= `
+				DELETE FROM friendship 
+				WHERE (userID = ?) 
+					OR (friendID = ?);
+			`
+
+			const params = [
+				userID,
+				userID
+			]
+			const result = await serv.dbFriends.run(query, params);
+			if (result.changes === 0)
+				return (reply.code(404).send({ message: 'Friendship not found.' }));
+
+			return (reply.code(204).send({
+				success: true,
+				message: `Friendships deleted !`
+			}));
+
+		} catch (error) {
+			serv.log.error(`[Friends Service] Error deleting all friendships: ${error}`);
 			return reply.code(500).send({ message: 'Internal server error.' });
 		}
 	});

@@ -1,5 +1,5 @@
 export async function validateCredentials(username: string, password: string): Promise<Response> {
-	const url = 'http://account-service:3000/internal/accounts/login';
+	const url = 'http://account:1414/internal/account/login';
 	return fetch(url, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
@@ -8,7 +8,7 @@ export async function validateCredentials(username: string, password: string): P
 }
 
 export async function updateAccountUsername(userID: number, newUsername: string): Promise<Response> {
-	const url = `http://account-service:3000/internal/accounts/${userID}/username`;
+	const url = `http://account:1414/internal/account/${userID}/username`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
@@ -17,7 +17,7 @@ export async function updateAccountUsername(userID: number, newUsername: string)
 }
 
 export async function updateAccountPassword(userID: number, newHashedPassword: string): Promise<Response> {
-	const url = `http://account-service:3000/internal/accounts/${userID}/password`;
+	const url = `http://account:1414/internal/account/${userID}/password`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
@@ -26,7 +26,7 @@ export async function updateAccountPassword(userID: number, newHashedPassword: s
 }
 
 export async function updateUserProfileUsername(userID: number, newUsername: string): Promise<Response> {
-	const url = `http://users-service:3000/internal/users/${userID}/username`;
+	const url = `http://users:1414/internal/users/${userID}/username`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },

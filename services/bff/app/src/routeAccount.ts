@@ -50,7 +50,7 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 
 			return reply.code(200).send({ token: token });
 		} catch (error) {
-			serv.log.error(`[API Gateway] Login error: ${error}`);
+			serv.log.error(`[BFF] Login error: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is unavailable.' });
 		}
 	});
@@ -76,7 +76,7 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 			return reply.code(200).send({ message: 'Username updated successfully.' });
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Username update error: ${error}`);
+			serv.log.error(`[BFF] Username update error: ${error}`);
 
 			if (isAuthUpdated) {
 				serv.log.warn(`Rolling back username change for userID: ${userID}`);
@@ -101,7 +101,7 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 			return reply.code(200).send({ message: 'Password updated successfully.' });
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Password update error: ${error}`);
+			serv.log.error(`[BFF] Password update error: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is unavailable.' });
 		}
 	});
@@ -116,7 +116,7 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 
 			const hashedPassword = await bcrypt.hash(password, 10);
 
-			const accountResponse = await fetch('http://account-service:3000/internal/account/register', {
+			const accountResponse = await fetch('https://account:3000/internal/account/register', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ username, hashedPassword })
@@ -128,7 +128,7 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 			const newAccount = await accountResponse.json() as { userID: number, username: string };
 			newAccountId = newAccount.userID;
 
-			const profileResponse = await fetch(`http://users-service:3000/internal/users/${newAccountId}/profile`, {
+			const profileResponse = await fetch(`https://users:3000/internal/users/${newAccountId}/profile`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ username: newAccount.username })
@@ -140,11 +140,11 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 			return (reply.code(201).send({ message: 'Account and profile created successfully!' }));
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error during registration: ${error}`);
+			serv.log.error(`[BFF] Error during registration: ${error}`);
 			// If the profile creation failed after the account was created, we delete the account.
 			if (newAccountId) {
 				serv.log.warn(`Rolling back account creation for userID: ${newAccountId}`);
-				await fetch(`http://account-service:3000/internal/accounts/${newAccountId}`, {
+				await fetch(`https://account:1414/internal/account/${newAccountId}`, {
 					method: 'DELETE'
 				});
 			}
@@ -152,5 +152,38 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TOOD: delete account
+	serv.delete('account/delete', async (request, reply) => {
+		try {
+			const userID = request.user.userID;
+			const username = request.user.username;
+			const { password } = request.body as { password: string };
+
+			const validationResponse = await validateCredentials(username, password);
+
+			if (!validationResponse.ok)
+				return reply.code(validationResponse.status).send({ message: 'Invalid credentials.' });
+
+			const deletionResults = await Promise.allSettled([
+				fetch(`http://friends:1616/internal/friends/${userID}/friendships`, { method: 'DELETE' }),
+				fetch(`http://users:3000/internal/users/${userID}/profile`, { method: 'DELETE' }),
+				fetch(`http://account:3000/internal/account/${userID}`, { method: 'DELETE' })
+			]);
+			const failures = deletionResults.filter(result => result.status === 'rejected' || (result.status === 'fulfilled' && !result.value.ok));
+
+			if (failures.length > 0) {
+				serv.log.error({
+					msg: `[CRITICAL] Partial deletion for userID: ${userID}.`,
+					failures: failures
+				});
+				return reply.code(500).send({
+					message: 'Failed to completely delete account. Please contact support.'
+				});
+			}
+			return (reply.code(204).send());
+
+		} catch (error) {
+			serv.log.error(`[BFF] Error during account deletion: ${error}`);
+			return reply.code(503).send({ message: 'A backend service is unavailable.' });
+		}
+	});
 }

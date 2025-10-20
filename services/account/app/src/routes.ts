@@ -61,7 +61,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.patch('/internal/accounts/:userID/password', async (request, reply) => {
+	serv.patch('/internal/account/:userID/password', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
 			const { newHashedPassword } = request.body as { newHashedPassword: string };
@@ -79,7 +79,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.patch('/internal/accounts/:userID/username', async (request, reply) => {
+	serv.patch('/internal/account/:userID/username', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
 			const { newUsername } = request.body as { newUsername: string };
@@ -100,7 +100,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.delete('/internal/accounts/:userID', async (request, reply) => {
+	serv.delete('/internal/account/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
 

@@ -1,5 +1,5 @@
 export async function validateCredentials(username: string, password: string): Promise<Response> {
-	const url = 'http://account-service:3000/internal/accounts/login';
+	const url = 'http://account:3000/internal/accounts/login';
 	return fetch(url, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
@@ -8,7 +8,7 @@ export async function validateCredentials(username: string, password: string): P
 }
 
 export async function updateAccountUsername(userID: number, newUsername: string): Promise<Response> {
-	const url = `http://account-service:3000/internal/accounts/${userID}/username`;
+	const url = `http://account:3000/internal/accounts/${userID}/username`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
@@ -17,7 +17,7 @@ export async function updateAccountUsername(userID: number, newUsername: string)
 }
 
 export async function updateAccountPassword(userID: number, newHashedPassword: string): Promise<Response> {
-	const url = `http://account-service:3000/internal/accounts/${userID}/password`;
+	const url = `http://account:3000/internal/accounts/${userID}/password`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
@@ -26,7 +26,7 @@ export async function updateAccountPassword(userID: number, newHashedPassword: s
 }
 
 export async function updateUserProfileUsername(userID: number, newUsername: string): Promise<Response> {
-	const url = `http://users-service:3000/internal/users/${userID}/username`;
+	const url = `http://users:3000/internal/users/${userID}/username`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
@@ -37,7 +37,7 @@ import type { RawFriend } from './gateway.interface.js';
 import type { UserProfile } from './gateway.interface.js';
 
 export async function findUserByUsername(username: string): Promise<UserData | null> {
-	const response = await fetch(`http://users-service:3000/internal/users/by-username/${username}`);
+	const response = await fetch(`http://users:3000/internal/users/by-username/${username}`);
 
 	if (response.status === 404)
 		return (null);
@@ -49,7 +49,7 @@ export async function findUserByUsername(username: string): Promise<UserData | n
 }
 
 export async function createFriendRequest(senderID: number, friendID: number): Promise<Response> {
-	return (fetch('http://friends-service:3000/internal/friends/sendrequest', {
+	return (fetch('http://friends:3000/internal/friends/sendrequest', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ senderID, friendID })
@@ -57,7 +57,7 @@ export async function createFriendRequest(senderID: number, friendID: number): P
 }
 
 export async function acceptFriendRequest(senderRequestID: number, friendID: number): Promise<Response> {
-	return (fetch('http://friends-service:3000//internal/friends/acceptrequest', {
+	return (fetch('http://friends:3000//internal/friends/acceptrequest', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ senderRequestID, friendID })
@@ -65,7 +65,7 @@ export async function acceptFriendRequest(senderRequestID: number, friendID: num
 }
 
 export async function deleteFriendRequest(removerID: number, friendID: number): Promise<Response> {
-	return (fetch('http://friends-service:3000//internal/friends/deletefriendship', {
+	return (fetch('http://friends:3000//internal/friends/deletefriendship', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ removerID, friendID })
@@ -73,7 +73,7 @@ export async function deleteFriendRequest(removerID: number, friendID: number): 
 }
 
 export async function fetchRawFriends(userID: number): Promise<RawFriend[]> {
-	const response = await fetch(`http://friends-service:3000/internal/users/${userID}/friends`);
+	const response = await fetch(`http://friends:3000/internal/users/${userID}/friends`);
 
 	if (!response.ok)
 		throw (new Error('Friends service failed.'));
@@ -82,7 +82,7 @@ export async function fetchRawFriends(userID: number): Promise<RawFriend[]> {
 }
 
 export async function fetchRawFriendRequests(userID: number): Promise<RawFriend[]> {
-	const response = await fetch(`http://friends-service:3000/internal/users/${userID}/friend-requests`);
+	const response = await fetch(`http://friends:3000/internal/users/${userID}/friend-requests`);
 
 	if (!response.ok)
 		throw (new Error('Friends service failed.'));
@@ -94,7 +94,7 @@ export async function fetchUserProfiles(userIDs: number[]): Promise<UserProfile[
 	if (userIDs.length === 0)
 		return [];
 
-	const response = await fetch('http://users-service:3000/internal/users/profiles-by-ids', {
+	const response = await fetch('http://users:3000/internal/users/profiles-by-ids', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ userIDs })
@@ -159,12 +159,12 @@ export interface FriendProfileCard {
 }
 
 export async function fetchUserStats(userID: number): Promise<Response> {
-	const url = `http://users-service:3000/internal/users/${userID}/stats`;
+	const url = `http://users:3000/internal/users/${userID}/stats`;
 	return fetch(url);
 }
 
 export async function updateUserStats(userID: number, statsData: object): Promise<Response> {
-	const url = `http://users-service:3000/internal/users/${userID}/stats`;
+	const url = `http://users:3000/internal/users/${userID}/stats`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
@@ -173,14 +173,14 @@ export async function updateUserStats(userID: number, statsData: object): Promis
 }
 
 export async function incrementWinStreak(userID: number): Promise<Response> {
-	const url = `http://users-service:3000/internal/users/${userID}/stats/win-streak/increment`;
+	const url = `http://users:3000/internal/users/${userID}/stats/win-streak/increment`;
 	return fetch(url, {
 		method: 'POST'
 	});
 }
 
 export async function resetWinStreak(userID: number): Promise<Response> {
-	const url = `http://users-service:3000/internal/users/${userID}/stats/win-streak/reset`;
+	const url = `http://users:3000/internal/users/${userID}/stats/win-streak/reset`;
 	return fetch(url, {
 		method: 'POST'
 	});
@@ -204,7 +204,7 @@ export async function fetchUserActivityStatus(userID: number): Promise<RawUserAc
 }
 
 export async function updateUserProfileField(userID: number, field: string, value: any): Promise<Response> {
-	const url = `http://users-service:3000/internal/users/${userID}/${field}`;
+	const url = `http://users:3000/internal/users/${userID}/${field}`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
@@ -240,7 +240,7 @@ export async function gatewayAccessibilityRoutes(serv: FastifyInstance) {
 				.send(await translationResponse.json()));
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error getting translation: ${error}`);
+			serv.log.error(`[BFF] Error getting translation: ${error}`);
 			return (reply.code(503).send({ message: 'The translation service is currently unavailable.' }));
 		}
 	});
@@ -296,7 +296,7 @@ export async function gatewayAccountRoutes(serv: FastifyInstance) {
 
 			return reply.code(200).send({ token: token });
 		} catch (error) {
-			serv.log.error(`[API Gateway] Login error: ${error}`);
+			serv.log.error(`[BFF] Login error: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is unavailable.' });
 		}
 	});
@@ -322,7 +322,7 @@ export async function gatewayAccountRoutes(serv: FastifyInstance) {
 			return reply.code(200).send({ message: 'Username updated successfully.' });
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Username update error: ${error}`);
+			serv.log.error(`[BFF] Username update error: ${error}`);
 
 			if (isAuthUpdated) {
 				serv.log.warn(`Rolling back username change for userID: ${userID}`);
@@ -347,7 +347,7 @@ export async function gatewayAccountRoutes(serv: FastifyInstance) {
 			return reply.code(200).send({ message: 'Password updated successfully.' });
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Password update error: ${error}`);
+			serv.log.error(`[BFF] Password update error: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is unavailable.' });
 		}
 	});
@@ -362,7 +362,7 @@ export async function gatewayAccountRoutes(serv: FastifyInstance) {
 
 			const hashedPassword = await bcrypt.hash(password, 10);
 
-			const accountResponse = await fetch('http://account-service:3000/internal/account/register', {
+			const accountResponse = await fetch('http://account:3000/internal/account/register', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ username, hashedPassword })
@@ -374,7 +374,7 @@ export async function gatewayAccountRoutes(serv: FastifyInstance) {
 			const newAccount = await accountResponse.json() as { userID: number, username: string };
 			newAccountId = newAccount.userID;
 
-			const profileResponse = await fetch(`http://users-service:3000/internal/users/${newAccountId}/profile`, {
+			const profileResponse = await fetch(`http://users:3000/internal/users/${newAccountId}/profile`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ username: newAccount.username })
@@ -386,11 +386,11 @@ export async function gatewayAccountRoutes(serv: FastifyInstance) {
 			return (reply.code(201).send({ message: 'Account and profile created successfully!' }));
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error during registration: ${error}`);
+			serv.log.error(`[BFF] Error during registration: ${error}`);
 			// If the profile creation failed after the account was created, we delete the account.
 			if (newAccountId) {
 				serv.log.warn(`Rolling back account creation for userID: ${newAccountId}`);
-				await fetch(`http://account-service:3000/internal/accounts/${newAccountId}`, {
+				await fetch(`http://account:3000/internal/accounts/${newAccountId}`, {
 					method: 'DELETE'
 				});
 			}
@@ -436,7 +436,7 @@ export async function gatewayFriendRoutes(serv: FastifyInstance) {
 				.send(await friendsServiceResponse.json()));
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error sending friend request: ${error}`);
+			serv.log.error(`[BFF] Error sending friend request: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is currently unavailable.' });
 		}
 	});
@@ -464,7 +464,7 @@ export async function gatewayFriendRoutes(serv: FastifyInstance) {
 				.send(await friendsServiceResponse.json()));
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error accepting friend request: ${error}`);
+			serv.log.error(`[BFF] Error accepting friend request: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is currently unavailable.' });
 		}
 	});
@@ -492,7 +492,7 @@ export async function gatewayFriendRoutes(serv: FastifyInstance) {
 				.send(await friendsServiceResponse.json()));
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error deleting friend request: ${error}`);
+			serv.log.error(`[BFF] Error deleting friend request: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is currently unavailable.' });
 		}
 	});
@@ -527,7 +527,7 @@ export async function gatewayFriendRoutes(serv: FastifyInstance) {
 			return (reply.code(200).send(friendCards));
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error fetching friends list: ${error}`);
+			serv.log.error(`[BFF] Error fetching friends list: ${error}`);
 			return (reply.code(503).send({ message: 'A backend service is currently unavailable.' }));
 		}
 	});
@@ -561,7 +561,7 @@ export async function gatewayFriendRoutes(serv: FastifyInstance) {
 			return (reply.code(200).send(requestCards));
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error fetching friend request list: ${error}`);
+			serv.log.error(`[BFF] Error fetching friend request list: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is currently unavailable.' });
 		}
 	});
@@ -592,7 +592,7 @@ export async function gatewayStatsRoutes(serv: FastifyInstance) {
 			return reply.code(statsResponse.status).send(await statsResponse.json());
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error getting user stats: ${error}`);
+			serv.log.error(`[BFF] Error getting user stats: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is unavailable.' });
 		}
 	});
@@ -606,7 +606,7 @@ export async function gatewayStatsRoutes(serv: FastifyInstance) {
 			return reply.code(statsResponse.status).send(await statsResponse.json());
 
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error getting own stats: ${error}`);
+			serv.log.error(`[BFF] Error getting own stats: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is unavailable.' });
 		}
 	});
@@ -639,7 +639,7 @@ export async function gatewayStatsRoutes(serv: FastifyInstance) {
 
 			return reply.code(200).send({ message: 'Game results processed.' });
 		} catch (error) {
-			serv.log.error(`[API Gateway] Error processing game results: ${error}`);
+			serv.log.error(`[BFF] Error processing game results: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is unavailable.' });
 		}
 	});

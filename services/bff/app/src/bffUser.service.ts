@@ -17,7 +17,7 @@ export async function fetchUserActivityStatus(userID: number): Promise<RawUserAc
 }
 
 export async function updateUserProfileField(userID: number, field: string, value: any): Promise<Response> {
-	const url = `http://users-service:3000/internal/users/${userID}/${field}`;
+	const url = `http://users:3000/internal/users/${userID}/${field}`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
