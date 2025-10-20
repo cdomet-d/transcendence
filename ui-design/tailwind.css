@@ -216,8 +216,9 @@
 
 	input {
 		box-sizing: border-box;
+		min-width: 330px;
 		width: 100%;
-		height: var(--m);
+		height: 36px;
 		outline: none;
 		background: linear-gradient(180deg,
 				#ffdc99 0 10%,

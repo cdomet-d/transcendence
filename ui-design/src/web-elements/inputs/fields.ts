@@ -162,16 +162,15 @@ export class InputGroup extends HTMLDivElement {
             if (this.#info.max) this.#input.max = this.#info.max;
             if (this.#info.step) this.#input.step = this.#info.step;
         }
-        if (this.#info.type === 'file') {
-            this.#input.classList.add(
-                'pl-(24px)',
-                'file:absolute',
-                'file:top-[5px]',
-                'file:left-[4px]',
-                'file:w-[5rem]',
-                'file:h-[31.91px]',
-            );
-        }
+        if (this.#info.type === 'file') console.log('were never here right');
+        this.#input.classList.add(
+            'pl-(24px)',
+            'file:absolute',
+            'file:top-[5px]',
+            'file:left-[4px]',
+            'file:w-[5rem]',
+            'file:h-[26px]',
+        );
     }
 }
 if (!customElements.get('input-and-label')) {
