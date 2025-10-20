@@ -41,11 +41,11 @@ export interface UserProfile {
 	rank: number;
 }
 
+//TODO: complete with all the profile card parameters
 export interface FriendProfileCard {
 	username: string;
 	avatar: string;
 	biography: string;
-	//TODO: complete with all the profile card parameters
 	friendship: {
 		friendsSince: string;
 	};
