@@ -1,15 +1,15 @@
 import type { FastifyInstance } from 'fastify';
-import type { FriendProfileCard } from './gateway.interface.js';
+import type { FriendProfileCard } from './bff.interface.js';
 
-import { findUserByUsername } from './gatewayFriends.service.js';
-import { createFriendRequest } from './gatewayFriends.service.js';
-import { acceptFriendRequest } from './gatewayFriends.service.js';
-import { deleteFriendRequest } from './gatewayFriends.service.js';
-import { fetchRawFriends } from './gatewayFriends.service.js';
-import { fetchRawFriendRequests } from './gatewayFriends.service.js';
-import { fetchUserProfiles } from './gatewayFriends.service.js';
+import { findUserByUsername } from './bffFriends.service.js';
+import { createFriendRequest } from './bffFriends.service.js';
+import { acceptFriendRequest } from './bffFriends.service.js';
+import { deleteFriendRequest } from './bffFriends.service.js';
+import { fetchRawFriends } from './bffFriends.service.js';
+import { fetchRawFriendRequests } from './bffFriends.service.js';
+import { fetchUserProfiles } from './bffFriends.service.js';
 
-export async function gatewayFriendRoutes(serv: FastifyInstance) {
+export async function bffFriendRoutes(serv: FastifyInstance) {
 
 	serv.post('/friends/sendrequest', async (request, reply) => {
 		try {

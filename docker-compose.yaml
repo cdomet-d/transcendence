@@ -116,12 +116,12 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/frontend/app:/app
-  gateway:
+  bff:
     build:
-      context: ./services/gateway
+      context: ./services/bff
       dockerfile: Dockerfile
-    container_name: gateway
-    image: gateway:0.0.1
+    container_name: bff
+    image: bff:0.0.1
     networks:
       - transcendence
     restart: unless-stopped
@@ -131,7 +131,7 @@ services:
       - ssl-key.pem
       - ssl-cert.pem
     volumes:
-      - ./services/gateway/app:/usr/app
+      - ./services/bff/app:/usr/app
     # user: "${T_UID}:${T_GID}"
   gamemanager:
     build:

@@ -1,12 +1,12 @@
 import type { FastifyInstance } from 'fastify';
-import type { UserData } from './gateway.interface.js';
+import type { UserData } from './bff.interface.js';
 
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import { validateCredentials } from './gatewayAccount.service.js';
-import { updateAccountUsername } from './gatewayAccount.service.js';
-import { updateAccountPassword } from './gatewayAccount.service.js';
-import { updateUserProfileUsername } from './gatewayAccount.service.js';
+import { validateCredentials } from './bffAccount.service.js';
+import { updateAccountUsername } from './bffAccount.service.js';
+import { updateAccountPassword } from './bffAccount.service.js';
+import { updateUserProfileUsername } from './bffAccount.service.js';
 
 //TODO: find a secure way to handle JWT_SECRET
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-and-long-key-for-development';
@@ -32,7 +32,7 @@ const payload = { userID: 123 };
 const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 */
 
-export async function gatewayAccountRoutes(serv: FastifyInstance) {
+export async function bffAccountRoutes(serv: FastifyInstance) {
 
 	serv.post('/account/login', async (request, reply) => {
 		try {

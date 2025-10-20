@@ -1,12 +1,12 @@
 import type { FastifyInstance } from 'fastify';
-import { findUserByUsername } from './gatewayFriends.service.js';
+import { findUserByUsername } from './bffFriends.service.js';
 
-import { fetchUserStats } from './gatewayStats.service.js';
-import { updateUserStats } from './gatewayStats.service.js';
-import { incrementWinStreak } from './gatewayStats.service.js';
-import { resetWinStreak } from './gatewayStats.service.js';
+import { fetchUserStats } from './bffStats.service.js';
+import { updateUserStats } from './bffStats.service.js';
+import { incrementWinStreak } from './bffStats.service.js';
+import { resetWinStreak } from './bffStats.service.js';
 
-export async function gatewayStatsRoutes(serv: FastifyInstance) {
+export async function bffStatsRoutes(serv: FastifyInstance) {
 
 	serv.get('/api/users/:username/stats', async (request, reply) => {
 		try {

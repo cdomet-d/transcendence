@@ -5,7 +5,7 @@ async function fetchTranslation(word: string, langCode: string): Promise<Respons
 	return (fetch(url));
 }
 
-export async function gatewayAccessibilityRoutes(serv: FastifyInstance) {
+export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 
 	serv.get('/api/translations', async (request, reply) => {
 		try {

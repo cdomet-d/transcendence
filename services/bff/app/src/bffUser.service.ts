@@ -1,5 +1,5 @@
-import type { FriendshipStatus } from "./gateway.interface.js";
-import type { RawUserActivity } from "./gateway.interface.js";
+import type { FriendshipStatus } from "./bff.interface.js";
+import type { RawUserActivity } from "./bff.interface.js";
 
 //TODO :code the friend internal route
 export async function fetchFriendshipStatus(userA: number, userB: number): Promise<FriendshipStatus> {

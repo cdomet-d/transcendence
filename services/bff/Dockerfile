@@ -10,4 +10,4 @@ RUN chmod +x /usr/local/bin/gateway.sh
 
 EXPOSE 1818
 
-CMD ["gateway.sh"]
+CMD ["bff.sh"]

@@ -1,10 +1,10 @@
 import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
-import { gatewayFriendRoutes } from './routeFriends.js';
-import { gatewayStatsRoutes } from './routeStats.js';
-import { gatewayAccessibilityRoutes } from './routeAccessibility.js';
-import { gatewayAccountRoutes } from './routeAccount.js';
+import { bffFriendRoutes } from './routeFriends.js';
+import { bffStatsRoutes } from './routeStats.js';
+import { bffAccessibilityRoutes } from './routeAccessibility.js';
+import { bffAccountRoutes } from './routeAccount.js';
 import { options } from './serv.conf.js';
 
 const serv: FastifyInstance = Fastify(options);
@@ -14,10 +14,10 @@ serv.register(cors, {
 	methods: ['GET', 'POST', 'PUT', 'DELETE']
 });
 
-serv.register(gatewayFriendRoutes);
-serv.register(gatewayAccessibilityRoutes);
-serv.register(gatewayStatsRoutes);
-serv.register(gatewayAccountRoutes);
+serv.register(bffFriendRoutes);
+serv.register(bffAccessibilityRoutes);
+serv.register(bffStatsRoutes);
+serv.register(bffAccountRoutes);
 
 const start = async () => {
 	try {
