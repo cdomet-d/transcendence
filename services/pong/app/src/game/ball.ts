@@ -48,7 +48,7 @@ function updateScore(player1: Player, player2: Player, newX: number): boolean {
 	return false;
 }
 
-function touchesPad(leftPad: coordinates, rightPad: coordinates, newX: number, newY: number): boolean {
+export function touchesPad(leftPad: coordinates, rightPad: coordinates, newX: number, newY: number): boolean {
 	//TODO: fix 460
 	if (newX + 10 >= 460 && (newY + 10 >= rightPad.y && newY - 10 <= rightPad.y + 54))
 		return true;
