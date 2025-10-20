@@ -8,6 +8,7 @@ interface userInfo {
 interface lobbyInfo {
 	lobbyID: number,
 	whitelist: whitelist,
+	available: boolean,
 	userList: userInfo[],
     remote: boolean,
     format: "quick" | "tournament",
@@ -44,7 +45,7 @@ show Lobby Room
 
 */
 
-// upon ws connection to GM with
+// upon ws connection to GM
 export function createLobby(hostID: number) {
 
 	const lobbyObj: lobbyInfo = makeLobbyInfo(hostID);
@@ -64,6 +65,7 @@ function makeLobbyInfo(hostID: number): lobbyInfo {
 			hostID: hostID,
 			userIDs: [hostID] // put invitees here
 		},
+		available: true,
 		userList: [
 			{userID: hostID} // and add them there when they join
 		],

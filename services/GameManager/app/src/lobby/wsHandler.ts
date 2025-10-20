@@ -4,16 +4,21 @@ import { processLobbyRequest } from '../manager.js';
 import type { lobbyInfo } from '../manager.js'
 import { createLobby } from './lobby.js';
 
-export const wsClientsMap: Map<Number, WebSocket> = new Map();
+export const wsClientsMap: Map<number, WebSocket> = new Map();
 
 export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 	req.server.log.info('WebSocket connection established');
 
-	const userID = getUniqueUserID();
-	wsClientsMap.set(userID, socket);
-	req.server.log.info("User" + userID + " added to clientMap");
+	// const userID = getUniqueUserID();
+	// wsClientsMap.set(userID, socket);
+	// req.server.log.info("User" + userID + " added to clientMap");
 
-	createLobby(userID);
+	// // IF CREATE LOBBY
+	// createLobby(userID);
+
+	// // IF JOIN LOBBY
+
+
 
 	// handle LOBBY creation CLIENT SIDE
 	// room info
@@ -31,6 +36,19 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 		if (!data) {
 			console.log("Error: Message received by GM is empty or corrupted!")
 		}
+
+		if (data.action) {
+			if (data.action === "create") {
+				console.log("GM RECEIVED 'create'")
+				const userID = getUniqueUserID();
+				wsClientsMap.set(userID, socket);
+				req.server.log.info("User" + userID + " added to clientMap");
+				createLobby(userID);
+				socket.send(JSON.stringify({lobby: "created"}));
+				return;
+			}
+		}
+
 		const event = data.event;
 		if (!event || event && (event !== "TOURNAMENT_REQUEST" && event !== "GAME_REQUEST")) {
 			console.log("Error: Wrong or empty request in GM!");

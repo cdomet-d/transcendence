@@ -1,7 +1,8 @@
+import { renderLobby } from '../../pages/html.pages.js';
 import { pong } from '../game/pong.js';
 import { router } from '../main.js';
 
-let wsInstance: any = null;
+let wsInstance: WebSocket | null = null;
 
 function openWsConnection() {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
@@ -11,18 +12,56 @@ function openWsConnection() {
 	return wsInstance;
 }
 
+export function attachLobbyMenuListeners() {
+	const createBtn = document.getElementById('create-btn');
+	const joinBtn = document.getElementById('join-btn');
+	
+	if (createBtn) {
+		createBtn.addEventListener('click', handleCreate);
+	}
+	if (joinBtn) {
+		joinBtn.addEventListener('click', handleJoin);
+	}
+}
+
+function attachLobbyListeners() {
+	const startButton = document.getElementById('start-tournament-btn');
+	
+	if (startButton) {
+		startButton.addEventListener('click', handleTournamentStart);
+	}
+}
+
+
 function wsConnect() {
 	const ws: WebSocket = openWsConnection();
 
-	ws.onerror = (err: any) => {
-		console.log("error:", err);
-		return; //TODO: handle error properly
-	}
-
 	ws.onopen = () => {
 		console.log("WebSocket connection established!")
+		// enable buttons in html?
+	}
 
-		ws.onmessage = (message: any) => {
+	ws.onmessage = (message: MessageEvent) => {
+		try {
+			// Filter incoming messages
+
+			// CREATE LOBBY
+			const data = JSON.parse(message.data);
+			if (data.lobby === "created") {
+				console.log("Lobby created, rendering lobby now")
+				const app = document.getElementById('app');
+				if (app) {
+					app.innerHTML = renderLobby();
+					attachLobbyListeners();
+				} else {
+					console.log("Error: could not find HTMLElement: 'app'");
+				}
+			}
+			// JOIN LOBBY
+
+			// REQUEST APPROVED
+			// REQUEST DECLINED
+
 			// console.log("Client received WS message!");
 
 			const gameRequest/* : gameRequest */ = JSON.parse(message.data);
@@ -33,27 +72,63 @@ function wsConnect() {
 			} else if (gameRequest.event === "approved") {
 				window.history.pushState({}, '', '/game/match');
 				router._loadRoute('/game/match');
-				console.log("Client ready to connect game #" + gameID);
-				// ws connect to "/game/match" and send userID + gameID
-				pong(message.data);
+				console.log("Client ready to connect game: #" + gameID);
+				pong(message.data); // ws connect to "/game/match" and send userID + gameID
 			}
+		} catch (error) {
+			console.error("Error: Failed to parse WS message", error);
 		}
+	}
 
-		// TODO: this ugly, make pretty
-		const startButton = document.getElementById('start-tournament-btn');
-		if (startButton && ws.readyState === WebSocket.OPEN) {
-			startButton.addEventListener('click', () => {
-				const message = createRequestForm();
-				console.log("Client sending following to GM:\n", message);
-				ws.send(message);
-			});
-		}
+	ws.onerror = (err: any) => {
+		console.log("error:", err);
+		return; //TODO: handle error properly
 	}
 
 	ws.onclose = () => {
 		console.log("WebSocket connection closed!");
 		// TODO: Check wether deconnection was expected or not 
 	}
+}
+
+function handleTournamentStart() {
+	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+		const message = createRequestForm();
+		console.log("Client sending REQUEST_FORM to GM:\n", message);
+		wsInstance.send(message);
+	} else {
+		console.log("Error: WebSocket is not open for REQUEST_FORM");
+	}
+}
+
+function handleCreate() {
+	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+		const message: string = makeCreateLobbyRequest();
+		console.log("Client sending CREATE request:\n", message);
+		wsInstance.send(message);
+	} else {
+		console.log("Error: WebSocket is not open for CREATE");
+	}
+}
+
+function handleJoin() {
+	console.log("JOIN");
+
+	// if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+	//     const joinMessage = makeJoinLobbyRequest();
+	//     console.log("Client sending JOIN request:\n", joinMessage);
+	//     wsInstance.send(joinMessage);
+	//   } else {
+	//     console.log("Error: WebSocket is not open for JOIN");
+	//   }
+}
+
+function makeCreateLobbyRequest(): string {
+	const message = {
+		action: "create"
+	};
+
+	return JSON.stringify(message);
 }
 
 // TODO: requestForm should be filled with lobbyInfo

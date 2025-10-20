@@ -1,7 +1,9 @@
-import { renderLobby } from "../../pages/html.pages.js";
+import { renderLobbyMenu } from "../../pages/html.pages.js";
+import { attachLobbyMenuListeners } from "./wsConnect.js";
 
 export function lobby() {
-	renderLobby();
+	renderLobbyMenu();
+	attachLobbyMenuListeners();
 	import("./wsConnect.js").then(({ wsConnect }) => {
 		wsConnect();
 	})
