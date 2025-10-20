@@ -1,0 +1,22 @@
+/!\ INFO /!\
+
+Tailwind CSS only compiles classes that are present in the source code at build 
+time. Those are dynamic classes that Tailwind doesn't recognize because 
+they look like that: 
+
+> el.classList.add(`bg-[${option.content}]`)
+
+Declaring them here forces Tailwind to include them in the compiled styles file, 
+avoiding issues.
+
+bg-4F9FFF
+bg-00DFFF
+bg-5200FF
+bg-6EEB83
+bg-1BE7FF
+bg-000080
+bg-98A869
+bg-FF5714
+bg-BE5103
+bg-FDFBD4
+bg-CE4257

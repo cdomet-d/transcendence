@@ -144,18 +144,20 @@ export class Searchbar extends HTMLFormElement {
 
         const img = this.createSearchIcon() as HTMLImageElement;
         const submit = createBtn(this.#btn) as HTMLButtonElement;
-
-        this.action = '/';
-        this.method = 'get';
-        this.className =
-            'items-center box-border grid grid-cols-[61%_37.8%] search-gap w-[100%] relative';
-        this.#results.className =
-            'hidden absolute brdr clear-bg min-h-fit max-h-[400px] pad-s overflow-y-auto box-border';
-
         this.#searchInput.appendChild(img);
         this.appendChild(this.#searchInput);
         this.appendChild(submit);
         this.appendChild(this.#results);
+
+        this.action = '/';
+        this.method = 'get';
+		submit.classList.remove('h-[90%]');
+		submit.classList.add('h-[36px]', 'mt-[24px]');
+        this.className =
+            'items-center box-border grid grid-cols-[61%_37.8%] search-gap w-[100%] relative';
+        this.#results.className =
+            'hidden absolute brdr bg min-h-fit max-h-[400px] pad-s overflow-y-auto box-border';
+
 
         this.setResultPos();
     }

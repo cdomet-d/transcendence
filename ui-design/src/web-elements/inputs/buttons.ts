@@ -37,7 +37,7 @@ export class RadioButton extends HTMLDivElement {
     }
 
     render() {
-        this.className = 'box-border relative block border-none w-[36px] h-[24px] brdr clear-bg';
+        this.className = 'box-border relative block border-none w-[36px] h-[24px] brdr bg';
     }
 }
 if (!customElements.get('radio-button')) {
@@ -84,7 +84,7 @@ export class Checkbox extends HTMLDivElement {
     }
 
     render() {
-        this.className = 'w-[24px] h-[24px] border-box relative block border-none brdr clear-bg';
+        this.className = 'w-[24px] h-[24px] border-box relative block border-none brdr bg';
     }
 }
 

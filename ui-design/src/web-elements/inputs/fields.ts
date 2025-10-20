@@ -41,7 +41,7 @@ export class CustomInput extends HTMLInputElement {
     render() {
         //TODO: border color change on focus not working
         this.className =
-            'active:yellow-border hover:yellow-border focus:yellow-border focus-visible:yellow-border brdr';
+            'brdr ';
     }
 }
 
@@ -149,7 +149,7 @@ export class InputGroup extends HTMLDivElement {
         this.appendChild(this.#label);
         this.appendChild(this.#input);
         this.appendChild(this.#inputFeedback);
-        this.className = 'w-full box-border relative min-w-[240px]';
+        this.className = 'w-full box-border relative min-w-[240px] mt-[24px]';
         this.#inputFeedback.className = 'brdr bg hidden';
         this.#label.for = this.#info.id;
         this.#label.content = this.#info.labelContent;
@@ -161,8 +161,9 @@ export class InputGroup extends HTMLDivElement {
             if (this.#info.min) this.#input.min = this.#info.min;
             if (this.#info.max) this.#input.max = this.#info.max;
             if (this.#info.step) this.#input.step = this.#info.step;
+			//TODO: add datalist ? => https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/range#adding_tick_marks 
         }
-        if (this.#info.type === 'file') console.log('were never here right');
+        if (this.#info.type === 'file')
         this.#input.classList.add(
             'pl-(24px)',
             'file:absolute',
@@ -234,17 +235,17 @@ export class TextAreaGroup extends HTMLDivElement {
     }
 
     render() {
-        this.#input.className = 'resize-y brdr w-full clear-bg pad-s min-h-fit';
+        this.appendChild(this.#label);
+        this.appendChild(this.#input);
+        this.appendChild(this.#inputFeedback);
+        this.#input.className = 'resize-y brdr w-full bg pad-s min-h-fit ';
         this.#input.id = this.#info.id;
         this.#input.maxLength = 256;
         this.#input.placeholder = this.#info.placeholder;
         this.#inputFeedback.className = 'brdr bg hidden';
         this.#label.content = this.#info.labelContent;
         this.#label.for = this.#info.id;
-        this.className = 'w-full box-border relative min-w-fit';
-        this.appendChild(this.#label);
-        this.appendChild(this.#input);
-        this.appendChild(this.#inputFeedback);
+        this.className = 'w-full box-border relative min-w-fit mt-[24px]';
     }
 }
 

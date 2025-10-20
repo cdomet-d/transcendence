@@ -155,7 +155,7 @@ class NotifPanel extends HTMLDivElement {
     /** Creates panel structure with background and decorative elements. */
     #createPopupContent() {
         this.#content.className =
-            'border-box clear-bg brdr pad-s w-[fit-content] relative grid gap-s';
+            'border-box bg brdr pad-s w-[fit-content] relative grid gap-s';
 
         const notifDecor = document.createElement('img');
         notifDecor.src = '/assets/icons/notification-bubble.png';

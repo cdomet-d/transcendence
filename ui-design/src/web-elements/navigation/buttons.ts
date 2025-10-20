@@ -50,10 +50,10 @@ export class CustomButton extends HTMLButtonElement {
         if (oldValue === newValue) return;
         if (name === 'disabled') {
             if (this.disabled) {
-                this.classList.add('disabled', 'clear-bg');
+                this.classList.add('disabled', 'bg');
                 this.classList.remove('yellow-bg');
             } else {
-                this.classList.remove('disabled', 'clear-bg');
+                this.classList.remove('disabled', 'bg');
                 this.classList.add('yellow-bg');
             }
         }
@@ -107,7 +107,7 @@ export class CustomButton extends HTMLButtonElement {
             this.classList.add('t2', 'button-shadow');
         }
 
-        if (this.disabled) this.classList.add('disabled', 'clear-bg');
+        if (this.disabled) this.classList.add('disabled', 'bg');
         else if (this.#btn.style) {
             this.#btn.style === 'green'
                 ? this.classList.add('valid', 'green-bg')

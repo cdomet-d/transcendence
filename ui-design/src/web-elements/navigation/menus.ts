@@ -75,7 +75,9 @@ export class Menu extends HTMLDivElement {
     render() {
         this.role = 'navigation';
         this.id = 'menu';
-        this.className = `gap-s box-border grid justify-items-center auto-cols-fr row-${this.#size}`;
+        this.className = `gap-s box-border grid justify-items-center auto-cols-fr row-${
+            this.#size
+        }`;
         if (this.#style === 'horizontal') this.classList.add('grid-flow-col');
         if (this.#style === 'vertical') this.classList.add('grid-flow-rows');
         this.#elements.forEach((item) => this.appendChild(createBtn(item, this.#animated)));
@@ -161,4 +163,77 @@ export class SocialMenu extends Menu {
 
 if (!customElements.get('social-menu')) {
     customElements.define('social-menu', SocialMenu, { extends: 'div' });
+}
+
+export class DropdownMenu extends HTMLDivElement {
+    #options: buttonData[];
+    #listbox: HTMLUListElement;
+
+    constructor() {
+        super();
+        this.#options = [];
+        this.#listbox = document.createElement('ul');
+    }
+
+    set setOptions(options: buttonData[]) {
+        this.#options = options;
+    }
+
+    renderListbox() {
+        this.#options.forEach((option) => {
+            const el = document.createElement('li');
+            this.#listbox.append(el);
+            if (option.content) {
+                el.id = option.content;
+                el.textContent = option.content;
+                el.classList.add(
+                    `bg-${option.content}`,
+					// 'brdr',
+					// 'thin',
+                    'pad-s',
+                    'f-yellow',
+                    'flex',
+                    'justify-center',
+                );
+                el.role = 'option';
+                el.ariaSelected = 'false';
+                el.setAttribute('tabindex', '-1');
+            }
+        });
+    }
+    connectedCallback() {
+        this.renderListbox();
+        this.render();
+        let focusedIndex: number = -1;
+        this.addEventListener('keydown', (event) => {
+            const options = Array.from(this.#listbox.children) as HTMLLIElement[];
+            if (event.key === 'ArrowDown') {
+                focusedIndex = (focusedIndex + 1) % options.length;
+                options[focusedIndex]?.focus();
+                event.preventDefault();
+            } else if (event.key === 'ArrowUp') {
+                focusedIndex = (focusedIndex - 1 + options.length) % options.length;
+                options[focusedIndex]?.focus();
+                event.preventDefault();
+            }
+        });
+    }
+
+    render() {
+        this.#listbox.role = 'listbox';
+        const ddbtn = createBtn({
+            type: 'button',
+            content: 'Pick a color !',
+            img: null,
+            ariaLabel: 'Dropdown menu',
+        });
+        this.append(ddbtn);
+        this.append(this.#listbox);
+        this.id = 'dropdown';
+        this.className = 'w-l h-m';
+    }
+}
+
+if (!customElements.get('dropdown-menu')) {
+    customElements.define('dropdown-menu', DropdownMenu, { extends: 'div' });
 }
