@@ -13,9 +13,9 @@ interface UserRow {
 	username: string;
 }
 
-interface UserRowConnection {
+/* interface UserRowConnection {
 	lastConnexion: string;
-}
+} */
 
 interface UserStats {
 	userID: number;
@@ -31,6 +31,38 @@ interface UserStats {
 
 export async function userRoutes(serv: FastifyInstance) {
 	//USER PROFILE
+
+	//get user's profile with userID
+	serv.get('/internal/users/:userID/profile', async (request, reply) => {
+		try {
+			const { userID } = request.params as { userID: number };
+
+			const query = `
+				SELECT * FROM userProfile WHERE userID = ?
+			`;
+
+			const userProfile = await serv.dbUsers.get<UserProfile>(query, [userID]);
+			if (!userProfile) {
+				return (reply.code(404).send({
+					success: false,
+					message: 'User profile not found'
+				}));
+			}
+
+			return (reply.code(200).send({
+				success: true,
+				profile: userProfile
+			}));
+
+		} catch (error) {
+			serv.log.error(`Error fetching user profile: ${error}`);
+			return (reply.code(500).send({
+				success: false,
+				message: 'Internal server error'
+			}));
+		}
+	});
+
 	//get userID by username
 	serv.get('/internal/users/:username/userID', async (request, reply) => { //using
 		try {
@@ -60,6 +92,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//get user profile
 	serv.get('/internal/users/profile', async (request, reply) => { //using
 		try {
 			const { userIDs } = request.body as { userIDs: number[] };
@@ -120,6 +153,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//create profile and stats
 	serv.post('/internal/users/:userID/profile', async (request, reply) => { //using
 		try {
 			const { userID } = request.params as { userID: number };
@@ -194,7 +228,8 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.patch('/internalUserProfile/users/:userID/profile', async (request, reply) => { //using
+	//update user profile
+	serv.patch('/internal/UserProfile/users/:userID/profile', async (request, reply) => { //using
 		try {
 			const userID = request.user.userID;
 			const statsToUpdate = request.body as { [key: string]: number };
@@ -265,6 +300,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//delete profile and stats
 	serv.delete('/internal/users/:userID', async (request, reply) => { //using
 		try {
 			const { userID } = request.params as { userID: number};
@@ -629,37 +665,6 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(error);
-			return (reply.code(500).send({
-				success: false,
-				message: 'Internal server error'
-			}));
-		}
-	});
-
-	//get user's profile with userID
-	serv.get('/internal/users/:userID/profile', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: number };
-
-			const query = `
-				SELECT * FROM userProfile WHERE userID = ?
-			`;
-
-			const userProfile = await serv.dbUsers.get<UserProfile>(query, [userID]);
-			if (!userProfile) {
-				return (reply.code(404).send({
-					success: false,
-					message: 'User profile not found'
-				}));
-			}
-
-			return (reply.code(200).send({
-				success: true,
-				profile: userProfile
-			}));
-
-		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
 			return (reply.code(500).send({
 				success: false,
 				message: 'Internal server error'
