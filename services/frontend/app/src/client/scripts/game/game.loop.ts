@@ -2,8 +2,7 @@ import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from "./game.event
 import { renderGame } from "./game.render.utils.js";
 import { Game, HEIGHT, WIDTH } from "./game.class.js";
 import { updatePaddlePos } from "./paddle.js";
-import { updateBallPos } from "./ball.js";
-import type { coordinates, repObj, startObj } from "./mess.validation.js";
+import type { repObj, startObj } from "./mess.validation.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
