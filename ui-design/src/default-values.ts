@@ -65,14 +65,64 @@ export const gameMenu: Array<types.buttonData> = [
 ];
 
 export const userColorsMenu: Array<types.buttonData> = [
-    { content: '4F9FFF', type: 'button', img: null, ariaLabel: '#hexcode color for profile customisation' },
-    { content: '5200FF', type: 'button', img: null, ariaLabel: '#hexcode color for profile customisation' },
-    { content: '000080', type: 'button', img: null, ariaLabel: '#hexcode color for profile customisation' },
-    { content: '98A869', type: 'button', img: null, ariaLabel: '#hexcode color for profile customisation' },
-    { content: 'BE5103', type: 'button', img: null, ariaLabel: '#hexcode color for profile customisation' },
-    { content: 'CE4257', type: 'button', img: null, ariaLabel: '#hexcode color for profile customisation' },
+    {
+        content: '4F9FFF',
+        type: 'button',
+        img: null,
+        ariaLabel: '#hexcode color for profile customisation',
+    },
+    {
+        content: '5200FF',
+        type: 'button',
+        img: null,
+        ariaLabel: '#hexcode color for profile customisation',
+    },
+    {
+        content: '000080',
+        type: 'button',
+        img: null,
+        ariaLabel: '#hexcode color for profile customisation',
+    },
+    {
+        content: '98A869',
+        type: 'button',
+        img: null,
+        ariaLabel: '#hexcode color for profile customisation',
+    },
+    {
+        content: 'BE5103',
+        type: 'button',
+        img: null,
+        ariaLabel: '#hexcode color for profile customisation',
+    },
+    {
+        content: 'CE4257',
+        type: 'button',
+        img: null,
+        ariaLabel: '#hexcode color for profile customisation',
+    },
 ];
 
+export const languageMenu: Array<types.buttonData> = [
+    {
+        content: 'English',
+        type: 'button',
+        img: null,
+        ariaLabel: '#hexcode color for profile customisation',
+    },
+    {
+        content: 'Spanish',
+        type: 'button',
+        img: null,
+        ariaLabel: '#hexcode color for profile customisation',
+    },
+    {
+        content: 'French',
+        type: 'button',
+        img: null,
+        ariaLabel: '#hexcode color for profile customisation',
+    },
+];
 export const iMeta: types.ImgMetadata = {
     id: 'user-avatar',
     src: '/assets/icons/purple-avatar.png',

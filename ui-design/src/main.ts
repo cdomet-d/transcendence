@@ -5,7 +5,7 @@ import * as nav from './web-elements/navigation/helpers.js';
 import * as user from './web-elements/users/helpers.js';
 import * as defaults from './default-values.js';
 import { UserSettingsForm } from './web-elements/users/settings.js';
-import { DropdownMenu } from './web-elements/navigation/menus.js';
+
 // import { Notification } from './web-elements/users/notifications.js';
 
 window.addEventListener('error', (e) => {
@@ -36,22 +36,22 @@ wrapper.classList.add(
 //     });
 // }
 
-function testNotifications() {
-    user.getNotificationBoxAsync().then((n) => {
-        try {
-            if (n) {
-                setTimeout(() => {
-                    n.newFriendRequest('CrimeGoose');
-                }, 2000);
-                setTimeout(() => {
-                    n.newGameInvitation('ShyElephant', 'tournament');
-                }, 6000);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    });
-}
+// function testNotifications() {
+//     user.getNotificationBoxAsync().then((n) => {
+//         try {
+//             if (n) {
+//                 setTimeout(() => {
+//                     n.newFriendRequest('CrimeGoose');
+//                 }, 2000);
+//                 setTimeout(() => {
+//                     n.newGameInvitation('ShyElephant', 'tournament');
+//                 }, 6000);
+//             }
+//         } catch (error) {
+//             console.log(error);
+//         }
+//     });
+// }
 
 try {
     wrapper.appendChild(typography.createHeading('1', 'Heading 1'));
@@ -76,11 +76,8 @@ try {
     wrapper.appendChild(nav.createSearchbar());
     wrapper.appendChild(user.createNotificationBox());
     wrapper.appendChild(new UserSettingsForm());
-
-	testNotifications();
-	const dm = new DropdownMenu;
-	dm.setOptions = defaults.userColorsMenu;
-	wrapper.append(dm);
+	// wrapper.appendChild(nav.createDropdown(defaults.languageMenu, 'Pick language', 'static'));
+	wrapper.appendChild(nav.createDropdown(defaults.userColorsMenu, 'Pick color', 'dynamic'));
 } catch (error) {
     console.log('[ERROR]', error);
 }

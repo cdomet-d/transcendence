@@ -1,6 +1,6 @@
 import { CustomButton } from './buttons';
 import { TabContainer } from './tabs';
-import { Menu, SocialMenu } from './menus';
+import { DropdownMenu, Menu, SocialMenu } from './menus';
 import { Searchbar } from './search';
 
 import type {
@@ -9,6 +9,7 @@ import type {
     buttonData,
     ProfileView,
     MenuSize,
+    DropdownBg,
 } from '../../types-interfaces';
 
 /**
@@ -28,7 +29,7 @@ import type {
  * const btn = createBtn(btnData, true);
  * document.body.appendChild(btn);
  */
-export function createBtn(btn: buttonData, animated?: boolean): HTMLButtonElement {
+export function createBtn(btn: buttonData, animated?: boolean): CustomButton {
     const el = document.createElement('button', { is: 'custom-button' }) as CustomButton;
     el.btn = btn;
     if (animated) el.animation = animated;
@@ -58,22 +59,15 @@ export function createTabs(list: Array<TabMetadata>): TabContainer {
 /**
  * Creates a menu wrapper element with specified buttons, style, and optional size and animation.
  *
- * @param {Array<buttonData>} content - Array of button metadata objects for menu buttons.
+ * @param {buttonData[]} content - Array of button metadata objects for menu buttons.
  * @param {MenuStyle} style - Menu layout style, either 'vertical' or 'horizontal'.
  * @param {MenuSize} [size] - Optional menu size variant.
  * @param {boolean} [animated] - Optional flag to enable animation effects on menu buttons.
  * @returns {Menu} A configured {@link Menu} div element.
  *
- * @example
- * const buttons = [
- *   { type: "button", content: "Save", img: null, ariaLabel: "Save changes" },
- *   { type: "submit", content: "Submit", img: null, ariaLabel: "Submit form" }
- * ];
- * const menu = createMenu(buttons, 'horizontal', 'm', true);
- * document.body.appendChild(menu);
  */
 export function createMenu(
-    content: Array<buttonData>,
+    content: buttonData[],
     style: MenuStyle,
     size?: MenuSize,
     animated?: boolean,
@@ -89,21 +83,14 @@ export function createMenu(
 /**
  * Creates a social menu with button content and profile view context.
  *
- * @param {Array<buttonData>} content - Button metadata array for menu items.
+ * @param {buttonData[]} content - Button metadata array for menu items.
  * @param {MenuStyle} style - Menu layout style, 'vertical' or 'horizontal'.
  * @param {ProfileView} v - Profile view state affecting menu display.
  * @returns {SocialMenu} A {@link SocialMenu} div element reflecting the profile view.
  *
- * @example
- * const socialButtons = [
- *   { type: "button", content: null, img: /path/to/icon, ariaLabel: "Follow user" },
- *   { type: "button", content: null, img: /path/to/icon, ariaLabel: "Send message" }
- * ];
- * const socialMenu = createSocialMenu(socialButtons, 'vertical', 'friend');
- * document.body.appendChild(socialMenu);
  */
 export function createSocialMenu(
-    content: Array<buttonData>,
+    content: buttonData[],
     style: MenuStyle,
     v: ProfileView,
 ): SocialMenu {
@@ -111,6 +98,27 @@ export function createSocialMenu(
     el.MenuElements = content;
     el.MenuStyle = style;
     el.view = v;
+    return el;
+}
+
+/**
+ * Creates a social menu with button content and profile view context.
+ *
+ * @param {buttonData[]} options - Button metadata array for menu items.
+ * @param {string} content - The toggle's text content.
+ * @param {DropdownBg} style - Toggles dynamic background styling.
+ * @returns {DropdownBg} A {@link DropdownMenu} set with the content of `options`.
+ *
+ */
+export function createDropdown(
+    options: buttonData[],
+    content: string,
+    style: DropdownBg,
+): DropdownMenu {
+    const el = document.createElement('div', { is: 'dropdown-menu' }) as DropdownMenu;
+    el.setOptions = options;
+    el.setToggleContent = content;
+    el.setDropdownStyling = style;
     return el;
 }
 

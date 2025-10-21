@@ -522,7 +522,6 @@
 		max-width: 11.2rem;
 		grid-template-columns: 1fr;
 		grid-template-rows: 1fr 1fr var(--m);
-		background-color: var(--transparent-blue);
 	}
 
 	.username {

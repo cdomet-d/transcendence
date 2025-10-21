@@ -1,6 +1,13 @@
 import { createBtn } from './helpers';
-import type { buttonData, MenuStyle, ProfileView, MenuSize } from '../../types-interfaces';
+import type {
+    buttonData,
+    MenuStyle,
+    ProfileView,
+    MenuSize,
+    DropdownBg,
+} from '../../types-interfaces';
 import type { Icon } from '../typography/images';
+import type { CustomButton } from './buttons';
 
 /**
  * Custom HTML div element representing a menu with configurable style and elements.
@@ -166,71 +173,206 @@ if (!customElements.get('social-menu')) {
 }
 
 export class DropdownMenu extends HTMLDivElement {
-    #options: buttonData[];
+    /** Array of {@link buttonData} used to fill the dropdown's option list*/
+    #optionListData: buttonData[];
+
+    /** Array of {@link HTMLUListElement}, cached to manipulation the menu's option without querying the DOM everytime*/
+    #listboxOptions: HTMLLIElement[];
+    #dropdownStyle: DropdownBg;
+
+    /** Inner components */
+    /** A {@link CustomButton} which serves as the toggle to make the options appear */
+    #toggle: CustomButton;
+    /** A {@link HTMLUListElement} containing the `<li>` option of the menu */
     #listbox: HTMLUListElement;
+
+    /** Event handling */
+    #keynavHandler: (ev: KeyboardEvent) => void;
+    #mouseNavHandler: (ev: MouseEvent) => void;
+    /** Index to the currently focused option in the listbox */
+    #currentFocus: number;
 
     constructor() {
         super();
-        this.#options = [];
+        this.#dropdownStyle = 'static';
+        this.#optionListData = [];
+        this.#listboxOptions = [];
         this.#listbox = document.createElement('ul');
+        this.#toggle = createBtn({
+            type: 'button',
+            content: '',
+            img: null,
+            ariaLabel: 'Dropdown menu',
+        });
+        this.#currentFocus = -1;
+        this.#keynavHandler = this.keyboardNavHandler.bind(this);
+        this.#mouseNavHandler = this.mouseNavHandler.bind(this);
     }
 
-    set setOptions(options: buttonData[]) {
-        this.#options = options;
+    /**
+     * Sets inner property `#optionListData`
+     */
+    set setOptions(data: buttonData[]) {
+        this.#optionListData = data;
     }
 
-    renderListbox() {
-        this.#options.forEach((option) => {
+    /**
+     * Sets toggle's `textContent`
+     */
+    set setToggleContent(content: string) {
+        this.#toggle.textContent = content + ' \u25BE';
+    }
+
+    /**
+     * Toggles dynamic styling
+     */
+    set setDropdownStyling(style: DropdownBg) {
+        this.#dropdownStyle = style;
+    }
+
+    /**
+     * Updates the toggle's background if the dropdown styling was set to dynamic.
+     * @param {string} newBg - The new background to add to the toggle.
+     */
+    #updateBackground(newBg: string) {
+        const bg: RegExpMatchArray | null = this.#toggle.className.match(/\bbg[\w-]*/g);
+        if (!bg) {
+            this.classList.add(newBg);
+            return;
+        }
+        bg.forEach((oc) => {
+            if (oc !== newBg) {
+                this.#toggle.classList.remove(oc);
+                this.#toggle.classList.add(newBg, 'f-yellow');
+            }
+        });
+        return;
+    }
+
+    /**
+     * Renders the content of the listbox with the data contained in `this#optionListData`.
+     */
+    #renderListbox() {
+        this.#optionListData.forEach((option) => {
             const el = document.createElement('li');
             this.#listbox.append(el);
             if (option.content) {
                 el.id = option.content;
                 el.textContent = option.content;
-                el.classList.add(
-                    `bg-${option.content}`,
-					// 'brdr',
-					// 'thin',
-                    'pad-s',
-                    'f-yellow',
-                    'flex',
-                    'justify-center',
-                );
+                el.className = 'brdr thin pad-s flex justify-center cursor-pointer';
                 el.role = 'option';
                 el.ariaSelected = 'false';
                 el.setAttribute('tabindex', '-1');
+                if (this.#dropdownStyle === 'static') el.classList.add('bg');
+                else el.classList.add(`bg-${option.content}`, 'f-yellow');
             }
         });
+        this.#listbox.className = 'hidden';
+        this.#listboxOptions = Array.from(this.#listbox.children) as HTMLLIElement[];
     }
-    connectedCallback() {
-        this.renderListbox();
-        this.render();
-        let focusedIndex: number = -1;
-        this.addEventListener('keydown', (event) => {
-            const options = Array.from(this.#listbox.children) as HTMLLIElement[];
-            if (event.key === 'ArrowDown') {
-                focusedIndex = (focusedIndex + 1) % options.length;
-                options[focusedIndex]?.focus();
-                event.preventDefault();
-            } else if (event.key === 'ArrowUp') {
-                focusedIndex = (focusedIndex - 1 + options.length) % options.length;
-                options[focusedIndex]?.focus();
-                event.preventDefault();
+
+    /**
+     * Updates the focus on the list element if the user is navigating using the keyboard.
+     */
+    #selectOptKeyboard() {
+        this.#listboxOptions[this.#currentFocus].ariaSelected = 'true';
+        this.#listboxOptions[this.#currentFocus].setAttribute('selected', '');
+    }
+
+    /**
+     * Updates focus on the list element if the user is navigating using the mouse.
+     * @param {HTMLElement} t - the target of the mouseEvent.
+     */
+    #selectOptOnClick(t: HTMLElement) {
+        if (t.tagName === 'LI') {
+            t.ariaSelected = 'true';
+            t.setAttribute('selected', '');
+        }
+    }
+
+    /**
+     * Targets dropdown menu and updates the active element representing the user's choice.
+     * It sets the attribute `selected` on the user's choice, then updates the toggle's content with the selected option.
+     * @param {HTMLElement} [target] - optionnal. Allows `#updateSelection()` to be called both by the `'click'` handler, which passes a target, and by the `'keydown'` handler, that updates the internal property `this.#currentFocus`
+     */
+    #updateSelection(target?: HTMLElement) {
+        this.#listboxOptions.forEach((li) => {
+            li.removeAttribute('selected');
+            li.ariaSelected = 'false';
+        });
+
+        if (this.#currentFocus >= 0) this.#selectOptKeyboard();
+        else if (target) this.#selectOptOnClick(target);
+
+        this.#listboxOptions.forEach((el) => {
+            if (el.hasAttribute('selected')) {
+                this.#toggle.textContent = el.textContent + ' \u25BE';
+
+                if (this.#dropdownStyle === 'dynamic') {
+                    if (el.textContent === 'Default') this.#updateBackground('bg');
+                    else this.#updateBackground(`bg-${el.textContent}`);
+                }
             }
         });
+        this.#listbox.classList.toggle('hidden');
+    }
+
+    /**
+     * Used by the `'keydown'` handler to calculate where the user is in the menu's option, remaining within the bounds of the options.
+     * @param {number} delta - the incrementing step; it's worth `-1` on `ArrowUp` and `1` on `ArrowDown`
+     */
+    #moveFocus(delta: number) {
+        this.#currentFocus =
+            (this.#currentFocus + delta + this.#listboxOptions.length) %
+            this.#listboxOptions.length;
+        this.#listboxOptions[this.#currentFocus].focus();
+    }
+
+    /**
+     * Handles keyboard navigation.
+     * @param {KeyboardEvent} ev - the event send by `addEventListener`
+     */
+    keyboardNavHandler(ev: KeyboardEvent) {
+        const actions: { [key: string]: () => void } = {
+            ArrowDown: () => this.#moveFocus(1),
+            ArrowUp: () => this.#moveFocus(-1),
+            Enter: () => this.#updateSelection(),
+        };
+
+        if (actions[ev.key]) {
+            ev.preventDefault();
+            actions[ev.key]();
+        }
+    }
+
+    /**
+     * Handles mouse navigation.
+     * @param {MouseEvent} ev - the event send by `addEventListener`
+     */
+    mouseNavHandler(ev: MouseEvent) {
+        const target = ev.target as HTMLButtonElement;
+        this.#updateSelection(target);
+    }
+
+    connectedCallback() {
+        this.#renderListbox();
+        this.render();
+        this.addEventListener('keydown', (ev) => this.#keynavHandler(ev));
+        this.addEventListener('click', (ev) => this.#mouseNavHandler(ev));
+    }
+
+    disconnectedCallback() {
+        this.removeEventListener('keydown', (ev) => this.#keynavHandler(ev));
+        this.removeEventListener('click', (ev) => this.#mouseNavHandler(ev));
     }
 
     render() {
-        this.#listbox.role = 'listbox';
-        const ddbtn = createBtn({
-            type: 'button',
-            content: 'Pick a color !',
-            img: null,
-            ariaLabel: 'Dropdown menu',
-        });
-        this.append(ddbtn);
+        this.append(this.#toggle);
         this.append(this.#listbox);
+        this.#listbox.role = 'listbox';
         this.id = 'dropdown';
-        this.className = 'w-l h-m';
+        this.className = 'h-m w-l';
+        if (this.#dropdownStyle === 'dynamic') this.#toggle.classList.remove('input-emphasis');
     }
 }
 

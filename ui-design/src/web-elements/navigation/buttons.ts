@@ -51,10 +51,10 @@ export class CustomButton extends HTMLButtonElement {
         if (name === 'disabled') {
             if (this.disabled) {
                 this.classList.add('disabled', 'bg');
-                this.classList.remove('yellow-bg');
+                this.classList.remove('bg-yellow');
             } else {
                 this.classList.remove('disabled', 'bg');
-                this.classList.add('yellow-bg');
+                this.classList.add('bg-yellow');
             }
         }
     }
@@ -110,9 +110,9 @@ export class CustomButton extends HTMLButtonElement {
         if (this.disabled) this.classList.add('disabled', 'bg');
         else if (this.#btn.style) {
             this.#btn.style === 'green'
-                ? this.classList.add('valid', 'green-bg')
-                : this.classList.add('invalid', 'red-bg', 'text-white');
-        } else this.classList.add('yellow-bg');
+                ? this.classList.add('valid', 'bg-green')
+                : this.classList.add('invalid', 'bg-red', 'text-white');
+        } else this.classList.add('bg-yellow');
 
         this.type = this.#btn.type;
         this.ariaLabel = this.#btn.ariaLabel;
@@ -150,11 +150,11 @@ export class TabButton extends HTMLButtonElement {
         if (oldValue === newValue) return;
         if (name === 'selected') {
             if (this.hasAttribute('selected')) {
-                this.classList.remove('yellow-bg', 'brdr', 'z-2');
+                this.classList.remove('bg-yellow', 'brdr', 'z-2');
                 this.classList.add('z-1');
             } else {
                 this.classList.remove('z-1');
-                this.classList.add('yellow-bg', 'brdr', 'z-2');
+                this.classList.add('bg-yellow', 'brdr', 'z-2');
             }
         }
     }
@@ -178,11 +178,11 @@ export class TabButton extends HTMLButtonElement {
             'tab z-2 w-[100%] h-[100%] pad-xs thin brdr overflow-hidden outline-hidden border-box flex justify-center items-center hover:transform-none';
 
         if (this.hasAttribute('selected')) {
-            this.classList.remove('yellow-bg', 'brdr', 'z-2');
+            this.classList.remove('bg-yellow', 'brdr', 'z-2');
             this.classList.add('z-1');
         } else {
             this.classList.remove('z-1');
-            this.classList.add('yellow-bg', 'brdr', 'z-2');
+            this.classList.add('bg-yellow', 'brdr', 'z-2');
         }
     }
 }

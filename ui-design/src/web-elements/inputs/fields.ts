@@ -40,8 +40,7 @@ export class CustomInput extends HTMLInputElement {
 
     render() {
         //TODO: border color change on focus not working
-        this.className =
-            'brdr ';
+        this.className = 'brdr ';
     }
 }
 
@@ -161,17 +160,17 @@ export class InputGroup extends HTMLDivElement {
             if (this.#info.min) this.#input.min = this.#info.min;
             if (this.#info.max) this.#input.max = this.#info.max;
             if (this.#info.step) this.#input.step = this.#info.step;
-			//TODO: add datalist ? => https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/range#adding_tick_marks 
+            //TODO: add datalist ? => https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/range#adding_tick_marks
         }
         if (this.#info.type === 'file')
-        this.#input.classList.add(
-            'pl-(24px)',
-            'file:absolute',
-            'file:top-[5px]',
-            'file:left-[4px]',
-            'file:w-[5rem]',
-            'file:h-[26px]',
-        );
+            this.#input.classList.add(
+                'pl-(24px)',
+                'file:absolute',
+                'file:top-[5px]',
+                'file:left-[4px]',
+                'file:w-[5rem]',
+                'file:h-[26px]',
+            );
     }
 }
 if (!customElements.get('input-and-label')) {

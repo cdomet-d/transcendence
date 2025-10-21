@@ -29,10 +29,9 @@
 			#fff1bd 0 80%,
 			#ffecb8 0 90%,
 			#ffe8b3 0 100%);
-
 }
 
-.yellow-bg {
+.bg-yellow {
 	background: linear-gradient(180deg,
 			#f4b000 0 10%,
 			#f7b200 0 20%,
@@ -46,8 +45,8 @@
 			#f4b000 0 100%);
 }
 
-.yellow-bg:hover,
-.yellow-bg:focus-visible {
+.bg-yellow:hover,
+.bg-yellow:focus-visible {
 	background: linear-gradient(180deg,
 			#ffc245 0 10%,
 			#ffc652 0 20%,
@@ -61,7 +60,7 @@
 			#ffc245 0 100%);
 }
 
-.yellow-bg:active {
+.bg-yellow:active {
 	background: linear-gradient(180deg,
 			#e3a300 0 10%,
 			#e7a700 0 20%,
@@ -75,7 +74,7 @@
 			#e3a300 0 100%);
 }
 
-.selected-yellow-bg {
+/* .selected-bg-yellow {
 	background: linear-gradient(180deg,
 			#ffdc99 0 10%,
 			#ffe0a5 0 20%,
@@ -89,9 +88,9 @@
 			#ffdc99 0 100%);
 	border: none;
 	border-top: 2px solid var(--border);
-}
+} */
 
-.red-bg {
+.bg-red {
 	background: linear-gradient(180deg,
 			#ce633b 0 10%,
 			#d3673f 0 20%,
@@ -105,9 +104,9 @@
 			#ce633b 0 100%);
 }
 
-.red-bg:hover,
-.red-bg:focus-visible,
-.red-bg:active {
+.bg-red:hover,
+.bg-red:focus-visible,
+.bg-red:active {
 	background: linear-gradient(180deg,
 			#ce633b 0 10%,
 			#d3673f 0 20%,
@@ -121,7 +120,7 @@
 			#ce633b 0 100%);
 }
 
-.green-bg {
+.bg-green {
 	background: linear-gradient(180deg,
 			#42b143 0 10%,
 			#57b946 0 20%,
@@ -135,8 +134,8 @@
 			#42b143 0 100%);
 }
 
-.green-bg:hover,
-.green-bg:focus-visible .green-bg:active {
+.bg-green:hover,
+.bg-green:focus-visible .bg-green:active {
 	background: linear-gradient(180deg,
 			#42b143 0 10%,
 			#57b946 0 20%,
@@ -234,9 +233,9 @@
 			#AA4150 0 100%);
 }
 
-.bg-4F9FFF:hover,
-.bg-4F9FFF:focus,
-.bg-4F9FFF:focus-visible {
+#dropdown .bg-4F9FFF:hover,
+#dropdown .bg-4F9FFF:focus,
+#dropdown .bg-4F9FFF:focus-visible {
 	background: linear-gradient(180deg,
 			#4d84d9 0 10%,
 			#5790e3 0 20%,
@@ -250,8 +249,8 @@
 			#4d84d9 0 100%);
 }
 
-.bg-4F9FFF:active,
-.bg-4F9FFF.selected {
+#dropdown .bg-4F9FFF:active,
+#dropdown .bg-4F9FFF.selected {
 	background: linear-gradient(180deg,
 			#244f83 0 10%,
 			#2c598d 0 20%,
@@ -265,9 +264,9 @@
 			#244f83 0 100%);
 }
 
-.bg-5200FF:hover,
-.bg-5200FF:focus,
-.bg-5200FF:focus-visible {
+#dropdown .bg-5200FF:hover,
+#dropdown .bg-5200FF:focus,
+#dropdown .bg-5200FF:focus-visible {
 	background: linear-gradient(180deg,
 			#6a33ff 0 10%,
 			#7740ff 0 20%,
@@ -281,8 +280,8 @@
 			#6a33ff 0 100%);
 }
 
-.bg-5200FF:active,
-.bg-5200FF.selected {
+#dropdown .bg-5200FF:active,
+#dropdown .bg-5200FF.selected {
 	background: linear-gradient(180deg,
 			#3c00b3 0 10%,
 			#4600c0 0 20%,
@@ -296,9 +295,9 @@
 			#3c00b3 0 100%);
 }
 
-.bg-000080:hover,
-.bg-000080:focus,
-.bg-000080:focus-visible {
+#dropdown .bg-000080:hover,
+#dropdown .bg-000080:focus,
+#dropdown .bg-000080:focus-visible {
 	background: linear-gradient(180deg,
 			#1a1a99 0 10%,
 			#2e2eb3 0 20%,
@@ -312,8 +311,8 @@
 			#1a1a99 0 100%);
 }
 
-.bg-000080:active,
-.bg-000080.selected {
+#dropdown .bg-000080:active,
+#dropdown .bg-000080.selected {
 	background: linear-gradient(180deg,
 			#00004c 0 10%,
 			#0f0f66 0 20%,
@@ -327,9 +326,9 @@
 			#00004c 0 100%);
 }
 
-.bg-98A869:hover,
-.bg-98A869:focus,
-.bg-98A869:focus-visible {
+#dropdown .bg-98A869:hover,
+#dropdown .bg-98A869:focus,
+#dropdown .bg-98A869:focus-visible {
 	background: linear-gradient(180deg,
 			#8ca971 0 10%,
 			#97b47f 0 20%,
@@ -343,8 +342,8 @@
 			#8ca971 0 100%);
 }
 
-.bg-98A869.selected,
-.bg-98A869:active {
+#dropdown .bg-98A869.selected,
+#dropdown .bg-98A869:active {
 	background: linear-gradient(180deg,
 			#555c39 0 10%,
 			#60663f 0 20%,
@@ -358,9 +357,9 @@
 			#555c39 0 100%);
 }
 
-.bg-BE5103:hover,
-.bg-BE5103:focus,
-.bg-BE5103:focus-visible {
+#dropdown .bg-BE5103:hover,
+#dropdown .bg-BE5103:focus,
+#dropdown .bg-BE5103:focus-visible {
 	background: linear-gradient(180deg,
 			#d7792b 0 10%,
 			#de8541 0 20%,
@@ -374,8 +373,8 @@
 			#d7792b 0 100%);
 }
 
-.bg-BE5103.selected,
-.bg-BE5103:active {
+#dropdown .bg-BE5103.selected,
+#dropdown .bg-BE5103:active {
 	background: linear-gradient(180deg,
 			#8b3800 0 10%,
 			#944100 0 20%,
@@ -389,9 +388,9 @@
 			#8b3800 0 100%);
 }
 
-.bg-CE4257:hover,
-.bg-CE4257:focus,
-.bg-CE4257:focus-visible {
+#dropdown .bg-CE4257:hover,
+#dropdown .bg-CE4257:focus,
+#dropdown .bg-CE4257:focus-visible {
 	background: linear-gradient(180deg,
 			#c46270 0 10%,
 			#ce6777 0 20%,
@@ -405,8 +404,8 @@
 			#c46270 0 100%);
 }
 
-.bg-CE4257.selected,
-.bg-CE4257:active {
+#dropdown .bg-CE4257.selected,
+#dropdown .bg-CE4257:active {
 	background: linear-gradient(180deg,
 			#6f2a36 0 10%,
 			#782e38 0 20%,

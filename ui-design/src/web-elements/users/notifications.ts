@@ -93,7 +93,7 @@ class NotifToggle extends HTMLDivElement {
 
         this.#alert.id = 'notifAlert';
         this.#alert.className =
-            'hidden z-2 invalid thin brdr red-bg w-xs h-xs absolute top-[8px] right-[8px]';
+            'hidden z-2 invalid thin brdr bg-red w-xs h-xs absolute top-[8px] right-[8px]';
 
         this.className =
             'w-[fit-content] relative cursor-pointer hover:scale-108 transform transition-transform';
@@ -154,8 +154,7 @@ class NotifPanel extends HTMLDivElement {
 
     /** Creates panel structure with background and decorative elements. */
     #createPopupContent() {
-        this.#content.className =
-            'border-box bg brdr pad-s w-[fit-content] relative grid gap-s';
+        this.#content.className = 'border-box bg brdr pad-s w-[fit-content] relative grid gap-s';
 
         const notifDecor = document.createElement('img');
         notifDecor.src = '/assets/icons/notification-bubble.png';

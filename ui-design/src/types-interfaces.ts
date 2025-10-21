@@ -28,6 +28,15 @@ export type MenuStyle = 'vertical' | 'horizontal';
  */
 export type MenuSize = 's' | 'm' | 'l';
 
+/** Determines dropdown menu styling, allowing to toggle between dynamic
+background colors (for user settings or pong backgrounds) or default colors.
+
+@remarks
+- `dynamic`: allows dynamic styling
+- `static`: disallows dynamic styling
+ */
+export type DropdownBg = 'dynamic' | 'static';
+
 /**
  * Relationship between viewer and a profile.
  *

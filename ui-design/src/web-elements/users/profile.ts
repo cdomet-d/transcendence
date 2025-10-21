@@ -22,7 +22,7 @@ export class UserCardSocial extends HTMLDivElement {
     }
 
     render() {
-        this.className = 'border-box pad-s grid place-items-center small-user';
+        this.className = 'border-box pad-s grid place-items-center small-user bg-4F9FFF';
     }
 }
 
@@ -68,7 +68,7 @@ export class UserInline extends HTMLDivElement {
 
     render() {
         this.className =
-            'cursor-pointer gap-m box-border flex flex-initial items-center hover:bg-(--transparent-blue)';
+            'cursor-pointer gap-m box-border flex flex-initial items-center hover:bg-4F9FFF';
     }
 }
 
