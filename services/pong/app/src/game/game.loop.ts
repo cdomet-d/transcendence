@@ -23,8 +23,8 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 
 	for (const req of toProcess) {
 		const player: Player = req._playerId === 1 ? player1 : player2;
-		rewind(game, player, req._req);
 		while(simulatedTime + TIME_STEP <= req._req._timeStamp - tickStart) {
+			game.addState(tickStart + simulatedTime);
 			game.status = updateBallPos(game.ball, player1, player2, TIME_STEP);
 			if (game.status) {
 				endGame(player1, player2, game);
@@ -33,22 +33,23 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 			simulatedTime += TIME_STEP;
 		}
 		updatePaddlePos(player, req._req._keys, game.paddleSpeed, TIME_STEP);
+		rewind(game, req._req);
 		player.reply._ID = req._req._ID;
 	}
 
 	while(simulatedTime < SERVER_TICK) {
+		game.addState(tickStart + simulatedTime);
 		game.status = updateBallPos(game.ball, player1, player2, TIME_STEP);
-		simulatedTime += TIME_STEP;
 		if(game.status){
 			endGame(player1, player2, game);
 			return;
 		}
+		simulatedTime += TIME_STEP;
 	}
 
-	game.reqHistory = futureReqs;
+	game.deleteStates(tickStart - 1000);
 
-	const timestamp: number = performance.now();
-	game.addState(timestamp);
+	game.reqHistory = futureReqs;
 
 	sendToPlayer(player1, player2.paddle, game.ball, "left");
 	if (!game.local)
@@ -58,43 +59,32 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 	setTimeout(gameLoop, Math.max(0, delay), game, player1, player2);
 }
 
-function rewind(game: Game, player: Player, req: reqObj) {
+function rewind(game: Game, req: reqObj) {
 	let state: stateObj | undefined = undefined;
-	const timestamp: number = req._timeStamp - 100
+	const timestamp: number = req._timeStamp;
 	let i: number = 0;
 	while( i < game.stateHistory.length - 1) {
 		if (timestamp >= game.stateHistory[i]!._timestamp
 			&& timestamp <= game.stateHistory[i + 1]!._timestamp) {
-				state = game.stateHistory[i];
+				if (Math.abs(timestamp - game.stateHistory[i]!._timestamp) < Math.abs(timestamp - game.stateHistory[i + 1]!._timestamp))
+					state = game.stateHistory[i];
+				else
+					state = game.stateHistory[i + 1];
 				break;
 			}
 		i++;
 	}
 	if (state === undefined)
 		return;
-	const playerPad: coordinates = { ...player.paddle };
-	updatePaddlePos(player, req._keys, game.paddleSpeed, TIME_STEP);
-	let newX: number = state._ball.x + (state._ball.dx * TIME_STEP);
-	let newY: number = state._ball.y + (state._ball.dy * TIME_STEP);
-	if (touchesPad(game.players[0]!.paddle, game.players[1]!.paddle, newX, newY)) {
-		game.ball.x = state._ball.x;
-		game.ball.y = state._ball.y;
-		while (i < game.stateHistory.length) {
-			let simulatedTime: number = 0;
-			while(simulatedTime + TIME_STEP <= SERVER_TICK) {
-				game.status = updateBallPos(game.ball, game.players[0]!, game.players[1]!, TIME_STEP);
-				if (game.status) {
-					endGame(game.players[0]!, game.players[1]!, game);
-					return;
-				}
-				simulatedTime += TIME_STEP;
-			}
-			game.updateState(i);
-		}
-	}
-	else {
-		player.paddle.x = playerPad.x;
-		player.paddle.y = playerPad.y;
+	
+	const age: number = performance.now() - state._timestamp;
+	if (age > 200 || age < 0)
+		return;
+	
+	console.log("IN REWIND");
+	if (touchesPad(game.players[0]!.paddle, game.players[1]!.paddle, state._ball.x, state._ball.y)) { //devrait verifier que le paddle qui a changé de position
+		game.ball.dx *= -1;
+		game.ball.x += (game.ball.dx * TIME_STEP);
 	}
 }
 
