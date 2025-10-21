@@ -22,7 +22,7 @@ export function updateBallPos(ball: ballObj, player1: Player, player2: Player, d
 		ball.dy *= -1;
 		newY = ball.y + (ball.dy * delta);
 	}
-	if (touchesPad(player1.paddle, player2.paddle, newX, newY)) {
+	if (paddleCollision(player1.paddle, player2.paddle, newX, newY)) {
 		ball.dx *= -1;
 		newX = ball.x + (ball.dx * delta);
 	}
@@ -48,12 +48,24 @@ function updateScore(player1: Player, player2: Player, newX: number): boolean {
 	return false;
 }
 
-export function touchesPad(leftPad: coordinates, rightPad: coordinates, newX: number, newY: number): boolean {
+export function paddleCollision(leftPad: coordinates, rightPad: coordinates, newX: number, newY: number): boolean {
+	if (touchesRightPad(rightPad, newX, newY))
+		return true;
+	if (touchesLeftPad(leftPad, newX, newY))
+		return true;
+	//TODO: check top of paddle
+	return false;
+}
+
+export function touchesRightPad(rightPad: coordinates, newX: number, newY: number): boolean {
 	//TODO: fix 460
 	if (newX + 10 >= 460 && (newY + 10 >= rightPad.y && newY - 10 <= rightPad.y + 54))
 		return true;
+	return false
+}
+
+export function touchesLeftPad(leftPad: coordinates, newX: number, newY: number): boolean {
 	if (newX - 10 <= leftPad.x + 10 && (newY + 10 >= leftPad.y && newY - 10 <= leftPad.y + 54))
 		return true;
-	//TODO: check top of paddle
 	return false;
 }
