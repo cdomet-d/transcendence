@@ -32,17 +32,15 @@ export class Game {
 	#_local: boolean;
 	#_leftPaddle: coordinates;
 	#_rightPaddle: coordinates;
-	#_paddleSpeed: number;
 	#_ball: ballObj;
-	#_req: reqObj;
-	#_reqHistory: requestMap;
+	#_paddleSpeed: number;
 	#_frameId: number;
 	#_delta: number;
 	#_lastFrameTime: number;
-	#_lastUpdateTime: number;
-	#_predictedBall: coordinates;
+	#_req: reqObj;
+	#_reqHistory: requestMap;
 	#_replyHistory: replyTab;
-
+ 
 	/*                            CONSTRUCTORS                               */
 	constructor(ctx: CanvasRenderingContext2D, local: boolean) {
 		this.#_ctx = ctx;
@@ -51,14 +49,11 @@ export class Game {
 		this.#_leftPaddle = {x: 10, y: 108}; //TODO: put operation
 		this.#_rightPaddle = {x: 460, y: 108};
 		this.#_paddleSpeed = 0.15;
-		let keys: keysObj = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
-		this.#_req = { _ID: 0, _keys: keys, _timeStamp: 0 };
-		this.#_reqHistory = new Map();
 		this.#_frameId = 0
 		this.#_delta = 0;
 		this.#_lastFrameTime = 0;
-		this.#_lastUpdateTime = 0;
-		this.#_predictedBall = {x: 0, y: 0};
+		this.#_req = { _ID: 0, _keys: {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false}, _timeStamp: 0 };
+		this.#_reqHistory = new Map();
 		this.#_replyHistory = new Array();
 	}
 
@@ -107,14 +102,6 @@ export class Game {
 		return this.#_reqHistory;
 	}
 
-	get lastUpdateTime(): number {
-		return this.#_lastUpdateTime;
-	}
-
-	get predictedBall(): coordinates {
-		return this.#_predictedBall;
-	}
-
 	get replyHistory(): replyTab {
 		return this.#_replyHistory;
 	}
@@ -143,10 +130,6 @@ export class Game {
 
 	set lastFrameTime(val: number) {
 		this.#_lastFrameTime = val;
-	}
-
-	set lastUpdateTime(time: number) {
-		this.#_lastUpdateTime = time;
 	}
 
     /*                              METHODS                                  */
