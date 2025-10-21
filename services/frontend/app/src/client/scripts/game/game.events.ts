@@ -10,7 +10,6 @@ export function addMessEvent(game: Game, ws: WebSocket) {
 		// } //TODO: fix validRep
 		rep._timestamp = performance.now();
 		game.addReply(rep);
-		// game.lastUpdateTime = performance.now();
 	};
 }
 
