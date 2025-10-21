@@ -4,13 +4,14 @@ import { createInputGroup, createTextAreaGroup } from '../inputs/helpers';
 import { createBtn } from '../navigation/helpers';
 
 export class UserSettingsForm extends HTMLFormElement {
+	#username: string;
     #inputFields: types.InputMetadata[];
     #biography: types.InputMetadata;
     #submit: types.buttonData;
-    #delete: types.buttonData;
 
     constructor() {
         super();
+		this.#username = '';
         this.#inputFields = [
             {
                 type: 'text',
@@ -25,14 +26,6 @@ export class UserSettingsForm extends HTMLFormElement {
                 id: 'password',
                 placeholder: 'Enter your new password!',
                 labelContent: 'Password',
-            },
-
-            {
-                type: 'file',
-                pattern: '',
-                id: 'upload',
-                placeholder: '',
-                labelContent: 'Profile picture',
             },
         ];
         this.#biography = {
@@ -49,15 +42,11 @@ export class UserSettingsForm extends HTMLFormElement {
             img: null,
             ariaLabel: 'Sunmit button for user settings form',
         };
-        this.#delete = {
-            type: 'button',
-            content: 'Delete account',
-            img: null,
-            ariaLabel: 'Account deletion request',
-            style: 'red',
-        };
     }
 
+	set setUsername(username: string) {
+		this.#username = username;
+	}
     connectedCallback() {
         this.render();
     }
@@ -73,20 +62,37 @@ export class UserSettingsForm extends HTMLFormElement {
 
     renderButtons() {
         const submit = createBtn(this.#submit);
-        const deleteAccount = createBtn(this.#delete);
-        this.append(deleteAccount, submit);
+        this.append(submit);
     }
 
     render() {
-        this.action = '/account/settings';
+        this.action = `/account/settings/${this.#username}`;
         this.method = 'patch';
         this.renderFields();
         this.renderButtons();
         this.className =
-            'grid grid-cols-[37.8%_61%] gap-y-(--space-m) gap-x-(--space-s) w-5xl brdr pad-sm';
+            'grid gap-y-(--space-m) pad-sm';
     }
 }
 
-if (!customElements.get('setting-forms')) {
-    customElements.define('setting-forms', UserSettingsForm, { extends: 'form' });
+if (!customElements.get('settings-form')) {
+    customElements.define('settings-form', UserSettingsForm, { extends: 'form' });
+}
+
+export class UserSettingsWrapper extends HTMLDivElement {
+	constructor() {
+		super();
+	}
+
+	connectedCallback() {
+		this.render();
+	}
+
+	render() {
+		this.className = 'brdr w-5xl grid sidebar-left justify-items-center gap-s'
+	}
+}
+
+if (!customElements.get('settings-wrapper')) {
+	customElements.define('settings-wrapper', UserSettingsWrapper, {extends: 'div'})
 }

@@ -1,10 +1,11 @@
 import { Avatar } from '../typography/images';
+import { Biography, Username, Winstreak } from './user-atoms';
 import { createAvatar } from '../typography/helpers';
 import { createSocialMenu } from '../navigation/helpers';
+import { Notification } from './notifications';
 import { SocialMenu } from '../navigation/menus';
 import { UserCardSocial, UserInline } from './profile';
-import { Biography, Username, Winstreak } from './user-atoms';
-import { Notification } from './notifications';
+import { UserSettingsForm, UserSettingsWrapper } from './settings';
 import * as types from '../../types-interfaces';
 
 /**
@@ -43,15 +44,15 @@ export function createBiography(val: string): Biography {
 export function createUserCardSocial(
     socialBtns: Array<types.buttonData>,
     user: types.UserData,
-    view: types.ProfileView,
+    view: types.ProfileView
 ): UserCardSocial {
-    const avatar = createAvatar(user.avatar) as Avatar;
+	const avatarCpy = { ...user.avatar }
+	avatarCpy.size = 'imedium'
+    const avatar = createAvatar(avatarCpy) as Avatar;
     const username = createUsername(user.username, user.status) as Username;
     const menu = createSocialMenu(socialBtns, 'horizontal', view);
     const card = document.createElement('div', { is: 'user-card-social' }) as UserCardSocial;
-    card.appendChild(avatar);
-    card.appendChild(username);
-    card.appendChild(menu);
+    card.append(avatar, username, menu);
     username.customizeStyle('f-yellow', 'f-m', 'f-bold', true);
     card.id = user.id;
     return card;
@@ -65,17 +66,16 @@ export function createUserCardSocial(
  *
  */
 export function createUserInline(user: types.UserData): UserInline {
-    user.avatar.size = 'iicon';
-    const avatar = createAvatar(user.avatar);
+	const avatarCpy = { ...user.avatar }
+    avatarCpy.size = 'iicon';
+    const avatar = createAvatar(avatarCpy);
     const username = createUsername(user.username, user.status);
     const wstreak = createWinstreak(user.winstreak);
     const card = document.createElement('div', { is: 'user-inline' }) as UserInline;
 
     username.customizeStyle('f-orange', 'f-regular');
     card.id = user.id;
-    card.appendChild(avatar);
-    card.appendChild(username);
-    card.appendChild(wstreak);
+    card.append(avatar, username, wstreak);
     return card;
 }
 
@@ -171,4 +171,13 @@ export function getNotificationBoxAsync(): Promise<Notification | null> {
         }
         resolveSearchbar();
     });
+}
+
+export function assembleUserSettings(user: types.UserData): UserSettingsWrapper {
+    const el = document.createElement('div', { is: 'settings-wrapper' }) as UserSettingsWrapper;
+    const form = document.createElement('form', { is: 'settings-form' }) as UserSettingsForm;
+	const avatar = createAvatar(user.avatar);
+	form.setUsername = user.username;
+    el.append(avatar, form);
+    return el;
 }

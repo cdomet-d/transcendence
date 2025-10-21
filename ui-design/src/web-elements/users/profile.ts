@@ -22,7 +22,7 @@ export class UserCardSocial extends HTMLDivElement {
     }
 
     render() {
-        this.className = 'border-box pad-s grid place-items-center small-user bg-4F9FFF';
+        this.className = 'border-box pad-s grid place-items-center small-user bg-4F9FFF gap-s h-fit';
     }
 }
 
@@ -41,6 +41,7 @@ if (!customElements.get('user-card-social')) {
  * @remark You should use {@link createUserInline} which encapsulates creation logic.
  */
 export class UserInline extends HTMLDivElement {
+	//TODO: clean up eventListener
     constructor() {
         super();
     }

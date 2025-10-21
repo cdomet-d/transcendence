@@ -18,8 +18,8 @@
 	:root {
 		--image-xl: 10.29rem;
 		--image-xxl: 16.65rem;
-		--image-cont-xl: 11.29rem;
-		--image-cont-xxl: 17.65rem;
+		--image-cont-xl: 12.29rem;
+		--image-cont-xxl: 18.65rem;
 
 		--image-size: 2.43rem;
 		--image-cont-size: 3.43rem;
@@ -138,17 +138,17 @@
 
 	.ismall {
 		--image-size: 1.5rem;
-		--image-cont-size: 2.5rem;
+		--image-cont-size: 3.5rem;
 	}
 
 	.imedium {
 		--image-size: 2.43rem;
-		--image-cont-size: 3.43rem;
+		--image-cont-size: 4.43rem;
 	}
 
 	.ilarge {
 		--image-size: 6.36rem;
-		--image-cont-size: 7.36rem;
+		--image-cont-size: 8.36rem;
 	}
 
 	.thin {
@@ -156,6 +156,14 @@
 		--inner-border-w: 1px;
 		--n-border-w: -2px;
 		--n-inner-border-w: -1px;
+	}
+
+	.sidebar-right {
+    	grid-template-columns: 61% 37.8%;
+	}
+
+	.sidebar-left {
+    	grid-template-columns: 37.8% 61%;
 	}
 
 	/* Used to hide some UI elements from viewing users, 
