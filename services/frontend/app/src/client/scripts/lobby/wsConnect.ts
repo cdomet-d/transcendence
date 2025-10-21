@@ -15,18 +15,18 @@ function openWsConnection() {
 export function attachLobbyMenuListeners() {
 	const createBtn = document.getElementById('create-btn');
 	const joinBtn = document.getElementById('join-btn');
-	
+
 	if (createBtn) {
-		createBtn.addEventListener('click', handleCreate);
+		createBtn.addEventListener('click', () => handleLobbyRequest("create"));
 	}
 	if (joinBtn) {
-		joinBtn.addEventListener('click', handleJoin);
+		joinBtn.addEventListener('click', () => handleLobbyRequest("join"));
 	}
 }
 
 function attachLobbyListeners() {
 	const startButton = document.getElementById('start-tournament-btn');
-	
+
 	if (startButton) {
 		startButton.addEventListener('click', handleTournamentStart);
 	}
@@ -43,11 +43,12 @@ function wsConnect() {
 
 	ws.onmessage = (message: MessageEvent) => {
 		try {
+			// console.log("Client received WS message!");
+
 			// Filter incoming messages
 
-			// CREATE LOBBY
 			const data = JSON.parse(message.data);
-			if (data.lobby === "created") {
+			if (data.lobby === "created" || data.lobby === "joined") { // CREATE LOBBY OR JOIN, SAME STORY FOR FRONT
 				console.log("Lobby created, rendering lobby now")
 				const app = document.getElementById('app');
 				if (app) {
@@ -57,19 +58,13 @@ function wsConnect() {
 					console.log("Error: could not find HTMLElement: 'app'");
 				}
 			}
-			// JOIN LOBBY
 
-			// REQUEST APPROVED
-			// REQUEST DECLINED
-
-			// console.log("Client received WS message!");
-
-			const gameRequest/* : gameRequest */ = JSON.parse(message.data);
+			const gameRequest/* : gameRequest */ = data;
 			const gameID: number = gameRequest.gameID;
-			if (gameRequest.event === "declined") {
+			if (gameRequest.event === "declined") { // REQUEST DECLINED
 				console.log("Error: Failed to start game: #" + gameID);
 				return;
-			} else if (gameRequest.event === "approved") {
+			} else if (gameRequest.event === "approved") { // REQUEST APPROVED
 				window.history.pushState({}, '', '/game/match');
 				router._loadRoute('/game/match');
 				console.log("Client ready to connect game: #" + gameID);
@@ -93,7 +88,7 @@ function wsConnect() {
 
 function handleTournamentStart() {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-		const message = createRequestForm();
+		const message = createGameRequestForm();
 		console.log("Client sending REQUEST_FORM to GM:\n", message);
 		wsInstance.send(message);
 	} else {
@@ -101,38 +96,18 @@ function handleTournamentStart() {
 	}
 }
 
-function handleCreate() {
+function handleLobbyRequest(action: string): void {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-		const message: string = makeCreateLobbyRequest();
-		console.log("Client sending CREATE request:\n", message);
-		wsInstance.send(message);
+		console.log(`Client sending ${action} request`);
+		// wsInstance.send(JSON.stringify({ action: action }));
+		wsInstance.send(createLobbyRequestForm(action));
 	} else {
-		console.log("Error: WebSocket is not open for CREATE");
+		console.log(`Error: WebSocket is not open for ${action}`);
 	}
 }
 
-function handleJoin() {
-	console.log("JOIN");
-
-	// if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-	//     const joinMessage = makeJoinLobbyRequest();
-	//     console.log("Client sending JOIN request:\n", joinMessage);
-	//     wsInstance.send(joinMessage);
-	//   } else {
-	//     console.log("Error: WebSocket is not open for JOIN");
-	//   }
-}
-
-function makeCreateLobbyRequest(): string {
-	const message = {
-		action: "create"
-	};
-
-	return JSON.stringify(message);
-}
-
 // TODO: requestForm should be filled with lobbyInfo
-function createRequestForm(): string {
+function createGameRequestForm(): string {
 	const requestForm = {
 		event: "TOURNAMENT_REQUEST",
 		payload: {
@@ -149,6 +124,27 @@ function createRequestForm(): string {
 	};
 
 	return JSON.stringify(requestForm);
+}
+
+interface lobbyForm {
+	event: "LOBBY_REQUEST",
+	payload: {
+		action: "create" | "join" | string, // | string is for type compatibility
+		lobbyID?: number,
+		userID?: number
+	}
+}
+
+function createLobbyRequestForm(action: string): string {
+	const lobbyForm: lobbyForm = {
+		event: "LOBBY_REQUEST",
+		payload: {
+			action: action,
+			lobbyID: 1// TODO: invitation would contain lobbyID
+			// userID: , // TODO: how to retrieve uid here (GM creates UIDs lol)
+		}
+	}
+	return JSON.stringify(lobbyForm);
 }
 
 export { wsConnect };

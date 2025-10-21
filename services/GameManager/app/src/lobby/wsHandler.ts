@@ -1,6 +1,6 @@
 import type { FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
-import { processLobbyRequest } from '../manager.js';
+import { processLobbyGameRequest } from '../manager.js';
 import type { lobbyInfo } from '../manager.js'
 import { createLobby } from './lobby.js';
 
@@ -32,39 +32,53 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 
 
 	socket.on('message', (message: any) => {
+		req.server.log.info(`server received: ${message}`);
+
 		const data = JSON.parse(message);
 		if (!data) {
 			console.log("Error: Message received by GM is empty or corrupted!")
 		}
 
-		if (data.action) {
-			if (data.action === "create") {
-				console.log("GM RECEIVED 'create'")
-				const userID = getUniqueUserID();
-				wsClientsMap.set(userID, socket);
-				req.server.log.info("User" + userID + " added to clientMap");
-				createLobby(userID);
-				socket.send(JSON.stringify({lobby: "created"}));
-				return;
-			}
-		}
-
+		// FILTER BY EVENT
 		const event = data.event;
-		if (!event || event && (event !== "TOURNAMENT_REQUEST" && event !== "GAME_REQUEST")) {
-			console.log("Error: Wrong or empty request in GM!");
+		if (!event || event && (event !== "TOURNAMENT_REQUEST" && event !== "GAME_REQUEST" && event !== "LOBBY_REQUEST")) {
+			console.log("Error: Wrong or empty request received in GM!");
 			return;
 		}
 
-		const payload: lobbyInfo = data.payload;
+		// DIFFERENT PAYLOADS MAY COME (lobbyInfo OR lobbyForm)
+		const payload/* : lobbyInfo  */ = data.payload;
 		if (!payload) {
-			console.log("Error: lobbyInfo received by GM is empty!");
+			console.log("Error: payload received by GM is empty!");
 			return;
 		}
 
 		if (event === "TOURNAMENT_REQUEST") {
-			// req.server.log.info(`server received: ${mess}`);
-			processLobbyRequest(data.payload);
+			processLobbyGameRequest(data.payload);
+		} else if (event === "GAME_REQUEST") {
+			// TODO
+		} else if (event === "LOBBY_REQUEST") {
+			const userID = getUniqueUserID(); // HAHAHA this bad but no choice
+			if (payload.action) {
+				if (payload.action === "create") { // createLobby()
+					console.log("GM RECEIVED 'create'")
+					wsClientsMap.set(userID, socket);
+					req.server.log.info("User" + userID + " added to clientMap");
+					createLobby(userID);
+					wsSend(socket, JSON.stringify({ lobby: "created" }));
+					return;
+				} else if (payload.action === "join") { //joinLobby
+					console.log("GM RECEIVED 'join'")
+					wsClientsMap.set(userID, socket);
+					req.server.log.info("User" + userID + " added to clientMap");
+					joinLobby(userID);
+					wsSend(socket, JSON.stringify({ lobby: "joined" }));
+				}
+			} else {
+				console.log("Error: GM received data but not data.action!");
+			}
 		}
+
 	});
 }
 

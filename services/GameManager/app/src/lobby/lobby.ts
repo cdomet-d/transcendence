@@ -54,6 +54,12 @@ export function createLobby(hostID: number) {
 	// we have lobby :)
 }
 
+
+export function joinLobby(uid: number) {
+	addUserToLobby(uid, lobbyID);
+}
+
+
 function makeLobbyInfo(hostID: number): lobbyInfo {
 
 	const lobbyID: number = getUniqueLobbyID();
