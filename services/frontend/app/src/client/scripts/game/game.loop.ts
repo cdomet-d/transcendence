@@ -1,53 +1,14 @@
-import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from "./game.events.js";
 import { renderGame } from "./game.render.utils.js";
 import { Game, HEIGHT, WIDTH } from "./game.class.js";
 import { updatePaddlePos } from "./paddle.js";
-import type { repObj, startObj } from "./mess.validation.js";
+import type { repObj } from "./mess.validation.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
-export async function startGame(game: Game, ws: WebSocket) {
-	//send client timestamp
-	ws.send(JSON.stringify(performance.now()));
-
-	// wait for server timestamp and delay
-	const start: startObj = await waitForMessage(ws);
-	const recvTime: number = performance.now();
-	const halfTripTime: number = (recvTime - start.clientTimeStamp) / 2;
-	const offset: number = start.serverTimeStamp + halfTripTime - recvTime;
-
-	// wait
-	setUpGame(game, ws, start);
-	const waitTime = Math.max(0, start.delay - halfTripTime);
-	await new Promise(res => setTimeout(res, waitTime));
-
-	// start game
+export async function startGame(game: Game, ws: WebSocket, offset: number) {
 	game.frameId = requestAnimationFrame((timestamp) => {
 		game.lastFrameTime = timestamp;
 		game.frameId = requestAnimationFrame(FrameRequestCallback(game, ws, offset));
-	});
-}
-
-function setUpGame(game: Game, ws: WebSocket, start: startObj) {
-	game.ball.dx *= start.ballDir;
-	game.ball.lastdx *= start.ballDir;
-	addMessEvent(game, ws);
-	window.addEventListener("keydown", createKeyDownEvent(game.req._keys));
-	window.addEventListener("keyup", createKeyUpEvent(game.req._keys));
-}
-
-function waitForMessage(socket: WebSocket): Promise< startObj > {
-	return new Promise((resolve, reject) => {
-		socket.addEventListener('message', (event) => {
-			try {
-				const start: startObj = JSON.parse(event.data);
-				// if (!validStart())
-				// 	reject(new Error("Invalid start"));
-				resolve(start);
-			} catch (err) {
-				reject(err);
-			}
-		}, { once: true });
 	});
 }
 
