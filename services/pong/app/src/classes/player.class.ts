@@ -25,6 +25,7 @@ export class Player {
 	#_keys: keysObj;
 	#_score: number;
 	#_reply: repObj;
+	#_syncClockCount: number;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(userID: number, socket: WebSocket, random: boolean) {
@@ -41,6 +42,7 @@ export class Player {
 			this.#_playerSide = "left";
 		}
 		this.#_score = 0;
+		this.#_syncClockCount = 0;
 	}
 
 	/*                              GETTERS                                  */
@@ -76,12 +78,20 @@ export class Player {
 		return this.#_keys;
 	}
 
+	get syncClockCount(): number {
+		return this.#_syncClockCount;
+	}
+
 	/*                              SETTERS                                  */
 	set keys(keys: keysObj) {
 		this.#_keys = keys;
 	}
 
 	/*                              METHODS                                  */
+	public incSyncClockCount() {
+		this.#_syncClockCount += 1;
+	}
+
 	public setMessPad(side: string, newPos: number) {
 		if (side === "left")
 			this.#_reply._leftPad.y = newPos;
