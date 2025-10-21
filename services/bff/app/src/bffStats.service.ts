@@ -2,6 +2,7 @@
 import type { UserStats } from "./bff.interface.js";
 import type { StatsResponse } from "./bff.interface.js";
 
+//GET
 export async function fetchUserStats(userID: number): Promise<UserStats | null> {
 	const response = await fetch (`http://users:2626/internal/users/${userID}/stats`);
 	if (response.status == 404)
@@ -12,6 +13,7 @@ export async function fetchUserStats(userID: number): Promise<UserStats | null> 
 	return (data.stats);
 }
 
+//PATCH
 export async function updateUserStats(userID: number, statsData: object): Promise<Response> {
 	const url = `http://users:2626/internal/users/${userID}/stats`;
 	return fetch(url, {
@@ -21,6 +23,7 @@ export async function updateUserStats(userID: number, statsData: object): Promis
 	});
 }
 
+//PATCH
 export async function incrementWinStreak(userID: number): Promise<Response> {
 	const url = `http://users:2626/internal/users/${userID}/stats/winStreak/increment`;
 	return fetch(url, {
@@ -28,6 +31,7 @@ export async function incrementWinStreak(userID: number): Promise<Response> {
 	});
 }
 
+//PATCH
 export async function resetWinStreak(userID: number): Promise<Response> {
 	const url = `http://users:2626/internal/users/${userID}/stats/winStreak/reset`;
 	return fetch(url, {

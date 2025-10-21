@@ -1,7 +1,8 @@
 import { Database } from "sqlite";
 import type { Match, Tournament } from "./routes.js";
 
-export async function getGame(db: Database, userID: number): Promise<boolean> {
+// Not needed rn
+/* export async function getGame(db: Database, userID: number): Promise<boolean> {
 	const query = `
 		SELECT
 			gameID,
@@ -29,7 +30,7 @@ export async function getGame(db: Database, userID: number): Promise<boolean> {
 	//TODO : fix that
 	return (true);
 	//return (matches);
-};
+}; */
 
 export async function getGameHistory(db: Database, userID: number): Promise<Match[]> {
 	const query = `

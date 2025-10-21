@@ -2,6 +2,10 @@ import type { FastifyInstance } from 'fastify';
 import { checkUsernameUnique } from './account.service.js'
 import * as bcrypt from 'bcrypt';
 
+interface AccountSettingsRow {
+	defaultLang: string;
+}
+
 export async function accountRoutes(serv: FastifyInstance) {
 
 	//TODO: usersStatus is always a hardcoded 1 for now, not even sure to keep it honestly
@@ -15,7 +19,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 
 			const query = `
 				INSERT INTO usersAuth (hashedPassword, username, userStatus, registerDate)
-				VALUES (?, ?, 1, ?)
+				VALUES (?, ?, 1, ?, en)
 			`;
 			const params = [hashedPassword, username, new Date().toISOString()];
 			const response = await serv.dbAccount.run(query, params);
@@ -88,15 +92,15 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const response = await serv.dbAccount.run(query, [newUsername, userID]);
 
 			if (response.changes === 0)
-				return reply.code(404).send({ message: 'User not found for username update.' });
+				return (reply.code(404).send({ message: 'User not found for username update.' }));
 
-			return reply.code(200).send({ message: 'Account username updated.' });
+			return (reply.code(200).send({ message: 'Account username updated.' }));
 		} catch (error) {
 			if (error && typeof error === 'object' && 'code' in error && (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE')
-				return reply.code(409).send({ message: 'Username is already taken.' });
+				return (reply.code(409).send({ message: 'Username is already taken.' }));
 
 			serv.log.error(`Error updating account username: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 
@@ -111,7 +115,26 @@ export async function accountRoutes(serv: FastifyInstance) {
 			return (reply.code(204).send());
 		} catch (error) {
 			serv.log.error(`Error deleting account: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			return (reply.code(500).send({ message: 'Internal server error' }));
+		}
+	});
+
+	serv.get('/internal/account/:userID/settings', async (request, reply) => {
+		try {
+			const userID = request.params as { userID: string };
+
+			const query = `
+				SELECT defaultLang FROM usersAuth WHERE userID = ?
+			`
+			const response = await serv.dbAccount.get(query, [userID]) as AccountSettingsRow | undefined;
+			if (!response)
+				return (reply.code(404).send({ message: 'Account not found.' }));
+			return (reply.code(201).send({
+				defaultLang: response.defaultLang
+			}));
+		} catch (error) {
+			serv.log.error(`[Account] Error fetching settings: ${error}`);
+			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
 	});
 }

@@ -3,5 +3,6 @@ CREATE TABLE usersAuth (
 	hashedPassword TEXT,
 	username TEXT,
 	userStatus INTEGER,
-	registerDate TEXT
+	registerDate TEXT,
+	defaultLang TEXT
 );

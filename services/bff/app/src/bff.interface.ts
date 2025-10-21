@@ -1,3 +1,5 @@
+import type { StringMappingType } from "typescript";
+
 export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
 export type StatusUser = 'offline' | 'online' | 'in-game';
 
@@ -74,5 +76,16 @@ export interface Matches {
 	scoreWinner: number;
 	scoreLoser: number;
 	opponentID: number;
+}
 
+export interface UserProfileView {
+	profile: UserProfile;
+	stats: UserStats;
+	friends: Friend[];
+	recentMatches: Matches[];
+}
+
+export interface settings {
+	defaultLang: string;
+	profileColor: string;
 }

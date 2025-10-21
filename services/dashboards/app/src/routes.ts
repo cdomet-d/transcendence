@@ -1,5 +1,4 @@
 import type { FastifyInstance } from 'fastify';
-import { getGame } from './dashboard.service.js';
 import { getGameHistory } from './dashboard.service.js';
 import { getTournamentHistory } from './dashboard.service.js';
 
@@ -302,9 +301,9 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//get all game of a player
-	serv.get('/internal/dashboard/gameHistory', async (request, reply) => {
+	serv.get('/internal/dashboard/:userID/gameHistory', async (request, reply) => {
 		try {
-			const userID = request.user.userID;
+			const { userID } = request.params as { userID: number };
 
 			const games = await getGameHistory(serv.dbStats, userID);
 
@@ -317,9 +316,10 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	// get all tournament of a player
-	serv.get('/internal/dashboard/tournamentHistory', async (request, reply) => {
+	serv.get('/internal/dashboard/:userID/tournamentHistory', async (request, reply) => {
 		try {
-			const userID = request.user.userID;
+			const { userID } = request.params as { userID: number };
+
 			const games = await getTournamentHistory(serv.dbStats, userID);
 			return (reply.code(200).send(games));
 

@@ -33,3 +33,13 @@ export async function updateUserProfileUsername(userID: number, newUsername: str
 		body: JSON.stringify({ newUsername })
 	});
 }
+
+export async function fetchDefaultLang(userID: number) {
+	const response = await fetch(`http://account:1414/internal/account/${userID}/settings`);
+	if (!response.ok) {
+		if (response.status === 404)
+			throw (new Error('User not found.'));
+		throw (new Error('Account service failed.'));
+	}
+	return (response.json());
+}

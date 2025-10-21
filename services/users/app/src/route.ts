@@ -13,10 +13,6 @@ interface UserRow {
 	username: string;
 }
 
-/* interface UserRowConnection {
-	lastConnexion: string;
-} */
-
 interface UserStats {
 	userID: number;
 	longestMatch: number;
@@ -35,7 +31,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//get user's profile with userID
 	serv.get('/internal/users/:userID/profile', async (request, reply) => {
 		try {
-			const { userID } = request.params as { userID: number };
+			const { userID } = request.params as { userID: string };
 
 			const query = `
 				SELECT * FROM userProfile WHERE userID = ?
@@ -126,7 +122,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//get user's activity with userID
 	serv.get('/internal/users/:userID/activity-status', async (request, reply) => { //using
 		try {
-			const { userID } = request.params as { userID: number };
+			const { userID } = request.params as { userID: string };
 
 			const query = `
 				SELECT activityStatus FROM userProfile WHERE userID = ?
@@ -153,10 +149,70 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//get user's activity with userID
+	serv.get('/internal/users/:userID/profileColor', async (request, reply) => { //using
+		try {
+			const { userID } = request.params as { userID: string };
+
+			const query = `
+				SELECT profileColor FROM userProfile WHERE userID = ?
+			`;
+
+			const profileColor = await serv.dbUsers.get<UserRow>(query, [userID]);
+			if (!profileColor)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found'
+				}));
+
+			return (reply.code(200).send({
+				success: true,
+				profileColor: profileColor
+			}));
+
+		} catch (error) {
+			serv.log.error(`Error fetching user profile: ${error}`);
+			return (reply.code(500).send({
+				success: false,
+				message: 'Internal server error'
+			}));
+		}
+	});
+
+	//get user's bio with userID
+	serv.get('/internal/users/:userID/bio', async (request, reply) => { //using
+		try {
+			const { userID } = request.params as { userID: string };
+
+			const query = `
+				SELECT bio FROM userProfile WHERE userID = ?
+			`;
+
+			const bio = await serv.dbUsers.get<UserRow>(query, [userID]);
+			if (!bio)
+				return (reply.code(404).send({
+					success: false,
+					message: 'User not found'
+				}));
+
+			return (reply.code(200).send({
+				success: true,
+				bio: bio
+			}));
+
+		} catch (error) {
+			serv.log.error(`Error fetching user profile: ${error}`);
+			return (reply.code(500).send({
+				success: false,
+				message: 'Internal server error'
+			}));
+		}
+	});
+
 	//create profile and stats
 	serv.post('/internal/users/:userID/profile', async (request, reply) => { //using
 		try {
-			const { userID } = request.params as { userID: number };
+			const { userID } = request.params as { userID: string };
 			const { username } = request.params as { username: string };
 
 			try {
@@ -228,6 +284,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//TODO : fix const userID ---> in .user or .params
 	//update user profile
 	serv.patch('/internal/UserProfile/users/:userID/profile', async (request, reply) => { //using
 		try {
@@ -786,45 +843,6 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//update user's profile color with userID
-	serv.patch('/internal/users/:userID/profil-color', async (request, reply) => {
-		try {
-			const userID = request.user.userID;
-			const { newProfileColor } = request.params as { newProfileColor: string };
-
-			if (typeof newProfileColor !== 'string') {
-				return (reply.code(400).send({
-					success: false,
-					message: 'Validation error: newStatus must be a number.'
-				}));
-			}
-
-			const query = `
-				UPDATE userProfile SET profileColor = ? WHERE userID = ?
-			`;
-
-			const params = [
-				newProfileColor,
-				userID
-			];
-
-			const response = await serv.dbUsers.run(query, params);
-			if (!response.changes)
-				return (reply.code(404).send({
-					success: false,
-					message: 'User not found or request parameters are wrong'
-				}));
-
-			return (reply.code(200).send({
-				success: true,
-				message: 'Profile Color updated !'
-			}));
-
-		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
-		}
-	});
 
 	//update user's activity with userID
 	serv.patch('/internal/users/:userID/activity-status', async (request, reply) => {

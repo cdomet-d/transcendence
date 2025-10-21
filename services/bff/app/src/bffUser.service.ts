@@ -5,7 +5,7 @@ import type { ProfileResponse } from "./bff.interface.js";
 
 export async function fetchUserProfile(userID: number): Promise<UserProfile | null> {
 	const response = await fetch(`http://users:2626/internal/users/${userID}/profile`)
-	if (response.status == 404)
+	if (response.status === 404)
 		return (null);
 	if (!response.ok)
 		throw (new Error('Users service failed.'));
@@ -13,7 +13,6 @@ export async function fetchUserProfile(userID: number): Promise<UserProfile | nu
 	const data = await response.json() as ProfileResponse;
 	return (data.profile);
 }
-
 
 //TODO: update route name in friends service
 export async function fetchFriendshipStatus(userA: number, userB: number): Promise<FriendshipStatus> {
@@ -40,3 +39,22 @@ export async function updateUserProfileField(userID: number, field: string, valu
 	});
 }
 
+export async function fetchProfileColor(userID: number) {
+	const response = await fetch(`https://user:2626/internal/users/${userID}/profileColor`);
+	if (!response.ok) {
+		if (response.status === 404)
+			throw (new Error('User not found.'));
+		throw (new Error('Account service failed.'));
+	}
+	return (response.json());
+}
+
+export async function fetchBio(userID: number) {
+	const response = await fetch(`https://user:2626/internal/users/${userID}/bio`);
+	if (!response.ok) {
+		if (response.status === 404)
+			throw (new Error('User not found.'));
+		throw (new Error('Account service failed.'));
+	}
+	return (response.json());
+}

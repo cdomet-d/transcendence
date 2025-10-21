@@ -8,17 +8,13 @@ import { resetWinStreak } from './bffStats.service.js';
 
 export async function bffStatsRoutes(serv: FastifyInstance) {
 
-	serv.get('/api/users/:username/stats', async (request, reply) => {
+	//TODO fix that
+	serv.get('/api/users/:userID/stats', async (request, reply) => {
 		try {
-			const { username } = request.params as { username: string };
+			const userID = request.user.userID;
 
-			const user = await findUserByUsername(username);
-			if (!user)
-				return reply.code(404).send({ message: `User '${username}' not found.` });
-
-			const statsResponse = await fetchUserStats(user.userID);
-
-			return reply.code(statsResponse.status).send(await statsResponse.json());
+			const statsResponse = await fetchUserStats(userID);
+			return (reply.code(statsResponse.status).send(await statsResponse.json()));
 
 		} catch (error) {
 			serv.log.error(`[BFF] Error getting user stats: ${error}`);
