@@ -158,14 +158,16 @@ export class Game {
 	}
 
 	public addState(timestamp: number) {
-		if (!this.#_players[0] || !this.#_players[1]) return;
+		if (!this.#_players[0] || !this.#_players[1])
 			return;
 		const newState: stateObj = { _timestamp: timestamp, _leftPad: { ...this.#_players[0]!.paddle}, _rightPad: { ...this.#_players[1]!.paddle}, _ball: { ...this.#_ball} };
 		this.#_stateHistory.push(newState);
 	}
 
-	public deleteStates(length: number) {
-		this.#_stateHistory.splice(0, length);
+	public deleteStates(timestamp: number) {
+		this.#_stateHistory = this.#_stateHistory.filter(
+            state => state._timestamp >= timestamp
+        );
 	}
 
 	public updateState(idx: number) {
