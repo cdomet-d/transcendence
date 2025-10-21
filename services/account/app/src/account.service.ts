@@ -5,10 +5,10 @@ export async function checkUsernameUnique(db: Database, username: string): Promi
 		const query = `
 			SELECT 1 FROM usersAuth WHERE username = ? LIMIT 1
 		`;
-		const result = await db.all(query, username);
+		const response = await db.all(query, username);
 
 		//true == username taken, false == username available
-		return (result.length > 0);
+		return (response.length > 0);
 	} catch (error) {
 		console.log(4);
 

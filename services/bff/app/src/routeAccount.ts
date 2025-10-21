@@ -168,7 +168,7 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 				fetch(`http://users:2626/internal/users/${userID}`, { method: 'DELETE' }),
 				fetch(`http://account:1414/internal/account/${userID}`, { method: 'DELETE' })
 			]);
-			const failures = deletionResults.filter(result => result.status === 'rejected' || (result.status === 'fulfilled' && !result.value.ok));
+			const failures = deletionResults.filter(response => response.status === 'rejected' || (response.status === 'fulfilled' && !response.value.ok));
 
 			if (failures.length > 0) {
 				serv.log.error({

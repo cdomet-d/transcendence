@@ -22,10 +22,10 @@ export async function routeFriend(serv: FastifyInstance) {
 				LIMIT 1;
 				`;
 			const params = [userA, userB, userB, userA];
-			const result = await serv.dbFriends.get<{ statusFrienship: boolean }>(query, params);
+			const response = await serv.dbFriends.get<{ statusFrienship: boolean }>(query, params);
 			let status: ProfileView = 'stranger';
-			if (result)
-				status = result.statusFrienship ? 'friend' : 'pending';
+			if (response)
+				status = response.statusFrienship ? 'friend' : 'pending';
 
 			return (reply.code(200).send({ status: status }));
 
@@ -60,8 +60,8 @@ export async function routeFriend(serv: FastifyInstance) {
 				false
 			];
 
-			const result = await serv.dbFriends.run(query, params);
-			if (result.changes === 0) {
+			const response = await serv.dbFriends.run(query, params);
+			if (response.changes === 0) {
 				return reply.code(404).send({
 					success: false,
 					message: 'Friend request could not be sent.'
@@ -103,8 +103,8 @@ export async function routeFriend(serv: FastifyInstance) {
 				[friendshipID,
 					receiverID];
 
-			const result = await serv.dbFriends.run(query, params);
-			if (result.changes === 0) {
+			const response = await serv.dbFriends.run(query, params);
+			if (response.changes === 0) {
 				return reply.code(404).send({
 					success: false,
 					message: 'Friendship could not be accepted.'
@@ -138,9 +138,9 @@ export async function routeFriend(serv: FastifyInstance) {
 			`;
 
 			const params = [removerId, friendID, friendID, removerId];
-			const result = await serv.dbFriends.run(query, params);
+			const response = await serv.dbFriends.run(query, params);
 
-			if (result.changes === 0)
+			if (response.changes === 0)
 				return (reply.code(404).send({ message: 'Friendship not found.' }));
 
 			return (reply.code(204).send({
@@ -197,8 +197,8 @@ export async function routeFriend(serv: FastifyInstance) {
 				userID,
 				userID
 			]
-			const result = await serv.dbFriends.run(query, params);
-			if (result.changes === 0)
+			const response = await serv.dbFriends.run(query, params);
+			if (response.changes === 0)
 				return (reply.code(404).send({ message: 'Friendship not found.' }));
 
 			return (reply.code(204).send({

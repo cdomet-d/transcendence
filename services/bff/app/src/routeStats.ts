@@ -40,7 +40,7 @@ export async function bffStatsRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/api/games/results', async (request, reply) => {
+	serv.post('/api/games/responses', async (request, reply) => {
 		try {
 			const { winnerID, loserID, duration, winnerScore } = request.body as any;
 
@@ -66,9 +66,9 @@ export async function bffStatsRoutes(serv: FastifyInstance) {
 				resetWinStreak(loserID)
 			]);
 
-			return reply.code(200).send({ message: 'Game results processed.' });
+			return reply.code(200).send({ message: 'Game responses processed.' });
 		} catch (error) {
-			serv.log.error(`[BFF] Error processing game results: ${error}`);
+			serv.log.error(`[BFF] Error processing game responses: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is unavailable.' });
 		}
 	});

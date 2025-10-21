@@ -258,8 +258,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				UPDATE userProfile SET ${setClauses} WHERE userID = ?
 			`;
 
-			const result = await serv.dbUsers.run(query, params);
-			if (result.changes === 0) {
+			const response = await serv.dbUsers.run(query, params);
+			if (response.changes === 0) {
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found'
@@ -284,9 +284,9 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const query = `UPDATE userProfile SET username = ? WHERE userID = ?`;
 			const params = [newUsername, userID];
-			const result = await serv.dbUsers.run(query, params);
+			const response = await serv.dbUsers.run(query, params);
 
-			if (result.changes === 0) {
+			if (response.changes === 0) {
 				return (reply.code(404).send({ success: false, message: 'User profile not found.' }));
 			}
 
@@ -314,8 +314,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				userID,
 				userID
 			];
-			const result = await serv.dbUsers.run(query, params);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, params);
+			if (!response.changes)
 				return (reply.code(404).send({ success: false, message: 'User profile/stats not found.' }));
 			return (reply.code(204).send({success: true, message: 'User profile and stats deleted !'}))
 		} catch (error) {
@@ -388,8 +388,8 @@ export async function userRoutes(serv: FastifyInstance) {
 			const params = [...Object.values(updates), userID];
 			const query = `UPDATE userStats SET ${setClauses} WHERE userID = ?`;
 
-			const result = await serv.dbUsers.run(query, params);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, params);
+			if (!response.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found'
@@ -412,8 +412,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				UPDATE userStats SET winStreak = winStreak + 1 WHERE userID = ?
 			`;
 
-			const result = await serv.dbUsers.run(query, userID);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, userID);
+			if (!response.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found'
@@ -439,8 +439,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				UPDATE userStats SET winStreak = 0 WHERE userID = ?
 			`;
 
-			const result = await serv.dbUsers.run(query, userID);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, userID);
+			if (!response.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found'
@@ -472,8 +472,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				userID
 			];
 
-			const result = await serv.dbUsers.run(query, params);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, params);
+			if (!response.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found'
@@ -505,8 +505,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				userID
 			];
 
-			const result = await serv.dbUsers.run(query, params);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, params);
+			if (!response.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found or'
@@ -532,8 +532,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				UPDATE userStats SET totalMatch = totalMatch + 1 WHERE userID = ?
 			`;
 
-			const result = await serv.dbUsers.run(query, [userID]);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, [userID]);
+			if (!response.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found'
@@ -559,8 +559,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				UPDATE userStats SET totalWins = totalWins + 1 WHERE userID = ?
 			`;
 
-			const result = await serv.dbUsers.run(query, [userID]);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, [userID]);
+			if (!response.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found'
@@ -592,8 +592,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				userID
 			];
 
-			const result = await serv.dbUsers.run(query, params);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, params);
+			if (!response.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found'
@@ -625,8 +625,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				userID
 			];
 
-			const result = await serv.dbUsers.run(query, params);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, params);
+			if (!response.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found or request parameters are wrong'
@@ -729,8 +729,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				userID
 			];
 
-			const result = await serv.dbUsers.run(query, params);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, params);
+			if (!response.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found or request parameters are wrong'
@@ -765,8 +765,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				userID
 			];
 
-			const result = await serv.dbUsers.run(query, params);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, params);
+			if (!response.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found or request parameters are wrong'
@@ -808,8 +808,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				userID
 			];
 
-			const result = await serv.dbUsers.run(query, params);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, params);
+			if (!response.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found or request parameters are wrong'
@@ -851,8 +851,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				userID
 			];
 
-			const result = await serv.dbUsers.run(query, params);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, params);
+			if (!response.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found or request parameters are wrong'
@@ -899,8 +899,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				userID
 			];
 
-			const result = await serv.dbUsers.run(query, params);
-			if (!result.changes)
+			const response = await serv.dbUsers.run(query, params);
+			if (!response.changes)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found or request parameters are wrong'

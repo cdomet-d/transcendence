@@ -1,5 +1,5 @@
 import type { UserData } from './bff.interface.js';
-import type { RawFriend } from './bff.interface.js';
+import type { Friend } from './bff.interface.js';
 import type { UserProfile } from './bff.interface.js';
 
 export async function findUserByUsername(username: string): Promise<UserData | null> {
@@ -35,22 +35,22 @@ export async function deleteFriendRequest(removerID: number, friendID: number): 
 	}));
 }
 
-export async function fetchRawFriends(userID: number): Promise<RawFriend[]> {
-	const response = await fetch(`http://friends:1616/internal/friends/${userID}/friends`);
+export async function fetchFriendList(userID: number): Promise<Friend[]> {
+	const response = await fetch(`http://friends:1616/internal/friends/${userID}/friendslist`);
 
 	if (!response.ok)
 		throw (new Error('Friends service failed.'));
 
-	return (response.json() as Promise<RawFriend[]>);
+	return (response.json() as Promise<Friend[]>);
 }
 
-export async function fetchRawFriendRequests(userID: number): Promise<RawFriend[]> {
+export async function fetchRawFriendRequests(userID: number): Promise<Friend[]> {
 	const response = await fetch(`http://friends:1616/internal/friends/${userID}/friend-requests`);
 
 	if (!response.ok)
 		throw (new Error('Friends service failed.'));
 
-	return (response.json() as Promise<RawFriend[]>);
+	return (response.json() as Promise<Friend[]>);
 }
 
 

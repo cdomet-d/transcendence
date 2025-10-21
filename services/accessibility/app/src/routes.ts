@@ -14,9 +14,9 @@ export async function languageRoutes(serv: FastifyInstance) {
 		`;
 
 		try {
-			const result = await serv.dbLanguage.get(query, [word, langCode]);
-			if (result)
-				return reply.code(200).send(result);
+			const response = await serv.dbLanguage.get(query, [word, langCode]);
+			if (response)
+				return reply.code(200).send(response);
 			else
 				reply.code(404).send({ message: 'Translation not found' });
 		} catch (error) {

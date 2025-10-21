@@ -42,7 +42,7 @@ export interface UserData {
 	username: string;
 }
 
-export interface RawFriend {
+export interface Friend {
 	otherUserID: number;
 	startTime: string;
 }
@@ -63,4 +63,8 @@ export interface FriendProfileCard {
 	friendship: {
 		friendsSince: string;
 	};
+}
+
+export interface Matches {
+
 }

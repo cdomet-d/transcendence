@@ -56,7 +56,7 @@ export async function friendshipExistsUsersID(db: Database, userA_ID: number, us
 	`;
 
 	const params = [userA_ID, userB_ID, userB_ID, userA_ID];
-	const result = await db.get<{ friendshipID: number }>(query, params);
+	const response = await db.get<{ friendshipID: number }>(query, params);
 
-	return (result ? result.friendshipID : null);
+	return (response ? response.friendshipID : null);
 }

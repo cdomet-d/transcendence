@@ -18,13 +18,13 @@ export async function accountRoutes(serv: FastifyInstance) {
 				VALUES (?, ?, 1, ?)
 			`;
 			const params = [hashedPassword, username, new Date().toISOString()];
-			const result = await serv.dbAccount.run(query, params);
+			const response = await serv.dbAccount.run(query, params);
 
-			if (result.changes === 0 || !result.lastID)
+			if (response.changes === 0 || !response.lastID)
 				return reply.code(500).send({ message: 'Failed to create account record.' });
 
 			return reply.code(201).send({
-				userID: result.lastID,
+				userID: response.lastID,
 				username: username
 			});
 
@@ -67,9 +67,9 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const { newHashedPassword } = request.body as { newHashedPassword: string };
 
 			const query = `UPDATE userAuth SET hashedPassword = ? WHERE userID = ?`;
-			const result = await serv.dbAccount.run(query, [newHashedPassword, userID]);
+			const response = await serv.dbAccount.run(query, [newHashedPassword, userID]);
 
-			if (result.changes === 0)
+			if (response.changes === 0)
 				return reply.code(404).send({ message: 'User not found for password update.' });
 
 			return reply.code(200).send({ message: 'Account password updated.' });
@@ -85,9 +85,9 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const { newUsername } = request.body as { newUsername: string };
 
 			const query = `UPDATE usersAuth SET username = ? WHERE userID = ?`;
-			const result = await serv.dbAccount.run(query, [newUsername, userID]);
+			const response = await serv.dbAccount.run(query, [newUsername, userID]);
 
-			if (result.changes === 0)
+			if (response.changes === 0)
 				return reply.code(404).send({ message: 'User not found for username update.' });
 
 			return reply.code(200).send({ message: 'Account username updated.' });

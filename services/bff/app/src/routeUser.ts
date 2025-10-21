@@ -5,6 +5,7 @@ import type { RawUserStats } from './bff.interface.js';
 import type { RawUserActivity } from './bff.interface.js';
 import type { FriendshipStatus } from './bff.interface.js';
 
+import { fetchFriendList } from './bffFriends.service.js';
 import { fetchUserStats } from './bffStats.service.js';
 import { fetchUserProfile } from './bffUser.service.js';
 

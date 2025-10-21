@@ -29,15 +29,15 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				local
 			];
 
-			const result = await serv.dbStats.run(query, params);
-			if (!result.changes) {
+			const response = await serv.dbStats.run(query, params);
+			if (!response.changes) {
 				serv.log.error('Game creation query succeeded but did not insert a row.');
 				return (reply.code(500).send({ message: 'Internal server error during game creation' }));
 			}
 
 			return (reply.code(201).send({
 				success: true,
-				gameID: result.lastID,
+				gameID: response.lastID,
 				message: 'Game created!'
 			}));
 
@@ -61,15 +61,15 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				INSERT INTO tournamentInfo (playersIDs) VALUES (?)
 			`;
 
-			const result = await serv.dbStats.run(query, [playerIDsString]);
-			if (!result.changes) {
+			const response = await serv.dbStats.run(query, [playerIDsString]);
+			if (!response.changes) {
 				serv.log.error('Tournament creation query succeeded but did not insert a row.');
 				return (reply.code(500).send({ message: 'Internal server error during game creation' }));
 			}
 
 			return (reply.code(201).send({
 				success: true,
-				tournamentID: result.lastID,
+				tournamentID: response.lastID,
 				message: 'Tournament created!'
 			}));
 
@@ -94,8 +94,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				gameID
 			];
 			
-			const result = await serv.dbStats.run(query, params);
-			if (!result.changes) {
+			const response = await serv.dbStats.run(query, params);
+			if (!response.changes) {
 				serv.log.error('Game winner insertion query succeeded but did not insert a row.');
 				return (reply.code(500).send({ message: 'Internal server error during game winner update' }));
 			}
@@ -127,8 +127,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				tournamentID
 			];
 			
-			const result = await serv.dbStats.run(query, params);
-			if (!result.changes) {
+			const response = await serv.dbStats.run(query, params);
+			if (!response.changes) {
 				serv.log.error('Tournament winner insertion query succeeded but did not insert a row.');
 				return (reply.code(500).send({ message: 'Internal server error during tournament winner update'}));
 			}
@@ -153,8 +153,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				DELETE FROM gameMatchInfo WHERE gameID = ?
 			`;
 
-			const result = await serv.dbStats.run(query, [gameID]);
-			if (!result.changes) {
+			const response = await serv.dbStats.run(query, [gameID]);
+			if (!response.changes) {
 				serv.log.error('Game deletion query succeeded but did not delete a row.');
 				return (reply.code(500).send({ message: 'Internal server error during game deletion' }));
 			}
@@ -179,8 +179,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				DELETE FROM tournamentInfo WHERE tournamentID = ?
 			`;
 
-			const result = await serv.dbStats.run(query, [tournamentID]);
-			if (!result.changes) {
+			const response = await serv.dbStats.run(query, [tournamentID]);
+			if (!response.changes) {
 				serv.log.error('Tournament deletion query succeeded but did not delete a row.');
 				return (reply.code(500).send({ message: 'Internal server error during tournament deletion' }));
 			}
@@ -211,8 +211,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				gameID
 			];
 			
-			const result = await serv.dbStats.run(query, params);
-			if (!result.changes) {
+			const response = await serv.dbStats.run(query, params);
+			if (!response.changes) {
 				serv.log.error('Game duration update query succeeded but did not insert a row.');
 				return (reply.code(500).send({ message: 'Internal server error during game duration update' }));
 			}
@@ -245,8 +245,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				gameID
 			];
 			
-			const result = await serv.dbStats.run(query, params);
-			if (!result.changes) {
+			const response = await serv.dbStats.run(query, params);
+			if (!response.changes) {
 				serv.log.error('Score update query succeeded but did not insert a row.');
 				return (reply.code(500).send({ message: 'Internal server error during score update' }));
 			}
@@ -278,8 +278,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				gameID
 			];
 			
-			const result = await serv.dbStats.run(query, params);
-			if (!result.changes) {
+			const response = await serv.dbStats.run(query, params);
+			if (!response.changes) {
 				serv.log.error('Game status query succeeded but did not insert a row.');
 				return (reply.code(500).send({ message: 'Internal server error during game status update' }));
 			}
@@ -354,8 +354,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 
 			];
 			
-			const result = await serv.dbStats.run(query, params);
-			if (!result.changes) {
+			const response = await serv.dbStats.run(query, params);
+			if (!response.changes) {
 				serv.log.error('Tournament creation query succeeded but did not insert a row.');
 				return (reply.code(500).send({ message: 'Internal server error during game creation' }));
 			}
@@ -384,8 +384,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 
 			];
 			
-			const result = await serv.dbStats.run(query, params);
-			if (!result.changes) {
+			const response = await serv.dbStats.run(query, params);
+			if (!response.changes) {
 				serv.log.error('Tournament creation query succeeded but did not insert a row.');
 				return (reply.code(500).send({ message: 'Internal server error during game creation' }));
 			}
@@ -413,8 +413,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 
 			];
 			
-			const result = await serv.dbStats.run(query, params);
-			if (!result.changes) {
+			const response = await serv.dbStats.run(query, params);
+			if (!response.changes) {
 				serv.log.error('Tournament creation query succeeded but did not insert a row.');
 				return (reply.code(500).send({ message: 'Internal server error during game creation' }));
 			}
