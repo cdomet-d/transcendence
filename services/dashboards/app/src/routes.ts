@@ -1,24 +1,30 @@
 import type { FastifyInstance } from 'fastify';
 import { getGame } from './dashboard.service.js';
 import { getGameHistory } from './dashboard.service.js';
+import { getTournamentHistory } from './dashboard.service.js';
 
-interface Match {
+export interface Match {
 	gameID: number;
 	duration: number;
 	startTime: string;
-	winnerID: number;
-	loserID: number;
-	scoreWinner: number;
-	scoreLoser: number;
+	player1: number;
+	player2: number;
+	player1Score: number;
+	player2Score: number;
 	opponentID: number;
+}
+
+export interface Tournament {
+	tournamentID: number;
+	winnerID: number;
 }
 
 export async function dashboardRoutes(serv: FastifyInstance) {
 	//post a game
 	serv.post('/internal/dashboard/createGame', async (request, reply) => {
 		try {
-			const { local } = request.body as { local: boolean};
-			const { tournamentID } = request.body as { tournamentID: number};
+			const { local } = request.body as { local: boolean };
+			const { tournamentID } = request.body as { tournamentID: number };
 
 			const query = `
 				INSERT INTO gameMatchInfo (gameStatus, tournamentID, localGame)
@@ -50,7 +56,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	//post a tournament
 	serv.post('/internal/dashboard/createTournament', async (request, reply) => {
 		try {
-			const { playerIDs } = request.body as { playerIDs: number[]};
+			const { playerIDs } = request.body as { playerIDs: number[] };
 
 			if (!Array.isArray(playerIDs) || playerIDs.length === 0 || !playerIDs.every(id => typeof id === 'number'))
 				return reply.code(400).send({ message: 'Validation error: playerIDs must be a non-empty array of numbers.' });
@@ -93,7 +99,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				winnerID,
 				gameID
 			];
-			
+
 			const response = await serv.dbStats.run(query, params);
 			if (!response.changes) {
 				serv.log.error('Game winner insertion query succeeded but did not insert a row.');
@@ -126,11 +132,11 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				winnerID,
 				tournamentID
 			];
-			
+
 			const response = await serv.dbStats.run(query, params);
 			if (!response.changes) {
 				serv.log.error('Tournament winner insertion query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: 'Internal server error during tournament winner update'}));
+				return (reply.code(500).send({ message: 'Internal server error during tournament winner update' }));
 			}
 
 			return (reply.code(201).send({
@@ -199,8 +205,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	//patch duration
 	serv.patch('/internal/dashboard/durationGame', async (request, reply) => {
 		try {
-			const { gameID } = request.body as { gameID: number};
-			const { duration } = request.body as { duration: string};
+			const { gameID } = request.body as { gameID: number };
+			const { duration } = request.body as { duration: string };
 
 			const query = `
 				UPDATE gameMatchInfo SET duration = ? WHERE gameID = ? 
@@ -210,7 +216,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				duration,
 				gameID
 			];
-			
+
 			const response = await serv.dbStats.run(query, params);
 			if (!response.changes) {
 				serv.log.error('Game duration update query succeeded but did not insert a row.');
@@ -231,9 +237,9 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	//patch score
 	serv.patch('/internal/dashboard/scoreGame', async (request, reply) => {
 		try {
-			const { gameID } = request.body as { gameID: number};
-			const { scoreWinner } = request.body as { scoreWinner: number};
-			const { scoreLoser } = request.body as { scoreLoser: number};
+			const { gameID } = request.body as { gameID: number };
+			const { scoreWinner } = request.body as { scoreWinner: number };
+			const { scoreLoser } = request.body as { scoreLoser: number };
 
 			const query = `
 				UPDATE gameMatchInfo SET scoreWinner = ? AND scoreLoser = ? WHERE gameID = ?
@@ -244,7 +250,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				scoreLoser,
 				gameID
 			];
-			
+
 			const response = await serv.dbStats.run(query, params);
 			if (!response.changes) {
 				serv.log.error('Score update query succeeded but did not insert a row.');
@@ -265,8 +271,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	//patch status
 	serv.patch('/internal/dashboard/gameStatus', async (request, reply) => {
 		try {
-			const { gameID } = request.body as { gameID: number};
-			const { gameStatus } = request.body as { gameStatus: number};
+			const { gameID } = request.body as { gameID: number };
+			const { gameStatus } = request.body as { gameStatus: number };
 
 
 			const query = `
@@ -277,7 +283,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				gameStatus,
 				gameID
 			];
-			
+
 			const response = await serv.dbStats.run(query, params);
 			if (!response.changes) {
 				serv.log.error('Game status query succeeded but did not insert a row.');
@@ -292,78 +298,30 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			serv.log.error(`Error updating game status: ${error}`);
 			return (reply.code(500).send({ message: 'Internal server error' }));
-		}});
+		}
+	});
 
 	//get all game of a player
 	serv.get('/internal/dashboard/gameHistory', async (request, reply) => {
-/* 	try {
-		const userID = request.user.userID;
-
-		const games = await getGameHistory(serv.dbStats, userID);
-
-		if (games.length === 0)
-			return (reply.code(200).send([]));
-
-		const gameCardPromises = games.map(async (game) => {
-			try {
-				const opponentProfile = await fetch(`https://2626/internal/users/by-userID${game.opponentID}`);
-				if (!opponentProfile)
-					return (null);
-
-				return {
-					gameID: game.gameID,
-					startTime: game.startTime,
-					duration: game.duration,
-					userScore: game.winnerID === userID ? game.scoreWinner : game.scoreLoser,
-					opponentScore: game.winnerID === userID ? game.scoreLoser : game.scoreWinner,
-					isWin: game.winnerID === userID,
-					opponent: {
-				        username: opponentProfile.username,
-				        avatar: opponentProfile.avatar,
-				        rank: opponentProfile.rank
-				    }
-				};
-            } catch (error) {
-                console.error(`Failed to fetch profile for opponent ${game.opponentID}:`, error);
-                return null; // Return null on error so it gets filtered out
-            }
-        });
-
-        const gameCards = (await Promise.all(gameCardPromises))
-                          .filter(card => card !== null);
-
-        return reply.code(200).send(gameCards);
-
-    } catch (error) {
-        serv.log.error(`[Stats Service] Error fetching match history: ${error}`);
-        return reply.code(500).send({ message: 'An internal error occurred.' });
-    } */
-});
-
-	//get all tournamenet of a player
-	serv.get('/internal/dashboard/playerTournaments', async (request, reply) => {
 		try {
-			const { userID } = request.body as { userID: number}
-			
+			const userID = request.user.userID;
 
-			const query =
-			`
-			`;
+			const games = await getGameHistory(serv.dbStats, userID);
 
-			const params = [
+			return reply.code(200).send(games);
 
-			];
-			
-			const response = await serv.dbStats.run(query, params);
-			if (!response.changes) {
-				serv.log.error('Tournament creation query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: 'Internal server error during game creation' }));
-			}
+		} catch (error) {
+			serv.log.error(`[Stats Service] Error fetching match history: ${error}`);
+			return reply.code(500).send({ message: 'An internal error occurred.' });
+		}
+	});
 
-			return (reply.code(201).send({
-				success: true,
-				message: 'Tournament created!'
-			}));
+	// get all tournament of a player
+	serv.get('/internal/dashboard/tournamentHistory', async (request, reply) => {
+		try {
+			const userID = request.user.userID;
+			const games = await getTournamentHistory(serv.dbStats, userID);
+			return (reply.code(200).send(games));
 
 		} catch (error) {
 			serv.log.error(`Error creating user account: ${error}`);
@@ -371,67 +329,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//get all game of a tournamenent
-	serv.get('/internal/dashboard/gameTournament', async (request, reply) => {
-		try {
-			const {}
-
-			const query =
-			`
-			`;
-
-			const params = [
-
-			];
-			
-			const response = await serv.dbStats.run(query, params);
-			if (!response.changes) {
-				serv.log.error('Tournament creation query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: 'Internal server error during game creation' }));
-			}
-
-			return (reply.code(201).send({
-				success: true,
-				message: 'Tournament created!'
-			}));
-
-		} catch (error) {
-			serv.log.error(`Error creating user account: ${error}`);
-			return (reply.code(500).send({ message: 'Internal server error' }));
-		}
-	});
-
-	//get stats of a game
-	serv.get('/internal/dashboard/statsGame', async (request, reply) => {
-		try {
-			
-
-			const query = `
-			`;
-
-			const params = [
-
-			];
-			
-			const response = await serv.dbStats.run(query, params);
-			if (!response.changes) {
-				serv.log.error('Tournament creation query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: 'Internal server error during game creation' }));
-			}
-
-			return (reply.code(201).send({
-				success: true,
-				message: 'Tournament created!'
-			}));
-
-		} catch (error) {
-			serv.log.error(`Error creating user account: ${error}`);
-			return (reply.code(500).send({ message: 'Internal server error' }));
-		}
-	});
-
-
-	//get a game with it's ID
-	//get a tournament with it's ID
-	//delete a player from a game ? GRPD
+	//TODO get a game with it's ID
+	//TODO get a tournament with it's ID
+	//TODO delete a player from a game ? GRPD
 }

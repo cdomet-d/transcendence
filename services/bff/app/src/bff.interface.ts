@@ -66,5 +66,13 @@ export interface FriendProfileCard {
 }
 
 export interface Matches {
+	gameID: number;
+	duration: number;
+	startTime: string;
+	winnerID: number;
+	loserID: number;
+	scoreWinner: number;
+	scoreLoser: number;
+	opponentID: number;
 
 }

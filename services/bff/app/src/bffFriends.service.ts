@@ -47,7 +47,7 @@ export async function fetchFriendList(userID: number): Promise<Friend[]> {
 export async function fetchRawFriendRequests(userID: number): Promise<Friend[]> {
 	const response = await fetch(`http://friends:1616/internal/friends/${userID}/friend-requests`);
 
-	if (!response.ok)
+>	if (!response.ok)
 		throw (new Error('Friends service failed.'));
 
 	return (response.json() as Promise<Friend[]>);
