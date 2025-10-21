@@ -42,7 +42,7 @@ export type { userInfo, lobbyInfo, game, tournament };
 //     return lobbyInfo;
 // }
 
-export function processLobbyGameRequest(lobbyInfo: lobbyInfo) {
+export function processGameRequest(lobbyInfo: lobbyInfo) {
 	// Filter request
 	if (lobbyInfo.format === "tournament") {
 		const tournament: tournament | undefined = createTournament(lobbyInfo);

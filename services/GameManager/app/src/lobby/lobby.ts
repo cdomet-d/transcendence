@@ -24,17 +24,6 @@ interface whitelist {
 
 export const lobbyMap: Map<number, lobbyInfo> = new Map();
 
-// Lobby management
-/*
-LobbyMap
-	stored in server memory,
-	as long as there are still users inside
-	(if host leaves, next user in list becomes host)
-
-	Map<number: LobbyID, lobbyInfo: lobbyInfo>
-*/
-
-
 /*
 FRONT:
 show Lobby Room
@@ -45,18 +34,13 @@ show Lobby Room
 
 */
 
-// upon ws connection to GM
 export function createLobby(hostID: number) {
-
 	const lobbyObj: lobbyInfo = makeLobbyInfo(hostID);
 	lobbyMap.set(lobbyObj.lobbyID, lobbyObj);
-
-	// we have lobby :)
 }
 
+export function addUserToLobby(uid: number, lobbyID: number) {
 
-export function joinLobby(uid: number) {
-	addUserToLobby(uid, lobbyID);
 }
 
 

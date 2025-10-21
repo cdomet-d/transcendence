@@ -45,10 +45,12 @@ function wsConnect() {
 		try {
 			// console.log("Client received WS message!");
 
-			// Filter incoming messages
+			// Filter incoming messages (mostly replies from GM)
+			// Lobby: created OR join
+			// GameRequest: approved OR declined
 
 			const data = JSON.parse(message.data);
-			if (data.lobby === "created" || data.lobby === "joined") { // CREATE LOBBY OR JOIN, SAME STORY FOR FRONT
+			if (data.lobby === "created" || data.lobby === "joined") { // CREATE OR JOIN, SAME STORY
 				console.log("Lobby created, rendering lobby now")
 				const app = document.getElementById('app');
 				if (app) {
@@ -56,9 +58,11 @@ function wsConnect() {
 					attachLobbyListeners();
 				} else {
 					console.log("Error: could not find HTMLElement: 'app'");
+					return;
 				}
 			}
 
+			// TODO: check for empty obj
 			const gameRequest/* : gameRequest */ = data;
 			const gameID: number = gameRequest.gameID;
 			if (gameRequest.event === "declined") { // REQUEST DECLINED
@@ -99,7 +103,6 @@ function handleTournamentStart() {
 function handleLobbyRequest(action: string): void {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 		console.log(`Client sending ${action} request`);
-		// wsInstance.send(JSON.stringify({ action: action }));
 		wsInstance.send(createLobbyRequestForm(action));
 	} else {
 		console.log(`Error: WebSocket is not open for ${action}`);
