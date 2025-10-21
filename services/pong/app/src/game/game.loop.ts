@@ -1,5 +1,5 @@
 import type { Game, stateObj } from "../classes/game.class.js";
-import { updateBallPos, touchesPad } from './ball.js';
+import { updateBallPos, paddleCollision, touchesLeftPad, touchesRightPad } from './ball.js';
 import { updatePaddlePos } from './paddle.js';
 import type { ballObj } from '../classes/game.class.js';
 import { coordinates, Player } from "../classes/player.class.js";
@@ -33,7 +33,7 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 			simulatedTime += TIME_STEP;
 		}
 		updatePaddlePos(player, req._req._keys, game.paddleSpeed, TIME_STEP);
-		rewind(game, req._req);
+		rewind(game, req._req, req._playerId);
 		player.reply._ID = req._req._ID;
 	}
 
@@ -59,7 +59,7 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 	setTimeout(gameLoop, Math.max(0, delay), game, player1, player2);
 }
 
-function rewind(game: Game, req: reqObj) {
+function rewind(game: Game, req: reqObj, playerId: number) {
 	let state: stateObj | undefined = undefined;
 	const timestamp: number = req._timeStamp;
 	let i: number = 0;
@@ -82,9 +82,14 @@ function rewind(game: Game, req: reqObj) {
 		return;
 	
 	console.log("IN REWIND");
-	if (touchesPad(game.players[0]!.paddle, game.players[1]!.paddle, state._ball.x, state._ball.y)) { //devrait verifier que le paddle qui a changé de position
+	if (playerId === 1 && touchesLeftPad(game.players[0]!.paddle, state._ball.x, state._ball.y)) {
 		game.ball.dx *= -1;
-		game.ball.x += (game.ball.dx * TIME_STEP);
+		game.ball.x = game.players[0]!.paddle.x + 21; //need to handler y
+		return;
+	}
+	if (playerId === 2 && touchesRightPad(game.players[1]!.paddle, state._ball.x, state._ball.y)) {
+		game.ball.dx *= -1;
+		game.ball.x = game.players[1]!.paddle.x - 11;
 	}
 }
 
