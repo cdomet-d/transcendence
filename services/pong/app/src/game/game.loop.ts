@@ -1,13 +1,13 @@
-import { Game, playerReq, snapshotObj } from "../classes/game.class.js";
+import { Game, playerReq, snapshotObj, type ballObj } from "../classes/game.class.js";
 import { updateBallPos, touchesLeftPad, touchesRightPad } from './ball.js';
 import { updatePaddlePos } from './paddle.js';
-import type { ballObj } from '../classes/game.class.js';
 import { coordinates, Player } from "../classes/player.class.js";
+import { syncClocks } from "./syncClocks.js";
 
 const SERVER_TICK: number = 1000 / 20; // 20UPS
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
-export function gameLoop(game: Game, player1: Player, player2: Player) {
+export async function gameLoop(game: Game, player1: Player, player2: Player) {
 	const start = performance.now();
 	const tickStart = game.lastTick === 0 ? start : game.lastTick;
 	const tickEnd = tickStart + SERVER_TICK;
@@ -25,13 +25,27 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 		simulatedTime = moveBall(game, tickStart, simulatedTime, playerReq._req._timeStamp - tickStart);
 		if (simulatedTime === -1)
 			return;
+		// if (simulatedTime === -2)
+		// 	break;
 		updatePaddlePos(player, playerReq._req._keys, game.paddleSpeed);
 		rewind(game, playerReq, player.paddle);
 		//TODO: should endGame be called after rewind ?
 		player.reply._ID = playerReq._req._ID;
 	}
-	moveBall(game, tickStart, simulatedTime, SERVER_TICK);
+	const rv: number = moveBall(game, tickStart, simulatedTime, SERVER_TICK);
+	if (rv === -1)
+		return;
 	sendToPlayers(game, player1, player2);
+
+	if (rv === -2) {
+		try {
+			await syncClocks(player1, 1);
+			if (!game.local)
+				await syncClocks(player2, 2);
+		} catch (err) {
+			return; //TODO: handle error
+		}
+	}
 
 	// clean
 	game.reqHistory = futureReqs;
@@ -45,10 +59,10 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 function moveBall(game: Game, tickStart: number, simulatedTime: number, end: number): number {
 	while(simulatedTime + TIME_STEP <= end) {
 		game.addSnapshot(tickStart + simulatedTime);
-		const status: boolean = updateBallPos(game.ball, game.players[0]!, game.players[1]!);
-		if (status) {
+		const status: number = updateBallPos(game.ball, game.players[0]!, game.players[1]!);
+		if (status !== 0) {
 			endGame(game.players[0]!, game.players[1]!, game);
-			return -1;
+			return status * -1;
 		}
 		simulatedTime += TIME_STEP;
 	}
@@ -83,7 +97,7 @@ function endGame(player1: Player, player2: Player, game: Game) {
 }
 
 function sendToPlayers(game: Game, player1: Player, player2: Player) {
-	player1.sendReply("left", game.ball, player2.paddle.y);
+	player1.sendReply("left", game.ball, player2);
 	if (!game.local)
-		player2.sendReply("right", game.ball, player1.paddle.y)
+		player2.sendReply("right", game.ball, player1)
 }

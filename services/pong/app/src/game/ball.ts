@@ -2,15 +2,15 @@ import { HEIGHT, WIDTH, type ballObj } from "../classes/game.class.js";
 import type { coordinates, Player } from "../classes/player.class.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
-const maxScore: number = 5;
+const MAX_SCORE: number = 5;
 
-export function updateBallPos(ball: ballObj, player1: Player, player2: Player): boolean {
+export function updateBallPos(ball: ballObj, player1: Player, player2: Player): number {
 	let newX: number = ball.x + (ball.dx * TIME_STEP);
 	let newY: number = ball.y + (ball.dy * TIME_STEP);
 
 	if (newX - 10 >= WIDTH || newX + 10 <= 0) {
 		if (updateScore(player1, player2, newX))
-			return true;
+			return 1;
 		ball.x = WIDTH / 2;
 		ball.y = HEIGHT / 2;
 		if (ball.dx === ball.lastdx)
@@ -18,7 +18,7 @@ export function updateBallPos(ball: ballObj, player1: Player, player2: Player): 
 		if (ball.dy < 0)
 			ball.dy *= -1;
 		ball.lastdx = ball.dx;
-		return false;
+		return 2;
 	}
 
 	if ((newY + 10) >= HEIGHT || (newY - 10) <= 0 ) {
@@ -32,7 +32,7 @@ export function updateBallPos(ball: ballObj, player1: Player, player2: Player): 
 
 	ball.x = newX;
 	ball.y = newY;
-	return false
+	return 0
 }
 
 function updateScore(player1: Player, player2: Player, newX: number): boolean {
@@ -44,7 +44,7 @@ function updateScore(player1: Player, player2: Player, newX: number): boolean {
 		player2.incScore();
 		console.log("OPPONENT:", player2.score);
 	}
-	if (player1.score === maxScore || player2.score === maxScore)
+	if (player1.score === MAX_SCORE || player2.score === MAX_SCORE)
 		return true;
 	return false;
 }

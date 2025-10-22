@@ -1,19 +1,21 @@
 import { renderGame } from "./game.render.utils.js";
 import { Game, HEIGHT, WIDTH } from "./game.class.js";
 import { updatePaddlePos } from "./paddle.js";
-import type { repObj } from "./mess.validation.js";
+import type { repObj, startObj } from "./mess.validation.js";
+import { syncClocks } from "./syncClocks.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
+const MAX_SCORE: number = 5;
 
-export async function startGame(game: Game, ws: WebSocket, offset: number) {
+export async function startGame(game: Game, ws: WebSocket) {
 	game.frameId = requestAnimationFrame((timestamp) => {
 		game.lastFrameTime = timestamp;
-		game.frameId = requestAnimationFrame(FrameRequestCallback(game, ws, offset));
+		game.frameId = requestAnimationFrame(FrameRequestCallback(game, ws));
 	});
 }
 
-function FrameRequestCallback(game: Game, ws: WebSocket, offset: number) {
-	return function gameLoop(timestamp: number) {
+function FrameRequestCallback(game: Game, ws: WebSocket) {
+	return async function gameLoop(timestamp: number) {
 		const latestReply: repObj | undefined = game.replyHistory[game.replyHistory.length - 1];
 
 		//reconciliation
@@ -31,22 +33,28 @@ function FrameRequestCallback(game: Game, ws: WebSocket, offset: number) {
 		// interpolation and dead reckoning
 		interpolation(game, latestReply);
 
-		//req to server
-		game.req._timeStamp = performance.now() + offset;
+		//draw new frame
+		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
+		renderGame(game);
+		if (latestReply !== undefined)
+			if (await handleScore(ws, game, latestReply))
+				return;
+
+		//request to server
+		// TODO: check score
+		game.req._timeStamp = performance.now() + game.clockOffset;
 		ws.send(JSON.stringify(game.req));
 		game.addReq(game.req);
 		game.req._ID += 1; //TODO: overflow
 
-		//new frame
-		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
-		renderGame(game);
-		game.frameId = window.requestAnimationFrame(FrameRequestCallback(game, ws, offset));
+		// request new frame
+		game.frameId = window.requestAnimationFrame(FrameRequestCallback(game, ws));
 	}
 }
 
 function interpolation(game: Game, latestReply: repObj | undefined) {
 	const renderTime: number = performance.now() - 100; //TODO: put 100 in a var
-	const updates: [repObj, repObj] | null = game.getReply(renderTime);
+	const updates: [repObj, repObj] | null = game.getReplies(renderTime);
 
 	if (updates) {
 		console.log("IN INTERPOLATION");
@@ -63,7 +71,7 @@ function interpolation(game: Game, latestReply: repObj | undefined) {
 }
 
 function lerp(start: number, end: number, t: number): number {
-    return start + Math.min(Math.max(t, 0), 1) * (end - start);
+	return start + Math.min(Math.max(t, 0), 1) * (end - start);
 }
 
 function deadReckoning(game: Game, latestReply: repObj) {
@@ -89,4 +97,37 @@ function reconciliation(game: Game, latestReply: repObj) {
 	for (let i = id + 1; game.reqHistory.has(i); i++) {
 		updatePaddlePos(game, game.reqHistory.get(i)!._keys, TIME_STEP)
 	}
+}
+
+async function handleScore(ws: WebSocket , game: Game, latestReply: repObj): Promise< boolean > {
+	if (latestReply._score[0] != game.score[0] || latestReply._score[1] != game.score[1]) {
+		//TODO update score css
+
+		// update score
+		game.score[0] = latestReply._score[0];
+		game.score[1] = latestReply._score[1];
+		// console.log("SCORES:", JSON.stringify(game.score));
+		if (game.score[0] === MAX_SCORE || game.score[1] === MAX_SCORE)
+			return true;
+
+		// update offset
+		ws.addEventListener('message', (event) => {
+			const signal: number = JSON.parse(event.data);
+			// console.log("SIGNAL:", signal, "TYPE", typeof(signal));
+			if (signal === 1)
+				updateOffset(ws, game);
+		}, { once: true });
+		//TODO: wait delay ?
+		return false;
+	}
+	return false;
+}
+
+async function updateOffset(ws: WebSocket, game: Game) {
+	const result: [number, number, startObj] | null = await syncClocks(ws);
+	if (!result) return false;
+
+	const [offset, halfTripTime, start] = result;
+	game.clockOffset = offset;
+	game.ball.dx *= start.ballDir;
 }
