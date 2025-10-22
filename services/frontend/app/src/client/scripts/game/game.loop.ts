@@ -125,7 +125,7 @@ async function handleScore(ws: WebSocket , game: Game, latestReply: repObj): Pro
 
 async function updateOffset(ws: WebSocket, game: Game) {
 	const result: [number, number, startObj] | null = await syncClocks(ws);
-	if (!result) return false;
+	if (!result) return false; //TODO: handle error
 
 	const [offset, halfTripTime, start] = result;
 	game.clockOffset = offset;
