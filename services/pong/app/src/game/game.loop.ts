@@ -71,24 +71,15 @@ function rewind(game: Game, playerReq: playerReq, paddle: coordinates) {
 	const collision: Function = playerReq._id === 1 ? touchesLeftPad : touchesRightPad;
 	if (collision(paddle, ball.x, ball.y)) {
 		game.ball.dx *= -1;
-		game.ball.x = paddle.x + x; //need to handler y
+		game.ball.x = paddle.x + x; //need to handle y
 		return;
 	}
 }
 
 function sendToPlayers(game: Game, player1: Player, player2: Player) {
-	player1.setMessPad(player1.paddle.y, player2.paddle.y);
-	player1.setMessBall("left", game.ball);
-	//TODO: add score
-	if (player1.socket.readyState === 1)
-		player1.socket.send(JSON.stringify(player1.reply));
-	if (!game.local) {
-		player2.setMessPad(player2.paddle.y, player1.paddle.y);
-		player2.setMessBall("right", game.ball);
-		//TODO: add score
-		if (player2.socket.readyState === 1)
-			player2.socket.send(JSON.stringify(player2.reply));
-	}
+	player1.sendReply("left", game.ball, player2.paddle.y);
+	if (!game.local)
+		player2.sendReply("right", game.ball, player1.paddle.y)
 }
 
 function endGame(player1: Player, player2: Player, game: Game) {

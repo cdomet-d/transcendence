@@ -15,14 +15,12 @@ export interface repObj {
 	_ball: ballObj,
 }
 
-
 export class Player {
 	/*                             PROPERTIES                                */
 	#_userID: number;
 	#_socket: WebSocket;
 	#_playerSide: string;
 	#_paddle: coordinates;
-	#_keys: keysObj;
 	#_score: number;
 	#_reply: repObj;
 
@@ -30,7 +28,6 @@ export class Player {
 	constructor(userID: number, socket: WebSocket, random: boolean) {
 		this.#_userID = userID;
 		this.#_socket = socket;
-		this.#_keys = {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false};
 		this.#_reply = {_ID: 0, _timestamp: 0, _leftPad: {x: 10, y: 108}, _rightPad: {x: 460, y: 108}, _ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3}};
 		if (random) {
 			this.#_paddle = {x: 460, y: 108};
@@ -73,21 +70,25 @@ export class Player {
 	}
 
 	/*                              METHODS                                  */
-	public setMessPad(leftY: number, rightY: number) {
-		this.#_reply._leftPad.y = leftY;
+	public sendReply(side: string, ball: ballObj, rightY: number) {
+		// paddles
+		this.#_reply._leftPad.y = this.#_paddle.y;
 		this.#_reply._rightPad.y = rightY;
-	}
 
-	public setMessBall(side: string, ball: ballObj) {
+		// ball
 		this.#_reply._ball = { ...ball };
 		if (side === "right") {
 			this.#_reply._ball.x = WIDTH - ball.x;
 			this.#_reply._ball.dx *= -1;
 		}
+		//TODO: add score
+
+		// send
+		if (this.#_socket.readyState === 1 )
+			this.#_socket.send(JSON.stringify(this.#_reply));
 	}
 
 	public incScore() {
 		this.#_score += 1;
 	}
-
 }
