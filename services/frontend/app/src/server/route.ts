@@ -7,7 +7,7 @@ import { setLangVars } from '../client/scripts/language/translation.js'
 function initLanguageSSR(req: FastifyRequest) {
 	let savedLang: string | undefined = req.cookies.lang;
 	if (!savedLang)
-		savedLang = "en";
+		savedLang = "English";
 	setLangVars(savedLang);
 }
 

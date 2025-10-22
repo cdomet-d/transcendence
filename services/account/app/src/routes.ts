@@ -19,22 +19,22 @@ export async function accountRoutes(serv: FastifyInstance) {
 
 			const query = `
 				INSERT INTO usersAuth (hashedPassword, username, userStatus, registerDate)
-				VALUES (?, ?, 1, ?, en)
+				VALUES (?, ?, 1, ?, English)
 			`;
 			const params = [hashedPassword, username, new Date().toISOString()];
 			const response = await serv.dbAccount.run(query, params);
 
 			if (response.changes === 0 || !response.lastID)
-				return reply.code(500).send({ message: 'Failed to create account record.' });
+				throw (new Error('Failed to create account record.'));
 
-			return reply.code(201).send({
+			return (reply.code(201).send({
 				userID: response.lastID,
 				username: username
-			});
+			}));
 
 		} catch (error) {
-			serv.log.error(`Error creating account record: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			serv.log.error(`Error when trying to register: ${error}`);
+			throw error;
 		}
 	});
 
@@ -60,8 +60,8 @@ export async function accountRoutes(serv: FastifyInstance) {
 			}));
 
 		} catch (error) {
-			serv.log.error(`Error when trying to login ${error}`);
-			return (reply.code(500).send({ message: 'Internal server error' }));
+			serv.log.error(`Error when trying to login: ${error}`);
+			throw error;
 		}
 	});
 

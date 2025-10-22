@@ -1,1 +1,1 @@
-INSERT INTO usersAuth (hashedPassword, username, userStatus, registerDate, defaultLang) VALUES ('passhash', 'user1', 1, '2025-09-04', 'en');
+INSERT INTO usersAuth (hashedPassword, username, userStatus, registerDate, defaultLang) VALUES ('passhash', 'user1', 1, '2025-09-04', 'English');

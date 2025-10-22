@@ -60,8 +60,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				accountServicePayload.newHashedPassword = await bcrypt.hash(requestBody.password, 10);
 			if (requestBody.defaultLang && typeof requestBody.defaultLang === 'string')
 				accountServicePayload.defaultLang = requestBody.defaultLang;
-			if (requestBody.bio && typeof requestBody.bio === 'string')
-				profileServicePayload.bio = requestBody.bio;
+			if (requestBody.biography && typeof requestBody.biography === 'string')
+				profileServicePayload.biography = requestBody.biography;
 			if (requestBody.profileColor && typeof requestBody.profileColor === 'string')
 				profileServicePayload.profileColor = requestBody.profileColor;
 
@@ -122,7 +122,7 @@ get status user
 
 export interface UserData {
 	avatar: ImgMetadata;
-	biography: string;
+	biographygraphy: string;
 	relation: ProfileView;
 	status: boolean;
 	username: string;

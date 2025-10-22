@@ -40,7 +40,7 @@ export interface UserProfile {
 	userID: number;
 	username: string;
 	avatar: string;
-	biography: string;
+	biographygraphy: string;
 	profileColor: string;
 }
 
@@ -66,6 +66,11 @@ export interface settings {
 	defaultLang: string;
 	profileColor: string;
 	username: string;
-	bio: string;
+	biography: string;
 	password: string;
 }
+
+export type ProfileCreationResult =
+	| { errorCode: 'success'; data: any }
+	| { errorCode: 'conflict' }  // For 409
+	| { errorCode: 'user_not_found' }; // For 404

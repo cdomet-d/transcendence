@@ -14,8 +14,8 @@ Le fichier nodemon.json permet de configurer quels fichiers à watch, ignorer, l
 
 ## Typescript
 cmd pour créer le fichier *tsconfig.json* : **npx tsc --init** \
-tsc doit etre installé soit en global ou soit en local.\
-cmd pour installer en local : **npm i typescript**.\
+tsc doit etre installé soit English global ou soit English local.\
+cmd pour installer English local : **npm i typescript**.\
 Ce fichier permet d'indiquer où sont les fichiers .ts (./src) à compiler et où mettre les fichiers .js (./dist). Il permet aussi de configurer la compilation du code.
 
 ## Tailwindcss

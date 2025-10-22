@@ -1,5 +1,8 @@
+import { createAccount } from './bffAccount.service.js';
 import type { FastifyInstance } from 'fastify';
 import type { UserData } from './bff.interface.js';
+import type { ProfileCreationResult } from "./bff.interface.js";
+import { createUserProfile } from './bffAccount.service.js';
 
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
@@ -37,8 +40,8 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 
 			const validationResponse = await validateCredentials(username, password);
 
-			if (!validationResponse.ok)
-				return reply.code(validationResponse.status).send({ message: 'Invalid credentials.' });
+			if (!validationResponse)
+				return reply.code(401).send({ message: 'Invalid credentials.' });
 
 			const UserData = await validationResponse.json() as UserData;
 
@@ -47,8 +50,8 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 
 			return reply.code(200).send({ token: token });
 		} catch (error) {
-			serv.log.error(`[BFF] Login error: ${error}`);
-			return reply.code(503).send({ message: 'A backend service is unavailable.' });
+			serv.log.error(`[BFF] An unexpected error occurred while login: ${error}`);
+			throw (error);
 		}
 	});
 
@@ -62,32 +65,26 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 
 			const hashedPassword = await bcrypt.hash(password, 10);
 
-			const accountResponse = await fetch('https://account:1414/internal/account/register', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ username, hashedPassword })
-			});
+			const accountResponse = createAccount(username, hashedPassword);
+			if (!accountResponse)
+				return (reply.code(409).send({ message: 'Username taken' }));
 
-			if (!accountResponse.ok)
-				return (reply.code(accountResponse.status).send(await accountResponse.json()));
-
-			const newAccount = await accountResponse.json() as { userID: number, username: string };
+			const newAccount = await accountResponse as { userID: number };
 			newAccountId = newAccount.userID;
 
-			const profileResponse = await fetch(`https://users:2626/internal/users/${newAccountId}/profile`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ username: newAccount.username })
-			});
-
-			if (!profileResponse.ok)
-				throw (new Error('Profile creation failed.'));
-
-			return (reply.code(201).send({ message: 'Account and profile created successfully!' }));
+			const profileResponse = createUserProfile(newAccountId, username);
+			switch ((await profileResponse).errorCode) {
+				case 'success':
+					return reply.code(201).send({ message: 'Account and profile created successfully!' });
+				case 'conflict':
+					throw new Error('Profile already existed for a newly created account.');
+				case 'user_not_found':
+					throw new Error(`User service could not find newly created userID: ${newAccountId}`);
+			}
 
 		} catch (error) {
 			serv.log.error(`[BFF] Error during registration: ${error}`);
-			// If the profile creation failed after the account was created, we delete the account.
+			//TODO: add helper function to delete account if user failed
 			if (newAccountId) {
 				serv.log.warn(`Rolling back account creation for userID: ${newAccountId}`);
 				await fetch(`https://account:1414/internal/account/${newAccountId}`, {

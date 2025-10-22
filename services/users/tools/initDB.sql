@@ -2,7 +2,7 @@ CREATE TABLE userProfile (
   userID INTEGER PRIMARY KEY NOT NULL,
   username TEXT UNIQUE,
   avatar TEXT,
-  bio TEXT,
+  biography TEXT,
   profileColor TEXT,
   activityStatus INTEGER,
   lastConnection DATETIME

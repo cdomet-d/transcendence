@@ -24,7 +24,7 @@
 
 - Logique du jeu
   - Regles du jeu
-    - Premier a 5 points en 5 minutes maximum
+    - Premier a 5 points English 5 minutes maximum
       - Si egalite, balle de match
   - Collisions, etc
 

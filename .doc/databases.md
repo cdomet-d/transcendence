@@ -53,15 +53,15 @@ The table has 4 column :
 * language_code &rarr; text 
 * translation &rarr; text
 
-The word column is meant to hold the key or phrase identifier. The language_code column holds the language code (dah), like "en" or "fr". And lastly the translation will hold the translation of the word in it's targeted language code.
+The word column is meant to hold the key or phrase identifier. The language_code column holds the language code (dah), like "English" or "French". And lastly the translation will hold the translation of the word in it's targeted language code.
 So for example we could have :
 * word == "hello"
-* language_code == "fr"
+* language_code == "French"
 * translation == "bonjour"
 
 A SQL query to find the translation of a word would look like this :
 ```
-SELECT translation FROM translations WHERE word = 'hello' AND language_code = 'fr';
+SELECT translation FROM translations WHERE word = 'hello' AND language_code = 'French';
 
 -- will return "bonjour"
 ```
@@ -84,7 +84,7 @@ To add translation I think the best course of action will be to directly modify 
 
 ### General overview
 
-The users container holds the data for a user's profile such as the bio, profile picture, online status and so forth.
+The users container holds the data for a user's profile such as the biography, profile picture, online status and so forth.
 The goal here is not to hold account info (like password), those informations will be handle in the account microservice.
 
 The tables in this database are pretty straight forward. I will elaborate on a couple column that need explanation in my opinion
@@ -99,7 +99,7 @@ This table has the following column :
 * userID &rarr; integer (__primary key__)
 * username &rarr; text
 * avatar &rarr; text
-* bio &rarr; text
+* biography &rarr; text
 * profileColor &rarr; text
 * activityStatus &rarr; integer 
 * lastConnexion &rarr; datetime
@@ -151,7 +151,7 @@ TODO :
     * ~~get activity status by userID~~
         
         ``` curl http://localhost:2626/users/activity/<userID> ```
-    * ~~get profile info (username. avatar, bio, profile color, lastConnexion) by userID~~
+    * ~~get profile info (username. avatar, biography, profile color, lastConnexion) by userID~~
         
         ``` curl http://localhost:2626/internal/users/profile/<userID> ```
     * ~~get lastConnexion by userID~~
@@ -163,13 +163,13 @@ TODO :
             -H "Content-Type: application/json" \
             -d '{"newAvatar": "<new avatar>"}' \
             http://localhost:2626/users/updateAvatar/<userID>
-    * updata bio
+    * updata biography
         
         ```
         curl -X POST \
         -H "Content-Type: application/json" \
-        -d '{"newBio": "<bio>>"}' \
-        http://localhost:2626/users/updateBio/<userID>
+        -d '{"newbiography": "<biography>>"}' \
+        http://localhost:2626/users/updatebiography/<userID>
     * update profileColor
 
         ```

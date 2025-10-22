@@ -85,8 +85,8 @@ components:
       maxLength: 128
       type: string
 
-    biography:
-      description: the user's chosen biography
+    biographygraphy:
+      description: the user's chosen biographygraphy
       example: '¯\_(ツ)_/¯'
       format: plaintext
       maxLength: 180
@@ -484,8 +484,8 @@ components:
       properties:
         avatar:
           $ref: "#/components/schemas/avatar"
-        biography:
-          $ref: "#/components/schemas/biography"
+        biographygraphy:
+          $ref: "#/components/schemas/biographygraphy"
         email:
           $ref: "#/components/schemas/email"
         profileColor:
@@ -503,8 +503,8 @@ components:
       properties:
         avatar:
           $ref: "#/components/schemas/avatar"
-        biography:
-          $ref: "#/components/schemas/biography"
+        biographygraphy:
+          $ref: "#/components/schemas/biographygraphy"
         email:
           $ref: "#/components/schemas/email"
         password:
@@ -587,8 +587,8 @@ components:
       properties:
         avatar:
           $ref: "#/components/schemas/avatar"
-        biography:
-          $ref: "#/components/schemas/biography"
+        biographygraphy:
+          $ref: "#/components/schemas/biographygraphy"
         friendship:
           $ref: "#/components/schemas/friendManager"
         joinedOn:
@@ -620,7 +620,7 @@ components:
       description: an array of a user's friends.
       example:
         - avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
-          biography: ¯\_(ツ)_/¯
+          biographygraphy: ¯\_(ツ)_/¯
           friendship:
             friendsSince: "2025-08-19T15:58:46.000Z"
             isBlocked: false
@@ -631,7 +631,7 @@ components:
           status: true
           username: Dandelion
         - avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEREffq..."
-          biography: Mh.
+          biographygraphy: Mh.
           friendship:
             friendsSince: "2025-08-19T15:58:46.000Z"
             isBlocked: false
@@ -678,7 +678,7 @@ components:
 
 info:
   contact:
-    email: cdomet-d@student.42lyon.fr
+    email: cdomet-d@student.42lyon.French
     name: cdomet-d
     url: https://localhost:8443/support
   description: Documentation for the RESTful section the BigTeam's Transcendance project

@@ -4,7 +4,7 @@ interface UserProfile {
 	userID: number;
 	username: string;
 	avatar: string;
-	biography: string;
+	biographygraphy: string;
 	profileColor: string;
 }
 
@@ -60,7 +60,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//get userID by username
-	serv.get('/internal/users/:username/userID', async (request, reply) => { //using
+	serv.get('/internal/users/:username/userID', async (request, reply) => {  
 		try {
 			const { username } = request.params as { username: string };
 			const query = `SELECT userID, username FROM userProfile WHERE username = ?`;
@@ -89,7 +89,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//get user profile
-	serv.get('/internal/users/profile', async (request, reply) => { //using
+	serv.get('/internal/users/profile', async (request, reply) => {  
 		try {
 			const { userIDs } = request.body as { userIDs: number[] };
 
@@ -120,7 +120,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//get user's activity with userID
-	serv.get('/internal/users/:userID/activity-status', async (request, reply) => { //using
+	serv.get('/internal/users/:userID/activity-status', async (request, reply) => {  
 		try {
 			const { userID } = request.params as { userID: string };
 
@@ -150,7 +150,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//get user's activity with userID
-	serv.get('/internal/users/:userID/profileColor', async (request, reply) => { //using
+	serv.get('/internal/users/:userID/profileColor', async (request, reply) => {  
 		try {
 			const { userID } = request.params as { userID: string };
 
@@ -179,17 +179,17 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//get user's bio with userID
-	serv.get('/internal/users/:userID/bio', async (request, reply) => { //using
+	//get user's biography with userID
+	serv.get('/internal/users/:userID/biography', async (request, reply) => {  
 		try {
 			const { userID } = request.params as { userID: string };
 
 			const query = `
-				SELECT bio FROM userProfile WHERE userID = ?
+				SELECT biography FROM userProfile WHERE userID = ?
 			`;
 
-			const bio = await serv.dbUsers.get<UserRow>(query, [userID]);
-			if (!bio)
+			const biography = await serv.dbUsers.get<UserRow>(query, [userID]);
+			if (!biography)
 				return (reply.code(404).send({
 					success: false,
 					message: 'User not found'
@@ -197,7 +197,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			return (reply.code(200).send({
 				success: true,
-				bio: bio
+				biography: biography
 			}));
 
 		} catch (error) {
@@ -210,15 +210,14 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//create profile and stats
-	serv.post('/internal/users/:userID/profile', async (request, reply) => { //using
+	serv.post('/internal/users/:userID/profile', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 			const { username } = request.params as { username: string };
 
 			try {
-				const [profileResponse, statsResponse] = await Promise.all([
+				const [profileResponse] = await Promise.all([
 					fetch(`https://users:2626/internal/users/profile/${userID}`),
-					fetch(`https://users:2626/users/userStats/${userID}`)
 				]);
 				if (profileResponse.ok) {
 					return (reply.code(409).send({
@@ -227,16 +226,9 @@ export async function userRoutes(serv: FastifyInstance) {
 					}));
 				}
 
-				if (statsResponse.ok) {
-					return (reply.code(409).send({
-						success: false,
-						message: 'User stats for this profile already exist.'
-					}));
-				}
-
-				if (profileResponse.status !== 404 || statsResponse.status !== 404) {
+				if (profileResponse.status !== 404) {
 					serv.log.error(`Unexpected status from users service. Profile: ${profileResponse.status}, Stats: ${statsResponse.status}`);
-					return (reply.code(502).send({
+					return (reply.code(404).send({
 						success: false,
 						message: 'An unexpected error occurred while checking with the users service.'
 					}));
@@ -244,17 +236,15 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			} catch (fetchError) {
 				serv.log.error(`Could not connect to the users service: ${fetchError}`);
-				return (reply.code(503).send({
-					success: false,
-					message: 'The users service is currently unavailable.'
-				}));
+				throw (new Error('Users service failed. Please try again later'));
 			}
 
 			const queryProfile = `
 				INSERT INTO userProfile
-				(userID, username, avatar, bio, profileColor, activityStatus, lastConnection)
+				(userID, username, avatar, biography, profileColor, activityStatus, lastConnection)
 				VALUES (?, ?, default, default, default, 1, ?)
 			`
+
 			const paramsProfile = [
 				userID,
 				username,
@@ -263,7 +253,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const createProfile = await serv.dbUsers.run(queryProfile, paramsProfile);
 			if (createProfile.changes === 0) {
-				return (reply.code(404).send({
+				return (reply.code(503).send({
 					success: false,
 					message: 'Profile could not be created.'
 				}));
@@ -274,19 +264,25 @@ export async function userRoutes(serv: FastifyInstance) {
 			winStreak, averageMatchDuration, highestScore)
 			VALUES (?, 0, 0, 0, 0, 0, 0, 0)
 			`
+
 			const createStats = await serv.dbUsers.run(queryStats, userID);
+			if (createStats.changes === 0) {
+				return (reply.code(503).send({
+					success: false,
+					message: 'Stats could not be created.'
+				}));
+			}
+
+			return (reply.code(201).send({ message: 'Profile created successfully!' }));
 		} catch (error) {
-			console.error('[Friend service] Error accepting friend request', error);
-			return (reply.code(500).send({
-				success: false,
-				message: 'An internal error occured.'
-			}));
+			serv.log.error(`Error when trying to register: ${error}`);
+			throw error;
 		}
 	});
 
 	//TODO : fix const userID ---> in .user or .params
 	//update user profile
-	serv.patch('/internal/UserProfile/users/:userID/profile', async (request, reply) => { //using
+	serv.patch('/internal/UserProfile/users/:userID/profile', async (request, reply) => {  
 		try {
 			const userID = request.user.userID;
 			const statsToUpdate = request.body as { [key: string]: number };
@@ -294,7 +290,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			const validStatKeys = [
 				'username',
 				'avatar',
-				'bio',
+				'biography',
 				'profileColor',
 			];
 
@@ -334,7 +330,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's username with userID
-	serv.patch('/internal/users/:userID/username', async (request, reply) => { //using
+	serv.patch('/internal/users/:userID/username', async (request, reply) => {  
 		try {
 			const { userID } = request.params as { userID: number };
 			const { newUsername } = request.body as { newUsername: string };
@@ -358,7 +354,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//delete profile and stats
-	serv.delete('/internal/users/:userID', async (request, reply) => { //using
+	serv.delete('/internal/users/:userID', async (request, reply) => {  
 		try {
 			const { userID } = request.params as { userID: number};
 
@@ -383,7 +379,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//USER STATS
 	//get all user's stats with userID
-	serv.get('/internal/users/:userID/stats', async (request, reply) => { //using
+	serv.get('/internal/users/:userID/stats', async (request, reply) => {  
 		try {
 			const { userID } = request.params as { userID: number };
 
@@ -403,7 +399,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update all stats of a user
-	serv.patch('/internal/users/:userID/stats', async (request, reply) => { //using
+	serv.patch('/internal/users/:userID/stats', async (request, reply) => {  
 		try {
 			const { userID } = request.params as { userID: number };
 			const actions = request.body as { action: string, field: string, value: number }[];
@@ -461,7 +457,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//add one to user's win streak with userID
-	serv.post('/internal/users/:userID/stats/winStreak/increment', async (request, reply) => { //using
+	serv.post('/internal/users/:userID/stats/winStreak/increment', async (request, reply) => {  
 		try {
 			const { userID } = request.params as { userID: number };
 
@@ -488,7 +484,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//set user's win streak to zero with userID
-	serv.patch('/internal/users/:userID/stats/winStreak/reset', async (request, reply) => { //using
+	serv.patch('/internal/users/:userID/stats/winStreak/reset', async (request, reply) => {  
 		try {
 			const { userID } = request.params as { userID: number };
 
@@ -807,18 +803,18 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//update user's bio with userID
-	serv.patch('/internal/users/:userID/bio', async (request, reply) => {
+	//update user's biography with userID
+	serv.patch('/internal/users/:userID/biography', async (request, reply) => {
 		try {
 			const userID = request.user.userID;
-			const { newBio } = request.params as { newBio: string };
+			const { newbiography } = request.params as { newbiography: string };
 
 			const query = `
-				UPDATE userProfile SET bio = ? WHERE userID = ?
+				UPDATE userProfile SET biography = ? WHERE userID = ?
 			`;
 
 			const params = [
-				newBio,
+				newbiography,
 				userID
 			];
 
@@ -831,7 +827,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			return (reply.code(200).send({
 				success: true,
-				message: 'Bio updated !'
+				message: 'biography updated !'
 			}));
 
 		} catch (error) {

@@ -14,7 +14,7 @@ function buildHtmlPage(url: string): string {
 
 	const html: string = `
 	<!doctype html>
-	<html lang="en">
+	<html lang="English">
 	<head>
 		<meta charset="UTF-8" />
 		<link rel="icon" type="image/svg+xml" href="/sunflower.svg" />
