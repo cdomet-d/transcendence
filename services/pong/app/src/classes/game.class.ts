@@ -1,7 +1,7 @@
 import type { Player, coordinates } from './player.class.js';
 import type { reqObj } from '../game/mess.validation.js';
 
- export const HEIGHT = 270;
+export const HEIGHT = 270;
 export const WIDTH = 480;
 
 export interface user {
@@ -27,12 +27,6 @@ export interface ballObj {
 	lastdx: number
 }
 
-interface timeObj {
-	stamp: number,
-	lastFrame: number,
-	delta: number,
-}
-
 export interface playerReq {
 	_id: number,
 	_req: reqObj,
@@ -55,10 +49,10 @@ export class Game {
 	#_players: playerTab;
 	#_ball: ballObj;
 	#_paddleSpeed: number;
-	#_time: timeObj;
 	#_status: boolean;
 	#_reqHistory: reqTab;
 	#_snapshotHistory: snapshotTab;
+	#_lastTick: number
 
 	/*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo) {
@@ -67,9 +61,9 @@ export class Game {
 		this.#_players = new Array();
 		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3};
 		this.#_paddleSpeed = 0.15;
-		this.#_time = { stamp: 0, lastFrame: 0, delta: 0};
 		this.#_reqHistory = new Array();
 		this.#_snapshotHistory = new Array();
+		this.#_lastTick = 0;
 	}
 
 	/*                              GETTERS                                  */
@@ -97,10 +91,6 @@ export class Game {
 		return this.#_paddleSpeed;
 	}
 
-	get time(): timeObj {
-		return this.#_time;
-	}
-
 	get status(): boolean {
 		return this.#_status;
 	}
@@ -111,6 +101,10 @@ export class Game {
 	
 	get snapshotHistory(): snapshotTab {
 		return this.#_snapshotHistory;
+	}
+
+	get lastTick(): number {
+		return this.#_lastTick;
 	}
 
 	/*                              SETTERS                                  */
@@ -132,6 +126,10 @@ export class Game {
 
 	set reqHistory(reqTab: reqTab) {
 		this.#_reqHistory = reqTab;
+	}
+
+	set lastTick(time: number) {
+		this.#_lastTick = time;
 	}
 
 	/*                              METHODS                                  */

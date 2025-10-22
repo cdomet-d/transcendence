@@ -9,9 +9,9 @@ const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function gameLoop(game: Game, player1: Player, player2: Player) {
 	const start = performance.now();
-	const tickStart = game.time.lastFrame === 0 ? start : game.time.lastFrame;
+	const tickStart = game.lastTick === 0 ? start : game.lastTick;
 	const tickEnd = tickStart + SERVER_TICK;
-	game.time.lastFrame = tickEnd;
+	game.lastTick = tickEnd;
 
 	// get requests
 	const reqsToProcess = game.reqHistory.filter(playerReq => playerReq._req._timeStamp < tickEnd);
@@ -76,16 +76,16 @@ function rewind(game: Game, playerReq: playerReq, paddle: coordinates) {
 	}
 }
 
-function sendToPlayers(game: Game, player1: Player, player2: Player) {
-	player1.sendReply("left", game.ball, player2.paddle.y);
-	if (!game.local)
-		player2.sendReply("right", game.ball, player1.paddle.y)
-}
-
 function endGame(player1: Player, player2: Player, game: Game) {
 	sendToPlayers(game, player1, player2);
 	player1.socket.close();
 	if (!game.local)
 		player2.socket.close();
 	//TODO: send result to gameManager via nats
+}
+
+function sendToPlayers(game: Game, player1: Player, player2: Player) {
+	player1.sendReply("left", game.ball, player2.paddle.y);
+	if (!game.local)
+		player2.sendReply("right", game.ball, player1.paddle.y)
 }
