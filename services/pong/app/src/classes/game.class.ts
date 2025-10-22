@@ -33,12 +33,12 @@ interface timeObj {
 	delta: number,
 }
 
-interface playerReq {
-	_playerId: number,
+export interface playerReq {
+	_id: number,
 	_req: reqObj,
 }
 
-export interface stateObj {
+export interface snapshotObj {
 	_timestamp: number,
 	_leftPad: coordinates,
 	_rightPad: coordinates,
@@ -47,7 +47,7 @@ export interface stateObj {
 
 export type playerTab = Array< Player >;
 type reqTab = Array< playerReq >;
-type stateTab = Array< stateObj >;
+type snapshotTab = Array< snapshotObj >;
 
 export class Game {
 	/*                             PROPERTIES                                */
@@ -58,7 +58,7 @@ export class Game {
 	#_time: timeObj;
 	#_status: boolean;
 	#_reqHistory: reqTab;
-	#_stateHistory: stateTab;
+	#_snapshotHistory: snapshotTab;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo) {
@@ -69,7 +69,7 @@ export class Game {
 		this.#_paddleSpeed = 0.15;
 		this.#_time = { stamp: 0, lastFrame: 0, delta: 0};
 		this.#_reqHistory = new Array();
-		this.#_stateHistory = new Array();
+		this.#_snapshotHistory = new Array();
 	}
 
 	/*                              GETTERS                                  */
@@ -109,8 +109,8 @@ export class Game {
 		return this.#_reqHistory;
 	}
 	
-	get stateHistory(): stateTab {
-		return this.#_stateHistory;
+	get snapshotHistory(): snapshotTab {
+		return this.#_snapshotHistory;
 	}
 
 	/*                              SETTERS                                  */
@@ -149,7 +149,7 @@ export class Game {
 	} //TODO: to be removed. only for testing
 
 	public addReq(req: reqObj, id: number) {
-		const newReq: playerReq = { _playerId: id, _req: structuredClone(req)};
+		const newReq: playerReq = { _id: id, _req: structuredClone(req)};
 		this.#_reqHistory.push(newReq);
 	}
 
@@ -157,22 +157,37 @@ export class Game {
 		this.#_reqHistory.splice(0, deleteCount);
 	}
 
-	public addState(timestamp: number) {
+	public addSnapshot(timestamp: number) {
 		if (!this.#_players[0] || !this.#_players[1])
 			return;
-		const newState: stateObj = { _timestamp: timestamp, _leftPad: { ...this.#_players[0]!.paddle}, _rightPad: { ...this.#_players[1]!.paddle}, _ball: { ...this.#_ball} };
-		this.#_stateHistory.push(newState);
+		const newSnapshot: snapshotObj = { _timestamp: timestamp, _leftPad: { ...this.#_players[0]!.paddle}, _rightPad: { ...this.#_players[1]!.paddle}, _ball: { ...this.#_ball} };
+		this.#_snapshotHistory.push(newSnapshot);
 	}
 
-	public deleteStates(timestamp: number) {
-		this.#_stateHistory = this.#_stateHistory.filter(
-            state => state._timestamp >= timestamp
-        );
+	public deleteSnapshots(timestamp: number) {
+		this.#_snapshotHistory = this.#_snapshotHistory.filter(
+			snapshot => snapshot._timestamp >= timestamp
+		);
 	}
 
-	public updateState(idx: number) {
-		this.#_stateHistory[idx]!._leftPad = { ...this.#_players[0]!.paddle};
-		this.#_stateHistory[idx]!._rightPad = { ...this.#_players[1]!.paddle};
-		this.#_stateHistory[idx]!._ball = { ...this.#_ball};
+	public findSnapshot(req: reqObj): snapshotObj | undefined {
+		let snapshot: snapshotObj | undefined = undefined;
+		const timestamp: number = req._timeStamp;
+		const tab: snapshotTab = this.#_snapshotHistory;
+		let i: number = 0;
+
+		while( i < tab.length - 1) {
+			if (timestamp >= tab[i]!._timestamp
+				&& timestamp <= tab[i + 1]!._timestamp) {
+					if (Math.abs(timestamp - tab[i]!._timestamp) < Math.abs(timestamp - tab[i + 1]!._timestamp))
+						snapshot = tab[i];
+					else
+						snapshot = tab[i + 1];
+					break;
+				}
+			i++;
+		}
+
+		return snapshot;
 	}
 }
