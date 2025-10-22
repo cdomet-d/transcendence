@@ -25,7 +25,6 @@ export class Player {
 	#_keys: keysObj;
 	#_score: number;
 	#_reply: repObj;
-	#_syncClockCount: number;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(userID: number, socket: WebSocket, random: boolean) {
@@ -42,7 +41,6 @@ export class Player {
 			this.#_playerSide = "left";
 		}
 		this.#_score = 0;
-		this.#_syncClockCount = 0;
 	}
 
 	/*                              GETTERS                                  */
@@ -74,42 +72,18 @@ export class Player {
 		return this.#_score;
 	}
 
-	get keys(): keysObj {
-		return this.#_keys;
-	}
-
-	get syncClockCount(): number {
-		return this.#_syncClockCount;
-	}
-
-	/*                              SETTERS                                  */
-	set keys(keys: keysObj) {
-		this.#_keys = keys;
-	}
-
 	/*                              METHODS                                  */
-	public incSyncClockCount() {
-		this.#_syncClockCount += 1;
-	}
-
-	public setMessPad(side: string, newPos: number) {
-		if (side === "left")
-			this.#_reply._leftPad.y = newPos;
-		else
-			this.#_reply._rightPad.y = newPos;
+	public setMessPad(leftY: number, rightY: number) {
+		this.#_reply._leftPad.y = leftY;
+		this.#_reply._rightPad.y = rightY;
 	}
 
 	public setMessBall(side: string, ball: ballObj) {
-		this.#_reply._ball.y = ball.y;
-		this.#_reply._ball.dx = ball.dx;
-		this.#_reply._ball.dy = ball.dy;
-		if (side === "left")
-			this.#_reply._ball.x = ball.x;
-		else {
+		this.#_reply._ball = { ...ball };
+		if (side === "right") {
 			this.#_reply._ball.x = WIDTH - ball.x;
 			this.#_reply._ball.dx *= -1;
 		}
-
 	}
 
 	public incScore() {
