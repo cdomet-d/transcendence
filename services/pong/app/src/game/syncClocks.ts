@@ -2,6 +2,7 @@ import type { Player } from '../classes/player.class.js';
 import { MessageEvent } from 'ws';
 
 const START_DELAY = 500;
+const MAX_SYNC = 3;
 
 interface startObj {
 	clientTimeStamp: number,
@@ -11,9 +12,9 @@ interface startObj {
 }
 
 export function syncClocks(player: Player, playerId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-        const MAX_SYNC = 3;
+    return new Promise((resolve, reject) => {        
         const TIMEOUT = 3000;
+        let syncClockCount: number = 0;
 
         const timer = setTimeout(() => {
             player.socket.removeEventListener('message', handler);
@@ -33,9 +34,9 @@ export function syncClocks(player: Player, playerId: number): Promise<void> {
             };
 
             player.socket.send(JSON.stringify(start));
-            player.incSyncClockCount();
+            syncClockCount += 1;
 
-            if (player.syncClockCount === MAX_SYNC) {
+            if (syncClockCount === MAX_SYNC) {
                 clearTimeout(timer);
                 player.socket.removeEventListener('message', handler);
                 resolve();
