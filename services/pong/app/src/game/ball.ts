@@ -1,9 +1,11 @@
 import { HEIGHT, WIDTH, type ballObj } from "../classes/game.class.js";
 import type { coordinates, Player } from "../classes/player.class.js";
 
-export function updateBallPos(ball: ballObj, player1: Player, player2: Player, delta: number): boolean {
-	let newX: number = ball.x + (ball.dx * delta);
-	let newY: number = ball.y + (ball.dy * delta);
+const TIME_STEP: number = 1000 / 60; // 60FPS
+
+export function updateBallPos(ball: ballObj, player1: Player, player2: Player): boolean {
+	let newX: number = ball.x + (ball.dx * TIME_STEP);
+	let newY: number = ball.y + (ball.dy * TIME_STEP);
 
 	if (newX - 10 >= WIDTH || newX + 10 <= 0) {
 		if (updateScore(player1, player2, newX))
@@ -20,11 +22,11 @@ export function updateBallPos(ball: ballObj, player1: Player, player2: Player, d
 
 	if ((newY + 10) >= HEIGHT || (newY - 10) <= 0 ) {
 		ball.dy *= -1;
-		newY = ball.y + (ball.dy * delta);
+		newY = ball.y + (ball.dy * TIME_STEP);
 	}
 	if (paddleCollision(player1.paddle, player2.paddle, newX, newY)) {
 		ball.dx *= -1;
-		newX = ball.x + (ball.dx * delta);
+		newX = ball.x + (ball.dx * TIME_STEP);
 	}
 
 	ball.x = newX;
