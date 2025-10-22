@@ -24,7 +24,7 @@ export function syncClocks(player: Player, playerId: number): Promise<void> {
         const handler = (event: MessageEvent) => {
             const clientTimestamp = Number(event.data);
             if (Number.isNaN(clientTimestamp))
-                return;
+                return; //TODO: handle error
 
             const start: startObj = {
                 clientTimeStamp: clientTimestamp,

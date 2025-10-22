@@ -30,7 +30,7 @@ export interface ballObj {
 export interface playerReq {
 	_id: number,
 	_req: reqObj,
-}
+} //TODO: find better way to register a req
 
 export interface snapshotObj {
 	_timestamp: number,

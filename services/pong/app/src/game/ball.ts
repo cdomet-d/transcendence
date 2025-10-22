@@ -2,6 +2,7 @@ import { HEIGHT, WIDTH, type ballObj } from "../classes/game.class.js";
 import type { coordinates, Player } from "../classes/player.class.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
+const maxScore: number = 5;
 
 export function updateBallPos(ball: ballObj, player1: Player, player2: Player): boolean {
 	let newX: number = ball.x + (ball.dx * TIME_STEP);
@@ -33,8 +34,6 @@ export function updateBallPos(ball: ballObj, player1: Player, player2: Player): 
 	ball.y = newY;
 	return false
 }
-
-const maxScore: number = 5;
 
 function updateScore(player1: Player, player2: Player, newX: number): boolean {
 	if (newX - 10 >= WIDTH) {

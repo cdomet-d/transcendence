@@ -70,7 +70,7 @@ function deadReckoning(game: Game, latestReply: repObj) {
 	console.log("IN DEADRECKONING");
 	let timeSinceUpdate: number = 0;
 	timeSinceUpdate = (performance.now() - latestReply._timestamp)
-	if (timeSinceUpdate > 200)
+	if (timeSinceUpdate > 200) //TODO: add var for 200
 		timeSinceUpdate = 200
 	timeSinceUpdate /= 1000;
 	game.ball.x = latestReply._ball.x + latestReply._ball.dx * timeSinceUpdate;

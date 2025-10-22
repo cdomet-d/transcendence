@@ -1,7 +1,7 @@
 import { renderGame } from "./game.render.utils.js";
 import { Game } from "./game.class.js";
 
-function pong() {
+export function pong() {
 	const ctx = getCanvasContext();
 	if (!ctx) {
 		console.log("error: context not supported");
@@ -9,7 +9,6 @@ function pong() {
 	}
 	const game: Game = new Game(ctx, true);
 	renderGame(game); //TODO: before rendering need to receive players names
-	//TODO: should rendering be done after ws connection ?
 	import("./ws.req.js").then(({ wsRequest }) => {
         wsRequest(game);
     }) //TODO: can import fail ?
@@ -22,5 +21,3 @@ function getCanvasContext(): CanvasRenderingContext2D | null {
 }
 
 // window.addEventListener("load", );
-
-export { pong };
