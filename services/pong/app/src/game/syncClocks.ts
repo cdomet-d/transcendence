@@ -42,7 +42,11 @@ export function syncClocks(player: Player, playerId: number): Promise<void> {
                 resolve();
             }
         };
-
+        
+        // event for client answer
         player.socket.addEventListener('message', handler);
+
+        // signal to start
+        player.socket.send("1");
     });
 }

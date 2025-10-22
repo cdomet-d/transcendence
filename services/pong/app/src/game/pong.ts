@@ -12,11 +12,6 @@ export async function setUpGame(game: Game) {
 	const player1: Player = game.players[0];
 	const player2: Player = game.players[1];
 
-	// send signal cause we got both players ready
-	player1.socket.send("1");
-	if (!game.local)
-		player2.socket.send("1");
-
 	// sync client & server clocks
 	try {
 		await syncClocks(player1, 1);
