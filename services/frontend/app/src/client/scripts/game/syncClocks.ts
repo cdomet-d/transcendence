@@ -1,10 +1,11 @@
 import type { startObj } from "./mess.validation.js";
+const MAX_SYNC = 3;
 
 export async function syncClocks(ws: WebSocket): Promise<[number, number, startObj] | null> {
     const offsetsTab: Array< number > = new Array();
     const halfTripsTab: Array< number > = new Array();
     let start: startObj | null = null;
-    let i: number = 3;
+    let i: number = MAX_SYNC;
 
     while (i > 0) {
         //send client timestamp
