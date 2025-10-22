@@ -39,7 +39,7 @@ function waitForMessage(socket: WebSocket): Promise< startObj > {
         socket.addEventListener('message', (event) => {
             try {
                 const start: startObj = JSON.parse(event.data);
-                // if (!validStart())
+                // if (!validStart()) //TODO
                 // 	reject(new Error("Invalid start"));
                 resolve(start);
             } catch (err) {

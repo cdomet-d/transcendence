@@ -4,7 +4,7 @@ import { updatePaddlePos } from './paddle.js';
 import type { ballObj } from '../classes/game.class.js';
 import { coordinates, Player } from "../classes/player.class.js";
 
-const SERVER_TICK: number = 1000 / 20; // 20FPS
+const SERVER_TICK: number = 1000 / 20; // 20UPS
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function gameLoop(game: Game, player1: Player, player2: Player) {
