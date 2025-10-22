@@ -1,9 +1,8 @@
-import type { Game, stateObj } from "../classes/game.class.js";
-import { updateBallPos, paddleCollision, touchesLeftPad, touchesRightPad } from './ball.js';
+import { Game, playerReq, snapshotObj } from "../classes/game.class.js";
+import { updateBallPos, touchesLeftPad, touchesRightPad } from './ball.js';
 import { updatePaddlePos } from './paddle.js';
 import type { ballObj } from '../classes/game.class.js';
 import { coordinates, Player } from "../classes/player.class.js";
-import { reqObj } from "./mess.validation.js";
 
 const SERVER_TICK: number = 1000 / 20; // 20FPS
 const TIME_STEP: number = 1000 / 60; // 60FPS
@@ -14,99 +13,86 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 	const tickEnd = tickStart + SERVER_TICK;
 	game.time.lastFrame = tickEnd;
 
-	const toProcess = game.reqHistory.filter(playerReq => playerReq._req._timeStamp < tickEnd);
+	// get requests
+	const reqsToProcess = game.reqHistory.filter(playerReq => playerReq._req._timeStamp < tickEnd);
 	const futureReqs = game.reqHistory.filter(playerReq => playerReq._req._timeStamp >= tickEnd);
+	reqsToProcess.sort((a, b) => a._req._timeStamp - b._req._timeStamp);
 
-	toProcess.sort((a, b) => a._req._timeStamp - b._req._timeStamp);
-
+	// update game
 	let simulatedTime = 0;
-
-	for (const req of toProcess) {
-		const player: Player = req._playerId === 1 ? player1 : player2;
-		while(simulatedTime + TIME_STEP <= req._req._timeStamp - tickStart) {
-			game.addState(tickStart + simulatedTime);
-			game.status = updateBallPos(game.ball, player1, player2, TIME_STEP);
-			if (game.status) {
-				endGame(player1, player2, game);
-				return;
-			}
-			simulatedTime += TIME_STEP;
-		}
-		updatePaddlePos(player, req._req._keys, game.paddleSpeed, TIME_STEP);
-		rewind(game, req._req, req._playerId);
-		player.reply._ID = req._req._ID;
-	}
-
-	while(simulatedTime < SERVER_TICK) {
-		game.addState(tickStart + simulatedTime);
-		game.status = updateBallPos(game.ball, player1, player2, TIME_STEP);
-		if(game.status){
-			endGame(player1, player2, game);
+	for (const playerReq of reqsToProcess) {
+		const player: Player = playerReq._id === 1 ? player1 : player2;
+		simulatedTime = moveBall(game, tickStart, simulatedTime, playerReq._req._timeStamp - tickStart);
+		if (simulatedTime === -1)
 			return;
-		}
-		simulatedTime += TIME_STEP;
+		updatePaddlePos(player, playerReq._req._keys, game.paddleSpeed);
+		rewind(game, playerReq, player.paddle);
+		//TODO: should endGame be called after rewind ?
+		player.reply._ID = playerReq._req._ID;
 	}
+	moveBall(game, tickStart, simulatedTime, SERVER_TICK);
+	sendToPlayers(game, player1, player2);
 
-	game.deleteStates(tickStart - 1000);
-
+	// clean
 	game.reqHistory = futureReqs;
+	game.deleteSnapshots(tickStart - 1000);
 
-	sendToPlayer(player1, player2.paddle, game.ball, "left");
-	if (!game.local)
-		sendToPlayer(player2, player1.paddle, game.ball, "right");
-
+	// new loop
 	const delay: number = SERVER_TICK - (performance.now() - start);
 	setTimeout(gameLoop, Math.max(0, delay), game, player1, player2);
 }
 
-function rewind(game: Game, req: reqObj, playerId: number) {
-	let state: stateObj | undefined = undefined;
-	const timestamp: number = req._timeStamp;
-	let i: number = 0;
-	while( i < game.stateHistory.length - 1) {
-		if (timestamp >= game.stateHistory[i]!._timestamp
-			&& timestamp <= game.stateHistory[i + 1]!._timestamp) {
-				if (Math.abs(timestamp - game.stateHistory[i]!._timestamp) < Math.abs(timestamp - game.stateHistory[i + 1]!._timestamp))
-					state = game.stateHistory[i];
-				else
-					state = game.stateHistory[i + 1];
-				break;
-			}
-		i++;
+function moveBall(game: Game, tickStart: number, simulatedTime: number, end: number): number {
+	while(simulatedTime + TIME_STEP <= end) {
+		game.addSnapshot(tickStart + simulatedTime);
+		game.status = updateBallPos(game.ball, game.players[0]!, game.players[1]!);
+		if (game.status) {
+			endGame(game.players[0]!, game.players[1]!, game);
+			return -1;
+		}
+		simulatedTime += TIME_STEP;
 	}
-	if (state === undefined)
+	return simulatedTime
+}
+
+function rewind(game: Game, playerReq: playerReq, paddle: coordinates) {
+	let snapshot: snapshotObj | undefined = game.findSnapshot(playerReq._req);
+	if (snapshot === undefined)
 		return;
-	
-	const age: number = performance.now() - state._timestamp;
-	if (age > 200 || age < 0)
+
+	const age: number = performance.now() - snapshot._timestamp;
+	if (age > 200 || age < 0) //TODO: put 200 in a var
 		return;
-	
+
 	console.log("IN REWIND");
-	if (playerId === 1 && touchesLeftPad(game.players[0]!.paddle, state._ball.x, state._ball.y)) {
+
+	const ball: ballObj = snapshot._ball;
+	const x: number = playerReq._id === 1 ? 21 : -11;
+	const collision: Function = playerReq._id === 1 ? touchesLeftPad : touchesRightPad;
+	if (collision(paddle, ball.x, ball.y)) {
 		game.ball.dx *= -1;
-		game.ball.x = game.players[0]!.paddle.x + 21; //need to handler y
+		game.ball.x = paddle.x + x; //need to handler y
 		return;
-	}
-	if (playerId === 2 && touchesRightPad(game.players[1]!.paddle, state._ball.x, state._ball.y)) {
-		game.ball.dx *= -1;
-		game.ball.x = game.players[1]!.paddle.x - 11;
 	}
 }
 
-function sendToPlayer(player: Player, opponentPaddle: coordinates, ball: ballObj, side: string) {
-	player.setMessPad("left", player.paddle.y);
-	player.setMessPad("right", opponentPaddle.y);
-	player.setMessBall(side, ball);
-	// player.reply._timestamp = 0;
+function sendToPlayers(game: Game, player1: Player, player2: Player) {
+	player1.setMessPad(player1.paddle.y, player2.paddle.y);
+	player1.setMessBall("left", game.ball);
 	//TODO: add score
-	if (player.socket.readyState === 1)
-		player.socket.send(JSON.stringify(player.reply));
+	if (player1.socket.readyState === 1)
+		player1.socket.send(JSON.stringify(player1.reply));
+	if (!game.local) {
+		player2.setMessPad(player2.paddle.y, player1.paddle.y);
+		player2.setMessBall("right", game.ball);
+		//TODO: add score
+		if (player2.socket.readyState === 1)
+			player2.socket.send(JSON.stringify(player2.reply));
+	}
 }
 
 function endGame(player1: Player, player2: Player, game: Game) {
-	sendToPlayer(player1, player2.paddle, game.ball, "left");
-	if (!game.local)
-		sendToPlayer(player2, player1.paddle, game.ball, "right");
+	sendToPlayers(game, player1, player2);
 	player1.socket.close();
 	if (!game.local)
 		player2.socket.close();
