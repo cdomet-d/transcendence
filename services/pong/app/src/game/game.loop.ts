@@ -45,8 +45,8 @@ export function gameLoop(game: Game, player1: Player, player2: Player) {
 function moveBall(game: Game, tickStart: number, simulatedTime: number, end: number): number {
 	while(simulatedTime + TIME_STEP <= end) {
 		game.addSnapshot(tickStart + simulatedTime);
-		game.status = updateBallPos(game.ball, game.players[0]!, game.players[1]!);
-		if (game.status) {
+		const status: boolean = updateBallPos(game.ball, game.players[0]!, game.players[1]!);
+		if (status) {
 			endGame(game.players[0]!, game.players[1]!, game);
 			return -1;
 		}
@@ -63,8 +63,6 @@ function rewind(game: Game, playerReq: playerReq, paddle: coordinates) {
 	const age: number = performance.now() - snapshot._timestamp;
 	if (age > 200 || age < 0) //TODO: put 200 in a var
 		return;
-
-	console.log("IN REWIND");
 
 	const ball: ballObj = snapshot._ball;
 	const x: number = playerReq._id === 1 ? 21 : -11;

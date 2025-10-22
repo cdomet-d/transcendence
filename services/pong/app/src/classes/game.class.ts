@@ -49,7 +49,6 @@ export class Game {
 	#_players: playerTab;
 	#_ball: ballObj;
 	#_paddleSpeed: number;
-	#_status: boolean;
 	#_reqHistory: reqTab;
 	#_snapshotHistory: snapshotTab;
 	#_lastTick: number
@@ -57,7 +56,6 @@ export class Game {
 	/*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo) {
 		this.#_gameInfo = gameInfo;
-		this.#_status = false;
 		this.#_players = new Array();
 		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3};
 		this.#_paddleSpeed = 0.15;
@@ -91,10 +89,6 @@ export class Game {
 		return this.#_paddleSpeed;
 	}
 
-	get status(): boolean {
-		return this.#_status;
-	}
-
 	get reqHistory(): reqTab {
 		return this.#_reqHistory;
 	}
@@ -118,10 +112,6 @@ export class Game {
 
 	set loser(loser: number) {
 		this.#_gameInfo._loser = loser;
-	}
-
-	set status(status: boolean) {
-		this.#_status = status;
 	}
 
 	set reqHistory(reqTab: reqTab) {
