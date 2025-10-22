@@ -362,5 +362,6 @@ TODO :
 * ~~add the creation of a profile and stat when creting account in the gateway~~
 * Define game card object w/ Coralie
 * Define friendsList card object w/ Coralie
+* changer toutes les 500 
 
 notion : https://www.notion.so/28fec36dccef8049863ee403e618e675?v=28fec36dccef804badbc000c4d0f3703&source=copy_link

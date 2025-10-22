@@ -4,9 +4,6 @@ import type { UserData } from './bff.interface.js';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { validateCredentials } from './bffAccount.service.js';
-import { updateAccountUsername } from './bffAccount.service.js';
-import { updateAccountPassword } from './bffAccount.service.js';
-import { updateUserProfileUsername } from './bffAccount.service.js';
 
 //TODO: find a secure way to handle JWT_SECRET
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-and-long-key-for-development';
@@ -51,57 +48,6 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 			return reply.code(200).send({ token: token });
 		} catch (error) {
 			serv.log.error(`[BFF] Login error: ${error}`);
-			return reply.code(503).send({ message: 'A backend service is unavailable.' });
-		}
-	});
-
-	serv.patch('/account/username', async (request, reply) => {
-		let isAuthUpdated = false;
-		const userID = request.user.userID;
-		const oldUsername = request.user.username;
-		const { newUsername } = request.body as { newUsername: string };
-
-		try {
-			const accountResponse = await updateAccountUsername(userID, newUsername);
-
-			if (!accountResponse.ok)
-				return reply.code(accountResponse.status).send(await accountResponse.json());
-			isAuthUpdated = true;
-
-			const profileResponse = await updateUserProfileUsername(userID, newUsername);
-
-			if (!profileResponse.ok)
-				throw new Error('Profile service update failed.');
-
-			return reply.code(200).send({ message: 'Username updated successfully.' });
-
-		} catch (error) {
-			serv.log.error(`[BFF] Username update error: ${error}`);
-
-			if (isAuthUpdated) {
-				serv.log.warn(`Rolling back username change for userID: ${userID}`);
-				await updateAccountUsername(userID, oldUsername);
-			}
-			return reply.code(503).send({ message: 'A backend service failed during username update.' });
-		}
-	});
-
-	serv.patch('/account/password', async (request, reply) => {
-		try {
-			const userID = request.user.userID;
-			const { newPassword } = request.body as { newPassword: string };
-
-			const newHashedPassword = await bcrypt.hash(newPassword, 10);
-
-			const response = await updateAccountPassword(userID, newHashedPassword);
-
-			if (!response.ok)
-				return reply.code(response.status).send({ message: 'Failed to update password.' });
-
-			return reply.code(200).send({ message: 'Password updated successfully.' });
-
-		} catch (error) {
-			serv.log.error(`[BFF] Password update error: ${error}`);
 			return reply.code(503).send({ message: 'A backend service is unavailable.' });
 		}
 	});

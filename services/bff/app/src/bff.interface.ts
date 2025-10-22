@@ -1,7 +1,5 @@
-import type { StringMappingType } from "typescript";
-
 export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
-export type StatusUser = 'offline' | 'online' | 'in-game';
+export type StatusUser = 'offline' | 'online' | 'in-game'; //TODO usefull ?
 
 export interface ProfileResponse {
 	success: boolean;
@@ -25,17 +23,6 @@ export interface UserStats {
 	[key: string]: number;
 }
 
-export interface UserCard {
-	id: number;
-	username: string;
-	avatar: string;
-	biography: string;
-	winstreak: number;
-	status: StatusUser
-	relation: ProfileView;
-}
-
-export interface RawUserStats { winStreak: number; }
 export interface RawUserActivity { activityStatus: StatusUser; }
 export interface FriendshipStatus { status: ProfileView; }
 
@@ -55,16 +42,6 @@ export interface UserProfile {
 	avatar: string;
 	biography: string;
 	profileColor: string;
-}
-
-//TODO: complete with all the profile card parameters
-export interface FriendProfileCard {
-	username: string;
-	avatar: string;
-	biography: string;
-	friendship: {
-		friendsSince: string;
-	};
 }
 
 export interface Matches {
@@ -88,4 +65,7 @@ export interface UserProfileView {
 export interface settings {
 	defaultLang: string;
 	profileColor: string;
+	username: string;
+	bio: string;
+	password: string;
 }

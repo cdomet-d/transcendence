@@ -933,6 +933,39 @@ export async function userRoutes(serv: FastifyInstance) {
 			serv.log.error(`Error fetching user profile: ${error}`);
 			return (reply.code(500).send({ message: 'Internal server error' }));
 		}
+	});
+	
+	serv.post('/api/games/responses', async (request, reply) => {
+		try {
+			const { winnerID, loserID, duration, winnerScore } = request.body as any;
+
+			const winnerActions = [
+				{ action: 'increment', field: 'totalMatch', value: 1 },
+				{ action: 'increment', field: 'totalWins', value: 1 },
+				{ action: 'setIfGreater', field: 'longestMatch', value: duration },
+				{ action: 'setIfLess', field: 'shortestMatch', value: duration },
+				{ action: 'setIfGreater', field: 'highestScore', value: winnerScore }
+			];
+
+			const loserActions = [
+				{ action: 'increment', field: 'totalMatch', value: 1 },
+				{ action: 'setIfGreater', field: 'longestMatch', value: duration },
+				{ action: 'setIfLess', field: 'shortestMatch', value: duration }
+			];
+
+			await Promise.all([
+				updateUserStats(winnerID, winnerActions),
+				incrementWinStreak(winnerID),
+
+				updateUserStats(loserID, loserActions),
+				resetWinStreak(loserID)
+			]);
+
+			return reply.code(200).send({ message: 'Game responses processed.' });
+		} catch (error) {
+			serv.log.error(`[BFF] Error processing game responses: ${error}`);
+			return reply.code(503).send({ message: 'A backend service is unavailable.' });
+		}
 	});*/
 	
 	//TODO: code this : const response = await fetch(`https://user:2626/internal/users/activity/${userID}`);

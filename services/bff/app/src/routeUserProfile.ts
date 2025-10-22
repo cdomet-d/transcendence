@@ -1,12 +1,10 @@
 import type { FastifyInstance } from 'fastify';
 import type { UserProfileView } from './bff.interface.js';
 import * as bcrypt from 'bcrypt';
-import { fetchMatches } from './bffGame.service.js';
-import { fetchFriendList } from './bffFriends.service.js';
-import { fetchUserStats } from './bffStats.service.js';
-import { fetchUserProfile } from './bffUser.service.js';
-
-
+import { fetchMatches } from './bffUserProfile.service.js';
+import { fetchFriendList } from './bffUserProfile.service.js';
+import { fetchUserStats } from './bffUserProfile.service.js';
+import { fetchUserProfile } from './bffUserProfile.service.js';
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
 
@@ -25,8 +23,9 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				fetchMatches(request.user.userID)
 			]);
 
+			//TODO change reply
 			if (!profile || !stats)
-				return reply.code(502).send({ message: 'Failed to retrieve essential user data.' });
+				return reply.code(404).send({ message: 'Failed to retrieve essential user data.' });
 
 			const responseData: UserProfileView = {
 				profile: profile,
@@ -39,8 +38,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[BFF]Error building user profile view: ${error}`);
-			return reply.code(503).send({ message: 'A backend service is currently unavailable.' });
-
+			return (reply.code(422).send({ message: 'A backend service is currently unavailable.' }));
 		}
 	});
 
@@ -110,7 +108,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`BFF Error | /users/settings: ${error}`);
-			return reply.code(500).send({ message: 'An internal server error occurred.' });
+			return reply.code(422).send({ message: 'An internal server error occurred.' });
 		}
 	});
 }
