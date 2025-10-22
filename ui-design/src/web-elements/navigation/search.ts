@@ -1,4 +1,4 @@
-import type { buttonData, InputMetadata, UserData } from '../../types-interfaces';
+import type { buttonData, InputFieldsData, UserData } from '../../types-interfaces';
 import { createInputGroup } from '../inputs/helpers';
 import { usernamePattern } from '../../default-values';
 import { createBtn } from './helpers';
@@ -14,7 +14,7 @@ import type { InputGroup } from '../inputs/fields';
  * Responsively adjusts results container position on window resize and scroll events.
  */
 export class Searchbar extends HTMLFormElement {
-    #inputData: InputMetadata;
+    #inputData: InputFieldsData;
     #btn: buttonData;
     #results: HTMLDivElement;
     #searchInput: HTMLDivElement;
@@ -24,7 +24,7 @@ export class Searchbar extends HTMLFormElement {
 
         /**
          * Input field metadata for search input.
-         * @type {InputMetadata}
+         * @type {InputFieldsData}
          */
         this.#inputData = {
             labelContent: 'Search',
@@ -153,8 +153,7 @@ export class Searchbar extends HTMLFormElement {
         this.method = 'get';
         submit.classList.remove('h-[90%]');
         submit.classList.add('h-[36px]', 'mt-[24px]');
-        this.className =
-            'items-center box-border grid sidebar-right search-gap w-[100%] relative';
+        this.className = 'items-center box-border grid sidebar-right search-gap w-[100%] relative';
         this.#results.className =
             'hidden absolute brdr bg min-h-fit max-h-[400px] pad-s overflow-y-auto box-border';
 

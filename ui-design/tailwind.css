@@ -109,10 +109,6 @@
 		--shadow: #04983a;
 	}
 
-	.yellow-border {
-		--border: #ffb800;
-	}
-
 	.invalid {
 		--border: #6b1d00;
 		--highlight: #f9865c;
@@ -130,6 +126,73 @@
 		--highlight: #ffe6a4;
 		--shadow: #966c00;
 	}
+
+	.bg-4F9FFF {
+		/* --border: #3f7fcc; */
+		--highlight: #a7cfff;
+		--shadow: #4289e5;
+	}
+
+	.bg-00DFFF {
+		/* --border: #00b2cc; */
+		--highlight: #7ff7ff;
+		--shadow: #00c5e5;
+	}
+
+	.bg-5200FF {
+		/* --border: #4200cc; */
+		--highlight: #aa7fff;
+		--shadow: #4a00e5;
+	}
+
+	.bg-6EEB83 {
+		/* --border: #58bc68; */
+		--highlight: #b3f7c2;
+		--shadow: #63d076;
+	}
+
+	.bg-1BE7FF {
+		/* --border: #16bacc; */
+		--highlight: #95f3ff;
+		--shadow: #18cbe5;
+	}
+
+	.bg-000080 {
+		/* --border: #000066; */
+		--highlight: #5555aa;
+		--shadow: #000073;
+	}
+
+	.bg-98A869 {
+		/* --border: #7a8855; */
+		--highlight: #d8e3b4;
+		--shadow: #8c9b5f;
+	}
+
+	.bg-FF5714 {
+		/* --border: #cc460f; */
+		--highlight: #ffab8d;
+		--shadow: #e54c12;
+	}
+
+	.bg-BE5103 {
+		/* --border: #983f02; */
+		--highlight: #e7a181;
+		--shadow: #aa4602;
+	}
+
+	.bg-FDFBD4 {
+		/* --border: #cacaa8; */
+		--highlight: #ffffff;
+		--shadow: #e3e3bc;
+	}
+
+	.bg-CE4257 {
+		/* --border: #a33646; */
+		--highlight: #f392a2;
+		--shadow: #b93b4e;
+	}
+
 
 	.iicon {
 		--image-size: 16px;
@@ -159,11 +222,11 @@
 	}
 
 	.sidebar-right {
-    	grid-template-columns: 61% 37.8%;
+		grid-template-columns: 61% 37.8%;
 	}
 
 	.sidebar-left {
-    	grid-template-columns: 37.8% 61%;
+		grid-template-columns: 37.8% 61%;
 	}
 
 	/* Used to hide some UI elements from viewing users, 
@@ -233,7 +296,7 @@
 		animation: a-grow 0.2s 1 linear forwards;
 	}
 
-	input {
+	input, textarea {
 		box-sizing: border-box;
 		min-width: 330px;
 		width: 100%;
@@ -626,7 +689,9 @@
 		border-bottom: 2px solid var(--shadow);
 	}
 
-	.input-emphasis:hover, .input-emphasis:focus, .input-emphasis:focus-visible  {
+	.input-emphasis:hover,
+	.input-emphasis:focus,
+	.input-emphasis:focus-visible {
 		border-top: 2px solid var(--highlight);
 		border-bottom: 2px solid var(--highlight);
 	}
@@ -640,16 +705,5 @@
 		background-color: var(--orange);
 		border-top: 2px solid var(--highlight-orange);
 		border-bottom: 2px solid var(--shadow-orange);
-	}
-
-	.small-user {
-		height: var(--xl);
-		box-sizing: border-box;
-		padding: var(--space-s);
-		display: grid;
-		grid-template-columns: 1fr;
-		grid-template-rows: 1fr 1fr var(--m);
-		place-items: center;
-		background-color: var(--transparent-blue);
 	}
 }

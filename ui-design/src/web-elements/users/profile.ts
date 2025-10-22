@@ -10,19 +10,41 @@ import { createUserCardSocial, createUserInline } from './helpers';
  * @remark You should use {@link createUserCardSocial} which encapsulates creation logic.
  */
 export class UserCardSocial extends HTMLDivElement {
+    #color: string;
+
     constructor() {
         super();
+        this.#color = 'bg-4F9FFF';
     }
     set Id(id: string) {
         this.id = id;
+    }
+
+    set backgroundColor(newBg: string) {
+        this.#color = newBg;
+        this.updateBg();
     }
 
     connectedCallback() {
         this.render();
     }
 
+    updateBg() {
+        const bg: RegExpMatchArray | null = this.className.match(/\bbg[\w-]*/g);
+        if (!bg) {
+            this.classList.add(this.#color);
+            return;
+        }
+        bg.forEach((oc) => {
+            if (oc !== this.#color) {
+                this.classList.remove(oc);
+                this.classList.add(this.#color, 'f-yellow');
+            }
+        });
+    }
     render() {
-        this.className = 'border-box pad-s grid place-items-center small-user bg-4F9FFF gap-s h-fit';
+        this.className = 'border-box pad-s grid place-items-center gap-s min-h-fit';
+        this.updateBg();
     }
 }
 
@@ -41,7 +63,7 @@ if (!customElements.get('user-card-social')) {
  * @remark You should use {@link createUserInline} which encapsulates creation logic.
  */
 export class UserInline extends HTMLDivElement {
-	//TODO: clean up eventListener
+    //TODO: clean up eventListener
     constructor() {
         super();
     }

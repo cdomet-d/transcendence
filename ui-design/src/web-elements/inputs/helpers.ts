@@ -1,20 +1,20 @@
 import { InputGroup, TextAreaGroup } from './fields';
-import { type InputMetadata } from '../../types-interfaces';
+import { type InputFieldsData } from '../../types-interfaces';
 import { Checkbox, RadioButton } from './buttons';
 
 /**
  * Creates a custom input group container.
  *
- * @param fieldData - Object describing input field details of type {@link InputMetadata}. If none is set, it defaults to a text input with username patterning.
+ * @param fieldData - Object describing input field details of type {@link InputFieldsData}. If none is set, it defaults to a text input with username patterning.
  * @returns The specialized {@link InputGroup} div element.
  */
-export function createInputGroup(fieldData: InputMetadata): HTMLDivElement {
+export function createInputGroup(fieldData: InputFieldsData): HTMLDivElement {
     const el = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
     el.info = fieldData;
     return el;
 }
 
-export function createTextAreaGroup(fieldData: InputMetadata): HTMLDivElement {
+export function createTextAreaGroup(fieldData: InputFieldsData): HTMLDivElement {
     const el = document.createElement('div', { is: 'textarea-and-label' }) as TextAreaGroup;
     el.info = fieldData;
     return el;
@@ -47,5 +47,12 @@ export function createCheckbox(btnName: string, btnId: string): HTMLDivElement {
     const el = document.createElement('div', { is: 'checkbox-input' }) as Checkbox;
     el.inputId = btnId;
     el.inputName = btnName;
+    return el;
+}
+
+export function singleInputForm(): HTMLFormElement {
+    const el = document.createElement('form');
+
+    el.className = 'items-center box-border grid sidebar-right search-gap w-[100%] relative';
     return el;
 }

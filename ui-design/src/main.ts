@@ -4,8 +4,7 @@ import * as formBtns from './web-elements/inputs/helpers.js';
 import * as nav from './web-elements/navigation/helpers.js';
 import * as user from './web-elements/users/helpers.js';
 import * as defaults from './default-values.js';
-
-// import { Notification } from './web-elements/users/notifications.js';
+import { UserSettingsForm } from './web-elements/users/settings.js';
 
 window.addEventListener('error', (e) => {
     console.error('Global error:', e.error);
@@ -22,7 +21,7 @@ wrapper.classList.add(
     'grid',
     'gap-6',
     `w-[${innerW}]`,
-    'pad-sm'
+    'pad-sm',
 );
 
 // function testSearchbar() {
@@ -69,14 +68,15 @@ try {
     wrapper.appendChild(nav.createMenu(defaults.mainMenu, 'vertical'));
     wrapper.appendChild(nav.createMenu(defaults.gameMenu, 'vertical', 'l', true));
     wrapper.appendChild(
-        user.createUserCardSocial(defaults.socialMenu, defaults.userDefault, 'stranger')
+        user.createUserCardSocial(defaults.socialMenu, defaults.userDefault, 'stranger'),
     );
     wrapper.appendChild(user.createUserInline(defaults.userDefault));
     wrapper.appendChild(nav.createSearchbar());
     wrapper.appendChild(user.createNotificationBox());
     wrapper.appendChild(nav.createDropdown(defaults.languageMenu, 'Pick language', 'static'));
     wrapper.appendChild(nav.createDropdown(defaults.userColorsMenu, 'Pick color', 'dynamic'));
-    wrapper.appendChild(user.assembleUserSettings(defaults.userDefault));
+    const el = document.createElement('form', { is: 'settings-form' }) as UserSettingsForm;
+    wrapper.append(el);
 } catch (error) {
     console.log('[ERROR]', error);
 }

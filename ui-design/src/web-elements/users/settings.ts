@@ -1,98 +1,103 @@
-import * as types from '../../types-interfaces';
-import * as defaults from '../../default-values';
+import { createAvatar, createHeading } from '../typography/helpers';
+import { createBtn, createDropdown } from '../navigation/helpers';
 import { createInputGroup, createTextAreaGroup } from '../inputs/helpers';
-import { createBtn } from '../navigation/helpers';
+import * as defaults from '../../default-values';
+import * as types from '../../types-interfaces';
+import type { Avatar } from '../typography/images';
+import type { DropdownMenu } from '../navigation/menus';
+import type { InputGroup, TextAreaGroup } from '../inputs/fields';
 
 export class UserSettingsForm extends HTMLFormElement {
-	#username: string;
-    #inputFields: types.InputMetadata[];
-    #biography: types.InputMetadata;
-    #submit: types.buttonData;
+    #user: types.UserData;
+    #formData: types.formDetails;
+    #colors: DropdownMenu;
+    #languages: DropdownMenu;
+    #avatar: Avatar;
+
+	#submitHandler: (ev: SubmitEvent) => void;
 
     constructor() {
         super();
-		this.#username = '';
-        this.#inputFields = [
-            {
-                type: 'text',
-                pattern: defaults.usernamePattern,
-                id: 'username',
-                placeholder: 'Enter your new username!',
-                labelContent: 'Username',
-            },
-            {
-                type: 'password',
-                pattern: defaults.passwordPattern,
-                id: 'password',
-                placeholder: 'Enter your new password!',
-                labelContent: 'Password',
-            },
-        ];
-        this.#biography = {
-            type: '',
-            pattern: '',
-            id: 'Biography',
-            placeholder: 'Enter your biography',
-            labelContent: 'Biography',
-        };
+        this.#user = defaults.userDefault;
+        this.#formData = defaults.userSettingsForm;
+        this.#avatar = createAvatar(this.#user.avatar);
+        this.#colors = createDropdown(defaults.userColorsMenu, 'Pick color', 'dynamic');
+        this.#languages = createDropdown(defaults.languageMenu, 'Pick language', 'static');
+		this.#submitHandler = this.submitHandler.bind(this);
+	}
 
-        this.#submit = {
-            type: 'submit',
-            content: 'Submit changes',
-            img: null,
-            ariaLabel: 'Sunmit button for user settings form',
-        };
+    set setUsername(details: types.UserData) {
+        this.#user = details;
     }
 
-	set setUsername(username: string) {
-		this.#username = username;
+    set setFormDetails(details: types.formDetails) {
+        this.#formData = details;
+    }
+
+	submitHandler(ev: SubmitEvent) {
+            ev.preventDefault();
+            const f = new FormData(this);
+            const colSelection = this.#colors.selectedElement;
+            if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
+                f.append('color', 'bg-' + colSelection.id);
+            const langSelection = this.#languages.selectedElement;
+            if (langSelection && langSelection.id !== this.#user.language)
+                f.append('language', langSelection.id);
+            console.log(f);
 	}
+
     connectedCallback() {
+        this.addEventListener('submit', (ev) => this.#submitHandler(ev));
         this.render();
     }
 
+	disconnectedCallback() {
+        this.removeEventListener('submit', (ev) => this.#submitHandler(ev));
+	}
+
+    renderDropdowns() {
+        const dropdownWrapper = document.createElement('div');
+        dropdownWrapper.append(this.#colors, this.#languages);
+        dropdownWrapper.className = 'grid gap-s grid-flow-col z-1';
+        this.append(dropdownWrapper);
+    }
+
     renderFields() {
-        this.#inputFields.forEach((field) => {
-            const el = createInputGroup(field);
+        this.#formData.fields.forEach((field) => {
+            let el: HTMLElement;
+            if (field.type !== 'textarea') {
+                el = createInputGroup(field) as InputGroup;
+            } else {
+                el = createTextAreaGroup(field) as TextAreaGroup;
+            }
             this.appendChild(el);
+            if (field.type === 'textarea') el.classList.add('row-span-3');
         });
-        const el = createTextAreaGroup(this.#biography);
-        this.appendChild(el);
     }
 
     renderButtons() {
-        const submit = createBtn(this.#submit);
+        const submit = createBtn(this.#formData.button);
         this.append(submit);
     }
 
     render() {
-        this.action = `/account/settings/${this.#username}`;
-        this.method = 'patch';
-        this.renderFields();
-        this.renderButtons();
+        const title = createHeading('1', 'Settings');
+
+        this.action = this.#formData.action;
+        this.ariaLabel = this.#formData.ariaLabel;
         this.className =
-            'grid gap-y-(--space-m) pad-sm';
+            'grid gap-y-(--space-m) pad-sm brdr w-5xl \
+			grid sidebar-left justify-items-center gap-s';
+        this.id = this.#formData.id;
+        this.method = this.#formData.method;
+
+        this.append(this.#avatar, title);
+        this.renderFields();
+        this.renderDropdowns();
+        this.renderButtons();
     }
 }
 
 if (!customElements.get('settings-form')) {
     customElements.define('settings-form', UserSettingsForm, { extends: 'form' });
-}
-
-export class UserSettingsWrapper extends HTMLDivElement {
-	constructor() {
-		super();
-	}
-
-	connectedCallback() {
-		this.render();
-	}
-
-	render() {
-		this.className = 'brdr w-5xl grid sidebar-left justify-items-center gap-s'
-	}
-}
-
-if (!customElements.get('settings-wrapper')) {
-	customElements.define('settings-wrapper', UserSettingsWrapper, {extends: 'div'})
 }

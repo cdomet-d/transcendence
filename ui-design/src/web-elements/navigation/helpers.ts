@@ -4,7 +4,7 @@ import { DropdownMenu, Menu, SocialMenu } from './menus';
 import { Searchbar } from './search';
 
 import type {
-    TabMetadata,
+    TabData,
     MenuStyle,
     buttonData,
     ProfileView,
@@ -39,7 +39,7 @@ export function createBtn(btn: buttonData, animated?: boolean): CustomButton {
 /**
  * Creates a tab wrapper element containing an array of tabs.
  *
- * @param {Array<TabMetadata>} list - Array of tab metadata objects to create tabs.
+ * @param {Array<TabData>} list - Array of tab metadata objects to create tabs.
  * @returns {TabContainer} A {@link TabContainer} div element containing the tabs.
  *
  * @example
@@ -50,7 +50,7 @@ export function createBtn(btn: buttonData, animated?: boolean): CustomButton {
  * const tabs = createTabs(tabsList);
  * document.body.appendChild(tabs);
  */
-export function createTabs(list: Array<TabMetadata>): TabContainer {
+export function createTabs(list: Array<TabData>): TabContainer {
     const el = document.createElement('div', { is: 'tab-container' }) as TabContainer;
     el.tabList = list;
     return el;

@@ -183,6 +183,7 @@ export class DropdownMenu extends HTMLDivElement {
     /** Inner components */
     /** A {@link CustomButton} which serves as the toggle to make the options appear */
     #toggle: CustomButton;
+
     /** A {@link HTMLUListElement} containing the `<li>` option of the menu */
     #listbox: HTMLUListElement;
 
@@ -198,6 +199,7 @@ export class DropdownMenu extends HTMLDivElement {
         this.#optionListData = [];
         this.#listboxOptions = [];
         this.#listbox = document.createElement('ul');
+		//TODO: set user selected preference on first load
         this.#toggle = createBtn({
             type: 'button',
             content: '',
@@ -230,6 +232,14 @@ export class DropdownMenu extends HTMLDivElement {
         this.#dropdownStyle = style;
     }
 
+    get selectedElement(): HTMLLIElement | null {
+        console.log(this.#listboxOptions);
+        for (let i = 0; i < this.#listboxOptions.length; i++) {
+            if (this.#listboxOptions[i].hasAttribute('selected')) return this.#listboxOptions[i];
+        }
+        return null;
+    }
+
     /**
      * Updates the toggle's background if the dropdown styling was set to dynamic.
      * @param {string} newBg - The new background to add to the toggle.
@@ -246,7 +256,6 @@ export class DropdownMenu extends HTMLDivElement {
                 this.#toggle.classList.add(newBg, 'f-yellow');
             }
         });
-        return;
     }
 
     /**
@@ -259,7 +268,8 @@ export class DropdownMenu extends HTMLDivElement {
             if (option.content) {
                 el.id = option.content;
                 el.textContent = option.content;
-                el.className = 'brdr thin pad-s flex justify-center cursor-pointer';
+                el.className =
+                    'brdr pad-s flex justify-center items-center cursor-pointer input-emphasis h-m w-l';
                 el.role = 'option';
                 el.ariaSelected = 'false';
                 el.setAttribute('tabindex', '-1');
@@ -267,7 +277,7 @@ export class DropdownMenu extends HTMLDivElement {
                 else el.classList.add(`bg-${option.content}`, 'f-yellow');
             }
         });
-        this.#listbox.className = 'hidden';
+        this.#listbox.className = 'hidden absolute';
         this.#listboxOptions = Array.from(this.#listbox.children) as HTMLLIElement[];
     }
 
@@ -333,6 +343,9 @@ export class DropdownMenu extends HTMLDivElement {
      * @param {KeyboardEvent} ev - the event send by `addEventListener`
      */
     keyboardNavHandler(ev: KeyboardEvent) {
+        //TODO: handle closing on ESC
+        //TODO: move focus on first item on open
+        //TODO: aria role for open/closed
         const actions: { [key: string]: () => void } = {
             ArrowDown: () => this.#moveFocus(1),
             ArrowUp: () => this.#moveFocus(-1),
@@ -371,8 +384,8 @@ export class DropdownMenu extends HTMLDivElement {
         this.append(this.#listbox);
         this.#listbox.role = 'listbox';
         this.id = 'dropdown';
-        this.className = 'h-m w-l';
-        if (this.#dropdownStyle === 'dynamic') this.#toggle.classList.remove('input-emphasis');
+        this.role = 'menu';
+        this.className = 'h-m w-l relative';
     }
 }
 

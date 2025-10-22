@@ -98,15 +98,15 @@ export type GameType = '1 vs 1' | 'tournament';
  * @property min - Optional, defines minimum numeric/date value.
  * @property step - Optional, step size for increment/decrement.
  */
-export interface InputMetadata {
-    labelContent: string;
+export interface InputFieldsData {
     id: string;
-    pattern: string;
-    placeholder: string;
-    type: string;
+    labelContent: string;
     max?: string;
     min?: string;
+    pattern: string;
+    placeholder: string;
     step?: string;
+    type: string;
 }
 
 /**
@@ -147,7 +147,7 @@ export interface buttonData {
  * @property content - Visible text or HTML content within the tab.
  * @property default - Whether this is the default active tab on load.
  */
-export interface TabMetadata {
+export interface TabData {
     id: string;
     content: string;
     default: boolean;
@@ -167,9 +167,20 @@ export interface TabMetadata {
 export interface UserData {
     avatar: ImgMetadata;
     biography: string;
+    id: string;
+    language: string;
+    profileColor: string;
     relation: ProfileView;
     status: boolean;
     username: string;
-    id: string;
     winstreak: string;
+}
+
+export interface formDetails {
+    action: string;
+    ariaLabel: string;
+    button: buttonData;
+    fields: InputFieldsData[];
+    id: string;
+    method: string;
 }

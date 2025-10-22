@@ -1,4 +1,4 @@
-import type { InputMetadata } from '../../types-interfaces';
+import type { InputFieldsData } from '../../types-interfaces';
 
 /**
  * Custom input element.
@@ -40,7 +40,7 @@ export class CustomInput extends HTMLInputElement {
 
     render() {
         //TODO: border color change on focus not working
-        this.className = 'brdr ';
+        this.className = 'brdr';
     }
 }
 
@@ -92,12 +92,12 @@ export class InputGroup extends HTMLDivElement {
     #label: InputLabel;
     #inputFeedback: HTMLDivElement;
     #validationCallback: (event: Event) => void;
-    #info: InputMetadata;
+    #info: InputFieldsData;
 
     /**
      * Sets input field information for label & input configuration.
      */
-    set info(data: InputMetadata) {
+    set info(data: InputFieldsData) {
         this.#info = data;
     }
 
@@ -153,6 +153,7 @@ export class InputGroup extends HTMLDivElement {
         this.#label.for = this.#info.id;
         this.#label.content = this.#info.labelContent;
         this.#input.id = this.#info.id;
+        this.#input.name = this.#info.id;
         this.#input.placeholder = this.#info.placeholder;
         this.#input.pattern = this.#info.pattern;
         this.#input.type = this.#info.type;
@@ -179,14 +180,14 @@ if (!customElements.get('input-and-label')) {
 export class TextAreaGroup extends HTMLDivElement {
     #input: HTMLTextAreaElement;
     #label: InputLabel;
-    #info: InputMetadata;
+    #info: InputFieldsData;
     #inputFeedback: HTMLDivElement;
     #validationCallback: (event: Event) => void;
 
     /**
      * Sets input field information for label & input configuration.
      */
-    set info(data: InputMetadata) {
+    set info(data: InputFieldsData) {
         this.#info = data;
     }
 
@@ -237,8 +238,9 @@ export class TextAreaGroup extends HTMLDivElement {
         this.appendChild(this.#label);
         this.appendChild(this.#input);
         this.appendChild(this.#inputFeedback);
-        this.#input.className = 'resize-y brdr w-full bg pad-s min-h-fit ';
+        this.#input.className = 'resize-y brdr w-full h-full bg pad-s';
         this.#input.id = this.#info.id;
+        this.#input.name = this.#info.id;
         this.#input.maxLength = 256;
         this.#input.placeholder = this.#info.placeholder;
         this.#inputFeedback.className = 'brdr bg hidden';

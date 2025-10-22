@@ -1,5 +1,5 @@
 import { TabButton, TabButtonWrapper } from './buttons';
-import type { TabMetadata } from '../../types-interfaces';
+import type { TabData } from '../../types-interfaces';
 
 /**
  * Creates a tab panel extending HTMLDivElement.
@@ -77,7 +77,7 @@ if (!customElements.get('tab-panel')) {
  * @extends {HTMLDivElement}
  */
 export class TabContainer extends HTMLDivElement {
-    #tabList: Array<TabMetadata>;
+    #tabList: Array<TabData>;
 
     constructor() {
         super();
@@ -88,9 +88,9 @@ export class TabContainer extends HTMLDivElement {
      * Sets the list of tab metadata.
      * Throws if duplicate IDs are found.
      *
-     * @param {Array<TabMetadata>} tabList
+     * @param {Array<TabData>} tabList
      */
-    set tabList(tabList: Array<TabMetadata>) {
+    set tabList(tabList: Array<TabData>) {
         this.#tabList = tabList;
         if (!this.isValidTabList(this.#tabList))
             throw new Error(
@@ -134,10 +134,10 @@ export class TabContainer extends HTMLDivElement {
     /**
      * Validates uniqueness of tab IDs.
      *
-     * @param {Array<TabMetadata>} tabList
+     * @param {Array<TabData>} tabList
      * @returns {boolean} True if no duplicates exist.
      */
-    private isValidTabList(tabList: Array<TabMetadata>): boolean {
+    private isValidTabList(tabList: Array<TabData>): boolean {
         return tabList.every((item, i, self) => i === self.findIndex((t) => t.id === item.id));
     }
 

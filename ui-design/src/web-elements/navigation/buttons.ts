@@ -90,7 +90,7 @@ export class CustomButton extends HTMLButtonElement {
     /** Updates button styles and content according to current state. */
     render(): void {
         this.className =
-            'border-box brdr h-[90%] pad-xs input-emphasis min-w-[4rem] outline-hidden overflow-hidden w-[100%] whitespace-nowrap cursor-pointer';
+            'border-box brdr h-[90%] pad-xs input-emphasis min-w-[4rem] outline-hidden overflow-hidden w-[100%] whitespace-nowrap cursor-pointer button';
 
         if (this.#btn.content && !this.#animated) {
             this.renderTextualBtn();
