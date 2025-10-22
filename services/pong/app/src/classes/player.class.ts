@@ -12,6 +12,7 @@ export interface repObj {
 	_leftPad: coordinates,
 	_rightPad: coordinates,
 	_ball: ballObj,
+	_score: [number, number]
 }
 
 export class Player {
@@ -27,7 +28,14 @@ export class Player {
 	constructor(userID: number, socket: WebSocket, random: boolean) {
 		this.#_userID = userID;
 		this.#_socket = socket;
-		this.#_reply = {_ID: 0, _timestamp: 0, _leftPad: {x: 10, y: 108}, _rightPad: {x: 460, y: 108}, _ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3}};
+		this.#_reply = {
+			_ID: 0, 
+			_timestamp: 0, 
+			_leftPad: {x: 10, y: 108},
+			_rightPad: {x: 460, y: 108}, 
+			_ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3}, 
+			_score: [0, 0]
+		};
 		if (random) {
 			this.#_paddle = {x: 460, y: 108};
 			this.#_playerSide = "right";
@@ -69,10 +77,10 @@ export class Player {
 	}
 
 	/*                              METHODS                                  */
-	public sendReply(side: string, ball: ballObj, rightY: number) {
+	public sendReply(side: string, ball: ballObj, opponent: Player) {
 		// paddles
 		this.#_reply._leftPad.y = this.#_paddle.y;
-		this.#_reply._rightPad.y = rightY;
+		this.#_reply._rightPad.y = opponent.paddle.y;
 
 		// ball
 		this.#_reply._ball = { ...ball };
@@ -80,7 +88,9 @@ export class Player {
 			this.#_reply._ball.x = WIDTH - ball.x;
 			this.#_reply._ball.dx *= -1;
 		}
-		//TODO: add score
+
+		// score
+		this.#_reply._score = [this.#_score, opponent.#_score];
 
 		// send
 		if (this.#_socket.readyState === 1 )

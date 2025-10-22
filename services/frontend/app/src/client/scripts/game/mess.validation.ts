@@ -12,6 +12,7 @@ export interface repObj {
 	_leftPad: coordinates,
 	_rightPad: coordinates,
 	_ball: ballObj,
+	_score: [number, number]
 }
 
 export interface startObj {
