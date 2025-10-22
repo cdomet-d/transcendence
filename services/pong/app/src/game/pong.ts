@@ -23,7 +23,7 @@ export async function setUpGame(game: Game) {
 		if (!game.local)
 			await syncClocks(player2, 2);
 	} catch (err) {
-		return;
+		return; //TODO: handle error
 	}
 
 	// set players message event
@@ -43,6 +43,5 @@ function setMessEvent(player: Player, playerNbr: number, game: Game) {
 		if (!validRequest(req))
 			return;
 		game.addReq(req, playerNbr);
-		// player.keys = { ...req._keys};
 	})
 }
