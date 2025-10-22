@@ -51,7 +51,7 @@ export class Game {
 	#_paddleSpeed: number;
 	#_reqHistory: reqTab;
 	#_snapshotHistory: snapshotTab;
-	#_lastTick: number
+	#_lastTick: number;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo) {
