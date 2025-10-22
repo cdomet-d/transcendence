@@ -10,10 +10,10 @@ interface lobbyInfo {
 	whitelist: whitelist,
 	available: boolean,
 	userList: userInfo[],
-    remote: boolean,
-    format: "quick" | "tournament",
+	remote: boolean,
+	format: "quick" | "tournament",
 	players: number
-    // gameSettings?: string
+	// gameSettings?: string
 }
 
 interface whitelist {
@@ -35,12 +35,17 @@ show Lobby Room
 */
 
 export function createLobby(hostID: number) {
-	const lobbyObj: lobbyInfo = makeLobbyInfo(hostID);
-	lobbyMap.set(lobbyObj.lobbyID, lobbyObj);
+	const lobby: lobbyInfo = makeLobbyInfo(hostID);
+	lobbyMap.set(lobby.lobbyID, lobby);
 }
 
 export function addUserToLobby(uid: number, lobbyID: number) {
-
+	const lobby/* : lobbyInfo | undefined */ = lobbyMap.get(lobbyID);
+	if (!lobby) {
+		console.log("Error: lobbyID not found in GM lobbyMap!");
+	}
+	lobby?.userList.push({ userID: uid });
+	console.log(`User #${uid} has been added to lobby`);
 }
 
 
@@ -57,7 +62,7 @@ function makeLobbyInfo(hostID: number): lobbyInfo {
 		},
 		available: true,
 		userList: [
-			{userID: hostID} // and add them there when they join
+			{ userID: hostID } // and add them there when they join
 		],
 		remote: true,
 		format: "tournament",
@@ -73,6 +78,17 @@ let idIndex: number = 1;
 function getUniqueLobbyID(): number {
 	const uniqueID = idIndex++;
 	return uniqueID;
+}
+
+
+export function printPlayersInLobby(lobbyID: number) {
+	const lobby = lobbyMap.get(1);
+	if (!lobby) {
+		console.log("AAAH PAS DE LOBBY");
+	}
+	lobby?.userList.forEach(user => {
+		console.log(`User #${user.userID} is in Lobby #1`);
+	});
 }
 
 

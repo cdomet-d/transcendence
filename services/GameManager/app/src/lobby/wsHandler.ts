@@ -1,7 +1,7 @@
 import type { FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 import { processGameRequest } from '../manager.js';
-import { addUserToLobby, createLobby } from './lobby.js';
+import { addUserToLobby, createLobby, printPlayersInLobby } from './lobby.js';
 
 export const wsClientsMap: Map<number, WebSocket> = new Map();
 
@@ -46,14 +46,17 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 			console.log(`GM received: ${action}`);
 
 			wsClientsMap.set(userID, socket);
-			req.server.log.info("User" + userID + " added to clientMap");
+			req.server.log.info("User #" + userID + " added to clientMap");
 			if (action === "create") {
 				createLobby(userID);
 				wsSend(socket, JSON.stringify({ lobby: "created" }));
 			} else if (action === "join") {
-				// addUserToLobby(userID, lobbyID); // TODO: replace lobbyID with one given in invitation
+				addUserToLobby(userID, 1); // TODO: replace 1 aka lobbyID with one given in invitation
 				wsSend(socket, JSON.stringify({ lobby: "joined" }));
 			}
+
+			printPlayersInLobby(1);
+
 		}
 
 	});

@@ -51,7 +51,15 @@ function wsConnect() {
 
 			const data = JSON.parse(message.data);
 			if (data.lobby === "created" || data.lobby === "joined") { // CREATE OR JOIN, SAME STORY
-				console.log("Lobby created, rendering lobby now")
+
+
+				if (data.lobby === "created") {
+					console.log("Created Lobby")
+				} else if (data.lobby === "joined") {
+					console.log("Joining Lobby")
+				}
+
+
 				const app = document.getElementById('app');
 				if (app) {
 					app.innerHTML = renderLobby();
@@ -72,7 +80,10 @@ function wsConnect() {
 				window.history.pushState({}, '', '/game/match');
 				router._loadRoute('/game/match');
 				console.log("Client ready to connect game: #" + gameID);
-				pong(message.data); // ws connect to "/game/match" and send userID + gameID
+				setTimeout(() => {
+					pong(message.data);
+				}, 300);
+				// pong(message.data); // ws connect to "/game/match" and send userID + gameID
 			}
 		} catch (error) {
 			console.error("Error: Failed to parse WS message", error);
