@@ -1,6 +1,5 @@
 import type { WebSocket } from '@fastify/websocket';
 import { HEIGHT, WIDTH, type ballObj } from './game.class.js';
-import type { reqObj, keysObj } from '../game/mess.validation.js';
 
 export interface coordinates {
 	x: number;
