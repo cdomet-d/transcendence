@@ -184,3 +184,8 @@ export interface formDetails {
     id: string;
     method: string;
 }
+
+
+export class User implements UserData {
+	
+}

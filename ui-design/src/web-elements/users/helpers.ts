@@ -29,7 +29,7 @@ export function createWinstreak(val: string): Winstreak {
 
 export function createBiography(val: string): Biography {
     const el = document.createElement('p', { is: 'user-bio' }) as Biography;
-    el.bioContent = val;
+    el.content = val;
     return el;
 }
 

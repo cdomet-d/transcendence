@@ -34,6 +34,7 @@ export class Username extends HTMLDivElement {
 
     set name(val: string) {
         this.#link.innerText = val;
+		//TODO: HUUUUM...
         this.#link.href = `/users/${val}`;
         this.render();
     }
@@ -122,7 +123,7 @@ export class Biography extends HTMLParagraphElement {
     constructor() {
         super();
     }
-    set bioContent(val: string) {
+    set content(val: string) {
         this.textContent = val;
         this.render();
     }

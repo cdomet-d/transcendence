@@ -1,4 +1,11 @@
+import { createSocialMenu } from '../navigation/helpers';
+import type { SocialMenu } from '../navigation/menus';
+import type { Avatar } from '../typography/images';
 import { createUserCardSocial, createUserInline } from './helpers';
+import type { Biography, Username, Winstreak } from './user-atoms';
+import * as defaults from '../../default-values';
+import * as types from '../../types-interfaces';
+import { profile } from 'console';
 
 /**
  * A small user card with a dynamic social menu. It's just a div, styled to hold
@@ -9,42 +16,114 @@ import { createUserCardSocial, createUserInline } from './helpers';
  *
  * @remark You should use {@link createUserCardSocial} which encapsulates creation logic.
  */
-export class UserCardSocial extends HTMLDivElement {
+
+// <div class="profile-header">
+// 	<div class="avatar-wrapper-l two-rows">
+// 		<img src="../assets/icons/light-green-avatar.png" />
+// 	</div>
+// 	<div class="username"> %username% <div class="user-status"></div>
+// 	</div>
+// 	<span class="since"> Joined %d days ago </span>
+// 	<p class="biography two-rows">
+// 		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae aliquam mi. Aliquam
+// 		vulputate augue sed risus consectetur, quis auctor odio maximus. Nullam volutpat, justo eu suscipit
+// 		condimentum, risus metus ultrices quam, eu tempor erat tellus vitae mauris. Quisque sed odio sed
+// 		ipsum lacinia finibus non ac enim. Sed sagittis vel. Lorem ipsum dolor sit amet, consectetur
+// 		adipiscing elit. Aliquam vitae aliquam mi. Aliquam
+// 		vulputate augue sed risus consectetur, quis auctor odio maximus. Nullam volutpat, justo eu suscipit
+// 		condimentum, risus metus ultrices quam, eu tempor erat tellus vitae mauris. Quisque sed odio sed
+// 		ipsum lacinia finibus non ac enim. Sed sagittis vel. </p>
+// 	<span class="rank"> %NB%</span>
+// 	<div class="vertical-menu-wrapper">
+// 		<button class="thin-border button-bg" type="button"> Settings </button>
+// 	</div>
+// </div>
+export class UserProfile extends HTMLDivElement {
+    #actionButtons: SocialMenu;
+    #avatar: Avatar;
+    #biography: Biography;
+    #joinedSince: HTMLSpanElement;
+    #username: Username;
+    #winstreak: Winstreak;
     #color: string;
 
     constructor() {
         super();
+        this.#actionButtons = createSocialMenu(defaults.socialMenu, 'vertical', 'stranger');
+        this.#avatar = document.createElement('div', { is: 'user-avatar' }) as Avatar;
+        this.#biography = document.createElement('p') as Biography;
+        this.#joinedSince = document.createElement('span') as HTMLSpanElement;
+        this.#username = document.createElement('div', { is: 'username-container' }) as Username;
+        this.#winstreak = document.createElement('span', { is: 'winstreak-block' }) as Winstreak;
         this.#color = 'bg-4F9FFF';
     }
-    set Id(id: string) {
-        this.id = id;
+
+    set avatar(profilePic: types.ImgMetadata) {
+        this.#avatar.metadata = profilePic;
     }
 
-    set backgroundColor(newBg: string) {
-        this.#color = newBg;
-        this.updateBg();
+    set biography(bio: string) {
+        this.#biography.content = bio;
+    }
+
+    set winstreak(val: string) {
+        this.#winstreak.winstreakValue = val;
+    }
+
+    set profileView(v: types.ProfileView) {
+        this.#actionButtons.view = v;
+    }
+
+    set profileAge(val: string) {
+        this.#joinedSince.textContent = val;
+    }
+
+    set username(name: string) {
+        this.#username.name = name;
+    }
+
+    set color(newColor: string) {
+        if (this.#color !== newColor) {
+            this.classList.remove(this.#color);
+            this.classList.add(newColor);
+            this.#color = newColor;
+        }
     }
 
     connectedCallback() {
         this.render();
     }
 
-    updateBg() {
-        const bg: RegExpMatchArray | null = this.className.match(/\bbg[\w-]*/g);
-        if (!bg) {
-            this.classList.add(this.#color);
-            return;
-        }
-        bg.forEach((oc) => {
-            if (oc !== this.#color) {
-                this.classList.remove(oc);
-                this.classList.add(this.#color, 'f-yellow');
-            }
-        });
-    }
     render() {
-        this.className = 'border-box pad-s grid place-items-center gap-s min-h-fit';
-        this.updateBg();
+        this.append(
+            this.#avatar,
+            this.#username,
+            this.#joinedSince,
+            this.#biography,
+            this.#winstreak,
+            this.#actionButtons
+        );
+		this.className = `${this.#color}`
+    }
+}
+
+if (!customElements.get('user-profile')) {
+    customElements.define('user-profile', UserProfile, { extends: 'div' });
+}
+
+export class UserCardSocial extends UserProfile {
+
+    constructor() {
+        super();
+    }
+
+    override connectedCallback() {
+        this.render();
+    }
+
+    override render() {
+		console.log(super.#color)
+        this.className = 'border-box pad-s grid place-items-center gap-s min-h-fit ';
     }
 }
 

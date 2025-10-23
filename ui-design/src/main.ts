@@ -5,6 +5,7 @@ import * as nav from './web-elements/navigation/helpers.js';
 import * as user from './web-elements/users/helpers.js';
 import * as defaults from './default-values.js';
 import { UserSettingsForm } from './web-elements/users/settings.js';
+import type { UserProfile } from './web-elements/users/profile.js';
 
 window.addEventListener('error', (e) => {
     console.error('Global error:', e.error);
@@ -75,8 +76,8 @@ try {
     wrapper.appendChild(user.createNotificationBox());
     wrapper.appendChild(nav.createDropdown(defaults.languageMenu, 'Pick language', 'static'));
     wrapper.appendChild(nav.createDropdown(defaults.userColorsMenu, 'Pick color', 'dynamic'));
-    const el = document.createElement('form', { is: 'settings-form' }) as UserSettingsForm;
-    wrapper.append(el);
+    wrapper.append(document.createElement('form', { is: 'settings-form' }) as UserSettingsForm);
+    wrapper.append(document.createElement('div', { is: 'user-profile' }) as UserProfile);
 } catch (error) {
     console.log('[ERROR]', error);
 }
