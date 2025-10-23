@@ -15,14 +15,14 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			const { username: friendUsername } = request.body as { username: string };
 
 			if (!friendUsername)
-				return reply.code(400).send({ message: 'Missing friend username in request body.' });
+				return reply.code(400).send({ message: '[BFF] Missing friend username in request body.' });
 
 			if (senderUsername === friendUsername)
-				return reply.code(400).send({ message: 'You cannot send a friend request to yourself.' });
+				return reply.code(400).send({ message: '[BFF] You cannot send a friend request to yourself.' });
 
 			const friendUser = await findUserByUsername(friendUsername);
 			if (!friendUser)
-				return reply.code(404).send({ message: `User '${friendUsername}' not found.` });
+				return reply.code(404).send({ message: `[BFF] User '${friendUsername}' not found.` });
 
 			const friendsServiceResponse = await createFriendRequest(senderID, friendUser.userID);
 			return (reply
@@ -31,7 +31,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[BFF] Error sending friend request: ${error}`);
-			return reply.code(503).send({ message: 'A backend service is currently unavailable.' });
+			return reply.code(503).send({ message: '[BFF] A backend service is currently unavailable.' });
 		}
 	});
 
@@ -43,14 +43,14 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			const { username: senderRequestUsername } = request.body as { username: string };
 
 			if (!senderRequestUsername)
-				return reply.code(400).send({ message: 'Missing friend username in request body.' });
+				return reply.code(400).send({ message: '[BFF] Missing friend username in request body.' });
 
 			if (senderRequestUsername === receiverUsername)
-				return reply.code(400).send({ message: 'You cannot accept a friend request to yourself.' });
+				return reply.code(400).send({ message: '[BFF] You cannot accept a friend request to yourself.' });
 
 			const senderRequestUser = await findUserByUsername(senderRequestUsername);
 			if (!senderRequestUser)
-				return reply.code(404).send({ message: `User '${senderRequestUsername}' not found.` });
+				return reply.code(404).send({ message: `[BFF] User '${senderRequestUsername}' not found.` });
 
 			const friendsServiceResponse = await acceptFriendRequest(receiverID, senderRequestUser.userID);
 			return (reply
@@ -59,7 +59,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[BFF] Error accepting friend request: ${error}`);
-			return reply.code(503).send({ message: 'A backend service is currently unavailable.' });
+			return reply.code(503).send({ message: '[BFF] A backend service is currently unavailable.' });
 		}
 	});
 
@@ -71,14 +71,14 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			const { username: friendUsername } = request.body as { username: string };
 
 			if (!friendUsername)
-				return reply.code(400).send({ message: 'Missing friend username in request body.' });
+				return reply.code(400).send({ message: '[BFF] Missing friend username in request body.' });
 
 			if (friendUsername === removerUsername)
-				return reply.code(400).send({ message: 'You cannot accept a friend request to yourself.' });
+				return reply.code(400).send({ message: '[BFF] You cannot accept a friend request to yourself.' });
 
 			const friendUser = await findUserByUsername(friendUsername);
 			if (!friendUser)
-				return reply.code(404).send({ message: `User '${friendUsername}' not found.` });
+				return reply.code(404).send({ message: `[BFF] User '${friendUsername}' not found.` });
 
 			const friendsServiceResponse = await deleteFriendRequest(removerID, friendUser.userID);
 			return (reply
@@ -87,7 +87,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[BFF] Error deleting friend request: ${error}`);
-			return reply.code(503).send({ message: 'A backend service is currently unavailable.' });
+			return reply.code(503).send({ message: '[BFF] A backend service is currently unavailable.' });
 		}
 	});
 }

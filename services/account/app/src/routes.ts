@@ -25,7 +25,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const response = await serv.dbAccount.run(query, params);
 
 			if (response.changes === 0 || !response.lastID)
-				throw (new Error('Failed to create account record.'));
+				throw (new Error('[ACCOUNT] Failed to create account record.'));
 
 			return (reply.code(201).send({
 				userID: response.lastID,
@@ -33,7 +33,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			}));
 
 		} catch (error) {
-			serv.log.error(`Error when trying to register: ${error}`);
+			serv.log.error(`[ACCOUNT] Error when trying to register: ${error}`);
 			throw error;
 		}
 	});
@@ -48,19 +48,19 @@ export async function accountRoutes(serv: FastifyInstance) {
 			`
 			const user = await serv.dbAccount.get(query, [username]);
 			if (!user)
-				return (reply.code(401).send({ message: 'Invalid credentials.' }));
+				return (reply.code(401).send({ message: '[ACCOUNT] Invalid credentials.' }));
 
 			const passwordMatches = await bcrypt.compare(password, user.hashedPassword);
 			if (!passwordMatches)
-				return (reply.code(401).send({ message: 'Invalid credentials.' }));
+				return (reply.code(401).send({ message: '[ACCOUNT] Invalid credentials.' }));
 
 			return (reply.code(200).send({
 				success: true,
-				message: 'Login successful!',
+				message: '[ACCOUNT] Login successful!',
 			}));
 
 		} catch (error) {
-			serv.log.error(`Error when trying to login: ${error}`);
+			serv.log.error(`[ACCOUNT] Error when trying to login: ${error}`);
 			throw error;
 		}
 	});
@@ -74,12 +74,12 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const response = await serv.dbAccount.run(query, [newHashedPassword, userID]);
 
 			if (response.changes === 0)
-				return reply.code(404).send({ message: 'User not found for password update.' });
+				return reply.code(404).send({ message: '[ACCOUNT] User not found for password update.' });
 
-			return reply.code(200).send({ message: 'Account password updated.' });
+			return reply.code(200).send({ message: '[ACCOUNT] Account password updated.' });
 		} catch (error) {
-			serv.log.error(`Error updating account password: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			serv.log.error(`[ACCOUNT] Error updating account password: ${error}`);
+			return reply.code(500).send({ message: '[ACCOUNT] Internal server error' });
 		}
 	});
 
@@ -92,30 +92,49 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const response = await serv.dbAccount.run(query, [newUsername, userID]);
 
 			if (response.changes === 0)
-				return (reply.code(404).send({ message: 'User not found for username update.' }));
+				return (reply.code(404).send({ message: '[ACCOUNT] User not found for username update.' }));
 
-			return (reply.code(200).send({ message: 'Account username updated.' }));
+			return (reply.code(200).send({ message: '[ACCOUNT] Account username updated.' }));
 		} catch (error) {
 			if (error && typeof error === 'object' && 'code' in error && (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE')
-				return (reply.code(409).send({ message: 'Username is already taken.' }));
+				return (reply.code(409).send({ message: '[ACCOUNT] Username is already taken.' }));
 
-			serv.log.error(`Error updating account username: ${error}`);
-			return (reply.code(500).send({ message: 'Internal server error' }));
+			serv.log.error(`[ACCOUNT] Error updating account username: ${error}`);
+			throw(error);
 		}
 	});
 
-	serv.delete('/internal/account/:userID', async (request, reply) => {
+	serv.patch('/internal/account/:userID/defaultLang', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
+			const { defaultLang } = request.body as { defaultLang: string };
+
+			const query = `UPDATE usersAuth SET defaultLang = ? WHERE userID = ?`;
+			const response = await serv.dbAccount.run(query, [defaultLang, userID]);
+
+			if (response.changes === 0)
+				return (reply.code(404).send({ message: '[ACCOUNT] User not found for default language update.' }));
+
+			return (reply.code(200).send({ message: '[ACCOUNT] Account default language updated.' }));
+		} catch (error) {
+			serv.log.error(`[ACCOUNT] Error updating account username: ${error}`);
+			throw(error);
+		}
+	});
+
+	serv.delete('/internal/account', async (request, reply) => {
+		try {
+			const { userID } = request.body as { userID: string };
 
 			const query = `DELETE FROM usersAuth WHERE userID = ?`;
 
-			await serv.dbAccount.run(query, [userID]);
-
+			const result = await serv.dbAccount.run(query, [userID]);
+			if (!result.changes)
+				return (reply.code(404).send({message: '[ACCOUNT] Account not found'}))
 			return (reply.code(204).send());
 		} catch (error) {
-			serv.log.error(`Error deleting account: ${error}`);
-			return (reply.code(500).send({ message: 'Internal server error' }));
+			serv.log.error(`[ACCOUNT] Error deleting account: ${error}`);
+			return (reply.code(500).send({ message: '[ACCOUNT] Internal server error' }));
 		}
 	});
 
@@ -128,13 +147,13 @@ export async function accountRoutes(serv: FastifyInstance) {
 			`
 			const response = await serv.dbAccount.get(query, [userID]) as AccountSettingsRow | undefined;
 			if (!response)
-				return (reply.code(404).send({ message: 'Account not found.' }));
+				return (reply.code(404).send({ message: '[ACCOUNT] Account not found.' }));
 			return (reply.code(201).send({
 				defaultLang: response.defaultLang
 			}));
 		} catch (error) {
-			serv.log.error(`[Account] Error fetching settings: ${error}`);
-			return (reply.code(500).send({ message: 'Internal server error' }));
+			serv.log.error(`[ACCOUNT] Error fetching settings: ${error}`);
+			return (reply.code(500).send({ message: '[ACCOUNT] Internal server error' }));
 		}
 	});
 }

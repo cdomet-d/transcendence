@@ -1,5 +1,6 @@
 import type { UserData } from './bff.interface.js';
 
+//TODO change to smart route
 export async function findUserByUsername(username: string): Promise<UserData | null> {
 	const response = await fetch(`http://users:2626/internal/users/${username}/userID`);
 	if (response.status === 404)
@@ -9,6 +10,7 @@ export async function findUserByUsername(username: string): Promise<UserData | n
 	return (response.json() as Promise<UserData>);
 }
 
+//TODO change to smart route
 export async function createFriendRequest(senderID: number, friendID: number): Promise<Response> {
 	return (fetch('http://friends:1616/internal/friends/sendrequest', {
 		method: 'POST',
@@ -17,6 +19,7 @@ export async function createFriendRequest(senderID: number, friendID: number): P
 	}));
 }
 
+//TODO change to smart route
 export async function acceptFriendRequest(senderRequestID: number, friendID: number): Promise<Response> {
 	return (fetch('http://friends:1616//internal/friends/acceptrequest', {
 		method: 'POST',
@@ -25,6 +28,7 @@ export async function acceptFriendRequest(senderRequestID: number, friendID: num
 	}));
 }
 
+//TODO change to smart route
 export async function deleteFriendRequest(removerID: number, friendID: number): Promise<Response> {
 	return (fetch('http://friends:1616//internal/friends/deletefriendship', {
 		method: 'POST',

@@ -12,7 +12,7 @@ export async function checkUsernameUnique(db: Database, username: string): Promi
 	} catch (error) {
 		console.log(4);
 
-		console.log(`Error fetching username availability for  ${username}: `, error)
+		console.log(`[ACCOUNT] Error fetching username availability for  ${username}: `, error)
 		throw (error);
 	}
 };

@@ -1,10 +1,8 @@
 import type { FastifyInstance } from 'fastify';
 import type { UserProfileView } from './bff.interface.js';
 import * as bcrypt from 'bcrypt';
-import { fetchMatches } from './bffUserProfile.service.js';
-import { fetchFriendList } from './bffUserProfile.service.js';
-import { fetchUserStats } from './bffUserProfile.service.js';
-import { fetchUserProfile } from './bffUserProfile.service.js';
+import { fetchMatches, fetchUserProfile, fetchFriendList, fetchUserStats } from './bffUserProfile.service.js';
+import { updatePassword, updateUsername, updateBio, updateProfileColor, updateDefaultLang, updateAvatar } from './bffAccount.service.js';
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
 
@@ -25,7 +23,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 			//TODO change reply
 			if (!profile || !stats)
-				return reply.code(404).send({ message: 'Failed to retrieve essential user data.' });
+				return reply.code(404).send({ message: '[BFF] Failed to retrieve essential user data.' });
 
 			const responseData: UserProfileView = {
 				profile: profile,
@@ -37,96 +35,53 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			return reply.code(200).send(responseData);
 
 		} catch (error) {
-			serv.log.error(`[BFF]Error building user profile view: ${error}`);
-			return (reply.code(422).send({ message: 'A backend service is currently unavailable.' }));
+			serv.log.error(`[BFF] Error building user profile view: ${error}`);
+			return (reply.code(422).send({ message: '[BFF] A backend service is currently unavailable.' }));
 		}
 	});
 
 	//TODO code route in user and account
 	serv.patch('/users/settings', async (request, reply) => {
 		try {
-			const user = request.user as { userID: number };
-			if (!user || !user.userID)
-				return reply.code(401).send({ message: 'Unauthorized' });
+			const { userID } = request.user;
+			const body = request.body as any;
 
-			const { userID } = user;
-			const requestBody = request.body as any;
-			const accountServicePayload: { [key: string]: any } = {};
-			const profileServicePayload: { [key: string]: any } = {};
+			const updateTasks: Promise<void>[] = [];
 
-			if (requestBody.username && typeof requestBody.username === 'string')
-				accountServicePayload.newUsername = requestBody.username;
-			if (requestBody.password && typeof requestBody.password === 'string')
-				accountServicePayload.newHashedPassword = await bcrypt.hash(requestBody.password, 10);
-			if (requestBody.defaultLang && typeof requestBody.defaultLang === 'string')
-				accountServicePayload.defaultLang = requestBody.defaultLang;
-			if (requestBody.biography && typeof requestBody.biography === 'string')
-				profileServicePayload.biography = requestBody.biography;
-			if (requestBody.profileColor && typeof requestBody.profileColor === 'string')
-				profileServicePayload.profileColor = requestBody.profileColor;
-
-			const isAccountUpdate = Object.keys(accountServicePayload).length > 0;
-			const isProfileUpdate = Object.keys(profileServicePayload).length > 0;
-
-			if (!isAccountUpdate && !isProfileUpdate)
-				return reply.code(400).send({ message: 'Bad Request: No valid fields provided for update.' });
-
-			const apiCalls = [];
-
-			if (isAccountUpdate) {
-				const accountServiceUrl = `http://account-service:1414/internal/account/${userID}`;
-				apiCalls.push(
-					fetch(accountServiceUrl, {
-						method: 'PATCH',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify(accountServicePayload)
-					})
-				);
+			if (body.username)
+				updateTasks.push(updateUsername(serv.log, userID, body.username));
+			if (body.password) {
+				const hashedPassword = await bcrypt.hash(body.password, 10);
+				updateTasks.push(updatePassword(serv.log, userID, hashedPassword));
 			}
+			if (body.avatar)
+				updateTasks.push(updateAvatar(serv.log, userID, body.avatar));
+			if (body.bio)
+				updateTasks.push(updateBio(serv.log, userID, body.bio));
+			if (body.profileColor)
+				updateTasks.push(updateProfileColor(serv.log, userID, body.profileColor));
+			if (body.defaultLang)
+				updateTasks.push(updateDefaultLang(serv.log, userID, body.defaultLang));
 
-			if (isProfileUpdate) {
-				const profileServiceUrl = `http://profile-service:1515/internal/profile/${userID}`;
-				apiCalls.push(
-					fetch(profileServiceUrl, {
-						method: 'PATCH',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify(profileServicePayload)
-					})
-				);
-			}
+			if (updateTasks.length === 0)
+				return reply.code(200).send({ message: '[BFF] No settings to update.' });
 
-			const results = await Promise.allSettled(apiCalls);
+			try {
+				await Promise.all(updateTasks);
+				return reply.code(200).send({ message: '[BFF] Settings updated successfully.' });
 
-			for (const result of results) {
-				if (result.status === 'rejected' || (result.status === 'fulfilled' && !result.value.ok)) {
-					serv.log.error('A downstream service failed during settings update.', result);
-					return reply.code(502).send({ message: 'Error while updating settings. Please try again.' });
+			} catch (error) {
+				if (typeof error === 'object' && error !== null && 'code' in error && (error as { code: unknown }).code === 409) {
+					const message = ('message' in error)
+						? (error as { message: string }).message
+						: '[BFF] Username is already taken.';
+					return (reply.code(409).send({ message: message }));
 				}
+				throw error;
 			}
-
-			return reply.code(200).send({ message: 'Settings updated successfully.' });
-
 		} catch (error) {
-			serv.log.error(`BFF Error | /users/settings: ${error}`);
-			return reply.code(422).send({ message: 'An internal server error occurred.' });
+			serv.log.error(`[BFF] Failed to update settings: ${error}`);
+			throw error;
 		}
 	});
 }
-
-
-/*create user card
-modify all user card info individualy
-get userID by username 
-get username by userID
-get status user
-
-export interface UserData {
-	avatar: ImgMetadata;
-	biographygraphy: string;
-	relation: ProfileView;
-	status: boolean;
-	username: string;
-	id: string;
-	winstreak: string;
-}*/
-

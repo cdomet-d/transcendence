@@ -1,10 +1,6 @@
-import type { UserProfile } from "./bff.interface.js";
-import type { ProfileResponse } from "./bff.interface.js";
-import type { Friend } from "./bff.interface.js";
-import type { UserStats } from "./bff.interface.js";
-import type { StatsResponse } from "./bff.interface.js";
-import type { Matches } from './bff.interface.js';
+import type { UserProfile, ProfileResponse, Friend, UserStats, StatsResponse, Matches } from "./bff.interface.js";
 
+//TODO change to smart route
 export async function fetchUserProfile(userID: number): Promise<UserProfile | null> {
 	const response = await fetch(`http://users:2626/internal/users/${userID}/profile`)
 	if (response.status === 404)
@@ -16,6 +12,7 @@ export async function fetchUserProfile(userID: number): Promise<UserProfile | nu
 	return (data.profile);
 }
 
+//TODO change to smart route
 export async function fetchUserStats(userID: number): Promise<UserStats | null> {
 	const response = await fetch (`http://users:2626/internal/users/${userID}/stats`);
 	if (response.status == 404)
@@ -26,6 +23,7 @@ export async function fetchUserStats(userID: number): Promise<UserStats | null> 
 	return (data.stats);
 }
 
+//TODO change to smart route
 export async function fetchFriendList(userID: number): Promise<Friend[]> {
 	const response = await fetch(`http://friends:1616/internal/friends/${userID}/friendslist`);
 
@@ -35,6 +33,7 @@ export async function fetchFriendList(userID: number): Promise<Friend[]> {
 	return (response.json() as Promise<Friend[]>);
 }
 
+//TODO change to smart route
 export async function fetchMatches (userID: number): Promise< Matches[] | null> {
 	const response = await fetch(`/internal/dashboard/${userID}/gameHistory`);
 	if (response.status == 404)

@@ -1,10 +1,6 @@
 import type { FastifyInstance } from 'fastify';
-
-import { getPendingFriendRequests } from './friends.service.js'
-import { getFriendship } from './friends.service.js'
-import { friendshipExistsUsersID } from './friends.service.js'
-
-export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
+import { getPendingFriendRequests, getFriendship, friendshipExistsUsersID } from './friends.service.js'
+type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
 
 export async function routeFriend(serv: FastifyInstance) {
 
@@ -13,7 +9,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			const { userA, userB } = request.query as { userA: number, userB: number };
 
 			if (!userA || !userB)
-				return reply.code(400).send({ message: 'Missing userA or userB query parameter.' });
+				return reply.code(400).send({ message: '[FRIENDS] Missing userA or userB query parameter.' });
 
 			const query = `
 				SELECT statusFrienship FROM friendship 
@@ -30,8 +26,8 @@ export async function routeFriend(serv: FastifyInstance) {
 			return (reply.code(200).send({ status: status }));
 
 		} catch (error) {
-			serv.log.error(`[Friends Service] Error checking relationship: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error.' });
+			serv.log.error(`[FRIENDS] Error checking relationship: ${error}`);
+			return reply.code(500).send({ message: '[FRIENDS] Internal server error.' });
 		}
 	});
 
@@ -44,7 +40,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			if (alreadyExists) {
 				return reply.code(409).send({
 					success: false,
-					message: 'Friendship already exists!'
+					message: '[FRIENDS] Friendship already exists!'
 				});
 			}
 
@@ -64,19 +60,19 @@ export async function routeFriend(serv: FastifyInstance) {
 			if (response.changes === 0) {
 				return reply.code(404).send({
 					success: false,
-					message: 'Friend request could not be sent.'
+					message: '[FRIENDS] Friend request could not be sent.'
 				});
 			}
 			return (reply.code(201).send({
 				success: true,
-				message: `Friend request sent to ${friendID}`
+				message: `[FRIENDS] Friend request sent to ${friendID}`
 			}));
 
 		} catch (error) {
-			console.error('[Friends Service] Error processing friend request:', error);
+			console.error('[FRIENDS] Error processing friend request:', error);
 			return reply.code(500).send({
 				success: false,
-				message: 'An internal error occurred.'
+				message: '[FRIENDS] An internal error occurred.'
 			});
 		}
 	});
@@ -91,7 +87,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			if (!friendshipID) {
 				return reply.code(409).send({
 					success: false,
-					message: 'Friendship doesnt exists!'
+					message: '[FRIENDS] Friendship doesnt exists!'
 				});
 			}
 
@@ -107,20 +103,20 @@ export async function routeFriend(serv: FastifyInstance) {
 			if (response.changes === 0) {
 				return reply.code(404).send({
 					success: false,
-					message: 'Friendship could not be accepted.'
+					message: '[FRIENDS] Friendship could not be accepted.'
 				});
 			}
 
 			return (reply.code(200).send({
 				success: true,
-				message: `Friendship accepted !`
+				message: `[FRIENDS] Friendship accepted !`
 			}));
 
 		} catch (error) {
-			console.error('[Friend service] Error accepting friend request', error);
+			console.error('[FRIENDS] Error accepting friend request', error);
 			return (reply.code(500).send({
 				success: false,
-				message: 'An internal error occured.'
+				message: '[FRIENDS] An internal error occured.'
 			}));
 		}
 	});
@@ -141,7 +137,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			const response = await serv.dbFriends.run(query, params);
 
 			if (response.changes === 0)
-				return (reply.code(404).send({ message: 'Friendship not found.' }));
+				return (reply.code(404).send({ message: '[FRIENDS] Friendship not found.' }));
 
 			return (reply.code(204).send({
 				success: true,
@@ -149,10 +145,10 @@ export async function routeFriend(serv: FastifyInstance) {
 			}));
 
 		} catch (error) {
-			serv.log.error(`[Friends Service] Error deleting friendship: ${error}`);
+			serv.log.error(`[FRIENDS] Error deleting friendship: ${error}`);
 			return (reply.code(500).send({
 				success: false,
-				message: 'An internal error occured.'
+				message: '[FRIENDS] An internal error occured.'
 			}));
 		}
 	});
@@ -165,7 +161,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			return reply.code(200).send(friends);
 
 		} catch (error) {
-			serv.log.error(`[Friends Service] Error fetching friends list: ${error}`);
+			serv.log.error(`[FRIENDS] Error fetching friends list: ${error}`);
 			return reply.code(500).send({ message: 'Internal server error.' });
 		}
 	});
@@ -178,37 +174,30 @@ export async function routeFriend(serv: FastifyInstance) {
 			return reply.code(200).send(requests);
 
 		} catch (error) {
-			serv.log.error(`[Friends Service] Error fetching friend request list: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error.' });
+			serv.log.error(`[FRIENDS] Error fetching friend request list: ${error}`);
+			return reply.code(500).send({ message: '[FRIENDS] Internal server error.' });
 		}
 	});
 
-	serv.delete('/internal/friends/:userID:/friendships', async (request, reply) => {
+	serv.delete('/internal/friends/:userID/friendships', async (request, reply) => {
 		try {
-			const { userID } = request.params as { userID: number };
+			const { userID } = request.params as { userID: string };
 
 			const query = `
 				DELETE FROM friendship 
 				WHERE (userID = ?) 
 					OR (friendID = ?);
 			`
-
-			const params = [
-				userID,
-				userID
-			]
-			const response = await serv.dbFriends.run(query, params);
-			if (response.changes === 0)
-				return (reply.code(404).send({ message: 'Friendship not found.' }));
+			await serv.dbFriends.run(query, [userID, userID]);
 
 			return (reply.code(204).send({
 				success: true,
-				message: `Friendships deleted !`
+				message: `[FRIENDS] Friendships deleted !`
 			}));
 
 		} catch (error) {
-			serv.log.error(`[Friends Service] Error deleting all friendships: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error.' });
+			serv.log.error(`[FRIENDS] Error deleting all friendships: ${error}`);
+			throw(error);
 		}
 	});
 }

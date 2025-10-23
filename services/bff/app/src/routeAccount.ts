@@ -1,12 +1,10 @@
-import { createAccount } from './bffAccount.service.js';
 import type { FastifyInstance } from 'fastify';
 import type { UserData } from './bff.interface.js';
-import type { ProfileCreationResult } from "./bff.interface.js";
-import { createUserProfile } from './bffAccount.service.js';
 
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import { validateCredentials } from './bffAccount.service.js';
+
+import { createAccount, deleteFriendship, deleteAccount, createUserProfile, validateCredentials, deleteUser } from './bffAccount.service.js';
 
 //TODO: find a secure way to handle JWT_SECRET
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-and-long-key-for-development';
@@ -61,13 +59,13 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 			const { username, password } = request.body as { username: string, password: string };
 
 			if (!username || !password)
-				return (reply.code(400).send({ message: 'Missing username or password.' }));
+				return (reply.code(400).send({ message: '[BFF] Missing username or password.' }));
 
 			const hashedPassword = await bcrypt.hash(password, 10);
 
 			const accountResponse = createAccount(username, hashedPassword);
 			if (!accountResponse)
-				return (reply.code(409).send({ message: 'Username taken' }));
+				return (reply.code(409).send({ message: '[BFF] Username taken' }));
 
 			const newAccount = await accountResponse as { userID: number };
 			newAccountId = newAccount.userID;
@@ -75,23 +73,22 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 			const profileResponse = createUserProfile(newAccountId, username);
 			switch ((await profileResponse).errorCode) {
 				case 'success':
-					return reply.code(201).send({ message: 'Account and profile created successfully!' });
+					return reply.code(201).send({ message: '[BFF] Account and profile created successfully!' });
 				case 'conflict':
-					throw new Error('Profile already existed for a newly created account.');
+					throw new Error('[BFF] Profile already existed for a newly created account.');
 				case 'user_not_found':
-					throw new Error(`User service could not find newly created userID: ${newAccountId}`);
+					throw new Error(`[BFF] User service could not find newly created userID: ${newAccountId}`);
 			}
 
 		} catch (error) {
 			serv.log.error(`[BFF] Error during registration: ${error}`);
-			//TODO: add helper function to delete account if user failed
 			if (newAccountId) {
-				serv.log.warn(`Rolling back account creation for userID: ${newAccountId}`);
-				await fetch(`https://account:1414/internal/account/${newAccountId}`, {
-					method: 'DELETE'
-				});
+				serv.log.warn(`[BFF] Rolling back account creation for userID: ${newAccountId}`);
+				const response = deleteAccount(newAccountId);
+				if (!response)
+					return (reply.code(404).send({ message: '[BFF] User not created and matching account not deleted' }));
 			}
-			return (reply.code(503).send({ message: 'A backend service failed during registration.' }));
+			throw (error);
 		}
 	});
 
@@ -103,30 +100,33 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 
 			const validationResponse = await validateCredentials(username, password);
 
-			if (!validationResponse.ok)
-				return reply.code(validationResponse.status).send({ message: 'Invalid credentials.' });
+			if (!validationResponse)
+				return (reply.code(401).send({ message: '[BFF] Invalid credentials.' }));
 
 			const deletionResults = await Promise.allSettled([
-				fetch(`http://friends:1616/internal/friends/${userID}/friendships`, { method: 'DELETE' }),
-				fetch(`http://users:2626/internal/users/${userID}`, { method: 'DELETE' }),
-				fetch(`http://account:1414/internal/account/${userID}`, { method: 'DELETE' })
+				deleteFriendship(userID),
+				deleteUser(userID),
+				deleteAccount(userID)
 			]);
-			const failures = deletionResults.filter(response => response.status === 'rejected' || (response.status === 'fulfilled' && !response.value.ok));
-
+			const failures = deletionResults.filter(response => {
+				if (response.status === 'rejected')
+					return (true);
+				return (!response.value || !response.value.ok);
+			});
 			if (failures.length > 0) {
 				serv.log.error({
-					msg: `[CRITICAL] Partial deletion for userID: ${userID}.`,
+					msg: `[CRITICAL][BFF] Partial deletion for userID: ${userID}.`,
 					failures: failures
 				});
 				return reply.code(500).send({
-					message: 'Failed to completely delete account. Please contact support.'
+					message: '[BFF] Failed to completely delete account. Please contact support.'
 				});
 			}
-			return (reply.code(204).send());
+			return (reply.code(204).send('[BFF] Account deleted !'));
 
 		} catch (error) {
 			serv.log.error(`[BFF] Error during account deletion: ${error}`);
-			return reply.code(503).send({ message: 'A backend service is unavailable.' });
+			throw (error);
 		}
 	});
 }
