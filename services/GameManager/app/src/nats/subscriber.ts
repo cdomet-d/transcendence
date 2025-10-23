@@ -1,19 +1,13 @@
 import 'dotenv/config';
-import { connect, StringCodec } from 'nats';
+import { StringCodec } from 'nats';
 import { wsSend } from '../lobby/wsHandler.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
 import { wsClientsMap } from '../lobby/wsHandler.js';
-
-// TODO: move to manager.js with others
-export interface gameRequest {
-	event: string,
-	userID: number,
-	gameID: number
-}
+import { natsConnect } from './publisher.js';
+import type { gameRequest } from '../manager.js';
 
 export async function natsSubscribe() {
-	let token = process.env.NATS_SERVER_TOKEN;
-	const nc = await connect({ servers: "nats://nats-server:4222", token: token ?? "" });
+	const nc = await natsConnect();
 
 	const pregame = nc.subscribe('game.reply'); // where PONG answers "game.request"
 	(async () => {
@@ -22,10 +16,6 @@ export async function natsSubscribe() {
 			const payload = JSON.parse(sc.decode(msg.data));
 			const game = payload.game;
 			// console.log(`GM received in "game.reply" : `, payload);
-
-			// signal BOTH client via WS their game is ready
-			// parse payload.users and find their IDs
-			// parse clientMap to get their socket
 
 			for (let i = 0; i < game.users.length; i++) {
 				const userID = game.users[i].userID;

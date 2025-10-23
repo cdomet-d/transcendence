@@ -1,17 +1,20 @@
 import { createTournament } from "./tournament/tournamentCreation.js";
 import { startTournament } from "./tournament/tournamentStart.js";
+import type { lobbyInfo } from './lobby/lobby.js'
+
 
 interface userInfo {
 	userID?: number,
 	username?: string
 }
 
-interface lobbyInfo {
-	users: userInfo[],
-	remote: boolean,
-	format: "quick" | "tournament"
-	// gameSettings: gameSettingsObj
-}
+// interface lobbyInfo {
+// 	remote: boolean,
+// 	format: "quick" | "tournament",
+// 	users: userInfo[],
+// 	players: number
+// 	// gameSettings: gameSettingsObj
+// }
 
 interface game {
 	gameID: number,
@@ -29,18 +32,13 @@ interface tournament {
 	bracket: game[]
 }
 
-export type { userInfo, lobbyInfo, game, tournament };
+interface gameRequest {
+	event: string,
+	userID: number,
+	gameID: number
+}
 
-// function receiveLobbyInfo(): lobbyInfo {
-//     const userArray: userInfo[] = [
-//             { userID: 1, username: "sam" },
-//             { userID: 2, username: "alex" },
-//             { userID: 3, username: "cha" },
-//             { userID: 4, username: "coco" }
-//         ];
-//     const lobbyInfo: lobbyInfo = { users: userArray, remote: true, format: "tournament" };
-//     return lobbyInfo;
-// }
+export type { userInfo, game, tournament, gameRequest }
 
 export function processGameRequest(lobbyInfo: lobbyInfo) {
 	// Filter request

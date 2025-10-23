@@ -1,7 +1,7 @@
-import type { FastifyRequest } from 'fastify';
-import type { WebSocket } from '@fastify/websocket';
 import { processGameRequest } from '../manager.js';
 import { addUserToLobby, createLobby, printPlayersInLobby } from './lobby.js';
+import type { FastifyRequest } from 'fastify';
+import type { WebSocket } from '@fastify/websocket';
 
 export const wsClientsMap: Map<number, WebSocket> = new Map();
 
@@ -16,7 +16,7 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 			console.log("Error: Message received by GM is empty or corrupted!")
 		}
 
-		// FILTER BY EVENT
+		// RECEIVE EVENT
 		const event = data.event;
 		if (!event || event && (event !== "TOURNAMENT_REQUEST" && event !== "GAME_REQUEST" && event !== "LOBBY_REQUEST")) {
 			console.log("Error: Wrong or empty request received in GM!");
@@ -24,12 +24,13 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 		}
 
 		// PAYLOAD MAY BE lobbyInfo OR lobbyForm
-		const payload/* : lobbyInfo  */ = data.payload;
+		const payload = data.payload;
 		if (!payload) {
 			console.log("Error: payload received by GM is empty!");
 			return;
 		}
 
+		// PROCESS EVENT
 		if (event === "TOURNAMENT_REQUEST") {
 			processGameRequest(payload);
 		} else if (event === "GAME_REQUEST") {

@@ -5,10 +5,10 @@ interface userInfo {
 	userSocket?: WebSocket
 }
 
-interface lobbyInfo {
-	lobbyID: number,
-	whitelist: whitelist,
-	available: boolean,
+export interface lobbyInfo {
+	lobbyID?: number,
+	whitelist?: whitelist,
+	joinable?: boolean,
 	userList: userInfo[],
 	remote: boolean,
 	format: "quick" | "tournament",
@@ -22,7 +22,7 @@ interface whitelist {
 	userIDs: number[]
 }
 
-export const lobbyMap: Map<number, lobbyInfo> = new Map();
+export const lobbyMap: Map<number | undefined, lobbyInfo> = new Map(); // '| undefined' needed here
 
 /*
 FRONT:
@@ -50,7 +50,6 @@ export function addUserToLobby(uid: number, lobbyID: number) {
 
 
 function makeLobbyInfo(hostID: number): lobbyInfo {
-
 	const lobbyID: number = getUniqueLobbyID();
 
 	const lobby: lobbyInfo = {
@@ -60,7 +59,7 @@ function makeLobbyInfo(hostID: number): lobbyInfo {
 			hostID: hostID,
 			userIDs: [hostID] // put invitees here
 		},
-		available: true,
+		joinable: true,
 		userList: [
 			{ userID: hostID } // and add them there when they join
 		],
@@ -90,16 +89,3 @@ export function printPlayersInLobby(lobbyID: number) {
 		console.log(`User #${user.userID} is in Lobby #1`);
 	});
 }
-
-
-// JOIN LOBBY
-/*
-On connect >>> check if userID is in whitelist
-
-if not
-	Error message
-else
-	add user to userList
-	show them in lobby room
-	signal all others that new user has joined
-*/
