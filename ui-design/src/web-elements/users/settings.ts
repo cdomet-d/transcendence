@@ -14,7 +14,7 @@ export class UserSettingsForm extends HTMLFormElement {
     #languages: DropdownMenu;
     #avatar: Avatar;
 
-	#submitHandler: (ev: SubmitEvent) => void;
+    #submitHandler: (ev: SubmitEvent) => void;
 
     constructor() {
         super();
@@ -23,8 +23,8 @@ export class UserSettingsForm extends HTMLFormElement {
         this.#avatar = createAvatar(this.#user.avatar);
         this.#colors = createDropdown(defaults.userColorsMenu, 'Pick color', 'dynamic');
         this.#languages = createDropdown(defaults.languageMenu, 'Pick language', 'static');
-		this.#submitHandler = this.submitHandler.bind(this);
-	}
+        this.#submitHandler = this.submitHandler.bind(this);
+    }
 
     set setUsername(details: types.UserData) {
         this.#user = details;
@@ -34,26 +34,26 @@ export class UserSettingsForm extends HTMLFormElement {
         this.#formData = details;
     }
 
-	submitHandler(ev: SubmitEvent) {
-            ev.preventDefault();
-            const f = new FormData(this);
-            const colSelection = this.#colors.selectedElement;
-            if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
-                f.append('color', 'bg-' + colSelection.id);
-            const langSelection = this.#languages.selectedElement;
-            if (langSelection && langSelection.id !== this.#user.language)
-                f.append('language', langSelection.id);
-            console.log(f);
-	}
+    submitHandler(ev: SubmitEvent) {
+        ev.preventDefault();
+        const f = new FormData(this);
+        const colSelection = this.#colors.selectedElement;
+        if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
+            f.append('color', 'bg-' + colSelection.id);
+        const langSelection = this.#languages.selectedElement;
+        if (langSelection && langSelection.id !== this.#user.language)
+            f.append('language', langSelection.id);
+        console.log(f);
+    }
 
     connectedCallback() {
         this.addEventListener('submit', (ev) => this.#submitHandler(ev));
         this.render();
     }
 
-	disconnectedCallback() {
+    disconnectedCallback() {
         this.removeEventListener('submit', (ev) => this.#submitHandler(ev));
-	}
+    }
 
     renderDropdowns() {
         const dropdownWrapper = document.createElement('div');

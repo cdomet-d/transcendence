@@ -40,7 +40,7 @@ export const userDefault: types.UserData = {
     id: '256',
     relation: 'stranger',
     profileColor: 'bg-4F9FFF',
-	language: 'English',
+    language: 'English',
     status: true,
     username: 'CrimeGoose',
     winstreak: '7',

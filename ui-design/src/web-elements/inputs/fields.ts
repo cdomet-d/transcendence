@@ -133,6 +133,7 @@ export class InputGroup extends HTMLDivElement {
         this.#inputFeedback.append(list);
     }
 
+    //TODO: add disconnected callback
     connectedCallback() {
         this.addEventListener('validation', this.#validationCallback);
         this.#input.addEventListener('blur', () => {

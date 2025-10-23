@@ -361,17 +361,17 @@
 	textarea:focus-visible {
 		outline: none;
 		border: none;
-		background: linear-gradient(180deg,
-				#ffe8b3 0 10%,
-				#ffecb8 0 20%,
-				#fff1bd 0 30%,
-				#fff5c3 0 40%,
-				#fff9c8 0 50%,
-				#fff9c8 0 60%,
-				#fff5c3 0 70%,
-				#fff1bd 0 80%,
-				#ffecb8 0 90%,
-				#ffe8b3 0 100%);
+	background: linear-gradient(180deg,
+			#FFB732 0 10%,
+			#FFD88F 0 20%,
+			#FFDFA2 0 30%,
+			#FFE5B4 0 40%,
+			#FFECC6 0 50%,
+			#FFECC6 0 60%,
+			#FFE5B4 0 70%,
+			#FFDFA2 0 80%,
+			#FFD88F 0 90%,
+			#FFB732 0 100%);
 
 	}
 
