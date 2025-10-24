@@ -1,8 +1,7 @@
 import { renderGame } from "./game.render.utils.js";
 import { Game, HEIGHT, WIDTH } from "./game.class.js";
 import { updatePaddlePos } from "./paddle.js";
-import type { repObj, startObj } from "./mess.validation.js";
-import { syncClocks } from "./syncClocks.js";
+import type { repObj } from "./mess.validation.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 const MAX_SCORE: number = 5;
@@ -37,7 +36,7 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
 		renderGame(game);
 		if (latestReply !== undefined)
-			if (await handleScore(ws, game, latestReply))
+			if (await handleScore(game, latestReply))
 				return;
 
 		//request to server
@@ -99,7 +98,7 @@ function reconciliation(game: Game, latestReply: repObj) {
 	}
 }
 
-async function handleScore(ws: WebSocket , game: Game, latestReply: repObj): Promise< boolean > {
+async function handleScore(game: Game, latestReply: repObj): Promise< boolean > {
 	if (latestReply._score[0] != game.score[0] || latestReply._score[1] != game.score[1]) {
 		//TODO update score css
 
@@ -109,25 +108,7 @@ async function handleScore(ws: WebSocket , game: Game, latestReply: repObj): Pro
 		// console.log("SCORES:", JSON.stringify(game.score));
 		if (game.score[0] === MAX_SCORE || game.score[1] === MAX_SCORE)
 			return true;
-
-		// update offset
-		ws.addEventListener('message', (event) => {
-			const signal: number = JSON.parse(event.data);
-			// console.log("SIGNAL:", signal, "TYPE", typeof(signal));
-			if (signal === 1)
-				updateOffset(ws, game);
-		}, { once: true });
-		//TODO: wait delay ?
 		return false;
 	}
 	return false;
-}
-
-async function updateOffset(ws: WebSocket, game: Game) {
-	const result: [number, number, startObj] | null = await syncClocks(ws);
-	if (!result) return false; //TODO: handle error
-
-	const [offset, halfTripTime, start] = result;
-	game.clockOffset = offset;
-	game.ball.dx *= start.ballDir;
 }

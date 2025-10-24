@@ -3,6 +3,7 @@ import { updateBallPos, touchesLeftPad, touchesRightPad } from './ball.js';
 import { updatePaddlePos } from './paddle.js';
 import { coordinates, Player } from "../classes/player.class.js";
 import { syncClocks } from "./syncClocks.js";
+import { setUpGame } from "./pong.js";
 
 const SERVER_TICK: number = 1000 / 20; // 20UPS
 const TIME_STEP: number = 1000 / 60; // 60FPS
@@ -35,17 +36,8 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 	const rv: number = moveBall(game, tickStart, simulatedTime, SERVER_TICK);
 	if (rv === -1)
 		return;
-	sendToPlayers(game, player1, player2);
 
-	if (rv === -2) {
-		try {
-			await syncClocks(player1, 1);
-			if (!game.local)
-				await syncClocks(player2, 2);
-		} catch (err) {
-			return; //TODO: handle error
-		}
-	}
+	sendToPlayers(game, player1, player2);
 
 	// clean
 	game.reqHistory = futureReqs;
@@ -59,11 +51,8 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 function moveBall(game: Game, tickStart: number, simulatedTime: number, end: number): number {
 	while(simulatedTime + TIME_STEP <= end) {
 		game.addSnapshot(tickStart + simulatedTime);
-		const status: number = updateBallPos(game.ball, game.players[0]!, game.players[1]!);
-		if (status !== 0) {
-			endGame(game.players[0]!, game.players[1]!, game);
-			return status * -1;
-		}
+		if (updateBallPos(game.ball, game.players[0]!, game.players[1]!))
+			return -1;
 		simulatedTime += TIME_STEP;
 	}
 	return simulatedTime
@@ -83,7 +72,7 @@ function rewind(game: Game, playerReq: playerReq, paddle: coordinates) {
 	const collision: Function = playerReq._id === 1 ? touchesLeftPad : touchesRightPad;
 	if (collision(paddle, ball.x, ball.y)) {
 		game.ball.dx *= -1;
-		game.ball.x = paddle.x + x; //need to handle y
+		game.ball.x = paddle.x + x; //TODO: need to handle y
 		return;
 	}
 }
