@@ -8,7 +8,7 @@ export function updateBallPos(game: Game, player1: Player, player2: Player): boo
 	let newX: number = game.ball.x + (game.ball.dx * TIME_STEP);
 	let newY: number = game.ball.y + (game.ball.dy * TIME_STEP);
 
-	if (newX - 10 >= WIDTH || newX + 10 <= 0) {
+	if (newX - 10 >= WIDTH + 150 || newX + 10 <= -150) {
 		if (updateScore(player1, player2, newX))
 			return true;
 		game.ball.x = WIDTH / 2;
@@ -19,7 +19,7 @@ export function updateBallPos(game: Game, player1: Player, player2: Player): boo
 			game.ball.dx = 0.3 * game.ballDir;
 			game.ball.dy = 0.025;
 			game.ballDir *= -1;
-		}, 1000);
+		}, 500);
 		return false;
 	}
 
