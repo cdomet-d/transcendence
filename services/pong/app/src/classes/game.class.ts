@@ -24,7 +24,6 @@ export interface ballObj {
 	y: number,
 	dx: number,
 	dy: number,
-	lastdx: number
 }
 
 export interface playerReq {
@@ -46,8 +45,9 @@ type snapshotTab = Array< snapshotObj >;
 export class Game {
 	/*                             PROPERTIES                                */
 	#_gameInfo: gameInfo;
-	#_players: playerTab;
+	#_players: playerTab; //TODO: replace tab with 2 player objects ?
 	#_ball: ballObj;
+	#_ballDir: number;
 	#_paddleSpeed: number;
 	#_reqHistory: reqTab;
 	#_snapshotHistory: snapshotTab;
@@ -57,7 +57,8 @@ export class Game {
 	constructor(gameInfo: gameInfo) {
 		this.#_gameInfo = gameInfo;
 		this.#_players = new Array();
-		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3};
+		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025};
+		this.#_ballDir = -1;
 		this.#_paddleSpeed = 0.15;
 		this.#_reqHistory = new Array();
 		this.#_snapshotHistory = new Array();
@@ -101,6 +102,10 @@ export class Game {
 		return this.#_lastTick;
 	}
 
+	get ballDir(): number {
+		return this.#_ballDir;
+	}
+
 	/*                              SETTERS                                  */
 	set score(score: Array< number >) {
 		this.#_gameInfo._score = score;
@@ -120,6 +125,10 @@ export class Game {
 
 	set lastTick(time: number) {
 		this.#_lastTick = time;
+	}
+
+	set ballDir(direction: number) {
+		this.#_ballDir = direction;
 	}
 
 	/*                              METHODS                                  */
