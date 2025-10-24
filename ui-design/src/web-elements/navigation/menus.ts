@@ -230,7 +230,7 @@ export class DropdownMenu extends HTMLDivElement {
 
     /**
      * Getter for the menu's current selected element.
-	 * @return `HTMLLiElement` if a selection was made, otherwise `null`.
+     * @return `HTMLLiElement` if a selection was made, otherwise `null`.
      */
     get selectedElement(): HTMLLIElement | null {
         for (let i = 0; i < this.#listboxOptions.length; i++) {
@@ -296,7 +296,7 @@ export class DropdownMenu extends HTMLDivElement {
         li.ariaSelected = 'false';
     }
 
-	/** Reveals the listbox popup and sets the focus back on either the first element or the current selection */
+    /** Reveals the listbox popup and sets the focus back on either the first element or the current selection */
     #expandOptions(isKeyboard: boolean) {
         this.#listbox.classList.remove('hidden');
         this.#toggle.ariaExpanded = 'true';
@@ -305,8 +305,8 @@ export class DropdownMenu extends HTMLDivElement {
         else if (this.#currentFocus !== -1) this.#listboxOptions[this.#currentFocus].focus();
     }
 
-	//TODO: make the toggle focus only on keyboard navigation.
-	/** Hides the listbox popup and sets the focus back on toggle */
+    //TODO: make the toggle focus only on keyboard navigation.
+    /** Hides the listbox popup and sets the focus back on toggle */
     #collapseOptions() {
         if (this.#listbox.classList.contains('hidden')) return;
         else {

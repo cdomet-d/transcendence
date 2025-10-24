@@ -2,50 +2,44 @@ import type { inlineMatchResult } from '../../types-interfaces';
 
 export class InlineMatch extends HTMLDivElement {
     #data: inlineMatchResult;
-	#header: boolean;
+    #header: boolean;
 
     constructor() {
         super();
-		this.#header = false;
-        this.#data = {
-            date: 'f',
-            opponent: 'f',
-            outcome: 'f',
-            score: 'f',
-            duration: 'f',
-        };
-
+        this.#header = false;
+        this.#data = { date: '', opponent: '', outcome: '', score: '', duration: '' };
     }
 
     set match(matchOutcome: inlineMatchResult) {
         this.#data = matchOutcome;
     }
 
-	set header(isHeader: boolean) {
-		this.#header = isHeader;
-	}
+    set header(isHeader: boolean) {
+        this.#header = isHeader;
+    }
 
     createSpans() {
         for (const key in this.#data) {
             const span = document.createElement('span');
-            span.textContent = this.#data[key as keyof inlineMatchResult]
+            this.append(span);
             span.id = key;
-			this.append(span);
-			if (this.#header) {
-				span.classList.add('f-bold', 'f-orange')
-			}
+            if (this.#header) {
+                span.classList.add('f-bold', 'f-orange');
+                span.textContent = key;
+            } else span.textContent = this.#data[key as keyof inlineMatchResult];
         }
     }
     connectedCallback() {
-		this.createSpans();
-		this.render();
-	}
+        this.createSpans();
+        this.render();
+    }
 
     render() {
-		this.className = 'border-box w-full grid grid-flow-col place-content-evenly justify-items-center'
-	}
+        this.className =
+            'border-box w-full grid grid-flow-col place-content-evenly justify-items-center';
+    }
 }
 
 if (!customElements.get('inline-match')) {
-	customElements.define('inline-match', InlineMatch, { extends: 'div' });
+    customElements.define('inline-match', InlineMatch, { extends: 'div' });
 }

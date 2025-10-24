@@ -1,6 +1,8 @@
 import { InputGroup, TextAreaGroup } from './fields';
 import { type InputFieldsData } from '../../types-interfaces';
 import { Checkbox, RadioButton } from './buttons';
+import { UserSettingsForm } from '../users/settings';
+import * as types from '../../types-interfaces';
 
 /**
  * Creates a custom input group container.
@@ -54,5 +56,15 @@ export function singleInputForm(): HTMLFormElement {
     const el = document.createElement('form');
 
     el.className = 'items-center box-border grid sidebar-right search-gap w-full relative';
+    return el;
+}
+
+export function createUserSettingsForm(
+    user: types.UserData,
+    form: types.formDetails,
+): UserSettingsForm {
+    const el = document.createElement('form', { is: 'settings-form' }) as UserSettingsForm;
+    el.user = user;
+    el.details = form;
     return el;
 }

@@ -182,14 +182,15 @@ export interface formDetails {
     ariaLabel: string;
     button: buttonData;
     fields: InputFieldsData[];
+    heading: string;
     id: string;
     method: string;
 }
 
 export interface inlineMatchResult {
-	date: string;
-	opponent: string;
-	outcome: string;
-	score: string;
-	duration: string
+    date: string;
+    opponent: string;
+    outcome: string;
+    score: string;
+    duration: string;
 }

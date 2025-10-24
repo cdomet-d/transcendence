@@ -4,8 +4,6 @@ import * as formBtns from './web-elements/inputs/helpers.js';
 import * as nav from './web-elements/navigation/helpers.js';
 import * as user from './web-elements/users/helpers.js';
 import * as defaults from './default-values.js';
-import { UserSettingsForm } from './web-elements/users/settings.js';
-import { InlineMatch } from './web-elements/stats/matches.js';
 
 window.addEventListener('error', (e) => {
     console.error('Global error:', e.error);
@@ -22,7 +20,7 @@ wrapper.classList.add(
     'grid',
     'gap-6',
     `w-[${innerW}]`,
-    'pad-sm'
+    'pad-sm',
 );
 
 // function testSearchbar() {
@@ -53,33 +51,29 @@ wrapper.classList.add(
 // }
 
 try {
+    wrapper.append(inputs.createUserSettingsForm(defaults.user, defaults.userSettingsForm));
+    wrapper.append(user.createUserCardSocial(defaults.user));
+    wrapper.append(user.createUserInline(defaults.user));
+    wrapper.append(user.createUserProfile(defaults.user));
+    wrapper.appendChild(formBtns.createCheckbox('check', 'test'));
+    wrapper.appendChild(formBtns.createRadioButton('radio', 'test'));
+    wrapper.appendChild(inputs.createInputGroup(defaults.pwData));
+    wrapper.appendChild(inputs.createInputGroup(defaults.slider));
+    wrapper.appendChild(inputs.createInputGroup(defaults.textData));
+    wrapper.appendChild(inputs.createInputGroup(defaults.uploadData));
+    wrapper.appendChild(inputs.createTextAreaGroup(defaults.textArea));
+    wrapper.appendChild(nav.createDropdown(defaults.languageMenu, 'Pick language', 'static'));
+    wrapper.appendChild(nav.createDropdown(defaults.userColorsMenu, 'Pick color', 'dynamic'));
+    wrapper.appendChild(nav.createMenu(defaults.gameMenu, 'vertical', 'l', true));
+    wrapper.appendChild(nav.createMenu(defaults.mainMenu, 'horizontal'));
+    wrapper.appendChild(nav.createMenu(defaults.mainMenu, 'vertical'));
+    wrapper.appendChild(nav.createSearchbar());
+    wrapper.appendChild(nav.createTabs(defaults.tabs));
+    wrapper.appendChild(typography.createAvatar(defaults.iMeta));
     wrapper.appendChild(typography.createHeading('1', 'Heading 1'));
     wrapper.appendChild(typography.createHeading('2', 'Heading 2'));
     wrapper.appendChild(typography.createHeading('3', 'Heading 3'));
-    wrapper.appendChild(inputs.createInputGroup(defaults.uploadData));
-    wrapper.appendChild(inputs.createInputGroup(defaults.textData));
-    wrapper.appendChild(inputs.createInputGroup(defaults.pwData));
-    wrapper.appendChild(inputs.createInputGroup(defaults.slider));
-    wrapper.appendChild(inputs.createTextAreaGroup(defaults.textArea));
-    wrapper.appendChild(formBtns.createRadioButton('radio', 'test'));
-    wrapper.appendChild(formBtns.createCheckbox('check', 'test'));
-    wrapper.appendChild(nav.createTabs(defaults.tabs));
-    wrapper.appendChild(typography.createAvatar(defaults.iMeta));
-    wrapper.appendChild(nav.createMenu(defaults.mainMenu, 'horizontal'));
-    wrapper.appendChild(nav.createMenu(defaults.mainMenu, 'vertical'));
-    wrapper.appendChild(nav.createMenu(defaults.gameMenu, 'vertical', 'l', true));
-    wrapper.appendChild(nav.createSearchbar());
     wrapper.appendChild(user.createNotificationBox());
-    wrapper.appendChild(nav.createDropdown(defaults.languageMenu, 'Pick language', 'static'));
-    wrapper.appendChild(nav.createDropdown(defaults.userColorsMenu, 'Pick color', 'dynamic'));
-    wrapper.append(document.createElement('form', { is: 'settings-form' }) as UserSettingsForm);
-    wrapper.append(user.createUserProfile(defaults.userDefault));
-    wrapper.append(user.createUserCardSocial(defaults.userDefault));
-    wrapper.append(user.createUserInline(defaults.userDefault));
-
-    const el = document.createElement('div', { is: 'inline-match' }) as InlineMatch;
-    wrapper.append(el);
-	el.header = true;
 } catch (error) {
     console.log('[ERROR]', error);
 }

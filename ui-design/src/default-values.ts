@@ -29,7 +29,7 @@ export const socialMenu: Array<types.buttonData> = [
     },
 ];
 
-export const userDefault: types.UserData = {
+export const user: types.UserData = {
     avatar: {
         alt: 'pp',
         id: 'user-avatar',
@@ -47,14 +47,7 @@ export const userDefault: types.UserData = {
     since: '145',
 };
 
-export const users: Array<types.UserData> = [
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-    userDefault,
-];
+export const users: Array<types.UserData> = [user, user, user, user, user, user];
 
 export const mainMenu: Array<types.buttonData> = [
     { content: 'Leaderboard', type: 'button', img: null, ariaLabel: 'Leaderboard Menu Button' },
@@ -185,6 +178,7 @@ export const slider: types.InputFieldsData = {
 //TODO: HTML froms don't support patch; must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
 export const userSettingsForm: types.formDetails = {
     action: '/account/settings/CrimeGoose',
+    heading: 'Settings',
     ariaLabel: 'User settings',
     id: 'user-settings',
     method: 'post',
@@ -219,4 +213,22 @@ export const userSettingsForm: types.formDetails = {
         },
     ],
     button: { type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+};
+
+export const emptyForm: types.formDetails = {
+    action: '',
+    ariaLabel: '',
+    button: { type: 'button', content: '', img: null, ariaLabel: '' },
+    fields: [],
+    heading: '',
+    id: '',
+    method: '',
+};
+
+export const defaultMatchOut: types.inlineMatchResult = {
+    date: '24.10.2025',
+    opponent: 'DumbCamel',
+    outcome: 'Win',
+    score: '5-3',
+    duration: "2'53",
 };

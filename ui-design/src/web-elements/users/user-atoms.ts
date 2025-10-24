@@ -34,7 +34,7 @@ export class Username extends HTMLDivElement {
 
     set name(val: string) {
         this.#link.innerText = val;
-		//TODO: HUUUUM...
+        //TODO: HUUUUM...
         this.#link.href = `/users/${val}`;
         this.render();
     }

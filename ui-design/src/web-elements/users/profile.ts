@@ -33,8 +33,6 @@ export class UserProfile extends HTMLDivElement {
         this.#joinedSince = document.createElement('span') as HTMLSpanElement;
         this.#username = document.createElement('div', { is: 'username-container' }) as Username;
         this.#winstreak = document.createElement('span', { is: 'winstreak-block' }) as Winstreak;
-        this.className =
-            'pad-s box-border items-center place-items-center justify-items-center';
         this.#color = 'bg-4F9FFF';
     }
 
@@ -63,8 +61,7 @@ export class UserProfile extends HTMLDivElement {
     }
 
     set profileAge(val: string) {
-        this.#joinedSince.textContent = `Joined ${val} days ago`
-;
+        this.#joinedSince.textContent = `Joined ${val} days ago`;
     }
 
     set username(name: string) {
@@ -107,47 +104,26 @@ export class UserProfile extends HTMLDivElement {
     }
 
     connectedCallback() {
+        this.className = 'pad-s box-border items-center place-items-center justify-items-center';
+        this.render();
+    }
+
+    render() {
         this.append(
             this.#avatar,
             this.#username,
             this.#joinedSince,
             this.#biography,
             this.#actionButtons,
-            this.#winstreak
+            this.#winstreak,
         );
-        this.render();
-    }
-
-    render() {
-		this.#username.customizeStyle('f-yellow', 'f-m', 'f-bold', true);
-		this.#joinedSince.classList.add('f-clear')
-		this.#biography.classList.add('row-span-2', 'f-clear')
-		this.#avatar.classList.add('row-span-3')
+        this.#username.customizeStyle('f-yellow', 'f-m', 'f-bold', true);
+        this.#joinedSince.classList.add('f-clear');
+        this.#biography.classList.add('row-span-2', 'f-clear');
+        this.#avatar.classList.add('row-span-3');
         this.classList.add(this.#color, 'grid', 'user-profile-header-grid', 'w-full');
     }
 }
-
-// <div class="profile-header">
-// 	<div class="avatar-wrapper-l two-rows">
-// 		<img src="../assets/icons/light-green-avatar.png" />
-// 	</div>
-// 	<div class="username"> %username% <div class="user-status"></div>
-// 	</div>
-// 	<span class="since"> Joined %d days ago </span>
-// 	<p class="biography two-rows">
-// 		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae aliquam mi. Aliquam
-// 		vulputate augue sed risus consectetur, quis auctor odio maximus. Nullam volutpat, justo eu suscipit
-// 		condimentum, risus metus ultrices quam, eu tempor erat tellus vitae mauris. Quisque sed odio sed
-// 		ipsum lacinia finibus non ac enim. Sed sagittis vel. Lorem ipsum dolor sit amet, consectetur
-// 		adipiscing elit. Aliquam vitae aliquam mi. Aliquam
-// 		vulputate augue sed risus consectetur, quis auctor odio maximus. Nullam volutpat, justo eu suscipit
-// 		condimentum, risus metus ultrices quam, eu tempor erat tellus vitae mauris. Quisque sed odio sed
-// 		ipsum lacinia finibus non ac enim. Sed sagittis vel. </p>
-// 	<span class="rank"> %NB%</span>
-// 	<div class="vertical-menu-wrapper">
-// 		<button class="thin-border button-bg" type="button"> Settings </button>
-// 	</div>
-// </div>
 
 if (!customElements.get('user-profile')) {
     customElements.define('user-profile', UserProfile, { extends: 'div' });
@@ -158,18 +134,12 @@ export class UserCardSocial extends UserProfile {
         super();
     }
 
-    override connectedCallback() {
+    override render() {
         this.append(super.getAvatar, super.getUsername, super.getActionMenu);
         super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
-        this.classList.add('grid', 'gap-s', 'min-h-fit');
-        this.render();
-    }
-
-    override render() {
-        this.classList.add(`${super.getColor}`);
+        this.classList.add('grid', 'gap-s', 'min-h-fit', `${super.getColor}`);
     }
 }
-
 if (!customElements.get('user-card-social')) {
     customElements.define('user-card-social', UserCardSocial, { extends: 'div' });
 }
@@ -184,7 +154,6 @@ if (!customElements.get('user-card-social')) {
  *
  * @remark You should use {@link createUserInline} which encapsulates creation logic.
  */
-
 export class UserInline extends UserProfile {
     #clickHandler: (ev: MouseEvent) => void;
     constructor() {
@@ -203,16 +172,8 @@ export class UserInline extends UserProfile {
         window.location.href = link.href;
     }
     override connectedCallback() {
+        this.className = 'pad-s box-border items-center place-items-center justify-items-center';
         this.addEventListener('click', this.#clickHandler);
-        this.append(super.getAvatar, super.getUsername, super.getWinstreak);
-        super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
-        this.classList.add(
-            'cursor-pointer',
-            'gap-m',
-            'flex',
-            'flex-initial',
-            `hover:${super.getColor}`
-        );
         this.render();
     }
 
@@ -220,7 +181,17 @@ export class UserInline extends UserProfile {
         this.removeEventListener('click', this.#clickHandler);
     }
 
-    override render() {}
+    override render() {
+        this.append(super.getAvatar, super.getUsername, super.getWinstreak);
+        super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
+        this.classList.add(
+            'cursor-pointer',
+            'gap-m',
+            'flex',
+            'flex-initial',
+            `hover:${super.getColor}`,
+        );
+    }
 }
 
 if (!customElements.get('user-inline')) {
