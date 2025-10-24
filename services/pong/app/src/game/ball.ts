@@ -62,13 +62,15 @@ export function paddleCollision(leftPad: coordinates, rightPad: coordinates, new
 
 export function touchesRightPad(rightPad: coordinates, newX: number, newY: number): boolean {
 	//TODO: fix 460
-	if (newX + 10 >= 460 && (newY + 10 >= rightPad.y && newY - 10 <= rightPad.y + 54))
+	if (newX + 10 >= 460 && newX - 10 <= 470 
+		&& newY + 10 >= rightPad.y && newY - 10 <= rightPad.y + 54)
 		return true;
 	return false
 }
 
 export function touchesLeftPad(leftPad: coordinates, newX: number, newY: number): boolean {
-	if (newX - 10 <= leftPad.x + 10 && (newY + 10 >= leftPad.y && newY - 10 <= leftPad.y + 54))
+	if (newX - 10 <= leftPad.x + 10 && newX + 10 >= leftPad.x 
+		&& newY + 10 >= leftPad.y && newY - 10 <= leftPad.y + 54)
 		return true;
 	return false;
-}
+} 
