@@ -99,6 +99,7 @@ export type GameType = '1 vs 1' | 'tournament';
  * @property step - Optional, step size for increment/decrement.
  */
 export interface InputFieldsData {
+    required: boolean;
     id: string;
     labelContent: string;
     max?: string;
@@ -117,7 +118,7 @@ export interface InputFieldsData {
  * @property alt - Alt text for accessibility.
  * @property size - Predefined image size variant.
  */
-export interface ImgMetadata {
+export interface ImgData {
     src: string;
     id: string;
     alt: string;
@@ -135,7 +136,7 @@ export interface ImgMetadata {
 export interface buttonData {
     type: BtnType;
     content: string | null;
-    img: ImgMetadata | null;
+    img: ImgData | null;
     ariaLabel: string;
     style?: BtnStyles;
 }
@@ -165,7 +166,7 @@ export interface TabData {
  * @property winstreak - Current consecutive wins count (stringified).
  */
 export interface UserData {
-    avatar: ImgMetadata;
+    avatar: ImgData;
     biography: string;
     id: string;
     language: string;

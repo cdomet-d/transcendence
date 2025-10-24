@@ -29,6 +29,7 @@
 	},
 	"dependencies": {
 		"@tailwindcss/postcss": "^4.1.13",
+		"madge": "^8.0.0",
 		"postcss-import": "^16.1.1"
 	}
 }

@@ -1,21 +1,23 @@
-import * as types from '../../types-interfaces';
-import * as defaults from '../../default-values';
-import { createInputGroup, createTextAreaGroup } from '../inputs/helpers';
 import type { InputGroup, TextAreaGroup } from '../inputs/fields';
-import { createBtn } from '../navigation/helpers';
+import type { formDetails } from '../../types-interfaces';
+
+import { emptyForm } from '../../default-values';
+import { createInputGroup, createTextAreaGroup } from '../inputs/helpers';
 import { createHeading } from '../typography/helpers';
+import { createBtn } from '../navigation/buttons-helpers';
+
 export class BaseForm extends HTMLFormElement {
-    #formData: types.formDetails;
+    #formData: formDetails;
     #submitHandler: (ev: SubmitEvent) => void;
 
     constructor() {
         super();
-        this.#formData = defaults.emptyForm;
+        this.#formData = emptyForm;
         this.#submitHandler = this.submitHandler.bind(this);
-        this.className = 'grid gap-s pad-s w-full justify-items-center';
+        this.className = 'grid gap-s pad-s w-full justify-items-center box-border';
     }
 
-    set details(form: types.formDetails) {
+    set details(form: formDetails) {
         this.#formData = form;
     }
 

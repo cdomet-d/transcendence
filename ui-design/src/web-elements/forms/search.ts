@@ -1,9 +1,9 @@
-import type { buttonData, InputFieldsData, UserData } from '../../types-interfaces';
+import { BaseForm } from './baseform';
 import { createInputGroup } from '../inputs/helpers';
-import { usernamePattern } from '../../default-values';
-import { createBtn } from './helpers';
-import { createUserInline } from '../users/helpers';
-import type { InputGroup } from '../inputs/fields';
+import { createUserInline } from '../users/profile-helpers';
+import { InputGroup } from '../inputs/fields';
+
+import type { UserData } from '../../types-interfaces';
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -13,69 +13,24 @@ import type { InputGroup } from '../inputs/fields';
  * It manages rendering of search results dynamically below the input.
  * Responsively adjusts results container position on window resize and scroll events.
  */
-export class Searchbar extends HTMLFormElement {
-    #inputData: InputFieldsData;
-    #btn: buttonData;
+export class Searchbar extends BaseForm {
+    #searchInput!: InputGroup;
     #results: HTMLDivElement;
-    #searchInput: HTMLDivElement;
 
     constructor() {
         super();
-
-        /**
-         * Input field metadata for search input.
-         * @type {InputFieldsData}
-         */
-        this.#inputData = {
-            labelContent: 'Search',
-            type: 'text',
-            id: 'search',
-            pattern: usernamePattern,
-            placeholder: 'Search a username...',
-        };
-
-        /**
-         * Button metadata for the search submit button.
-         * @type {buttonData}
-         */
-        this.#btn = {
-            type: 'submit',
-            content: 'Search',
-            img: null,
-            ariaLabel: 'Submit button for the search bar',
-        };
-
-        /**
-         * Container for the search input field group.
-         * @type {InputGroup}
-         */
-        this.#searchInput = createInputGroup(this.#inputData) as InputGroup;
-
-        /**
-         * Container div for showing search results.
-         * @type {HTMLDivElement}
-         */
         this.#results = document.createElement('div');
-
-        // Bind context to event handler method
         this.setResultPos = this.setResultPos.bind(this);
     }
 
-    /**
-     * Called when the element is inserted into the DOM.
-     * Triggers rendering and attaches window event listeners to update result position.
-     */
-    connectedCallback() {
-        this.render();
+    override connectedCallback() {
+        super.connectedCallback();
         window.addEventListener('resize', this.setResultPos);
         window.addEventListener('scroll', this.setResultPos);
     }
 
-    /**
-     * Called when the element is removed from the DOM.
-     * Detaches window event listeners to prevent memory leaks.
-     */
-    disconnectedCallback() {
+    override disconnectedCallback() {
+        super.disconnectedCallback();
         window.removeEventListener('resize', this.setResultPos);
         window.removeEventListener('scroll', this.setResultPos);
     }
@@ -138,25 +93,18 @@ export class Searchbar extends HTMLFormElement {
      * Renders the search bar structure including input, submit button, search icon, and results container.
      * Sets form attributes and class names appropriately.
      */
-    render() {
-        this.role = 'search';
-        this.id = 'searchbar';
-
+    override render() {
         const img = this.createSearchIcon() as HTMLImageElement;
-        const submit = createBtn(this.#btn) as HTMLButtonElement;
+        this.#searchInput = createInputGroup(super.details.fields[0]);
+
         this.#searchInput.appendChild(img);
         this.appendChild(this.#searchInput);
-        this.appendChild(submit);
+        super.renderButtons();
         this.appendChild(this.#results);
 
-        this.action = '/';
-        this.method = 'get';
-        submit.classList.remove('h-[90%]');
-        submit.classList.add('h-[36px]', 'mt-[24px]');
-        this.className = 'items-center box-border grid sidebar-right search-gap w-full relative';
+        this.classList.add('sidebar-right', 'search-gap', 'relative');
         this.#results.className =
-            'hidden absolute brdr bg min-h-fit max-h-[400px] pad-s overflow-y-auto box-border';
-
+            'hidden absolute brdr bg min-h-fit max-h-l pad-s overflow-y-auto box-border';
         this.setResultPos();
     }
 }

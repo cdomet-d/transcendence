@@ -1,5 +1,5 @@
 import type { buttonData, GameType } from '../../types-interfaces';
-import { createMenu } from '../navigation/helpers';
+import { createMenu } from '../navigation/menu-helpers';
 
 //TODO: Make notifications tab-focusable
 /**

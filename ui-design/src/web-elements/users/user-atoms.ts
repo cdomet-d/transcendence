@@ -1,4 +1,4 @@
-import type { FontWeight, FontSize, FontColor, ImgMetadata } from '../../types-interfaces';
+import type { FontWeight, FontSize, FontColor, ImgData } from '../../types-interfaces';
 import { createIcon } from '../typography/helpers';
 import type { Icon } from '../typography/images';
 
@@ -88,7 +88,7 @@ export class Winstreak extends HTMLSpanElement {
 
     constructor() {
         super();
-        const iconData: ImgMetadata = {
+        const iconData: ImgData = {
             src: '/assets/icons/winstreak.png',
             id: '',
             alt: 'A gold pixel trophy with the number 1 engraved in a darker color.',

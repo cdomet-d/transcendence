@@ -1,9 +1,12 @@
-import * as inputs from './web-elements/inputs/helpers.js';
+import * as inputs from './web-elements/inputs/helpers';
 import * as typography from './web-elements/typography/helpers.js';
 import * as formBtns from './web-elements/inputs/helpers.js';
-import * as nav from './web-elements/navigation/helpers.js';
-import * as user from './web-elements/users/helpers.js';
+import * as menu from './web-elements/navigation/menu-helpers';
+import * as tab from './web-elements/navigation/tabs-helpers';
+import * as user from './web-elements/users//profile-helpers';
 import * as defaults from './default-values.js';
+import * as forms from './web-elements/forms/helpers.js';
+import { createNotificationBox } from './web-elements/users/notifications-helpers';
 
 window.addEventListener('error', (e) => {
     console.error('Global error:', e.error);
@@ -24,7 +27,7 @@ wrapper.classList.add(
 );
 
 // function testSearchbar() {
-//     nav.getSearchbarAsync().then((bar) => {
+//     menu.getSearchbarAsync().then((bar) => {
 //         try {
 //             if (bar) bar.displayResults(defaults.users);
 //         } catch (error) {
@@ -51,7 +54,6 @@ wrapper.classList.add(
 // }
 
 try {
-    wrapper.append(inputs.createUserSettingsForm(defaults.user, defaults.userSettingsForm));
     wrapper.append(user.createUserCardSocial(defaults.user));
     wrapper.append(user.createUserInline(defaults.user));
     wrapper.append(user.createUserProfile(defaults.user));
@@ -62,18 +64,20 @@ try {
     wrapper.appendChild(inputs.createInputGroup(defaults.textData));
     wrapper.appendChild(inputs.createInputGroup(defaults.uploadData));
     wrapper.appendChild(inputs.createTextAreaGroup(defaults.textArea));
-    wrapper.appendChild(nav.createDropdown(defaults.languageMenu, 'Pick language', 'static'));
-    wrapper.appendChild(nav.createDropdown(defaults.userColorsMenu, 'Pick color', 'dynamic'));
-    wrapper.appendChild(nav.createMenu(defaults.gameMenu, 'vertical', 'l', true));
-    wrapper.appendChild(nav.createMenu(defaults.mainMenu, 'horizontal'));
-    wrapper.appendChild(nav.createMenu(defaults.mainMenu, 'vertical'));
-    wrapper.appendChild(nav.createSearchbar());
-    wrapper.appendChild(nav.createTabs(defaults.tabs));
+    wrapper.appendChild(menu.createDropdown(defaults.languageMenu, 'Pick language', 'static'));
+    wrapper.appendChild(menu.createDropdown(defaults.userColorsMenu, 'Pick color', 'dynamic'));
+    wrapper.appendChild(menu.createMenu(defaults.gameMenu, 'vertical', 'l', true));
+    wrapper.appendChild(menu.createMenu(defaults.mainMenu, 'horizontal'));
+    wrapper.appendChild(menu.createMenu(defaults.mainMenu, 'vertical'));
+    wrapper.appendChild(tab.createTabs(defaults.tabs));
     wrapper.appendChild(typography.createAvatar(defaults.iMeta));
     wrapper.appendChild(typography.createHeading('1', 'Heading 1'));
     wrapper.appendChild(typography.createHeading('2', 'Heading 2'));
     wrapper.appendChild(typography.createHeading('3', 'Heading 3'));
-    wrapper.appendChild(user.createNotificationBox());
+    wrapper.appendChild(createNotificationBox());
+    wrapper.append(forms.createUserSettingsForm(defaults.user, defaults.userSettingsForm));
+    wrapper.append(forms.createRegistrationForm(defaults.registrationForm));
+    wrapper.append(forms.createSearchbar(defaults.search));
 } catch (error) {
     console.log('[ERROR]', error);
 }

@@ -1,10 +1,10 @@
-import { createSocialMenu } from '../navigation/helpers';
-import type { SocialMenu } from '../navigation/menus';
-import type { Avatar } from '../typography/images';
-import { createUserInline } from './helpers';
-import type { Biography, Username, Winstreak } from './user-atoms';
+import { createSocialMenu } from '../navigation/menu-helpers';
 import * as defaults from '../../default-values';
 import * as types from '../../types-interfaces';
+
+import { Avatar } from '../typography/images';
+import { Biography, Username, Winstreak } from './user-atoms';
+import { SocialMenu } from '../navigation/menus';
 
 /**
  * A small user card with a dynamic social menu. It's just a div, styled to hold
@@ -44,7 +44,7 @@ export class UserProfile extends HTMLDivElement {
         this.#username.status = status;
     }
 
-    set avatar(profilePic: types.ImgMetadata) {
+    set avatar(profilePic: types.ImgData) {
         this.#avatar.metadata = profilePic;
     }
 

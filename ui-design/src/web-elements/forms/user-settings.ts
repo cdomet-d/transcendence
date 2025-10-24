@@ -1,26 +1,28 @@
-import { BaseForm } from '../inputs/forms';
-import { createAvatar, createHeading } from '../typography/helpers';
-import { createDropdown } from '../navigation/helpers';
-import * as defaults from '../../default-values';
-import * as types from '../../types-interfaces';
-import type { Avatar } from '../typography/images';
+import { BaseForm } from './baseform';
+import { createAvatar } from '../typography/helpers';
+import { createDropdown } from '../navigation/menu-helpers';
+import { user, userColorsMenu, languageMenu } from '../../default-values';
+import { createHeading } from '../typography/helpers';
+
 import type { DropdownMenu } from '../navigation/menus';
+import type { UserData } from '../../types-interfaces';
+import type { Avatar } from '../typography/images';
 
 export class UserSettingsForm extends BaseForm {
-    #user: types.UserData;
+    #user: UserData;
     #colors: DropdownMenu;
     #languages: DropdownMenu;
     #avatar: Avatar;
 
     constructor() {
         super();
-        this.#user = defaults.user;
+        this.#user = user;
         this.#avatar = createAvatar(this.#user.avatar);
-        this.#colors = createDropdown(defaults.userColorsMenu, 'Pick color', 'dynamic');
-        this.#languages = createDropdown(defaults.languageMenu, 'Pick language', 'static');
+        this.#colors = createDropdown(userColorsMenu, 'Pick color', 'dynamic');
+        this.#languages = createDropdown(languageMenu, 'Pick language', 'static');
     }
 
-    set user(details: types.UserData) {
+    set user(details: UserData) {
         this.#user = details;
     }
 

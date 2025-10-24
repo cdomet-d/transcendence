@@ -1,18 +1,18 @@
-import type { ImgMetadata } from '../../types-interfaces';
+import type { ImgData } from '../../types-interfaces';
 
 /**
  * Custom image element representing an icon.
  * Extends the native HTMLImageElement.
  */
 export class Icon extends HTMLImageElement {
-    #data: ImgMetadata;
+    #data: ImgData;
 
     constructor() {
         super();
         this.#data = { src: '', alt: '', size: 'ismall', id: '' };
     }
 
-    set metadata(data: ImgMetadata) {
+    set metadata(data: ImgData) {
         this.#data = data;
         this.render();
     }
@@ -44,7 +44,7 @@ if (!customElements.get('custom-icon')) {
  */
 export class Avatar extends HTMLDivElement {
     #img: Icon;
-    #data: ImgMetadata;
+    #data: ImgData;
 
     constructor() {
         super();
@@ -59,7 +59,7 @@ export class Avatar extends HTMLDivElement {
         this.appendChild(this.#img);
     }
 
-    set metadata(data: ImgMetadata) {
+    set metadata(data: ImgData) {
         this.#data = data;
         this.render();
     }

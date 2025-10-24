@@ -1,5 +1,8 @@
 import type { InputFieldsData } from '../../types-interfaces';
 
+//TODO: feedback on username
+//TODO: err message on required field empty
+
 /**
  * Custom input element.
  * Extends native HTMLInputElement.
@@ -11,6 +14,7 @@ export class CustomInput extends HTMLInputElement {
         this.#inputCallback = (event) => this.inputFeedback(event);
     }
 
+    //TODO: allow hide on ESC
     inputFeedback(event: Event) {
         if (this.getAttribute('type') === 'password') {
             const el = event.target as HTMLInputElement;
@@ -104,11 +108,12 @@ export class InputGroup extends HTMLDivElement {
     constructor() {
         super();
         this.#info = {
-            labelContent: 'Username',
-            id: 'username',
-            pattern: '^[a-zA-Z0-9]{3,10}$',
-            placeholder: 'Enter your username',
-            type: 'text',
+            labelContent: '',
+            id: '',
+            pattern: '',
+            placeholder: '',
+            type: '',
+            required: true,
         };
         this.#input = document.createElement('input', { is: 'custom-input' }) as CustomInput;
         this.#label = document.createElement('label', { is: 'input-label' }) as InputLabel;
@@ -149,10 +154,14 @@ export class InputGroup extends HTMLDivElement {
         this.appendChild(this.#label);
         this.appendChild(this.#input);
         this.appendChild(this.#inputFeedback);
+
+        if (this.#info.required) this.#input.setAttribute('required', '');
         this.className = 'w-full box-border relative min-w-[240px] mt-[24px]';
         this.#inputFeedback.className = 'brdr bg hidden';
         this.#label.for = this.#info.id;
-        this.#label.content = this.#info.labelContent;
+        this.#info.required
+            ? (this.#label.content = this.#info.labelContent + ' *')
+            : (this.#label.content = this.#info.labelContent);
         this.#input.id = this.#info.id;
         this.#input.name = this.#info.id;
         this.#input.placeholder = this.#info.placeholder;
@@ -195,11 +204,12 @@ export class TextAreaGroup extends HTMLDivElement {
     constructor() {
         super();
         this.#info = {
-            labelContent: 'Username',
-            id: 'username',
-            pattern: '^[a-zA-Z0-9]{3,10}$',
-            placeholder: 'Enter your username',
-            type: 'text',
+            labelContent: '',
+            id: '',
+            pattern: '',
+            placeholder: '',
+            type: '',
+            required: false,
         };
         this.#input = document.createElement('textarea') as HTMLTextAreaElement;
         this.#label = document.createElement('label', { is: 'input-label' }) as InputLabel;
@@ -239,14 +249,16 @@ export class TextAreaGroup extends HTMLDivElement {
         this.appendChild(this.#label);
         this.appendChild(this.#input);
         this.appendChild(this.#inputFeedback);
+
         this.#input.className = 'resize-y brdr w-full h-full bg pad-s';
         this.#input.id = this.#info.id;
-        this.#input.name = this.#info.id;
         this.#input.maxLength = 256;
+        this.#input.name = this.#info.id;
         this.#input.placeholder = this.#info.placeholder;
         this.#inputFeedback.className = 'brdr bg hidden';
         this.#label.content = this.#info.labelContent;
         this.#label.for = this.#info.id;
+        if (this.#info.required) this.#input.setAttribute('required', '');
         this.className = 'w-full box-border relative min-w-fit mt-[24px]';
     }
 }

@@ -1,6 +1,6 @@
 import * as types from './types-interfaces';
 
-export const biographyPattern: string = '^[A-Za-z0-9\\s,\\.\\?!:\\)\\(\\/;\\-_]{0,256}$';
+export const biographyPattern: string = '^[A-Za-z0-9\\s,\\.\\?!:\\)\\(\\/\\-_]{0,256}$';
 export const passwordPattern: string = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{12,64}$';
 export const usernamePattern: string = '^[A-Za-z0-9_\\-]{4,18}$';
 
@@ -119,7 +119,7 @@ export const languageMenu: Array<types.buttonData> = [
         type: 'button',
     },
 ];
-export const iMeta: types.ImgMetadata = {
+export const iMeta: types.ImgData = {
     alt: 'pp',
     id: 'user-avatar',
     size: 'imedium',
@@ -138,6 +138,7 @@ export const textData: types.InputFieldsData = {
     pattern: usernamePattern,
     placeholder: 'Enter your username!',
     type: 'text',
+    required: false,
 };
 
 export const textArea: types.InputFieldsData = {
@@ -146,6 +147,7 @@ export const textArea: types.InputFieldsData = {
     pattern: '',
     placeholder: 'Enter your biography',
     type: '',
+    required: false,
 };
 
 export const uploadData: types.InputFieldsData = {
@@ -154,6 +156,7 @@ export const uploadData: types.InputFieldsData = {
     pattern: '',
     placeholder: 'Choose a file from your computer...',
     type: 'file',
+    required: false,
 };
 
 export const pwData: types.InputFieldsData = {
@@ -162,6 +165,7 @@ export const pwData: types.InputFieldsData = {
     pattern: passwordPattern,
     placeholder: 'Enter your password!',
     type: 'password',
+    required: false,
 };
 
 export const slider: types.InputFieldsData = {
@@ -173,9 +177,10 @@ export const slider: types.InputFieldsData = {
     placeholder: '',
     step: '1',
     type: 'range',
+    required: false,
 };
 
-//TODO: HTML froms don't support patch; must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
+//TODO: HTML froms don't support patch must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
 export const userSettingsForm: types.formDetails = {
     action: '/account/settings/CrimeGoose',
     heading: 'Settings',
@@ -189,6 +194,7 @@ export const userSettingsForm: types.formDetails = {
             pattern: '',
             placeholder: 'Enter your biography',
             type: 'textarea',
+            required: false,
         },
         {
             id: 'upload',
@@ -196,6 +202,7 @@ export const userSettingsForm: types.formDetails = {
             pattern: '',
             placeholder: '',
             type: 'file',
+            required: false,
         },
         {
             id: 'username',
@@ -203,6 +210,7 @@ export const userSettingsForm: types.formDetails = {
             pattern: usernamePattern,
             placeholder: 'Enter your new username!',
             type: 'text',
+            required: false,
         },
         {
             id: 'password',
@@ -210,9 +218,56 @@ export const userSettingsForm: types.formDetails = {
             pattern: passwordPattern,
             placeholder: 'Enter your new password!',
             type: 'password',
+            required: false,
         },
     ],
     button: { type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+};
+
+export const registrationForm: types.formDetails = {
+    action: '/account',
+    heading: 'Register',
+    ariaLabel: 'Create an account',
+    id: 'account-create',
+    method: 'post',
+    fields: [
+        {
+            id: 'username',
+            labelContent: 'Username',
+            pattern: usernamePattern,
+            placeholder: 'Enter your username!',
+            type: 'text',
+            required: true,
+        },
+        {
+            id: 'password',
+            labelContent: 'Password',
+            pattern: passwordPattern,
+            placeholder: 'Enter your password!',
+            type: 'password',
+            required: false,
+        },
+    ],
+    button: { type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+};
+
+export const search: types.formDetails = {
+    action: '/search',
+    heading: '',
+    ariaLabel: 'Search for a user',
+    id: 'searchform',
+    method: 'get',
+    fields: [
+        {
+            id: 'searchbar',
+            labelContent: 'Searchbar',
+            pattern: '',
+            placeholder: 'Search...',
+            type: 'text',
+            required: false,
+        },
+    ],
+    button: { type: 'submit', content: 'Search', img: null, ariaLabel: '' },
 };
 
 export const emptyForm: types.formDetails = {
