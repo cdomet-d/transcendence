@@ -32,15 +32,16 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		// interpolation and dead reckoning
 		interpolation(game, latestReply);
 
-		//draw new frame
-		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
-		renderGame(game);
+		// score
 		if (latestReply !== undefined)
 			if (await handleScore(game, latestReply))
 				return;
 
-		//request to server
-		// TODO: check score
+		//draw new frame
+		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
+		renderGame(game);
+
+		// request to server
 		game.req._timeStamp = performance.now() + game.clockOffset;
 		ws.send(JSON.stringify(game.req));
 		game.addReq(game.req);
@@ -105,10 +106,11 @@ async function handleScore(game: Game, latestReply: repObj): Promise< boolean > 
 		// update score
 		game.score[0] = latestReply._score[0];
 		game.score[1] = latestReply._score[1];
-		// console.log("SCORES:", JSON.stringify(game.score));
+		game.ball = { ...latestReply._ball };
+		game.deleteReplies(game.replyHistory.length);
 		if (game.score[0] === MAX_SCORE || game.score[1] === MAX_SCORE)
 			return true;
 		return false;
 	}
-	return false;
+ 	return false;
 }
