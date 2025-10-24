@@ -29,19 +29,16 @@ export function wsRequest(game: Game) {
 }
 
 export async function setUpGame(game: Game, ws: WebSocket) {
+    addMessEvent(game, ws);
+
     const result: [number, number, startObj] | null = await syncClocks(ws)
     if (!result) return;
-
     const [offset, halfTripTime, start] = result;
     game.clockOffset = offset;
-
-    // set events;
     game.ball.dx *= start.ballDir;
-    // game.ball.lastdx *= start.ballDir;
-    addMessEvent(game, ws);
     window.addEventListener("keydown", createKeyDownEvent(game.req._keys));
     window.addEventListener("keyup", createKeyUpEvent(game.req._keys));
-    
+
     // wait
     const waitTime = Math.max(0, start.delay - halfTripTime);
     await new Promise(res => setTimeout(res, waitTime));

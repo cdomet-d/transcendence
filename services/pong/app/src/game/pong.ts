@@ -12,6 +12,10 @@ export async function setUpGame(game: Game) {
 	const player1: Player = game.players[0];
 	const player2: Player = game.players[1];
 
+	// set players message event
+	setMessEvent(player1, 1, game);
+	setMessEvent(player2, 2, game);
+
 	// sync client & server clocks
 	try {
 		await syncClocks(player1, 1);
@@ -20,10 +24,6 @@ export async function setUpGame(game: Game) {
 	} catch (err) {
 		return; //TODO: handle error
 	}
-
-	// set players message event
-	setMessEvent(player1, 1, game);
-	setMessEvent(player2, 2, game);
 
 	// start game
 	await new Promise(res => setTimeout(res, START_DELAY));
