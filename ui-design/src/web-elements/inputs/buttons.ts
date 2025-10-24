@@ -29,7 +29,7 @@ export class RadioButton extends HTMLDivElement {
         this.input.type = 'radio';
         this.input.className = 'peer z-2 absolute top-[0] left-[0] cursor-pointer';
         this.check.className =
-            'thin brdr z-1 orange-bg absolute top-[0] left-[0] cursor-pointer w-[18px] h-[100%] peer-checked:absolute peer-checked:left-1/2 border-box';
+            'thin brdr z-1 orange-bg absolute top-[0] left-[0] cursor-pointer w-[18px] h-full peer-checked:absolute peer-checked:left-1/2 border-box';
     }
 
     connectedCallback() {

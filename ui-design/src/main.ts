@@ -5,7 +5,6 @@ import * as nav from './web-elements/navigation/helpers.js';
 import * as user from './web-elements/users/helpers.js';
 import * as defaults from './default-values.js';
 import { UserSettingsForm } from './web-elements/users/settings.js';
-import type { UserProfile } from './web-elements/users/profile.js';
 
 window.addEventListener('error', (e) => {
     console.error('Global error:', e.error);
@@ -22,7 +21,7 @@ wrapper.classList.add(
     'grid',
     'gap-6',
     `w-[${innerW}]`,
-    'pad-sm',
+    'pad-sm'
 );
 
 // function testSearchbar() {
@@ -68,16 +67,14 @@ try {
     wrapper.appendChild(nav.createMenu(defaults.mainMenu, 'horizontal'));
     wrapper.appendChild(nav.createMenu(defaults.mainMenu, 'vertical'));
     wrapper.appendChild(nav.createMenu(defaults.gameMenu, 'vertical', 'l', true));
-    wrapper.appendChild(
-        user.createUserCardSocial(defaults.socialMenu, defaults.userDefault, 'stranger'),
-    );
-    wrapper.appendChild(user.createUserInline(defaults.userDefault));
     wrapper.appendChild(nav.createSearchbar());
     wrapper.appendChild(user.createNotificationBox());
     wrapper.appendChild(nav.createDropdown(defaults.languageMenu, 'Pick language', 'static'));
     wrapper.appendChild(nav.createDropdown(defaults.userColorsMenu, 'Pick color', 'dynamic'));
     wrapper.append(document.createElement('form', { is: 'settings-form' }) as UserSettingsForm);
-    wrapper.append(document.createElement('div', { is: 'user-profile' }) as UserProfile);
+    wrapper.append(user.createUserProfile(defaults.userDefault));
+    wrapper.append(user.createUserCardSocial(defaults.userDefault));
+    wrapper.append(user.createUserInline(defaults.userDefault));
 } catch (error) {
     console.log('[ERROR]', error);
 }

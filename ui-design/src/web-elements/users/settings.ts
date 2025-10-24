@@ -86,8 +86,8 @@ export class UserSettingsForm extends HTMLFormElement {
         this.action = this.#formData.action;
         this.ariaLabel = this.#formData.ariaLabel;
         this.className =
-            'grid gap-y-(--space-m) pad-sm brdr w-5xl \
-			grid sidebar-left justify-items-center gap-s';
+            'grid gap-s pad-s w-full \
+			grid sidebar-left justify-items-center';
         this.id = this.#formData.id;
         this.method = this.#formData.method;
 

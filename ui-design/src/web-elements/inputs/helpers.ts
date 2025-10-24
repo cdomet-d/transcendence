@@ -53,6 +53,6 @@ export function createCheckbox(btnName: string, btnId: string): HTMLDivElement {
 export function singleInputForm(): HTMLFormElement {
     const el = document.createElement('form');
 
-    el.className = 'items-center box-border grid sidebar-right search-gap w-[100%] relative';
+    el.className = 'items-center box-border grid sidebar-right search-gap w-full relative';
     return el;
 }

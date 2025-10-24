@@ -36,7 +36,7 @@ export const userDefault: types.UserData = {
         size: 'ilarge',
         src: '/assets/icons/magenta-avatar.png',
     },
-    biography: '¯\\_(ツ)_/¯',
+    biography: '(╯°□°)╯︵ ┻━┻',
     id: '256',
     relation: 'stranger',
     profileColor: 'bg-4F9FFF',
@@ -44,6 +44,7 @@ export const userDefault: types.UserData = {
     status: true,
     username: 'CrimeGoose',
     winstreak: '7',
+    since: '145',
 };
 
 export const users: Array<types.UserData> = [

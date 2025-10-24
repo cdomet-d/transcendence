@@ -1,10 +1,8 @@
 import { Avatar } from '../typography/images';
 import { Biography, Username, Winstreak } from './user-atoms';
-import { createAvatar } from '../typography/helpers';
-import { createSocialMenu } from '../navigation/helpers';
 import { Notification } from './notifications';
 import { SocialMenu } from '../navigation/menus';
-import { UserCardSocial, UserInline } from './profile';
+import { UserCardSocial, UserInline, UserProfile } from './profile';
 import * as types from '../../types-interfaces';
 
 /**
@@ -40,22 +38,17 @@ export function createBiography(val: string): Biography {
  * @param user - The user data object ({@link types.UserData}).
  * @returns A `UserCardSocial` element populated with user info and social buttons.
  */
-export function createUserCardSocial(
-    socialBtns: Array<types.buttonData>,
-    user: types.UserData,
-    view: types.ProfileView,
-): UserCardSocial {
-    const avatarCpy = { ...user.avatar };
-    avatarCpy.size = 'imedium';
-    const avatar = createAvatar(avatarCpy) as Avatar;
-    const username = createUsername(user.username, user.status) as Username;
-    const menu = createSocialMenu(socialBtns, 'horizontal', view);
-    const card = document.createElement('div', { is: 'user-card-social' }) as UserCardSocial;
-    card.append(avatar, username, menu);
-    username.customizeStyle('f-yellow', 'f-m', 'f-bold', true);
-    card.backgroundColor = user.profileColor;
-    card.id = user.id;
-    return card;
+export function createUserCardSocial(user: types.UserData): UserCardSocial {
+    const el = document.createElement('div', { is: 'user-card-social' }) as UserCardSocial;
+    const avatar = { ...user.avatar };
+    avatar.size = 'imedium';
+    el.profileId = user.id;
+    el.avatar = avatar;
+    el.color = user.profileColor;
+    el.username = user.username;
+    el.status = user.status;
+    el.profileView = user.relation;
+    return el;
 }
 
 /**
@@ -66,19 +59,31 @@ export function createUserCardSocial(
  *
  */
 export function createUserInline(user: types.UserData): UserInline {
-    const avatarCpy = { ...user.avatar };
-    avatarCpy.size = 'iicon';
-    const avatar = createAvatar(avatarCpy);
-    const username = createUsername(user.username, user.status);
-    const wstreak = createWinstreak(user.winstreak);
-    const card = document.createElement('div', { is: 'user-inline' }) as UserInline;
-
-    username.customizeStyle('f-orange', 'f-regular');
-    card.id = user.id;
-    card.append(avatar, username, wstreak);
-    return card;
+    const el = document.createElement('div', { is: 'user-inline' }) as UserInline;
+    const avatar = { ...user.avatar };
+    avatar.size = 'iicon';
+    el.profileId = user.id;
+    el.avatar = avatar;
+    el.username = user.username;
+    el.status = user.status;
+    el.winstreak = user.winstreak;
+    return el;
 }
 
+export function createUserProfile(user: types.UserData): UserProfile {
+    const el = document.createElement('div', { is: 'user-profile' }) as UserProfile;
+    const avatar = { ...user.avatar };
+    avatar.size = 'ilarge';
+    el.profileId = user.id;
+    el.avatar = avatar;
+    el.username = user.username;
+    el.status = user.status;
+    el.winstreak = user.winstreak;
+    el.profileView = user.relation;
+    el.biography = user.biography;
+    el.profileAge = user.since;
+    return el;
+}
 /**
  * Updates the avatar image for a user card.
  *
@@ -101,14 +106,14 @@ export function updateUserAvatar(newProfilePicture: types.ImgMetadata, userId: s
  * @param newProfilePicture - New avatar image metadata.
  * @param userId - The ID of the user card to update.
  */
-export function updateProfileColor(newColor: string, userId: string) {
-    document.addEventListener('DOMContentLoaded', () => {
-        const userCard = document.getElementById(userId) as UserCardSocial;
-        if (userCard) {
-            userCard.backgroundColor = newColor;
-        }
-    });
-}
+// export function updateProfileColor(newColor: string, userId: string) {
+//     document.addEventListener('DOMContentLoaded', () => {
+//         const userCard = document.getElementById(userId) as UserCardSocial;
+//         if (userCard) {
+//             userCard.backgroundColor = newColor;
+//         }
+//     });
+// }
 
 /**
  * Updates the social menu view for a user card.
@@ -187,12 +192,3 @@ export function getNotificationBoxAsync(): Promise<Notification | null> {
         resolveSearchbar();
     });
 }
-
-// export function assembleUserSettings(user: types.UserData): UserSettingsWrapper {
-//     const el = document.createElement('div', { is: 'settings-wrapper' }) as UserSettingsWrapper;
-//     const form = document.createElement('form', { is: 'settings-form' }) as UserSettingsForm;
-// 	const avatar = createAvatar(user.avatar);
-// 	form.setUsername = user.username;
-//     el.append(avatar, form);
-//     return el;
-// }

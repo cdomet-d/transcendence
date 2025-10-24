@@ -153,7 +153,7 @@ export class Searchbar extends HTMLFormElement {
         this.method = 'get';
         submit.classList.remove('h-[90%]');
         submit.classList.add('h-[36px]', 'mt-[24px]');
-        this.className = 'items-center box-border grid sidebar-right search-gap w-[100%] relative';
+        this.className = 'items-center box-border grid sidebar-right search-gap w-full relative';
         this.#results.className =
             'hidden absolute brdr bg min-h-fit max-h-[400px] pad-s overflow-y-auto box-border';
 

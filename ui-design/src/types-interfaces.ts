@@ -174,6 +174,7 @@ export interface UserData {
     status: boolean;
     username: string;
     winstreak: string;
+    since: string;
 }
 
 export interface formDetails {
@@ -183,9 +184,4 @@ export interface formDetails {
     fields: InputFieldsData[];
     id: string;
     method: string;
-}
-
-
-export class User implements UserData {
-	
 }
