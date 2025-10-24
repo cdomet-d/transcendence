@@ -185,3 +185,11 @@ export interface formDetails {
     id: string;
     method: string;
 }
+
+export interface inlineMatchResult {
+	date: string;
+	opponent: string;
+	outcome: string;
+	score: string;
+	duration: string
+}

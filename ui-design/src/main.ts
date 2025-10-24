@@ -5,6 +5,7 @@ import * as nav from './web-elements/navigation/helpers.js';
 import * as user from './web-elements/users/helpers.js';
 import * as defaults from './default-values.js';
 import { UserSettingsForm } from './web-elements/users/settings.js';
+import { InlineMatch } from './web-elements/stats/matches.js';
 
 window.addEventListener('error', (e) => {
     console.error('Global error:', e.error);
@@ -75,6 +76,10 @@ try {
     wrapper.append(user.createUserProfile(defaults.userDefault));
     wrapper.append(user.createUserCardSocial(defaults.userDefault));
     wrapper.append(user.createUserInline(defaults.userDefault));
+
+    const el = document.createElement('div', { is: 'inline-match' }) as InlineMatch;
+    wrapper.append(el);
+	el.header = true;
 } catch (error) {
     console.log('[ERROR]', error);
 }
