@@ -33,7 +33,7 @@ export class Player {
 			_timestamp: 0, 
 			_leftPad: {x: 10, y: 108},
 			_rightPad: {x: 460, y: 108}, 
-			_ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, lastdx: 0.3}, 
+			_ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025}, 
 			_score: [0, 0]
 		};
 		if (random) {
