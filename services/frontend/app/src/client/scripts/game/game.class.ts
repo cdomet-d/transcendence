@@ -53,7 +53,7 @@ export class Game {
 			y: HEIGHT / 2, 
 			dx: 0.3, 
 			dy: 0.025, 
-			lastdx: 0.3
+			lastdx: 0.3 //TODO: rm
 		};
 		this.#_leftPaddle = {x: 10, y: 108}; //TODO: put operation
 		this.#_rightPaddle = {x: 460, y: 108};
