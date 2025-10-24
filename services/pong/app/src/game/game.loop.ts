@@ -2,8 +2,6 @@ import { Game, playerReq, snapshotObj, type ballObj } from "../classes/game.clas
 import { updateBallPos, touchesLeftPad, touchesRightPad } from './ball.js';
 import { updatePaddlePos } from './paddle.js';
 import { coordinates, Player } from "../classes/player.class.js";
-import { syncClocks } from "./syncClocks.js";
-import { setUpGame } from "./pong.js";
 
 const SERVER_TICK: number = 1000 / 20; // 20UPS
 const TIME_STEP: number = 1000 / 60; // 60FPS
@@ -51,8 +49,10 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 function moveBall(game: Game, tickStart: number, simulatedTime: number, end: number): number {
 	while(simulatedTime + TIME_STEP <= end) {
 		game.addSnapshot(tickStart + simulatedTime);
-		if (updateBallPos(game.ball, game.players[0]!, game.players[1]!))
+		if (updateBallPos(game, game.players[0]!, game.players[1]!)) {
+			endGame(game.players[0]!, game.players[1]!, game);
 			return -1;
+		}
 		simulatedTime += TIME_STEP;
 	}
 	return simulatedTime
