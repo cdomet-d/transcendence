@@ -24,8 +24,6 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 		simulatedTime = moveBall(game, tickStart, simulatedTime, playerReq._req._timeStamp - tickStart);
 		if (simulatedTime === -1)
 			return;
-		// if (simulatedTime === -2)
-		// 	break;
 		updatePaddlePos(player, playerReq._req._keys, game.paddleSpeed);
 		rewind(game, playerReq, player.paddle);
 		//TODO: should endGame be called after rewind ?
@@ -34,7 +32,6 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 	const rv: number = moveBall(game, tickStart, simulatedTime, SERVER_TICK);
 	if (rv === -1)
 		return;
-
 	sendToPlayers(game, player1, player2);
 
 	// clean
