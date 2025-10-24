@@ -4,21 +4,29 @@ import type { coordinates, Player } from "../classes/player.class.js";
 const TIME_STEP: number = 1000 / 60; // 60FPS
 const MAX_SCORE: number = 5;
 
-export function updateBallPos(ball: ballObj, player1: Player, player2: Player): number {
+export function updateBallPos(ball: ballObj, player1: Player, player2: Player): boolean {
 	let newX: number = ball.x + (ball.dx * TIME_STEP);
 	let newY: number = ball.y + (ball.dy * TIME_STEP);
 
 	if (newX - 10 >= WIDTH || newX + 10 <= 0) {
 		if (updateScore(player1, player2, newX))
-			return 1;
+			return true;
 		ball.x = WIDTH / 2;
 		ball.y = HEIGHT / 2;
-		if (ball.dx === ball.lastdx)
-			ball.dx *= -1;
-		if (ball.dy < 0)
-			ball.dy *= -1;
-		ball.lastdx = ball.dx;
-		return 2;
+		// if (ball.dx === ball.lastdx)
+		// 	ball.dx *= -1;
+		// if (ball.dy < 0)
+		// 	ball.dy *= -1;
+		// ball.lastdx = ball.dx;
+		ball.dx = 0;
+		ball.lastdx = 0;
+		ball.dy = 0;
+		setTimeout(() => {
+			ball.dx = 0.3;
+			ball.lastdx = 0.3;
+			ball.dy = 0.025;
+		}, 1000);
+		return false;
 	}
 
 	if ((newY + 10) >= HEIGHT || (newY - 10) <= 0 ) {
@@ -32,7 +40,7 @@ export function updateBallPos(ball: ballObj, player1: Player, player2: Player): 
 
 	ball.x = newX;
 	ball.y = newY;
-	return 0
+	return false
 }
 
 function updateScore(player1: Player, player2: Player, newX: number): boolean {
