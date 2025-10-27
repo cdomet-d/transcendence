@@ -1,10 +1,11 @@
 import type { Game } from '../classes/game.class.js';
-import type { Player, repObj } from '../classes/player.class.js';
+import type { Player } from '../classes/player.class.js';
 import { validRequest, type reqObj } from './mess.validation.js';
 import { gameLoop } from './game.loop.js';
 import { syncClocks } from './syncClocks.js';
  
 const START_DELAY = 500;
+const SERVER_TICK: number = 1000 / 20; // 20UPS
 
 export async function setUpGame(game: Game) {
 	if (!game.players[0] || !game.players[1])
@@ -27,7 +28,7 @@ export async function setUpGame(game: Game) {
 
 	// start game
 	await new Promise(res => setTimeout(res, START_DELAY));
-	gameLoop(game, player1, player2);
+	setTimeout(gameLoop, SERVER_TICK, game, player1, player2);
 }
 
 function setMessEvent(player: Player, playerNbr: number, game: Game) {
