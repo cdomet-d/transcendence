@@ -31,16 +31,8 @@ export interface playerReq {
 	_req: reqObj,
 } //TODO: find better way to register a req
 
-export interface snapshotObj {
-	_timestamp: number,
-	_leftPad: coordinates,
-	_rightPad: coordinates,
-	_ball: ballObj,
-}
-
 export type playerTab = Array< Player >;
 type reqTab = Array< playerReq >;
-type snapshotTab = Array< snapshotObj >;
 
 export class Game {
 	/*                             PROPERTIES                                */
@@ -50,7 +42,6 @@ export class Game {
 	#_ballDir: number;
 	#_paddleSpeed: number;
 	#_reqHistory: reqTab;
-	#_snapshotHistory: snapshotTab;
 	#_lastTick: number;
 	#_timeoutID: NodeJS.Timeout | null;
 
@@ -62,7 +53,6 @@ export class Game {
 		this.#_ballDir = -1;
 		this.#_paddleSpeed = 0.15;
 		this.#_reqHistory = new Array();
-		this.#_snapshotHistory = new Array();
 		this.#_lastTick = 0;
 		this.#_timeoutID = null;
 	}
@@ -94,10 +84,6 @@ export class Game {
 
 	get reqHistory(): reqTab {
 		return this.#_reqHistory;
-	}
-	
-	get snapshotHistory(): snapshotTab {
-		return this.#_snapshotHistory;
 	}
 
 	get lastTick(): number {
@@ -162,39 +148,5 @@ export class Game {
 
 	public deleteReq(deleteCount: number) {
 		this.#_reqHistory.splice(0, deleteCount);
-	}
-
-	public addSnapshot(timestamp: number) {
-		if (!this.#_players[0] || !this.#_players[1])
-			return;
-		const newSnapshot: snapshotObj = { _timestamp: timestamp, _leftPad: { ...this.#_players[0]!.paddle}, _rightPad: { ...this.#_players[1]!.paddle}, _ball: { ...this.#_ball} };
-		this.#_snapshotHistory.push(newSnapshot);
-	}
-
-	public deleteSnapshots(timestamp: number) {
-		this.#_snapshotHistory = this.#_snapshotHistory.filter(
-			snapshot => snapshot._timestamp >= timestamp
-		);
-	}
-
-	public findSnapshot(req: reqObj): snapshotObj | undefined {
-		let snapshot: snapshotObj | undefined = undefined;
-		const timestamp: number = req._timeStamp;
-		const tab: snapshotTab = this.#_snapshotHistory;
-		let i: number = 0;
-
-		while( i < tab.length - 1) {
-			if (timestamp >= tab[i]!._timestamp
-				&& timestamp <= tab[i + 1]!._timestamp) {
-					if (Math.abs(timestamp - tab[i]!._timestamp) < Math.abs(timestamp - tab[i + 1]!._timestamp))
-						snapshot = tab[i];
-					else
-						snapshot = tab[i + 1];
-					break;
-				}
-			i++;
-		}
-
-		return snapshot;
 	}
 }
