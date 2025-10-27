@@ -1,7 +1,8 @@
 import { renderGame } from "./game.render.utils.js";
-import { Game, HEIGHT, WIDTH, type ballObj } from "./game.class.js";
+import { Game, HEIGHT, WIDTH } from "./game.class.js";
 import { updatePaddlePos } from "./paddle.js";
 import type { repObj } from "./mess.validation.js";
+import { deadReckoning, updateBallPos } from "./ball.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 const MAX_SCORE: number = 5;
@@ -19,25 +20,26 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		if (latestReply !== undefined && game.reqHistory.has(latestReply._ID))
 			reconciliation(game, latestReply);
 
-		//prediction
 		game.delta += (timestamp - game.lastFrameTime);
 		game.lastFrameTime = timestamp;
 		while (game.delta >= TIME_STEP) { //TODO: add update limit
+			//prediction
 			updatePaddlePos(game, game.req._keys, TIME_STEP);
+
+			// opponent pad interpolation
+			if (!game.local)
+				interpolation(game);
+			
+			// ball dead reckoning
+			deadReckoning(game, latestReply);
+			
+			// score
+			if (latestReply !== undefined)
+				if (await handleScore(game, latestReply))
+					return;
+
 			game.delta -= TIME_STEP;
 		}
-
-		// interpolation and dead reckoning
-		interpolation(game, latestReply);
-
-		// score
-		if (latestReply !== undefined)
-			if (await handleScore(game, latestReply))
-				return;
-
-		//draw new frame
-		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
-		renderGame(game);
 
 		// request to server
 		game.req._timeStamp = performance.now() + game.clockOffset;
@@ -45,12 +47,16 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		game.addReq(game.req);
 		game.req._ID += 1; //TODO: overflow
 
+		//draw new frame
+		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
+		renderGame(game);
+
 		// request new frame
 		game.frameId = window.requestAnimationFrame(FrameRequestCallback(game, ws));
 	}
 }
 
-function interpolation(game: Game, latestReply: repObj | undefined) {
+function interpolation(game: Game) {
 	const renderTime: number = performance.now() - 100; //TODO: put 100 in a var
 	const updates: [repObj, repObj] | null = game.getReplies(renderTime);
 
@@ -58,42 +64,13 @@ function interpolation(game: Game, latestReply: repObj | undefined) {
 		console.log("IN INTERPOLATION");
 		const t = (renderTime - updates[0]._timestamp) / 
 					(updates[1]._timestamp - updates[0]._timestamp);
-		if (!game.local)
-			game.rightPad.y = lerp(updates[0]._rightPad.y, updates[1]._rightPad.y, t);
-		if (latestReply !== undefined && latestReply._ball.dx != game.ball.dx ) {
-			// game.ball.x = lerp(updates[0]._ball.x, updates[1]._ball.x, t),
-			// game.ball.y = lerp(updates[0]._ball.y, updates[1]._ball.y, t)
-
-			// game.ball.x = latestReply._ball.x;
-			// game.ball.y = latestReply._ball.y;
-			
-			game.ball.dx = latestReply._ball.dx;
-		}
-		else
-			deadReckoning(game, latestReply);
+		game.rightPad.y = lerp(updates[0]._rightPad.y, updates[1]._rightPad.y, t);
 		game.deleteReplies(game.replyHistory.indexOf(updates[0]) - 1);
 	}
-	else
-		deadReckoning(game, latestReply);
 }
 
 function lerp(start: number, end: number, t: number): number {
 	return start + (end - start) * Math.min(Math.max(t, 0), 1);
-}
-
-function deadReckoning(game: Game, latestReply: repObj | undefined) {
-	console.log("IN DEADRECKONING");
-	let timeSinceUpdate: number = performance.now() - game.lastFrameTime; //TIME_STEP;
-	let ball: ballObj = { ...game.ball };
-	if (latestReply !== undefined) {
-		timeSinceUpdate = (performance.now() - latestReply._timestamp)
-		ball = latestReply._ball;
-	}
-	if (timeSinceUpdate > 100) //TODO: add var for 100
-		timeSinceUpdate = 100
-	game.ball.x = ball.x + ball.dx * timeSinceUpdate;
-	game.ball.y = ball.y + ball.dy * timeSinceUpdate;
-	// game.ball.dx = ball.dx;
 }
 
 function reconciliation(game: Game, latestReply: repObj) {
@@ -104,9 +81,11 @@ function reconciliation(game: Game, latestReply: repObj) {
 	game.leftPad.y = latestReply._leftPad.y;
 	if (game.local)
 		game.rightPad.y = latestReply._rightPad.y;
+	game.ball = { ...latestReply._ball };
 
 	for (let i = id + 1; game.reqHistory.has(i); i++) {
-		updatePaddlePos(game, game.reqHistory.get(i)!._keys, TIME_STEP)
+		updatePaddlePos(game, game.reqHistory.get(i)!._keys, TIME_STEP);
+		deadReckoning(game, latestReply);
 	}
 }
 
