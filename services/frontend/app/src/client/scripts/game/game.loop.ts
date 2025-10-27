@@ -2,7 +2,7 @@ import { renderGame } from "./game.render.utils.js";
 import { Game, HEIGHT, WIDTH } from "./game.class.js";
 import { updatePaddlePos } from "./paddle.js";
 import type { repObj } from "./mess.validation.js";
-import { deadReckoning, updateBallPos } from "./ball.js";
+import { deadReckoning } from "./ball.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 const MAX_SCORE: number = 5;
@@ -16,30 +16,29 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 	return async function gameLoop(timestamp: number) {
 		const latestReply: repObj | undefined = game.replyHistory[game.replyHistory.length - 1];
 
-		//reconciliation
+		// client paddle && ball reconciliation
 		if (latestReply !== undefined && game.reqHistory.has(latestReply._ID))
 			reconciliation(game, latestReply);
 
+		// client paddle prediction
 		game.delta += (timestamp - game.lastFrameTime);
 		game.lastFrameTime = timestamp;
 		while (game.delta >= TIME_STEP) { //TODO: add update limit
-			//prediction
 			updatePaddlePos(game, game.req._keys, TIME_STEP);
-
-			// opponent pad interpolation
-			if (!game.local)
-				interpolation(game);
-			
-			// ball dead reckoning
-			deadReckoning(game, latestReply);
-			
-			// score
-			if (latestReply !== undefined)
-				if (await handleScore(game, latestReply))
-					return;
-
 			game.delta -= TIME_STEP;
 		}
+
+		// opponent paddle interpolation
+		if (!game.local)
+			interpolation(game);
+		
+		// ball dead reckoning
+		deadReckoning(game, latestReply);
+		
+		// score
+		if (latestReply !== undefined)
+			if (await handleScore(game, latestReply))
+				return;
 
 		// request to server
 		game.req._timeStamp = performance.now() + game.clockOffset;
