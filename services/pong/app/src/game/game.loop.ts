@@ -25,8 +25,8 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 		if (simulatedTime === -1)
 			return;
 		updatePaddlePos(player, playerReq._req._keys, game.paddleSpeed);
-		rewind(game, playerReq, player.paddle);
-		//TODO: should endGame be called after rewind ?
+		// rewind(game, playerReq, player.paddle);
+		//TODO: should rewind before updaqting score !!
 		player.reply._ID = playerReq._req._ID;
 	}
 	const rv: number = moveBall(game, tickStart, simulatedTime, SERVER_TICK);
@@ -40,7 +40,7 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 
 	// new loop
 	const delay: number = SERVER_TICK - (performance.now() - start);
-	setTimeout(gameLoop, Math.max(0, delay), game, player1, player2);
+	game.timeoutID = setTimeout(gameLoop, Math.max(0, delay), game, player1, player2);
 }
 
 function moveBall(game: Game, tickStart: number, simulatedTime: number, end: number): number {
