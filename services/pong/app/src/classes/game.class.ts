@@ -52,6 +52,7 @@ export class Game {
 	#_reqHistory: reqTab;
 	#_snapshotHistory: snapshotTab;
 	#_lastTick: number;
+	#_timeoutID: NodeJS.Timeout | null;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo) {
@@ -63,6 +64,7 @@ export class Game {
 		this.#_reqHistory = new Array();
 		this.#_snapshotHistory = new Array();
 		this.#_lastTick = 0;
+		this.#_timeoutID = null;
 	}
 
 	/*                              GETTERS                                  */
@@ -106,6 +108,10 @@ export class Game {
 		return this.#_ballDir;
 	}
 
+	get timeoutID(): NodeJS.Timeout | null {
+		return this.#_timeoutID;
+	}
+
 	/*                              SETTERS                                  */
 	set score(score: Array< number >) {
 		this.#_gameInfo._score = score;
@@ -129,6 +135,10 @@ export class Game {
 
 	set ballDir(direction: number) {
 		this.#_ballDir = direction;
+	}
+
+	set timeoutID(id: NodeJS.Timeout) {
+		this.#_timeoutID = id;
 	}
 
 	/*                              METHODS                                  */

@@ -20,6 +20,8 @@ async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyR
 	getPlayersInGame(game, ids.userID, socket);
 	
 	socket.on('close', () => {
+		if (game.timeoutID)
+			clearTimeout(game.timeoutID);
 		if (game)
 			game.deletePlayers(); //TODO: to be rm
 		this.gameRegistry.deleteGame(game.gameID);
