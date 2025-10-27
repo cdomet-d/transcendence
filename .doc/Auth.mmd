@@ -1,39 +1,39 @@
 ---
 config:
-  theme: redux-dark-color
-  look: classic
+	theme: redux-dark-color
+	look: classic
 ---
 sequenceDiagram
 
-  title Auth and Authz
+	title Auth and Authz
 
-  participant B as Browser
-  participant A as JWT Auth
-  participant G as NGINX Gateway
-  participant GM as GameManager
-  participant FS as Friends
-  participant AZ as Authorisation
-  participant D as Database
-  autonumber
+	participant B as Browser
+	participant A as JWT Auth
+	participant G as NGINX Gateway
+	participant GM as GameManager
+	participant FS as Friends
+	participant AZ as Authorisation
+	participant D as Database
+	autonumber
 
-  B ->> A: Login (credentials)
-  A -->> B: Return JWT
-  B ->> G: API Request (with JWT)
-  G ->> G: Validate JWT
-  G ->> G: Check basic authorisation
-  alt Game Request
-    G ->> GM: Route to GM
-    GM ->> AZ: Check complex authorisation
-    AZ -->> GM: Permission Granted/Denied
-    GM ->> D: Update/Retrieve Game Data
-    GM -->> G: Response (game event)
-  end
-  alt Friend Request
-    G ->> FS: Route to FriendService
-    FS ->> AZ: Check complex authorisation
-    AZ -->> FS: Permission Granted/Denied
-    FS ->> D: Update/Retrieve Friend Data
-    FS -->> G: Response (friend event)
-  end
-  G -->> B: API Response
-  B ->> B: Display result
+	B ->> A: Login (credentials)
+	A -->> B: Return JWT
+	B ->> G: API Request (with JWT)
+	G ->> G: Validate JWT
+	G ->> G: Check basic authorisation
+	alt Game Request
+		G ->> GM: Route to GM
+		GM ->> AZ: Check complex authorisation
+		AZ -->> GM: Permission Granted/Denied
+		GM ->> D: Update/Retrieve Game Data
+		GM -->> G: Response (game event)
+	end
+	alt Friend Request
+		G ->> FS: Route to FriendService
+		FS ->> AZ: Check complex authorisation
+		AZ -->> FS: Permission Granted/Denied
+		FS ->> D: Update/Retrieve Friend Data
+		FS -->> G: Response (friend event)
+	end
+	G -->> B: API Response
+	B ->> B: Display result

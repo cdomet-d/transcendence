@@ -12,3 +12,9 @@ catch (err) {
 	console.error('server error:', err);
 	process.exit(1);
 }
+
+import { generateJWT } from './JWT/tokenGeneration.js';
+
+const token = generateJWT();
+
+console.log(token);
