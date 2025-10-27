@@ -1,5 +1,5 @@
 import { renderGame } from "./game.render.utils.js";
-import { Game, HEIGHT, WIDTH } from "./game.class.js";
+import { Game, HEIGHT, WIDTH, type ballObj } from "./game.class.js";
 import { updatePaddlePos } from "./paddle.js";
 import type { repObj } from "./mess.validation.js";
 
@@ -62,11 +62,18 @@ function interpolation(game: Game, latestReply: repObj | undefined) {
 					(updates[1]._timestamp - updates[0]._timestamp);
 		if (!game.local)
 			game.rightPad.y = lerp(updates[0]._rightPad.y, updates[1]._rightPad.y, t);
-		game.ball.x = lerp(updates[0]._ball.x, updates[1]._ball.x, t),
-		game.ball.y = lerp(updates[0]._ball.y, updates[1]._ball.y, t)
+		// if (latestReply !== undefined && latestReply._ball.dx != game.ball.dx ) {
+		// 	// game.ball.x = lerp(updates[0]._ball.x, updates[1]._ball.x, t),
+		// 	// game.ball.y = lerp(updates[0]._ball.y, updates[1]._ball.y, t)
+		// 	game.ball.x = latestReply._ball.x;
+		// 	game.ball.y = latestReply._ball.y;
+		// 	game.ball.dx = latestReply._ball.dx;
+		// }
+		// else
+		// 	deadReckoning(game, latestReply);
 		game.deleteReplies(game.replyHistory.indexOf(updates[0]) - 1);
 	}
-	else if (latestReply !== undefined)
+	// else
 		deadReckoning(game, latestReply);
 }
 
@@ -74,15 +81,19 @@ function lerp(start: number, end: number, t: number): number {
 	return start + Math.min(Math.max(t, 0), 1) * (end - start);
 }
 
-function deadReckoning(game: Game, latestReply: repObj) {
+function deadReckoning(game: Game, latestReply: repObj | undefined) {
 	console.log("IN DEADRECKONING");
-	let timeSinceUpdate: number = 0;
-	timeSinceUpdate = (performance.now() - latestReply._timestamp)
-	if (timeSinceUpdate > 200) //TODO: add var for 200
-		timeSinceUpdate = 200
-	timeSinceUpdate /= 1000;
-	game.ball.x = latestReply._ball.x + latestReply._ball.dx * timeSinceUpdate;
-	game.ball.y = latestReply._ball.y + latestReply._ball.dy * timeSinceUpdate;
+	let timeSinceUpdate: number = performance.now() - game.lastFrameTime; //TIME_STEP;
+	let ball: ballObj = { ...game.ball };
+	if (latestReply !== undefined) {
+		timeSinceUpdate = (performance.now() - latestReply._timestamp)
+		ball = latestReply._ball;
+	}
+	if (timeSinceUpdate > 100) //TODO: add var for 100
+		timeSinceUpdate = 100
+	game.ball.x = ball.x + ball.dx * timeSinceUpdate;
+	game.ball.y = ball.y + ball.dy * timeSinceUpdate;
+	// game.ball.dx = ball.dx;
 }
 
 function reconciliation(game: Game, latestReply: repObj) {
