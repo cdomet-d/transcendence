@@ -1,13 +1,13 @@
-import type { UserData } from './bff.interface.js';
+import type { UserAuth } from './bff.interface.js';
 
 //TODO change to smart route
-export async function findUserByUsername(username: string): Promise<UserData | null> {
+export async function findUserByUsername(username: string): Promise<UserAuth | null> {
 	const response = await fetch(`http://users:2626/internal/users/${username}/userID`);
 	if (response.status === 404)
 		return (null);
 	if (!response.ok)
 		throw (new Error('Users service failed.'));
-	return (response.json() as Promise<UserData>);
+	return (response.json() as Promise<UserAuth>);
 }
 
 //TODO change to smart route

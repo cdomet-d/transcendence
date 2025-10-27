@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { request } from 'http';
 
 interface UserProfile {
 	userID: number;
@@ -52,15 +53,12 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return (reply.code(500).send({
-				success: false,
-				message: 'Internal server error'
-			}));
+			throw (error);
 		}
 	});
 
 	//get userID by username
-	serv.get('/internal/users/:username/userID', async (request, reply) => {  
+	serv.get('/internal/users/:username/userID', async (request, reply) => {
 		try {
 			const { username } = request.params as { username: string };
 			const query = `SELECT userID, username FROM userProfile WHERE username = ?`;
@@ -81,20 +79,17 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(error);
-			return (reply.code(500).send({
-				success: false,
-				message: 'Internal server error'
-			}));
+			throw (error);
 		}
 	});
 
 	//get user profile
-	serv.get('/internal/users/profile', async (request, reply) => {  
+	serv.get('/internal/users/profile', async (request, reply) => {
 		try {
 			const { userIDs } = request.body as { userIDs: number[] };
 
 			if (!Array.isArray(userIDs) || userIDs.length === 0)
-				return (reply.code(400).send({ message: 'userIDs must be a non-empty array.' }));
+				return (reply.code(400).send({ success: false, message: 'userIDs must be a non-empty array.' }));
 
 			const placeholders = userIDs.map(() => '?').join(',');
 
@@ -112,15 +107,12 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profiles by IDs: ${error}`);
-			return (reply.code(500).send({
-				success: false,
-				message: 'Internal server error'
-			}));
+			throw (error);
 		}
 	});
 
 	//get user's activity with userID
-	serv.get('/internal/users/:userID/activity-status', async (request, reply) => {  
+	serv.get('/internal/users/:userID/activity-status', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 
@@ -142,15 +134,12 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return (reply.code(500).send({
-				success: false,
-				message: 'Internal server error'
-			}));
+			throw (error);
 		}
 	});
 
 	//get user's activity with userID
-	serv.get('/internal/users/:userID/profileColor', async (request, reply) => {  
+	serv.get('/internal/users/:userID/profileColor', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 
@@ -172,15 +161,12 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return (reply.code(500).send({
-				success: false,
-				message: 'Internal server error'
-			}));
+			throw (error);
 		}
 	});
 
 	//get user's biography with userID
-	serv.get('/internal/users/:userID/biography', async (request, reply) => {  
+	serv.get('/internal/users/:userID/biography', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 
@@ -202,10 +188,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return (reply.code(500).send({
-				success: false,
-				message: 'Internal server error'
-			}));
+			throw (error);
 		}
 	});
 
@@ -213,38 +196,13 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.post('/internal/users/:userID/profile', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
-			const { username } = request.params as { username: string };
-
-			try {
-				const [profileResponse] = await Promise.all([
-					fetch(`https://users:2626/internal/users/profile/${userID}`),
-				]);
-				if (profileResponse.ok) {
-					return (reply.code(409).send({
-						success: false,
-						message: 'This user profile already exists.'
-					}));
-				}
-
-				if (profileResponse.status !== 404) {
-					serv.log.error(`Unexpected status from users service. Profile: ${profileResponse.status}, Stats: ${statsResponse.status}`);
-					return (reply.code(404).send({
-						success: false,
-						message: 'An unexpected error occurred while checking with the users service.'
-					}));
-				}
-
-			} catch (fetchError) {
-				serv.log.error(`Could not connect to the users service: ${fetchError}`);
-				throw (new Error('Users service failed. Please try again later'));
-			}
+			const { username } = request.body as { username: string };
 
 			const queryProfile = `
 				INSERT INTO userProfile
 				(userID, username, avatar, biography, profileColor, activityStatus, lastConnection)
 				VALUES (?, ?, default, default, default, 1, ?)
-			`
-
+			`;
 			const paramsProfile = [
 				userID,
 				username,
@@ -253,36 +211,42 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const createProfile = await serv.dbUsers.run(queryProfile, paramsProfile);
 			if (createProfile.changes === 0) {
-				return (reply.code(503).send({
+				return (reply.code(500).send({
 					success: false,
 					message: 'Profile could not be created.'
 				}));
 			}
 
 			const queryStats = `
-			INSERT INTO userStats (userID, longestMatch, shorestMatch, totalMatch, totalWins,
-			winStreak, averageMatchDuration, highestScore)
-			VALUES (?, 0, 0, 0, 0, 0, 0, 0)
-			`
+				INSERT INTO userStats (userID, longestMatch, shorestMatch, totalMatch, totalWins,
+				winStreak, averageMatchDuration, highestScore)
+				VALUES (?, 0, 0, 0, 0, 0, 0, 0)
+			`;
 
-			const createStats = await serv.dbUsers.run(queryStats, userID);
+			const createStats = await serv.dbUsers.run(queryStats, [userID]);
 			if (createStats.changes === 0) {
-				return (reply.code(503).send({
+				return (reply.code(500).send({
 					success: false,
 					message: 'Stats could not be created.'
 				}));
 			}
+			return (reply.code(201).send({ success: true, message: 'Profile created successfully!' }));
 
-			return (reply.code(201).send({ message: 'Profile created successfully!' }));
 		} catch (error) {
-			serv.log.error(`Error when trying to register: ${error}`);
-			throw error;
+			if (error && typeof error === 'object' && 'code' in error && error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+				return (reply.code(409).send({
+					success: false,
+					message: 'A profile for this user already exists.'
+				}));
+			}
+			serv.log.error(`Error creating user profile: ${error}`);
+			throw (error);
 		}
 	});
 
 	//TODO : fix const userID ---> in .user or .params
 	//update user profile
-	serv.patch('/internal/UserProfile/users/:userID/profile', async (request, reply) => {  
+	serv.patch('/internal/UserProfile/users/:userID/profile', async (request, reply) => {
 		try {
 			const userID = request.user.userID;
 			const statsToUpdate = request.body as { [key: string]: number };
@@ -325,12 +289,12 @@ export async function userRoutes(serv: FastifyInstance) {
 			}));
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return (reply.code(500).send({ message: 'Internal server error' }));
+			throw (error);
 		}
 	});
 
 	//update user's username with userID
-	serv.patch('/internal/users/:userID/username', async (request, reply) => {  
+	serv.patch('/internal/users/:userID/username', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 			const { newUsername } = request.body as { newUsername: string };
@@ -348,14 +312,14 @@ export async function userRoutes(serv: FastifyInstance) {
 				return (reply.code(409).send({ success: false, message: 'This username is already taken.' }));
 			}
 			serv.log.error(`Error updating username in profile: ${error}`);
-			throw(error)
+			throw (error)
 		}
 	});
 
 	//delete profile and stats
-	serv.delete('/internal/users/:userID', async (request, reply) => {  
+	serv.delete('/internal/users/:userID', async (request, reply) => {
 		try {
-			const { userID } = request.params as { userID: number};
+			const { userID } = request.params as { userID: number };
 
 			const query = `
 				DELETE FROM userProfile WHERE userID = ?;
@@ -365,17 +329,17 @@ export async function userRoutes(serv: FastifyInstance) {
 			const response = await serv.dbUsers.run(query, [userID, userID]);
 			if (!response.changes)
 				return (reply.code(404).send({ success: false, message: 'User profile/stats not found.' }));
-			return (reply.code(204).send({success: true, message: 'User profile and stats deleted !'}))
+			return (reply.code(204).send({ success: true, message: 'User profile and stats deleted !' }))
 		} catch (error) {
 			serv.log.error(`Error deleting user profile: ${error}`);
-			throw(error);
+			throw (error);
 		}
 	})
 
-		//update user's avatar with userID
+	//update user's avatar with userID
 	serv.patch('/internal/users/:userID/avatar', async (request, reply) => {
 		try {
-			const userID = request.params as { userID: string};
+			const userID = request.params as { userID: string };
 			const { avatar } = request.body as { avatar: string };
 
 			if (typeof avatar !== 'string') {
@@ -408,14 +372,14 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			throw(error);
+			throw (error);
 		}
 	});
 
 	//update user's biography with userID
 	serv.patch('/internal/users/:userID/bio', async (request, reply) => {
 		try {
-			const userID = request.params as { userID: string};
+			const userID = request.params as { userID: string };
 			const { bio } = request.body as { bio: string };
 
 			const query = `
@@ -441,13 +405,13 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			throw(error);
+			throw (error);
 		}
 	});
 
 	serv.patch('/internal/users/:userID/profileColor', async (request, reply) => {
 		try {
-			const userID = request.params as { userID: string};
+			const userID = request.params as { userID: string };
 			const { profileColor } = request.body as { profileColor: string };
 
 			const query = `
@@ -473,13 +437,13 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			throw(error);
+			throw (error);
 		}
 	});
 
 	//USER STATS
 	//get all user's stats with userID
-	serv.get('/internal/users/:userID/stats', async (request, reply) => {  
+	serv.get('/internal/users/:userID/stats', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 
@@ -489,24 +453,24 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const userProfile = await serv.dbUsers.get<UserStats>(query, [userID]);
 			if (!userProfile)
-				return (reply.code(404).send({ message: 'User profile not found' }));
+				return (reply.code(404).send({ success: false, message: 'User profile not found' }));
 
-			return (reply.code(200).send(userProfile));
+			return (reply.code(200).send({ success: true, userProfile }));
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			throw (error);
 		}
 	});
 
 	//update all stats of a user
-	serv.patch('/internal/users/:userID/stats', async (request, reply) => {  
+	serv.patch('/internal/users/:userID/stats', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 			const actions = request.body as { action: string, field: string, value: number }[];
 
 			const currentStats = await serv.dbUsers.get<UserStats>('SELECT * FROM userStats WHERE userID = ?', [userID]);
 			if (!currentStats)
-				return reply.code(404).send({ message: 'User not found.' });
+				return reply.code(404).send({ success: false, message: 'User not found.' });
 
 			const updates: { [key: string]: number } = {};
 			const validFields = ['totalMatch', 'totalWins', 'longestMatch', 'shortestMatch', 'highestScore'];
@@ -535,7 +499,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			}
 
 			if (Object.keys(updates).length === 0)
-				return reply.code(200).send({ message: 'No stats were updated.' });
+				return reply.code(200).send({ success: true, message: 'No stats were updated.' });
 
 			const setClauses = Object.keys(updates).map(key => `${key} = ?`).join(', ');
 			const params = [...Object.values(updates), userID];
@@ -548,16 +512,16 @@ export async function userRoutes(serv: FastifyInstance) {
 					message: 'User not found'
 				}));
 
-			return reply.code(200).send({ message: 'User stats updated successfully.' });
+			return reply.code(200).send({ success: true, message: 'User stats updated successfully.' });
 
 		} catch (error) {
 			serv.log.error(`Error updating user stats: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error' });
+			throw (error);
 		}
 	});
 
 	//add one to user's win streak with userID
-	serv.post('/internal/users/:userID/stats/winStreak/increment', async (request, reply) => {  
+	serv.post('/internal/users/:userID/stats/winStreak/increment', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 
@@ -579,12 +543,12 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error incrementing win streak: ${error}`);
-			return (reply.code(500).send({ message: 'Internal server error' }));
+			throw (error);
 		}
 	});
 
 	//set user's win streak to zero with userID
-	serv.patch('/internal/users/:userID/stats/winStreak/reset', async (request, reply) => {  
+	serv.patch('/internal/users/:userID/stats/winStreak/reset', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 
@@ -606,7 +570,17 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error resetting win streak: ${error}`);
-			return (reply.code(500).send({ message: 'Internal server error' }));
+			throw (error);
+		}
+	});
+
+	//TODOt
+	serv.get('internal/users/:userID/userData', async (request, reply) => {
+		try {
+
+		} catch (error) {
+			serv.log.error(`[USERS] Error fetching user data win streak: ${error}`);
+			throw (error);
 		}
 	});
 
@@ -798,6 +772,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			return reply.code(503).send({ message: 'A backend service is unavailable.' });
 		}
 	});*/
-	
+
 	//TODO: code this : const response = await fetch(`https://user:2626/internal/users/activity/${userID}`);
 }

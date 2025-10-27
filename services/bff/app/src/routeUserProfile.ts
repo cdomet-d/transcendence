@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import type { UserProfileView } from './bff.interface.js';
+import type { UserProfileView  } from './bff.interface.js';
 import * as bcrypt from 'bcrypt';
 import { fetchMatches, fetchUserProfile, fetchFriendList, fetchUserStats } from './bffUserProfile.service.js';
 import { updatePassword, updateUsername, updateBio, updateProfileColor, updateDefaultLang, updateAvatar } from './bffAccount.service.js';
@@ -21,7 +21,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				fetchMatches(request.user.userID)
 			]);
 
-			//TODO change reply
 			if (!profile || !stats)
 				return reply.code(404).send({ message: '[BFF] Failed to retrieve essential user data.' });
 
@@ -36,7 +35,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[BFF] Error building user profile view: ${error}`);
-			return (reply.code(422).send({ message: '[BFF] A backend service is currently unavailable.' }));
+			throw (error);
 		}
 	});
 
@@ -82,6 +81,17 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			serv.log.error(`[BFF] Failed to update settings: ${error}`);
 			throw error;
+		}
+	});
+
+	serv.get('/friends/friendslist', async (request, reply) => {
+		try {
+			fetchFriendList(request.user.userID);
+			return(reply)
+
+		} catch (error) {
+			serv.log.error(`[BFF] Error building user profile view: ${error}`);
+			throw (error);
 		}
 	});
 }

@@ -91,6 +91,3 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 		}
 	});
 }
-
-
-

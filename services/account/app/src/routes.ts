@@ -15,7 +15,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 
 			const usernameTaken = await checkUsernameUnique(serv.dbAccount, username);
 			if (usernameTaken)
-				return reply.code(409).send({ message: 'Username taken' });
+				return (reply.code(409).send({ message: 'Username taken' }));
 
 			const query = `
 				INSERT INTO usersAuth (hashedPassword, username, userStatus, registerDate)
@@ -34,7 +34,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[ACCOUNT] Error when trying to register: ${error}`);
-			throw error;
+			throw (error);
 		}
 	});
 

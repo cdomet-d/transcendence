@@ -27,7 +27,7 @@ export async function routeFriend(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[FRIENDS] Error checking relationship: ${error}`);
-			return reply.code(500).send({ message: '[FRIENDS] Internal server error.' });
+			throw(error);
 		}
 	});
 
@@ -70,10 +70,7 @@ export async function routeFriend(serv: FastifyInstance) {
 
 		} catch (error) {
 			console.error('[FRIENDS] Error processing friend request:', error);
-			return reply.code(500).send({
-				success: false,
-				message: '[FRIENDS] An internal error occurred.'
-			});
+			throw(error);
 		}
 	});
 
@@ -114,10 +111,7 @@ export async function routeFriend(serv: FastifyInstance) {
 
 		} catch (error) {
 			console.error('[FRIENDS] Error accepting friend request', error);
-			return (reply.code(500).send({
-				success: false,
-				message: '[FRIENDS] An internal error occured.'
-			}));
+			throw(error);
 		}
 	});
 
@@ -146,10 +140,7 @@ export async function routeFriend(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[FRIENDS] Error deleting friendship: ${error}`);
-			return (reply.code(500).send({
-				success: false,
-				message: '[FRIENDS] An internal error occured.'
-			}));
+			throw(error);
 		}
 	});
 
@@ -158,11 +149,11 @@ export async function routeFriend(serv: FastifyInstance) {
 			const { userID } = request.params as { userID: number };
 
 			const friends = await getFriendship(serv.dbFriends, userID);
-			return reply.code(200).send(friends);
+			return (reply.code(200).send(friends));
 
 		} catch (error) {
 			serv.log.error(`[FRIENDS] Error fetching friends list: ${error}`);
-			return reply.code(500).send({ message: 'Internal server error.' });
+			throw(error);
 		}
 	});
 
@@ -175,7 +166,7 @@ export async function routeFriend(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[FRIENDS] Error fetching friend request list: ${error}`);
-			return reply.code(500).send({ message: '[FRIENDS] Internal server error.' });
+			throw(error);
 		}
 	});
 
