@@ -8,7 +8,7 @@ export function updateBallPos(game: Game, player1: Player, player2: Player): boo
 	let newX: number = game.ball.x + (game.ball.dx * TIME_STEP);
 	let newY: number = game.ball.y + (game.ball.dy * TIME_STEP);
 
-	if (newX - 10 >= WIDTH + 150 || newX + 10 <= -150) {
+	if (newX - 10 >= WIDTH + 100 || newX + 10 <= -100) {
 		if (updateScore(player1, player2, newX))
 			return true;
 		game.ball.x = WIDTH / 2;
@@ -51,26 +51,13 @@ function updateScore(player1: Player, player2: Player, newX: number): boolean {
 	return false;
 }
 
-export function paddleCollision(leftPad: coordinates, rightPad: coordinates, newX: number, newY: number): boolean {
-	if (touchesRightPad(rightPad, newX, newY))
+function paddleCollision(leftPad: coordinates, rightPad: coordinates, newX: number, newY: number): boolean {
+	if (newX + 10 >= 460 && newX - 10 <= 470 
+		&& newY + 10 >= rightPad.y && newY - 10 <= rightPad.y + 54)
 		return true;
-	if (touchesLeftPad(leftPad, newX, newY))
+	if (newX - 10 <= leftPad.x + 10 && newX + 10 >= leftPad.x 
+		&& newY + 10 >= leftPad.y && newY - 10 <= leftPad.y + 54)
 		return true;
 	//TODO: check top of paddle
 	return false;
 }
-
-export function touchesRightPad(rightPad: coordinates, newX: number, newY: number): boolean {
-	//TODO: fix 460
-	if (newX + 10 >= 460 && newX - 10 <= 470 
-		&& newY + 10 >= rightPad.y && newY - 10 <= rightPad.y + 54)
-		return true;
-	return false
-}
-
-export function touchesLeftPad(leftPad: coordinates, newX: number, newY: number): boolean {
-	if (newX - 10 <= leftPad.x + 10 && newX + 10 >= leftPad.x 
-		&& newY + 10 >= leftPad.y && newY - 10 <= leftPad.y + 54)
-		return true;
-	return false;
-} 

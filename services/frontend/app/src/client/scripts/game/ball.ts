@@ -18,7 +18,7 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 	updateBallPos(game, newX, newY);
 }
 
-export function updateBallPos(game: Game, newX: number, newY: number): boolean {
+function updateBallPos(game: Game, newX: number, newY: number): boolean {
 	if ((newY + 10) >= HEIGHT || (newY - 10) <= 0 ) {
 		game.ball.dy *= -1;
 		newY = game.ball.y + (game.ball.dy * TIME_STEP);
@@ -32,25 +32,13 @@ export function updateBallPos(game: Game, newX: number, newY: number): boolean {
 	return false;
 }
 
-export function paddleCollision(leftPad: coordinates, rightPad: coordinates, newX: number, newY: number): boolean {
-	if (touchesRightPad(rightPad, newX, newY))
+function paddleCollision(leftPad: coordinates, rightPad: coordinates, newX: number, newY: number): boolean {
+	if (newX + 10 >= rightPad.x && newX - 10 <= rightPad.x + 10 
+		&& newY + 10 >= rightPad.y && newY - 10 <= rightPad.y + 54)
 		return true;
-	if (touchesLeftPad(leftPad, newX, newY))
+	if (newX - 10 <= leftPad.x + 10 && newX + 10 >= leftPad.x 
+		&& newY + 10 >= leftPad.y && newY - 10 <= leftPad.y + 54)
 		return true;
 	//TODO: check top of paddle
 	return false;
 }
-
-export function touchesRightPad(rightPad: coordinates, newX: number, newY: number): boolean {
-	if (newX + 10 >= rightPad.x && newX - 10 <= rightPad.x + 10 
-		&& newY + 10 >= rightPad.y && newY - 10 <= rightPad.y + 54)
-		return true;
-	return false
-}
-
-export function touchesLeftPad(leftPad: coordinates, newX: number, newY: number): boolean {
-	if (newX - 10 <= leftPad.x + 10 && newX + 10 >= leftPad.x 
-		&& newY + 10 >= leftPad.y && newY - 10 <= leftPad.y + 54)
-		return true;
-	return false;
-} 
