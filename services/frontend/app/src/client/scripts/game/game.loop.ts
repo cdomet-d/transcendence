@@ -7,10 +7,8 @@ const TIME_STEP: number = 1000 / 60; // 60FPS
 const MAX_SCORE: number = 5;
 
 export async function startGame(game: Game, ws: WebSocket) {
-	game.frameId = requestAnimationFrame((timestamp) => {
-		game.lastFrameTime = timestamp;
-		game.frameId = requestAnimationFrame(FrameRequestCallback(game, ws));
-	});
+	game.lastFrameTime = performance.now();
+	game.frameId = requestAnimationFrame(FrameRequestCallback(game, ws));
 }
 
 function FrameRequestCallback(game: Game, ws: WebSocket) {
@@ -62,23 +60,25 @@ function interpolation(game: Game, latestReply: repObj | undefined) {
 					(updates[1]._timestamp - updates[0]._timestamp);
 		if (!game.local)
 			game.rightPad.y = lerp(updates[0]._rightPad.y, updates[1]._rightPad.y, t);
-		// if (latestReply !== undefined && latestReply._ball.dx != game.ball.dx ) {
-		// 	// game.ball.x = lerp(updates[0]._ball.x, updates[1]._ball.x, t),
-		// 	// game.ball.y = lerp(updates[0]._ball.y, updates[1]._ball.y, t)
-		// 	game.ball.x = latestReply._ball.x;
-		// 	game.ball.y = latestReply._ball.y;
-		// 	game.ball.dx = latestReply._ball.dx;
-		// }
-		// else
-		// 	deadReckoning(game, latestReply);
+		if (latestReply !== undefined && latestReply._ball.dx != game.ball.dx ) {
+			// game.ball.x = lerp(updates[0]._ball.x, updates[1]._ball.x, t),
+			// game.ball.y = lerp(updates[0]._ball.y, updates[1]._ball.y, t)
+
+			// game.ball.x = latestReply._ball.x;
+			// game.ball.y = latestReply._ball.y;
+			
+			game.ball.dx = latestReply._ball.dx;
+		}
+		else
+			deadReckoning(game, latestReply);
 		game.deleteReplies(game.replyHistory.indexOf(updates[0]) - 1);
 	}
-	// else
+	else
 		deadReckoning(game, latestReply);
 }
 
 function lerp(start: number, end: number, t: number): number {
-	return start + Math.min(Math.max(t, 0), 1) * (end - start);
+	return start + (end - start) * Math.min(Math.max(t, 0), 1);
 }
 
 function deadReckoning(game: Game, latestReply: repObj | undefined) {
