@@ -47,6 +47,43 @@ export const user: types.UserData = {
     since: '145',
 };
 
+export const players: types.matchParticipants = {
+    player1: {
+        avatar: {
+            alt: 'pp',
+            id: 'user-avatar',
+            size: 'iicon',
+            src: '/assets/icons/magenta-avatar.png',
+        },
+        biography: '(╯°□°)╯︵ ┻━┻',
+        id: '256',
+        relation: 'stranger',
+        profileColor: 'bg-CE4257',
+        language: 'English',
+        status: true,
+        username: 'CrimeGoose',
+        winstreak: '7',
+        since: '145',
+    },
+    player2: {
+        avatar: {
+            alt: 'pp',
+            id: 'user-avatar',
+            size: 'iicon',
+            src: '/assets/icons/light-green-avatar.png',
+        },
+        biography: '>:)',
+        id: '64',
+        relation: 'stranger',
+        profileColor: 'bg-98A869',
+        language: 'English',
+        status: true,
+        username: 'ElGuapo',
+        winstreak: '4',
+        since: '35',
+    },
+};
+
 export const users: Array<types.UserData> = [user, user, user, user, user, user];
 
 export const mainMenu: Array<types.buttonData> = [
@@ -287,3 +324,5 @@ export const defaultMatchOut: types.inlineMatchResult = {
     score: '5-3',
     duration: "2'53",
 };
+
+export const tournament: types.matchParticipants[] = [players, players, players, players];

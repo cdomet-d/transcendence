@@ -10,13 +10,32 @@ Declaring them here forces Tailwind to include them in the compiled styles file,
 avoiding issues.
 
 bg-4F9FFF
-bg-00DFFF
 bg-5200FF
-bg-6EEB83
-bg-1BE7FF
 bg-000080
 bg-98A869
-bg-FF5714
 bg-BE5103
-bg-FDFBD4
 bg-CE4257
+
+col-start-1
+col-start-2
+col-start-3
+col-start-4
+col-start-5
+col-start-6
+col-start-7
+
+row-start-1
+row-start-2
+row-start-3
+row-start-4
+row-start-5
+row-start-6
+row-start-7
+
+row-span-1
+row-span-2
+row-span-3
+row-span-4
+row-span-5
+row-span-6
+row-span-7

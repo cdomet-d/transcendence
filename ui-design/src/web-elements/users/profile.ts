@@ -1,10 +1,9 @@
-import { createSocialMenu } from '../navigation/menu-helpers';
-import * as defaults from '../../default-values';
-import * as types from '../../types-interfaces';
-
 import { Avatar } from '../typography/images';
 import { Biography, Username, Winstreak } from './user-atoms';
+import { createSocialMenu } from '../navigation/menu-helpers';
+import { socialMenu } from '../../default-values';
 import { SocialMenu } from '../navigation/menus';
+import type { UserData, ImgData, ProfileView } from '../../types-interfaces';
 
 /**
  * A small user card with a dynamic social menu. It's just a div, styled to hold
@@ -27,7 +26,7 @@ export class UserProfile extends HTMLDivElement {
 
     constructor() {
         super();
-        this.#actionButtons = createSocialMenu(defaults.socialMenu, 'horizontal', 'stranger');
+        this.#actionButtons = createSocialMenu(socialMenu, 'horizontal', 'stranger');
         this.#avatar = document.createElement('div', { is: 'user-avatar' }) as Avatar;
         this.#biography = document.createElement('p', { is: 'user-bio' }) as Biography;
         this.#joinedSince = document.createElement('span') as HTMLSpanElement;
@@ -44,7 +43,7 @@ export class UserProfile extends HTMLDivElement {
         this.#username.status = status;
     }
 
-    set avatar(profilePic: types.ImgData) {
+    set avatar(profilePic: ImgData) {
         this.#avatar.metadata = profilePic;
     }
 
@@ -56,7 +55,7 @@ export class UserProfile extends HTMLDivElement {
         this.#winstreak.winstreakValue = val;
     }
 
-    set profileView(v: types.ProfileView) {
+    set profileView(v: ProfileView) {
         this.#actionButtons.view = v;
     }
 
@@ -73,6 +72,19 @@ export class UserProfile extends HTMLDivElement {
             this.classList.remove(this.#color);
             this.#color = newColor;
         }
+    }
+
+    set userInfo(user: UserData) {
+        this.profileId = user.id;
+        this.avatar = user.avatar;
+        this.username = user.username;
+        this.status = user.status;
+        this.winstreak = user.winstreak;
+        this.profileView = user.relation;
+        this.biography = user.biography;
+        this.profileAge = user.since;
+        this.color = user.profileColor;
+		this.render();
     }
 
     get getAvatar() {
@@ -104,7 +116,7 @@ export class UserProfile extends HTMLDivElement {
     }
 
     connectedCallback() {
-        this.className = 'pad-s box-border items-center place-items-center justify-items-center';
+        this.className = `pad-s box-border items-center place-items-center justify-items-center thin brdr ${this.#color} min-w-xl`;
         this.render();
     }
 
@@ -115,13 +127,13 @@ export class UserProfile extends HTMLDivElement {
             this.#joinedSince,
             this.#biography,
             this.#actionButtons,
-            this.#winstreak,
+            this.#winstreak
         );
         this.#username.customizeStyle('f-yellow', 'f-m', 'f-bold', true);
         this.#joinedSince.classList.add('f-clear');
         this.#biography.classList.add('row-span-2', 'f-clear');
         this.#avatar.classList.add('row-span-3');
-        this.classList.add(this.#color, 'grid', 'user-profile-header-grid', 'w-full');
+        this.classList.add('grid', 'user-profile-header-grid', 'w-full');
     }
 }
 
@@ -156,6 +168,7 @@ if (!customElements.get('user-card-social')) {
  */
 export class UserInline extends UserProfile {
     #clickHandler: (ev: MouseEvent) => void;
+
     constructor() {
         super();
         this.#clickHandler = this.attachClick.bind(this);
@@ -172,7 +185,7 @@ export class UserInline extends UserProfile {
         window.location.href = link.href;
     }
     override connectedCallback() {
-        this.className = 'pad-s box-border items-center place-items-center justify-items-center';
+		super.connectedCallback();
         this.addEventListener('click', this.#clickHandler);
         this.render();
     }
@@ -186,10 +199,9 @@ export class UserInline extends UserProfile {
         super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
         this.classList.add(
             'cursor-pointer',
-            'gap-m',
+            'gap-s',
             'flex',
             'flex-initial',
-            `hover:${super.getColor}`,
         );
     }
 }

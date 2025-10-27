@@ -9,7 +9,7 @@ export class Icon extends HTMLImageElement {
 
     constructor() {
         super();
-        this.#data = { src: '', alt: '', size: 'ismall', id: '' };
+        this.#data = { src: '', alt: '', size: 'iicon', id: '' };
     }
 
     set metadata(data: ImgData) {
@@ -52,7 +52,7 @@ export class Avatar extends HTMLDivElement {
             src: '/assets/icons/default-avatar.png',
             id: 'default-avatar',
             alt: "A pixel art blue blob with a neutral expression, the site's default avatar",
-            size: 'imedium',
+            size: 'iicon',
         };
         this.#img = document.createElement('img', { is: 'custom-icon' }) as Icon;
         this.#img.metadata = this.#data;

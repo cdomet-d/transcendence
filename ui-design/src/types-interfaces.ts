@@ -195,3 +195,8 @@ export interface inlineMatchResult {
     score: string;
     duration: string;
 }
+
+export interface matchParticipants {
+	player1: UserData;
+	player2: UserData;
+}
