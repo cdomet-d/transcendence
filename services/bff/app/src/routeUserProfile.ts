@@ -1,11 +1,14 @@
 import type { FastifyInstance } from 'fastify';
-import type { UserProfileView  } from './bff.interface.js';
+import type { UserProfileView, userData } from './bff.interface.js';
 import * as bcrypt from 'bcrypt';
-import { fetchMatches, fetchUserProfile, fetchFriendList, fetchUserStats } from './bffUserProfile.service.js';
-import { updatePassword, updateUsername, updateBio, updateProfileColor, updateDefaultLang, updateAvatar } from './bffAccount.service.js';
+import { fetchProfileData, fetchUserID, fetchMatches, fetchUserProfile, fetchFriendList, fetchUserStats, fetchRelationship } from './bffUserProfile.service.js';
+import { updatePassword, fetchUserDataAccount, updateUsername, updateBio, updateProfileColor, updateDefaultLang, updateAvatar } from './bffAccount.service.js';
+
+
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
 
+	//TODO : fix this 
 	//get's profile + stats + game + friendslist
 	serv.get('/users/profile', async (request, reply) => {
 		try {
@@ -17,8 +20,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			] = await Promise.all([
 				fetchUserProfile(request.user.userID),
 				fetchUserStats(request.user.userID),
-				fetchFriendList(request.user.userID),
-				fetchMatches(request.user.userID)
+				fetchFriendList(serv.log, request.user.userID),
+				fetchMatches(serv.log, request.user.userID)
 			]);
 
 			if (!profile || !stats)
@@ -55,8 +58,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			}
 			if (body.avatar)
 				updateTasks.push(updateAvatar(serv.log, userID, body.avatar));
-			if (body.bio)
-				updateTasks.push(updateBio(serv.log, userID, body.bio));
+			if (body.biography)
+				updateTasks.push(updateBio(serv.log, userID, body.biography));
 			if (body.profileColor)
 				updateTasks.push(updateProfileColor(serv.log, userID, body.profileColor));
 			if (body.defaultLang)
@@ -84,13 +87,60 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//TODO code the friends list with the userData interface
 	serv.get('/friends/friendslist', async (request, reply) => {
 		try {
-			fetchFriendList(request.user.userID);
-			return(reply)
+			fetchFriendList(serv.log, request.user.userID);
+			return (reply)
 
 		} catch (error) {
 			serv.log.error(`[BFF] Error building user profile view: ${error}`);
+			throw (error);
+		}
+	});
+
+	serv.get('/users/:userID/profile', async (request, reply) => {
+		try {
+			const { username: targetUsername } = request.params as { username: string };
+			const { userID: viewerUserID } = request.user as { userID: number };
+
+			if (!viewerUserID)
+				return (reply.code(401).send({ message: 'Unauthorized.' }));
+			
+			const targetUserID = await fetchUserID(serv.log, targetUsername);
+			
+			const [
+				AccountData,
+				ProfileData,
+				relation
+			] = await Promise.all([
+				fetchUserDataAccount(serv.log, Number(targetUserID)),
+				fetchProfileData(serv.log, Number(targetUserID)),
+				fetchRelationship(serv.log, viewerUserID, targetUsername),
+			]);
+
+			const combinedUserData: userData = {
+				userID: String(targetUserID),
+				username: AccountData.username,
+				avatar: ProfileData.avatar,
+				biography: ProfileData.biography,
+				profileColor: ProfileData.profileColor,
+				language: AccountData.defaultLang,
+				since: AccountData.registerDate,
+				status: AccountData.userStatus,
+				relation: relation,
+			};
+
+			return (reply.code(200).send(combinedUserData));
+
+		} catch (error) {
+			if (typeof error === 'object' && error !== null && 'message' in error &&
+				(error as { message: string }).message.includes('User data not found'))
+					return (reply.code(404).send({ message: 'User not found.' }));
+			if (error instanceof Error) 
+				serv.log.error(`[BFF] Failed to build user profile: ${error.message}`);
+			else 
+				serv.log.error(`[BFF] Failed to build user profile: An unknown error occurred.`);
 			throw (error);
 		}
 	});

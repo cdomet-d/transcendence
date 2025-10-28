@@ -377,17 +377,17 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user's biography with userID
-	serv.patch('/internal/users/:userID/bio', async (request, reply) => {
+	serv.patch('/internal/users/:userID/biography', async (request, reply) => {
 		try {
 			const userID = request.params as { userID: string };
-			const { bio } = request.body as { bio: string };
+			const { biography } = request.body as { biography: string };
 
 			const query = `
 				UPDATE userProfile SET biography = ? WHERE userID = ?
 			`;
 
 			const params = [
-				bio,
+				biography,
 				userID
 			];
 
@@ -574,12 +574,68 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODOt
 	serv.get('internal/users/:userID/userData', async (request, reply) => {
 		try {
+			const { userID } = request.params as { userID: string };
 
+			const query = `
+				SELECT
+					p.avatar,
+					p.biography,
+					p.profileColor,
+					s.winStreak
+				FROM
+					userProfile p
+				JOIN
+					userStats s ON p.userID = s.userID
+				WHERE
+					p.userID = ?
+			`;
+
+			const userData = await serv.dbUsers.get(query, [userID]);
+			if (!userData) {
+				return (reply.code(404).send({
+					success: false,
+					message: 'User data not found.'
+				}));
+			}
+
+			return (reply.code(200).send({ success: true, userData }));
 		} catch (error) {
 			serv.log.error(`[USERS] Error fetching user data win streak: ${error}`);
+			throw (error);
+		}
+	});
+
+	serv.post('/internal/users/userDataBatch', async (request, reply) => {
+		try {
+			const { userIDs } = request.body as { userIDs: number[] };
+
+			if (!userIDs || userIDs.length === 0)
+				return (reply.code(200).send([]));
+
+			const placeholders = userIDs.map(() => '?').join(',');
+
+			const query = `
+				SELECT
+					p.userID,
+					p.avatar,
+					p.biography,
+					p.profileColor,
+					s.winStreak
+				FROM
+					userProfile p
+				JOIN
+					userStats s ON p.userID = s.userID
+				WHERE
+					p.userID IN (${placeholders})
+			`;
+
+			const usersData = await serv.dbUsers.all(query, userIDs);
+			return (reply.code(200).send({success: true, usersData}));
+
+		} catch (error) {
+			serv.log.error(`[USERS] Error fetching user data batch: ${error}`);
 			throw (error);
 		}
 	});

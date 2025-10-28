@@ -1,12 +1,11 @@
 import type { FastifyInstance } from 'fastify';
 
 import { findUserByUsername } from './bffFriends.service.js';
-import { createFriendRequest } from './bffFriends.service.js';
-import { acceptFriendRequest } from './bffFriends.service.js';
-import { deleteFriendRequest } from './bffFriends.service.js';
+import { createFriendRequest, deleteFriendRequest, acceptFriendRequest } from './bffFriends.service.js';
 
 export async function bffFriendRoutes(serv: FastifyInstance) {
 
+	//TODO fix this
 	serv.post('/friends/sendrequest', async (request, reply) => {
 		try {
 			const senderID = request.user.userID;
@@ -20,11 +19,11 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			if (senderUsername === friendUsername)
 				return reply.code(400).send({ message: '[BFF] You cannot send a friend request to yourself.' });
 
-			const friendUser = await findUserByUsername(friendUsername);
+			const friendUser = await findUserByUsername(serv.log, friendUsername);
 			if (!friendUser)
 				return reply.code(404).send({ message: `[BFF] User '${friendUsername}' not found.` });
 
-			const friendsServiceResponse = await createFriendRequest(senderID, friendUser.userID);
+			const friendsServiceResponse = await createFriendRequest(serv.log, senderID, friendUser.userID);
 			return (reply
 				.code(friendsServiceResponse.status)
 				.send(await friendsServiceResponse.json()));
@@ -34,6 +33,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			return reply.code(503).send({ message: '[BFF] A backend service is currently unavailable.' });
 		}
 	});
+	//TODO fix this
 
 	serv.patch('/friends/acceptrequest', async (request, reply) => {
 		try {
@@ -48,11 +48,11 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			if (senderRequestUsername === receiverUsername)
 				return reply.code(400).send({ message: '[BFF] You cannot accept a friend request to yourself.' });
 
-			const senderRequestUser = await findUserByUsername(senderRequestUsername);
+			const senderRequestUser = await findUserByUsername(serv.log, senderRequestUsername);
 			if (!senderRequestUser)
 				return reply.code(404).send({ message: `[BFF] User '${senderRequestUsername}' not found.` });
 
-			const friendsServiceResponse = await acceptFriendRequest(receiverID, senderRequestUser.userID);
+			const friendsServiceResponse = await acceptFriendRequest(serv.log, receiverID, senderRequestUser.userID);
 			return (reply
 				.code(friendsServiceResponse.status)
 				.send(await friendsServiceResponse.json()));
@@ -62,6 +62,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			return reply.code(503).send({ message: '[BFF] A backend service is currently unavailable.' });
 		}
 	});
+	//TODO fix this
 
 	serv.delete('/friends/deletefriendship', async (request, reply) => {
 		try {
@@ -76,11 +77,11 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			if (friendUsername === removerUsername)
 				return reply.code(400).send({ message: '[BFF] You cannot accept a friend request to yourself.' });
 
-			const friendUser = await findUserByUsername(friendUsername);
+			const friendUser = await findUserByUsername(serv.log, friendUsername);
 			if (!friendUser)
 				return reply.code(404).send({ message: `[BFF] User '${friendUsername}' not found.` });
 
-			const friendsServiceResponse = await deleteFriendRequest(removerID, friendUser.userID);
+			const friendsServiceResponse = await deleteFriendRequest(serv.log, removerID, friendUser.userID);
 			return (reply
 				.code(friendsServiceResponse.status)
 				.send(await friendsServiceResponse.json()));

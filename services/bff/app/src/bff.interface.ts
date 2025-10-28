@@ -1,11 +1,21 @@
-import type { StringMappingType } from "typescript";
-
 export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
-export type StatusUser = 'offline' | 'online' | 'in-game';
+export type userStatus = 'offline' | 'online' | 'in-game';
 
 export interface ProfileResponse {
 	success: boolean;
 	profile: UserProfile;
+}
+
+export interface userData {
+	avatar: string,
+	biography: string,
+	userID: string,
+	language: string,
+	profileColor: string,
+	relation: ProfileView,
+	status: userStatus,
+	username: string,
+	since: string
 }
 
 export interface Friends {
@@ -30,7 +40,7 @@ export interface UserStats {
 	[key: string]: number;
 }
 
-export interface RawUserActivity { activityStatus: StatusUser; }
+export interface RawUserActivity { activityStatus: userStatus; }
 export interface FriendshipStatus { status: ProfileView; }
 
 export interface UserAuth {
@@ -38,25 +48,58 @@ export interface UserAuth {
 	username: string
 }
 
-export interface UserDataUser {
+export interface ProfileData {
 	avatar: string,
-	bio: string,
+	biography: string,
 	profileColor: string,
 	winstreak: string,
 }
 
-export interface UserDataAccount {
-	username: string,
-	since: string,
-	userID: string,
-	status: string,
-	language: string
+export interface ProfileDataResponse {
+	success: boolean;
+	profileData: ProfileData;
+	message?: string;
 }
 
-export interface UserData {
+export interface ProfileDataBatch {
+	userID: number;
+	avatar: string;
+	biography: string;
+	profileColor: string;
+	winStreak: number;
+}
+
+export interface ProfileDataBatchResponse {
+	success: boolean;
+	profileData: ProfileDataBatch[];
+	message?: string;
+}
+
+
+export interface AccountDataBatchResponse {
+	success: boolean;
+	accountData: AccountData[];
+	message?: string;
+}
+
+export interface AccountDataResponse {
+	success: boolean;
+	accountData: AccountData;
+	message?: string;
+}
+
+export interface AccountData {
+	username: string,
+	registerDate: string,
+	userID: string,
+	userStatus: userStatus,
+	defaultLang: string
+}
+
+export interface profileData {
 	avatar: string,
 	biography: string,
-	language:string,
+	language: string,
 	profileColor: string,
 	relation: ProfileView,
 	status: boolean;
@@ -86,9 +129,10 @@ export interface Matches {
 }
 
 export interface UserProfileView {
-	profile: UserData;
+	userData: userData
+	profile: profileData;
 	stats: UserStats;
-	friends: UserData[];
+	friends: ProfileDataBatch[];
 	recentMatches: Matches[];
 }
 

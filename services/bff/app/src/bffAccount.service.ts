@@ -1,4 +1,4 @@
-import type { ProfileCreationResult } from "./bff.interface.js";
+import type { ProfileCreationResult, AccountData, AccountDataResponse, AccountDataBatchResponse } from "./bff.interface.js";
 //THIS FILE IS DOOOOONE 
 // GO FOCUS ON OTHER THINGS PLEASE
 
@@ -237,14 +237,14 @@ export async function deleteFriendship(log: any, userID: number): Promise<Respon
 	return (response.json() as Promise<Response>);
 }
 
-export async function updateBio(log: any, userID: number, bio: string): Promise<void> {
-	const url = `http://account:1414/internal/users/${userID}/bio`;
+export async function updateBio(log: any, userID: number, biography: string): Promise<void> {
+	const url = `http://account:1414/internal/users/${userID}/biography`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
 			method: 'PATCH',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ bio: bio })
+			body: JSON.stringify({ biography: biography })
 		});
 	} catch (error) {
 		log.error(`[BFF] User service is unreachable: ${error}`);
@@ -257,7 +257,7 @@ export async function updateBio(log: any, userID: number, bio: string): Promise<
 	}
 
 	if (response.status === 404) {
-		log.warn(`[BFF] User not found for bio update: ${userID}`);
+		log.warn(`[BFF] User not found for biography update: ${userID}`);
 		throw new Error('User not found in profile service.');
 	}
 
@@ -361,3 +361,66 @@ export async function updateAvatar(log: any, userID: number, avatar: string): Pr
 	return;
 }
 
+export async function fetchUserDataAccount(log: any, userID: number): Promise<AccountData> {
+	const url = `http://account:1414/internal/account/${userID}/userData`;
+		let response: Response;
+	
+		try {
+			response = await fetch(url);
+		} catch (error) {
+			log.error(`[BFF] Account service is unreachable: ${error}`);
+			throw new Error('Account service is unreachable.');
+		}
+	
+		if (response.status === 404) {
+			log.warn(`[BFF] Account data not found for user ${userID}`);
+			throw new Error('User data not found.');
+		}
+	
+		if (!response.ok) {
+			log.error(`[BFF] Account service failed with status ${response.status}`);
+			throw new Error('User service failed.');
+		}
+	
+		const body = (await response.json()) as AccountDataResponse;
+	
+		if (!body.success || !body.accountData) {
+			log.error(`[BFF] User service (userData) returned 200 OK but with a failure body.`);
+			throw new Error('User service returned invalid data.');
+		}
+	
+		return (body.accountData);
+}
+
+export async function fetchUserDataBatch(log: any, userIDs: number[]): Promise<AccountData[]> {
+	if (!userIDs || userIDs.length === 0)
+		return [];
+
+	const url = 'http://account:1414/internal/account/userDataBatch';
+	let response: Response;
+
+	try {
+		response = await fetch(url, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ userIDs: userIDs }),
+		});
+	} catch (error) {
+		log.error(`[BFF] Account service (userDataBatch) is unreachable: ${error}`);
+		throw new Error('Account service is unreachable.');
+	}
+
+	if (!response.ok) {
+		log.error(`[BFF] Account service (userDataBatch) failed with status ${response.status}`);
+		throw new Error('Account service (batch) failed.');
+	}
+
+	const body = (await response.json()) as AccountDataBatchResponse;
+
+	if (!body.success || !body.accountData) {
+		log.error(`[BFF] Account service (userDataBatch) returned 200 OK but with a failure body.`);
+		throw new Error('Account service (batch) returned invalid data.');
+	}
+
+	return (body.accountData);
+}

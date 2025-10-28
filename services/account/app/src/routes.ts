@@ -18,7 +18,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 				return (reply.code(409).send({ message: 'Username taken' }));
 
 			const query = `
-				INSERT INTO usersAuth (hashedPassword, username, userStatus, registerDate)
+				INSERT INTO account (hashedPassword, username, userStatus, registerDate)
 				VALUES (?, ?, 1, ?, English)
 			`;
 			const params = [hashedPassword, username, new Date().toISOString()];
@@ -44,7 +44,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const { password } = request.body as { password: string };
 
 			const query = `
-				SELECT userId, hashedPassword FROM usersAuth WHERE username = ?
+				SELECT userId, hashedPassword FROM account WHERE username = ?
 			`
 			const user = await serv.dbAccount.get(query, [username]);
 			if (!user)
@@ -88,7 +88,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const { userID } = request.params as { userID: number };
 			const { newUsername } = request.body as { newUsername: string };
 
-			const query = `UPDATE usersAuth SET username = ? WHERE userID = ?`;
+			const query = `UPDATE account SET username = ? WHERE userID = ?`;
 			const response = await serv.dbAccount.run(query, [newUsername, userID]);
 
 			if (response.changes === 0)
@@ -100,7 +100,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 				return (reply.code(409).send({ message: '[ACCOUNT] Username is already taken.' }));
 
 			serv.log.error(`[ACCOUNT] Error updating account username: ${error}`);
-			throw(error);
+			throw (error);
 		}
 	});
 
@@ -109,7 +109,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const { userID } = request.params as { userID: number };
 			const { defaultLang } = request.body as { defaultLang: string };
 
-			const query = `UPDATE usersAuth SET defaultLang = ? WHERE userID = ?`;
+			const query = `UPDATE account SET defaultLang = ? WHERE userID = ?`;
 			const response = await serv.dbAccount.run(query, [defaultLang, userID]);
 
 			if (response.changes === 0)
@@ -118,7 +118,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			return (reply.code(200).send({ message: '[ACCOUNT] Account default language updated.' }));
 		} catch (error) {
 			serv.log.error(`[ACCOUNT] Error updating account username: ${error}`);
-			throw(error);
+			throw (error);
 		}
 	});
 
@@ -126,11 +126,11 @@ export async function accountRoutes(serv: FastifyInstance) {
 		try {
 			const { userID } = request.body as { userID: string };
 
-			const query = `DELETE FROM usersAuth WHERE userID = ?`;
+			const query = `DELETE FROM account WHERE userID = ?`;
 
 			const result = await serv.dbAccount.run(query, [userID]);
 			if (!result.changes)
-				return (reply.code(404).send({message: '[ACCOUNT] Account not found'}))
+				return (reply.code(404).send({ message: '[ACCOUNT] Account not found' }))
 			return (reply.code(204).send());
 		} catch (error) {
 			serv.log.error(`[ACCOUNT] Error deleting account: ${error}`);
@@ -143,7 +143,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const userID = request.params as { userID: string };
 
 			const query = `
-				SELECT defaultLang FROM usersAuth WHERE userID = ?
+				SELECT defaultLang FROM account WHERE userID = ?
 			`
 			const response = await serv.dbAccount.get(query, [userID]) as AccountSettingsRow | undefined;
 			if (!response)
@@ -154,6 +154,69 @@ export async function accountRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			serv.log.error(`[ACCOUNT] Error fetching settings: ${error}`);
 			return (reply.code(500).send({ message: '[ACCOUNT] Internal server error' }));
+		}
+	});
+
+	serv.get('internal/account/:userID/userData', async (request, reply) => {
+		try {
+			const { userID } = request.params as { userID: string };
+
+			const query = `
+				SELECT
+					p.uername,
+					p.userStatus,
+					p.registerDate,
+					p.defaultLang,
+					p.registerDate
+				FROM
+					account p
+				WHERE
+					p.userID = ?
+			`;
+
+			const userData = await serv.dbAccount.get(query, [userID]);
+			if (!userData) {
+				return (reply.code(404).send({
+					success: false,
+					message: 'User data not found.'
+				}));
+			}
+
+			return (reply.code(200).send({ success: true, userData }));
+		} catch (error) {
+			serv.log.error(`[ACCOUNT] Error fetching account data: ${error}`);
+			throw (error);
+		}
+	});
+
+	serv.post('/internal/account/userDataBatch', async (request, reply) => {
+		try {
+			const { userIDs } = request.body as { userIDs: number[] };
+
+			if (!userIDs || userIDs.length === 0)
+				return (reply.code(200).send([]));
+
+			const placeholders = userIDs.map(() => '?').join(',');
+
+			const query = `
+				SELECT
+					p.username,
+					p.userStatus,
+					p.registerDate,
+					p.defaultLang,
+					p.registerDate
+				FROM
+					account p
+				WHERE
+					p.userID IN (${placeholders})
+			`;
+
+			const usersData = await serv.dbAccount.all(query, userIDs);
+			return (reply.code(200).send({ success: true, usersData }));
+
+		} catch (error) {
+			serv.log.error(`[ACCOUNT] Error fetching account data batch: ${ error } `);
+			throw (error);
 		}
 	});
 }

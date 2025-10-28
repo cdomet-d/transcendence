@@ -1,4 +1,4 @@
-CREATE TABLE usersAuth (
+CREATE TABLE account (
 	userID INTEGER PRIMARY KEY,
 	hashedPassword TEXT,
 	username TEXT,

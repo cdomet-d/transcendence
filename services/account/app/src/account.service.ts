@@ -3,7 +3,7 @@ import { Database } from "sqlite";
 export async function checkUsernameUnique(db: Database, username: string): Promise<boolean> {
 	try {
 		const query = `
-			SELECT 1 FROM usersAuth WHERE username = ? LIMIT 1
+			SELECT 1 FROM account WHERE username = ? LIMIT 1
 		`;
 		const response = await db.all(query, username);
 

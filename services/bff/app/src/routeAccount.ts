@@ -30,6 +30,7 @@ const payload = { userID: 123 };
 const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 */
 
+	//TODO fix this
 export async function bffAccountRoutes(serv: FastifyInstance) {
 
 	serv.post('/account/login', async (request, reply) => {
