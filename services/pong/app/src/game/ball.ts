@@ -23,12 +23,26 @@ export function updateBallPos(game: Game, player1: Player, player2: Player): boo
 		return false;
 	}
 
-	if ((newY + 10) >= HEIGHT || (newY - 10) <= 0 ) {
-		game.ball.dy *= -1;
+	if ((newY + 10) >= HEIGHT || (newY - 10) <= 0) {
+		if (game.ball.dy > 0.5 || game.ball.dy < -0.5)
+			game.ball.dy *= -1;
+		else
+			game.ball.dy *= -1.1;
+		if (game.ball.dx <= 0.5 && game.ball.dx >= -0.5) {
+			game.ball.dx *= 1.1;
+			newX = game.ball.x + (game.ball.dx * TIME_STEP);
+		}
 		newY = game.ball.y + (game.ball.dy * TIME_STEP);
 	}
 	if (paddleCollision(player1.paddle, player2.paddle, newX, newY)) {
-		game.ball.dx *= -1;
+		if (game.ball.dx > 0.5 || game.ball.dx < -0.5)
+			game.ball.dx *= -1;
+		else
+			game.ball.dx *= -1.1;
+		if (game.ball.dy <= 0.5 && game.ball.dy >= -0.5) {
+			game.ball.dy *= 1.1;
+			newY = game.ball.y + (game.ball.dy * TIME_STEP);
+		}
 		newX = game.ball.x + (game.ball.dx * TIME_STEP);
 	}
 

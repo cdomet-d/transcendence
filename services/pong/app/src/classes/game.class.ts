@@ -49,9 +49,14 @@ export class Game {
 	constructor(gameInfo: gameInfo) {
 		this.#_gameInfo = gameInfo;
 		this.#_players = new Array();
-		this.#_ball = {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025};
+		this.#_ball = {
+			x: WIDTH / 2, 
+			y: HEIGHT / 2, 
+			dx: 0.3, 
+			dy: 0.03
+		};
 		this.#_ballDir = -1;
-		this.#_paddleSpeed = 0.15;
+		this.#_paddleSpeed = 0.2;
 		this.#_reqHistory = new Array();
 		this.#_lastTick = 0;
 		this.#_timeoutID = null;
