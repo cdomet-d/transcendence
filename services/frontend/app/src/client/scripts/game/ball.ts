@@ -2,6 +2,7 @@ import { Game, HEIGHT, type ballObj } from "./game.class.js";
 import type { coordinates, repObj } from "./mess.validation.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
+const BALL_RADIUS: number = 10;
 
 export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 	console.log("IN DEADRECKONING");
@@ -19,39 +20,42 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 }
 
 function updateBallPos(game: Game, newX: number, newY: number): boolean {
-	if ((newY + 10) >= HEIGHT || (newY - 10) <= 0 ) {
-		if (game.ball.dy >= 0.5 || game.ball.dy <= -0.5)
-			game.ball.dy *= -1;
-		else
-			game.ball.dy *= -1.1;
-		if (game.ball.dx <= 0.5 && game.ball.dx >= -0.5) {
-			game.ball.dx *= 1.1;
-			newX = game.ball.x + (game.ball.dx * TIME_STEP);
-		}
+	if ((newY + BALL_RADIUS) >= HEIGHT || (newY - BALL_RADIUS) <= 0 ) {
+		[game.ball.dy, game.ball.dx] = increaseVelocity(game.ball.dy, game.ball.dx);
+		newX = game.ball.x + (game.ball.dx * TIME_STEP);
 		newY = game.ball.y + (game.ball.dy * TIME_STEP);
 	}
 	if (paddleCollision(game.leftPad, game.leftPad, newX, newY)) {
-		if (game.ball.dx >= 0.5 || game.ball.dx <= -0.5)
-			game.ball.dx *= -1;
-		else
-			game.ball.dx *= -1.1;
-		if (game.ball.dy <= 0.5 && game.ball.dy >= -0.5) {
-			game.ball.dy *= 1.1;
-			newY = game.ball.y + (game.ball.dy * TIME_STEP);
-		}
+		[game.ball.dx, game.ball.dy] = increaseVelocity(game.ball.dx, game.ball.dy);
+		newY = game.ball.y + (game.ball.dy * TIME_STEP);
 		newX = game.ball.x + (game.ball.dx * TIME_STEP);
 	}
+
 	game.ball.x = newX;
 	game.ball.y = newY;
 	return false;
 }
 
+function increaseVelocity(v1: number, v2: number): [number, number] {
+	if (v1 > 0.5 || v1 < -0.5)
+		v1 *= -1;
+	else
+		v1 *= -1.1;
+	if (v2 <= 0.5 && v2 >= -0.5)
+		v2 *= 1.1;
+	return [v1, v2];
+}
+
 function paddleCollision(leftPad: coordinates, rightPad: coordinates, newX: number, newY: number): boolean {
-	if (newX + 10 >= rightPad.x && newX - 10 <= rightPad.x + 10 
-		&& newY + 10 >= rightPad.y && newY - 10 <= rightPad.y + 54)
+	if (newX + BALL_RADIUS >= rightPad.x 
+		&& newX - BALL_RADIUS <= rightPad.x + BALL_RADIUS 
+		&& newY + BALL_RADIUS >= rightPad.y 
+		&& newY - BALL_RADIUS <= rightPad.y + 54)
 		return true;
-	if (newX - 10 <= leftPad.x + 10 && newX + 10 >= leftPad.x 
-		&& newY + 10 >= leftPad.y && newY - 10 <= leftPad.y + 54)
+	if (newX - BALL_RADIUS <= leftPad.x + BALL_RADIUS 
+		&& newX + BALL_RADIUS >= leftPad.x 
+		&& newY + BALL_RADIUS >= leftPad.y 
+		&& newY - BALL_RADIUS <= leftPad.y + 54)
 		return true;
 	//TODO: check top of paddle
 	return false;
