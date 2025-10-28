@@ -1,4 +1,4 @@
-import { Game, HEIGHT, WIDTH, type ballObj } from "./game.class.js";
+import { Game, HEIGHT, type ballObj } from "./game.class.js";
 import type { coordinates, repObj } from "./mess.validation.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
@@ -20,11 +20,25 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 
 function updateBallPos(game: Game, newX: number, newY: number): boolean {
 	if ((newY + 10) >= HEIGHT || (newY - 10) <= 0 ) {
-		game.ball.dy *= -1;
+		if (game.ball.dy >= 0.5 || game.ball.dy <= -0.5)
+			game.ball.dy *= -1;
+		else
+			game.ball.dy *= -1.1;
+		if (game.ball.dx <= 0.5 && game.ball.dx >= -0.5) {
+			game.ball.dx *= 1.1;
+			newX = game.ball.x + (game.ball.dx * TIME_STEP);
+		}
 		newY = game.ball.y + (game.ball.dy * TIME_STEP);
 	}
 	if (paddleCollision(game.leftPad, game.leftPad, newX, newY)) {
-		game.ball.dx *= -1;
+		if (game.ball.dx >= 0.5 || game.ball.dx <= -0.5)
+			game.ball.dx *= -1;
+		else
+			game.ball.dx *= -1.1;
+		if (game.ball.dy <= 0.5 && game.ball.dy >= -0.5) {
+			game.ball.dy *= 1.1;
+			newY = game.ball.y + (game.ball.dy * TIME_STEP);
+		}
 		newX = game.ball.x + (game.ball.dx * TIME_STEP);
 	}
 	game.ball.x = newX;

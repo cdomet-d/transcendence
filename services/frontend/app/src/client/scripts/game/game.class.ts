@@ -51,11 +51,11 @@ export class Game {
 			x: WIDTH / 2, 
 			y: HEIGHT / 2, 
 			dx: 0.3, 
-			dy: 0.025, 
+			dy: 0.03, 
 		};
 		this.#_leftPaddle = {x: 10, y: 108}; //TODO: put operation
 		this.#_rightPaddle = {x: 460, y: 108};
-		this.#_paddleSpeed = 0.15;
+		this.#_paddleSpeed = 0.2;
 		this.#_frameId = 0
 		this.#_delta = 0;
 		this.#_lastFrameTime = 0;
