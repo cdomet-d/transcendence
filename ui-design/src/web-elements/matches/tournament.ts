@@ -69,7 +69,7 @@ export class BracketConnectors extends HTMLCanvasElement {
 }
 
 if (!customElements.get('t-canva')) {
-    customElements.define('t-canva', Match, { extends: 'canvas' });
+    customElements.define('t-canva', BracketConnectors, { extends: 'canvas' });
 }
 
 //TODO: handle tournament bracket connection

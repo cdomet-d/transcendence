@@ -41,7 +41,7 @@ export class UserSettingsForm extends BaseForm {
     renderDropdowns() {
         const dropdownWrapper = document.createElement('div');
         dropdownWrapper.append(this.#colors, this.#languages);
-        dropdownWrapper.className = 'grid gap-s grid-flow-col z-1';
+        dropdownWrapper.className = 'grid gap-s grid-flow-col';
         this.append(dropdownWrapper);
     }
 

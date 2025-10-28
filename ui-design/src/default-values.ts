@@ -4,7 +4,7 @@ export const biographyPattern: string = '^[A-Za-z0-9\\s,\\.\\?!:\\)\\(\\/\\-_]{0
 export const passwordPattern: string = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{12,64}$';
 export const usernamePattern: string = '^[A-Za-z0-9_\\-]{4,18}$';
 
-export const socialMenu: Array<types.buttonData> = [
+export const socialMenu: types.buttonData[] = [
     {
         ariaLabel: 'Add user as friend',
         content: null,
@@ -49,18 +49,18 @@ export const user: types.UserData = {
 
 export const users: Array<types.UserData> = [user, user, user, user, user, user];
 
-export const mainMenu: Array<types.buttonData> = [
+export const mainMenu: types.buttonData[] = [
     { content: 'Leaderboard', type: 'button', img: null, ariaLabel: 'Leaderboard Menu Button' },
     { content: 'Play', type: 'button', img: null, ariaLabel: 'Pong Game Menu Button' },
     { content: 'Profile', type: 'button', img: null, ariaLabel: 'User Profile Menu Button' },
 ];
 
-export const gameMenu: Array<types.buttonData> = [
+export const gameMenu: types.buttonData[] = [
     { content: 'Local game', type: 'button', img: null, ariaLabel: 'Play a local game' },
     { content: 'Remote game', type: 'button', img: null, ariaLabel: 'Play a remote game' },
 ];
 
-export const userColorsMenu: Array<types.buttonData> = [
+export const userColorsMenu: types.buttonData[] = [
     {
         ariaLabel: '#hexcode color for profile customisation',
         content: '4F9FFF',
@@ -99,26 +99,55 @@ export const userColorsMenu: Array<types.buttonData> = [
     },
 ];
 
-export const languageMenu: Array<types.buttonData> = [
+export const languageMenu: types.buttonData[] = [
     {
-        ariaLabel: '#hexcode color for profile customisation',
+        ariaLabel: 'English',
         content: 'English',
         img: null,
         type: 'button',
     },
     {
-        ariaLabel: '#hexcode color for profile customisation',
+        ariaLabel: 'Spanish',
         content: 'Spanish',
         img: null,
         type: 'button',
     },
     {
-        ariaLabel: '#hexcode color for profile customisation',
+        ariaLabel: 'French',
         content: 'French',
         img: null,
         type: 'button',
     },
 ];
+
+export const backgroundMenu: types.buttonData[] = [
+    {
+        ariaLabel: 'farm',
+        content: 'Adorable Farm',
+        img: null,
+        type: 'button',
+    },
+    {
+        ariaLabel: 'forest',
+        content: 'Enchanted Forest',
+        img: null,
+        type: 'button',
+    },
+    {
+        ariaLabel: 'underwater',
+        content: 'Magical Underwater',
+        img: null,
+        type: 'button',
+    },
+    {
+        ariaLabel: 'Snow',
+        content: 'Mysterious Snow',
+        img: null,
+        type: 'button',
+    },
+];
+
+
 export const iMeta: types.ImgData = {
     alt: 'pp',
     id: 'user-avatar',
@@ -270,6 +299,58 @@ export const search: types.formDetails = {
     button: { type: 'submit', content: 'Search', img: null, ariaLabel: '' },
 };
 
+export const localPong: types.formDetails = {
+    action: '/gameManager',
+    heading: 'Local Pong',
+    ariaLabel: 'Pong settings',
+    id: 'local-pong-settings',
+    method: 'post',
+    fields: [
+        {
+            id: 'opponent',
+            labelContent: 'Opponent Nickname',
+            pattern: usernamePattern,
+            placeholder: "Challenger's nickname",
+            type: 'text',
+            required: true,
+        },
+        {
+            id: 'ballspeed',
+            labelContent: 'Starting Ball Speed',
+            max: '5',
+            min: '0',
+            pattern: '',
+            placeholder: '',
+            required: true,
+            step: '1',
+            type: 'range',
+        },
+        {
+            id: 'paddlesize',
+            labelContent: 'Paddle size',
+            max: '5',
+            min: '0',
+            pattern: '',
+            placeholder: '',
+            required: true,
+            step: '1',
+            type: 'range',
+        },
+		{
+            id: 'paddlespeed',
+            labelContent: 'Paddle speed',
+            max: '5',
+            min: '0',
+            pattern: '',
+            placeholder: '',
+            required: true,
+            step: '1',
+            type: 'range',
+        },
+    ],
+    button: { type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
+};
+
 export const emptyForm: types.formDetails = {
     action: '',
     ariaLabel: '',
@@ -287,7 +368,6 @@ export const defaultMatchOut: types.inlineMatchResult = {
     score: '5-3',
     duration: "2'53",
 };
-
 
 export const m1: types.matchParticipants = {
     player1: {
@@ -474,7 +554,6 @@ export const r2m1: types.matchParticipants = {
     },
 };
 
-
 export const r2m2: types.matchParticipants = {
     player1: {
         avatar: {
@@ -511,7 +590,6 @@ export const r2m2: types.matchParticipants = {
         since: '35',
     },
 };
-
 
 export const tournament: types.matchParticipants[] = [m1, m2, m3, m4];
 export const tournamentR2: types.matchParticipants[] = [r2m1, r2m2];

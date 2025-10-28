@@ -475,14 +475,6 @@
 		font-size: var(--l);
 	}
 
-	.w-xs {
-		width: var(--space-xs);
-	}
-
-	.h-xs {
-		height: var(--space-xs);
-	}
-
 	.w-sidebar {
 		width: var(--sidebar);
 	}
@@ -491,20 +483,41 @@
 		width: var(--s);
 	}
 
-	.h-s {
-		height: var(--s);
+
+	.w-xs {
+		width: var(--space-xs);
 	}
 
 	.w-m {
 		width: var(--m);
 	}
 
-	.h-m {
-		height: var(--m);
+	.min-w-m {
+		min-width: var(--m);
 	}
 
 	.w-l {
 		width: var(--l);
+	}
+
+	.w-xl {
+		width: var(--xl);
+	}
+
+	.min-w-xl {
+		min-width: 270px;
+	}
+
+	.h-xs {
+		height: var(--space-xs);
+	}
+
+	.h-s {
+		height: var(--s);
+	}
+
+	.h-m {
+		height: var(--m);
 	}
 
 	.h-l {
@@ -513,10 +526,6 @@
 
 	.max-h-l {
 		max-height: var(--l);
-	}
-
-	.min-w-xl {
-		min-width: 270px;
 	}
 
 	.gap-xs {

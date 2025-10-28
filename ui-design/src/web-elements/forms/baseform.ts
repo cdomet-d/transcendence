@@ -8,13 +8,15 @@ import { createBtn } from '../navigation/buttons-helpers';
 
 export class BaseForm extends HTMLFormElement {
     #formData: formDetails;
+    #formContent: { [key: string]: HTMLElement };
     #submitHandler: (ev: SubmitEvent) => void;
 
     constructor() {
         super();
         this.#formData = emptyForm;
         this.#submitHandler = this.submitHandler.bind(this);
-        this.className = 'grid gap-s pad-s w-full justify-items-center box-border';
+        this.className = 'grid gap-s pad-s w-full place-items-center justify-center box-border';
+        this.#formContent = {};
     }
 
     set details(form: formDetails) {
@@ -24,6 +26,10 @@ export class BaseForm extends HTMLFormElement {
     get details() {
         return this.#formData;
     }
+
+	get contentMap() {
+		return this.#formContent;
+	}
 
     submitHandler(ev: SubmitEvent) {
         ev.preventDefault();
@@ -36,8 +42,10 @@ export class BaseForm extends HTMLFormElement {
             let el: HTMLElement;
             if (field.type !== 'textarea') {
                 el = createInputGroup(field) as InputGroup;
+				this.#formContent[field.id] = el;
             } else {
                 el = createTextAreaGroup(field) as TextAreaGroup;
+				this.#formContent[field.id] = el;
             }
             this.appendChild(el);
             if (field.type === 'textarea') el.classList.add('row-span-3');
@@ -46,6 +54,7 @@ export class BaseForm extends HTMLFormElement {
 
     renderButtons() {
         const submit = createBtn(this.#formData.button);
+		this.#formContent['submit'] = submit;
         this.append(submit);
     }
 

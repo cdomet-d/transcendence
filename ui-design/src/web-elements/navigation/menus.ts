@@ -268,7 +268,7 @@ export class DropdownMenu extends HTMLDivElement {
                 el.id = option.content;
                 el.textContent = option.content;
                 el.className =
-                    'brdr pad-s flex justify-center items-center cursor-pointer input-emphasis h-m w-l';
+                    'brdr pad-s flex justify-center items-center cursor-pointer input-emphasis w-xl';
                 el.role = 'option';
                 el.ariaSelected = 'false';
                 el.setAttribute('tabindex', '-1');
@@ -278,7 +278,7 @@ export class DropdownMenu extends HTMLDivElement {
         });
         this.#listbox.role = 'listbox';
         this.#listbox.setAttribute('hidden', '');
-        this.#listbox.className = 'hidden absolute';
+        this.#listbox.className = 'hidden z-0';
         this.#listboxOptions = Array.from(this.#listbox.children) as HTMLLIElement[];
     }
 
@@ -308,7 +308,7 @@ export class DropdownMenu extends HTMLDivElement {
     //TODO: make the toggle focus only on keyboard navigation.
     /** Hides the listbox popup and sets the focus back on toggle */
     #collapseOptions() {
-        if (this.#listbox.classList.contains('hidden')) return;
+        if (this.#listbox.hasAttribute('hidden')) return;
         else {
             this.#listbox.classList.add('hidden');
             this.#toggle.ariaExpanded = 'false';
@@ -374,7 +374,7 @@ export class DropdownMenu extends HTMLDivElement {
 
         if (actions[ev.key]) {
             ev.preventDefault();
-            if (target.tagName === 'BUTTON') this.#expandOptions(true);
+            if (target.tagName === 'BUTTON' && ev.key == 'Enter') this.#expandOptions(true);
             else actions[ev.key]();
         }
     }
@@ -409,7 +409,7 @@ export class DropdownMenu extends HTMLDivElement {
     render() {
         this.append(this.#toggle);
         this.append(this.#listbox);
-        this.className = 'h-m w-l relative';
+        this.className = 'h-m w-xl relative z-1';
 
         //TODO: add aria-controls on #toggle ?
         this.#toggle.ariaExpanded = 'false';
