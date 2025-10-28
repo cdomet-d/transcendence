@@ -47,43 +47,6 @@ export const user: types.UserData = {
     since: '145',
 };
 
-export const players: types.matchParticipants = {
-    player1: {
-        avatar: {
-            alt: 'pp',
-            id: 'user-avatar',
-            size: 'iicon',
-            src: '/assets/icons/magenta-avatar.png',
-        },
-        biography: '(╯°□°)╯︵ ┻━┻',
-        id: '256',
-        relation: 'stranger',
-        profileColor: 'bg-CE4257',
-        language: 'English',
-        status: true,
-        username: 'CrimeGoose',
-        winstreak: '7',
-        since: '145',
-    },
-    player2: {
-        avatar: {
-            alt: 'pp',
-            id: 'user-avatar',
-            size: 'iicon',
-            src: '/assets/icons/light-green-avatar.png',
-        },
-        biography: '>:)',
-        id: '64',
-        relation: 'stranger',
-        profileColor: 'bg-98A869',
-        language: 'English',
-        status: true,
-        username: 'ElGuapo',
-        winstreak: '4',
-        since: '35',
-    },
-};
-
 export const users: Array<types.UserData> = [user, user, user, user, user, user];
 
 export const mainMenu: Array<types.buttonData> = [
@@ -325,4 +288,230 @@ export const defaultMatchOut: types.inlineMatchResult = {
     duration: "2'53",
 };
 
-export const tournament: types.matchParticipants[] = [players, players, players, players];
+
+export const m1: types.matchParticipants = {
+    player1: {
+        avatar: {
+            alt: 'pp',
+            id: 'user-avatar',
+            size: 'iicon',
+            src: '/assets/icons/magenta-avatar.png',
+        },
+        biography: '(╯°□°)╯︵ ┻━┻',
+        id: '256',
+        relation: 'stranger',
+        profileColor: 'bg-CE4257',
+        language: 'English',
+        status: true,
+        username: 'm1p1',
+        winstreak: '7',
+        since: '145',
+    },
+    player2: {
+        avatar: {
+            alt: 'pp',
+            id: 'user-avatar',
+            size: 'iicon',
+            src: '/assets/icons/light-green-avatar.png',
+        },
+        biography: '>:)',
+        id: '64',
+        relation: 'stranger',
+        profileColor: 'bg-98A869',
+        language: 'English',
+        status: true,
+        username: 'm1p2',
+        winstreak: '4',
+        since: '35',
+    },
+};
+
+export const m2: types.matchParticipants = {
+    player1: {
+        avatar: {
+            alt: 'pp',
+            id: 'user-avatar',
+            size: 'iicon',
+            src: '/assets/icons/magenta-avatar.png',
+        },
+        biography: '(╯°□°)╯︵ ┻━┻',
+        id: '256',
+        relation: 'stranger',
+        profileColor: 'bg-4F9FFF',
+        language: 'English',
+        status: true,
+        username: 'm2p1',
+        winstreak: '7',
+        since: '145',
+    },
+    player2: {
+        avatar: {
+            alt: 'pp',
+            id: 'user-avatar',
+            size: 'iicon',
+            src: '/assets/icons/light-green-avatar.png',
+        },
+        biography: '>:)',
+        id: '64',
+        relation: 'stranger',
+        profileColor: 'bg-5200FF',
+        language: 'English',
+        status: true,
+        username: 'm2p2',
+        winstreak: '4',
+        since: '35',
+    },
+};
+
+export const m3: types.matchParticipants = {
+    player1: {
+        avatar: {
+            alt: 'pp',
+            id: 'user-avatar',
+            size: 'iicon',
+            src: '/assets/icons/magenta-avatar.png',
+        },
+        biography: '(╯°□°)╯︵ ┻━┻',
+        id: '256',
+        relation: 'stranger',
+        profileColor: 'bg-000080',
+        language: 'English',
+        status: true,
+        username: 'm3p1',
+        winstreak: '7',
+        since: '145',
+    },
+    player2: {
+        avatar: {
+            alt: 'pp',
+            id: 'user-avatar',
+            size: 'iicon',
+            src: '/assets/icons/light-green-avatar.png',
+        },
+        biography: '>:)',
+        id: '64',
+        relation: 'stranger',
+        profileColor: 'bg-98A869',
+        language: 'English',
+        status: true,
+        username: 'm3p2',
+        winstreak: '4',
+        since: '35',
+    },
+};
+
+export const m4: types.matchParticipants = {
+    player1: {
+        avatar: {
+            alt: 'pp',
+            id: 'user-avatar',
+            size: 'iicon',
+            src: '/assets/icons/magenta-avatar.png',
+        },
+        biography: '(╯°□°)╯︵ ┻━┻',
+        id: '256',
+        relation: 'stranger',
+        profileColor: 'bg-BE5103',
+        language: 'English',
+        status: true,
+        username: 'm4p1',
+        winstreak: '7',
+        since: '145',
+    },
+    player2: {
+        avatar: {
+            alt: 'pp',
+            id: 'user-avatar',
+            size: 'iicon',
+            src: '/assets/icons/light-green-avatar.png',
+        },
+        biography: '>:)',
+        id: '64',
+        relation: 'stranger',
+        profileColor: 'bg-CE4257',
+        language: 'English',
+        status: true,
+        username: 'm4p2',
+        winstreak: '4',
+        since: '35',
+    },
+};
+
+export const r2m1: types.matchParticipants = {
+    player1: {
+        avatar: {
+            alt: 'pp',
+            id: 'user-avatar',
+            size: 'iicon',
+            src: '/assets/icons/magenta-avatar.png',
+        },
+        biography: '(╯°□°)╯︵ ┻━┻',
+        id: '256',
+        relation: 'stranger',
+        profileColor: 'bg-4F9FFF',
+        language: 'English',
+        status: true,
+        username: 'm2p1',
+        winstreak: '7',
+        since: '145',
+    },
+    player2: {
+        avatar: {
+            alt: 'pp',
+            id: 'user-avatar',
+            size: 'iicon',
+            src: '/assets/icons/magenta-avatar.png',
+        },
+        biography: '(╯°□°)╯︵ ┻━┻',
+        id: '256',
+        relation: 'stranger',
+        profileColor: 'bg-CE4257',
+        language: 'English',
+        status: true,
+        username: 'm1p1',
+        winstreak: '7',
+        since: '145',
+    },
+};
+
+
+export const r2m2: types.matchParticipants = {
+    player1: {
+        avatar: {
+            alt: 'pp',
+            id: 'user-avatar',
+            size: 'iicon',
+            src: '/assets/icons/light-green-avatar.png',
+        },
+        biography: '>:)',
+        id: '64',
+        relation: 'stranger',
+        profileColor: 'bg-98A869',
+        language: 'English',
+        status: true,
+        username: 'm3p2',
+        winstreak: '4',
+        since: '35',
+    },
+    player2: {
+        avatar: {
+            alt: 'pp',
+            id: 'user-avatar',
+            size: 'iicon',
+            src: '/assets/icons/light-green-avatar.png',
+        },
+        biography: '>:)',
+        id: '64',
+        relation: 'stranger',
+        profileColor: 'bg-CE4257',
+        language: 'English',
+        status: true,
+        username: 'm4p2',
+        winstreak: '4',
+        since: '35',
+    },
+};
+
+
+export const tournament: types.matchParticipants[] = [m1, m2, m3, m4];
+export const tournamentR2: types.matchParticipants[] = [r2m1, r2m2];

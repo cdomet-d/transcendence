@@ -197,6 +197,6 @@ export interface inlineMatchResult {
 }
 
 export interface matchParticipants {
-	player1: UserData;
-	player2: UserData;
+    player1: UserData;
+    player2: UserData;
 }

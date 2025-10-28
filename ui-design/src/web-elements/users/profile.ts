@@ -71,6 +71,7 @@ export class UserProfile extends HTMLDivElement {
         if (this.#color !== newColor) {
             this.classList.remove(this.#color);
             this.#color = newColor;
+            this.classList.add(this.#color);
         }
     }
 
@@ -84,7 +85,6 @@ export class UserProfile extends HTMLDivElement {
         this.biography = user.biography;
         this.profileAge = user.since;
         this.color = user.profileColor;
-		this.render();
     }
 
     get getAvatar() {
@@ -116,7 +116,9 @@ export class UserProfile extends HTMLDivElement {
     }
 
     connectedCallback() {
-        this.className = `pad-s box-border items-center place-items-center justify-items-center thin brdr ${this.#color} min-w-xl`;
+        this.className = `pad-s box-border items-center place-items-center justify-items-center thin brdr ${
+            this.#color
+        } min-w-xl`;
         this.render();
     }
 
@@ -127,7 +129,7 @@ export class UserProfile extends HTMLDivElement {
             this.#joinedSince,
             this.#biography,
             this.#actionButtons,
-            this.#winstreak
+            this.#winstreak,
         );
         this.#username.customizeStyle('f-yellow', 'f-m', 'f-bold', true);
         this.#joinedSince.classList.add('f-clear');
@@ -185,7 +187,7 @@ export class UserInline extends UserProfile {
         window.location.href = link.href;
     }
     override connectedCallback() {
-		super.connectedCallback();
+        super.connectedCallback();
         this.addEventListener('click', this.#clickHandler);
         this.render();
     }
@@ -197,12 +199,7 @@ export class UserInline extends UserProfile {
     override render() {
         this.append(super.getAvatar, super.getUsername, super.getWinstreak);
         super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
-        this.classList.add(
-            'cursor-pointer',
-            'gap-s',
-            'flex',
-            'flex-initial',
-        );
+        this.classList.add('cursor-pointer', 'gap-s', 'flex', 'flex-initial', `${super.getColor}`);
     }
 }
 

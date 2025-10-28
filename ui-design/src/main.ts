@@ -3,7 +3,7 @@
 // import * as formBtns from './web-elements/inputs/helpers.js';
 // import * as menu from './web-elements/navigation/menu-helpers';
 // import * as tab from './web-elements/navigation/tabs-helpers';
-import * as user from './web-elements/users//profile-helpers';
+// import * as user from './web-elements/users//profile-helpers';
 import * as defaults from './default-values.js';
 // import * as forms from './web-elements/forms/helpers.js';
 // import { createNotificationBox } from './web-elements/users/notifications-helpers';
@@ -56,7 +56,7 @@ wrapper.classList.add(
 
 try {
     // wrapper.append(user.createUserCardSocial(defaults.user));
-    wrapper.append(user.createUserInline(defaults.user));
+    // wrapper.append(user.createUserInline(defaults.user));
     // wrapper.append(user.createUserProfile(defaults.user));
     // wrapper.appendChild(formBtns.createCheckbox('check', 'test'));
     // wrapper.appendChild(formBtns.createRadioButton('radio', 'test'));
@@ -80,9 +80,12 @@ try {
     // wrapper.append(forms.createRegistrationForm(defaults.registrationForm));
     // wrapper.append(forms.createSearchbar(defaults.search));
 
-	const el = document.createElement('div', {is: 'tournament-bracket' }) as TournamentBrackets;
-	el.players = defaults.tournament;
-	wrapper.append(el);
+    const el = document.createElement('div', { is: 'tournament-bracket' }) as TournamentBrackets;
+    el.players = defaults.tournament;
+    wrapper.append(el);
+    // setTimeout(() => {
+    //     el.populateBrackets(defaults.tournamentR2);
+    // }, 2000);
 } catch (error) {
     console.log('[ERROR]', error);
 }

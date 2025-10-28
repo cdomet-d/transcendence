@@ -1,9 +1,10 @@
 import type { matchParticipants } from '../../types-interfaces';
 import { UserInline } from '../users/profile';
 
-export class TournamentMatchup extends HTMLDivElement {
+export class Match extends HTMLDivElement {
     #player1: UserInline;
     #player2: UserInline;
+
     #players: matchParticipants;
 
     constructor() {
@@ -12,12 +13,7 @@ export class TournamentMatchup extends HTMLDivElement {
         this.#player2 = document.createElement('div', { is: 'user-inline' }) as UserInline;
         this.#players = {
             player1: {
-                avatar: {
-                    alt: '',
-                    id: 'user-avatar',
-                    size: 'iicon',
-                    src: '',
-                },
+                avatar: { alt: '', id: 'user-avatar', size: 'iicon', src: '' },
                 biography: '',
                 id: '',
                 relation: 'stranger',
@@ -29,12 +25,7 @@ export class TournamentMatchup extends HTMLDivElement {
                 since: '',
             },
             player2: {
-                avatar: {
-                    alt: '',
-                    id: 'user-avatar',
-                    size: 'iicon',
-                    src: '.png',
-                },
+                avatar: { alt: '', id: 'user-avatar', size: 'iicon', src: '.png' },
                 biography: '>:)',
                 id: '',
                 relation: 'stranger',
@@ -63,20 +54,33 @@ export class TournamentMatchup extends HTMLDivElement {
     }
     render() {
         this.append(this.#player1, this.#player2);
-        this.className = 'grid gap-xs pr-4 border-r-4 h-[112px]';
+        this.className = 'grid gap-xs h-[112px]';
     }
 }
 
-if (!customElements.get('tournament-pair')) {
-    customElements.define('tournament-pair', TournamentMatchup, { extends: 'div' });
+if (!customElements.get('t-match')) {
+    customElements.define('t-match', Match, { extends: 'div' });
 }
 
+export class BracketConnectors extends HTMLCanvasElement {
+	constructor() {
+		super();
+	}
+}
+
+if (!customElements.get('t-canva')) {
+    customElements.define('t-canva', Match, { extends: 'canvas' });
+}
+
+//TODO: handle tournament bracket connection
+
 export class TournamentBrackets extends HTMLDivElement {
-    #matches: TournamentMatchup[];
+    #matches: Match[][];
     #players: matchParticipants[];
     #gamePerRound: number;
     #totalRounds: number;
     #currentRound: number;
+    #span: number;
 
     constructor() {
         super();
@@ -85,6 +89,7 @@ export class TournamentBrackets extends HTMLDivElement {
         this.#gamePerRound = 0;
         this.#totalRounds = 1;
         this.#currentRound = 1;
+        this.#span = 1;
     }
 
     #computeTotalRounds() {
@@ -93,61 +98,59 @@ export class TournamentBrackets extends HTMLDivElement {
         }
         this.#totalRounds += 1;
     }
+
     set players(players: matchParticipants[]) {
         this.#players = players;
-        this.#gamePerRound = players.length;
-        this.#computeTotalRounds();
     }
 
     #initMatches() {
-        if (this.#gamePerRound === this.#players.length) {
-            let i: number = 1;
-            this.#players.forEach((user) => {
-                const match = document.createElement('div', {
-                    is: 'tournament-pair',
-                }) as TournamentMatchup;
-                match.players = user;
-                match.bracketId = 'r1-' + i.toString();
-                this.#matches[i] = match;
-                this.append(match);
-                match.classList.add(
-                    `col-start-${this.#currentRound}`,
-                    `col-span-1`,
-                    `row-start-${i}`
-                );
-                i++;
-            });
-        } else {
-            for (let i = 1; i <= this.#gamePerRound; i++) {
-                const match = document.createElement('div', {
-                    is: 'tournament-pair',
-                }) as TournamentMatchup;
-                match.bracketId = i.toString();
-                this.append(match);
-                let span = this.#currentRound;
-                if (this.#gamePerRound === 1) span = this.#players.length;
-                let step = i;
-                if (i !== 1) step = i + this.#gamePerRound - 1;
-                match.classList.add(
-                    `col-start-${this.#currentRound}`,
-                    `col-span-1`,
-                    `row-span-${span}`,
-                    `row-start-${step}`
-                );
-            }
+        let row = 1;
+        for (let i = 1; i <= this.#gamePerRound; i++) {
+            if (!this.#matches[this.#currentRound - 1]) this.#matches[this.#currentRound - 1] = [];
+            const match = document.createElement('div', { is: 't-match' }) as Match;
+            this.#matches[this.#currentRound - 1][i - 1] = match;
+            this.append(match);
+            match.classList.add(
+                `col-start-${this.#currentRound}`,
+                `col-span-1`,
+                `row-span-${this.#span}`,
+                `row-start-${row}`
+            );
+            match.bracketId = 'tournament-match';
+            row += this.#span;
         }
         this.#currentRound++;
+        this.#span *= 2;
+    }
+	//TODO: disable looser from previous bracket
+    //TODO: need to make sure that the elemnt has been attached and everything before accessing the cache I guess ? It doesn't crash but it doesn't work if it's not attached.
+    populateBrackets(players: matchParticipants[]) {
+        const matchNb = players.length;
+        let playerIndex = 0;
+
+        for (let i = 0; i <= this.#matches.length; i++) {
+            if (this.#matches[i] && matchNb === this.#matches[i].length) {
+                this.#matches[i].forEach((m) => {
+                    m.players = players[playerIndex];
+                    playerIndex++;
+                });
+            }
+        }
     }
 
     connectedCallback() {
+        this.#gamePerRound = this.#players.length;
         for (; this.#gamePerRound >= 1; this.#gamePerRound /= 2) this.#initMatches();
         this.render();
     }
+
     render() {
-        this.className = `bg grid grid-rows-${this.#players.length} grid-col-${
+        this.#computeTotalRounds();
+        this.className = `grid grid-rows-${this.#players.length} grid-col-${
             this.#totalRounds
-        } pad-s gap-m place-items-center`;
+        } pad-s v-gap-l place-items-center`;
         this.id = 'tournament-brackets';
+        this.populateBrackets(this.#players);
     }
 }
 if (!customElements.get('tournament-bracket')) {
