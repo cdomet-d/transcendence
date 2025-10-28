@@ -34,6 +34,21 @@ export function updateBallPos(game: Game, player1: Player, player2: Player): boo
 		newY = game.ball.y + (game.ball.dy * TIME_STEP);
 		newX = game.ball.x + (game.ball.dx * TIME_STEP);
 	}
+	// if (leftPadCollision(player1.paddle, newX, newY)) {
+	// 	[game.ball.dx, game.ball.dy] = increaseVelocity(game.ball.dx, game.ball.dy);
+	// 	if (game.ball.y - 10 < player1.paddle.y || game.ball.y + 10 > player1.paddle.y)
+	// 		game.ball.dy *= -1;
+	// 	newY = game.ball.y + (game.ball.dy * TIME_STEP);
+	// 	newX = game.ball.x + (game.ball.dx * TIME_STEP);
+	// }
+
+	// if (rightPadCollision(player2.paddle, newX, newY)) {
+	// 	[game.ball.dx, game.ball.dy] = increaseVelocity(game.ball.dx, game.ball.dy);
+	// 	if (game.ball.y - 10 < player2.paddle.y || game.ball.y + 10 > player2.paddle.y)
+	// 		game.ball.dy *= -1;
+	// 	newY = game.ball.y + (game.ball.dy * TIME_STEP);
+	// 	newX = game.ball.x + (game.ball.dx * TIME_STEP);
+	// }
 
 	game.ball.x = newX;
 	game.ball.y = newY;
@@ -65,16 +80,39 @@ function updateScore(player1: Player, player2: Player, newX: number): boolean {
 }
 
 function paddleCollision(leftPad: coordinates, rightPad: coordinates, newX: number, newY: number): boolean {
-	if (newX + BALL_RADIUS >= rightPad.x 
-		&& newX - BALL_RADIUS <= rightPad.x + BALL_RADIUS
-		&& newY + BALL_RADIUS >= rightPad.y 
-		&& newY - BALL_RADIUS <= rightPad.y + 54)
+	// if (newX + BALL_RADIUS >= rightPad.x 
+	// 	&& newX - BALL_RADIUS <= rightPad.x + BALL_RADIUS 
+	// 	&& newY + BALL_RADIUS >= rightPad.y 
+	// 	&& newY - BALL_RADIUS <= rightPad.y + 54)
+	// 	return true;
+	// if (newX - BALL_RADIUS <= leftPad.x + BALL_RADIUS 
+	// 	&& newX + BALL_RADIUS >= leftPad.x 
+	// 	&& newY + BALL_RADIUS >= leftPad.y 
+	// 	&& newY - BALL_RADIUS <= leftPad.y + 54)
+	// 	return true;
+	if (sdBox({x: newX - (rightPad.x + 5), y: newY - (rightPad.y + 27)}, {x :(10 / 2), y:(54 / 2)}) <= BALL_RADIUS + 2)
 		return true;
-	if (newX - BALL_RADIUS <= leftPad.x + BALL_RADIUS 
-		&& newX + BALL_RADIUS >= leftPad.x 
-		&& newY + BALL_RADIUS >= leftPad.y 
-		&& newY - BALL_RADIUS <= leftPad.y + 54)
+	if (sdBox({x: newX - (leftPad.x + 5), y: newY - (leftPad.y + 27)}, {x :(10 / 2), y:(54 / 2)}) <= BALL_RADIUS + 2)
 		return true;
-	//TODO: check top of paddle
 	return false;
+}
+
+function leftPadCollision(leftPad: coordinates, newX: number, newY: number): boolean {
+	if (sdBox({x: newX - (leftPad.x + 5), y: newY - (leftPad.y + 27)}, {x :(10 / 2), y:(54 / 2)}) <= BALL_RADIUS + 2)
+		return true;
+	return false;
+}
+
+function rightPadCollision(rightPad: coordinates, newX: number, newY: number): boolean {
+	if (sdBox({x: newX - (rightPad.x + 5), y: newY - (rightPad.y + 27)}, {x :(10 / 2), y:(54 / 2)}) <= BALL_RADIUS + 2)
+		return true;
+	return false
+}
+
+function sdBox(p: coordinates, b: coordinates): number {
+    const d: coordinates = {x: Math.abs(p.x) - b.x, y: Math.abs(p.y) - b.y};
+	d.x = Math.max(d.x, 0.0);
+	d.y = Math.max(d.y, 0.0);
+	const length: number = Math.sqrt(d.x * d.x + d.y * d.y);
+    return length + Math.min(Math.max(d.x, d.y), 0.0);
 }
