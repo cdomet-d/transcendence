@@ -45,9 +45,9 @@ export function waitForMessage(socket: WebSocket): Promise< idsObj > {
 }
 
 function getPlayersInGame(game: Game, userID: number, socket: WebSocket) {
-	game.addPlayer(new Player(userID, socket, false));
+	game.addPlayer(userID, socket);
 	if (game.local)
-		game.addPlayer(new Player(game.randUserID, socket, true));
+		game.addPlayer(game.randUserID, socket);
 	if (game.players.length === 2)
 		setUpGame(game);
 }

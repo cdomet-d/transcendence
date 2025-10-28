@@ -1,5 +1,6 @@
-import type { Player, coordinates } from './player.class.js';
+import { Player } from './player.class.js';
 import type { reqObj } from '../game/mess.validation.js';
+import type { WebSocket } from '@fastify/websocket';
 
 export const HEIGHT = 270;
 export const WIDTH = 480;
@@ -133,7 +134,11 @@ export class Game {
 	}
 
 	/*                              METHODS                                  */
-	public addPlayer(player: Player) {
+	public addPlayer(userID: number, socket: WebSocket) {
+		let side: string = "left";
+		if (this.#_players.length === 1)
+			side = "right";
+		const player: Player = new Player(userID, socket, side);
 		this.#_players.push(player);
 	}
 
