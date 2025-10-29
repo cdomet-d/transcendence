@@ -35,8 +35,7 @@ export class InlineMatch extends HTMLDivElement {
     }
 
     render() {
-        this.className =
-            'box-border grid grid-flow-col place-content-evenly justify-items-center';
+        this.className = 'box-border grid grid-flow-col place-content-evenly justify-items-center';
     }
 }
 

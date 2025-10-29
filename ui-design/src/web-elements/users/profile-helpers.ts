@@ -36,7 +36,7 @@ export function createUserInline(user: UserData): UserInline {
     el.username = user.username;
     el.status = user.status;
     el.winstreak = user.winstreak;
-	el.color = user.profileColor
+    el.color = user.profileColor;
     return el;
 }
 

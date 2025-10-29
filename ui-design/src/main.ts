@@ -8,7 +8,6 @@ import * as defaults from './default-values.js';
 import * as forms from './web-elements/forms/helpers.js';
 import { createNotificationBox } from './web-elements/users/notifications-helpers';
 import { TournamentBrackets } from './web-elements/matches/tournament';
-import { LocalPongSettings, RemotePongSettings } from './web-elements/forms/pong-settings';
 
 window.addEventListener('error', (e) => {
     console.error('Global error:', e.error);
@@ -19,14 +18,8 @@ window.addEventListener('unhandledrejection', (e) => {
 
 const innerW = window.innerWidth;
 const wrapper = document.createElement('div');
-wrapper.classList.add(
-    'box-border',
-    'justify-items-center',
-    'grid',
-    'gap-6',
-    'pad-sm',
-);
-wrapper.style.width=`${innerW}`;
+wrapper.classList.add('box-border', 'justify-items-center', 'grid', 'gap-6', 'pad-sm');
+wrapper.style.width = `${innerW}`;
 
 // function testSearchbar() {
 //     menu.getSearchbarAsync().then((bar) => {
@@ -77,29 +70,20 @@ try {
     wrapper.appendChild(typography.createHeading('2', 'Heading 2'));
     wrapper.appendChild(typography.createHeading('3', 'Heading 3'));
     wrapper.appendChild(createNotificationBox());
-    wrapper.append(forms.createUserSettingsForm(defaults.user, defaults.userSettingsForm));
-    wrapper.append(forms.createRegistrationForm(defaults.registrationForm));
-    wrapper.append(forms.createSearchbar(defaults.search));
-	
-    const tbracket = document.createElement('div', { is: 'tournament-bracket' }) as TournamentBrackets;
+    wrapper.append(forms.createForm('settings-form', defaults.userSettingsForm, defaults.user));
+    wrapper.append(forms.createForm('default-form', defaults.registrationForm));
+    wrapper.append(forms.createForm('search-form', defaults.search));
+    wrapper.append(forms.createForm('local-pong-settings', defaults.localPong));
+    wrapper.append(forms.createForm('remote-pong-settings', defaults.remotePong));
+
+    const tbracket = document.createElement('div', {
+        is: 'tournament-bracket',
+    }) as TournamentBrackets;
     tbracket.players = defaults.tournament;
     wrapper.append(tbracket);
     setTimeout(() => {
         tbracket.populateBrackets(defaults.tournamentR2);
     }, 2000);
-	const lpongsettings = document.createElement('form', { is: 'local-pong-settings' }) as LocalPongSettings;
-	lpongsettings.details = defaults.localPong;
-    wrapper.append(lpongsettings);
-
-	const rpongsettings = document.createElement('form', { is: 'remote-pong-settings' }) as RemotePongSettings;
-	rpongsettings.details = defaults.remotePong;
-    wrapper.append(rpongsettings);
-
-	rpongsettings.invitedUsers = defaults.users;
-
-	rpongsettings.invitedUsers = defaults.u2;
-
-
 } catch (error) {
     console.log('[ERROR]', error);
 }

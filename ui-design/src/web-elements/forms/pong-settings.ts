@@ -53,14 +53,14 @@ export class RemotePongSettings extends LocalPongSettings {
         this.#displayInvitedUser();
     }
 
-	clearResults() {
+    clearResults() {
         while (this.#guestWrapper.firstChild) {
             this.#guestWrapper.removeChild(this.#guestWrapper.firstChild);
         }
     }
     #displayInvitedUser() {
-		if (!this.#invitedUsers) return;
-		if (this.#guestWrapper.firstChild) this.clearResults();
+        if (!this.#invitedUsers) return;
+        if (this.#guestWrapper.firstChild) this.clearResults();
         this.#invitedUsers.forEach((user) => {
             this.#guestWrapper.append(createUserInline(user));
         });
@@ -81,11 +81,11 @@ export class RemotePongSettings extends LocalPongSettings {
     }
 
     override render() {
-		super.renderTitle();
-		super.renderFields();
+        super.renderTitle();
+        super.renderFields();
         this.append(this.#searchbar, this.#guestWrapper);
-		this.append(super.dropdownMenu)
-		super.renderButtons();
+        this.append(super.dropdownMenu);
+        super.renderButtons();
         this.styleFields();
         this.styleInviteList();
         this.classList.add('sidebar-left');

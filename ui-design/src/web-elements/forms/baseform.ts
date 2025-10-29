@@ -86,3 +86,7 @@ export class BaseForm extends HTMLFormElement {
         this.renderButtons();
     }
 }
+
+if (!customElements.get('default-form')) {
+    customElements.define('default-form', BaseForm, { extends: 'form' });
+}

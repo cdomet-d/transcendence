@@ -105,9 +105,9 @@ export class InputGroup extends HTMLDivElement {
         this.#info = data;
     }
 
-	get label() {
-		return this.#label
-	}
+    get label() {
+        return this.#label;
+    }
     constructor() {
         super();
         this.#info = {

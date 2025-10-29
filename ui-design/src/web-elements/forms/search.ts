@@ -21,7 +21,7 @@ export class Searchbar extends BaseForm {
         super();
         this.#results = document.createElement('div');
         this.setResultPos = this.setResultPos.bind(this);
-		this.#searchInput = document.createElement('div', {is: 'input-and-label'}) as InputGroup;
+        this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
     }
 
     override connectedCallback() {

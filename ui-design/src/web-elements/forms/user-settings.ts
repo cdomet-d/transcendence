@@ -1,14 +1,16 @@
 import { BaseForm } from './baseform';
 import { createAvatar } from '../typography/helpers';
 import { createDropdown } from '../navigation/menu-helpers';
-import { user, userColorsMenu, languageMenu } from '../../default-values';
+import { user, userColorsMenu, languageMenu, deleteAccount } from '../../default-values';
 
 import type { DropdownMenu } from '../navigation/menus';
 import type { UserData } from '../../types-interfaces';
 import type { Avatar } from '../typography/images';
+import { createForm } from './helpers';
 
 export class UserSettingsForm extends BaseForm {
     #user: UserData;
+    #accountDelete: BaseForm;
     #colors: DropdownMenu;
     #languages: DropdownMenu;
     #avatar: Avatar;
@@ -16,6 +18,7 @@ export class UserSettingsForm extends BaseForm {
     constructor() {
         super();
         this.#user = user;
+        this.#accountDelete = createForm('default-form', deleteAccount);
         this.#avatar = createAvatar(this.#user.avatar);
         this.#colors = createDropdown(userColorsMenu, 'Pick color', 'dynamic');
         this.#languages = createDropdown(languageMenu, 'Pick language', 'static');
@@ -46,13 +49,18 @@ export class UserSettingsForm extends BaseForm {
 
     override render() {
         this.append(this.#avatar);
-		super.renderTitle();
-		super.renderFields();
+        super.renderTitle();
+        super.renderFields();
         this.renderDropdowns();
-		super.renderButtons();
-		this.#avatar.classList.add('row-span-2');
-		super.contentMap['biography'].classList.add('col-start-1', 'row-span-3', 'place-self-stretch')
-		super.contentMap['title'].classList.add('row-span-2')
+        super.renderButtons();
+        this.append(this.#accountDelete);
+        this.#avatar.classList.add('row-span-2');
+        super.contentMap['biography'].classList.add(
+            'col-start-1',
+            'row-span-3',
+            'place-self-stretch',
+        );
+        super.contentMap['title'].classList.add('row-span-2');
         this.classList.add('sidebar-left');
     }
 }

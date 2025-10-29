@@ -1,21 +1,26 @@
-import { AccountCreationForm } from './account-create-form';
+import type { UserData, formDetails } from '../../types-interfaces';
+import { BaseForm } from './baseform';
+import { RemotePongSettings, LocalPongSettings } from './pong-settings';
 import { Searchbar } from './search';
 import { UserSettingsForm } from './user-settings';
 
-import type { UserData, formDetails } from '../../types-interfaces';
-
-export function createUserSettingsForm(user: UserData, form: formDetails): UserSettingsForm {
-    const el = document.createElement('form', { is: 'settings-form' }) as UserSettingsForm;
-    el.user = user;
-    el.details = form;
-    return el;
+interface HTMLElementTagMap {
+    'default-form': BaseForm;
+    'settings-form': UserSettingsForm;
+    'search-form': Searchbar;
+    'remote-pong-settings': RemotePongSettings;
+    'local-pong-settings': LocalPongSettings;
 }
 
-export function createRegistrationForm(form: formDetails): AccountCreationForm {
-    const el = document.createElement('form', {
-        is: 'account-creation-form',
-    }) as AccountCreationForm;
+export function createForm<K extends keyof HTMLElementTagMap>(
+    tag: K,
+    form: formDetails,
+    user?: UserData,
+): HTMLElementTagMap[K] {
+    console.log(tag);
+    const el = document.createElement('form', { is: tag }) as HTMLElementTagMap[K];
     el.details = form;
+    if (tag === 'settings-form') el.user = user;
     return el;
 }
 

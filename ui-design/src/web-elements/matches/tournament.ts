@@ -63,9 +63,9 @@ if (!customElements.get('t-match')) {
 }
 
 export class BracketConnectors extends HTMLCanvasElement {
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 }
 
 if (!customElements.get('t-canva')) {
@@ -114,7 +114,7 @@ export class TournamentBrackets extends HTMLDivElement {
                 `col-start-${this.#currentRound}`,
                 `col-span-1`,
                 `row-span-${this.#span}`,
-                `row-start-${row}`
+                `row-start-${row}`,
             );
             match.bracketId = 'tournament-match';
             row += this.#span;
@@ -122,7 +122,7 @@ export class TournamentBrackets extends HTMLDivElement {
         this.#currentRound++;
         this.#span *= 2;
     }
-	//TODO: disable looser from previous bracket
+    //TODO: disable looser from previous bracket
     //TODO: need to make sure that the elemnt has been attached and everything before accessing the cache I guess ? It doesn't crash but it doesn't work if it's not attached.
     populateBrackets(players: matchParticipants[]) {
         const matchNb = players.length;

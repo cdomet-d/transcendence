@@ -119,51 +119,16 @@ export const userColorsMenu: types.buttonData[] = [
 ];
 
 export const languageMenu: types.buttonData[] = [
-    {
-        ariaLabel: 'English',
-        content: 'English',
-        img: null,
-        type: 'button',
-    },
-    {
-        ariaLabel: 'Spanish',
-        content: 'Spanish',
-        img: null,
-        type: 'button',
-    },
-    {
-        ariaLabel: 'French',
-        content: 'French',
-        img: null,
-        type: 'button',
-    },
+    { ariaLabel: 'English', content: 'English', img: null, type: 'button' },
+    { ariaLabel: 'Spanish', content: 'Spanish', img: null, type: 'button' },
+    { ariaLabel: 'French', content: 'French', img: null, type: 'button' },
 ];
 
 export const backgroundMenu: types.buttonData[] = [
-    {
-        ariaLabel: 'farm',
-        content: 'Adorable Farm',
-        img: null,
-        type: 'button',
-    },
-    {
-        ariaLabel: 'forest',
-        content: 'Enchanted Forest',
-        img: null,
-        type: 'button',
-    },
-    {
-        ariaLabel: 'underwater',
-        content: 'Magical Underwater',
-        img: null,
-        type: 'button',
-    },
-    {
-        ariaLabel: 'Snow',
-        content: 'Mysterious Snow',
-        img: null,
-        type: 'button',
-    },
+    { ariaLabel: 'farm', content: 'Adorable Farm', img: null, type: 'button' },
+    { ariaLabel: 'forest', content: 'Enchanted Forest', img: null, type: 'button' },
+    { ariaLabel: 'underwater', content: 'Magical Underwater', img: null, type: 'button' },
+    { ariaLabel: 'Snow', content: 'Mysterious Snow', img: null, type: 'button' },
 ];
 
 export const iMeta: types.ImgData = {
@@ -411,6 +376,16 @@ export const remotePong: types.formDetails = {
         },
     ],
     button: { type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
+};
+
+export const deleteAccount: types.formDetails = {
+    action: '/account/delete',
+    heading: '',
+    ariaLabel: 'Account deletion request',
+    id: 'account-deletion-request',
+    method: 'post',
+    fields: [],
+    button: { type: 'submit', content: 'Delete account', img: null, ariaLabel: '', style: 'red' },
 };
 
 export const emptyForm: types.formDetails = {
