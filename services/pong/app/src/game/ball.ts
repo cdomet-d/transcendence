@@ -16,8 +16,10 @@ export function updateBallPos(game: Game, player1: Player, player2: Player): boo
 	}
 	newY = upperWallCollision(game, newY);
 	newY = bottomWallCollision(game, newY);
-	[newX, newY] = leftPadCollision(game, player1.paddle, newX, newY);
-	[newX, newY] = rightPadCollision(game, player2.paddle, newX, newY);
+	if (leftPadCollision(game, player1.paddle, newX, newY))
+		return false;
+	if (rightPadCollision(game, player2.paddle, newX, newY))
+		return false;
 
 	game.ball.x = newX;
 	game.ball.y = newY;
@@ -68,22 +70,26 @@ function updateScore(player1: Player, player2: Player, newX: number) {
 	}
 }
 
-function leftPadCollision(game: Game, leftPad: coordinates, newX: number, newY: number): [number, number] {
+function leftPadCollision(game: Game, leftPad: coordinates, newX: number, newY: number): boolean
+{
 	const p: coordinates = {x: newX - (leftPad.x + 5), y: newY - (leftPad.y + 27)};
 	const b: coordinates = {x :(10 / 2), y:(54 / 2)};
 	if (sdBox(p, b) <= BALL_RADIUS) {
-		return getPosition(game, leftPad, newX, newY);
+		/*[game.ball.x, game.ball.y] =*/ getPosition(game, leftPad, newX, newY);
+		return true;
 	}
-	return [newX, newY];
+	return false;
 }
 
-function rightPadCollision(game: Game, rightPad: coordinates, newX: number, newY: number): [number, number] {
+function rightPadCollision(game: Game, rightPad: coordinates, newX: number, newY: number): boolean
+{
 	const p: coordinates = {x: newX - (rightPad.x + 5), y: newY - (rightPad.y + 27)};
 	const b: coordinates = {x :(10 / 2), y:(54 / 2)};
 	if (sdBox(p, b) <= BALL_RADIUS) {
-		return getPosition(game, rightPad, newX, newY);
+		/*[game.ball.x, game.ball.y] = */getPosition(game, rightPad, newX, newY);
+		return true
 	}
-	return [newX, newY];
+	return false;
 }
 
 function sdBox(p: coordinates, b: coordinates): number {
@@ -101,22 +107,62 @@ function getPosition(game: Game, paddle: coordinates, newX: number, newY: number
 	const distToBottom = Math.abs(game.ball.y - (paddle.y + 54));
 
 	const minDist = Math.min(distToLeft, distToRight, distToTop, distToBottom);
-
-	if (minDist === distToLeft && game.ball.dx > 0) {
+	let unique: boolean = true;
+	if (new Set([distToLeft, distToRight, distToTop, distToBottom]).size !== 4)
+		unique = false;
+	if (unique && minDist === distToLeft
+		&& game.ball.y > paddle.y - BALL_RADIUS
+		&& game.ball.y < paddle.y + 54 + BALL_RADIUS) {
 		newX = paddle.x - (BALL_RADIUS + 2);
+		[game.ball.x, game.ball.y] = [newX, newY];
 		game.ball.dx = increaseVelocity(-Math.abs(game.ball.dx));
 	}
-	else if (minDist === distToRight && game.ball.dx < 0) {
+	else if (unique && minDist === distToRight
+		&& game.ball.y > paddle.y - BALL_RADIUS
+		&& game.ball.y < paddle.y + 54 + BALL_RADIUS) {
 		newX = paddle.x + 10 + (BALL_RADIUS + 2);
+		[game.ball.x, game.ball.y] = [newX, newY];
 		game.ball.dx = increaseVelocity(Math.abs(game.ball.dx));
 	}
-	else if (minDist === distToTop && game.ball.dy > 0) {
+	else if (unique && minDist === distToTop
+		&& game.ball.x > paddle.x - BALL_RADIUS
+		&& game.ball.x < paddle.x + 10 + BALL_RADIUS) {
 		newY = paddle.y - (BALL_RADIUS + 2);
+		[game.ball.x, game.ball.y] = [newX, newY];
 		game.ball.dy = increaseVelocity(-Math.abs(game.ball.dy));
 	}
-	else if (minDist === distToBottom && game.ball.dy < 0) {
+	else if (unique && minDist === distToBottom
+		&& game.ball.x > paddle.x - BALL_RADIUS
+		&& game.ball.x < paddle.x + 10 + BALL_RADIUS) {
 		newY = paddle.y + 54 + (BALL_RADIUS + 2);
+		[game.ball.x, game.ball.y] = [newX, newY];
 		game.ball.dy = increaseVelocity(Math.abs(game.ball.dy));
+	}
+	else {
+		const isLeft = game.ball.x < paddle.x + 5;
+		const isTop = game.ball.y < paddle.y + 27;
+		
+		if (isLeft && isTop) {
+			newX = paddle.x - (BALL_RADIUS + 2);
+			newY = paddle.y - (BALL_RADIUS + 2);
+			game.ball.dx = increaseVelocity(-Math.abs(game.ball.dx));
+			game.ball.dy = increaseVelocity(-Math.abs(game.ball.dy));
+		} else if (!isLeft && isTop) {
+			newX = paddle.x + 10 + (BALL_RADIUS + 2);
+			newY = paddle.y - (BALL_RADIUS + 2);
+			game.ball.dx = increaseVelocity(Math.abs(game.ball.dx));
+			game.ball.dy = increaseVelocity(-Math.abs(game.ball.dy));
+		} else if (isLeft && !isTop) {
+			newX = paddle.x - (BALL_RADIUS + 2);
+			newY = paddle.y + 54 + (BALL_RADIUS + 2);
+			game.ball.dx = increaseVelocity(-Math.abs(game.ball.dx));
+			game.ball.dy = increaseVelocity(Math.abs(game.ball.dy));
+		} else {
+			newX = paddle.x + 10 + (BALL_RADIUS + 2);
+			newY = paddle.y + 54 + (BALL_RADIUS + 2);
+			game.ball.dx = increaseVelocity(Math.abs(game.ball.dx));
+			game.ball.dy = increaseVelocity(Math.abs(game.ball.dy));
+		}
 	}
 	return [newX, newY];
 }
