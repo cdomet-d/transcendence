@@ -19,8 +19,13 @@ export interface Tournament {
 }
 
 export async function dashboardRoutes(serv: FastifyInstance) {
+
+	/* -------------------------------------------------------------------------- */
+	/*                                    GAME                                    */
+	/* -------------------------------------------------------------------------- */
+
 	//post a game
-	serv.post('/internal/dashboard/createGame', async (request, reply) => {
+	serv.post('/internal/dashboard/games', async (request, reply) => {
 		try {
 			const { local } = request.body as { local: boolean };
 			const { tournamentID } = request.body as { tournamentID: number };
@@ -37,6 +42,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const response = await serv.dbStats.run(query, params);
 			if (!response.changes) {
 				serv.log.error('[DASHBOARD] Game creation query succeeded but did not insert a row.');
+				//TODO check if I really need to send 500 or I can just throw an error
 				return (reply.code(500).send({ message: '[DASHBOARD] Internal server error during game creation' }));
 			}
 
@@ -48,12 +54,92 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[[DASHBOARD] Error creating user account: ${error}`);
-			return (reply.code(500).send({ message: '[DASHBOARD] Internal server error' }));
+			throw (error);
 		}
 	});
 
+	//patch game stats
+	serv.patch('/internal/dashboard/games/:gameID', async (request, reply) => {
+		try {
+			const { gameID } = request.params as { gameID: string };
+			const body = request.body as { [key: string]: any };
+
+			const validKeys = [
+				'duration',
+				'player1Score',
+				'player2Score',
+				'gameStatus'
+			];
+			const keysToUpdate = Object.keys(body).filter(key => validKeys.includes(key));
+
+			if (keysToUpdate.length === 0) {
+				return (reply.code(400).send({ message: 'No valid fields provided for update.' }));
+			}
+
+			const setClauses = keysToUpdate.map(key => `${key} = ?`).join(', ');
+			const params = keysToUpdate.map(key => body[key]);
+			params.push(gameID);
+
+			const query = `UPDATE gameMatchInfo SET ${setClauses} WHERE gameID = ?`;
+
+			const response = await serv.dbStats.run(query, params);
+			if (response.changes === 0)
+				return (reply.code(404).send({ message: 'Game not found.' }));
+
+			return (reply.code(200).send({ success: true, message: 'Game updated!' }));
+
+		} catch (error) {
+			serv.log.error(`[GAMES] Error updating game: ${error}`);
+			throw (error);
+		}
+	});
+
+	//get all game of a player
+	serv.get('/internal/dashboard/games', async (request, reply) => {
+		try {
+			const { userID } = request.query as { userID?: string };
+			if (!userID)
+				return (reply.code(400).send({ message: 'userID query parameter is required.' }));
+
+			const games = await getGameHistory(serv.dbStats, Number(userID));
+			return (reply.code(200).send(games));
+
+		} catch (error) {
+			serv.log.error(`[DASHBOARD] Error fetching match history: ${error}`);
+			throw (error);
+		}
+	});
+
+	//delete a game
+	serv.delete('/internal/dashboard/games/:gameID', async (request, reply) => {
+		try {
+			const { gameID } = request.body as { gameID: string };
+
+			const query = `
+				DELETE FROM gameMatchInfo WHERE gameID = ?
+			`;
+
+			const response = await serv.dbStats.run(query, [gameID]);
+			if (response.changes === 0)
+				return (reply.code(404).send({ message: 'Game not found.' }));
+
+			return (reply.code(204).send({
+				success: true,
+				message: '[DASHBOARD] Game deleted!'
+			}));
+
+		} catch (error) {
+			serv.log.error(`[DASHBOARD] Error deleting game: ${error}`);
+			throw (error);
+		}
+	});
+
+	/* -------------------------------------------------------------------------- */
+	/*                                 TOURNAMENT                                 */
+	/* -------------------------------------------------------------------------- */
+
 	//post a tournament
-	serv.post('/internal/dashboard/createTournament', async (request, reply) => {
+	serv.post('/internal/dashboard/tournaments', async (request, reply) => {
 		try {
 			const { playerIDs } = request.body as { playerIDs: number[] };
 
@@ -80,103 +166,53 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[DASHBOARD] Error creating user account: ${error}`);
-			return (reply.code(500).send({ message: '[DASHBOARD] Internal server error' }));
+			throw (error);
 		}
 	});
 
-	//patch a winner game
-	serv.patch('/internal/dashboard/winnerGame', async (request, reply) => {
+	//patch a tournament stats
+	serv.patch('/internal/dashboard/tournaments/:tournamentID', async (request, reply) => {
 		try {
-			const { gameID } = request.body as { gameID: number };
+			const { tournamentID } = request.params as { tournamentID: string };
 			const { winnerID } = request.body as { winnerID: number };
 
-			const query = `
-				UPDATE gameMatchInfo SET winnerID = ? WHERE gameID = ?
-			`;
+			if (winnerID === undefined)
+				return (reply.code(400).send({ message: 'winnerID is required.' }));
 
-			const params = [
-				winnerID,
-				gameID
-			];
+			const query = `UPDATE tournamentInfo SET winnerID = ? WHERE tournamentID = ?`;
+			const params = [winnerID, tournamentID];
 
 			const response = await serv.dbStats.run(query, params);
-			if (!response.changes) {
-				serv.log.error('[DASHBOARD] Game winner insertion query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: '[DASHBOARD] Internal server error during game winner update' }));
-			}
+			if (response.changes === 0)
+				return (reply.code(404).send({ message: 'Tournament not found.' }));
 
-			return (reply.code(201).send({
-				success: true,
-				message: '[DASHBOARD] Game winner updated!'
-			}));
+			return (reply.code(200).send({ success: true, message: 'Tournament updated!' }));
 
 		} catch (error) {
-			serv.log.error(`[DASHBOARD] Error updating game winner: ${error}`);
-			return (reply.code(500).send({ message: '[DASHBOARD] Internal server error' }));
+			serv.log.error(`[TOURNAMENTS] Error updating tournament: ${error}`);
+			throw (error);
 		}
 	});
 
-	//patch a winner tournament
-	serv.patch('/internal/dashboard/winnerTournament', async (request, reply) => {
+	//TODO add interface for tournament
+	// get all tournament of a player
+	serv.get('/internal/dashboard/tournaments', async (request, reply) => {
 		try {
-			const { tournamentID } = request.body as { tournamentID: number };
-			const { winnerID } = request.body as { winnerID: number };
+			const { userID } = request.params as { userID: number };
+			if (!userID)
+				return reply.code(400).send({ message: 'userID query parameter is required.' });
 
-
-			const query = `
-				UPDATE tournamentInfo SET winnerID = ? WHERE tournamentID = ?
-			`;
-
-			const params = [
-				winnerID,
-				tournamentID
-			];
-
-			const response = await serv.dbStats.run(query, params);
-			if (!response.changes) {
-				serv.log.error('[DASHBOARD] Tournament winner insertion query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: '[DASHBOARD] Internal server error during tournament winner update' }));
-			}
-
-			return (reply.code(201).send({
-				success: true,
-				message: '[DASHBOARD] Tournament winner updated!'
-			}));
+			const games = await getTournamentHistory(serv.dbStats, userID);
+			return (reply.code(200).send(tournaments));
 
 		} catch (error) {
-			serv.log.error(`[DASHBOARD] Error updating tournament winner: ${error}`);
-			return (reply.code(500).send({ message: '[DASHBOARD] Internal server error' }));
-		}
-	});
-
-	//delete a game
-	serv.delete('/internal/dashboard/deleteGame', async (request, reply) => {
-		try {
-			const { gameID } = request.body as { gameID: number };
-
-			const query = `
-				DELETE FROM gameMatchInfo WHERE gameID = ?
-			`;
-
-			const response = await serv.dbStats.run(query, [gameID]);
-			if (!response.changes) {
-				serv.log.error('[DASHBOARD] Game deletion query succeeded but did not delete a row.');
-				return (reply.code(500).send({ message: '[DASHBOARD] Internal server error during game deletion' }));
-			}
-
-			return (reply.code(201).send({
-				success: true,
-				message: '[DASHBOARD] Game deleted!'
-			}));
-
-		} catch (error) {
-			serv.log.error(`[DASHBOARD] Error deleting game: ${error}`);
-			return (reply.code(500).send({ message: '[DASHBOARD] Internal server error' }));
+			serv.log.error(`[DASHBOARD] Error creating user account: ${error}`);
+			throw (error);
 		}
 	});
 
 	//delete a tournamement
-	serv.delete('/internal/dashboard/deleteTournament', async (request, reply) => {
+	serv.delete('/internal/dashboard/tournaments/:tournamentID', async (request, reply) => {
 		try {
 			const { tournamentID } = request.body as { tournamentID: number };
 
@@ -185,147 +221,17 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			`;
 
 			const response = await serv.dbStats.run(query, [tournamentID]);
-			if (!response.changes) {
-				serv.log.error('[DASHBOARD] Tournament deletion query succeeded but did not delete a row.');
-				return (reply.code(500).send({ message: '[DASHBOARD] Internal server error during tournament deletion' }));
-			}
+			if (!response.changes)
+				return (reply.code(404).send({ message: 'Tournament not found.' }));serv.log.error('[DASHBOARD] Tournament deletion query succeeded but did not delete a row.');
 
-			return (reply.code(201).send({
+			return (reply.code(204).send({
 				success: true,
 				message: '[DASHBOARD] Tournament deleted!'
 			}));
 
 		} catch (error) {
 			serv.log.error(`[DASHBOARD] Error deleted tournament: ${error}`);
-			return (reply.code(500).send({ message: '[DASHBOARD] Internal server error' }));
-		}
-	});
-
-	//patch duration
-	serv.patch('/internal/dashboard/durationGame', async (request, reply) => {
-		try {
-			const { gameID } = request.body as { gameID: number };
-			const { duration } = request.body as { duration: string };
-
-			const query = `
-				UPDATE gameMatchInfo SET duration = ? WHERE gameID = ? 
-			`;
-
-			const params = [
-				duration,
-				gameID
-			];
-
-			const response = await serv.dbStats.run(query, params);
-			if (!response.changes) {
-				serv.log.error('[DASHBOARD] Game duration update query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: '[DASHBOARD] Internal server error during game duration update' }));
-			}
-
-			return (reply.code(201).send({
-				success: true,
-				message: '[DASHBOARD] Game duration updated!'
-			}));
-
-		} catch (error) {
-			serv.log.error(`[DASHBOARD] Error updating game duration: ${error}`);
-			return (reply.code(500).send({ message: '[DASHBOARD] Internal server error' }));
-		}
-	});
-
-	//patch score
-	serv.patch('/internal/dashboard/scoreGame', async (request, reply) => {
-		try {
-			const { gameID } = request.body as { gameID: number };
-			const { scoreWinner } = request.body as { scoreWinner: number };
-			const { scoreLoser } = request.body as { scoreLoser: number };
-
-			const query = `
-				UPDATE gameMatchInfo SET scoreWinner = ? AND scoreLoser = ? WHERE gameID = ?
-			`;
-
-			const params = [
-				scoreWinner,
-				scoreLoser,
-				gameID
-			];
-
-			const response = await serv.dbStats.run(query, params);
-			if (!response.changes) {
-				serv.log.error('[DASHBOARD] Score update query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: '[DASHBOARD] Internal server error during score update' }));
-			}
-
-			return (reply.code(201).send({
-				success: true,
-				message: '[DASHBOARD] Score updated!'
-			}));
-
-		} catch (error) {
-			serv.log.error(`[DASHBOARD] Error updating score: ${error}`);
-			return (reply.code(500).send({ message: '[DASHBOARD] Internal server error' }));
-		}
-	});
-
-	//patch status
-	serv.patch('/internal/dashboard/gameStatus', async (request, reply) => {
-		try {
-			const { gameID } = request.body as { gameID: number };
-			const { gameStatus } = request.body as { gameStatus: number };
-
-
-			const query = `
-				UPDATE gameMatchInfo SET gameStatus = ? WHERE gameID = ?
-			`;
-
-			const params = [
-				gameStatus,
-				gameID
-			];
-
-			const response = await serv.dbStats.run(query, params);
-			if (!response.changes) {
-				serv.log.error('[DASHBOARD] Game status query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: '[DASHBOARD] Internal server error during game status update' }));
-			}
-
-			return (reply.code(201).send({
-				success: true,
-				message: '[DASHBOARD] Game status updated!'
-			}));
-
-		} catch (error) {
-			serv.log.error(`[DASHBOARD] Error updating game status: ${error}`);
-			return (reply.code(500).send({ message: '[DASHBOARD] Internal server error' }));
-		}
-	});
-
-	//get all game of a player
-	serv.get('/internal/dashboard/:userID/gameHistory', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: number };
-
-			const games = await getGameHistory(serv.dbStats, userID);
-
-			return reply.code(200).send(games);
-
-		} catch (error) {
-			serv.log.error(`[DASHBOARD] Error fetching match history: ${error}`);
-			return reply.code(500).send({ message: '[DASHBOARD] An internal error occurred.' });
-		}
-	});
-
-	// get all tournament of a player
-	serv.get('/internal/dashboard/:userID/tournamentHistory', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: number };
-
-			const games = await getTournamentHistory(serv.dbStats, userID);
-			return (reply.code(200).send(games));
-
-		} catch (error) {
-			serv.log.error(`[DASHBOARD] Error creating user account: ${error}`);
-			return (reply.code(500).send({ message: '[DASHBOARD] Internal server error' }));
+			throw (error);
 		}
 	});
 

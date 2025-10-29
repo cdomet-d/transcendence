@@ -9,7 +9,7 @@ interface AccountSettingsRow {
 export async function accountRoutes(serv: FastifyInstance) {
 
 	//TODO: usersStatus is always a hardcoded 1 for now, not even sure to keep it honestly
-	serv.post('/internal/account/register', async (request, reply) => { //good
+	serv.post('/internal/account/register', async (request, reply) => {
 		try {
 			const { username, hashedPassword } = request.body as { username: string, hashedPassword: string };
 
@@ -38,7 +38,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/internal/account/login', async (request, reply) => { //good
+	serv.get('/internal/account/login', async (request, reply) => {
 		try {
 			const { username } = request.body as { username: string };
 			const { password } = request.body as { password: string };
@@ -113,7 +113,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.delete('/internal/account', async (request, reply) => { //good
+	serv.delete('/internal/account', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 
@@ -160,7 +160,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/internal/account/userDataBatch', async (request, reply) => {  //good
+	serv.post('/internal/account/userDataBatch', async (request, reply) => { 
 		try {
 			const { userIDs } = request.body as { userIDs: number[] };
 

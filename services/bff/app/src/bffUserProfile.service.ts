@@ -156,6 +156,7 @@ export async function fetchProfileDataBatch(log: any, userIDs: number[]): Promis
 	return (body.profileData);
 }
 
+//TODO: fix matches to also include tournaments and see what it should look like
 export async function fetchMatches(log: any, userID: number): Promise<Matches[] | null> {
 	const url = `http://users:2626/internal/dashboard/${userID}/gameHistory`;
 	let response: Response;
