@@ -386,7 +386,6 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//TODO: code this : const response = await fetch(`https://user:2626/internal/users/activity/${userID}`);
 
-
 	/*
 	//get username by userID
 	serv.get('/internal/users/:userID/username', async (request, reply) => {
