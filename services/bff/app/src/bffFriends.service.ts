@@ -1,7 +1,7 @@
 import type { UserAuth } from './bff.interface.js';
 
 export async function findUserByUsername(log: any, username: string): Promise<UserAuth | null> {
-	const url = `http://users:2626/internal/users/${username}/userID`;
+	const url = `http://users:2626/internal/users?username=${username}`;
 	let response: Response;
 
 	try {

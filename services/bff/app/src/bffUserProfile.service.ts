@@ -27,7 +27,8 @@ export async function fetchUserProfile(log: any, userID: number): Promise<Profil
 }
 
 export async function fetchUserID(log: any, username: string): Promise<number> {
-	const url = `http://users:2626/internal/users/${username}/userID`;
+	const url = `http://users:2626/internal/users?username=${username}`;
+
 	let response: Response;
 	try {
 		response = await fetch(url)
@@ -180,6 +181,7 @@ export async function fetchMatches(log: any, userID: number): Promise<Matches[] 
 
 export async function fetchRelationship(log: any, userID: number, username: string): Promise<ProfileView> {
 	const url = `http://users:2626/internal/users/${username}/userID`;
+
 	let response: Response;
 
 	try {
