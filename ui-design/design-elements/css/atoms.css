@@ -16,20 +16,20 @@ ul {
   margin: 0;
   padding: 0;
   font-size: var(--regular);
-  line-height: var(--space-sm);
+  line-height: var(--sm);
   color: var(--black);
 }
 
 li {
   margin: 0;
-  padding: 0px 0px 0px var(--space-m);
+  padding: 0px 0px 0px var(--m);
   list-style: none;
 }
 
 .input-w-tooltip {
   position: relative;
   display: flex;
-  gap: var(--space-s);
+  gap: var(--s);
   align-items: center;
   z-index: 0;
 }
@@ -37,7 +37,7 @@ li {
 .tooltip {
   position: relative;
   display: flex;
-  gap: var(--space-s);
+  gap: var(--s);
   align-items: center;
   position: relative;
   z-index: 1;
@@ -57,7 +57,7 @@ li {
 }
 
 .tooltip-body {
-  padding: var(--space-xs);
+  padding: var(--s);
   position: absolute;
   top: -50%;
   left: 110%;
@@ -73,6 +73,6 @@ li {
 }
 
 .error-message {
-  padding: var(--space-s);
+  padding: var(--s);
   color: var(--red);
 }

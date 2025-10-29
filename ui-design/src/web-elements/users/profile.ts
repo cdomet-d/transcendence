@@ -116,9 +116,9 @@ export class UserProfile extends HTMLDivElement {
     }
 
     connectedCallback() {
-        this.className = `pad-s box-border items-center place-items-center justify-items-center thin brdr ${
+        this.className = `pad-xs box-border items-center place-items-center justify-items-center thin brdr ${
             this.#color
-        } min-w-xl`;
+        }`;
         this.render();
     }
 
@@ -135,7 +135,7 @@ export class UserProfile extends HTMLDivElement {
         this.#joinedSince.classList.add('f-clear');
         this.#biography.classList.add('row-span-2', 'f-clear');
         this.#avatar.classList.add('row-span-3');
-        this.classList.add('grid', 'user-profile-header-grid', 'w-full');
+        this.classList.add('grid', 'user-profile-header-grid');
     }
 }
 

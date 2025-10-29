@@ -268,7 +268,7 @@ export class DropdownMenu extends HTMLDivElement {
                 el.id = option.content;
                 el.textContent = option.content;
                 el.className =
-                    'brdr pad-s flex justify-center items-center cursor-pointer input-emphasis w-xl';
+                    'brdr pad-xs flex justify-center items-center cursor-pointer input-emphasis h-m';
                 el.role = 'option';
                 el.ariaSelected = 'false';
                 el.setAttribute('tabindex', '-1');
@@ -278,7 +278,7 @@ export class DropdownMenu extends HTMLDivElement {
         });
         this.#listbox.role = 'listbox';
         this.#listbox.setAttribute('hidden', '');
-        this.#listbox.className = 'hidden z-0';
+        this.#listbox.className = 'hidden z-0 w-xxl';
         this.#listboxOptions = Array.from(this.#listbox.children) as HTMLLIElement[];
     }
 
@@ -409,7 +409,7 @@ export class DropdownMenu extends HTMLDivElement {
     render() {
         this.append(this.#toggle);
         this.append(this.#listbox);
-        this.className = 'h-m w-xl relative z-1';
+        this.className = 'h-m  w-xxl relative z-1';
 
         //TODO: add aria-controls on #toggle ?
         this.#toggle.ariaExpanded = 'false';

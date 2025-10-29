@@ -76,7 +76,7 @@ export class CustomButton extends HTMLButtonElement {
             const letterSpan = document.createElement('span');
             letterSpan.textContent = char;
             letterSpan.style.animationDelay = `${index}s`;
-            letterSpan.classList.add('f-brown', 'f-bold', 'whitespace-pre');
+            letterSpan.classList.add('f-brown', 'f-bold', 'whitepre');
             this.appendChild(letterSpan);
             index += 0.1;
         }
@@ -90,7 +90,7 @@ export class CustomButton extends HTMLButtonElement {
     /** Updates button styles and content according to current state. */
     render(): void {
         this.className =
-            'border-box brdr pad-xs input-emphasis min-w-[4rem] outline-hidden overflow-hidden w-full whitespace-nowrap cursor-pointer button';
+            'box-border brdr pad-xs input-emphasis outline-hidden overflow-hidden whitenowrap cursor-pointer button';
 
         if (this.#btn.content && !this.#animated) {
             this.renderTextualBtn();
@@ -175,7 +175,7 @@ export class TabButton extends HTMLButtonElement {
     /** Updates styles depending on selection state. */
     render(): void {
         this.className =
-            'tab z-2 w-full h-full pad-xs thin brdr overflow-hidden outline-hidden border-box flex justify-center items-center hover:transform-none';
+            'tab z-2 h-full pad-xs thin brdr overflow-hidden outline-hidden box-border flex justify-center items-center w-full hover:transform-none';
 
         if (this.hasAttribute('selected')) {
             this.classList.remove('bg-yellow', 'brdr', 'z-2');
@@ -208,7 +208,7 @@ export class TabButtonWrapper extends HTMLDivElement {
     /** Applies grid layout styling to the tab group container. */
     render(): void {
         this.className =
-            'tab-button-wrapper w-full h-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center';
+            'tab-button-wrapper h-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center';
     }
 }
 

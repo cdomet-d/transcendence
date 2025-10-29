@@ -14,13 +14,14 @@ import type { UserData } from '../../types-interfaces';
  * Responsively adjusts results container position on window resize and scroll events.
  */
 export class Searchbar extends BaseForm {
-    #searchInput!: InputGroup;
+    #searchInput: InputGroup;
     #results: HTMLDivElement;
 
     constructor() {
         super();
         this.#results = document.createElement('div');
         this.setResultPos = this.setResultPos.bind(this);
+		this.#searchInput = document.createElement('div', {is: 'input-and-label'}) as InputGroup;
     }
 
     override connectedCallback() {
@@ -104,7 +105,7 @@ export class Searchbar extends BaseForm {
 
         this.classList.add('sidebar-right', 'search-gap', 'relative');
         this.#results.className =
-            'hidden absolute brdr bg min-h-fit max-h-l pad-s overflow-y-auto box-border';
+            'hidden absolute brdr bg min-h-fit max-h-l pad-xs overflow-y-auto box-border';
         this.setResultPos();
     }
 }

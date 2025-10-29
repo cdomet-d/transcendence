@@ -57,7 +57,7 @@ export class TabPanel extends HTMLDivElement {
      * Renders the panel's base classes and visibility.
      */
     render() {
-        this.className = 'panel border-box overflow-scroll h-full w-[inherit]';
+        this.className = 'panel box-border overflow-scroll h-full w-[inherit]';
         if (this.hasAttribute('selected')) {
             this.classList.add('block');
         } else {
@@ -126,7 +126,7 @@ export class TabContainer extends HTMLDivElement {
      */
     render() {
         this.className =
-            'bg brdr w-full overflow-hidden grid items-stretch grid-flow-row grid-cols-[1fr] grid-rows-[var(--s)_1fr]';
+            'bg brdr overflow-hidden grid items-stretch grid-flow-row grid-cols-[1fr] grid-rows-[var(--s)_1fr]';
         this.appendChild(this.createTabButtons());
         this.createPanels();
     }

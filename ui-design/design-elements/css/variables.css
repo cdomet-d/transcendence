@@ -18,19 +18,19 @@
 	--image-cont-xxl: 17.65rem;
 
 	/* Golden ratio spacing */
-	--nspace-xs: -0.5rem;
-	--nspace-s: -0.81rem;
-	--nspace-sm: -1.31rem;
-	--nspace-m: -2.12rem;
+	--nxs: -0.5rem;
+	--ns: -0.81rem;
+	--nsm: -1.31rem;
+	--nm: -2.12rem;
 
-	--space-xxs: 0.25rem;
-	--space-xs: 0.5rem;
-	--space-s: 0.81rem;
-	--space-sm: 1.31rem;
-	--space-m: 2.12rem;
-	--space-ml: 3.43rem;
-	--space-l: 5.55rem;
-	--space-xl: 8.98rem;
+	--xxs: 0.25rem;
+	--s: 0.5rem;
+	--s: 0.81rem;
+	--sm: 1.31rem;
+	--m: 2.12rem;
+	--ml: 3.43rem;
+	--l: 5.55rem;
+	--xl: 8.98rem;
 
 	/* Font sizing */
 	--regular: 1rem;

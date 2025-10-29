@@ -15,7 +15,8 @@ export class BaseForm extends HTMLFormElement {
         super();
         this.#formData = emptyForm;
         this.#submitHandler = this.submitHandler.bind(this);
-        this.className = 'grid gap-s pad-s w-full place-items-center justify-center box-border';
+        this.className =
+            'w-full grid row-ml gap-s pad-s place-items-center justify-center box-border';
         this.#formContent = {};
     }
 
@@ -27,9 +28,9 @@ export class BaseForm extends HTMLFormElement {
         return this.#formData;
     }
 
-	get contentMap() {
-		return this.#formContent;
-	}
+    get contentMap() {
+        return this.#formContent;
+    }
 
     submitHandler(ev: SubmitEvent) {
         ev.preventDefault();
@@ -37,15 +38,23 @@ export class BaseForm extends HTMLFormElement {
         console.log(formResults);
     }
 
+    renderTitle() {
+        if (this.#formData.heading) {
+            const title = createHeading('1', this.#formData.heading);
+            this.#formContent['title'] = title;
+            this.append(title);
+        }
+    }
+
     renderFields() {
         this.#formData.fields.forEach((field) => {
             let el: HTMLElement;
             if (field.type !== 'textarea') {
                 el = createInputGroup(field) as InputGroup;
-				this.#formContent[field.id] = el;
+                this.#formContent[field.id] = el;
             } else {
                 el = createTextAreaGroup(field) as TextAreaGroup;
-				this.#formContent[field.id] = el;
+                this.#formContent[field.id] = el;
             }
             this.appendChild(el);
             if (field.type === 'textarea') el.classList.add('row-span-3');
@@ -54,7 +63,7 @@ export class BaseForm extends HTMLFormElement {
 
     renderButtons() {
         const submit = createBtn(this.#formData.button);
-		this.#formContent['submit'] = submit;
+        this.#formContent['submit'] = submit;
         this.append(submit);
     }
 
@@ -72,8 +81,7 @@ export class BaseForm extends HTMLFormElement {
     }
 
     render() {
-        const title = createHeading('1', this.#formData.heading);
-        this.append(title);
+        this.renderTitle();
         this.renderFields();
         this.renderButtons();
     }

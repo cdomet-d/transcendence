@@ -17,19 +17,19 @@
 				spacing is determined by increments of 0.4. We start at 0.4, then increment by that value. </p>
 			<p> Spacing variables are defined as follow:</p>
 			<ul>
-				<li>--space-xs: 0.4rem;</li>
-				<li>--space-s: 0.8rem;</li>
-				<li>--space-sm: 1.2rem;</li>
-				<li>--space-m: 1.6rem;</li>
-				<li>--space-ml: 2.0rem;</li>
-				<li>--space-l: 2.4rem; </li>
+				<li>--s: 0.4rem;</li>
+				<li>--s: 0.8rem;</li>
+				<li>--sm: 1.2rem;</li>
+				<li>--m: 1.6rem;</li>
+				<li>--ml: 2.0rem;</li>
+				<li>--l: 2.4rem; </li>
 			</ul>
 
 			<p> The above values are css variables that can be applied in place of a "hardcoded" value, like so: </p>
 			<p> Do:</p>
 			<ul>
-				<li>border-bottom: #a74500 solid var(--space-xs);</li>
-				<li>border-right: #a74500 solid var(--space-xs);</li>
+				<li>border-bottom: #a74500 solid var(--s);</li>
+				<li>border-right: #a74500 solid var(--s);</li>
 			</ul>
 			<p> Don't:</p>
 			<ul>
@@ -41,7 +41,7 @@
 			<code class="blockcode">
 					display: grid; <br>
 					grid-template-columns: auto; <br>
-					gap: var(--space-m); <br>
+					gap: var(--m); <br>
 			</code>
 			<p> This formats content in a way that keeps spacing coherent and even accross all elements. It can be
 				manipulated to add more columns, retaining a regular gap.</p>
@@ -251,7 +251,7 @@
 			<p>All titles share the following attributes: </p>
 			<code class="blockcode">
 				margin: 0px 0px 0px 0px<br>
-				padding: var(--space-s) 0px var(--space-s) 0px<br>
+				padding: var(--s) 0px var(--s) 0px<br>
 				background: repeating-linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(9, 78, 121, 1) 50%, rgba(0,
 					212, 255, 1) 100%);<br>
 				color: var(--yellow-accent);<br>
@@ -300,7 +300,7 @@
 
 		<div class="block bg-brdr bg">
 			<h3> body paragraph </h3>
-			<p> margin: 0px 0px 0px 0px // font-size: var(--regular) // line-height: var(--space-sm) // font-family:
+			<p> margin: 0px 0px 0px 0px // font-size: var(--regular) // line-height: var(--sm) // font-family:
 				PixelOperator;</p>
 			<p>
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla egestas laoreet dui, at rutrum

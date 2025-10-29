@@ -2,7 +2,6 @@ import { BaseForm } from './baseform';
 import { createAvatar } from '../typography/helpers';
 import { createDropdown } from '../navigation/menu-helpers';
 import { user, userColorsMenu, languageMenu } from '../../default-values';
-import { createHeading } from '../typography/helpers';
 
 import type { DropdownMenu } from '../navigation/menus';
 import type { UserData } from '../../types-interfaces';
@@ -41,16 +40,19 @@ export class UserSettingsForm extends BaseForm {
     renderDropdowns() {
         const dropdownWrapper = document.createElement('div');
         dropdownWrapper.append(this.#colors, this.#languages);
-        dropdownWrapper.className = 'grid gap-s grid-flow-col';
+        dropdownWrapper.className = 'grid gap-s grid-flow-col row-start-6';
         this.append(dropdownWrapper);
     }
 
     override render() {
-        const title = createHeading('1', 'Settings');
-        this.append(this.#avatar, title);
-        this.renderFields();
+        this.append(this.#avatar);
+		super.renderTitle();
+		super.renderFields();
         this.renderDropdowns();
-        this.renderButtons();
+		super.renderButtons();
+		this.#avatar.classList.add('row-span-2');
+		super.contentMap['biography'].classList.add('col-start-1', 'row-span-3', 'place-self-stretch')
+		super.contentMap['title'].classList.add('row-span-2')
         this.classList.add('sidebar-left');
     }
 }

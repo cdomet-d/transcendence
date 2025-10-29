@@ -105,6 +105,9 @@ export class InputGroup extends HTMLDivElement {
         this.#info = data;
     }
 
+	get label() {
+		return this.#label
+	}
     constructor() {
         super();
         this.#info = {
@@ -128,7 +131,7 @@ export class InputGroup extends HTMLDivElement {
         if (this.#inputFeedback.firstChild)
             this.#inputFeedback.removeChild(this.#inputFeedback.firstChild);
         const list = document.createElement('ul');
-        list.className = 'pad-s list-inside';
+        list.className = 'pad-xs list-inside';
         for (let i: number = 0; i < ev.detail.feedback.length; i++) {
             const ul = document.createElement('li');
             ul.innerText = ev.detail.feedback[i];
@@ -154,9 +157,9 @@ export class InputGroup extends HTMLDivElement {
         this.appendChild(this.#label);
         this.appendChild(this.#input);
         this.appendChild(this.#inputFeedback);
+        this.className = 'box-border relative mt-[24px] w-full';
 
         if (this.#info.required) this.#input.setAttribute('required', '');
-        this.className = 'w-full box-border relative min-w-[240px] mt-[24px]';
         this.#inputFeedback.className = 'brdr bg hidden';
         this.#label.for = this.#info.id;
         this.#info.required
@@ -224,7 +227,7 @@ export class TextAreaGroup extends HTMLDivElement {
         if (this.#inputFeedback.firstChild)
             this.#inputFeedback.removeChild(this.#inputFeedback.firstChild);
         const list = document.createElement('ul');
-        list.className = 'pad-s list-inside';
+        list.className = 'pad-xs list-inside';
         for (let i: number = 0; i < ev.detail.feedback.length; i++) {
             const ul = document.createElement('li');
             ul.innerText = ev.detail.feedback[i];
@@ -250,7 +253,7 @@ export class TextAreaGroup extends HTMLDivElement {
         this.appendChild(this.#input);
         this.appendChild(this.#inputFeedback);
 
-        this.#input.className = 'resize-y brdr w-full h-full bg pad-s';
+        this.#input.className = 'resize-y brdr h-full pad-xs';
         this.#input.id = this.#info.id;
         this.#input.maxLength = 256;
         this.#input.name = this.#info.id;
@@ -259,7 +262,7 @@ export class TextAreaGroup extends HTMLDivElement {
         this.#label.content = this.#info.labelContent;
         this.#label.for = this.#info.id;
         if (this.#info.required) this.#input.setAttribute('required', '');
-        this.className = 'w-full box-border relative min-w-fit mt-[24px]';
+        this.className = 'box-border relative mt-[24px] w-full';
     }
 }
 

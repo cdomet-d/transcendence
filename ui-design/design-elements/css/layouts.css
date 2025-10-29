@@ -18,7 +18,7 @@ body {
   align-items: center;
   box-sizing: border-box;
   display: grid;
-  gap: var(--space-s);
+  gap: var(--s);
   grid-template-columns: var(--ui-doc-full-width);
   justify-content: center;
   max-width: 100%;
@@ -33,7 +33,7 @@ body {
   grid-auto-rows: var(--m);
   grid-auto-columns: 100%;
   display: grid;
-  gap: var(--space-s);
+  gap: var(--s);
   align-items: center;
   justify-items: center;
 }
@@ -48,11 +48,11 @@ body {
   grid-template-columns: 5% 32.3% 48.87% 5% 5%;
   grid-template-rows: var(--ml);
   place-items: center;
-  gap: var(--space-s);
+  gap: var(--s);
 }
 
 .header-item {
-  padding: var(--space-xs);
+  padding: var(--s);
 }
 
 .single-centered-no-header {
@@ -86,7 +86,7 @@ body {
   aspect-ratio: 16/9;
   width: 60%;
   display: flex;
-  gap: var(--space-s);
+  gap: var(--s);
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -95,9 +95,9 @@ body {
 .block {
   min-width: var(--min-width);
   box-sizing: border-box;
-  padding: var(--space-m);
+  padding: var(--m);
   display: grid;
-  gap: var(--space-xs);
+  gap: var(--s);
   grid-template-columns: 1fr;
   height: 100%;
 }
@@ -113,7 +113,7 @@ body {
   max-width: 100%;
   box-sizing: border-box;
   display: grid;
-  gap: var(--space-s) var(--space-s);
+  gap: var(--s) var(--s);
   grid-template-columns: 48.09% 1fr;
 }
 
@@ -128,7 +128,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: var(--space-s) var(--space-s);
+  gap: var(--s) var(--s);
 }
 
 .flex-item {

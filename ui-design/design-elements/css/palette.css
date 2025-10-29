@@ -1,7 +1,7 @@
 @import url(./atoms.css);
 
 .palette-group {
-	padding: var(--space-s);
+	padding: var(--s);
 }
 
 .palette-row {

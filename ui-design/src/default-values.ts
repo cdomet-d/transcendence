@@ -47,7 +47,26 @@ export const user: types.UserData = {
     since: '145',
 };
 
+export const u1: types.UserData = {
+    avatar: {
+        alt: 'pp',
+        id: 'user-avatar',
+        size: 'iicon',
+        src: '/assets/icons/magenta-avatar.png',
+    },
+    biography: '(╯°□°)╯︵ ┻━┻',
+    id: '256',
+    relation: 'stranger',
+    profileColor: 'bg-BE5103',
+    language: 'English',
+    status: true,
+    username: 'm4p1',
+    winstreak: '7',
+    since: '145',
+};
+
 export const users: Array<types.UserData> = [user, user, user, user, user, user];
+export const u2: Array<types.UserData> = [u1, u1];
 
 export const mainMenu: types.buttonData[] = [
     { content: 'Leaderboard', type: 'button', img: null, ariaLabel: 'Leaderboard Menu Button' },
@@ -146,7 +165,6 @@ export const backgroundMenu: types.buttonData[] = [
         type: 'button',
     },
 ];
-
 
 export const iMeta: types.ImgData = {
     alt: 'pp',
@@ -336,7 +354,51 @@ export const localPong: types.formDetails = {
             step: '1',
             type: 'range',
         },
-		{
+        {
+            id: 'paddlespeed',
+            labelContent: 'Paddle speed',
+            max: '5',
+            min: '0',
+            pattern: '',
+            placeholder: '',
+            required: true,
+            step: '1',
+            type: 'range',
+        },
+    ],
+    button: { type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
+};
+
+export const remotePong: types.formDetails = {
+    action: '/gameManager',
+    heading: 'Remote Pong',
+    ariaLabel: 'Remote Pong settings',
+    id: 'remote-pong-settings',
+    method: 'post',
+    fields: [
+        {
+            id: 'ballspeed',
+            labelContent: 'Starting Ball Speed',
+            max: '5',
+            min: '0',
+            pattern: '',
+            placeholder: '',
+            required: true,
+            step: '1',
+            type: 'range',
+        },
+        {
+            id: 'paddlesize',
+            labelContent: 'Paddle size',
+            max: '5',
+            min: '0',
+            pattern: '',
+            placeholder: '',
+            required: true,
+            step: '1',
+            type: 'range',
+        },
+        {
             id: 'paddlespeed',
             labelContent: 'Paddle speed',
             max: '5',

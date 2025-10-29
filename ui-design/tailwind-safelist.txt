@@ -41,3 +41,5 @@ col-start-17	row-start-17	row-span-17
 col-start-18	row-start-18	row-span-18
 col-start-19	row-start-19	row-span-19
 col-start-20	row-start-20	row-span-20
+
+w-xl

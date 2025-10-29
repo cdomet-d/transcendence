@@ -24,29 +24,16 @@
 		--image-size: 2.43rem;
 		--image-cont-size: 3.43rem;
 
-		/* Golden ratio spacing */
-		--nspace-xs: -0.5rem;
-		--nspace-s: -0.81rem;
-		--nspace-sm: -1.31rem;
-		--nspace-m: -2.12rem;
-
-		--space-xxs: 0.25rem;
-		--space-xs: 0.5rem;
-		--space-s: 0.81rem;
-		--space-sm: 1.31rem;
-		--space-m: 2.12rem;
-		--space-ml: 3.43rem;
-		--space-l: 5.55rem;
-		--space-xl: 8.98rem;
-
 		/* Font sizing */
+		--xs: 0.5rem;
 		--regular: 1rem;
-		--s: 1.62rem;
-		--sm: 1.84rem;
-		--m: 2.62rem;
-		--ml: 4.24rem;
-		--l: 6.86rem;
-		--xl: 11.1rem;
+		--s: 1.33rem;
+		--sm: 1.77rem;
+		--m: 2.35rem;
+		--ml: 3.13rem;
+		--l: 4.16rem;
+		--xl: 5.53rem;
+		--xxl: 7.36rem;
 
 		/* Elements sizes */
 		--percent-sidebar: 38.06%;
@@ -127,6 +114,10 @@
 		--shadow: #966c00;
 	}
 
+	.field {
+		--highlight: #FFEAC9;
+		--shadow: #DC681C;
+	}
 	.bg-4F9FFF {
 		--highlight: #a7cfff;
 		--shadow: #4289e5;
@@ -261,39 +252,26 @@
 		animation: a-grow 0.2s 1 linear forwards;
 	}
 
-	input,
-	textarea {
+	input {
 		box-sizing: border-box;
 		min-width: 330px;
 		width: 100%;
 		height: 36px;
 		outline: none;
-		background: linear-gradient(180deg,
-				#ffdc99 0 10%,
-				#ffe0a5 0 20%,
-				#ffe4b0 0 30%,
-				#ffe8bb 0 40%,
-				#ffecc6 0 50%,
-				#ffecc6 0 60%,
-				#ffe8bb 0 70%,
-				#ffe4b0 0 80%,
-				#ffe0a5 0 90%,
-				#ffdc99 0 100%);
+		background-color: #F3BE6A;
 	}
 
-	input[type="radio"],
-	input[type="checkbox"] {
-		height: 100%;
-		opacity: 0%;
-	}
-
-	input[type="text"],
-	input[type="password"] {
-		padding: var(--space-xs);
-	}
-
-	input#upload {
-		padding: var(--space-xs) var(--space-xs) var(--space-xs) var(--space-l);
+	input:hover,
+	input:active,
+	input:focus,
+	input:focus-visible,
+	textarea:hover,
+	textarea:active,
+	textarea:focus,
+	textarea:focus-visible {
+		outline: none;
+		border: none;
+		background-color: #FDD9A2;
 	}
 
 	input[type="text"]:invalid,
@@ -313,28 +291,32 @@
 		color: white;
 	}
 
-	input:hover,
-	input:active,
-	input:focus,
-	input:focus-visible,
-	textarea:hover,
-	textarea:active,
-	textarea:focus,
-	textarea:focus-visible {
-		outline: none;
-		border: none;
-		background: linear-gradient(180deg,
-				#FFB732 0 10%,
-				#FFD88F 0 20%,
-				#FFDFA2 0 30%,
-				#FFE5B4 0 40%,
-				#FFECC6 0 50%,
-				#FFECC6 0 60%,
-				#FFE5B4 0 70%,
-				#FFDFA2 0 80%,
-				#FFD88F 0 90%,
-				#FFB732 0 100%);
 
+	textarea {
+		height: 100%;
+		width: 100%;
+		box-sizing: border-box;
+		outline: none;
+		background-color: #F3BE6A;
+	}
+
+	input[type="radio"],
+	input[type="checkbox"] {
+		height: 100%;
+		opacity: 0%;
+	}
+
+	input[type="text"],
+	input[type="password"] {
+		padding: var(--xs);
+	}
+
+	input#upload {
+		padding: var(--xs) var(--xs) var(--xs) var(--xl);
+	}
+
+	input#searchbar {
+		padding: var(--xs) var(--xs) var(--xs) var(--m);
 	}
 
 	li:focus,
@@ -358,7 +340,7 @@
 		outline: none;
 		border: none;
 		border-radius: 0;
-		width: var(--space-s);
+		width: var(--xs);
 		height: var(--sm);
 		background-color: var(--orange);
 		border-top: 2px solid var(--highlight-orange);
@@ -387,9 +369,9 @@
 	}
 
 
-	#searchbar {
-		padding: var(--space-xs) var(--space-s) var(--space-xs) var(--space-m);
-	}
+	/* #searchbar {
+		padding: var(--s) var(--s) var(--s) var(--m);
+	} */
 
 	#searchform button {
 		height: 36px;
@@ -400,7 +382,9 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		min-width: var(--l);
 		height: 90%;
+		width: 100%;
 	}
 
 	button:hover>span,
@@ -426,16 +410,20 @@
 @layer components {}
 
 @layer utilities {
-	.row-l {
-		grid-auto-rows: var(--l);
+	.row-s {
+		grid-template-rows: repeat(auto-fit, minmax(36px, var(--s)));
 	}
 
 	.row-m {
-		grid-auto-rows: var(--m);
+		grid-template-rows: repeat(auto-fit, minmax(36px, var(--m)));
 	}
 
-	.row-s {
-		grid-auto-rows: var(--s);
+	.row-ml {
+		grid-template-rows: repeat(auto-fit, minmax(36px, var(--ml)));
+	}
+
+	.row-l {
+		grid-template-rows: repeat(auto-fit, minmax(36px, var(--l)));
 	}
 
 	.f-yellow {
@@ -449,7 +437,6 @@
 	.f-clear {
 		color: #ffdc99;
 	}
-
 
 	.f-brown {
 		color: var(--border);
@@ -483,11 +470,6 @@
 		width: var(--s);
 	}
 
-
-	.w-xs {
-		width: var(--space-xs);
-	}
-
 	.w-m {
 		width: var(--m);
 	}
@@ -504,12 +486,12 @@
 		width: var(--xl);
 	}
 
-	.min-w-xl {
-		min-width: 270px;
+	.w-xl {
+		width: var(--xxl);
 	}
 
-	.h-xs {
-		height: var(--space-xs);
+	.min-w-xl {
+		width: var(--xl);
 	}
 
 	.h-s {
@@ -524,48 +506,52 @@
 		height: var(--l);
 	}
 
+	.h-xl {
+		height: var(--xl);
+	}
+
 	.max-h-l {
 		max-height: var(--l);
 	}
 
 	.gap-xs {
-		gap: var(--space-xs) var(--space-xs);
+		gap: var(--xs) var(--xs);
 	}
 
 	.gap-s {
-		gap: var(--space-s) var(--space-s);
+		gap: var(--s) var(--s);
 	}
 
 	.gap-sm {
-		gap: var(--space-sm) var(--space-sm);
+		gap: var(--sm) var(--sm);
 	}
 
 	.gap-m {
-		gap: var(--space-m) var(--space-m);
+		gap: var(--m) var(--m);
 	}
 
 	.gap-l {
-		gap: var(--space-l) var(--space-l);
+		gap: var(--l) var(--l);
 	}
 
 	.v-gap-l {
-		gap: var(--space-m) var(--space-l);
+		gap: var(--m) var(--l);
 	}
 
 	.search-gap {
-		gap: 0 var(--space-s);
+		gap: 0 var(--s);
 	}
 
 	.pad-xs {
-		padding: var(--space-xs);
+		padding: var(--xs);
 	}
 
 	.pad-s {
-		padding: var(--space-s);
+		padding: var(--s);
 	}
 
 	.pad-sm {
-		padding: var(--space-sm);
+		padding: var(--sm);
 	}
 
 	.outline-focus:focus,
@@ -592,13 +578,6 @@
 		display: block;
 	}
 
-	.small-user-grid {
-		height: var(--xl);
-		max-width: 11.2rem;
-		grid-template-columns: 1fr;
-		grid-template-rows: 1fr 1fr var(--m);
-	}
-
 	.username {
 		grid-template-columns: auto 10%;
 		justify-content: left;
@@ -621,8 +600,8 @@
 	}
 
 	.user-status {
-		height: var(--space-s);
-		width: var(--space-s);
+		height: var(--s);
+		width: var(--s);
 		background-color: var(--user-status);
 		border-radius: 30px;
 		line-height: 110%;
@@ -634,7 +613,7 @@
 		grid-auto-flow: column;
 		grid-template-columns: repeat(auto-fit, minmax(11.2rem, max-content));
 		grid-auto-rows: max-content;
-		gap: var(--space-xs) var(--space-xs);
+		gap: var(--s) var(--s);
 	}
 
 	.biography {
@@ -644,7 +623,7 @@
 		line-clamp: 6;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		padding: var(--space-xxs);
+		padding: var(--xs);
 	}
 
 	.title-shadow {
