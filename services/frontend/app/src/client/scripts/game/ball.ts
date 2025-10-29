@@ -22,10 +22,8 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 function updateBallPos(game: Game, newX: number, newY: number) {
 	newY = upperWallCollision(game, newY);
 	newY = bottomWallCollision(game, newY);
-	if (leftPadCollision(game, game.leftPad, newX, newY))
-		return;
-	if (rightPadCollision(game, game.rightPad, newX, newY))
-		return;
+	[newX, newY] = leftPadCollision(game, game.leftPad, newX, newY);
+	[newX, newY] = rightPadCollision(game, game.rightPad, newX, newY);
 
 	game.ball.x = newX;
 	game.ball.y = newY;
@@ -33,7 +31,7 @@ function updateBallPos(game: Game, newX: number, newY: number) {
 
 function upperWallCollision(game: Game, newY: number): number {
 	if (newY - BALL_RADIUS <= 0) {
-		game.ball.y = BALL_RADIUS;
+		newY = BALL_RADIUS;
 		game.ball.dy = increaseVelocity(Math.abs(game.ball.dy));
 	}
 	return newY;
@@ -41,26 +39,28 @@ function upperWallCollision(game: Game, newY: number): number {
 
 function bottomWallCollision(game: Game, newY: number): number {
 	if (newY + BALL_RADIUS >= HEIGHT) {
-		game.ball.y = HEIGHT - BALL_RADIUS;
+		newY = HEIGHT - BALL_RADIUS;
 		game.ball.dy = increaseVelocity(-Math.abs(game.ball.dy));
 	}
 	return newY;
 }
 
-function leftPadCollision(game: Game, leftPad: coordinates, newX: number, newY: number): boolean {
-	if (sdBox({x: newX - (leftPad.x + 5), y: newY - (leftPad.y + 27)}, {x :(10 / 2), y:(54 / 2)}) <= BALL_RADIUS) {
-		getPosition(game, leftPad);
-		return true;
+function leftPadCollision(game: Game, leftPad: coordinates, newX: number, newY: number): [number, number] {
+	const p: coordinates = {x: newX - (leftPad.x + 5), y: newY - (leftPad.y + 27)};
+	const b: coordinates = {x :(10 / 2), y:(54 / 2)};
+	if (sdBox(p, b) <= BALL_RADIUS) {
+		return getPosition(game, leftPad, newX, newY);
 	}
-	return false;
+	return [newX, newY];
 }
 
-function rightPadCollision(game: Game, rightPad: coordinates, newX: number, newY: number): boolean {
-	if (sdBox({x: newX - (rightPad.x + 5), y: newY - (rightPad.y + 27)}, {x :(10 / 2), y:(54 / 2)}) <= BALL_RADIUS) {
-		getPosition(game, rightPad);
-		return true;
+function rightPadCollision(game: Game, rightPad: coordinates, newX: number, newY: number): [number, number] {
+	const p: coordinates = {x: newX - (rightPad.x + 5), y: newY - (rightPad.y + 27)};
+	const b: coordinates = {x :(10 / 2), y:(54 / 2)};
+	if (sdBox(p, b) <= BALL_RADIUS) {
+		return getPosition(game, rightPad, newX, newY);
 	}
-	return false
+	return [newX, newY];
 }
 
 function sdBox(p: coordinates, b: coordinates): number {
@@ -71,7 +71,7 @@ function sdBox(p: coordinates, b: coordinates): number {
     return length + Math.min(Math.max(d.x, d.y), 0.0);
 }
 
-function getPosition(game: Game, paddle: coordinates) {
+function getPosition(game: Game, paddle: coordinates, newX: number, newY: number): [number, number] {
 	const distToLeft = Math.abs(game.ball.x - paddle.x);
 	const distToRight = Math.abs(game.ball.x - (paddle.x + 10));
 	const distToTop = Math.abs(game.ball.y - paddle.y);
@@ -80,21 +80,22 @@ function getPosition(game: Game, paddle: coordinates) {
 	const minDist = Math.min(distToLeft, distToRight, distToTop, distToBottom);
 
 	if (minDist === distToLeft && game.ball.dx > 0) {
-		game.ball.x = paddle.x - (BALL_RADIUS + 2);
+		newX = paddle.x - (BALL_RADIUS + 2);
 		game.ball.dx = increaseVelocity(-Math.abs(game.ball.dx));
 	}
 	else if (minDist === distToRight && game.ball.dx < 0) {
-		game.ball.x = paddle.x + 10 + (BALL_RADIUS + 2);
+		newX = paddle.x + 10 + (BALL_RADIUS + 2);
 		game.ball.dx = increaseVelocity(Math.abs(game.ball.dx));
 	}
 	else if (minDist === distToTop && game.ball.dy > 0) {
-		game.ball.y = paddle.y - (BALL_RADIUS + 2);
+		newY = paddle.y - (BALL_RADIUS + 2);
 		game.ball.dy = increaseVelocity(-Math.abs(game.ball.dy));
 	}
 	else if (minDist === distToBottom && game.ball.dy < 0) {
-		game.ball.y = paddle.y + 54 + (BALL_RADIUS + 2);
+		newY = paddle.y + 54 + (BALL_RADIUS + 2);
 		game.ball.dy = increaseVelocity(Math.abs(game.ball.dy));
 	}
+	return [newX, newY];
 }
 
 function increaseVelocity(velocity: number): number {
