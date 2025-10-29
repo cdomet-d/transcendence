@@ -1,47 +1,49 @@
 import { Database } from 'sqlite';
 
 interface Friendship {
-	otherUserID: number;
-	startTime: string;
+	friendshipID: number,
+	userID: number,
+	friendID: number,
+	startTime: string,
+	statusFrienship: boolean
 }
 
-export async function getPendingFriendRequests(db: Database, userId: number): Promise<Friendship[]> {
+export async function getPendingFriendRequests(db: Database, userID: number): Promise<Friendship[]> {
 	const query = `
 		SELECT
-			CASE
-				WHEN userID = ? THEN friendID
-				ELSE userID
-			END AS otherUserID,
-			startTimeFriendship AS startTime
+			friendshipID,
+			userID,
+			friendID,
+			startTimeFriendship AS startTime,
+			statusFrienship
 		FROM
 			friendship
 		WHERE
-			(userID = ? OR friendID = ?)
+			friendID = ?
 			AND statusFrienship = false;
 	`;
 
-	const params = [userId, userId, userId];
-	const requests = await db.all<Friendship[]>(query, params);
+	const requests = await db.all<Friendship[]>(query, [userID]);
 
 	return (requests);
 }
 
-export async function getFriendship(db: Database, userId: number): Promise<Friendship[]> {
+export async function getFriendship(db: Database, userID: number): Promise<Friendship[]> {
 	const query = `
 		SELECT
-			CASE
-				WHEN userID = ? THEN friendID
-				ELSE userID
-			END AS otherUserID,
-			startTimeFriendship AS startTime
+			friendshipID,
+			userID,
+			friendID,
+			startTimeFriendship AS startTime,
+			statusFrienship
 		FROM
 			friendship
 		WHERE
-			(userID = ? OR friendID = ?)
+			friendID = ?
 			AND statusFrienship = true;
 	`;
 
-	const params = [userId, userId, userId];
+	const params = [userID, userID, userID];
 	const requests = await db.all<Friendship[]>(query, params);
 
 	return (requests);
