@@ -31,7 +31,7 @@ export function updateBallPos(game: Game, player1: Player, player2: Player): boo
 function upperWallCollision(game: Game, newY: number): number {
 	if (newY - BALL_RADIUS <= 0) {
 		newY = BALL_RADIUS;
-		game.ball.dy = increaseVelocity(Math.abs(game.ball.dy));
+		game.ball.dy = incVelocity(game.ball.dx, Math.abs(game.ball.dy))[1];
 	}
 	return newY;
 }
@@ -39,7 +39,7 @@ function upperWallCollision(game: Game, newY: number): number {
 function bottomWallCollision(game: Game, newY: number): number {
 	if (newY + BALL_RADIUS >= HEIGHT) {
 		newY = HEIGHT - BALL_RADIUS;
-		game.ball.dy = increaseVelocity(-Math.abs(game.ball.dy));
+		game.ball.dy = incVelocity(game.ball.dx, -Math.abs(game.ball.dy))[1];
 	}
 	return newY;
 }
@@ -72,29 +72,27 @@ function updateScore(player1: Player, player2: Player, newX: number) {
 	}
 }
 
-function leftPadCollision(game: Game, leftPad: coordinates, newX: number, newY: number): boolean
-{
+function leftPadCollision(game: Game, leftPad: coordinates, newX: number, newY: number): boolean {
 	const p: coordinates = {x: newX - (leftPad.x + 5), y: newY - (leftPad.y + 27)};
 	const b: coordinates = {x :(10 / 2), y:(54 / 2)};
-	if (sdBox(p, b) <= BALL_RADIUS) {
-		/*[game.ball.x, game.ball.y] = */getPosition(game, leftPad, newX, newY);
+	if (distBallPad(p, b) <= BALL_RADIUS) {
+		[game.ball.x, game.ball.y] = getPosition(game, leftPad, newX, newY);
 		return true;
 	}
 	return false;
 }
 
-function rightPadCollision(game: Game, rightPad: coordinates, newX: number, newY: number): boolean
-{
+function rightPadCollision(game: Game, rightPad: coordinates, newX: number, newY: number): boolean {
 	const p: coordinates = {x: newX - (rightPad.x + 5), y: newY - (rightPad.y + 27)};
 	const b: coordinates = {x :(10 / 2), y:(54 / 2)};
-	if (sdBox(p, b) <= BALL_RADIUS) {
-		/*[game.ball.x, game.ball.y] = */getPosition(game, rightPad, newX, newY);
+	if (distBallPad(p, b) <= BALL_RADIUS) {
+		[game.ball.x, game.ball.y] = getPosition(game, rightPad, newX, newY);
 		return true
 	}
 	return false;
 }
 
-function sdBox(p: coordinates, b: coordinates): number {
+function distBallPad(p: coordinates, b: coordinates): number {
     const d: coordinates = {x: Math.abs(p.x) - b.x, y: Math.abs(p.y) - b.y};
 	d.x = Math.max(d.x, 0.0);
 	d.y = Math.max(d.y, 0.0);
@@ -104,62 +102,39 @@ function sdBox(p: coordinates, b: coordinates): number {
 
 function getPosition(game: Game, paddle: coordinates, newX: number, newY: number): [number, number] {
 	const side: string = getCollisionSide(game, paddle);
+	const offset: number = BALL_RADIUS + 2;
+
 	switch (side) {
 		case "left":
-			newX = paddle.x - (BALL_RADIUS + 2);
-			[game.ball.x, game.ball.y] = [newX, newY];
-			game.ball.dx = increaseVelocity(-Math.abs(game.ball.dx));
-			break;
+			[game.ball.dx, game.ball.dy] = incVelocity(-Math.abs(game.ball.dx), game.ball.dy);
+			return [paddle.x - offset, newY];
 		case "right":
-			newX = paddle.x + 10 + (BALL_RADIUS + 2);
-			[game.ball.x, game.ball.y] = [newX, newY];
-			game.ball.dx = increaseVelocity(Math.abs(game.ball.dx));
-			break;
+			[game.ball.dx, game.ball.dy] = incVelocity(Math.abs(game.ball.dx), game.ball.dy);
+			return [paddle.x + 10 + offset, newY];
 		case "top":
-			newY = paddle.y - (BALL_RADIUS + 2);
-			[game.ball.x, game.ball.y] = [newX, newY];
-			game.ball.dy = increaseVelocity(-Math.abs(game.ball.dy));
-			break;
+			[game.ball.dx, game.ball.dy] = incVelocity(game.ball.dx, -Math.abs(game.ball.dy));
+			return [newX, paddle.y - offset];
 		case "bottom":
-			newY = paddle.y + 54 + (BALL_RADIUS + 2);
-			[game.ball.x, game.ball.y] = [newX, newY];
-			game.ball.dy = increaseVelocity(Math.abs(game.ball.dy));
-			break;
+			[game.ball.dx, game.ball.dy] = incVelocity(game.ball.dx, Math.abs(game.ball.dy));
+			return [newX, paddle.y + 54 + offset];
 		case "topleft":
-			newX = paddle.x - (BALL_RADIUS + 2);
-			newY = paddle.y - (BALL_RADIUS + 2);
-			[game.ball.x, game.ball.y] = [newX, newY];
-			game.ball.dx = increaseVelocity(-Math.abs(game.ball.dx));
-			game.ball.dy = increaseVelocity(-Math.abs(game.ball.dy));
-			break;
+			[game.ball.dx, game.ball.dy] = incVelocity(-Math.abs(game.ball.dx), -Math.abs(game.ball.dy));
+			return [paddle.x - offset, paddle.y - offset];
 		case "topright":
-			newX = paddle.x + 10 + (BALL_RADIUS + 2);
-			newY = paddle.y - (BALL_RADIUS + 2);
-			[game.ball.x, game.ball.y] = [newX, newY];
-			game.ball.dx = increaseVelocity(Math.abs(game.ball.dx));
-			game.ball.dy = increaseVelocity(-Math.abs(game.ball.dy));
-			break;
+			[game.ball.dx, game.ball.dy] = incVelocity(Math.abs(game.ball.dx), -Math.abs(game.ball.dy));
+			return [paddle.x + 10 + offset, paddle.y - offset];
 		case "bottomleft":
-			newX = paddle.x - (BALL_RADIUS + 2);
-			newY = paddle.y + 54 + (BALL_RADIUS + 2);
-			[game.ball.x, game.ball.y] = [newX, newY];
-			game.ball.dx = increaseVelocity(-Math.abs(game.ball.dx));
-			game.ball.dy = increaseVelocity(Math.abs(game.ball.dy));
-			break;
+			[game.ball.dx, game.ball.dy] = incVelocity(-Math.abs(game.ball.dx), Math.abs(game.ball.dy));
+			return [paddle.x - offset, paddle.y + 54 + offset];
 		case "bottomright":
-			newX = paddle.x + 10 + (BALL_RADIUS + 2);
-			newY = paddle.y + 54 + (BALL_RADIUS + 2);
-			[game.ball.x, game.ball.y] = [newX, newY];
-			game.ball.dx = increaseVelocity(Math.abs(game.ball.dx));
-			game.ball.dy = increaseVelocity(Math.abs(game.ball.dy));
-			break;
+			[game.ball.dx, game.ball.dy] = incVelocity(Math.abs(game.ball.dx), Math.abs(game.ball.dy));
+			return [paddle.x + 10 + offset, paddle.y + 54 + offset];
 		default:
 			return [newX, newY];
 	}
-	return [newX, newY];
 }
 
-function getCollisionSide(game: Game, paddle: coordinates): "left" | "right" | "top" | "bottom" | "topleft" | "topright" | "bottomleft" | "bottomright" {
+function getCollisionSide(game: Game, paddle: coordinates): string {
     const paddleCenterX = paddle.x + 5;
     const paddleCenterY = paddle.y + 27;
 
@@ -187,8 +162,11 @@ function getCollisionSide(game: Game, paddle: coordinates): "left" | "right" | "
     }
 }
 
-function increaseVelocity(velocity: number): number {
-	if (velocity <= 0.5 && velocity >= -0.5)
-		velocity *= 1.1;
-	return velocity
+function incVelocity(dx: number, dy: number): [number, number] {
+	if (dx <= 0.5 && dx >= -0.5)
+		dx *= 1.2;
+	if (dy <= 0.5 && dy >= -0.5)
+		dy *= 1.2;
+	return [dx, dy];
 }
+ 
