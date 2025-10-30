@@ -43,7 +43,6 @@ export class CustomInput extends HTMLInputElement {
     }
 
     render() {
-        //TODO: border color change on focus not working
         this.className = 'brdr w-full';
     }
 }
@@ -98,16 +97,6 @@ export class InputGroup extends HTMLDivElement {
     #validationCallback: (event: Event) => void;
     #info: InputFieldsData;
 
-    /**
-     * Sets input field information for label & input configuration.
-     */
-    set info(data: InputFieldsData) {
-        this.#info = data;
-    }
-
-    get label() {
-        return this.#label;
-    }
     constructor() {
         super();
         this.#info = {
@@ -122,6 +111,17 @@ export class InputGroup extends HTMLDivElement {
         this.#label = document.createElement('label', { is: 'input-label' }) as InputLabel;
         this.#inputFeedback = document.createElement('div');
         this.#validationCallback = (event: Event) => this.displayInputFeedback(event);
+    }
+
+    /**
+     * Sets input field information for label & input configuration.
+     */
+    set info(data: InputFieldsData) {
+        this.#info = data;
+    }
+
+    get label() {
+        return this.#label;
     }
 
     displayInputFeedback(event: Event) {
@@ -153,38 +153,66 @@ export class InputGroup extends HTMLDivElement {
         this.render();
     }
 
-    render() {
-        this.appendChild(this.#label);
-        this.appendChild(this.#input);
-        this.appendChild(this.#inputFeedback);
-        this.className = 'box-border relative w-full';
-
+    #isRequiredField() {
         if (this.#info.required) this.#input.setAttribute('required', '');
-        this.#inputFeedback.className = 'brdr bg hidden';
-        this.#label.for = this.#info.id;
         this.#info.required
             ? (this.#label.content = this.#info.labelContent + ' *')
             : (this.#label.content = this.#info.labelContent);
+    }
+
+    #isRange() {
+        if (!this.#info.min || !this.#info.max || !this.#info.step) {
+            throw new Error('Slider type input needs min, max and step');
+        }
+        this.#input.min = this.#info.min;
+        this.#input.max = this.#info.max;
+        this.#input.step = this.#info.step;
+    }
+
+    #isUpload() {
+        this.#input.classList.add(
+            'pl-(24px)',
+            'file:absolute',
+            'file:top-[5px]',
+            'file:left-[4px]',
+            'file:w-[5rem]',
+            'file:h-[26px]',
+        );
+    }
+
+    #setInputAttributes() {
         this.#input.id = this.#info.id;
         this.#input.name = this.#info.id;
         this.#input.placeholder = this.#info.placeholder;
         this.#input.pattern = this.#info.pattern;
         this.#input.type = this.#info.type;
+    }
+
+    #setLabelAttributes() {
+        this.#label.for = this.#info.id;
+    }
+
+    render() {
+        this.appendChild(this.#label);
+        this.appendChild(this.#input);
+        this.appendChild(this.#inputFeedback);
+
+        this.className = 'box-border relative w-full';
+        this.#inputFeedback.className = 'brdr bg hidden';
+
+        this.#isRequiredField();
+        this.#setInputAttributes();
+        this.#setLabelAttributes();
+
         if (this.#info.type === 'range') {
-            if (this.#info.min) this.#input.min = this.#info.min;
-            if (this.#info.max) this.#input.max = this.#info.max;
-            if (this.#info.step) this.#input.step = this.#info.step;
-            //TODO: add datalist ? => https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/range#adding_tick_marks
+            try {
+                this.#isRange();
+            } catch (error) {
+                console.log(error);
+            }
         }
-        if (this.#info.type === 'file')
-            this.#input.classList.add(
-                'pl-(24px)',
-                'file:absolute',
-                'file:top-[5px]',
-                'file:left-[4px]',
-                'file:w-[5rem]',
-                'file:h-[26px]',
-            );
+
+        if (this.#info.type === 'file') this.#isUpload();
     }
 }
 if (!customElements.get('input-and-label')) {

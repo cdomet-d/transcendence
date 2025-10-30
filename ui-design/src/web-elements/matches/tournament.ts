@@ -4,39 +4,13 @@ import { UserInline } from '../users/profile';
 export class Match extends HTMLDivElement {
     #player1: UserInline;
     #player2: UserInline;
-
-    #players: MatchParticipants;
+    #players: MatchParticipants | null;
 
     constructor() {
         super();
         this.#player1 = document.createElement('div', { is: 'user-inline' }) as UserInline;
         this.#player2 = document.createElement('div', { is: 'user-inline' }) as UserInline;
-        this.#players = {
-            player1: {
-                avatar: { alt: '', id: 'user-avatar', size: 'iicon', src: '' },
-                biography: '',
-                id: '',
-                relation: 'stranger',
-                profileColor: '',
-                language: '',
-                status: false,
-                username: '',
-                winstreak: '',
-                since: '',
-            },
-            player2: {
-                avatar: { alt: '', id: 'user-avatar', size: 'iicon', src: '.png' },
-                biography: '>:)',
-                id: '',
-                relation: 'stranger',
-                profileColor: '',
-                language: '',
-                status: false,
-                username: '',
-                winstreak: '',
-                since: '',
-            },
-        };
+        this.#players = null;
     }
 
     set players(players: MatchParticipants) {

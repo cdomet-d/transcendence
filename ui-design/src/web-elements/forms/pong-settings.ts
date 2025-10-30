@@ -1,15 +1,23 @@
-import { createDropdown } from '../navigation/menu-helpers';
-import { DropdownMenu } from '../navigation/menus';
-import { BaseForm } from './baseform';
 import { backgroundMenu } from '../../default-values';
+import { BaseForm } from './baseform';
+import { createDropdown } from '../navigation/menu-helpers';
+import { createForm } from './helpers';
 import { createHeading } from '../typography/helpers';
+import { createUserInline } from '../users/profile-helpers';
+import { DropdownMenu } from '../navigation/menus';
 import type { Searchbar } from './search';
 import type { UserData } from '../../types-interfaces';
-import { createUserInline } from '../users/profile-helpers';
-import { createForm } from './helpers';
 
 //TODO: Override parent submit event to append all relevant informations.
 
+/**
+ * A form allowing user to create a local pong game.
+ *
+ * @export
+ * @class LocalPongSettings
+ * @extends {BaseForm}
+ * @remark customElement: `'local-pong-settings'`
+ */
 export class LocalPongSettings extends BaseForm {
     #backgroundSelector: DropdownMenu;
 
@@ -35,6 +43,14 @@ if (!customElements.get('local-pong-settings')) {
     customElements.define('local-pong-settings', LocalPongSettings, { extends: 'form' });
 }
 
+/**
+ * A form allowing user to create a local pong game.
+ *
+ * @export
+ * @class RemotePongSettings
+ * @extends {LocalPongSettings}
+ * @remark customElement: `'remote-pong-settings'`
+ */
 export class RemotePongSettings extends LocalPongSettings {
     #searchbar: Searchbar;
     #guestWrapper: HTMLDivElement;

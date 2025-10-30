@@ -4,6 +4,12 @@ import { RemotePongSettings, LocalPongSettings } from './pong-settings';
 import { Searchbar } from './search';
 import { UserSettingsForm } from './user-settings';
 
+/**
+ * Merges with the existing HTMLElementTag map.
+ *
+ * Allows me to register custom elements to their classes so I can type elements dynamically and avoid code redundancy.
+ * @interface HTMLElementTagMap
+ */
 interface HTMLElementTagMap {
     'default-form': BaseForm;
     'settings-form': UserSettingsForm;
@@ -12,6 +18,16 @@ interface HTMLElementTagMap {
     'local-pong-settings': LocalPongSettings;
 }
 
+/**
+ * A generic function allowing me to create whichever form I'd like, typing it dynamically.
+ *
+ * @export
+ * @template K - a key of `HTMLElementTagMap` - see {@link HTMLElementTagMap}
+ * @param {K} tag - the litteral key of the element I want to create
+ * @param {FormDetails} [form] - the fields of the desired form.
+ * @param {UserData} [user] - an optional user parameter for `setting-form` that displays the user avatar.
+ * @return {*}  {HTMLElementTagMap[K]}
+ */
 export function createForm<K extends keyof HTMLElementTagMap>(
     tag: K,
     form?: FormDetails,
@@ -22,6 +38,7 @@ export function createForm<K extends keyof HTMLElementTagMap>(
     if (tag === 'settings-form') el.user = user;
     return el;
 }
+
 /**
  * Asynchronously retrieves the search bar element by its ID.
  *

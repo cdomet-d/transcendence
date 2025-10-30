@@ -74,9 +74,9 @@ export class Searchbar extends BaseForm {
      * Displays a list of user search results.
      * Clears existing results and toggles results container visibility.
      *
-     * @param {Array<UserData>} res - Array of user data to display as search results.
+     * @param {UserData[]} res - Array of user data to display as search results.
      */
-    displayResults(res: Array<UserData>) {
+    displayResults(res: UserData[]) {
         this.clearResults();
         this.#results.classList.toggle('hidden');
         res.forEach((user) => this.addUser(user));

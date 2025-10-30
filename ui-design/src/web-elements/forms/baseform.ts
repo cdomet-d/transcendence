@@ -6,10 +6,23 @@ import { createInputGroup, createTextAreaGroup } from '../inputs/helpers';
 import { createHeading } from '../typography/helpers';
 import { createBtn } from '../navigation/buttons-helpers';
 
+/**
+ * The parent class from which all forms derives.
+ *
+ * It handles field and button rendering, as well as setting up a default submit behavior that can be overidden in descendant classes.
+ * @class BaseForm
+ * @remarks customElement name is `'default-form'`
+ * @extends {HTMLFormElement}
+ */
 export class BaseForm extends HTMLFormElement {
     #formData: FormDetails;
-    #formContent: { [key: string]: HTMLElement };
     #submitHandler: (ev: SubmitEvent) => void;
+
+    /**
+     * A map-like object to store the individual elements of a form to allow repositionning and easy manipulation.
+     * It's basically a cache.
+     */
+    #formContent: { [key: string]: HTMLElement };
 
     constructor() {
         super();
@@ -27,6 +40,9 @@ export class BaseForm extends HTMLFormElement {
         return this.#formData;
     }
 
+    /**
+     * Getter for `formContent`, the form's cache.
+     */
     get contentMap() {
         return this.#formContent;
     }
