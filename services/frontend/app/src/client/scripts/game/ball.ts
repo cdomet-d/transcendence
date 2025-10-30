@@ -82,34 +82,39 @@ function getPosition(game: Game, paddle: coordinates, newX: number, newY: number
 	const distToTop = Math.abs(game.ball.y - paddle.y);
 	const distToBottom = Math.abs(game.ball.y - (paddle.y + 54));
 
-	const minDist = Math.min(distToLeft, distToRight, distToTop, distToBottom);
+	let minDist = Math.min(distToLeft, distToRight, distToTop, distToBottom);
 	let unique: boolean = true;
 	if (new Set([distToLeft, distToRight, distToTop, distToBottom]).size !== 4)
 		unique = false;
-	if (unique && minDist === distToLeft
-		&& game.ball.y > paddle.y - BALL_RADIUS
-		&& game.ball.y < paddle.y + 54 + BALL_RADIUS) {
+	if (unique && (minDist === distToLeft || minDist === distToRight)) {
+		if (game.ball.y <= paddle.y - BALL_RADIUS)
+			minDist = distToTop;
+		else if (game.ball.y >= paddle.y + 54 + BALL_RADIUS)
+			minDist = distToBottom;
+	}
+	else if (unique && (minDist === distToTop || minDist === distToBottom)) {
+		if (game.ball.x <= paddle.x - BALL_RADIUS)
+			minDist = distToLeft;
+		else if (game.ball.x >= paddle.x + 10 + BALL_RADIUS)
+			minDist = distToRight;
+	} 
+
+	if (unique && minDist === distToLeft) {
 		newX = paddle.x - (BALL_RADIUS + 2);
 		[game.ball.x, game.ball.y] = [newX, newY];
 		game.ball.dx = increaseVelocity(-Math.abs(game.ball.dx));
 	}
-	else if (unique && minDist === distToRight
-		&& game.ball.y > paddle.y - BALL_RADIUS
-		&& game.ball.y < paddle.y + 54 + BALL_RADIUS) {
+	else if (unique && minDist === distToRight) {
 		newX = paddle.x + 10 + (BALL_RADIUS + 2);
 		[game.ball.x, game.ball.y] = [newX, newY];
 		game.ball.dx = increaseVelocity(Math.abs(game.ball.dx));
 	}
-	else if (unique && minDist === distToTop
-		&& game.ball.x > paddle.x - BALL_RADIUS
-		&& game.ball.x < paddle.x + 10 + BALL_RADIUS) {
+	else if (unique && minDist === distToTop) {
 		newY = paddle.y - (BALL_RADIUS + 2);
 		[game.ball.x, game.ball.y] = [newX, newY];
 		game.ball.dy = increaseVelocity(-Math.abs(game.ball.dy));
 	}
-	else if (unique && minDist === distToBottom
-		&& game.ball.x > paddle.x - BALL_RADIUS
-		&& game.ball.x < paddle.x + 10 + BALL_RADIUS) {
+	else if (unique && minDist === distToBottom) {
 		newY = paddle.y + 54 + (BALL_RADIUS + 2);
 		[game.ball.x, game.ball.y] = [newX, newY];
 		game.ball.dy = increaseVelocity(Math.abs(game.ball.dy));
