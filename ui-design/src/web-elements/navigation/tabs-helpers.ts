@@ -1,6 +1,7 @@
 import { TabContainer } from './tabs';
 import { MatchHistory } from '../stats/matches';
-import type { matchOutcome, TabData } from '../../types-interfaces';
+import { UserMasonery } from '../users/user-profile-containers';
+import type { MatchOutcome, TabData, UserData } from '../../types-interfaces';
 
 /**
  * Creates a tab wrapper element containing an array of tabs.
@@ -22,8 +23,14 @@ export function createTabs(list: TabData[]): TabContainer {
     return el;
 }
 
-export function createMatchHistory(matches: matchOutcome[]): MatchHistory {
+export function createMatchHistory(matches: MatchOutcome[]): MatchHistory {
     const el = document.createElement('div', { is: 'match-history' }) as MatchHistory;
     el.setHistory(matches);
+    return el;
+}
+
+export function createUserMasonery(users: UserData[]): UserMasonery {
+    const el = document.createElement('div', { is: 'user-masonery' }) as UserMasonery;
+    el.setUsers(users);
     return el;
 }

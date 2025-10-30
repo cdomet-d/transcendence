@@ -1,7 +1,7 @@
-import { Notification } from './notifications';
+import { NotifBox } from './notifications';
 
-export function createNotificationBox(): Notification {
-    const el = document.createElement('div', { is: 'notif-container' }) as Notification;
+export function createNotificationBox(): NotifBox {
+    const el = document.createElement('div', { is: 'notif-container' }) as NotifBox;
     return el;
 }
 
@@ -13,12 +13,12 @@ export function createNotificationBox(): Notification {
  *
  * @returns {Promise<Searchbar | null>} A promise that resolves with the {@link Searchbar} element if found, or `null` if not found within the timeout.
  */
-export function getNotificationBoxAsync(): Promise<Notification | null> {
+export function getNotificationBoxAsync(): Promise<NotifBox | null> {
     const timeout: number = 1000;
     const start = Date.now();
     return new Promise((resolve) => {
         function resolveSearchbar() {
-            const s = document.getElementById('notificationWrapper') as Notification | null;
+            const s = document.getElementById('notificationWrapper') as NotifBox | null;
             if (s) {
                 resolve(s);
             } else {

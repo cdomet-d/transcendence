@@ -1,11 +1,11 @@
-import type { matchParticipants } from '../../types-interfaces';
+import type { MatchParticipants } from '../../types-interfaces';
 import { UserInline } from '../users/profile';
 
 export class Match extends HTMLDivElement {
     #player1: UserInline;
     #player2: UserInline;
 
-    #players: matchParticipants;
+    #players: MatchParticipants;
 
     constructor() {
         super();
@@ -39,7 +39,7 @@ export class Match extends HTMLDivElement {
         };
     }
 
-    set players(players: matchParticipants) {
+    set players(players: MatchParticipants) {
         this.#players = players;
         this.#player1.userInfo = this.#players.player1;
         this.#player2.userInfo = this.#players.player2;
@@ -76,7 +76,7 @@ if (!customElements.get('t-canva')) {
 
 export class TournamentBrackets extends HTMLDivElement {
     #matches: Match[][];
-    #players: matchParticipants[];
+    #players: MatchParticipants[];
     #gamePerRound: number;
     #totalRounds: number;
     #currentRound: number;
@@ -99,7 +99,7 @@ export class TournamentBrackets extends HTMLDivElement {
         this.#totalRounds += 1;
     }
 
-    set players(players: matchParticipants[]) {
+    set players(players: MatchParticipants[]) {
         this.#players = players;
     }
 
@@ -124,7 +124,7 @@ export class TournamentBrackets extends HTMLDivElement {
     }
     //TODO: disable looser from previous bracket
     //TODO: need to make sure that the elemnt has been attached and everything before accessing the cache I guess ? It doesn't crash but it doesn't work if it's not attached.
-    populateBrackets(players: matchParticipants[]) {
+    populateBrackets(players: MatchParticipants[]) {
         const matchNb = players.length;
         let playerIndex = 0;
 

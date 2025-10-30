@@ -17,7 +17,7 @@ import type { CustomButton } from './buttons';
  * It supports both icon and textual buttons.
  * Menu elements are configured using {@link buttonData} and created via {@link createBtn}.
  */
-export class Menu extends HTMLDivElement {
+export class Menu extends HTMLElement {
     #size: MenuSize;
     #animated: boolean;
     #style: MenuStyle;
@@ -82,7 +82,7 @@ export class Menu extends HTMLDivElement {
     render() {
         this.role = 'navigation';
         this.id = 'menu';
-        this.className = `gap-s box-border grid justify-items-center auto-cols-fr row-${
+        this.className = `w-full gap-r box-border grid justify-items-center auto-cols-fr row-${
             this.#size
         }`;
         if (this.#style === 'horizontal') this.classList.add('grid-flow-col');
@@ -92,10 +92,11 @@ export class Menu extends HTMLDivElement {
 }
 
 if (!customElements.get('menu-wrapper')) {
-    customElements.define('menu-wrapper', Menu, { extends: 'div' });
+    customElements.define('menu-wrapper', Menu, { extends: 'nav' });
 }
 
 //TODO: update SocialMenu to Setting button when view is 'self'
+//TODO: each button is actually a form, lol
 //TODO: is the UI update as smooth as it could be ?
 
 /**
@@ -161,7 +162,6 @@ export class SocialMenu extends Menu {
         this.id = 'social-menu';
         const icon = this.querySelector('#friendship') as Icon;
         if (!icon) return;
-
         if (this.#view === 'friend') this.friend(icon);
         else if (this.#view === 'stranger') this.stranger(icon);
         else if (this.#view === 'self') this.self();
@@ -169,7 +169,7 @@ export class SocialMenu extends Menu {
 }
 
 if (!customElements.get('social-menu')) {
-    customElements.define('social-menu', SocialMenu, { extends: 'div' });
+    customElements.define('social-menu', SocialMenu, { extends: 'nav' });
 }
 
 export class DropdownMenu extends HTMLDivElement {

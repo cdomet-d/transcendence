@@ -1,8 +1,14 @@
-// import { tournament } from '../../default-values';
-import type { matchOutcome } from '../../types-interfaces';
+import type { MatchOutcome } from '../../types-interfaces';
+
+export function createMatchOutcome(match: MatchOutcome): InlineMatch {
+    const el = document.createElement('div', { is: 'inline-match' }) as InlineMatch;
+    el.match = match;
+    el.createSpans();
+    return el;
+}
 
 export class InlineMatch extends HTMLDivElement {
-    #data: matchOutcome;
+    #data: MatchOutcome;
 
     constructor() {
         super();
@@ -16,7 +22,7 @@ export class InlineMatch extends HTMLDivElement {
         };
     }
 
-    set match(matchOutcome: matchOutcome) {
+    set match(matchOutcome: MatchOutcome) {
         this.#data = matchOutcome;
     }
 
@@ -39,8 +45,7 @@ export class InlineMatch extends HTMLDivElement {
             const span = document.createElement('span');
             this.append(span);
             span.id = key;
-            span.textContent = this.#data[key as keyof matchOutcome].toString();
-            span.classList.add('text-center');
+            span.textContent = this.#data[key as keyof MatchOutcome].toString();
         }
         return this;
     }
@@ -49,7 +54,7 @@ export class InlineMatch extends HTMLDivElement {
     }
 
     render() {
-        this.classList.add('box-border', 'grid', 'grid-cols-6');
+        this.classList.add('box-border', 'grid', 'grid-cols-6', 'text-center');
     }
 }
 
@@ -62,14 +67,12 @@ export class MatchHistory extends HTMLDivElement {
         super();
     }
 
-    setHistory(matches: matchOutcome[]) {
+    setHistory(matches: MatchOutcome[]) {
         const header = document.createElement('div', { is: 'inline-match' }) as InlineMatch;
         this.append(header.createHeader());
 
         matches.forEach((el) => {
-            const match = document.createElement('div', { is: 'inline-match' }) as InlineMatch;
-            match.match = el;
-            this.append(match.createSpans());
+            this.append(createMatchOutcome(el));
         });
     }
 
@@ -78,6 +81,7 @@ export class MatchHistory extends HTMLDivElement {
     }
 
     render() {
+        this.id = 'match-history';
         this.classList.add('grid', 'grid-flow-rows');
     }
 }

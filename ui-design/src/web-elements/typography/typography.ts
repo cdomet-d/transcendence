@@ -17,6 +17,7 @@ export class CustomTitle extends HTMLElement {
 		class="f-yellow
 		text-center
 		title-shadow
+		whitepre
 		t${validLevel}
 		leading-[130%]">${this.textContent}</h${validLevel}>`;
     }

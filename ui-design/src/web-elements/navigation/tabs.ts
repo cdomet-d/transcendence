@@ -1,7 +1,8 @@
 import { TabButton, TabButtonWrapper } from './buttons';
-import type { matchOutcome, TabData } from '../../types-interfaces';
-import { createMatchHistory } from './tabs-helpers';
-import type { MatchHistory } from '../stats/matches';
+import type { MatchOutcome, TabData, UserData } from '../../types-interfaces';
+import { createMatchHistory, createUserMasonery } from './tabs-helpers';
+import { MatchHistory } from '../stats/matches';
+import { UserMasonery } from '../users/user-profile-containers';
 
 /**
  * Creates a tab panel extending HTMLDivElement.
@@ -37,17 +38,14 @@ export class TabPanel extends HTMLDivElement {
      * @param {string} newValue - The new attribute value.
      */
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-        let needsGrid: boolean = false;
-
-        if (this.matches('[data-content="friends"]')) needsGrid = true;
         if (oldValue === newValue) return;
         if (name === 'selected') {
             if (this.hasAttribute('selected')) {
                 this.classList.remove('hidden');
-                needsGrid ? this.classList.add('masonery') : this.classList.add('block');
+                this.removeAttribute('hidden');
             } else {
-                needsGrid ? this.classList.remove('masonery') : this.classList.remove('block');
                 this.classList.add('hidden');
+                this.setAttribute('hidden', '');
             }
         }
     }
@@ -64,10 +62,11 @@ export class TabPanel extends HTMLDivElement {
      * Renders the panel's base classes and visibility.
      */
     render() {
-        this.className = 'panel box-border overflow-scroll h-full w-[inherit]';
+        this.className = 'panel box-border overflow-y-scroll overflow-x-hidden h-full w-full';
         if (this.hasAttribute('selected')) {
             this.classList.add('block');
         } else {
+            this.setAttribute('hidden', '');
             this.classList.add('hidden');
         }
     }
@@ -160,7 +159,6 @@ export class TabContainer extends HTMLDivElement {
     private isValidTabList(tabList: Array<TabData>): boolean {
         return tabList.every((item, i, self) => i === self.findIndex((t) => t.id === item.id));
     }
-
     /**
      * Creates the tab buttons container element.
      *
@@ -204,7 +202,11 @@ export class TabContainer extends HTMLDivElement {
             el.classList.add('pad-xs');
             if (tab.id === 'history')
                 el.appendContent(
-                    createMatchHistory(tab.panelContent as matchOutcome[]) as MatchHistory,
+                    createMatchHistory(tab.panelContent as MatchOutcome[]) as MatchHistory,
+                );
+            else if (tab.id === 'friends')
+                el.appendContent(
+                    createUserMasonery(tab.panelContent as UserData[]) as UserMasonery,
                 );
         });
     }

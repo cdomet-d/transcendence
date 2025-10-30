@@ -151,7 +151,7 @@ export class UserCardSocial extends UserProfile {
     override render() {
         this.append(super.getAvatar, super.getUsername, super.getActionMenu);
         super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
-        this.classList.add('grid', 'gap-s', 'min-h-fit', `${super.getColor}`);
+        this.classList.add('grid', 'gap-s', 'min-h-fit', 'min-w-[171px]', `${super.getColor}`);
     }
 }
 if (!customElements.get('user-card-social')) {

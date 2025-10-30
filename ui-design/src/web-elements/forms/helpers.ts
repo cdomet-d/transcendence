@@ -1,4 +1,4 @@
-import type { UserData, formDetails } from '../../types-interfaces';
+import type { UserData, FormDetails } from '../../types-interfaces';
 import { BaseForm } from './baseform';
 import { RemotePongSettings, LocalPongSettings } from './pong-settings';
 import { Searchbar } from './search';
@@ -14,31 +14,14 @@ interface HTMLElementTagMap {
 
 export function createForm<K extends keyof HTMLElementTagMap>(
     tag: K,
-    form: formDetails,
+    form?: FormDetails,
     user?: UserData,
 ): HTMLElementTagMap[K] {
-    console.log(tag);
     const el = document.createElement('form', { is: tag }) as HTMLElementTagMap[K];
-    el.details = form;
+    if (form) el.details = form;
     if (tag === 'settings-form') el.user = user;
     return el;
 }
-
-/**
- * Creates a search bar element.
- *
- * @returns {Searchbar} A new {@link Searchbar} form element.
- *
- * @example
- * const searchbar = createSearchbar();
- * document.body.appendChild(searchbar);
- */
-export function createSearchbar(details: formDetails): Searchbar {
-    const el = document.createElement('form', { is: 'search-form' }) as Searchbar;
-    el.details = details;
-    return el;
-}
-
 /**
  * Asynchronously retrieves the search bar element by its ID.
  *

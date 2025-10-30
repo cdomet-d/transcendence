@@ -24,7 +24,7 @@ export function createMenu(
     size?: MenuSize,
     animated?: boolean,
 ): Menu {
-    const el = document.createElement('div', { is: 'menu-wrapper' }) as Menu;
+    const el = document.createElement('nav', { is: 'menu-wrapper' }) as Menu;
     el.MenuElements = content;
     el.MenuStyle = style;
     if (size) el.MenuSize = size;
@@ -46,7 +46,7 @@ export function createSocialMenu(
     style: MenuStyle,
     v: ProfileView,
 ): SocialMenu {
-    const el = document.createElement('div', { is: 'social-menu' }) as SocialMenu;
+    const el = document.createElement('nav', { is: 'social-menu' }) as SocialMenu;
     el.MenuElements = content;
     el.MenuStyle = style;
     el.view = v;

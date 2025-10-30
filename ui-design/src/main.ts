@@ -8,6 +8,7 @@ import * as defaults from './default-values.js';
 import * as forms from './web-elements/forms/helpers.js';
 import { createNotificationBox } from './web-elements/users/notifications-helpers';
 import { TournamentBrackets } from './web-elements/matches/tournament';
+import { PageHeader } from './web-elements/navigation/header';
 
 window.addEventListener('error', (e) => {
     console.error('Global error:', e.error);
@@ -72,7 +73,7 @@ try {
     wrapper.appendChild(createNotificationBox());
     wrapper.append(forms.createForm('settings-form', defaults.userSettingsForm, defaults.user));
     wrapper.append(forms.createForm('default-form', defaults.registrationForm));
-    wrapper.append(forms.createForm('search-form', defaults.search));
+    wrapper.append(forms.createForm('search-form'));
     wrapper.append(forms.createForm('local-pong-settings', defaults.localPong));
     wrapper.append(forms.createForm('remote-pong-settings', defaults.remotePong));
 
@@ -84,6 +85,10 @@ try {
     setTimeout(() => {
         tbracket.populateBrackets(defaults.tournamentR2);
     }, 2000);
+
+    const header = document.createElement('header', { is: 'page-header' }) as PageHeader;
+    wrapper.append(header);
+	
 } catch (error) {
     console.log('[ERROR]', error);
 }

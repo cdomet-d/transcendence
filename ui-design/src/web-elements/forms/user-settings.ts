@@ -43,7 +43,7 @@ export class UserSettingsForm extends BaseForm {
     renderDropdowns() {
         const dropdownWrapper = document.createElement('div');
         dropdownWrapper.append(this.#colors, this.#languages);
-        dropdownWrapper.className = 'grid gap-s grid-flow-col row-start-6';
+        dropdownWrapper.className = 'grid gap-s grid-flow-col';
         this.append(dropdownWrapper);
     }
 
@@ -55,11 +55,10 @@ export class UserSettingsForm extends BaseForm {
         super.renderButtons();
         this.append(this.#accountDelete);
         this.#avatar.classList.add('row-span-2');
-        super.contentMap['biography'].classList.add(
-            'col-start-1',
-            'row-span-3',
-            'place-self-stretch',
-        );
+			super.contentMap['biography'].classList.add(
+				'row-span-3',
+				'place-self-stretch',
+			);
         super.contentMap['title'].classList.add('row-span-2');
         this.classList.add('sidebar-left');
     }

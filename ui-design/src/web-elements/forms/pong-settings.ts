@@ -1,12 +1,12 @@
 import { createDropdown } from '../navigation/menu-helpers';
 import { DropdownMenu } from '../navigation/menus';
 import { BaseForm } from './baseform';
-import { backgroundMenu, search } from '../../default-values';
+import { backgroundMenu } from '../../default-values';
 import { createHeading } from '../typography/helpers';
 import type { Searchbar } from './search';
-import { createSearchbar } from './helpers';
 import type { UserData } from '../../types-interfaces';
 import { createUserInline } from '../users/profile-helpers';
+import { createForm } from './helpers';
 
 //TODO: Override parent submit event to append all relevant informations.
 
@@ -43,7 +43,7 @@ export class RemotePongSettings extends LocalPongSettings {
     constructor() {
         super();
 
-        this.#searchbar = createSearchbar(search);
+        this.#searchbar = createForm('search-form');
         this.#guestWrapper = document.createElement('div');
         this.#invitedUsers = null;
     }
@@ -68,16 +68,16 @@ export class RemotePongSettings extends LocalPongSettings {
 
     styleFields() {
         this.#searchbar.classList.add('row-start-2', 'col-start-2');
-        super.dropdownMenu.classList.add('row-start-5', 'col-start-1', 'row-span-2');
+        super.dropdownMenu.classList.add('row-start-5', 'col-start-1');
         super.contentMap['paddlespeed'].classList.add('col-start-1');
         super.contentMap['ballspeed'].classList.add('col-start-1');
         super.contentMap['paddlesize'].classList.add('col-start-1');
-        super.contentMap['submit'].classList.add('row-start-6', 'col-start-2');
+        super.contentMap['submit'].classList.add('row-start-5', 'col-start-2');
     }
 
     styleInviteList() {
         this.#guestWrapper.className =
-            'brdr grid row-m gap-xs w-full pad-xs overflow-y-auto box-border row-start-3 col-start-2 row-span-3 place-self-stretch';
+            'brdr grid row-m gap-xs pad-xs overflow-y-auto box-border row-start-3 col-start-2 row-span-2 place-self-stretch';
     }
 
     override render() {

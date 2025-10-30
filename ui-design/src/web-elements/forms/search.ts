@@ -4,6 +4,7 @@ import { createUserInline } from '../users/profile-helpers';
 import { InputGroup } from '../inputs/fields';
 
 import type { UserData } from '../../types-interfaces';
+import { search } from '../../default-values';
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -19,6 +20,7 @@ export class Searchbar extends BaseForm {
 
     constructor() {
         super();
+        super.details = search;
         this.#results = document.createElement('div');
         this.setResultPos = this.setResultPos.bind(this);
         this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
@@ -103,7 +105,7 @@ export class Searchbar extends BaseForm {
         super.renderButtons();
         this.appendChild(this.#results);
 
-        this.classList.add('sidebar-right', 'search-gap', 'relative');
+        this.classList.add('sidebar-right', 'search-gap', 'relative', 'w-5/6');
         this.#results.className =
             'hidden absolute brdr bg min-h-fit max-h-l pad-xs overflow-y-auto box-border';
         this.setResultPos();

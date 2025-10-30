@@ -1,5 +1,5 @@
 import type { InputGroup, TextAreaGroup } from '../inputs/fields';
-import type { formDetails } from '../../types-interfaces';
+import type { FormDetails } from '../../types-interfaces';
 
 import { emptyForm } from '../../default-values';
 import { createInputGroup, createTextAreaGroup } from '../inputs/helpers';
@@ -7,7 +7,7 @@ import { createHeading } from '../typography/helpers';
 import { createBtn } from '../navigation/buttons-helpers';
 
 export class BaseForm extends HTMLFormElement {
-    #formData: formDetails;
+    #formData: FormDetails;
     #formContent: { [key: string]: HTMLElement };
     #submitHandler: (ev: SubmitEvent) => void;
 
@@ -16,11 +16,11 @@ export class BaseForm extends HTMLFormElement {
         this.#formData = emptyForm;
         this.#submitHandler = this.submitHandler.bind(this);
         this.className =
-            'w-full grid row-ml gap-s pad-s place-items-center justify-center box-border';
+            'w-full grid row-l gap-s place-items-center justify-center box-border';
         this.#formContent = {};
     }
 
-    set details(form: formDetails) {
+    set details(form: FormDetails) {
         this.#formData = form;
     }
 

@@ -231,7 +231,7 @@ if (!customElements.get('notif-panel')) {
  * Handles friend requests and game invitations.
  * Manages notification polling and interface updates on user interaction.
  */
-export class Notification extends HTMLDivElement {
+export class NotifBox extends HTMLDivElement {
     #toggle: NotifToggle;
     #popup: NotifPanel;
     #newNotifIntervalId!: NodeJS.Timeout;
@@ -327,4 +327,4 @@ export class Notification extends HTMLDivElement {
 }
 
 if (!customElements.get('notif-container'))
-    customElements.define('notif-container', Notification, { extends: 'div' });
+    customElements.define('notif-container', NotifBox, { extends: 'div' });

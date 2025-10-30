@@ -46,7 +46,7 @@ export class CustomButton extends HTMLButtonElement {
      * @param {string} oldValue - The previous value of the attribute.
      * @param {string} newValue - The new value of the attribute.
      */
-    attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
+    attributeChangedCallback(name: string, oldValue: string, newValue: string) {
         if (oldValue === newValue) return;
         if (name === 'disabled') {
             if (this.disabled) {
@@ -60,17 +60,17 @@ export class CustomButton extends HTMLButtonElement {
     }
 
     /** Called when element is inserted into the DOM. */
-    connectedCallback(): void {
+    connectedCallback() {
         this.render();
     }
 
     /** Renders simple textual button content. */
-    renderTextualBtn(): void {
+    renderTextualBtn() {
         this.textContent = this.#btn.content;
     }
 
     /** Renders animated button text letter-by-letter. */
-    renderAnimatedBtn(): void {
+    renderAnimatedBtn() {
         let index: number = 0;
         for (const char of this.#btn.content!) {
             const letterSpan = document.createElement('span');
@@ -83,12 +83,12 @@ export class CustomButton extends HTMLButtonElement {
     }
 
     /** Renders button icon if image metadata is provided. */
-    renderIconBtn(): void {
+    renderIconBtn() {
         if (this.#btn.img) this.appendChild(createIcon(this.#btn.img));
     }
 
     /** Updates button styles and content according to current state. */
-    render(): void {
+    render() {
         this.className =
             'box-border brdr pad-xs input-emphasis outline-hidden overflow-hidden whitenowrap cursor-pointer button';
 
@@ -104,7 +104,7 @@ export class CustomButton extends HTMLButtonElement {
             this.renderIconBtn();
         } else if (this.#btn.content && this.#animated) {
             this.renderAnimatedBtn();
-            this.classList.add('t2', 'button-shadow');
+            this.classList.add('t3', 'button-shadow');
         }
 
         if (this.disabled) this.classList.add('disabled', 'bg');
@@ -146,7 +146,7 @@ export class TabButton extends HTMLButtonElement {
      * @param {string} oldValue - The previous value of the attribute.
      * @param {string} newValue - The new value of the attribute.
      */
-    attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
+    attributeChangedCallback(name: string, oldValue: string, newValue: string) {
         if (oldValue === newValue) return;
         if (name === 'selected') {
             if (this.hasAttribute('selected')) {
@@ -160,7 +160,7 @@ export class TabButton extends HTMLButtonElement {
     }
 
     /** Called when element is inserted into the DOM. */
-    connectedCallback(): void {
+    connectedCallback() {
         this.render();
     }
 
@@ -173,9 +173,9 @@ export class TabButton extends HTMLButtonElement {
     }
 
     /** Updates styles depending on selection state. */
-    render(): void {
+    render() {
         this.className =
-            'tab z-2 h-full pad-xs thin brdr overflow-hidden outline-hidden box-border flex justify-center items-center w-full hover:transform-none';
+            'tab z-2 h-full pad-xs thin brdr overflow-hidden outline-hidden box-border flex justify-center items-center hover:transform-none';
 
         if (this.hasAttribute('selected')) {
             this.classList.remove('bg-yellow', 'brdr', 'z-2');
@@ -201,12 +201,12 @@ export class TabButtonWrapper extends HTMLDivElement {
     }
 
     /** Called when element is inserted into the DOM. */
-    connectedCallback(): void {
+    connectedCallback() {
         this.render();
     }
 
     /** Applies grid layout styling to the tab group container. */
-    render(): void {
+    render() {
         this.className =
             'tab-button-wrapper h-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center';
     }

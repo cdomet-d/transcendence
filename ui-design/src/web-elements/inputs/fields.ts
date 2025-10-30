@@ -44,7 +44,7 @@ export class CustomInput extends HTMLInputElement {
 
     render() {
         //TODO: border color change on focus not working
-        this.className = 'brdr';
+        this.className = 'brdr w-full';
     }
 }
 
@@ -157,7 +157,7 @@ export class InputGroup extends HTMLDivElement {
         this.appendChild(this.#label);
         this.appendChild(this.#input);
         this.appendChild(this.#inputFeedback);
-        this.className = 'box-border relative mt-[24px] w-full';
+        this.className = 'box-border relative w-full';
 
         if (this.#info.required) this.#input.setAttribute('required', '');
         this.#inputFeedback.className = 'brdr bg hidden';
@@ -262,7 +262,7 @@ export class TextAreaGroup extends HTMLDivElement {
         this.#label.content = this.#info.labelContent;
         this.#label.for = this.#info.id;
         if (this.#info.required) this.#input.setAttribute('required', '');
-        this.className = 'box-border relative mt-[24px] w-full';
+        this.className = 'box-border relative';
     }
 }
 

@@ -153,7 +153,7 @@ export interface TabData {
     id: string;
     content: string;
     default: boolean;
-    panelContent: UserData[] | matchOutcome[];
+    panelContent: UserData[] | MatchOutcome[];
 }
 
 /**
@@ -180,7 +180,7 @@ export interface UserData {
     since: string;
 }
 
-export interface formDetails {
+export interface FormDetails {
     action: string;
     ariaLabel: string;
     button: buttonData;
@@ -190,7 +190,7 @@ export interface formDetails {
     method: string;
 }
 
-export interface matchOutcome {
+export interface MatchOutcome {
     date: string;
     opponent: string;
     outcome: string;
@@ -199,7 +199,7 @@ export interface matchOutcome {
     tournament: boolean;
 }
 
-export interface matchParticipants {
+export interface MatchParticipants {
     player1: UserData;
     player2: UserData;
 }

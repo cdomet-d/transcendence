@@ -118,6 +118,7 @@
 		--highlight: #FFEAC9;
 		--shadow: #DC681C;
 	}
+
 	.bg-4F9FFF {
 		--highlight: #a7cfff;
 		--shadow: #4289e5;
@@ -255,8 +256,8 @@
 	input {
 		box-sizing: border-box;
 		min-width: 330px;
+		height: var(--m);
 		width: 100%;
-		height: 36px;
 		outline: none;
 		background-color: #F3BE6A;
 	}
@@ -368,14 +369,8 @@
 				#f4b000 0 100%);
 	}
 
-
-	/* #searchbar {
-		padding: var(--s) var(--s) var(--s) var(--m);
-	} */
-
-	#searchform button {
-		height: 36px;
-		margin-top: 24px;
+	#searchform button, form button {
+		height: var(--m);
 	}
 
 	button {
@@ -383,7 +378,7 @@
 		align-items: center;
 		justify-content: center;
 		min-width: var(--l);
-		height: 90%;
+		height: 100%;
 		width: 100%;
 	}
 
@@ -411,19 +406,23 @@
 
 @layer utilities {
 	.row-s {
-		grid-template-rows: repeat(auto-fit, minmax(36px, var(--s)));
+		grid-auto-rows: var(--s)
 	}
 
 	.row-m {
-		grid-template-rows: repeat(auto-fit, minmax(36px, var(--m)));
+		grid-auto-rows: var(--m)
 	}
 
 	.row-ml {
-		grid-template-rows: repeat(auto-fit, minmax(36px, var(--ml)));
+		grid-auto-rows: var(--ml);
 	}
 
 	.row-l {
-		grid-template-rows: repeat(auto-fit, minmax(36px, var(--l)));
+		grid-auto-rows: var(--l)
+	}
+
+	.row-xl {
+		grid-auto-rows: var(--xl);
 	}
 
 	.f-yellow {
@@ -502,6 +501,10 @@
 		height: var(--m);
 	}
 
+	.h-ml {
+		height: var(--ml);
+	}
+
 	.h-l {
 		height: var(--l);
 	}
@@ -516,6 +519,10 @@
 
 	.gap-xs {
 		gap: var(--xs) var(--xs);
+	}
+
+	.gap-r {
+		gap: var(--regular) var(--regular);
 	}
 
 	.gap-s {
@@ -539,7 +546,7 @@
 	}
 
 	.search-gap {
-		gap: 0 var(--s);
+		gap: 0 var(--regular);
 	}
 
 	.pad-xs {
@@ -562,6 +569,12 @@
 	.user-profile-header-grid {
 		grid-template-columns: var(--image-cont-xl) 1fr var(--image-cont-xl);
 		grid-template-rows: 1fr 1fr 1fr;
+	}
+
+	.header {
+		grid-template-columns: 5% 45% 5% 35% 10%;
+		grid-template-rows: var(--ml);
+		place-items: center;
 	}
 
 	.isize {
@@ -610,10 +623,8 @@
 	.masonery {
 		height: auto;
 		display: grid;
-		grid-auto-flow: column;
-		grid-template-columns: repeat(auto-fit, minmax(11.2rem, max-content));
-		grid-auto-rows: max-content;
-		gap: var(--s) var(--s);
+		grid-template-columns: repeat(auto-fit, minmax(170px, max-content));
+		justify-content: space-evenly;
 	}
 
 	.biography {

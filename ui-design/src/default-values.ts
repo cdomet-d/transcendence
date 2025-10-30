@@ -65,7 +65,7 @@ export const u1: types.UserData = {
     since: '145',
 };
 
-export const users: Array<types.UserData> = [user, u1, user, user, u1, user];
+export const users: Array<types.UserData> = [user, u1, user, user, u1, user, user, u1, user];
 export const u2: Array<types.UserData> = [u1, u1];
 
 export const mainMenu: types.buttonData[] = [
@@ -187,7 +187,7 @@ export const slider: types.InputFieldsData = {
 };
 
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
-export const userSettingsForm: types.formDetails = {
+export const userSettingsForm: types.FormDetails = {
     action: '/account/settings/CrimeGoose',
     heading: 'Settings',
     ariaLabel: 'User settings',
@@ -195,19 +195,19 @@ export const userSettingsForm: types.formDetails = {
     method: 'post',
     fields: [
         {
-            id: 'biography',
-            labelContent: 'Biography',
-            pattern: '',
-            placeholder: 'Enter your biography',
-            type: 'textarea',
-            required: false,
-        },
-        {
             id: 'upload',
             labelContent: 'Avatar uploader',
             pattern: '',
             placeholder: '',
             type: 'file',
+            required: false,
+        },
+        {
+            id: 'biography',
+            labelContent: 'Biography',
+            pattern: '',
+            placeholder: 'Enter your biography',
+            type: 'textarea',
             required: false,
         },
         {
@@ -230,7 +230,7 @@ export const userSettingsForm: types.formDetails = {
     button: { type: 'submit', content: 'submit', img: null, ariaLabel: '' },
 };
 
-export const registrationForm: types.formDetails = {
+export const registrationForm: types.FormDetails = {
     action: '/account',
     heading: 'Register',
     ariaLabel: 'Create an account',
@@ -257,7 +257,7 @@ export const registrationForm: types.formDetails = {
     button: { type: 'submit', content: 'submit', img: null, ariaLabel: '' },
 };
 
-export const search: types.formDetails = {
+export const search: types.FormDetails = {
     action: '/search',
     heading: '',
     ariaLabel: 'Search for a user',
@@ -276,7 +276,7 @@ export const search: types.formDetails = {
     button: { type: 'submit', content: 'Search', img: null, ariaLabel: '' },
 };
 
-export const localPong: types.formDetails = {
+export const localPong: types.FormDetails = {
     action: '/gameManager',
     heading: 'Local Pong',
     ariaLabel: 'Pong settings',
@@ -328,7 +328,7 @@ export const localPong: types.formDetails = {
     button: { type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
 };
 
-export const remotePong: types.formDetails = {
+export const remotePong: types.FormDetails = {
     action: '/gameManager',
     heading: 'Remote Pong',
     ariaLabel: 'Remote Pong settings',
@@ -372,7 +372,7 @@ export const remotePong: types.formDetails = {
     button: { type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
 };
 
-export const deleteAccount: types.formDetails = {
+export const deleteAccount: types.FormDetails = {
     action: '/account/delete',
     heading: '',
     ariaLabel: 'Account deletion request',
@@ -382,7 +382,7 @@ export const deleteAccount: types.formDetails = {
     button: { type: 'submit', content: 'Delete account', img: null, ariaLabel: '', style: 'red' },
 };
 
-export const emptyForm: types.formDetails = {
+export const emptyForm: types.FormDetails = {
     action: '',
     ariaLabel: '',
     button: { type: 'button', content: '', img: null, ariaLabel: '' },
@@ -392,7 +392,7 @@ export const emptyForm: types.formDetails = {
     method: '',
 };
 
-export const mout1: types.matchOutcome = {
+export const mout1: types.MatchOutcome = {
     date: '24.10.2025',
     opponent: 'DumbCamel',
     outcome: 'Win',
@@ -401,7 +401,7 @@ export const mout1: types.matchOutcome = {
     tournament: true,
 };
 
-export const mout2: types.matchOutcome = {
+export const mout2: types.MatchOutcome = {
     date: '24.10.2025',
     opponent: 'AnotherFuckingPlayer',
     outcome: 'loss',
@@ -410,7 +410,7 @@ export const mout2: types.matchOutcome = {
     tournament: false,
 };
 
-export const matchesHistory: types.matchOutcome[] = [
+export const matchesHistory: types.MatchOutcome[] = [
     mout1,
     mout2,
     mout2,
@@ -426,7 +426,7 @@ export const tabs: Array<types.TabData> = [
     { id: 'stats', content: 'Statistics', default: false, panelContent: [] },
 ];
 
-export const m1: types.matchParticipants = {
+export const m1: types.MatchParticipants = {
     player1: {
         avatar: {
             alt: 'pp',
@@ -463,7 +463,7 @@ export const m1: types.matchParticipants = {
     },
 };
 
-export const m2: types.matchParticipants = {
+export const m2: types.MatchParticipants = {
     player1: {
         avatar: {
             alt: 'pp',
@@ -500,7 +500,7 @@ export const m2: types.matchParticipants = {
     },
 };
 
-export const m3: types.matchParticipants = {
+export const m3: types.MatchParticipants = {
     player1: {
         avatar: {
             alt: 'pp',
@@ -537,7 +537,7 @@ export const m3: types.matchParticipants = {
     },
 };
 
-export const m4: types.matchParticipants = {
+export const m4: types.MatchParticipants = {
     player1: {
         avatar: {
             alt: 'pp',
@@ -574,7 +574,7 @@ export const m4: types.matchParticipants = {
     },
 };
 
-export const r2m1: types.matchParticipants = {
+export const r2m1: types.MatchParticipants = {
     player1: {
         avatar: {
             alt: 'pp',
@@ -611,7 +611,7 @@ export const r2m1: types.matchParticipants = {
     },
 };
 
-export const r2m2: types.matchParticipants = {
+export const r2m2: types.MatchParticipants = {
     player1: {
         avatar: {
             alt: 'pp',
@@ -648,5 +648,5 @@ export const r2m2: types.matchParticipants = {
     },
 };
 
-export const tournament: types.matchParticipants[] = [m1, m2, m3, m4];
-export const tournamentR2: types.matchParticipants[] = [r2m1, r2m2];
+export const tournament: types.MatchParticipants[] = [m1, m2, m3, m4];
+export const tournamentR2: types.MatchParticipants[] = [r2m1, r2m2];
