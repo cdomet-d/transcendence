@@ -1,5 +1,6 @@
 import { TabContainer } from './tabs';
-import type { TabData } from '../../types-interfaces';
+import { MatchHistory } from '../stats/matches';
+import type { matchOutcome, TabData } from '../../types-interfaces';
 
 /**
  * Creates a tab wrapper element containing an array of tabs.
@@ -18,5 +19,11 @@ import type { TabData } from '../../types-interfaces';
 export function createTabs(list: TabData[]): TabContainer {
     const el = document.createElement('div', { is: 'tab-container' }) as TabContainer;
     el.tabList = list;
+    return el;
+}
+
+export function createMatchHistory(matches: matchOutcome[]): MatchHistory {
+    const el = document.createElement('div', { is: 'match-history' }) as MatchHistory;
+    el.setHistory(matches);
     return el;
 }

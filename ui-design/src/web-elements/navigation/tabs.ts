@@ -1,5 +1,7 @@
 import { TabButton, TabButtonWrapper } from './buttons';
-import type { TabData } from '../../types-interfaces';
+import type { matchOutcome, TabData } from '../../types-interfaces';
+import { createMatchHistory } from './tabs-helpers';
+import type { MatchHistory } from '../stats/matches';
 
 /**
  * Creates a tab panel extending HTMLDivElement.
@@ -20,6 +22,11 @@ export class TabPanel extends HTMLDivElement {
      */
     updateClassList(newClass: string) {
         this.classList.add(newClass);
+    }
+
+    appendContent(innerContent: HTMLElement) {
+        while (this.firstChild) this.removeChild(this.firstChild);
+        this.append(innerContent);
     }
 
     /**
@@ -78,10 +85,14 @@ if (!customElements.get('tab-panel')) {
  */
 export class TabContainer extends HTMLDivElement {
     #tabList: Array<TabData>;
+    #tabPanels: { [key: string]: TabPanel };
+    #tabHeaders: { [key: string]: TabButton };
 
     constructor() {
         super();
-        this.#tabList = [{ id: 'default', content: 'default', default: true }];
+        this.#tabList = [{ id: 'default', content: 'default', default: true, panelContent: [] }];
+        this.#tabPanels = {};
+        this.#tabHeaders = {};
     }
 
     /**
@@ -101,6 +112,7 @@ export class TabContainer extends HTMLDivElement {
     /**
      * Attaches click event listener to handle tab selection.
      */
+    //TODO: add disconnected callback
     attachEvent() {
         this.addEventListener('click', (event: MouseEvent) => {
             const target = event.target as Element | null;
@@ -113,22 +125,30 @@ export class TabContainer extends HTMLDivElement {
     }
 
     /**
+     * Handles activating the clicked tab and corresponding panel.
+     *
+     * @param {Element} tab - The tab element clicked.
+     */
+    private animateTab(tab: Element) {
+        for (const key in this.#tabHeaders) {
+            this.#tabHeaders[key].removeAttribute('selected');
+        }
+        for (const key in this.#tabPanels) {
+            this.#tabPanels[key].removeAttribute('selected');
+        }
+
+        tab.setAttribute('selected', '');
+        const clickedTab = tab.getAttribute('data-tab');
+        if (clickedTab) this.#tabPanels[clickedTab].setAttribute('selected', '');
+    }
+
+    /**
      * Called on element insertion into DOM.
      * Renders and attaches events.
      */
     connectedCallback() {
         this.render();
         this.attachEvent();
-    }
-
-    /**
-     * Renders tab wrapper structure and adds tab buttons and panels.
-     */
-    render() {
-        this.className =
-            'bg brdr overflow-hidden grid items-stretch grid-flow-row grid-cols-[1fr] grid-rows-[var(--s)_1fr]';
-        this.appendChild(this.createTabButtons());
-        this.createPanels();
     }
 
     /**
@@ -142,29 +162,11 @@ export class TabContainer extends HTMLDivElement {
     }
 
     /**
-     * Handles activating the clicked tab and corresponding panel.
-     *
-     * @param {Element} tab - The tab element clicked.
-     */
-    private animateTab(tab: Element) {
-        const tabs = this.querySelectorAll('.tab');
-        const panels = this.querySelectorAll('.panel');
-
-        tabs.forEach((t) => t.removeAttribute('selected'));
-        panels.forEach((p) => p.removeAttribute('selected'));
-        tab.setAttribute('selected', '');
-
-        const clickedTab = tab.getAttribute('data-tab');
-        const activeTab = this.querySelector(`.panel[data-content="${clickedTab}"]`);
-        activeTab?.setAttribute('selected', '');
-    }
-
-    /**
      * Creates the tab buttons container element.
      *
      * @returns {HTMLDivElement} The container for tab buttons.
      */
-    private createTabButtons(): HTMLDivElement {
+    private createTabButtons(): TabButtonWrapper {
         let isSet: boolean = false;
         const tabHeader = document.createElement('div', {
             is: 'tab-button-wrapper',
@@ -172,6 +174,7 @@ export class TabContainer extends HTMLDivElement {
 
         this.#tabList.forEach((tab) => {
             const el = document.createElement('button', { is: 'tab-button' }) as TabButton;
+            this.#tabHeaders[tab.id] = el;
             el.setAttribute('data-tab', tab.id);
             el.textContent = tab.content;
             if (tab.default && !isSet) {
@@ -190,6 +193,7 @@ export class TabContainer extends HTMLDivElement {
         let isSet: boolean = false;
         this.#tabList.forEach((tab) => {
             const el = document.createElement('div', { is: 'tab-panel' }) as TabPanel;
+            this.#tabPanels[tab.id] = el;
             el.setAttribute('data-content', tab.id);
             el.textContent = tab.content;
             if (tab.default && !isSet) {
@@ -197,7 +201,22 @@ export class TabContainer extends HTMLDivElement {
                 el.setAttribute('selected', '');
             }
             this.appendChild(el);
+            el.classList.add('pad-xs');
+            if (tab.id === 'history')
+                el.appendContent(
+                    createMatchHistory(tab.panelContent as matchOutcome[]) as MatchHistory,
+                );
         });
+    }
+
+    /**
+     * Renders tab wrapper structure and adds tab buttons and panels.
+     */
+    render() {
+        this.className =
+            'w-full bg brdr overflow-hidden grid items-stretch grid-flow-row grid-cols-[1fr] grid-rows-[var(--s)_1fr]';
+        this.appendChild(this.createTabButtons());
+        this.createPanels();
     }
 }
 

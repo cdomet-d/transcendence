@@ -52,7 +52,7 @@ try {
     wrapper.append(user.createUserCardSocial(defaults.user));
     wrapper.append(user.createUserInline(defaults.user));
     wrapper.append(user.createUserProfile(defaults.user));
-    wrapper.appendChild(formBtns.createCheckbox('check', 'test'));
+    wrapper.appendChild(formBtns.createCheckbox('checinline-matchk', 'test'));
     wrapper.appendChild(formBtns.createRadioButton('radio', 'test'));
     wrapper.appendChild(inputs.createInputGroup(defaults.pwData));
     wrapper.appendChild(inputs.createInputGroup(defaults.slider));

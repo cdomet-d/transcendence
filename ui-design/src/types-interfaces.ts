@@ -145,13 +145,15 @@ export interface buttonData {
  * Metadata describing a tab component.
  *
  * @property id - Unique tab identifier.
- * @property content - Visible text or HTML content within the tab.
+ * @property content - Visible text or HTML content within the tab button.
+ * @property panelContent - an Array of Data to create the content of the tab panel.
  * @property default - Whether this is the default active tab on load.
  */
 export interface TabData {
     id: string;
     content: string;
     default: boolean;
+    panelContent: UserData[] | matchOutcome[];
 }
 
 /**
@@ -188,12 +190,13 @@ export interface formDetails {
     method: string;
 }
 
-export interface inlineMatchResult {
+export interface matchOutcome {
     date: string;
     opponent: string;
     outcome: string;
     score: string;
     duration: string;
+    tournament: boolean;
 }
 
 export interface matchParticipants {

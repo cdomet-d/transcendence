@@ -65,7 +65,7 @@ export const u1: types.UserData = {
     since: '145',
 };
 
-export const users: Array<types.UserData> = [user, user, user, user, user, user];
+export const users: Array<types.UserData> = [user, u1, user, user, u1, user];
 export const u2: Array<types.UserData> = [u1, u1];
 
 export const mainMenu: types.buttonData[] = [
@@ -137,12 +137,6 @@ export const iMeta: types.ImgData = {
     size: 'imedium',
     src: '/assets/icons/purple-avatar.png',
 };
-
-export const tabs: Array<types.TabData> = [
-    { id: 'friends', content: 'Friends', default: false },
-    { id: 'history', content: 'Game history', default: true },
-    { id: 'stats', content: 'Statistics', default: false },
-];
 
 export const textData: types.InputFieldsData = {
     id: 'username',
@@ -398,13 +392,39 @@ export const emptyForm: types.formDetails = {
     method: '',
 };
 
-export const defaultMatchOut: types.inlineMatchResult = {
+export const mout1: types.matchOutcome = {
     date: '24.10.2025',
     opponent: 'DumbCamel',
     outcome: 'Win',
     score: '5-3',
     duration: "2'53",
+    tournament: true,
 };
+
+export const mout2: types.matchOutcome = {
+    date: '24.10.2025',
+    opponent: 'AnotherFuckingPlayer',
+    outcome: 'loss',
+    score: '5-3',
+    duration: "0'53",
+    tournament: false,
+};
+
+export const matchesHistory: types.matchOutcome[] = [
+    mout1,
+    mout2,
+    mout2,
+    mout1,
+    mout1,
+    mout1,
+    mout2,
+];
+
+export const tabs: Array<types.TabData> = [
+    { id: 'friends', content: 'Friends', default: true, panelContent: users },
+    { id: 'history', content: 'Game history', default: false, panelContent: matchesHistory },
+    { id: 'stats', content: 'Statistics', default: false, panelContent: [] },
+];
 
 export const m1: types.matchParticipants = {
     player1: {
