@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon",
-"start": "tsc && node dist/server.js"
+    "start": "tsc && node dist/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +16,10 @@
     "typescript": "^5.9.2"
   },
   "devDependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@types/jsonwebtoken": "^9.0.10",
+    "jsonwebtoken": "^9.0.2",
+    "nats": "^2.29.3",
     "nodemon": "^3.1.10"
   }
 }

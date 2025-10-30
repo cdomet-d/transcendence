@@ -1,8 +1,10 @@
 'use strict'
+// Third-party modules
 import Fastify from 'fastify'
 import websocket from '@fastify/websocket'
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 
+// Local modules
 import { wsRoute } from './routes/wsRoute.js';
 import { options } from './serv.conf.js'
 import { natsConnect } from './nats/publisher.js';
@@ -19,7 +21,14 @@ try {
 }
 
 function addPlugins(serv: FastifyInstance) {
-	serv.register(websocket);
+	serv.register(websocket, {
+		errorHandler: function (error, socket: WebSocket, req: FastifyRequest, reply: FastifyReply) {
+			//TODO: send html error page ?
+			serv.log.error(error);
+			socket.close()
+		},
+		options: {},
+	});
 	serv.register(wsRoute);
 }
 
