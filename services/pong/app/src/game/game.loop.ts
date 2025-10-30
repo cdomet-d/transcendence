@@ -27,8 +27,7 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 		updatePaddlePos(player, playerReq._req._keys, game.paddleSpeed);
 		player.reply._ID = playerReq._req._ID;
 	}
-	const rv: number = moveBall(game, simulatedTime, SERVER_TICK);
-	if (rv === -1)
+	if (moveBall(game, simulatedTime, SERVER_TICK) === -1)
 		return;
 	sendToPlayers(game, player1, player2);
 

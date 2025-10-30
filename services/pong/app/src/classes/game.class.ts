@@ -134,11 +134,11 @@ export class Game {
 	}
 
 	/*                              METHODS                                  */
-	public addPlayer(userID: number, socket: WebSocket) {
-		let side: string = "left";
+	public addPlayer(userID: number, socket: WebSocket, clientSide: string) {
+		let serverSide: string = "left";
 		if (this.#_players.length === 1)
-			side = "right";
-		const player: Player = new Player(userID, socket, side);
+			serverSide = "right";
+		const player: Player = new Player(userID, socket, serverSide, clientSide);
 		this.#_players.push(player);
 	}
 

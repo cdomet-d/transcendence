@@ -19,13 +19,14 @@ export class Player {
 	/*                             PROPERTIES                                */
 	#_userID: number;
 	#_socket: WebSocket;
-	#_side: string;
+	#_serverSide: string;
+	#_clientSide: string;
 	#_paddle: coordinates;
 	#_score: number;
 	#_reply: repObj;
 
 	/*                            CONSTRUCTORS                               */
-	constructor(userID: number, socket: WebSocket, side: string) {
+	constructor(userID: number, socket: WebSocket, serverSide: string, clientSide: string) {
 		this.#_userID = userID;
 		this.#_socket = socket;
 		this.#_reply = {
@@ -36,11 +37,12 @@ export class Player {
 			_ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025}, 
 			_score: [0, 0]
 		};
-		this.#_side = side;
-		if (side === "right")
+		this.#_serverSide = serverSide;
+		if (serverSide === "right")
 			this.#_paddle = {x: 460, y: 108};
 		else
 			this.#_paddle = {x: 10, y: 108};
+		this.#_clientSide = clientSide;
 		this.#_score = 0;
 	}
 
@@ -58,13 +60,13 @@ export class Player {
 	}
 
 	get left(): boolean {
-		if (this.#_side === "left")
+		if (this.#_clientSide === "left")
 			return true;
 		return false;
 	}
 
 	get right(): boolean {
-		if (this.#_side === "right")
+		if (this.#_clientSide === "right")
 			return true;
 		return false;
 	}
@@ -79,11 +81,11 @@ export class Player {
 		this.#_reply._leftPad.y = this.#_paddle.y;
 		this.#_reply._rightPad.y = opponent.paddle.y;
 		this.#_reply._ball = { ...ball };
-		if (this.#_side === "right") {
+		if (this.#_serverSide === "right") {
 			this.#_reply._ball.x = WIDTH - ball.x;
+			this.#_reply._ball.dx *= -1;
 			this.#_reply._leftPad.x = WIDTH - this.#_paddle.x;
 			this.#_reply._rightPad.x = WIDTH - opponent.paddle.x;
-			this.#_reply._ball.dx *= -1;
 		}
 		else {
 			this.#_reply._leftPad.x = this.#_paddle.x;
