@@ -6,7 +6,7 @@ import type { FastifyInstance } from 'fastify';
 import cookie from '@fastify/cookie';
 // Local modules
 import { options } from './serv.conf.js'
-import { initNatsConnection, natsSubscription } from './nats/subscriber.js';
+import { initNatsConnection, natsSubscription } from '../nats/subscriber.js';
 
 (async () => {
 	try {

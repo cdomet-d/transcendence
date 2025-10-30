@@ -98,7 +98,7 @@ export function renderLobbyMenu(): string {
     return html;
 }
 
-export function  renderLobby(): string {
+export function renderLobby(): string {
 	let html: string = `
 		<div class="relative min-h-screen flex flex-col items-center justify-center">
 		    <button id="start-tournament-btn"
