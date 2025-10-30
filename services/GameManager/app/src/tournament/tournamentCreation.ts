@@ -1,4 +1,5 @@
-import type { userInfo, lobbyInfo, game, tournament } from '../../src/manager.js'
+import type { userInfo, game, tournament } from '../../src/manager.js'
+import type { lobbyInfo } from '../lobby/lobby.js';
 
 export function createTournament(payload: lobbyInfo): tournament | undefined {
 	console.log("Creating Tournament");
@@ -24,15 +25,15 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: number): game[
 
 	// Basic bracket format is: | A vs B | C vs D | winner of each goes to FINAL
 	// TODO: this ugly af
-	if (!lobbyInfo.users[0] || !lobbyInfo.users[1] || !lobbyInfo.users[2] || !lobbyInfo.users[3]) {
+	if (!lobbyInfo.userList[0] || !lobbyInfo.userList[1] || !lobbyInfo.userList[2] || !lobbyInfo.userList[3]) {
 		console.log("Error: Empty userInfo");
 		return undefined;
 	}
 
 	// TODO: suffle players in an array then assign opponents for smoking hot brackets
 	let opponents: userInfo[][] = [
-		[lobbyInfo.users[0], lobbyInfo.users[1]],
-		[lobbyInfo.users[2], lobbyInfo.users[3]]
+		[lobbyInfo.userList[0], lobbyInfo.userList[1]],
+		[lobbyInfo.userList[2], lobbyInfo.userList[3]]
 	];
 
 	// TODO: need to generate unique gameIDs (fetch DB?)
