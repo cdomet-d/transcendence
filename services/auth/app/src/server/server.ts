@@ -7,11 +7,16 @@ import cookie from '@fastify/cookie';
 // Local modules
 import { options } from './serv.conf.js'
 import { initNatsConnection, natsSubscription } from '../nats/subscriber.js';
+import { healthcheck, userRoutes } from '../authentication.js';
+
+export var _serv: FastifyInstance;
 
 (async () => {
 	try {
 		const serv = await init();
 		await runServ(serv);
+		_serv = serv; // is this bad or?
+		healthcheck(serv);
 	} catch (err) {
 		console.error('server', err);
 		process.exit(1);
@@ -37,6 +42,7 @@ export async function init(): Promise<FastifyInstance> {
 //add plugins
 function addPlugins(serv: FastifyInstance) {
 	serv.register(cookie);
+	serv.register(userRoutes, { prefix: '/api/users' });
 }
 
 //run server
@@ -54,7 +60,7 @@ function getPort(): number {
 	return port;
 }
 
-
+// // // // // // // // // // // // // // // // // // // // // // // // // // // //
 (() => {
 	const payload: object = { userID: "123", role: "Player", exp: 60 * 60 };
 	const secretKey = process.env.SECRET;
@@ -66,3 +72,12 @@ function getPort(): number {
 
 	console.log("REAL:", token);
 })();
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // //
+const listeners = ['SIGINT', 'SIGTERM']
+listeners.forEach((signal) => {
+	process.on(signal, async () => {
+		await _serv.close()
+		process.exit(0)
+	})
+})
