@@ -26,6 +26,9 @@ function updateBallPos(game: Game, newX: number, newY: number) {
 		return false;
 	if (rightPadCollision(game, game.rightPad, newX, newY))
 		return false;
+	// [newX, newY] = leftPadCollision(game, game.leftPad, newX, newY);
+	// [newX, newY] = rightPadCollision(game, game.rightPad, newX, newY);
+
 	game.ball.x = newX;
 	game.ball.y = newY;
 }
@@ -51,7 +54,7 @@ function leftPadCollision(game: Game, leftPad: coordinates, newX: number, newY: 
 	const p: coordinates = {x: newX - (leftPad.x + 5), y: newY - (leftPad.y + 27)};
 	const b: coordinates = {x :(10 / 2), y:(54 / 2)};
 	if (sdBox(p, b) <= BALL_RADIUS) {
-		/*[game.ball.x, game.ball.y] =*/ getPosition(game, leftPad, newX, newY);
+		/*[game.ball.x, game.ball.y] = */getPosition(game, leftPad, newX, newY);
 		return true;
 	}
 	return false;
@@ -62,7 +65,7 @@ function rightPadCollision(game: Game, rightPad: coordinates, newX: number, newY
 	const p: coordinates = {x: newX - (rightPad.x + 5), y: newY - (rightPad.y + 27)};
 	const b: coordinates = {x :(10 / 2), y:(54 / 2)};
 	if (sdBox(p, b) <= BALL_RADIUS) {
-		/*[game.ball.x, game.ball.y] =*/ getPosition(game, rightPad, newX, newY);
+		/*[game.ball.x, game.ball.y] = */getPosition(game, rightPad, newX, newY);
 		return true
 	}
 	return false;
@@ -77,75 +80,88 @@ function sdBox(p: coordinates, b: coordinates): number {
 }
 
 function getPosition(game: Game, paddle: coordinates, newX: number, newY: number): [number, number] {
-	const distToLeft = Math.abs(game.ball.x - paddle.x);
-	const distToRight = Math.abs(game.ball.x - (paddle.x + 10));
-	const distToTop = Math.abs(game.ball.y - paddle.y);
-	const distToBottom = Math.abs(game.ball.y - (paddle.y + 54));
-
-	let minDist = Math.min(distToLeft, distToRight, distToTop, distToBottom);
-	let unique: boolean = true;
-	if (new Set([distToLeft, distToRight, distToTop, distToBottom]).size !== 4)
-		unique = false;
-	if (unique && (minDist === distToLeft || minDist === distToRight)) {
-		if (game.ball.y <= paddle.y - BALL_RADIUS)
-			minDist = distToTop;
-		else if (game.ball.y >= paddle.y + 54 + BALL_RADIUS)
-			minDist = distToBottom;
-	}
-	else if (unique && (minDist === distToTop || minDist === distToBottom)) {
-		if (game.ball.x <= paddle.x - BALL_RADIUS)
-			minDist = distToLeft;
-		else if (game.ball.x >= paddle.x + 10 + BALL_RADIUS)
-			minDist = distToRight;
-	} 
-
-	if (unique && minDist === distToLeft) {
-		newX = paddle.x - (BALL_RADIUS + 2);
-		[game.ball.x, game.ball.y] = [newX, newY];
-		game.ball.dx = increaseVelocity(-Math.abs(game.ball.dx));
-	}
-	else if (unique && minDist === distToRight) {
-		newX = paddle.x + 10 + (BALL_RADIUS + 2);
-		[game.ball.x, game.ball.y] = [newX, newY];
-		game.ball.dx = increaseVelocity(Math.abs(game.ball.dx));
-	}
-	else if (unique && minDist === distToTop) {
-		newY = paddle.y - (BALL_RADIUS + 2);
-		[game.ball.x, game.ball.y] = [newX, newY];
-		game.ball.dy = increaseVelocity(-Math.abs(game.ball.dy));
-	}
-	else if (unique && minDist === distToBottom) {
-		newY = paddle.y + 54 + (BALL_RADIUS + 2);
-		[game.ball.x, game.ball.y] = [newX, newY];
-		game.ball.dy = increaseVelocity(Math.abs(game.ball.dy));
-	}
-	else {
-		const isLeft = game.ball.x < paddle.x + 5;
-		const isTop = game.ball.y < paddle.y + 27;
-		
-		if (isLeft && isTop) {
+	const side: string = getCollisionSide(game, paddle);
+	switch (side) {
+		case "left":
+			newX = paddle.x - (BALL_RADIUS + 2);
+			[game.ball.x, game.ball.y] = [newX, newY];
+			game.ball.dx = increaseVelocity(-Math.abs(game.ball.dx));
+			break;
+		case "right":
+			newX = paddle.x + 10 + (BALL_RADIUS + 2);
+			[game.ball.x, game.ball.y] = [newX, newY];
+			game.ball.dx = increaseVelocity(Math.abs(game.ball.dx));
+			break;
+		case "top":
+			newY = paddle.y - (BALL_RADIUS + 2);
+			[game.ball.x, game.ball.y] = [newX, newY];
+			game.ball.dy = increaseVelocity(-Math.abs(game.ball.dy));
+			break;
+		case "bottom":
+			newY = paddle.y + 54 + (BALL_RADIUS + 2);
+			[game.ball.x, game.ball.y] = [newX, newY];
+			game.ball.dy = increaseVelocity(Math.abs(game.ball.dy));
+			break;
+		case "topleft":
 			newX = paddle.x - (BALL_RADIUS + 2);
 			newY = paddle.y - (BALL_RADIUS + 2);
+			[game.ball.x, game.ball.y] = [newX, newY];
 			game.ball.dx = increaseVelocity(-Math.abs(game.ball.dx));
 			game.ball.dy = increaseVelocity(-Math.abs(game.ball.dy));
-		} else if (!isLeft && isTop) {
+			break;
+		case "topright":
 			newX = paddle.x + 10 + (BALL_RADIUS + 2);
 			newY = paddle.y - (BALL_RADIUS + 2);
+			[game.ball.x, game.ball.y] = [newX, newY];
 			game.ball.dx = increaseVelocity(Math.abs(game.ball.dx));
 			game.ball.dy = increaseVelocity(-Math.abs(game.ball.dy));
-		} else if (isLeft && !isTop) {
+			break;
+		case "bottomleft":
 			newX = paddle.x - (BALL_RADIUS + 2);
 			newY = paddle.y + 54 + (BALL_RADIUS + 2);
+			[game.ball.x, game.ball.y] = [newX, newY];
 			game.ball.dx = increaseVelocity(-Math.abs(game.ball.dx));
 			game.ball.dy = increaseVelocity(Math.abs(game.ball.dy));
-		} else {
+			break;
+		case "bottomright":
 			newX = paddle.x + 10 + (BALL_RADIUS + 2);
 			newY = paddle.y + 54 + (BALL_RADIUS + 2);
+			[game.ball.x, game.ball.y] = [newX, newY];
 			game.ball.dx = increaseVelocity(Math.abs(game.ball.dx));
 			game.ball.dy = increaseVelocity(Math.abs(game.ball.dy));
-		}
+			break;
+		default:
+			return [newX, newY];
 	}
 	return [newX, newY];
+}
+
+function getCollisionSide(game: Game, paddle: coordinates): "left" | "right" | "top" | "bottom" | "topleft" | "topright" | "bottomleft" | "bottomright" {
+    const paddleCenterX = paddle.x + 5;
+    const paddleCenterY = paddle.y + 27;
+
+    const dx = game.ball.x - paddleCenterX;
+    const dy = game.ball.y - paddleCenterY;
+
+    const normalizedX = dx / 5;
+    const normalizedY = dy / 27;
+    
+    const absX = Math.abs(normalizedX);
+    const absY = Math.abs(normalizedY);
+    
+    const cornerThreshold = 0.1;
+
+    if (Math.abs(absX - absY) < cornerThreshold) {
+        if (dx > 0 && dy < 0) return "topright";
+        if (dx > 0 && dy > 0) return "bottomright";
+        if (dx < 0 && dy < 0) return "topleft";
+        return "bottomleft";
+    }
+    if (absX > absY) {
+        return dx > 0 ? "right" : "left";
+    } else {
+        return dy > 0 ? "bottom" : "top";
+    }
 }
 
 function increaseVelocity(velocity: number): number {
