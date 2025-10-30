@@ -55,10 +55,7 @@ export class UserSettingsForm extends BaseForm {
         super.renderButtons();
         this.append(this.#accountDelete);
         this.#avatar.classList.add('row-span-2');
-			super.contentMap['biography'].classList.add(
-				'row-span-3',
-				'place-self-stretch',
-			);
+        super.contentMap['biography'].classList.add('row-span-3', 'place-self-stretch');
         super.contentMap['title'].classList.add('row-span-2');
         this.classList.add('sidebar-left');
     }

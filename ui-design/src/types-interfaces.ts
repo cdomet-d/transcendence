@@ -28,12 +28,12 @@ export type MenuStyle = 'vertical' | 'horizontal';
  */
 export type MenuSize = 's' | 'm' | 'l';
 
-/** Determines dropdown menu styling, allowing to toggle between dynamic
-background colors (for user settings or pong backgrounds) or default colors.
-
-@remarks
-- `dynamic`: allows dynamic styling
-- `static`: disallows dynamic styling
+/**
+ * Dropdown background styling modes.
+ *
+ * @remarks
+ * - `dynamic`: allows dynamic styling, meaning that background of the toggle will change according to the selected option.
+ * - `static`: disallows dynamic styling
  */
 export type DropdownBg = 'dynamic' | 'static';
 
@@ -82,56 +82,67 @@ export type FontWeight = 'f-bold';
  * Matches native `<button type="...">` options.
  */
 export type BtnType = 'button' | 'submit' | 'reset';
+
+/**
+ * Limits allowed modifications to button style. Names are pretty self-explanatory: the button is either green or red.
+ */
 export type BtnStyles = 'green' | 'red';
 
+/**
+ * Describes the type of game a user is invited to.
+ *
+ * Used by notifications.
+ */
 export type GameType = '1 vs 1' | 'tournament';
 
 /**
  * Metadata describing an HTML input field.
  *
- * @property labelContent - Visible text for the label element.
- * @property id - Unique identifier for the input element.
- * @property pattern - Regular expression string for validating input value.
- * @property placeholder - Placeholder hint text inside the input.
- * @property type - Input type attribute (`text`, `email`, etc.).
- * @property max - Optional, defines maximum numeric/date value.
- * @property min - Optional, defines minimum numeric/date value.
- * @property step - Optional, step size for increment/decrement.
+ * @property {string} id - Unique identifier for the input element.
+ * @property {string} labelContent - Visible text for the label element.
+ * @property {string} pattern - Regex pattern string for input validation.
+ * @property {string} placeholder - Placeholder text for the input.
+ * @property {boolean} required - Whether input is mandatory.
+ * @property {string} type - Input type attribute (e.g. text, range, etc).
+ * @property {string} [max] - Optional max numeric/date value.
+ * @property {string} [min] - Optional min numeric/date value.
+ * @property {string} [step] - Optional step value for increments.
  */
 export interface InputFieldsData {
-    required: boolean;
     id: string;
     labelContent: string;
-    max?: string;
-    min?: string;
     pattern: string;
     placeholder: string;
-    step?: string;
+    required: boolean;
     type: string;
+    max?: string;
+    min?: string;
+    step?: string;
 }
 
 /**
  * Image metadata for display elements.
  *
- * @property src - Image source URL.
- * @property id - Unique identifier for the image resource.
- * @property alt - Alt text for accessibility.
- * @property size - Predefined image size variant.
+ * @property {string} alt - Alt text for accessibility.
+ * @property {string} id - Unique image identifier.
+ * @property {Size} size - Predefined image size variant (see {@link Size})
+ * @property {string} src - Image source URL.
  */
 export interface ImgData {
-    src: string;
-    id: string;
     alt: string;
+    id: string;
     size: Size;
+    src: string;
 }
 
 /**
- * Button metadata used in UI rendering.
+ * Button metadata for UI rendering.
  *
- * @property type - Button functional type (`button`, `submit`, or `reset`).
- * @property content - Optional text content of the button.
- * @property img - Optional associated image metadata.
- * @property ariaLabel - Accessibility label for screen readers.
+ * @property {BtnType} type - Button functional type - see {@link BtnType}.
+ * @property {string | null} content - Text content of the button.
+ * @property {ImgData | null} img - Optional image metadata associated with the button - see {@link ImgData}
+ * @property {string} ariaLabel - Accessibility label for screen readers.
+ * @property {BtnStyles} [style] - Optional style modifier for button appearance - see {@link BtnStyles}.
  */
 export interface buttonData {
     type: BtnType;
@@ -144,28 +155,31 @@ export interface buttonData {
 /**
  * Metadata describing a tab component.
  *
- * @property id - Unique tab identifier.
- * @property content - Visible text or HTML content within the tab button.
- * @property panelContent - an Array of Data to create the content of the tab panel.
- * @property default - Whether this is the default active tab on load.
+ * @property {string} content - Visible text or HTML content within the tab button.
+ * @property {boolean} default - Whether this is the default active tab on load.
+ * @property {string} id - Unique tab identifier.
+ * @property {UserData[] | MatchOutcome[]} panelContent - Array of data to populate tab panel.
  */
 export interface TabData {
-    id: string;
     content: string;
     default: boolean;
+    id: string;
     panelContent: UserData[] | MatchOutcome[];
 }
 
 /**
  * User profile data model.
  *
- * @property avatar - User's avatar image metadata.
- * @property biography - Short biography text.
- * @property relation - Relationship between viewer and this user.
- * @property status - Boolean indicating online/offline status.
- * @property username - Display username.
- * @property id - Unique user identifier string.
- * @property winstreak - Current consecutive wins count (stringified).
+ * @property {ImgData} avatar - User's avatar image metadata.
+ * @property {string} biography - Short biography text.
+ * @property {string} id - Unique user identifier string.
+ * @property {string} language - User's language preference.
+ * @property {string} profileColor - Color theme for the profile.
+ * @property {ProfileView} relation - Relationship to viewer - see {@link ProfileView}.
+ * @property {string} since - Account creation date.
+ * @property {boolean} status - Online/offline status.
+ * @property {string} username - Display username.
+ * @property {string} winstreak - Current consecutive wins count.
  */
 export interface UserData {
     avatar: ImgData;
@@ -174,12 +188,23 @@ export interface UserData {
     language: string;
     profileColor: string;
     relation: ProfileView;
+    since: string;
     status: boolean;
     username: string;
     winstreak: string;
-    since: string;
 }
 
+/**
+ * Form metadata describing action, fields, and buttons.
+ *
+ * @property {string} action - Form submission URL.
+ * @property {string} ariaLabel - Accessibility label for form.
+ * @property {buttonData} button - Form button metadata.
+ * @property {InputFieldsData[]} fields - Array of input field metadata - see {@link InputFieldsData}
+ * @property {string} heading - Form heading text.
+ * @property {string} id - Unique form identifier.
+ * @property {string} method - HTTP method for form submission.
+ */
 export interface FormDetails {
     action: string;
     ariaLabel: string;
@@ -190,6 +215,16 @@ export interface FormDetails {
     method: string;
 }
 
+/**
+ * Describes outcome of a match.
+ *
+ * @property {string} date - Date of the match.
+ * @property {string} opponent - Opponent name.
+ * @property {string} outcome - Result (win/loss/draw).
+ * @property {string} score - Match score.
+ * @property {string} duration - Duration of the match.
+ * @property {boolean} tournament - If it was a tournament match.
+ */
 export interface MatchOutcome {
     date: string;
     opponent: string;
@@ -199,6 +234,12 @@ export interface MatchOutcome {
     tournament: boolean;
 }
 
+/**
+ * Match participants data.
+ *
+ * @property {UserData} player1 - First player data.
+ * @property {UserData} player2 - Second player data.
+ */
 export interface MatchParticipants {
     player1: UserData;
     player2: UserData;

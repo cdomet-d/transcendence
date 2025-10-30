@@ -30,7 +30,14 @@ export class PageHeader extends HTMLElement {
     }
 
     render() {
-        this.classList.add('box-border', 'w-full', 'grid', 'gap-xs', 'header', 'place-content-center');
+        this.classList.add(
+            'box-border',
+            'w-full',
+            'grid',
+            'gap-xs',
+            'header',
+            'place-content-center',
+        );
     }
 }
 

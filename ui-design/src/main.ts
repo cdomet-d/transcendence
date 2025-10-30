@@ -88,7 +88,6 @@ try {
 
     const header = document.createElement('header', { is: 'page-header' }) as PageHeader;
     wrapper.append(header);
-	
 } catch (error) {
     console.log('[ERROR]', error);
 }
