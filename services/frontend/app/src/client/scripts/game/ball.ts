@@ -20,39 +20,32 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 
 function updateBallPos(game: Game, newX: number, newY: number) {
 	//TODO: check side walls ?
-	newY = upperWallCollision(game, newY);
-	newY = bottomWallCollision(game, newY);
+	newY = upperAndBottomWallCollision(game, newY);
 	if (leftPadCollision(game, game.leftPad, newX, newY))
 		return false;
 	if (rightPadCollision(game, game.rightPad, newX, newY))
 		return false;
-	// [newX, newY] = leftPadCollision(game, game.leftPad, newX, newY);
-	// [newX, newY] = rightPadCollision(game, game.rightPad, newX, newY);
 
 	game.ball.x = newX;
 	game.ball.y = newY;
 }
 
-function upperWallCollision(game: Game, newY: number): number {
+function upperAndBottomWallCollision(game: Game, newY: number): number {
 	if (newY - BALL_RADIUS <= 0) {
-		newY = BALL_RADIUS;
+		newY = BALL_RADIUS + 1;
 		game.ball.dy = incVelocity(game.ball.dx, Math.abs(game.ball.dy))[1];
 	}
-	return newY;
-}
-
-function bottomWallCollision(game: Game, newY: number): number {
 	if (newY + BALL_RADIUS >= HEIGHT) {
-		newY = HEIGHT - BALL_RADIUS;
+		newY = HEIGHT - (BALL_RADIUS + 1);
 		game.ball.dy = incVelocity(game.ball.dx, -Math.abs(game.ball.dy))[1];
 	}
 	return newY;
 }
 
 function leftPadCollision(game: Game, leftPad: coordinates, newX: number, newY: number): boolean {
-	const p: coordinates = {x: newX - (leftPad.x + 5), y: newY - (leftPad.y + 27)};
-	const b: coordinates = {x :(10 / 2), y:(54 / 2)};
-	if (distBallPad(p, b) <= BALL_RADIUS) {
+	const ball: coordinates = {x: newX - (leftPad.x + 5), y: newY - (leftPad.y + 27)};
+	const paddle: coordinates = {x :(10 / 2), y:(54 / 2)};
+	if (distBallPad(ball, paddle) <= BALL_RADIUS) {
 		[game.ball.x, game.ball.y] = getPosition(game, leftPad, newX, newY);
 		return true;
 	}
@@ -60,9 +53,9 @@ function leftPadCollision(game: Game, leftPad: coordinates, newX: number, newY: 
 }
 
 function rightPadCollision(game: Game, rightPad: coordinates, newX: number, newY: number): boolean {
-	const p: coordinates = {x: newX - (rightPad.x + 5), y: newY - (rightPad.y + 27)};
-	const b: coordinates = {x :(10 / 2), y:(54 / 2)};
-	if (distBallPad(p, b) <= BALL_RADIUS) {
+	const ball: coordinates = {x: newX - (rightPad.x + 5), y: newY - (rightPad.y + 27)};
+	const paddle: coordinates = {x :(10 / 2), y:(54 / 2)};
+	if (distBallPad(ball, paddle) <= BALL_RADIUS) {
 		[game.ball.x, game.ball.y] = getPosition(game, rightPad, newX, newY);
 		return true
 	}
@@ -79,7 +72,7 @@ function distBallPad(p: coordinates, b: coordinates): number {
 
 function getPosition(game: Game, paddle: coordinates, newX: number, newY: number): [number, number] {
 	const side: string = getCollisionSide(game, paddle);
-	const offset: number = BALL_RADIUS + 2;
+	const offset: number = BALL_RADIUS + 1;
 
 	switch (side) {
 		case "left":
