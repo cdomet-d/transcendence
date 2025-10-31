@@ -47,12 +47,22 @@ export class BaseForm extends HTMLFormElement {
         return this.#formContent;
     }
 
+    /**
+     * Handles the default submit event for the form.
+     * Prevents default submission and logs form data.
+     * Can be overridden in subclasses for custom behavior.
+     * @param ev - The submit event.
+     */
     submitHandler(ev: SubmitEvent) {
         ev.preventDefault();
         const formResults = new FormData(this);
         console.log(formResults);
     }
 
+    /**
+     * Renders the form title if a heading is provided in form details.
+     * Appends the title element to the form and caches it in `formContent`.
+     */
     renderTitle() {
         if (this.#formData.heading) {
             const title = createHeading('1', this.#formData.heading);
@@ -61,6 +71,10 @@ export class BaseForm extends HTMLFormElement {
         }
     }
 
+    /**
+     * Renders all fields defined in the form details.
+     * Creates input or textarea groups as needed, appends them, and caches them in `formContent`.
+     */
     renderFields() {
         this.#formData.fields.forEach((field) => {
             let el: HTMLElement;
@@ -71,17 +85,25 @@ export class BaseForm extends HTMLFormElement {
                 el = createTextAreaGroup(field) as TextAreaGroup;
                 this.#formContent[field.id] = el;
             }
-            this.appendChild(el);
+            this.append(el);
             if (field.type === 'textarea') el.classList.add('row-span-3');
         });
     }
 
+    /**
+     * Renders the form's submit button as defined in form details.
+     * Appends the button to the form and caches it in `formContent`.
+     */
     renderButtons() {
         const submit = createBtn(this.#formData.button);
         this.#formContent['submit'] = submit;
         this.append(submit);
     }
 
+    /**
+     * Called when the element is inserted into the DOM.
+     * Sets form attributes, attaches the submit event handler, and renders the form.
+     */
     connectedCallback() {
         this.action = this.#formData.action;
         this.ariaLabel = this.#formData.ariaLabel;
@@ -95,6 +117,9 @@ export class BaseForm extends HTMLFormElement {
         this.removeEventListener('submit', (ev) => this.#submitHandler(ev));
     }
 
+    /**
+     * Renders the form by calling the title, fields, and button renderers.
+     */
     render() {
         this.renderTitle();
         this.renderFields();

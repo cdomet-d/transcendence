@@ -2,6 +2,8 @@ import type { buttonData, GameType } from '../../types-interfaces';
 import { createMenu } from '../navigation/menu-helpers';
 
 //TODO: Make notifications tab-focusable
+//TODO: Buttons are actually a form
+
 /**
  * Defines default button data used inside notifications (e.g., invitations).
  *
@@ -57,8 +59,7 @@ class NotifContent extends HTMLDivElement {
     /** Called when the element is connected; renders text and buttons within the container. */
     connectedCallback() {
         const buttons = createMenu(notificationBtns, 'horizontal', 's');
-        this.appendChild(this.#text);
-        this.appendChild(buttons);
+        this.append(this.#text, buttons);
         this.className = 'grid grid-cols-[65%_32%] gap-s';
         this.id = 'notification';
         this.setAttribute('unread', '');
@@ -84,24 +85,6 @@ class NotifToggle extends HTMLDivElement {
         this.#alert = document.createElement('div');
     }
 
-    /** Creates and assembles the toggle icon and the alert indicator. */
-    #createToggleContent() {
-        const notifIcon = document.createElement('img');
-        notifIcon.src = '../assets/icons/notification.png';
-        notifIcon.className = 'imedium isize z-1';
-        notifIcon.id = 'notifToggle';
-
-        this.#alert.id = 'notifAlert';
-        this.#alert.className =
-            'hidden z-2 invalid thin brdr bg-red w-s h-s absolute top-[8px] right-[8px]';
-
-        this.className =
-            'w-[fit-content] relative cursor-pointer hover:scale-108 transform transition-transform';
-
-        this.appendChild(notifIcon);
-        this.appendChild(this.#alert);
-    }
-
     /**
      * Toggles the alert visibility depending on unread notifications.
      *
@@ -114,7 +97,23 @@ class NotifToggle extends HTMLDivElement {
 
     /** Builds the inner elements when connected to the DOM. */
     connectedCallback() {
-        this.#createToggleContent();
+        this.#render();
+    }
+    /** Creates and assembles the toggle icon and the alert indicator. */
+    #render() {
+        const notifIcon = document.createElement('img');
+        notifIcon.src = '../assets/icons/notification.png';
+
+        notifIcon.className = 'imedium isize z-1';
+        notifIcon.id = 'notifToggle';
+        this.#alert.id = 'notifAlert';
+
+        this.#alert.className =
+            'hidden z-2 invalid thin brdr bg-red w-s h-s absolute top-[8px] right-[8px]';
+        this.className =
+            'w-[fit-content] relative cursor-pointer hover:scale-108 transform transition-transform';
+
+        this.append(notifIcon, this.#alert);
     }
 }
 
@@ -149,7 +148,7 @@ class NotifPanel extends HTMLDivElement {
         const defaultContent = document.createElement('p');
         defaultContent.innerText = 'No new notifications :<';
         defaultContent.id = 'default';
-        this.#content.appendChild(defaultContent);
+        this.#content.append(defaultContent);
     }
 
     /** Creates panel structure with background and decorative elements. */
@@ -160,7 +159,7 @@ class NotifPanel extends HTMLDivElement {
         notifDecor.src = '/assets/icons/notification-bubble.png';
         notifDecor.className = 'h-[32px] w-[16px] absolute right-[-20px] top-[8px]';
 
-        this.#content.appendChild(notifDecor);
+        this.#content.append(notifDecor);
         this.append(this.#content);
     }
 
@@ -318,8 +317,7 @@ export class NotifBox extends HTMLDivElement {
 
     /** Renders the toggle and panel elements inside the main wrapper. */
     render() {
-        this.appendChild(this.#toggle);
-        this.appendChild(this.#popup);
+        this.append(this.#toggle, this.#popup);
 
         this.id = 'notificationWrapper';
         this.className = 'relative box-border w-fit flex items-start gap-m';

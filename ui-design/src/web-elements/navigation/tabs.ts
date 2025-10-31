@@ -25,6 +25,11 @@ export class TabPanel extends HTMLDivElement {
         this.classList.add(newClass);
     }
 
+    /**
+     * Replaces the current content of the tab panel with the provided element.
+     *
+     * @param innerContent - The HTMLElement to append as the new content of the panel.
+     */
     appendContent(innerContent: HTMLElement) {
         while (this.firstChild) this.removeChild(this.firstChild);
         this.append(innerContent);
@@ -102,7 +107,7 @@ export class TabContainer extends HTMLDivElement {
      */
     set tabList(tabList: Array<TabData>) {
         this.#tabList = tabList;
-        if (!this.isValidTabList(this.#tabList))
+        if (!this.#isValidTabList(this.#tabList))
             throw new Error(
                 'Duplicate Tab.data will lead to UI confusion. Check your TabInfo array.',
             );
@@ -118,7 +123,7 @@ export class TabContainer extends HTMLDivElement {
 
             if (target) {
                 const tab: Element | null = target.closest('.tab');
-                if (tab && this.contains(tab)) this.animateTab(tab);
+                if (tab && this.contains(tab)) this.#animateTab(tab);
             }
         });
     }
@@ -128,7 +133,7 @@ export class TabContainer extends HTMLDivElement {
      *
      * @param {Element} tab - The tab element clicked.
      */
-    private animateTab(tab: Element) {
+    #animateTab(tab: Element) {
         for (const key in this.#tabHeaders) {
             this.#tabHeaders[key].removeAttribute('selected');
         }
@@ -156,7 +161,7 @@ export class TabContainer extends HTMLDivElement {
      * @param {Array<TabData>} tabList
      * @returns {boolean} True if no duplicates exist.
      */
-    private isValidTabList(tabList: Array<TabData>): boolean {
+    #isValidTabList(tabList: Array<TabData>): boolean {
         return tabList.every((item, i, self) => i === self.findIndex((t) => t.id === item.id));
     }
     /**
@@ -164,7 +169,7 @@ export class TabContainer extends HTMLDivElement {
      *
      * @returns {HTMLDivElement} The container for tab buttons.
      */
-    private createTabButtons(): TabButtonWrapper {
+    #createTabButtons(): TabButtonWrapper {
         let isSet: boolean = false;
         const tabHeader = document.createElement('div', {
             is: 'tab-button-wrapper',
@@ -179,7 +184,7 @@ export class TabContainer extends HTMLDivElement {
                 isSet = true;
                 el.setAttribute('selected', '');
             }
-            tabHeader.appendChild(el);
+            tabHeader.append(el);
         });
         return tabHeader;
     }
@@ -187,7 +192,7 @@ export class TabContainer extends HTMLDivElement {
     /**
      * Creates content panels matching tabs.
      */
-    private createPanels() {
+    #createPanels() {
         let isSet: boolean = false;
         this.#tabList.forEach((tab) => {
             const el = document.createElement('div', { is: 'tab-panel' }) as TabPanel;
@@ -198,7 +203,7 @@ export class TabContainer extends HTMLDivElement {
                 isSet = true;
                 el.setAttribute('selected', '');
             }
-            this.appendChild(el);
+            this.append(el);
             el.classList.add('pad-xs');
             if (tab.id === 'history')
                 el.appendContent(
@@ -217,8 +222,8 @@ export class TabContainer extends HTMLDivElement {
     render() {
         this.className =
             'w-full bg brdr overflow-hidden grid items-stretch grid-flow-row grid-cols-[1fr] grid-rows-[var(--s)_1fr]';
-        this.appendChild(this.createTabButtons());
-        this.createPanels();
+        this.append(this.#createTabButtons());
+        this.#createPanels();
     }
 }
 

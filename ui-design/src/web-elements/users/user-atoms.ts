@@ -24,14 +24,12 @@ export class Username extends HTMLDivElement {
         this.#name = document.createElement('div');
         this.#link = document.createElement('a');
         this.#name.append(this.#link);
-        this.appendChild(this.#name);
-        this.appendChild(this.#status);
+        this.append(this.#name, this.#status);
     }
 
     /**
      * Sets the username text.
      */
-
     set name(val: string) {
         this.#link.innerText = val;
         //TODO: HUUUUM...
@@ -48,6 +46,14 @@ export class Username extends HTMLDivElement {
         this.render();
     }
 
+    /**
+     * Applies custom styles to the username link element.
+     *
+     * @param fcolor - Optional font color class to apply.
+     * @param fsize - Optional font size class to apply.
+     * @param fweight - Optional font weight class to apply.
+     * @param shadow - Whether to add a shadow class to the username.
+     */
     customizeStyle(fcolor?: FontColor, fsize?: FontSize, fweight?: FontWeight, shadow?: boolean) {
         if (fsize) this.#link.classList.add(fsize);
         if (fcolor) this.#link.classList.add(fcolor);
@@ -82,6 +88,10 @@ if (!customElements.get('username-container')) {
     customElements.define('username-container', Username, { extends: 'div' });
 }
 
+/**
+ * Custom element for displaying a winstreak icon and the value of said winstreak.
+ * Extends HTMLSpanElement.
+ */
 export class Winstreak extends HTMLSpanElement {
     #icon: Icon;
     #val: HTMLSpanElement;
@@ -96,10 +106,13 @@ export class Winstreak extends HTMLSpanElement {
         };
         this.#icon = createIcon(iconData);
         this.#val = document.createElement('p');
-        this.appendChild(this.#icon);
-        this.appendChild(this.#val);
+        this.append(this.#icon, this.#val);
     }
 
+    /**
+     * Sets the winstreak value text.
+     * @param val - The winstreak value to display.
+     */
     set winstreakValue(val: string) {
         this.#val.innerText = val;
     }
@@ -119,10 +132,19 @@ if (!customElements.get('winstreak-block')) {
     customElements.define('winstreak-block', Winstreak, { extends: 'span' });
 }
 
+/**
+ * Custom element for displaying a user biography.
+ * Extends HTMLParagraphElement.
+ */
 export class Biography extends HTMLParagraphElement {
     constructor() {
         super();
     }
+
+    /**
+     * Sets the biography content.
+     * @param val - The biography text to display.
+     */
     set content(val: string) {
         this.textContent = val;
         this.render();

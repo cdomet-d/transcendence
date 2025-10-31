@@ -6,15 +6,10 @@ import { SocialMenu } from '../navigation/menus';
 import type { UserData, ImgData, ProfileView } from '../../types-interfaces';
 
 /**
- * A small user card with a dynamic social menu. It's just a div, styled to hold
- * an avatar, a username and the social menu. The profile card is identified by the userID of the user it represents,
- * to allow later selection and dynamic UI updates (logging in/out, the users becoming friends, avatar or username changes...).
- *
- * @setter Id - used to set the container `id` attribute.
- *
- * @remark You should use {@link createUserCardSocial} which encapsulates creation logic.
+ * Custom element representing a user profile.
+ * Displays avatar, username, status, winstreak, biography, profile age, and action menu.
+ * Extends HTMLDivElement.
  */
-
 export class UserProfile extends HTMLDivElement {
     #actionButtons: SocialMenu;
     #avatar: Avatar;
@@ -24,6 +19,9 @@ export class UserProfile extends HTMLDivElement {
     #winstreak: Winstreak;
     #color: string;
 
+    /**
+     * Initializes the UserProfile element and its child components.
+     */
     constructor() {
         super();
         this.#actionButtons = createSocialMenu(socialMenu, 'horizontal', 'stranger');
@@ -35,38 +33,65 @@ export class UserProfile extends HTMLDivElement {
         this.#color = 'bg-4F9FFF';
     }
 
+    /**
+     * Sets the profile ID (container id attribute).
+     */
     set profileId(userId: string) {
         this.id = userId;
     }
 
+    /**
+     * Sets the user's status (online/offline).
+     */
     set status(status: boolean) {
         this.#username.status = status;
     }
 
+    /**
+     * Sets the user's avatar image data.
+     */
     set avatar(profilePic: ImgData) {
         this.#avatar.metadata = profilePic;
     }
 
+    /**
+     * Sets the user's biography text.
+     */
     set biography(bio: string) {
         this.#biography.content = bio;
     }
 
+    /**
+     * Sets the user's winstreak value.
+     */
     set winstreak(val: string) {
         this.#winstreak.winstreakValue = val;
     }
 
+    /**
+     * Sets the profile view type for the action menu.
+     */
     set profileView(v: ProfileView) {
         this.#actionButtons.view = v;
     }
 
+    /**
+     * Sets the user's profile age (days since joined).
+     */
     set profileAge(val: string) {
         this.#joinedSince.textContent = `Joined ${val} days ago`;
     }
 
+    /**
+     * Sets the user's username.
+     */
     set username(name: string) {
         this.#username.name = name;
     }
 
+    /**
+     * Sets the profile color and updates the class.
+     */
     set color(newColor: string) {
         if (this.#color !== newColor) {
             this.classList.remove(this.#color);
@@ -75,6 +100,9 @@ export class UserProfile extends HTMLDivElement {
         }
     }
 
+    /**
+     * Sets all user information at once from a UserData object.
+     */
     set userInfo(user: UserData) {
         this.profileId = user.id;
         this.avatar = user.avatar;
@@ -143,6 +171,15 @@ if (!customElements.get('user-profile')) {
     customElements.define('user-profile', UserProfile, { extends: 'div' });
 }
 
+/**
+ * A small user card with a dynamic social menu. It's just a div, styled to hold
+ * an avatar, a username and the social menu. The profile card is identified by the userID of the user it represents,
+ * to allow later selection and dynamic UI updates (logging in/out, the users becoming friends, avatar or username changes...).
+ *
+ * @setter Id - used to set the container `id` attribute.
+ *
+ * @remark You should use {@link createUserCardSocial} which encapsulates creation logic.
+ */
 export class UserCardSocial extends UserProfile {
     constructor() {
         super();
@@ -176,6 +213,11 @@ export class UserInline extends UserProfile {
         this.#clickHandler = this.attachClick.bind(this);
     }
 
+    /**
+     * Handles click events on the element.
+     * Navigates to the user's profile page.
+     * @param ev - The mouse event.
+     */
     attachClick(ev: MouseEvent) {
         const clickedEl = ev.target as Element | null;
         if (!clickedEl) return;

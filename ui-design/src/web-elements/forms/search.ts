@@ -54,7 +54,7 @@ export class Searchbar extends BaseForm {
      */
     addUser(user: UserData) {
         const el = createUserInline(user);
-        this.#results.appendChild(el);
+        this.#results.append(el);
     }
 
     /**
@@ -100,10 +100,10 @@ export class Searchbar extends BaseForm {
         const img = this.createSearchIcon() as HTMLImageElement;
         this.#searchInput = createInputGroup(super.details.fields[0]);
 
-        this.#searchInput.appendChild(img);
-        this.appendChild(this.#searchInput);
+        this.#searchInput.append(img);
+        this.append(this.#searchInput);
         super.renderButtons();
-        this.appendChild(this.#results);
+        this.append(this.#results);
 
         this.classList.add('sidebar-right', 'search-gap', 'relative', 'w-5/6');
         this.#results.className =

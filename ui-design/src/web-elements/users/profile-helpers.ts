@@ -40,6 +40,12 @@ export function createUserInline(user: UserData): UserInline {
     return el;
 }
 
+/**
+ * Creates a user profile element containing avatar, username, status, winstreak, biography, and profile age.
+ *
+ * @param user - The user data object ({@link UserData}).
+ * @returns A `UserProfile` element populated with the user's details.
+ */
 export function createUserProfile(user: UserData): UserProfile {
     const el = document.createElement('div', { is: 'user-profile' }) as UserProfile;
     const avatar = { ...user.avatar };

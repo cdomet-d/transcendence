@@ -8,10 +8,6 @@ import * as types from '../../types-interfaces';
  * @param level - Heading level ('1', '2', '3'); defaults to '1'.
  * @param content - Text content of the heading.
  * @returns The created {@link CustomTitle} element.
- *
- * @example
- * const heading = createHeading("3", "Section Title");
- * document.body.appendChild(heading);
  */
 export function createHeading(level: string, content: string): CustomTitle {
     const el = document.createElement('custom-title') as CustomTitle;

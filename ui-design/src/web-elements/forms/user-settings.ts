@@ -8,6 +8,10 @@ import type { UserData } from '../../types-interfaces';
 import type { Avatar } from '../typography/images';
 import { createForm } from './helpers';
 
+/**
+ * Custom form element for user settings, including avatar, color, language, and account deletion.
+ * Extends BaseForm.
+ */
 export class UserSettingsForm extends BaseForm {
     #user: UserData;
     #accountDelete: BaseForm;
@@ -15,6 +19,9 @@ export class UserSettingsForm extends BaseForm {
     #languages: DropdownMenu;
     #avatar: Avatar;
 
+    /**
+     * Initializes the user settings form with user data, avatar, color and language dropdowns, and account deletion form.
+     */
     constructor() {
         super();
         this.#user = user;
@@ -24,10 +31,19 @@ export class UserSettingsForm extends BaseForm {
         this.#languages = createDropdown(languageMenu, 'Pick language', 'static');
     }
 
+    /**
+     * Sets the user data for the form.
+     * @param details - The user data object.
+     */
     set user(details: UserData) {
         this.#user = details;
     }
 
+    /**
+     * Handles the submit event for the form.
+     * Appends color and language selections to the form data if changed.
+     * @param ev - The submit event.
+     */
     override submitHandler(ev: SubmitEvent) {
         ev.preventDefault();
         const f = new FormData(this);
@@ -40,6 +56,9 @@ export class UserSettingsForm extends BaseForm {
         console.log(f);
     }
 
+    /**
+     * Renders the color and language dropdown menus.
+     */
     renderDropdowns() {
         const dropdownWrapper = document.createElement('div');
         dropdownWrapper.append(this.#colors, this.#languages);
@@ -47,6 +66,10 @@ export class UserSettingsForm extends BaseForm {
         this.append(dropdownWrapper);
     }
 
+    /**
+     * Renders the user settings form, including avatar, title, fields, dropdowns, buttons, and account deletion form.
+     * Applies custom styles to certain fields.
+     */
     override render() {
         this.append(this.#avatar);
         super.renderTitle();

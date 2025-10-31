@@ -9,12 +9,19 @@ import type { InputFieldsData } from '../../types-interfaces';
  */
 export class CustomInput extends HTMLInputElement {
     #inputCallback: (event: Event) => void;
+
     constructor() {
         super();
         this.#inputCallback = (event) => this.inputFeedback(event);
     }
 
     //TODO: allow hide on ESC
+
+    /**
+     * Provides feedback for password fields based on validation rules.
+     * Dispatches a 'validation' event with feedback details.
+     * @param event - The input event.
+     */
     inputFeedback(event: Event) {
         if (this.getAttribute('type') === 'password') {
             const el = event.target as HTMLInputElement;
@@ -110,7 +117,7 @@ export class InputGroup extends HTMLDivElement {
         this.#input = document.createElement('input', { is: 'custom-input' }) as CustomInput;
         this.#label = document.createElement('label', { is: 'input-label' }) as InputLabel;
         this.#inputFeedback = document.createElement('div');
-        this.#validationCallback = (event: Event) => this.displayInputFeedback(event);
+        this.#validationCallback = (event: Event) => this.#displayInputFeedback(event);
     }
 
     /**
@@ -124,7 +131,11 @@ export class InputGroup extends HTMLDivElement {
         return this.#label;
     }
 
-    displayInputFeedback(event: Event) {
+    /**
+     * Displays input feedback messages in the feedback element.
+     * @param event - The validation event.
+     */
+    #displayInputFeedback(event: Event) {
         const ev = event as CustomEvent;
         if (ev.detail.feedback.length > 0) this.#inputFeedback.classList.remove('hidden');
         else this.#inputFeedback.classList.add('hidden');
@@ -142,6 +153,10 @@ export class InputGroup extends HTMLDivElement {
     }
 
     //TODO: add disconnected callback
+    /**
+     * Called when the element is added to the document.
+     * Adds validation event listeners and renders the group.
+     */
     connectedCallback() {
         this.addEventListener('validation', this.#validationCallback);
         this.#input.addEventListener('blur', () => {
@@ -180,6 +195,10 @@ export class InputGroup extends HTMLDivElement {
         );
     }
 
+    /**
+     * Sets Input attributes based on info.
+     * @private
+     */
     #setInputAttributes() {
         this.#input.id = this.#info.id;
         this.#input.name = this.#info.id;
@@ -188,14 +207,16 @@ export class InputGroup extends HTMLDivElement {
         this.#input.type = this.#info.type;
     }
 
+    /**
+     * Sets label attributes based on info.
+     * @private
+     */
     #setLabelAttributes() {
         this.#label.for = this.#info.id;
     }
 
     render() {
-        this.appendChild(this.#label);
-        this.appendChild(this.#input);
-        this.appendChild(this.#inputFeedback);
+        this.append(this.#label, this.#input, this.#inputFeedback);
 
         this.className = 'box-border relative w-full';
         this.#inputFeedback.className = 'brdr bg hidden';
@@ -245,10 +266,14 @@ export class TextAreaGroup extends HTMLDivElement {
         this.#input = document.createElement('textarea') as HTMLTextAreaElement;
         this.#label = document.createElement('label', { is: 'input-label' }) as InputLabel;
         this.#inputFeedback = document.createElement('div');
-        this.#validationCallback = (event: Event) => this.displayInputFeedback(event);
+        this.#validationCallback = (event: Event) => this.#displayInputFeedback(event);
     }
 
-    displayInputFeedback(event: Event) {
+    /**
+     * Displays input feedback messages in the feedback element.
+     * @param event - The validation event.
+     */
+    #displayInputFeedback(event: Event) {
         const ev = event as CustomEvent;
         if (ev.detail.feedback.length > 0) this.#inputFeedback.classList.remove('hidden');
         else this.#inputFeedback.classList.add('hidden');
@@ -276,20 +301,26 @@ export class TextAreaGroup extends HTMLDivElement {
         this.render();
     }
 
-    render() {
-        this.appendChild(this.#label);
-        this.appendChild(this.#input);
-        this.appendChild(this.#inputFeedback);
-
-        this.#input.className = 'resize-y brdr h-full pad-xs';
+    #setInputAttributes() {
+        if (this.#info.required) this.#input.setAttribute('required', '');
         this.#input.id = this.#info.id;
         this.#input.maxLength = 256;
         this.#input.name = this.#info.id;
         this.#input.placeholder = this.#info.placeholder;
-        this.#inputFeedback.className = 'brdr bg hidden';
+    }
+
+    #setLabelAttributes() {
         this.#label.content = this.#info.labelContent;
         this.#label.for = this.#info.id;
-        if (this.#info.required) this.#input.setAttribute('required', '');
+    }
+
+    render() {
+        this.append(this.#label, this.#input, this.#inputFeedback);
+
+        this.#setInputAttributes();
+        this.#setLabelAttributes();
+        this.#inputFeedback.className = 'brdr bg hidden';
+        this.#input.className = 'resize-y brdr h-full pad-xs';
         this.className = 'box-border relative';
     }
 }

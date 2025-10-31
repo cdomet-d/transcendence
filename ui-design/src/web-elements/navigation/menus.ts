@@ -87,7 +87,7 @@ export class Menu extends HTMLElement {
         }`;
         if (this.#style === 'horizontal') this.classList.add('grid-flow-col');
         if (this.#style === 'vertical') this.classList.add('grid-flow-rows');
-        this.#elements.forEach((item) => this.appendChild(createBtn(item, this.#animated)));
+        this.#elements.forEach((item) => this.append(createBtn(item, this.#animated)));
     }
 }
 

@@ -1,6 +1,8 @@
 import { createIcon } from '../typography/helpers';
 import type { buttonData } from '../../types-interfaces';
 
+//TODO: Migrate to inheritance ?
+
 /**
  * Custom menu button element extending HTMLButtonElement.
  * Updates styles dynamically based on the "disabled" attribute.
@@ -67,6 +69,12 @@ export class CustomButton extends HTMLButtonElement {
     /** Renders simple textual button content. */
     renderTextualBtn() {
         this.textContent = this.#btn.content;
+        this.classList.add(
+            'hover:transform',
+            'hover:scale-[1.02]',
+            'focus-visible:transform',
+            'focus-visible:scale-[1.02]',
+        );
     }
 
     /** Renders animated button text letter-by-letter. */
@@ -77,14 +85,24 @@ export class CustomButton extends HTMLButtonElement {
             letterSpan.textContent = char;
             letterSpan.style.animationDelay = `${index}s`;
             letterSpan.classList.add('f-brown', 'f-bold', 'whitepre');
-            this.appendChild(letterSpan);
+            this.append(letterSpan);
             index += 0.1;
         }
+        this.classList.add('t3', 'button-shadow');
     }
 
     /** Renders button icon if image metadata is provided. */
     renderIconBtn() {
-        if (this.#btn.img) this.appendChild(createIcon(this.#btn.img));
+        if (this.#btn.img) this.append(createIcon(this.#btn.img));
+    }
+
+    #dynamicStyling() {
+        if (this.disabled) this.classList.add('disabled', 'bg');
+        else if (this.#btn.style) {
+            this.#btn.style === 'green'
+                ? this.classList.add('valid', 'bg-green')
+                : this.classList.add('invalid', 'bg-red', 'text-white');
+        } else this.classList.add('bg-yellow');
     }
 
     /** Updates button styles and content according to current state. */
@@ -94,26 +112,12 @@ export class CustomButton extends HTMLButtonElement {
 
         if (this.#btn.content && !this.#animated) {
             this.renderTextualBtn();
-            this.classList.add(
-                'hover:transform',
-                'hover:scale-[1.02]',
-                'focus-visible:transform',
-                'focus-visible:scale-[1.02]',
-            );
-        } else if (this.#btn.img) {
-            this.renderIconBtn();
         } else if (this.#btn.content && this.#animated) {
             this.renderAnimatedBtn();
-            this.classList.add('t3', 'button-shadow');
+        } else if (this.#btn.img) {
+            this.renderIconBtn();
         }
-
-        if (this.disabled) this.classList.add('disabled', 'bg');
-        else if (this.#btn.style) {
-            this.#btn.style === 'green'
-                ? this.classList.add('valid', 'bg-green')
-                : this.classList.add('invalid', 'bg-red', 'text-white');
-        } else this.classList.add('bg-yellow');
-
+        this.#dynamicStyling();
         this.type = this.#btn.type;
         this.ariaLabel = this.#btn.ariaLabel;
     }

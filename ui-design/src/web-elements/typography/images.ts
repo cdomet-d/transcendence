@@ -56,7 +56,7 @@ export class Avatar extends HTMLDivElement {
         };
         this.#img = document.createElement('img', { is: 'custom-icon' }) as Icon;
         this.#img.metadata = this.#data;
-        this.appendChild(this.#img);
+        this.append(this.#img);
     }
 
     set metadata(data: ImgData) {

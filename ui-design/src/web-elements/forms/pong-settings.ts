@@ -21,6 +21,9 @@ import type { UserData } from '../../types-interfaces';
 export class LocalPongSettings extends BaseForm {
     #backgroundSelector: DropdownMenu;
 
+    /**
+     * Gets the dropdown menu element for background selection.
+     */
     get dropdownMenu() {
         return this.#backgroundSelector;
     }
@@ -30,9 +33,12 @@ export class LocalPongSettings extends BaseForm {
         this.#backgroundSelector = createDropdown(backgroundMenu, 'Select background', 'static');
     }
 
+    /**
+     * Renders the local pong settings form.
+     * Appends the title, background selector, fields, and buttons.
+     */
     override render() {
-        const title = createHeading('1', super.details.heading);
-        this.append(title);
+        super.renderTitle();
         this.append(this.#backgroundSelector);
         this.renderFields();
         this.renderButtons();
@@ -64,24 +70,40 @@ export class RemotePongSettings extends LocalPongSettings {
         this.#invitedUsers = null;
     }
 
+    /**
+     * Sets the invited users and updates the guest list display.
+     * @param users - Array of invited user data.
+     */
     set invitedUsers(users: UserData[]) {
         this.#invitedUsers = users;
         this.#displayInvitedUser();
     }
 
-    clearResults() {
+    /**
+     * Clears all children from the guest wrapper element, ensure no guest is displayed twice when refreshing the view.
+     */
+    #clearResults() {
         while (this.#guestWrapper.firstChild) {
             this.#guestWrapper.removeChild(this.#guestWrapper.firstChild);
         }
     }
+
+    /**
+     * Displays the invited users in the guest wrapper.
+     * Appends user inline elements for each invited user.
+     * @private
+     */
     #displayInvitedUser() {
         if (!this.#invitedUsers) return;
-        if (this.#guestWrapper.firstChild) this.clearResults();
+        if (this.#guestWrapper.firstChild) this.#clearResults();
         this.#invitedUsers.forEach((user) => {
             this.#guestWrapper.append(createUserInline(user));
         });
     }
 
+    /**
+     * Applies custom styles to form fields and buttons.
+     */
     styleFields() {
         this.#searchbar.classList.add('row-start-2', 'col-start-2');
         super.dropdownMenu.classList.add('row-start-5', 'col-start-1');
@@ -91,11 +113,19 @@ export class RemotePongSettings extends LocalPongSettings {
         super.contentMap['submit'].classList.add('row-start-5', 'col-start-2');
     }
 
+    /**
+     * Applies custom styles to the invite list wrapper.
+     */
     styleInviteList() {
         this.#guestWrapper.className =
             'brdr grid row-m gap-xs pad-xs overflow-y-auto box-border row-start-3 col-start-2 row-span-2 place-self-stretch';
     }
 
+    /**
+     * Renders the remote pong settings form.
+     * Appends the title, fields, search bar, guest wrapper, dropdown menu, and buttons.
+     * Applies custom styles to fields and invite list.
+     */
     override render() {
         super.renderTitle();
         super.renderFields();
