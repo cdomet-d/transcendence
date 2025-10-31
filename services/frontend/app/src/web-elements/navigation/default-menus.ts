@@ -1,4 +1,4 @@
-import type { buttonData, TabData } from '../types-interfaces';
+import type { buttonData, TabData } from '../types-interfaces.js';
 
 export const mainMenu: buttonData[] = [
     { content: 'Leaderboard', type: 'button', img: null, ariaLabel: 'Leaderboard Menu Button' },

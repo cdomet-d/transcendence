@@ -1,4 +1,4 @@
-import type { MatchOutcome } from '../types-interfaces';
+import type { MatchOutcome } from '../types-interfaces.js';
 
 /**
  * Creates an InlineMatch element and populates it with match outcome data.

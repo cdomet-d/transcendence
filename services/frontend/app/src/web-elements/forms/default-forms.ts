@@ -1,5 +1,5 @@
-import type { FormDetails } from '../types-interfaces';
-import { usernamePattern, passwordPattern } from '../default-values';
+import type { FormDetails } from '../types-interfaces.js';
+import { usernamePattern, passwordPattern } from '../default-values.js';
 
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
 export const userSettingsForm: FormDetails = {

@@ -1,12 +1,12 @@
-import { backgroundMenu } from '../navigation/default-menus';
-import { BaseForm } from './baseform';
-import { createDropdown } from '../navigation/menu-helpers';
-import { createForm } from './helpers';
-import { createUserInline } from '../users/profile-helpers';
-import { DropdownMenu } from '../navigation/menus';
-import { NoResults } from '../typography/images';
-import type { Searchbar } from './search';
-import type { UserData } from '../types-interfaces';
+import { backgroundMenu } from '../navigation/default-menus.js';
+import { BaseForm } from './baseform.js';
+import { createDropdown } from '../navigation/menu-helpers.js';
+import { createForm } from './helpers.js';
+import { createUserInline } from '../users/profile-helpers.js';
+import { DropdownMenu } from '../navigation/menus.js';
+import { NoResults } from '../typography/images.js';
+import type { Searchbar } from './search.js';
+import type { UserData } from '../types-interfaces.js';
 
 //TODO: Override parent submit event to append all relevant informations.
 
@@ -113,10 +113,10 @@ export class RemotePongSettings extends LocalPongSettings {
     styleFields() {
         this.#searchbar.classList.add('row-start-2', 'col-start-2');
         super.dropdownMenu.classList.add('row-start-5', 'col-start-1');
-        super.contentMap['paddlespeed'].classList.add('col-start-1');
-        super.contentMap['ballspeed'].classList.add('col-start-1');
-        super.contentMap['paddlesize'].classList.add('col-start-1');
-        super.contentMap['submit'].classList.add('row-start-5', 'col-start-2');
+        super.contentMap['paddlespeed']?.classList.add('col-start-1');
+        super.contentMap['ballspeed']?.classList.add('col-start-1');
+        super.contentMap['paddlesize']?.classList.add('col-start-1');
+        super.contentMap['submit']?.classList.add('row-start-5', 'col-start-2');
     }
 
     /**

@@ -1,11 +1,11 @@
-import { BaseForm } from './baseform';
-import { createInputGroup } from '../inputs/helpers';
-import { createUserInline } from '../users/profile-helpers';
-import { InputGroup } from '../inputs/fields';
-import { NoResults } from '../typography/images';
+import { BaseForm } from './baseform.js';
+import { createInputGroup } from '../inputs/helpers.js';
+import { createUserInline } from '../users/profile-helpers.js';
+import { InputGroup } from '../inputs/fields.js';
+import { NoResults } from '../typography/images.js';
 
-import type { UserData } from '../types-interfaces';
-import { search } from './default-forms';
+import type { UserData } from '../types-interfaces.js';
+import { search } from './default-forms.js';
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -102,7 +102,7 @@ export class Searchbar extends BaseForm {
      */
     override render() {
         const img = this.createSearchIcon() as HTMLImageElement;
-        this.#searchInput = createInputGroup(super.details.fields[0]);
+		if (super.details.fields[0]) this.#searchInput = createInputGroup(super.details.fields[0]);
 
         this.#searchInput.append(img);
         this.append(this.#searchInput);

@@ -1,9 +1,9 @@
-import { TabButton, TabButtonWrapper } from './buttons';
-import type { MatchOutcome, TabData, UserData } from '../types-interfaces';
-import { createMatchHistory, createUserMasonery } from './tabs-helpers';
-import { MatchHistory } from '../stats/matches';
-import { UserMasonery } from '../users/user-profile-containers';
-import { NoResults } from '../typography/images';
+import { TabButton, TabButtonWrapper } from './buttons.js';
+import type { MatchOutcome, TabData, UserData } from '../types-interfaces.js';
+import { createMatchHistory, createUserMasonery } from './tabs-helpers.js';
+import { MatchHistory } from '../stats/matches.js';
+import { UserMasonery } from '../users/user-profile-containers.js';
+import { NoResults } from '../typography/images.js';
 
 /**
  * Creates a tab panel extending HTMLDivElement.
@@ -136,15 +136,15 @@ export class TabContainer extends HTMLDivElement {
      */
     #animateTab(tab: Element) {
         for (const key in this.#tabHeaders) {
-            this.#tabHeaders[key].removeAttribute('selected');
+            this.#tabHeaders[key]!.removeAttribute('selected');
         }
         for (const key in this.#tabPanels) {
-            this.#tabPanels[key].removeAttribute('selected');
+            this.#tabPanels[key]!.removeAttribute('selected');
         }
 
         tab.setAttribute('selected', '');
         const clickedTab = tab.getAttribute('data-tab');
-        if (clickedTab) this.#tabPanels[clickedTab].setAttribute('selected', '');
+        if (clickedTab) this.#tabPanels[clickedTab]!.setAttribute('selected', '');
     }
 
     /**

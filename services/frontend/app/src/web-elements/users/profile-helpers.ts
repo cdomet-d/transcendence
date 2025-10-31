@@ -1,5 +1,5 @@
-import type { UserData } from '../types-interfaces';
-import { UserProfile, UserCardSocial, UserInline } from './profile';
+import type { UserData } from '../types-interfaces.js';
+import { UserProfile, UserCardSocial, UserInline } from './profile.js';
 /**
  * Creates a user card element with avatar, username, and social menu.
  *

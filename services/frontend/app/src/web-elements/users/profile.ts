@@ -1,9 +1,9 @@
-import { Avatar } from '../typography/images';
-import { Biography, Username, Winstreak } from './user-atoms';
-import { createSocialMenu } from '../navigation/menu-helpers';
-import { socialMenu } from '../default-values';
-import { SocialMenu } from '../navigation/menus';
-import type { UserData, ImgData, ProfileView } from '../types-interfaces';
+import { Avatar } from '../typography/images.js';
+import { Biography, Username, Winstreak } from './user-atoms.js';
+import { createSocialMenu } from '../navigation/menu-helpers.js';
+import { socialMenu } from '../default-values.js';
+import { SocialMenu } from '../navigation/menus.js';
+import type { UserData, ImgData, ProfileView } from '../types-interfaces.js';
 
 /**
  * Custom element representing a user profile.

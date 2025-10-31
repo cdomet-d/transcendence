@@ -1,5 +1,5 @@
-import { CustomButton } from './buttons';
-import type { buttonData } from '../types-interfaces';
+import { CustomButton } from './buttons.js';
+import type { buttonData } from '../types-interfaces.js';
 
 /**
  * Creates a menu button element configured with provided button data.

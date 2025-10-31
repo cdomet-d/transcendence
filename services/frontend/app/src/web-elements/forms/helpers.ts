@@ -1,8 +1,8 @@
-import type { UserData, FormDetails } from '../types-interfaces';
-import { BaseForm } from './baseform';
-import { RemotePongSettings, LocalPongSettings } from './pong-settings';
-import { Searchbar } from './search';
-import { UserSettingsForm } from './user-settings';
+import type { UserData, FormDetails } from '../types-interfaces.js';
+import { BaseForm } from './baseform.js';
+import { RemotePongSettings, LocalPongSettings } from './pong-settings.js';
+import { Searchbar } from './search.js';
+import { UserSettingsForm } from './user-settings.js';
 
 /**
  * Merges with the existing HTMLElementTag map.
