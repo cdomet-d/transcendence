@@ -1,4 +1,5 @@
 import type { ImgData } from '../../types-interfaces';
+import { createIcon } from './helpers';
 
 /**
  * Custom image element representing an icon.
@@ -79,4 +80,35 @@ export class Avatar extends HTMLDivElement {
 
 if (!customElements.get('user-avatar')) {
     customElements.define('user-avatar', Avatar, { extends: 'div' });
+}
+
+export class NoResults extends HTMLDivElement {
+    #noResultsImg: ImgData;
+
+    constructor() {
+        super();
+        this.#noResultsImg = {
+            alt: 'A crying blue pixel art blob',
+            id: 'no-results',
+            size: 'ilarge',
+            src: 'assets/icons/no-result.png',
+        };
+    }
+
+    connectedCallback() {
+        const img = createIcon(this.#noResultsImg);
+        const p = document.createElement('p');
+        p.innerText = "There's nothing here :<";
+        this.append(p, img);
+        img.classList.add('breathe', 'justify-self-center');
+        this.render();
+    }
+
+    render() {
+        this.className = 'w-full box-border grid justify-center';
+    }
+}
+
+if (!customElements.get('no-results')) {
+    customElements.define('no-results', NoResults, { extends: 'div' });
 }

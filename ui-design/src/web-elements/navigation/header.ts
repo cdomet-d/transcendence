@@ -4,9 +4,10 @@ import { createIcon } from '../typography/helpers';
 import { createNotificationBox } from '../users/notifications-helpers';
 import { DropdownMenu, Menu } from './menus';
 import { Icon } from '../typography/images';
-import { iMeta, languageMenu, mainMenu } from '../../default-values';
+import { iMeta } from '../../default-values';
 import { NotifBox } from '../users/notifications';
 import { Searchbar } from '../forms/search';
+import { mainMenu, languageMenu } from './default-menus';
 
 /**
  * Custom element for the main page header.

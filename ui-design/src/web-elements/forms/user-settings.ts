@@ -1,13 +1,13 @@
 import { BaseForm } from './baseform';
 import { createAvatar } from '../typography/helpers';
 import { createDropdown } from '../navigation/menu-helpers';
-import { user, userColorsMenu, languageMenu, deleteAccount } from '../../default-values';
-
+import { createForm } from './helpers';
+import { deleteAccount } from './default-forms';
+import { user } from '../../default-values';
+import { userColorsMenu, languageMenu } from '../navigation/default-menus';
+import type { Avatar } from '../typography/images';
 import type { DropdownMenu } from '../navigation/menus';
 import type { UserData } from '../../types-interfaces';
-import type { Avatar } from '../typography/images';
-import { createForm } from './helpers';
-
 /**
  * Custom form element for user settings, including avatar, color, language, and account deletion.
  * Extends BaseForm.

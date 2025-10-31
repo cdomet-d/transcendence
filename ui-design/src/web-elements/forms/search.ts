@@ -2,9 +2,10 @@ import { BaseForm } from './baseform';
 import { createInputGroup } from '../inputs/helpers';
 import { createUserInline } from '../users/profile-helpers';
 import { InputGroup } from '../inputs/fields';
+import { NoResults } from '../typography/images';
 
 import type { UserData } from '../../types-interfaces';
-import { search } from '../../default-values';
+import { search } from './default-forms';
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -79,6 +80,9 @@ export class Searchbar extends BaseForm {
     displayResults(res: UserData[]) {
         this.clearResults();
         this.#results.classList.toggle('hidden');
+        if (res.length < 1)
+            this.#results.append(document.createElement('div', { is: 'no-results' }) as NoResults);
+
         res.forEach((user) => this.addUser(user));
     }
 

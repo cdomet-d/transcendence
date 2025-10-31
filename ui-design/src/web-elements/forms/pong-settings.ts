@@ -1,10 +1,10 @@
-import { backgroundMenu } from '../../default-values';
+import { backgroundMenu } from '../navigation/default-menus';
 import { BaseForm } from './baseform';
 import { createDropdown } from '../navigation/menu-helpers';
 import { createForm } from './helpers';
-import { createHeading } from '../typography/helpers';
 import { createUserInline } from '../users/profile-helpers';
 import { DropdownMenu } from '../navigation/menus';
+import { NoResults } from '../typography/images';
 import type { Searchbar } from './search';
 import type { UserData } from '../../types-interfaces';
 
@@ -94,11 +94,17 @@ export class RemotePongSettings extends LocalPongSettings {
      * @private
      */
     #displayInvitedUser() {
-        if (!this.#invitedUsers) return;
         if (this.#guestWrapper.firstChild) this.#clearResults();
-        this.#invitedUsers.forEach((user) => {
-            this.#guestWrapper.append(createUserInline(user));
-        });
+
+        if (!this.#invitedUsers || this.#invitedUsers.length < 1) {
+            this.#guestWrapper.append(
+                document.createElement('div', { is: 'no-results' }) as NoResults,
+            );
+        } else {
+            this.#invitedUsers.forEach((user) => {
+                this.#guestWrapper.append(createUserInline(user));
+            });
+        }
     }
 
     /**
@@ -134,6 +140,7 @@ export class RemotePongSettings extends LocalPongSettings {
         super.renderButtons();
         this.styleFields();
         this.styleInviteList();
+        this.#displayInvitedUser();
         this.classList.add('sidebar-left');
     }
 }

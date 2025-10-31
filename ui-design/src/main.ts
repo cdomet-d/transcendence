@@ -6,6 +6,20 @@ import * as tab from './web-elements/navigation/tabs-helpers';
 import * as user from './web-elements/users//profile-helpers';
 import * as defaults from './default-values.js';
 import * as forms from './web-elements/forms/helpers.js';
+
+import {
+    languageMenu,
+    userColorsMenu,
+    gameMenu,
+    mainMenu,
+    tabs,
+} from './web-elements/navigation/default-menus';
+import {
+    userSettingsForm,
+    registrationForm,
+    localPong,
+    remotePong,
+} from './web-elements/forms/default-forms';
 import { createNotificationBox } from './web-elements/users/notifications-helpers';
 import { TournamentBrackets } from './web-elements/matches/tournament';
 import { PageHeader } from './web-elements/navigation/header';
@@ -60,22 +74,22 @@ try {
     wrapper.appendChild(inputs.createInputGroup(defaults.textData));
     wrapper.appendChild(inputs.createInputGroup(defaults.uploadData));
     wrapper.appendChild(inputs.createTextAreaGroup(defaults.textArea));
-    wrapper.appendChild(menu.createDropdown(defaults.languageMenu, 'Pick language', 'static'));
-    wrapper.appendChild(menu.createDropdown(defaults.userColorsMenu, 'Pick color', 'dynamic'));
-    wrapper.appendChild(menu.createMenu(defaults.gameMenu, 'vertical', 'l', true));
-    wrapper.appendChild(menu.createMenu(defaults.mainMenu, 'horizontal'));
-    wrapper.appendChild(menu.createMenu(defaults.mainMenu, 'vertical'));
-    wrapper.appendChild(tab.createTabs(defaults.tabs));
+    wrapper.appendChild(menu.createDropdown(languageMenu, 'Pick language', 'static'));
+    wrapper.appendChild(menu.createDropdown(userColorsMenu, 'Pick color', 'dynamic'));
+    wrapper.appendChild(menu.createMenu(gameMenu, 'vertical', 'l', true));
+    wrapper.appendChild(menu.createMenu(mainMenu, 'horizontal'));
+    wrapper.appendChild(menu.createMenu(mainMenu, 'vertical'));
+    wrapper.appendChild(tab.createTabs(tabs));
     wrapper.appendChild(typography.createAvatar(defaults.iMeta));
     wrapper.appendChild(typography.createHeading('1', 'Heading 1'));
     wrapper.appendChild(typography.createHeading('2', 'Heading 2'));
     wrapper.appendChild(typography.createHeading('3', 'Heading 3'));
     wrapper.appendChild(createNotificationBox());
-    wrapper.append(forms.createForm('settings-form', defaults.userSettingsForm, defaults.user));
-    wrapper.append(forms.createForm('default-form', defaults.registrationForm));
+    wrapper.append(forms.createForm('settings-form', userSettingsForm, defaults.user));
+    wrapper.append(forms.createForm('default-form', registrationForm));
     wrapper.append(forms.createForm('search-form'));
-    wrapper.append(forms.createForm('local-pong-settings', defaults.localPong));
-    wrapper.append(forms.createForm('remote-pong-settings', defaults.remotePong));
+    wrapper.append(forms.createForm('local-pong-settings', localPong));
+    wrapper.append(forms.createForm('remote-pong-settings', remotePong));
 
     const tbracket = document.createElement('div', {
         is: 'tournament-bracket',

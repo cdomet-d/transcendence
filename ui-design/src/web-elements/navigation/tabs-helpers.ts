@@ -6,7 +6,7 @@ import type { MatchOutcome, TabData, UserData } from '../../types-interfaces';
 /**
  * Creates a tab wrapper element containing an array of tabs.
  *
- * @param {Array<TabData>} list - Array of tab metadata objects to create tabs.
+ * @param {TabData[]} list - Array of tab metadata objects to create tabs.
  * @returns {TabContainer} A {@link TabContainer} div element containing the tabs.
  *
  */

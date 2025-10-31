@@ -3,6 +3,7 @@ import type { MatchOutcome, TabData, UserData } from '../../types-interfaces';
 import { createMatchHistory, createUserMasonery } from './tabs-helpers';
 import { MatchHistory } from '../stats/matches';
 import { UserMasonery } from '../users/user-profile-containers';
+import { NoResults } from '../typography/images';
 
 /**
  * Creates a tab panel extending HTMLDivElement.
@@ -88,7 +89,7 @@ if (!customElements.get('tab-panel')) {
  * @extends {HTMLDivElement}
  */
 export class TabContainer extends HTMLDivElement {
-    #tabList: Array<TabData>;
+    #tabList: TabData[];
     #tabPanels: { [key: string]: TabPanel };
     #tabHeaders: { [key: string]: TabButton };
 
@@ -103,9 +104,9 @@ export class TabContainer extends HTMLDivElement {
      * Sets the list of tab metadata.
      * Throws if duplicate IDs are found.
      *
-     * @param {Array<TabData>} tabList
+     * @param {TabData[]} tabList
      */
-    set tabList(tabList: Array<TabData>) {
+    set tabList(tabList: TabData[]) {
         this.#tabList = tabList;
         if (!this.#isValidTabList(this.#tabList))
             throw new Error(
@@ -158,10 +159,10 @@ export class TabContainer extends HTMLDivElement {
     /**
      * Validates uniqueness of tab IDs.
      *
-     * @param {Array<TabData>} tabList
+     * @param {TabData[]} tabList
      * @returns {boolean} True if no duplicates exist.
      */
-    #isValidTabList(tabList: Array<TabData>): boolean {
+    #isValidTabList(tabList: TabData[]): boolean {
         return tabList.every((item, i, self) => i === self.findIndex((t) => t.id === item.id));
     }
     /**
@@ -205,6 +206,12 @@ export class TabContainer extends HTMLDivElement {
             }
             this.append(el);
             el.classList.add('pad-xs');
+            this.populatePanels(tab, el);
+        });
+    }
+
+    populatePanels(tab: TabData, el: TabPanel) {
+        if (tab.panelContent.length > 0) {
             if (tab.id === 'history')
                 el.appendContent(
                     createMatchHistory(tab.panelContent as MatchOutcome[]) as MatchHistory,
@@ -213,7 +220,9 @@ export class TabContainer extends HTMLDivElement {
                 el.appendContent(
                     createUserMasonery(tab.panelContent as UserData[]) as UserMasonery,
                 );
-        });
+        } else {
+            el.appendContent(document.createElement('div', { is: 'no-results' }) as NoResults);
+        }
     }
 
     /**

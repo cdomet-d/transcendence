@@ -1,10 +1,19 @@
 import type { InputGroup, TextAreaGroup } from '../inputs/fields';
 import type { FormDetails } from '../../types-interfaces';
 
-import { emptyForm } from '../../default-values';
 import { createInputGroup, createTextAreaGroup } from '../inputs/helpers';
 import { createHeading } from '../typography/helpers';
 import { createBtn } from '../navigation/buttons-helpers';
+
+const emptyForm: FormDetails = {
+    action: '',
+    ariaLabel: '',
+    button: { type: 'button', content: '', img: null, ariaLabel: '' },
+    fields: [],
+    heading: '',
+    id: '',
+    method: '',
+};
 
 /**
  * The parent class from which all forms derives.
