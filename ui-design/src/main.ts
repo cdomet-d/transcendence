@@ -4,7 +4,7 @@ import * as formBtns from './web-elements/inputs/helpers.js';
 import * as menu from './web-elements/navigation/menu-helpers';
 import * as tab from './web-elements/navigation/tabs-helpers';
 import * as user from './web-elements/users//profile-helpers';
-import * as defaults from './default-values.js';
+import * as defaults from './web-elements/default-values.js';
 import * as forms from './web-elements/forms/helpers.js';
 
 import {
