@@ -12,41 +12,41 @@ interface startObj {
 }
 
 export function syncClocks(player: Player, playerId: number): Promise<void> {
-    return new Promise((resolve, reject) => {        
-        const TIMEOUT = 3000;
-        let syncClockCount: number = 0;
+	return new Promise((resolve, reject) => {        
+		const TIMEOUT = 3000;
+		let syncClockCount: number = 0;
 
-        const timer = setTimeout(() => {
-            player.socket.removeEventListener('message', handler);
-            reject(new Error("Clock sync timeout"));
-        }, TIMEOUT);
+		const timer = setTimeout(() => {
+			player.socket.removeEventListener('message', handler);
+			reject(new Error("Clock sync timeout"));
+		}, TIMEOUT);
 
-        const handler = (event: MessageEvent) => {
-            const clientTimestamp = Number(event.data);
-            if (Number.isNaN(clientTimestamp))
-                return; //TODO: handle error
+		const handler = (event: MessageEvent) => {
+			const clientTimestamp = Number(event.data);
+			if (Number.isNaN(clientTimestamp))
+				return; //TODO: handle error
 
-            const start: startObj = {
-                clientTimeStamp: clientTimestamp,
-                serverTimeStamp: performance.now(),
-                delay: START_DELAY,
-                ballDir: playerId === 2 ? -1 : 1
-            };
+			const start: startObj = {
+				clientTimeStamp: clientTimestamp,
+				serverTimeStamp: performance.now(),
+				delay: START_DELAY,
+				ballDir: playerId === 2 ? -1 : 1
+			};
 
-            player.socket.send(JSON.stringify(start));
-            syncClockCount += 1;
+			player.socket.send(JSON.stringify(start));
+			syncClockCount += 1;
 
-            if (syncClockCount === MAX_SYNC) {
-                clearTimeout(timer);
-                player.socket.removeEventListener('message', handler);
-                resolve();
-            }
-        };
-        
-        // event for client answer
-        player.socket.addEventListener('message', handler);
+			if (syncClockCount === MAX_SYNC) {
+				clearTimeout(timer);
+				player.socket.removeEventListener('message', handler);
+				resolve();
+			}
+		};
+		
+		// event for client answer
+		player.socket.addEventListener('message', handler);
 
-        // signal to start
-        player.socket.send("1");
-    });
+		// signal to start
+		player.socket.send("1");
+	});
 }

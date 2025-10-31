@@ -22,3 +22,5 @@ function down(pad: coordinates, padSpeed: number) {
     if (pad.y + (padSpeed * TIME_STEP) < (HEIGHT - 54))
         pad.y += (padSpeed * TIME_STEP);
 }
+
+//TODO: check if ball is between paddle and wall
