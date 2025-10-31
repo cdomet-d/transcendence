@@ -135,31 +135,30 @@ function getPosition(game: Game, paddle: coordinates, newX: number, newY: number
 }
 
 function getCollisionSide(game: Game, paddle: coordinates): string {
-    const paddleCenterX = paddle.x + 5;
-    const paddleCenterY = paddle.y + 27;
+    const padCenterX = paddle.x + 5;
+    const padCenterY = paddle.y + 27;
 
-    const dx = game.ball.x - paddleCenterX;
-    const dy = game.ball.y - paddleCenterY;
+    const dx = game.ball.x - padCenterX;
+    const dy = game.ball.y - padCenterY;
 
     const normalizedX = dx / 5;
     const normalizedY = dy / 27;
-    
+
     const absX = Math.abs(normalizedX);
     const absY = Math.abs(normalizedY);
-    
+
     const cornerThreshold = 0.1;
 
     if (Math.abs(absX - absY) < cornerThreshold) {
-        if (dx > 0 && dy < 0) return "topright";
-        if (dx > 0 && dy > 0) return "bottomright";
-        if (dx < 0 && dy < 0) return "topleft";
-        return "bottomleft";
+        if (dx > 0) 
+			return dy < 0 ? "topright" : "bottomright";
+        else
+			return dy < 0 ? "topleft" : "bottomleft";
     }
-    if (absX > absY) {
+    if (absX > absY)
         return dx > 0 ? "right" : "left";
-    } else {
+    else
         return dy > 0 ? "bottom" : "top";
-    }
 }
 
 function incVelocity(dx: number, dy: number): [number, number] {
