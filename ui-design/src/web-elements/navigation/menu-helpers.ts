@@ -4,9 +4,9 @@ import type {
     ProfileView,
     DropdownBg,
     buttonData,
-} from '../types-interfaces';
+} from '../types-interfaces.js';
 
-import { Menu, SocialMenu, DropdownMenu } from './menus';
+import { Menu, SocialMenu, DropdownMenu } from './menus.js';
 
 /**
  * Creates a menu wrapper element with specified buttons, style, and optional size and animation.

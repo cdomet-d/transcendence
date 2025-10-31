@@ -1,5 +1,5 @@
-import type { ImgData } from '../types-interfaces';
-import { createIcon } from './helpers';
+import type { ImgData } from '../types-interfaces.js';
+import { createIcon } from './helpers.js';
 
 /**
  * Custom image element representing an icon.

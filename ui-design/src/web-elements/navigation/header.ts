@@ -1,13 +1,13 @@
-import { createDropdown, createMenu } from './menu-helpers';
-import { createForm } from '../forms/helpers';
-import { createIcon } from '../typography/helpers';
-import { createNotificationBox } from '../users/notifications-helpers';
-import { DropdownMenu, Menu } from './menus';
-import { Icon } from '../typography/images';
-import { iMeta } from '../default-values';
-import { NotifBox } from '../users/notifications';
-import { Searchbar } from '../forms/search';
-import { mainMenu, languageMenu } from './default-menus';
+import { createDropdown, createMenu } from './menu-helpers.js';
+import { createForm } from '../forms/helpers.js';
+import { createIcon } from '../typography/helpers.js';
+import { createNotificationBox } from '../users/notifications-helpers.js';
+import { DropdownMenu, Menu } from './menus.js';
+import { Icon } from '../typography/images.js';
+import { iMeta } from '../default-values.js';
+import { NotifBox } from '../users/notifications.js';
+import { Searchbar } from '../forms/search.js';
+import { mainMenu, languageMenu } from './default-menus.js';
 
 /**
  * Custom element for the main page header.

@@ -1,13 +1,13 @@
-import { createBtn } from './buttons-helpers';
+import { createBtn } from './buttons-helpers.js';
 import type {
     buttonData,
     MenuStyle,
     ProfileView,
     MenuSize,
     DropdownBg,
-} from '../types-interfaces';
-import type { Icon } from '../typography/images';
-import type { CustomButton } from './buttons';
+} from '../types-interfaces.js';
+import type { Icon } from '../typography/images.js';
+import type { CustomButton } from './buttons.js';
 
 /**
  * Custom HTML div element representing a menu with configurable style and elements.
@@ -234,7 +234,8 @@ export class DropdownMenu extends HTMLDivElement {
      */
     get selectedElement(): HTMLLIElement | null {
         for (let i = 0; i < this.#listboxOptions.length; i++) {
-            if (this.#listboxOptions[i].hasAttribute('selected')) return this.#listboxOptions[i];
+			const option = this.#listboxOptions[i]
+            if (option && option.hasAttribute('selected')) return option;
         }
         return null;
     }
@@ -302,7 +303,10 @@ export class DropdownMenu extends HTMLDivElement {
         this.#toggle.ariaExpanded = 'true';
         this.#listbox.removeAttribute('hidden');
         if (this.#currentFocus === -1 && isKeyboard) this.#moveFocus(1);
-        else if (this.#currentFocus !== -1) this.#listboxOptions[this.#currentFocus].focus();
+        else if (this.#currentFocus !== -1) {
+			const focusedOption = this.#listboxOptions[this.#currentFocus];
+			if (focusedOption) focusedOption.focus();
+		}
     }
 
     //TODO: make the toggle focus only on keyboard navigation.
@@ -345,7 +349,8 @@ export class DropdownMenu extends HTMLDivElement {
         this.#currentFocus =
             (this.#currentFocus + delta + this.#listboxOptions.length) %
             this.#listboxOptions.length;
-        this.#listboxOptions[this.#currentFocus].focus();
+		const focusedOption = this.#listboxOptions[this.#currentFocus];
+       if (focusedOption) focusedOption.focus();
     }
 
     /**
@@ -375,7 +380,7 @@ export class DropdownMenu extends HTMLDivElement {
         if (actions[ev.key]) {
             ev.preventDefault();
             if (target.tagName === 'BUTTON' && ev.key == 'Enter') this.#expandOptions(true);
-            else actions[ev.key]();
+            else actions[ev.key]!();
         }
     }
 

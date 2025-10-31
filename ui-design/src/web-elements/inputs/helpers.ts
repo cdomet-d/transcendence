@@ -1,6 +1,6 @@
-import { InputGroup, TextAreaGroup } from './fields';
-import { Checkbox, RadioButton } from './buttons';
-import type { InputFieldsData } from '../types-interfaces';
+import { InputGroup, TextAreaGroup } from './fields.js';
+import { Checkbox, RadioButton } from './buttons.js';
+import type { InputFieldsData } from '../types-interfaces.js';
 
 /**
  * Creates a custom input group container.

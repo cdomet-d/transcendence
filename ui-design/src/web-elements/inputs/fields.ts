@@ -1,4 +1,4 @@
-import type { InputFieldsData } from '../types-interfaces';
+import type { InputFieldsData } from '../types-interfaces.js';
 
 //TODO: feedback on username
 //TODO: err message on required field empty

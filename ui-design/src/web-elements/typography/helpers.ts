@@ -1,6 +1,6 @@
-import { CustomTitle } from './typography';
-import { Icon, Avatar } from './images';
-import * as types from '../types-interfaces';
+import { CustomTitle } from './typography.js';
+import { Icon, Avatar } from './images.js';
+import * as types from '../types-interfaces.js';
 
 /**
  * Creates a heading element with a specified level.

@@ -1,43 +1,46 @@
 {
-  "name": "frontend",
-  "version": "1.0.0",
-  "private": true,
-  "main": "server.js",
-  "type": "module",
-  "description": "",
-  "author": "",
-  "license": "ISC",
-  "scripts": {
-    "dev": "concurrently \"npm run css:watch\" \"nodemon\"",
-    "build": "tsc & postcss ./src/css/tailwind.css -o ./src/css/output.css",
-    "css:watch": "tsc --watch & postcss ./src/css/tailwind.css -o ./src/css/output.css --watch",
-    "format": "npx prettier --write ./src/**/*.ts",
-    "lint": "eslint ."
-  },
-  "keywords": [],
-  "dependencies": {
-    "@fastify/cookie": "^11.0.2",
-    "@fastify/static": "^8.2.0",
-    "@tailwindcss/cli": "^4.1.13",
-    "@tailwindcss/postcss": "^4.1.13",
-    "fastify": "^5.5.0",
-    "postcss-import": "^16.1.1",
-    "tailwindcss": "^4.1.13",
-    "typescript": "^5.9.3"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.37.0",
-    "@tailwindcss/vite": "^4.1.12",
-    "@types/node": "^24.6.0",
-    "@typescript-eslint/eslint-plugin": "^8.46.1",
-    "autoprefixer": "^10.4.21",
-    "concurrently": "^9.2.1",
-    "eslint": "^9.37.0",
-    "globals": "^16.4.0",
-    "nodemon": "^3.1.10",
-    "postcss": "^8.5.6",
-    "postcss-cli": "^11.0.1",
-    "tailwindcss": "^4.1.13",
-    "typescript": "^5.9.3"
-  }
+	"name": "frontend",
+	"version": "1.0.0",
+	"private": true,
+	"main": "server.js",
+	"type": "module",
+	"description": "",
+	"author": "",
+	"license": "ISC",
+	"scripts": {
+		"dev": "concurrently \"npm run watch\" \"nodemon\"",
+		"copy:fonts": "mkdir -p dist/client/assets/ && cp -r src/client/assets/fonts dist/client/assets",
+		"copy:images": "mkdir -p dist/client/assets/ && cp -r src/client/assets/images dist/client/assets",
+		"build:css": "postcss ./src/css/tailwind.css -o ./dist/css/output.css",
+		"build": "tsc && npm run build:css && npm run copy:fonts && npm run copy:images",
+		"watch": "concurrently \"tsc --watch\" \"postcss ./src/css/tailwind.css -o ./dist/css/output.css --watch\"",
+		"format": "npx prettier --write ./src/**/*.ts",
+		"lint": "eslint ."
+	},
+	"keywords": [],
+	"dependencies": {
+		"@fastify/cookie": "^11.0.2",
+		"@fastify/static": "^8.2.0",
+		"@tailwindcss/cli": "^4.1.13",
+		"@tailwindcss/postcss": "^4.1.13",
+		"fastify": "^5.5.0",
+		"postcss-import": "^16.1.1",
+		"tailwindcss": "^4.1.13",
+		"typescript": "^5.9.3"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.37.0",
+		"@tailwindcss/vite": "^4.1.12",
+		"@types/node": "^24.6.0",
+		"@typescript-eslint/eslint-plugin": "^8.46.1",
+		"autoprefixer": "^10.4.21",
+		"concurrently": "^9.2.1",
+		"eslint": "^9.37.0",
+		"globals": "^16.4.0",
+		"nodemon": "^3.1.10",
+		"postcss": "^8.5.6",
+		"postcss-cli": "^11.0.1",
+		"tailwindcss": "^4.1.13",
+		"typescript": "^5.9.3"
+	}
 }

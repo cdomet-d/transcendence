@@ -1,9 +1,9 @@
-import type { InputGroup, TextAreaGroup } from '../inputs/fields';
-import type { FormDetails } from '../types-interfaces';
+import type { InputGroup, TextAreaGroup } from '../inputs/fields.js';
+import type { FormDetails } from '../types-interfaces.js';
 
-import { createInputGroup, createTextAreaGroup } from '../inputs/helpers';
-import { createHeading } from '../typography/helpers';
-import { createBtn } from '../navigation/buttons-helpers';
+import { createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
+import { createHeading } from '../typography/helpers.js';
+import { createBtn } from '../navigation/buttons-helpers.js';
 
 const emptyForm: FormDetails = {
     action: '',

@@ -1,5 +1,5 @@
-import { createUserCardSocial } from './profile-helpers';
-import type { UserData } from '../types-interfaces';
+import { createUserCardSocial } from './profile-helpers.js';
+import type { UserData } from '../types-interfaces.js';
 
 /**
  * Custom element for displaying a masonry grid of user cards.

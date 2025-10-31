@@ -1,7 +1,7 @@
-import { TabContainer } from './tabs';
-import { MatchHistory } from '../stats/matches';
-import { UserMasonery } from '../users/user-profile-containers';
-import type { MatchOutcome, TabData, UserData } from '../types-interfaces';
+import { TabContainer } from './tabs.js';
+import { MatchHistory } from '../stats/matches.js';
+import { UserMasonery } from '../users/user-profile-containers.js';
+import type { MatchOutcome, TabData, UserData } from '../types-interfaces.js';
 
 /**
  * Creates a tab wrapper element containing an array of tabs.

@@ -4,13 +4,13 @@
 
 @font-face {
 	font-family: PixelOperator;
-	src: url(/fonts/PixelOperator.woff) format("woff");
+	src: url(/assets/fonts/PixelOperator.woff) format("woff");
 	/* src: url(../public/fonts/PixelOperator.woff); */
 }
 
 @font-face {
 	font-family: PixelOperatorBold;
-	src: url(/fonts/PixelOperator-Bold.woff) format("woff");
+	src: url(/assets/fonts/PixelOperator-Bold.woff) format("woff");
 	/* src: url(../public/fonts/PixelOperator-Bold.woff); */
 }
 

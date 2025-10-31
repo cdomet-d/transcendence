@@ -1,5 +1,5 @@
-import type { MatchParticipants } from '../types-interfaces';
-import { UserInline } from '../users/profile';
+import type { MatchParticipants } from '../types-interfaces.js';
+import { UserInline } from '../users/profile.js';
 
 /**
  * Custom element representing a single match in the tournament bracket.
@@ -122,7 +122,7 @@ export class TournamentBrackets extends HTMLDivElement {
         for (let i = 1; i <= this.#gamePerRound; i++) {
             if (!this.#matches[this.#currentRound - 1]) this.#matches[this.#currentRound - 1] = [];
             const match = document.createElement('div', { is: 't-match' }) as Match;
-            this.#matches[this.#currentRound - 1][i - 1] = match;
+            this.#matches[this.#currentRound - 1]!.push(match);
             this.append(match);
             match.classList.add(
                 `col-start-${this.#currentRound}`,
@@ -148,9 +148,10 @@ export class TournamentBrackets extends HTMLDivElement {
         let playerIndex = 0;
 
         for (let i = 0; i <= this.#matches.length; i++) {
-            if (this.#matches[i] && matchNb === this.#matches[i].length) {
-                this.#matches[i].forEach((m) => {
-                    m.players = players[playerIndex];
+			const round = this.#matches[i];
+            if (round && matchNb === round.length) {
+                this.#matches[i]!.forEach((m) => {
+                    m.players = players[playerIndex]!;
                     playerIndex++;
                 });
             }

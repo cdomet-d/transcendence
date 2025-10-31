@@ -1,13 +1,13 @@
-import { BaseForm } from './baseform';
-import { createAvatar } from '../typography/helpers';
-import { createDropdown } from '../navigation/menu-helpers';
-import { createForm } from './helpers';
-import { deleteAccount } from './default-forms';
-import { user } from '../default-values';
-import { userColorsMenu, languageMenu } from '../navigation/default-menus';
-import type { Avatar } from '../typography/images';
-import type { DropdownMenu } from '../navigation/menus';
-import type { UserData } from '../types-interfaces';
+import { BaseForm } from './baseform.js';
+import { createAvatar } from '../typography/helpers.js';
+import { createDropdown } from '../navigation/menu-helpers.js';
+import { createForm } from './helpers.js';
+import { deleteAccount } from './default-forms.js';
+import { user } from '../default-values.js';
+import { userColorsMenu, languageMenu } from '../navigation/default-menus.js';
+import type { Avatar } from '../typography/images.js';
+import type { DropdownMenu } from '../navigation/menus.js';
+import type { UserData } from '../types-interfaces.js';
 /**
  * Custom form element for user settings, including avatar, color, language, and account deletion.
  * Extends BaseForm.
@@ -78,8 +78,8 @@ export class UserSettingsForm extends BaseForm {
         super.renderButtons();
         this.append(this.#accountDelete);
         this.#avatar.classList.add('row-span-2');
-        super.contentMap['biography'].classList.add('row-span-3', 'place-self-stretch');
-        super.contentMap['title'].classList.add('row-span-2');
+        super.contentMap['biography']?.classList.add('row-span-3', 'place-self-stretch');
+        super.contentMap['title']?.classList.add('row-span-2');
         this.classList.add('sidebar-left');
     }
 }

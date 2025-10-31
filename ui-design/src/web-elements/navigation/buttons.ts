@@ -1,5 +1,5 @@
-import { createIcon } from '../typography/helpers';
-import type { buttonData } from '../types-interfaces';
+import { createIcon } from '../typography/helpers.js';
+import type { buttonData } from '../types-interfaces.js';
 
 //TODO: Migrate to inheritance ?
 

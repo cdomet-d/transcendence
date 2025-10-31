@@ -1,4 +1,4 @@
-import { Username, Winstreak, Biography } from './user-atoms';
+import { Username, Winstreak, Biography } from './user-atoms.js';
 
 /**
  * Creates a custom `Username` element displaying specified name and status.

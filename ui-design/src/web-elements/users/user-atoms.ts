@@ -1,6 +1,6 @@
-import type { FontWeight, FontSize, FontColor, ImgData } from '../types-interfaces';
-import { createIcon } from '../typography/helpers';
-import type { Icon } from '../typography/images';
+import type { FontWeight, FontSize, FontColor, ImgData } from '../types-interfaces.js';
+import { createIcon } from '../typography/helpers.js';
+import type { Icon } from '../typography/images.js';
 
 /**
  * Custom element for displaying a username with status.
