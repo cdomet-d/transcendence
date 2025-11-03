@@ -52,9 +52,8 @@ function moveBall(game: Game, simulatedTime: number, end: number): number {
 
 function endGame(player1: Player, player2: Player, game: Game) {
 	sendToPlayers(game, player1, player2);
-	player1.socket.close();
-	if (!game.local)
-		player2.socket.close();
+	game.fillGameInfos();
+	
 	//TODO: send result to gameManager via nats
 }
 

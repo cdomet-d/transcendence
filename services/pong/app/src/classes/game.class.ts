@@ -13,9 +13,9 @@ export interface user {
 
 export interface gameInfo {
 	_gameID: number,
-	_score: Array<number>,
+	_score: [number, number],
 	_local: boolean,
-	_users: Array<user>,
+	_users: [user, user],
 	_winner: number,
 	_loser: number
 }
@@ -101,18 +101,6 @@ export class Game {
 	}
 
 	/*                              SETTERS                                  */
-	set score(score: Array< number >) {
-		this.#_gameInfo._score = score;
-	}
-
-	set winner(winner: number) {
-		this.#_gameInfo._winner = winner;
-	}
-
-	set loser(loser: number) {
-		this.#_gameInfo._loser = loser;
-	}
-
 	set reqHistory(reqTab: reqTab) {
 		this.#_reqHistory = reqTab;
 	}
@@ -158,5 +146,34 @@ export class Game {
 
 	public cleanTimeoutIDs() {
 		this.#_timeoutIDs.forEach((ID) => clearTimeout(ID));
+	}
+
+	public fillGameInfos() {
+		const user1: number = this.#_gameInfo._users[0]._userID;
+		const user2: number = this.#_gameInfo._users[1]._userID;
+		let score1: number = 0;
+		let score2: number = 0;
+		if (this.#_players[0]) {
+			if (this.#_players[0].userID === user1)
+				score1 = this.#_players[0].score;
+			else
+				score2 = this.#_players[0].score;
+		}
+		if (this.#_players[1]) {
+			if (this.#_players[1].userID === user1)
+				score1 = this.#_players[1].score;
+			else
+				score2 = this.#_players[1].score;
+		}
+		this.#_gameInfo._score = [score1, score2];
+		if (score1 > score2) {
+			this.#_gameInfo._winner = user1;
+			this.#_gameInfo._loser = user2;
+		}
+		else {
+			this.#_gameInfo._winner = user2;
+			this.#_gameInfo._loser = user1;
+		}
+		console.log("GAME INFO", JSON.stringify(this.#_gameInfo));
 	}
 }
