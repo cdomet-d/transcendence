@@ -1,14 +1,13 @@
-import dotenv from 'dotenv';
 import { connect, StringCodec, type NatsConnection } from 'nats';
-
-dotenv.config();
 
 let nc: NatsConnection;
 
 export async function natsConnect(): Promise<NatsConnection> {
 	if (!nc) {
-		let token = process.env.NATS_SERVER_TOKEN;
-		nc = await connect({ servers: "nats://nats-server:4222", token: token ?? "" });
+		let token: string | undefined = process.env.NATS_SERVER_TOKEN;
+		if (!token)
+			throw new Error("NATS token undefined");
+		nc = await connect({ servers: "nats://nats-server:4222", token: token });
 	}
 	return nc;
 };
