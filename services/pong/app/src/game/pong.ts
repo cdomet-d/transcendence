@@ -18,13 +18,17 @@ export async function setUpGame(game: Game) {
 	setMessEvent(player2, 2, game);
 
 	// sync client & server clocks
-	try {
-		await syncClocks(game, player1, 1);
-		if (!game.local)
-			await syncClocks(game, player2, 2);
-	} catch (err) {
-		return; //TODO: handle error
-	}
+	// try {
+	// 	await syncClocks(game, player1, 1);
+	// 	if (!game.local)
+	// 		await syncClocks(game, player2, 2);
+	// } catch (err) {
+	// 	return; //TODO: handle error
+	// }
+
+	player1.socket.send(1);
+	if (!game.local)
+		player2.socket.send(-1);
 
 	// start game
 	await new Promise(res => game.addTimoutID(setTimeout(res, START_DELAY)));
