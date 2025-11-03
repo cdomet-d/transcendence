@@ -1,6 +1,7 @@
 import { Player } from './player.class.js';
 import type { reqObj } from '../game/mess.validation.js';
 import type { WebSocket } from '@fastify/websocket';
+import { NatsConnection } from 'nats';
 
 export const HEIGHT = 270;
 export const WIDTH = 480;
@@ -38,6 +39,7 @@ type reqTab = Array< playerReq >;
 export class Game {
 	/*                             PROPERTIES                                */
 	#_gameInfo: gameInfo;
+	#_nc: NatsConnection;
 	#_players: playerTab; //TODO: replace tab with 2 player objects ?
 	#_ball: ballObj;
 	#_ballDir: number;
@@ -47,8 +49,9 @@ export class Game {
 	#_timeoutIDs: Array< NodeJS.Timeout >;
 
 	/*                            CONSTRUCTORS                               */
-	constructor(gameInfo: gameInfo) {
+	constructor(gameInfo: gameInfo, nc: NatsConnection) {
 		this.#_gameInfo = gameInfo;
+		this.#_nc = nc;
 		this.#_players = new Array();
 		this.#_ball = {
 			x: WIDTH / 2, 
@@ -64,6 +67,14 @@ export class Game {
 	}
 
 	/*                              GETTERS                                  */
+	get nc(): NatsConnection {
+		return this.#_nc;
+	}
+
+	get infos(): gameInfo {
+		return this.#_gameInfo;
+	}
+
 	get gameID(): number {
 		return this.#_gameInfo._gameID;
 	}
@@ -124,7 +135,7 @@ export class Game {
 
 	public deletePlayers() {
 		this.#_players.forEach((player: Player) => {
-			if (player.socket.readyState === 1)
+			if (player.socket.readyState === 1) //TODO: ou 0 ?
 				player.socket.close();
 		})
 		this.#_players.splice(0, this.#_players.length);
