@@ -19,16 +19,16 @@ export async function setUpGame(game: Game) {
 
 	// sync client & server clocks
 	try {
-		await syncClocks(player1, 1);
+		await syncClocks(game, player1, 1);
 		if (!game.local)
-			await syncClocks(player2, 2);
+			await syncClocks(game, player2, 2);
 	} catch (err) {
 		return; //TODO: handle error
 	}
 
 	// start game
-	await new Promise(res => setTimeout(res, START_DELAY));
-	setTimeout(gameLoop, SERVER_TICK, game, player1, player2);
+	await new Promise(res => game.addTimoutID(setTimeout(res, START_DELAY)));
+	game.addTimoutID(setTimeout(gameLoop, SERVER_TICK, game, player1, player2));
 }
 
 function setMessEvent(player: Player, playerNbr: number, game: Game) {

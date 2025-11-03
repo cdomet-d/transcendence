@@ -44,7 +44,7 @@ export class Game {
 	#_paddleSpeed: number;
 	#_reqHistory: reqTab;
 	#_lastTick: number;
-	#_timeoutID: NodeJS.Timeout | null;
+	#_timeoutIDs: Array< NodeJS.Timeout >;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo) {
@@ -60,7 +60,7 @@ export class Game {
 		this.#_paddleSpeed = 0.2;
 		this.#_reqHistory = new Array();
 		this.#_lastTick = 0;
-		this.#_timeoutID = null;
+		this.#_timeoutIDs = new Array();
 	}
 
 	/*                              GETTERS                                  */
@@ -100,10 +100,6 @@ export class Game {
 		return this.#_ballDir;
 	}
 
-	get timeoutID(): NodeJS.Timeout | null {
-		return this.#_timeoutID;
-	}
-
 	/*                              SETTERS                                  */
 	set score(score: Array< number >) {
 		this.#_gameInfo._score = score;
@@ -127,10 +123,6 @@ export class Game {
 
 	set ballDir(direction: number) {
 		this.#_ballDir = direction;
-	}
-
-	set timeoutID(id: NodeJS.Timeout) {
-		this.#_timeoutID = id;
 	}
 
 	/*                              METHODS                                  */
@@ -158,5 +150,13 @@ export class Game {
 
 	public deleteReq(deleteCount: number) {
 		this.#_reqHistory.splice(0, deleteCount);
+	}
+
+	public addTimoutID(ID: NodeJS.Timeout) {
+		this.#_timeoutIDs.push(ID);
+	}
+
+	public cleanTimeoutIDs() {
+		this.#_timeoutIDs.forEach((ID) => clearTimeout(ID));
 	}
 }

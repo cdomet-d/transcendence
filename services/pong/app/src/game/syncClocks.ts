@@ -1,3 +1,4 @@
+import { Game } from '../classes/game.class.js';
 import type { Player } from '../classes/player.class.js';
 import { MessageEvent } from 'ws';
 
@@ -11,7 +12,7 @@ interface startObj {
 	ballDir: number,
 }
 
-export function syncClocks(player: Player, playerId: number): Promise<void> {
+export function syncClocks(game: Game, player: Player, playerId: number): Promise<void> {
 	return new Promise((resolve, reject) => {        
 		const TIMEOUT = 3000;
 		let syncClockCount: number = 0;
@@ -20,6 +21,7 @@ export function syncClocks(player: Player, playerId: number): Promise<void> {
 			player.socket.removeEventListener('message', handler);
 			reject(new Error("Clock sync timeout"));
 		}, TIMEOUT);
+		game.addTimoutID(timer);
 
 		const handler = (event: MessageEvent) => {
 			const clientTimestamp = Number(event.data);

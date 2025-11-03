@@ -44,11 +44,11 @@ function sideWallCollision(game: Game, player1: Player, player2: Player, newX: n
 		game.ball.y = HEIGHT / 2;
 		game.ball.dx = 0;
 		game.ball.dy = 0;
-		setTimeout(() => { //TODO: get timeoutID to cancel it
+		game.addTimoutID(setTimeout(() => {
 			game.ball.dx = 0.3 * game.ballDir;
 			game.ball.dy = 0.025;
 			game.ballDir *= -1;
-		}, 1000);
+		}, 1000));
 		return true;
 	}
 	return false;
