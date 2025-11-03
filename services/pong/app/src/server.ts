@@ -10,6 +10,7 @@ import { wsRoute } from './ws.route.js';
 import { options } from './serv.conf.js'
 import { initNatsConnexion, natsSubscribtion } from './nats/subscriber.js';
 import { GameRegistry } from './classes/gameRegistry.class.js';
+import { NatsConnection } from 'nats';
 
 (async () => {
 	try {
@@ -27,7 +28,7 @@ export async function init(): Promise<FastifyInstance> {
 	serv.decorate("gameRegistry", new GameRegistry());
 
 	//nats
-	const nc = await initNatsConnexion(); //TODO: use await ?
+	const nc: NatsConnection = await initNatsConnexion(); //TODO: use await ?
 	serv.decorate("nc", nc);
 	natsSubscribtion(serv);
 
