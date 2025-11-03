@@ -34,6 +34,6 @@ export function renderHeader(): string {
 }
 
 export function clearHeader() {
-  const headerDiv = document.querySelector<HTMLDivElement>('#header')!;
-  headerDiv.innerHTML = '';
+	const headerDiv = document.querySelector<HTMLDivElement>('#header')!;
+	headerDiv.innerHTML = '';
 }

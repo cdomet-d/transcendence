@@ -1,11 +1,11 @@
-import { Ajv }  from 'ajv';
+import { Ajv } from 'ajv';
 
 export interface keysObj {
-    _w: boolean,
-    _s: boolean,
-    _ArrowUp: boolean,
-    _ArrowDown: boolean,
-    [key: string]: boolean,
+	_w: boolean,
+	_s: boolean,
+	_ArrowUp: boolean,
+	_ArrowDown: boolean,
+	[key: string]: boolean,
 }
 
 export interface reqObj {
@@ -15,17 +15,17 @@ export interface reqObj {
 }
 
 export interface idsObj {
-    gameID: number,
-    userID: number
+	gameID: number,
+	userID: number
 }
 
 const idsObjSchema = {
-    type: 'object',
-    required: ['gameID', 'userID'],
-    properties: {
-        gameID: { type: 'number' },
-        userID: { type: 'number' },
-    }
+	type: 'object',
+	required: ['gameID', 'userID'],
+	properties: {
+		gameID: { type: 'number' },
+		userID: { type: 'number' },
+	}
 }
 
 const reqObjSchema = {

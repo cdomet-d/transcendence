@@ -11,7 +11,7 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 	const ids: idsObj = await waitForMessage(socket);
 
 	const game: Game | undefined = this.gameRegistry.findGame(ids.gameID);
-	if (!game) 
+	if (!game)
 		throw new Error("game " + ids.gameID + " not found"); //TODO: send nats message ?
 	if (game.players.length === 2)
 		throw new Error("not allowed");
@@ -30,7 +30,7 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 	});
 }
 
-function waitForMessage(socket: WebSocket): Promise< idsObj > {
+export function waitForMessage(socket: WebSocket): Promise<idsObj> {
 	return new Promise((resolve, reject) => {
 		socket.once('message', (payload: string) => {
 			try {

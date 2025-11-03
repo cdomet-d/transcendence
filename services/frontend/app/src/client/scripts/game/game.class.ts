@@ -7,6 +7,10 @@ export interface keysObj {
 	_s: boolean,
 	_ArrowUp: boolean,
 	_ArrowDown: boolean,
+	_w: boolean,
+	_s: boolean,
+	_ArrowUp: boolean,
+	_ArrowDown: boolean,
 }
 
 export interface reqObj {
@@ -126,6 +130,10 @@ export class Game {
 		return this.#_clockOffset;
 	}
 
+	/*                              SETTERS                                  */
+	set leftPad(newPos: number) {
+		this.#_leftPaddle.y = newPos;
+	}
 	/*                              SETTERS                                  */
 	set leftPad(newPos: number) {
 		this.#_leftPaddle.y = newPos;

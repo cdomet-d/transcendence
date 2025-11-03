@@ -38,6 +38,7 @@ type reqTab = Array< playerReq >;
 
 export class Game {
 	/*                             PROPERTIES                                */
+	/*                             PROPERTIES                                */
 	#_gameInfo: gameInfo;
 	#_nc: NatsConnection;
 	#_players: playerTab; //TODO: replace tab with 2 player objects ?

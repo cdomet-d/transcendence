@@ -4,7 +4,7 @@ import { Game } from './game.class.js';
 import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from "./game.events.js";
 // import { syncClocks } from './syncClocks.js';
 
-export function wsRequest(game: Game) {
+export function wsRequest(game: Game, gameRequest: string) {
 	const ws = new WebSocket('wss://localhost:8443/api/game/match'); //?gameID=1');
 
 	ws.onerror = (err) => {
@@ -21,7 +21,7 @@ export function wsRequest(game: Game) {
 			if (signal === 1 || signal === -1)
 				setUpGame(game, ws, signal);
 		}, { once: true });
-		ws.send(JSON.stringify({gameID: 1, userID: 1})); //TODO: only for testing
+		ws.send(JSON.stringify(gameRequest)); //TODO: only for testing
 	}
 
 	ws.onclose = () => {

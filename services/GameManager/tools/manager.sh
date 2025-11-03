@@ -4,5 +4,4 @@
 
 npm install
 
-npm run dev
-#npm start
+npm run dev | tee .logs
