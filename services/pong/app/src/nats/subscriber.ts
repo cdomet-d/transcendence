@@ -19,13 +19,13 @@ export async function natsSubscribtion(serv: FastifyInstance) {
 	// (async () => {
 	// 	for await (const msg of sub) {
 	// 		const _gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
-	// 		serv.gameRegistry.addGame(new Game(_gameInfo));
+	// 		serv.gameRegistry.addGame(new Game(_gameInfo, serv.nc));
 	// 		console.log(`Received message: ${JSON.stringify(_gameInfo)}`);
 	// 		//TODO: send back a message saying the object was received
 	// 	}
 	// })();
 
-	serv.gameRegistry.addGame(new Game(gameobj)); //TODO: for testing
+	serv.gameRegistry.addGame(new Game(gameobj, serv.nc)); //TODO: for testing
 };
 
 import type { user } from '../classes/game.class.js';
