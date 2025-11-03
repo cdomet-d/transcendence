@@ -2,7 +2,7 @@ import { renderGame } from "./game.render.utils.js";
 import { Game } from "./game.class.js";
 
 // adding parameter to pong() and wsRequest(): gameRequest '{"userID", "gameID"}'
-function pong(gameRequest: string) {
+export function pong(gameRequest: string) {
 
 	console.log("game request obj: ", gameRequest);
 
