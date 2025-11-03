@@ -1,4 +1,4 @@
-import { Game, HEIGHT, type ballObj } from "./game.class.js";
+import { Game, HEIGHT, WIDTH, type ballObj } from "./game.class.js";
 import type { coordinates, repObj } from "./mess.validation.js";
 
 const BALL_RADIUS: number = 10;
@@ -19,7 +19,8 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 }
 
 function updateBallPos(game: Game, newX: number, newY: number) {
-	//TODO: check side walls ?
+	if (sideWallCollision(game, newX))
+		return false;
 	newY = upperAndBottomWallCollision(game, newY);
 	if (leftPadCollision(game, game.leftPad, newX, newY))
 		return false;
@@ -28,6 +29,17 @@ function updateBallPos(game: Game, newX: number, newY: number) {
 
 	game.ball.x = newX;
 	game.ball.y = newY;
+}
+
+function sideWallCollision(game: Game, newX: number): boolean {
+	if (newX - BALL_RADIUS >= WIDTH + 50 || newX + BALL_RADIUS <= -50) {
+		game.ball.x = WIDTH / 2;
+		game.ball.y = HEIGHT / 2;
+		game.ball.dx = 0;
+		game.ball.dy = 0;
+		return true;
+	}
+	return false;
 }
 
 function upperAndBottomWallCollision(game: Game, newY: number): number {
