@@ -2,6 +2,7 @@ import { Game } from "../classes/game.class.js";
 import { updateBallPos } from './ball.js';
 import { updatePaddlePos } from './paddle.js';
 import { Player } from "../classes/player.class.js";
+import { StringCodec } from 'nats';
 
 const SERVER_TICK: number = 1000 / 20; // 20UPS
 const TIME_STEP: number = 1000 / 60; // 60FPS
@@ -53,7 +54,11 @@ function moveBall(game: Game, simulatedTime: number, end: number): number {
 function endGame(player1: Player, player2: Player, game: Game) {
 	sendToPlayers(game, player1, player2);
 	game.fillGameInfos();
-	
+	const sc = StringCodec();
+	game.nc.publish("game.end", sc.encode(JSON.stringify(game.infos)));
+	player1.socket.close();
+	if (!game.local)
+		player2.socket.close();
 	//TODO: send result to gameManager via nats
 }
 
