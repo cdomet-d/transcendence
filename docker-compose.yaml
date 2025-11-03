@@ -140,19 +140,19 @@ services:
   #     - ssl-cert.pem
   #   volumes:
   #     - ./services/monitoring/app:/usr/app
-  # nats-server:
-  #   build:
-  #     context: ./services/NATS
-  #     dockerfile: Dockerfile
-  #   container_name: nats-server
-  #   image: nats:0.0.1
-  #   environment:
-  #     - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-  #   networks:
-  #     - transcendence
-  #   ports:
-  #     - "4222:4222"
-  #   restart: unless-stopped
+  nats-server:
+    build:
+      context: ./services/NATS
+      dockerfile: Dockerfile
+    container_name: nats-server
+    image: nats:0.0.1
+    environment:
+      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+    networks:
+      - transcendence
+    ports:
+      - "4222:4222"
+    restart: unless-stopped
   nginx:
     build:
       context: ./services/nginx/
