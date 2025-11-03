@@ -50,10 +50,6 @@ export class Player {
 	get socket(): WebSocket {
 		return this.#_socket;
 	}
-	/*                              GETTERS                                  */
-	get socket(): WebSocket {
-		return this.#_socket;
-	}
 
 	get paddle(): coordinates {
 		return this.#_paddle;
