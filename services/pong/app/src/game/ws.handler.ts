@@ -28,7 +28,7 @@ async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyR
 	});
 }
 
-export function waitForMessage(socket: WebSocket): Promise< idsObj > {
+function waitForMessage(socket: WebSocket): Promise< idsObj > {
 	return new Promise((resolve, reject) => {
 		socket.once('message', (payload: string) => {
 			try {
