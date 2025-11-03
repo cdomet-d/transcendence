@@ -32,7 +32,7 @@ const servRoutes: FastifyPluginCallback = function (serv, options, done) {
 	serv.get('/user/friends', handler);
 	serv.get('/users', handler);
 	serv.get('/game/leaderboard', handler);
-	// serv.get('/game/match', handler);
+	serv.get('/game/match', handler);
 	serv.get('/game/lobby', handler);
 	done();
 }
