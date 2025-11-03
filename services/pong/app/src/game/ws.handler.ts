@@ -1,6 +1,5 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
-import { Player } from "../classes/player.class.js";
 import type { Game } from '../classes/game.class.js';
 import { setUpGame } from './pong.js';
 import { validIds, type idsObj } from './mess.validation.js';
@@ -17,7 +16,7 @@ async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyR
 	if (game.players.length === 2)
 		throw new Error("not allowed");
 
-	getPlayersInGame(game, ids.userID, socket);
+	getPlayerInGame(game, ids.userID, socket);
 	
 	socket.on('close', () => {
 		if (game.timeoutID)
@@ -44,7 +43,7 @@ export function waitForMessage(socket: WebSocket): Promise< idsObj > {
 	});
 }
 
-function getPlayersInGame(game: Game, userID: number, socket: WebSocket) {
+function getPlayerInGame(game: Game, userID: number, socket: WebSocket) {
 	game.addPlayer(userID, socket, "left");
 	if (game.local)
 		game.addPlayer(game.randUserID, socket, "right");
