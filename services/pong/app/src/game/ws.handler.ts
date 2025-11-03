@@ -5,7 +5,7 @@ import { setUpGame } from './pong.js';
 import { validIds, type idsObj } from './mess.validation.js';
 import { natsSubscribtion } from '../nats/subscriber.js';//only for testing
 
-async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): Promise< void > {
+export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): Promise< void > {
 	this.log.info('WebSocket connection established');
 
 	const ids: idsObj = await waitForMessage(socket);
@@ -18,6 +18,8 @@ async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyR
 
 	getPlayerInGame(game, ids.userID, socket);
 	
+	// socket.onerror = (event) => {}; //TODO
+
 	socket.on('close', () => {
 		if (game) {
 			game.cleanTimeoutIDs();
@@ -50,5 +52,3 @@ function getPlayerInGame(game: Game, userID: number, socket: WebSocket) {
 	if (game.players.length === 2)
 		setUpGame(game);
 }
-
-export { wsHandler };

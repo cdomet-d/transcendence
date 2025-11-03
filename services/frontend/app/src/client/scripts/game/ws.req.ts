@@ -1,8 +1,8 @@
 import { startGame } from './game.loop.js';
 import { Game } from './game.class.js';
-import type { startObj } from './mess.validation.js';
+// import type { startObj } from './mess.validation.js';
 import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from "./game.events.js";
-import { syncClocks } from './syncClocks.js';
+// import { syncClocks } from './syncClocks.js';
 
 export function wsRequest(game: Game) {
 	const ws = new WebSocket('wss://localhost:8443/api/game/match'); //?gameID=1');
@@ -29,7 +29,7 @@ export function wsRequest(game: Game) {
 	}
 }
 
-export async function setUpGame(game: Game, ws: WebSocket, ballDir: number) {
+async function setUpGame(game: Game, ws: WebSocket, ballDir: number) {
 	// addMessEvent(game, ws);
 
 	// const result: [number, number, startObj] | null = await syncClocks(ws)
