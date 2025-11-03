@@ -1,5 +1,5 @@
 import { connect, StringCodec, type NatsConnection } from 'nats';
-import { Game, type gameInfo } from './classes/game.class.js';
+import { Game, type gameInfo } from '../classes/game.class.js';
 import type { FastifyInstance } from 'fastify';
 
 export async function initNatsConnexion(): Promise<NatsConnection> {
@@ -28,7 +28,7 @@ export async function natsSubscribtion(serv: FastifyInstance) {
 	serv.gameRegistry.addGame(new Game(gameobj)); //TODO: for testing
 };
 
-import type { user } from './classes/game.class.js';
+import type { user } from '../classes/game.class.js';
 const player1: user = {
 	_username: "cha",
 	_userID: 1
@@ -41,7 +41,7 @@ const player2: user = {
 
 const gameobj: gameInfo = {
 	_gameID: 1,
-	_score: [],
+	_score: [0, 0],
 	_local: true,
 	_users: [player1, player2],
 	_winner: 0,

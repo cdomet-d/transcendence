@@ -8,7 +8,7 @@ import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 // Local modules
 import { wsRoute } from './ws.route.js';
 import { options } from './serv.conf.js'
-import { initNatsConnexion, natsSubscribtion } from './subscriber.js';
+import { initNatsConnexion, natsSubscribtion } from './nats/subscriber.js';
 import { GameRegistry } from './classes/gameRegistry.class.js';
 
 (async () => {
