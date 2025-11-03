@@ -75,6 +75,10 @@ export class Player {
 		return this.#_score;
 	}
 
+	get userID(): number {
+		return this.#_userID;
+	}
+
 	/*                              METHODS                                  */
 	public sendReply(ball: ballObj, opponent: Player) {
 		// paddles and ball
