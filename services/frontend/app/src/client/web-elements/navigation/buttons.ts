@@ -14,6 +14,8 @@ import type { buttonData } from '../types-interfaces.js';
  */
 export class CustomButton extends HTMLButtonElement {
     #btn: buttonData;
+	#mouseNavHandler: (event: MouseEvent) => void; 
+	#keyboardNavHandler: (event: KeyboardEvent) => void; 
     #animated: boolean;
 
     static get observedAttributes(): string[] {
@@ -24,6 +26,7 @@ export class CustomButton extends HTMLButtonElement {
         super();
         this.#btn = { type: 'button', content: null, ariaLabel: '', img: null };
         this.#animated = false;
+		this.#keyboardNavHandler = 
     }
 
     /**
@@ -41,6 +44,10 @@ export class CustomButton extends HTMLButtonElement {
     set animation(b: boolean) {
         this.#animated = b;
     }
+
+	clickNavigateTo() {
+	
+	}
 
     /**
      * Handles attribute changes for observed attributes.
