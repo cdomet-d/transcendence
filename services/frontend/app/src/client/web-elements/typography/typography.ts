@@ -13,12 +13,13 @@ export class CustomTitle extends HTMLElement {
 
     render(level: string) {
         const validLevel = ['1', '2', '3'].includes(level) ? level : '1';
+        const validSize = ['0', '1', '2', '3'].includes(level) ? level : '1';
         this.innerHTML = `<h${validLevel}
 		class="f-yellow
 		text-center
 		title-shadow
 		whitepre
-		t${validLevel}
+		t${validSize}
 		leading-[130%]">${this.textContent}</h${validLevel}>`;
     }
 }

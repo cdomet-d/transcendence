@@ -1,28 +1,29 @@
 type NavButton = {
-	href: string;
-	label: string;
+    href: string;
+    label: string;
 };
 
 interface Element {
-	title: string;
-	nextButtons?: NavButton[];
-	backHref?: string;
-	showBack?: boolean;
-	homeHref?: string;
+    title: string;
+    nextButtons?: NavButton[];
+    backHref?: string;
+    showBack?: boolean;
+    homeHref?: string;
 }
 
-export function renderPageTemplate({ 
-title,
-nextButtons = [],
-backHref,
-showBack = true,
-homeHref = "/"
-}: Element) : string
-{
-	const htmlPage = `
+export function renderPageTemplate({
+    title,
+    nextButtons = [],
+    backHref,
+    showBack = true,
+    homeHref = '/',
+}: Element): string {
+    const htmlPage = `
 		<div class="pt-12 text-center text-2xl font-bold">${title}</div>
 		<div class="flex justify-center mt-32 gap-8">
-			${nextButtons.map(btn => `
+			${nextButtons
+                .map(
+                    (btn) => `
 				<a
 					href="${btn.href}"
 					data-link
@@ -30,10 +31,14 @@ homeHref = "/"
 				>
 					${btn.label}
 				</a>
-			`).join('')}
+			`
+                )
+                .join('')}
 		</div>
 		<div class="fixed inset-x-0 bottom-0 flex justify-center gap-4 mb-2">
-			${showBack && backHref ? `
+			${
+                showBack && backHref
+                    ? `
 				<a
 					href="${backHref}"
 					data-link
@@ -42,7 +47,9 @@ homeHref = "/"
 				>
 					Back
 				</a>
-			` : ''}
+			`
+                    : ''
+            }
 			<a
 				href="${homeHref}"
 				data-link
@@ -53,5 +60,5 @@ homeHref = "/"
 			</a>
 		</div>
 	`;
-	return htmlPage;
+    return htmlPage;
 }

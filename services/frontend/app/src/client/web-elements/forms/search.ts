@@ -102,7 +102,7 @@ export class Searchbar extends BaseForm {
      */
     override render() {
         const img = this.createSearchIcon() as HTMLImageElement;
-		if (super.details.fields[0]) this.#searchInput = createInputGroup(super.details.fields[0]);
+        if (super.details.fields[0]) this.#searchInput = createInputGroup(super.details.fields[0]);
 
         this.#searchInput.append(img);
         this.append(this.#searchInput);

@@ -56,7 +56,7 @@ export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
  * - `f-s`, `f-m`, `f-l`: Font sizes small → large
  * - `f-regular`: Regular text size
  */
-export type FontSize = 't1' | 't2' | 't3' | 'f-s' | 'f-m' | 'f-l' | 'f-regular';
+export type FontSize = 't0' | 't1' | 't2' | 't3' | 'f-s' | 'f-m' | 'f-l' | 'f-regular';
 
 /**
  * Font color style names used in UI themes.

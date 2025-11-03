@@ -31,7 +31,7 @@ function rerenderPage() {
 	if (!langDropdown || !page)
 		return; //TODO: handle error
 
-	page.innerHTML = callback();
+	callback;
 	langDropdown.innerHTML = renderLanguageDropdownButton();
 	addLanguageEvents();
 }

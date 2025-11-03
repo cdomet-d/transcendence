@@ -1,8 +1,8 @@
 import { Router } from './spaRouter/router.class.js';
 import { routes } from './spaRouter/routes.js';
-import { pong } from './game/pong.js';
-import { addLanguageEvents } from './language/languageEvents.js';
-import { initLanguageCSR } from './language/translation.js';
+// import { pong } from './game/pong.js';
+// import { addLanguageEvents } from './language/languageEvents.js';
+// import { initLanguageCSR } from './language/translation.js';
 
 export const router = new Router(routes);
 
@@ -20,6 +20,7 @@ document.addEventListener('click', (event) => {
 		if (path !== null) {
 	        window.history.pushState({}, '', path);
 	        const cleanPath = sanitisePath(path);
+			console.log(path);
 			router._loadRoute(cleanPath);
 		}
     }
@@ -30,8 +31,10 @@ window.addEventListener('popstate', () => {
     router._loadRoute(cleanPath);
 });
 
-if (router._getCurrentURL() === '/game/match')
-    pong(); //TODO: find a way to render it server side
+router._loadRoute(router._getCurrentURL())
 
-initLanguageCSR();
-addLanguageEvents();
+// if (router._getCurrentURL() === '/game/match')
+//     pong(); //TODO: find a way to render it server side
+
+// initLanguageCSR();
+// addLanguageEvents();

@@ -1,10 +1,9 @@
-import { render404 } from '../../pages/html.pages.js';
-import { clearHeader, renderHeader } from '../../pages/header.js'
+import { renderNotFound } from '../../pages/render-pages.js';
 import { pong } from '../game/pong.js';
 
 interface routeInterface {
     path: string;
-    callback: () => string;
+    callback: () => void;
 }
 
 export class Router {
@@ -25,36 +24,21 @@ export class Router {
         return this._routes.find(route => route.path === path);
     }
 
-    _getCallback() : routeInterface["callback"] {
+    _getCallback() {
         const route: routeInterface | undefined = this._matchUrlToRoute(this._getCurrentURL());
         if (!route)
-            return render404;
-        return route.callback;
+            renderNotFound;
+    	else 
+			route.callback;
     }
 
     _loadRoute(path: string) {
-        const page = document.getElementById('page');
-        const header = document.getElementById('header');
-
-        if (!page || !header) return; //TODO: handle error
-
         const matchedRoute = this._matchUrlToRoute(path);
         if (!matchedRoute) {
-            // throw new Error('Route not found');
-            page.innerHTML = render404();
+				renderNotFound;
             return;
         }
-
-        // TODO try to load header once and change display instead of function calling everytime
-        if (matchedRoute.path === '/') {
-            // header.style.display = "hidden";
-            clearHeader();
-        } else {
-            // header.style.display = "block";
-            document.getElementById('header')!.innerHTML = renderHeader();
-        }
-
-        page.innerHTML = matchedRoute.callback();
+        matchedRoute.callback();
         
         if (matchedRoute.path === '/game/match')
             pong();

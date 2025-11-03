@@ -7,7 +7,7 @@ interface routeInterface {
 
 export const routes: routeInterface[] = [
   { path: '/', callback: page.renderHome },
-  { path: '/404', callback: page.render404 },
+  { path: '/404', callback: page.renderNotFound },
   { path: '/central', callback: page.renderCentral },
   { path: '/account', callback: page.renderProfile },
   { path: '/game/leaderboard', callback: page.renderLeaderboard },

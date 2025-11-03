@@ -1,4 +1,4 @@
-import { render404 } from '../../pages/html.pages.js';
+import { renderNotFound } from '../../pages/html.pages.js';
 import { clearHeader, renderHeader } from '../../pages/header.js'
 import { pong } from '../game/pong.js';
 
@@ -28,7 +28,7 @@ export class Router {
     _getCallback() : routeInterface["callback"] {
         const route: routeInterface | undefined = this._matchUrlToRoute(this._getCurrentURL());
         if (!route)
-            return render404;
+            return renderNotFound;
         return route.callback;
     }
 
@@ -41,7 +41,7 @@ export class Router {
         const matchedRoute = this._matchUrlToRoute(path);
         if (!matchedRoute) {
             // throw new Error('Route not found');
-            page.innerHTML = render404();
+            page.innerHTML = renderNotFound();
             return;
         }
 

@@ -88,7 +88,7 @@ export class CustomButton extends HTMLButtonElement {
             this.append(letterSpan);
             index += 0.1;
         }
-        this.classList.add('t3', 'button-shadow');
+        this.classList.add('t1', 'button-shadow');
     }
 
     /** Renders button icon if image metadata is provided. */

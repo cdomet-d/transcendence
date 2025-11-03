@@ -47,7 +47,7 @@ components:
         application/json:
           example:
             code: 404
-            message: User not found
+            message: Not found
           schema:
             $ref: "#/components/schemas/response"
       description: Not Found

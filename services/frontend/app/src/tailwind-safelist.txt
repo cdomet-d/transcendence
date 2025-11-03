@@ -43,3 +43,8 @@ col-start-19	row-start-19	row-span-19
 col-start-20	row-start-20	row-span-20
 
 w-xl
+
+t0
+t1
+t2
+t3

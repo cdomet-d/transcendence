@@ -91,7 +91,7 @@ export function renderGame(): string {
 	return html;
 }
 
-export function render404(): string {
+export function renderNotFound(): string {
 	let html: string = `
 	<html>
 	<body>

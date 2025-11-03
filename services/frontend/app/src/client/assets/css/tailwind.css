@@ -200,6 +200,10 @@
 }
 
 @layer base {
+	.t0 {
+		font-size: calc(15vw + 1em);
+	}
+
 	.t1 {
 		font-size: calc(5.85vw + 1em);
 	}
@@ -403,23 +407,6 @@
 @layer components {}
 
 @layer utilities {
-
-	.page-w {
-		width: var(--fwidth);
-		min-width: var(--min-width);
-	}
-
-	.fpage-h {
-		height: 100vh;
-		min-height: var(--min-height);
-	}
-
-	.hpage-h {
-		height: var(--header-height);
-		min-height: var(--min-height);
-
-	}
-
 	.row-s {
 		grid-auto-rows: var(--s)
 	}
@@ -438,6 +425,10 @@
 
 	.row-xl {
 		grid-auto-rows: var(--xl);
+	}
+
+	.single-col-xl {
+		grid-template-columns: 50%;
 	}
 
 	.f-yellow {

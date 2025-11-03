@@ -4,7 +4,7 @@ import { servRoutes } from './route.js';
 import { options } from './serv.conf.js';
 import fastifyStatic from '@fastify/static';
 import cookie from '@fastify/cookie';
-import { render404 } from '../client/pages/html.pages.js';
+import { renderNotFound } from '../client/pages/html.pages.js';
 // import fastifyVite from '@fastify/vite'
 
 try {
@@ -24,7 +24,7 @@ catch (err) {
 function error404Handler(request: FastifyRequest, reply: FastifyReply) {
 	reply.code(404)
 		 .header('Content-Type', 'text/html')
-		 .send(render404());
+		 .send(renderNotFound());
 }
 
 async function addPlugins(serv: FastifyInstance) {
