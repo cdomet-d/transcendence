@@ -12,7 +12,7 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 		ball = latestReply._ball;
 	}
 	if (timeSinceUpdate > 100) //TODO: add var for 100
-		timeSinceUpdate = 100
+		timeSinceUpdate = 100;
 	let newX: number = ball.x + ball.dx * timeSinceUpdate;
 	let newY: number = ball.y + ball.dy * timeSinceUpdate;
 	updateBallPos(game, newX, newY);
