@@ -28,7 +28,7 @@ export async function init(): Promise<FastifyInstance> {
 	serv.decorate("gameRegistry", new GameRegistry());
 
 	//nats
-	const nc: NatsConnection = await initNatsConnection(); //TODO: use await ?
+	const nc: NatsConnection = await initNatsConnection();
 	serv.decorate("nc", nc);
 	await natsSubscription(serv);
 
