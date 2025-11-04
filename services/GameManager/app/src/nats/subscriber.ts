@@ -1,4 +1,4 @@
-import 'dotenv/config';
+// import 'dotenv/config';
 import { connect, StringCodec } from 'nats';
 import { wsSend } from '../lobby/wsHandler.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
