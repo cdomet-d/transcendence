@@ -25,14 +25,22 @@ function lobby() {
 }
 
 function attachLobbyMenuListeners() {
-	const createBtn = document.getElementById('create-btn');
-	const joinBtn = document.getElementById('join-btn');
+	const createQuickBtn = document.getElementById('create-quick-btn');
+	const createTournamentBtn = document.getElementById('create-tournament-btn');
+	const joinQuickBtn = document.getElementById('join-quick-btn');
+	const joinTournamentBtn = document.getElementById('join-tournament-btn');
 
-	if (createBtn) {
-		createBtn.addEventListener('click', () => handleLobbyRequest("create"));
+	if (createQuickBtn) {
+		createQuickBtn.addEventListener('click', () => handleLobbyRequest("create", "quick"));
 	}
-	if (joinBtn) {
-		joinBtn.addEventListener('click', () => handleLobbyRequest("join"));
+	if (joinQuickBtn) {
+		joinQuickBtn.addEventListener('click', () => handleLobbyRequest("join", "quick"));
+	}
+	if (createTournamentBtn) {
+		createTournamentBtn.addEventListener('click', () => handleLobbyRequest("create", "tournament"));
+	}
+	if (joinTournamentBtn) {
+		joinTournamentBtn.addEventListener('click', () => handleLobbyRequest("join", "tournament"));
 	}
 }
 
@@ -45,14 +53,14 @@ function attachTournamentListener() {
 }
 
 interface gameRequestForm {
-	event: "TOURNAMENT_REQUEST" | "GAME_REQUEST",
+	event: "GAME_REQUEST",
 	payload: lobbyInfo
 }
 
 // TODO: gameRequestForm 's payload is basically lobbyInfo
 function createGameRequestForm(): string {
 	const gameRequestForm: gameRequestForm = {
-		event: "TOURNAMENT_REQUEST",
+		event: "GAME_REQUEST",
 		payload: {
 			format: "tournament",
 			remote: true,
@@ -73,17 +81,19 @@ interface lobbyForm {
 	event: "LOBBY_REQUEST",
 	payload: {
 		action: "create" | "join" | string, // '| string' is for type compatibility
+		format: "quick" | "tournament" | string
 		lobbyID?: number,
 		userID?: number
 	}
 }
 
-function createLobbyRequestForm(action: string): string {
+function createLobbyRequestForm(action: string, format: string): string {
 	const lobbyForm: lobbyForm = {
 		event: "LOBBY_REQUEST",
 		payload: {
 			action: action,
-			lobbyID: 1// TODO: invitation would contain lobbyID
+			format: format,
+			lobbyID: 99// TODO: invitation would contain lobbyID
 			// userID: , // TODO: how to retrieve uid here (GM creates UIDs lol)
 		}
 	}

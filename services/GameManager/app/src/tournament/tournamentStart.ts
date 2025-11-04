@@ -14,9 +14,9 @@ export function startTournament(tournamentObj: tournament) {
 // and start games 1 by 1 after in tournamentRoutine
 function startFirstRound(tournament: tournament) {
 	if (tournament.bracket && Array.isArray(tournament.bracket)) {
-		for (let i = 0; tournament.bracket[i]?.users !== null; i++) {
+		for (let i = 0; tournament.bracket[i]?.userList !== null; i++) {
 			const game = tournament.bracket[i];
-			if (game && game.users && game.users.length > 0) {
+			if (game && game.userList && game.userList.length > 0) {
 				startGame(game);
 			}
 		}

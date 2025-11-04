@@ -18,7 +18,7 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 
 		// RECEIVE EVENT
 		const event = data.event;
-		if (!event || event && (event !== "TOURNAMENT_REQUEST" && event !== "GAME_REQUEST" && event !== "LOBBY_REQUEST")) {
+		if (!event || event && (event !== "GAME_REQUEST" && event !== "GAME_REQUEST" && event !== "LOBBY_REQUEST")) {
 			console.log("Error: Wrong or empty request received in GM!");
 			return;
 		}
@@ -31,10 +31,8 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 		}
 
 		// PROCESS EVENT
-		if (event === "TOURNAMENT_REQUEST") {
+		if (event === "GAME_REQUEST") {
 			processGameRequest(payload);
-		} else if (event === "GAME_REQUEST") {
-			// TODO
 		} else if (event === "LOBBY_REQUEST") {
 
 			const userID = getUniqueUserID(); // HAHAHA this bad but no choice
@@ -49,10 +47,11 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 			wsClientsMap.set(userID, socket);
 			req.server.log.info("User #" + userID + " added to clientMap");
 			if (action === "create") {
-				createLobby(userID);
+				createLobby(userID, payload.format);
+				// function needs more info: format, nbPlayers, remote
 				wsSend(socket, JSON.stringify({ lobby: "created" }));
 			} else if (action === "join") {
-				addUserToLobby(userID, 1); // TODO: replace 1 aka lobbyID with one given in invitation
+				addUserToLobby(userID, 99); // TODO: replace 1 aka lobbyID with one given in invitation
 				wsSend(socket, JSON.stringify({ lobby: "joined" }));
 			}
 

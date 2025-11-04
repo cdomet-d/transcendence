@@ -8,7 +8,7 @@ const nextPlayersMap: Map<number, { player1?: userInfo, player2?: userInfo }> = 
 export async function tournamentState(payload: string) {
 	const game: game = JSON.parse(payload);
 
-	const tournamentObj = tournamentMap.get(game.tournamentID);
+	const tournamentObj = tournamentMap.get(game.tournamentID!);
 	if (!tournamentObj) {
 		console.log("Error: Could not make tournamentObj!");
 		return;
@@ -49,7 +49,7 @@ export async function tournamentState(payload: string) {
 	// when both players are ready start next game
 	if (nextPlayers.player1 && nextPlayers.player2) {
 		tournamentObj.bracket[index] = game; // update local tournamnetObj
-		nextGame.users = [nextPlayers.player1, nextPlayers.player2];
+		nextGame.userList = [nextPlayers.player1, nextPlayers.player2];
 		startGame(nextGame);
 		nextPlayersMap.delete(nextGameID);
 		
@@ -59,18 +59,18 @@ export async function tournamentState(payload: string) {
 }
 
 function getUsernameFromID(userID: number, game: game): string {
-	if (game.users?.length === 2) {
-		if (game.users[0]?.userID === userID)
-			return game.users[0]?.username!;
+	if (game.userList?.length === 2) {
+		if (game.userList[0]?.userID === userID)
+			return game.userList[0]?.username!;
 		else
-			return game.users[1]?.username!;
+			return game.userList[1]?.username!;
 	}
 	return "Error: Couldn't find username from userID in gameObj!";
 }
 
 function getNextGameInBracket(tournament: tournament): game | undefined {
 	tournament.bracket.forEach((GameObj) => {
-		if (GameObj.users === null) {
+		if (GameObj.userList === null) {
 			return GameObj;
 		}
 	});

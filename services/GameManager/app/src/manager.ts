@@ -1,7 +1,7 @@
 import { createTournament } from "./tournament/tournamentCreation.js";
-import { startTournament } from "./tournament/tournamentStart.js";
+import { startGame, startTournament } from "./tournament/tournamentStart.js";
 import type { lobbyInfo } from './lobby/lobby.js'
-
+import { createGameObj } from "./quickmatch/createGame.js";
 
 interface userInfo {
 	userID?: number,
@@ -18,9 +18,9 @@ interface userInfo {
 
 interface game {
 	gameID: number,
-	tournamentID: number,
+	tournamentID?: number,
 	remote: boolean,
-	users: userInfo[] | undefined | null,
+	userList: userInfo[] | undefined | null,
 	score: string,
 	winnerID: number,
 	loserID: number,
@@ -51,6 +51,12 @@ export function processGameRequest(lobbyInfo: lobbyInfo) {
 		startTournament(tournament);
 	} else if (lobbyInfo.format === "quick") {
 		// create gameObj
+		const quickmatch: game | boolean = createGameObj(lobbyInfo);
+		if (quickmatch === false) {
+			console.log("Error: Something went wrong");
+			return;
+		}
+		startGame(quickmatch);
 		// send it to PONG
 		// wait for approval from PONG
 		// signal involved clients game ready for them

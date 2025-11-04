@@ -79,10 +79,10 @@ function handleTournamentStart() {
 	}
 }
 
-function handleLobbyRequest(action: string): void {
+function handleLobbyRequest(action: string, format: string): void {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 		console.log(`Client sending ${action} request`);
-		wsInstance.send(createLobbyRequestForm(action));
+		wsInstance.send(createLobbyRequestForm(action, format));
 	} else {
 		console.log(`Error: WebSocket is not open for ${action}`);
 	}

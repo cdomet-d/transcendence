@@ -11,8 +11,8 @@ export interface lobbyInfo {
 	joinable?: boolean,
 	userList: userInfo[],
 	remote: boolean,
-	format: "quick" | "tournament",
-	players: number
+	format: "quick" | "tournament" | string,
+	nbPlayers: number
 	// gameSettings?: string
 }
 
@@ -34,8 +34,8 @@ show Lobby Room
 
 */
 
-export function createLobby(hostID: number) {
-	const lobby: lobbyInfo = makeLobbyInfo(hostID);
+export function createLobby(hostID: number, format: string) {
+	const lobby: lobbyInfo = makeLobbyInfo(hostID, format);
 	lobbyMap.set(lobby.lobbyID, lobby);
 }
 
@@ -49,7 +49,7 @@ export function addUserToLobby(uid: number, lobbyID: number) {
 }
 
 
-function makeLobbyInfo(hostID: number): lobbyInfo {
+function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 	const lobbyID: number = getUniqueLobbyID();
 
 	const lobby: lobbyInfo = {
@@ -57,15 +57,15 @@ function makeLobbyInfo(hostID: number): lobbyInfo {
 		whitelist: {
 			lobbyId: lobbyID,
 			hostID: hostID,
-			userIDs: [hostID] // put invitees here
+			userIDs: [hostID] // put invitee ID here on invite
 		},
-		joinable: true,
+		joinable: true, // TODO turn this off when game/tournament starts
 		userList: [
 			{ userID: hostID } // and add them there when they join
 		],
-		remote: true,
-		format: "tournament",
-		players: 4
+		remote: true, // TODO TBD
+		format: format,
+		nbPlayers: format === "quick" ? 2 : 4
 	}
 
 	return lobby;
