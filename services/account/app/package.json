@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon",
-    "start": "tsc && node dist/server.js"
+    "start": "tsc && node dist/server.js",
+    "test:setup": "rm -f ../data/testDB.db && ../tools/testDB.sh",
+    "test": "npm run test:setup && DATABASE_PATH=../data/testDB.db jest"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +23,9 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
-    "nodemon": "^3.1.10"
+    "@types/jest": "^30.0.0",
+    "jest": "^30.2.0",
+    "nodemon": "^3.1.10",
+    "ts-jest": "^29.4.5"
   }
 }

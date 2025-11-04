@@ -42,7 +42,6 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const response = await serv.dbStats.run(query, params);
 			if (!response.changes) {
 				serv.log.error('[DASHBOARD] Game creation query succeeded but did not insert a row.');
-				//TODO check if I really need to send 500 or I can just throw an error
 				return (reply.code(500).send({ message: '[DASHBOARD] Internal server error during game creation' }));
 			}
 
@@ -194,23 +193,6 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO add interface for tournament
-	// get all tournament of a player
-	serv.get('/internal/dashboard/tournaments', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: number };
-			if (!userID)
-				return reply.code(400).send({ message: 'userID query parameter is required.' });
-
-			const games = await getTournamentHistory(serv.dbStats, userID);
-			return (reply.code(200).send(tournaments));
-
-		} catch (error) {
-			serv.log.error(`[DASHBOARD] Error creating user account: ${error}`);
-			throw (error);
-		}
-	});
-
 	//delete a tournamement
 	serv.delete('/internal/dashboard/tournaments/:tournamentID', async (request, reply) => {
 		try {
@@ -235,7 +217,5 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO get a game with it's ID
-	//TODO get a tournament with it's ID
 	//TODO delete a player from a game ? GRPD
 }

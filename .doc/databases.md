@@ -44,7 +44,7 @@ It will look like this :
 
 ### General overview
 
-The accessibily container holds the translation for each supported langangues (English, French and Spanish). 
+The accessibily container holds the translation for each supported langangues (en, French and Spanish). 
 There is only one table in this database : translations
 
 The table has 4 column :
@@ -53,7 +53,7 @@ The table has 4 column :
 * language_code &rarr; text 
 * translation &rarr; text
 
-The word column is meant to hold the key or phrase identifier. The language_code column holds the language code (dah), like "English" or "French". And lastly the translation will hold the translation of the word in it's targeted language code.
+The word column is meant to hold the key or phrase identifier. The language_code column holds the language code (dah), like "en" or "French". And lastly the translation will hold the translation of the word in it's targeted language code.
 So for example we could have :
 * word == "hello"
 * language_code == "French"

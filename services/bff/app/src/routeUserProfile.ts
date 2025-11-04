@@ -1,34 +1,33 @@
 import type { FastifyInstance } from 'fastify';
 import type { UserProfileView, userData } from './bff.interface.js';
 import * as bcrypt from 'bcrypt';
-import { fetchProfileData, fetchUserID, fetchMatches, fetchUserProfile, fetchFriendList, fetchUserStats, fetchRelationship } from './bffUserProfile.service.js';
+import { fetchProfileData, fetchUserID, processMatches, fetchUserProfile, fetchFriendList, fetchUserStats, fetchRelationship } from './bffUserProfile.service.js';
 import { updatePassword, fetchUserDataAccount, updateUsername, updateBio, updateProfileColor, updateDefaultLang, updateAvatar } from './bffAccount.service.js';
 
 
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
 
-	//TODO : fix this 
 	//get's profile + stats + game + friendslist
 	serv.get('/users/profile', async (request, reply) => {
 		try {
 			const [
-				profile,
+				userData,
 				stats,
 				friends,
 				recentMatches
 			] = await Promise.all([
-				fetchUserProfile(request.user.userID),
-				fetchUserStats(request.user.userID),
+				fetchUserProfile(serv.log, request.user.userID),
+				fetchUserStats(serv.log, request.user.userID),
 				fetchFriendList(serv.log, request.user.userID),
-				fetchMatches(serv.log, request.user.userID)
+				processMatches(serv.log, String(request.user.userID))
 			]);
 
-			if (!profile || !stats)
+			if (!userData || !stats)
 				return reply.code(404).send({ message: '[BFF] Failed to retrieve essential user data.' });
 
 			const responseData: UserProfileView = {
-				profile: profile,
+				userData: userData,
 				stats: stats,
 				friends: friends || [],
 				recentMatches: recentMatches || []
@@ -42,7 +41,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO code route in user and account
 	serv.patch('/users/settings', async (request, reply) => {
 		try {
 			const { userID } = request.user;
@@ -87,14 +85,14 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO code the friends list with the userData interface
 	serv.get('/friends/friendslist', async (request, reply) => {
 		try {
-			fetchFriendList(serv.log, request.user.userID);
-			return (reply)
+			const friendsList = await fetchFriendList(serv.log, request.user.userID);
+
+			return (reply.code(200).send(friendsList));
 
 		} catch (error) {
-			serv.log.error(`[BFF] Error building user profile view: ${error}`);
+			serv.log.error(`[BFF] Error fetching friends list: ${error}`);
 			throw (error);
 		}
 	});
@@ -106,9 +104,9 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 			if (!viewerUserID)
 				return (reply.code(401).send({ message: 'Unauthorized.' }));
-			
+
 			const targetUserID = await fetchUserID(serv.log, targetUsername);
-			
+
 			const [
 				AccountData,
 				ProfileData,
@@ -136,10 +134,10 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'message' in error &&
 				(error as { message: string }).message.includes('User data not found'))
-					return (reply.code(404).send({ message: 'User not found.' }));
-			if (error instanceof Error) 
+				return (reply.code(404).send({ message: 'User not found.' }));
+			if (error instanceof Error)
 				serv.log.error(`[BFF] Failed to build user profile: ${error.message}`);
-			else 
+			else
 				serv.log.error(`[BFF] Failed to build user profile: An unknown error occurred.`);
 			throw (error);
 		}

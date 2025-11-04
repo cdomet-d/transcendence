@@ -6,31 +6,8 @@ import * as jwt from 'jsonwebtoken';
 
 import { createAccount, deleteFriendship, deleteAccount, createUserProfile, validateCredentials, deleteUser } from './bffAccount.service.js';
 
-//TODO: find a secure way to handle JWT_SECRET
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-and-long-key-for-development';
 
-/*
-//Install the dotenv package
-npm install dotenv
-
-// At the very top of your main server file
-import 'dotenv/config';
-
-// Now, process.env is populated with variables from your .env file
-const JWT_SECRET = process.env.JWT_SECRET;
-
-// You can now use this variable throughout your file
-console.log(`Successfully loaded JWT_SECRET: ${JWT_SECRET}`);
-
-// --- Example of using it in your code ---
-import * as jwt from 'jsonwebtoken';
-
-// ... inside a function
-const payload = { userID: 123 };
-const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
-*/
-
-	//TODO fix this
 export async function bffAccountRoutes(serv: FastifyInstance) {
 
 	serv.post('/account/login', async (request, reply) => {

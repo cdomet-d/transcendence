@@ -8,20 +8,19 @@ interface AccountSettingsRow {
 
 export async function accountRoutes(serv: FastifyInstance) {
 
-	//TODO: usersStatus is always a hardcoded 1 for now, not even sure to keep it honestly
+	//usersStatus is always a hardcoded 1 for now, not even sure to keep it honestly
 	serv.post('/internal/account/register', async (request, reply) => {
 		try {
 			const { username, hashedPassword } = request.body as { username: string, hashedPassword: string };
-
 			const usernameTaken = await checkUsernameUnique(serv.dbAccount, username);
 			if (usernameTaken)
 				return (reply.code(409).send({ message: 'Username taken' }));
 
 			const query = `
-				INSERT INTO account (hashedPassword, username, userStatus, registerDate)
-				VALUES (?, ?, 1, ?, English)
+				INSERT INTO account (hashedPassword, username, userStatus, registerDate, defaultLang)
+				VALUES (?, ?, 1, ?, ?)
 			`;
-			const params = [hashedPassword, username, new Date().toISOString()];
+			const params = [hashedPassword, username, new Date().toISOString(), 'English'];
 			const response = await serv.dbAccount.run(query, params);
 
 			if (response.changes === 0 || !response.lastID)
@@ -76,7 +75,9 @@ export async function accountRoutes(serv: FastifyInstance) {
 				'defaultLang'
 			];
 
-			const keysToUpdate = Object.keys(body).filter(key => validKeys.includes(key));
+			const keysToUpdate = Object.keys(body).filter(key =>
+				validKeys.includes(key) && body[key] !== ''
+			);
 
 			if (keysToUpdate.length === 0) {
 				return (reply.code(400).send({
@@ -160,7 +161,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/internal/account/userDataBatch', async (request, reply) => { 
+	serv.post('/internal/account/userDataBatch', async (request, reply) => {
 		try {
 			const { userIDs } = request.body as { userIDs: number[] };
 

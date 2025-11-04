@@ -20,7 +20,9 @@ export interface userData {
 
 export interface Friends {
 	friendID: string,
-	since: string
+	statusFrienship: boolean,
+	since: string,
+	userData: userData,
 }
 
 export interface StatsResponse {
@@ -63,6 +65,7 @@ export interface ProfileDataResponse {
 
 export interface ProfileDataBatch {
 	userID: number;
+	username: string,
 	avatar: string;
 	biography: string;
 	profileColor: string;
@@ -96,19 +99,6 @@ export interface AccountData {
 	defaultLang: string
 }
 
-export interface profileData {
-	avatar: string,
-	biography: string,
-	language: string,
-	profileColor: string,
-	relation: ProfileView,
-	status: boolean;
-	winstreak: string,
-	since: string,
-	userID: number;
-	username: string;
-}
-
 export interface UserProfile {
 	userID: number;
 	username: string;
@@ -117,7 +107,7 @@ export interface UserProfile {
 	profileColor: string;
 }
 
-export interface Matches {
+export interface RawMatches {
 	gameID: number;
 	duration: number;
 	startTime: string;
@@ -126,13 +116,22 @@ export interface Matches {
 	scoreWinner: number;
 	scoreLoser: number;
 	opponentID: number;
+	tournament: number
+}
+
+export interface Matches {
+	date: string;
+	opponent: string;
+	outcome: string;
+	score: string;
+	duration: string;
+	tournament: boolean;
 }
 
 export interface UserProfileView {
 	userData: userData
-	profile: profileData;
 	stats: UserStats;
-	friends: ProfileDataBatch[];
+	friends: Friends[];
 	recentMatches: Matches[];
 }
 

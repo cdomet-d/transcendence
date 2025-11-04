@@ -4,9 +4,9 @@ RUN mkdir -p /usr/app && chown -R 1000:1000 /usr/app
 
 WORKDIR /usr/app
 
-COPY ./tools/gateway.sh /usr/local/bin/
+COPY ./tools/bff.sh /usr/local/bin/
 
-RUN chmod +x /usr/local/bin/gateway.sh
+RUN chmod +x /usr/local/bin/bff.sh
 
 EXPOSE 1818
 

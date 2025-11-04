@@ -7,6 +7,7 @@ interface UserProfile {
 	avatar: string;
 	biographygraphy: string;
 	profileColor: string;
+	winstreak: number;
 }
 
 interface UserRow {
@@ -363,6 +364,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			const query = `
 				SELECT
 					p.userID,
+					p.username,
 					p.avatar,
 					p.biography,
 					p.profileColor,
@@ -383,8 +385,6 @@ export async function userRoutes(serv: FastifyInstance) {
 			throw (error);
 		}
 	});
-
-	//TODO: code this : const response = await fetch(`https://user:2626/internal/users/activity/${userID}`);
 
 	/*
 	//get username by userID

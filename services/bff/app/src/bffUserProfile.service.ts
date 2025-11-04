@@ -1,8 +1,11 @@
-import type { ProfileDataBatch, ProfileDataBatchResponse, ProfileView, 
-				ProfileData, UserStats, StatsResponse, Matches, Friends, 
-				ProfileDataResponse } from "./bff.interface.js";
+import type {
+	ProfileDataBatch, ProfileDataBatchResponse, ProfileView,
+	ProfileData, UserStats, StatsResponse, Matches, RawMatches, Friends,
+	ProfileDataResponse,
+	userData
+} from "./bff.interface.js";
 
-export async function fetchUserProfile(log: any, userID: number): Promise<ProfileData | null> {
+export async function fetchUserProfile(log: any, userID: number): Promise<userData | null> {
 	const url = `http://users:2626/internal/users/${userID}/profile`;
 	let response: Response;
 
@@ -22,7 +25,7 @@ export async function fetchUserProfile(log: any, userID: number): Promise<Profil
 		throw new Error('User service failed.');
 	}
 
-	const data = await response.json() as ProfileData;
+	const data = await response.json() as userData;
 	return (data);
 }
 
@@ -73,8 +76,9 @@ export async function fetchUserStats(log: any, userID: number): Promise<UserStat
 	return (data.stats);
 }
 
+//TODO fetch userData in friendlist.............................................
 export async function fetchFriendList(log: any, userID: number): Promise<Friends[]> {
-	const url = `http://friends:1616/internal/friends/${userID}/friendslist`;
+	const url = `http://friends:1616/internal/friends/friendships?userID=${userID}&status=friend`;
 	let response: Response;
 
 	try {
@@ -84,9 +88,14 @@ export async function fetchFriendList(log: any, userID: number): Promise<Friends
 		throw new Error('User service is unreachable.');
 	}
 
+	if (response.status === 400) {
+		log.error('[BFF] Bad request to friends service (friendlist).');
+		throw new Error('Bad request to friends service.');
+	}
+
 	if (!response.ok) {
-		log.error(`[BFF] User service failed with status ${response.status}`);
-		throw new Error('User service failed.');
+		log.error(`[BFF] Friends service (friendlist) failed with status ${response.status}`);
+		throw new Error('Friends service failed.');
 	}
 
 	return (response.json() as Promise<Friends[]>);
@@ -156,8 +165,13 @@ export async function fetchProfileDataBatch(log: any, userIDs: number[]): Promis
 	return (body.profileData);
 }
 
-//TODO: fix matches to also include tournaments and see what it should look like
-export async function fetchMatches(log: any, userID: number): Promise<Matches[] | null> {
+function formatDuration(seconds: number): string {
+	const mins = Math.floor(seconds / 60);
+	const secs = seconds % 60;
+	return (`${mins}m ${secs}s`);
+}
+
+async function fetchMatches(log: any, userID: string): Promise<RawMatches[]> {
 	const url = `http://users:2626/internal/dashboard/${userID}/gameHistory`;
 	let response: Response;
 	try {
@@ -177,7 +191,54 @@ export async function fetchMatches(log: any, userID: number): Promise<Matches[] 
 		log.error(`[BFF] User service failed with status ${response.status}`);
 		throw new Error('User service failed.');
 	}
-	return (response.json() as Promise<Matches[]>);
+	return (response.json() as Promise<RawMatches[]>);
+}
+
+async function fetchUsernamesForMatches(log: any, matches: RawMatches[]): Promise<Map<number, string>> {
+	const opponentIDs = [...new Set(matches.map(match => match.opponentID))];
+
+	if (opponentIDs.length === 0) {
+		return new Map();
+	}
+
+	const usersData = await fetchProfileDataBatch(log, opponentIDs);
+
+	const usernameMap = new Map<number, string>();
+	for (const user of usersData)
+		usernameMap.set(user.userID, user.username);
+
+	return (usernameMap);
+}
+
+export async function processMatches(log: any, userID: string): Promise<Matches[]> {
+	const rawMatches = await fetchMatches(log, userID);
+
+	if (rawMatches.length === 0)
+		return [];
+
+	const opponentMap = await fetchUsernamesForMatches(log, rawMatches);
+
+	const numericUserID = Number(userID);
+
+	const processedMatches = rawMatches.map(rawMatch => {
+		const outcome = rawMatch.winnerID === numericUserID ? "Win" : "Loss";
+		const score = `${rawMatch.scoreWinner} - ${rawMatch.scoreLoser}`;
+		const opponentName = opponentMap.get(rawMatch.opponentID) || "Unknown User";
+		const isTournament = 'tournamentID' in rawMatch && (rawMatch as any).tournamentID > 0;
+
+		const match: Matches = {
+			date: new Date(rawMatch.startTime).toLocaleDateString(),
+			opponent: opponentName,
+			outcome: outcome,
+			score: score,
+			duration: formatDuration(rawMatch.duration),
+			tournament: isTournament
+		};
+
+		return (match);
+	});
+
+	return (processedMatches);
 }
 
 export async function fetchRelationship(log: any, userID: number, username: string): Promise<ProfileView> {

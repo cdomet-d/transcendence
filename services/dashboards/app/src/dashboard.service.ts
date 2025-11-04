@@ -1,37 +1,6 @@
 import { Database } from "sqlite";
 import type { Match, Tournament } from "./routes.js";
 
-// Not needed rn
-/* export async function getGame(db: Database, userID: number): Promise<boolean> {
-	const query = `
-		SELECT
-			gameID,
-			duration,
-			startTime,
-			winnerID,
-			loserID,
-			scoreWinner,
-			scoreLoser,
-			CASE
-				WHEN winnerID = ? THEN loserID
-				ELSE winnerID
-			END AS opponentID
-		FROM
-			gameMatchInfo
-		WHERE
-			(winnerID = ? OR loserID = ?)
-			AND gameStatus = 2; -- Ensures you only get completed games
-			`;
-
-	const params = [userID, userID, userID];
-
-	const matches = await db.all(query, params);
-
-	//TODO : fix that
-	return (true);
-	//return (matches);
-}; */
-
 export async function getGameHistory(db: Database, userID: number): Promise<Match[]> {
 	const query = `
 		SELECT

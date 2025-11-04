@@ -30,7 +30,7 @@ export async function validateCredentials(log: any, username: string, password: 
 }
 
 async function updateAccountUsername(userID: string, newUsername: string): Promise<Response> {
-	const url = `http://account:1414/internal/account/${userID}/username`;
+	const url = `http://account:1414/internal/account/${userID}`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
@@ -39,7 +39,7 @@ async function updateAccountUsername(userID: string, newUsername: string): Promi
 }
 
 async function updateUserProfileUsername(userID: string, newUsername: string): Promise<Response> {
-	const url = `http://users:2626/internal/users/${userID}/username`;
+	const url = `http://users:2626/internal/users/${userID}`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
@@ -84,14 +84,14 @@ export async function updateUsername(log: any, userID: number, newUsername: stri
 	return;
 }
 
-export async function updatePassword(log: any, userID: number, newHashedPassword: string): Promise<void> {
-	const url = `http://account:1414/internal/account/${userID}/password`;
+export async function updatePassword(log: any, userID: number, hashedPassword: string): Promise<void> {
+	const url = `http://account:1414/internal/account/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
 			method: 'PATCH',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ newHashedPassword: newHashedPassword })
+			body: JSON.stringify({ hashedPassword: hashedPassword })
 		});
 	} catch (error) {
 		log.error(`[BFF] User service is unreachable: ${error}`);
@@ -238,7 +238,7 @@ export async function deleteFriendship(log: any, userID: number): Promise<Respon
 }
 
 export async function updateBio(log: any, userID: number, biography: string): Promise<void> {
-	const url = `http://account:1414/internal/users/${userID}/biography`;
+	const url = `http://account:1414/internal/users/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -300,7 +300,7 @@ export async function updateProfileColor(log: any, userID: number, profileColor:
 }
 
 export async function updateDefaultLang(log: any, userID: number, defaultLang: string): Promise<void> {
-	const url = `https://users:2626/internal/account/${userID}/defaultLang`;
+	const url = `https://users:2626/internal/account/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -331,7 +331,7 @@ export async function updateDefaultLang(log: any, userID: number, defaultLang: s
 }
 
 export async function updateAvatar(log: any, userID: number, avatar: string): Promise<void> {
-	const url = `https://users:2626/internal/users/${userID}/avatar`;
+	const url = `https://users:2626/internal/users/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
