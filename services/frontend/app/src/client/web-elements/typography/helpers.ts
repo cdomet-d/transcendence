@@ -1,5 +1,5 @@
 import { CustomTitle } from './typography.js';
-import { Icon, Avatar } from './images.js';
+import { Icon, Avatar, NoResults } from './images.js';
 import * as types from '../types-interfaces.js';
 
 /**
@@ -41,4 +41,10 @@ export function createAvatar(metadata?: types.ImgData): Avatar {
     if (metadata) el.metadata = metadata;
 
     return el;
+}
+
+export function createNoResult(size: types.Size): NoResults {
+	const el = document.createElement('div', { is: 'no-results' }) as NoResults;
+	el.size = size;
+	return el;
 }

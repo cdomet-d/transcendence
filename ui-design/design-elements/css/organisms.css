@@ -24,7 +24,7 @@
 	align-items: center;
 }
 
-.user-card>.vertical-menu-wrapper {
+.user-card>.vertical-nav-menu-wrapper {
 	gap: var(--xxs);
 }
 
@@ -247,7 +247,7 @@
 	max-height: var(--m);
 }
 
-.game-menu-wrapper {
+.game-nav-menu-wrapper {
 	height: var(--sidebar);
 	aspect-ratio: 4/3;
 	outline: solid red 2px;

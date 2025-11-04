@@ -1,31 +1,68 @@
-import { createBtn } from '../web-elements/navigation/buttons-helpers.js';
-import { createHeading } from '../web-elements/typography/helpers.js';
+import { createLink } from '../web-elements/navigation/buttons-helpers.js';
+import { createHeading, createNoResult } from '../web-elements/typography/helpers.js';
 import { FullscreenPage } from '../web-elements/layouts/fullscreen.js';
-import { NoResults } from '../web-elements/typography/images.js';
+import { pageWithHeader } from '../web-elements/layouts/page-with-header.js';
 import { renderPageTemplate } from './page.template.js';
 import { translate } from '../scripts/language/translation.js';
-import type { buttonData } from '../web-elements/types-interfaces.js';
+import type { navigationLinksData } from '../web-elements/types-interfaces.js';
+import type { Layout } from '../web-elements/layouts/layout.js';
+
+interface HTMLElementTagMap {
+    'page-w-header': pageWithHeader;
+    'full-screen': FullscreenPage;
+}
+
+const layoutPerPage: { [key: string]: string } = {
+    home: 'full-screen',
+    regitration: 'full-screen',
+    error: 'full-screen',
+    game: 'full-screen',
+    leaderboard: 'page-w-header',
+    lobby: 'page-w-header',
+    profile: 'page-w-header',
+    userSettings: 'page-w-header',
+};
+
+function prepareLayout<K extends keyof HTMLElementTagMap>(curLayout: Layout | null, HTMLMapKey: K, page: string) {
+	if (!layoutPerPage[page]) throw new Error ('Requested page is undefined');
+    console.log(curLayout?.id, layoutPerPage[page]);
+    if (!curLayout) {
+        const newLayout = document.createElement('div', {
+            is: HTMLMapKey,
+        }) as HTMLElementTagMap[K];
+        document.body.append(newLayout);
+        document.body.layoutInstance = newLayout;
+    } else if (curLayout.id !== layoutPerPage[page]) {
+        curLayout.clearAll();
+        curLayout.remove();
+        const newLayout = document.createElement('div', {
+            is: HTMLMapKey,
+        }) as HTMLElementTagMap[K];
+        document.body.append(newLayout);
+        document.body.layoutInstance = newLayout;
+    } else {
+        curLayout.clearAll();
+    }
+}
 
 export function renderNotFound() {
-    console.log('rendering 404');
-    document.body.append(document.createElement('div', { is: 'no-results' }) as NoResults);
+    console.log('renderNotFound');
+    prepareLayout(document.body.layoutInstance, 'full-screen', 'error');
+    document.body.layoutInstance!.appendAndCache(createNoResult('ifs'));
 }
 
 export function renderHome() {
-    const page: FullscreenPage = document.createElement('div', {
-        is: 'full-screen',
-    }) as FullscreenPage;
-
-    document.body.append(page);
-
-    const playButtonData: buttonData = {
-        type: 'button',
-        content: 'PLAY',
-        img: null,
-        ariaLabel: 'Click to play',
+    console.log('RenderHome');
+    prepareLayout(document.body.layoutInstance, 'full-screen', 'home');
+    const playButtonData: navigationLinksData = {
+        title: 'PLAY',
+        href: '/register',
+        datalink: '/register',
     };
-
-    page.appendAndCache(createHeading('0', 'PONG!'), createBtn(playButtonData, true));
+    document.body.layoutInstance!.appendAndCache(
+        createHeading('0', 'PONG!'),
+        createLink(playButtonData, true)
+    );
 }
 
 export function renderCentral(): string {

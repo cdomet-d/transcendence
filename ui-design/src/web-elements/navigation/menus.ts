@@ -91,8 +91,8 @@ export class Menu extends HTMLElement {
     }
 }
 
-if (!customElements.get('menu-wrapper')) {
-    customElements.define('menu-wrapper', Menu, { extends: 'nav' });
+if (!customElements.get('nav-menu-wrapper')) {
+    customElements.define('nav-menu-wrapper', Menu, { extends: 'nav' });
 }
 
 //TODO: update SocialMenu to Setting button when view is 'self'

@@ -55,7 +55,7 @@
   transform: none;
 }
 
-.horizontal-menu-wrapper {
+.horizontal-nav-menu-wrapper {
   align-items: center;
   box-sizing: border-box;
   display: grid;
@@ -67,7 +67,7 @@
   justify-items: center;
 }
 
-.vertical-menu-wrapper {
+.vertical-nav-menu-wrapper {
   align-items: center;
   box-sizing: border-box;
   display: grid;
@@ -155,7 +155,7 @@
   justify-items: center;
 }
 
-.popup > .horizontal-menu-wrapper {
+.popup > .horizontal-nav-menu-wrapper {
   width: var(--sidebar);
 }
 

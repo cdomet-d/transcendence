@@ -1,13 +1,15 @@
-import { createBtn } from './buttons-helpers.js';
+import { createBtn, createLink } from './buttons-helpers.js';
 import type {
     buttonData,
     MenuStyle,
     ProfileView,
     MenuSize,
     DropdownBg,
+    navigationLinksData,
 } from '../types-interfaces.js';
 import type { Icon } from '../typography/images.js';
 import type { CustomButton } from './buttons.js';
+import type { NavigationLinks } from './links.js';
 
 /**
  * Custom HTML div element representing a menu with configurable style and elements.
@@ -17,7 +19,109 @@ import type { CustomButton } from './buttons.js';
  * It supports both icon and textual buttons.
  * Menu elements are configured using {@link buttonData} and created via {@link createBtn}.
  */
-export class Menu extends HTMLElement {
+export class NavigationMenu extends HTMLElement {
+    #size: MenuSize;
+    #animated: boolean;
+    #style: MenuStyle;
+
+    #menuLinks: HTMLUListElement;
+    #linkList: Map<string, NavigationLinks>;
+    #linkInfo: navigationLinksData[];
+
+    constructor() {
+        super();
+        this.#linkList = new Map<string, NavigationLinks>();
+        this.#linkInfo = [];
+        this.#menuLinks = document.createElement('ul');
+
+        this.#style = 'horizontal';
+        this.#size = 'm';
+        this.#animated = false;
+
+        this.append(this.#menuLinks);
+    }
+
+    /**
+     * Sets the menu's button elements.
+     *
+     * @param {navigationLinksData[]} list - Array of navigationLinksData for menu buttons.
+     */
+    set linkList(list: navigationLinksData[]) {
+        this.#linkInfo = list;
+    }
+
+    /**
+     * Sets the menu's layout style.
+     *
+     * @param {MenuStyle} style - menuStyle, either 'horizontal' or 'vertical'.
+     */
+    set menuStyle(style: MenuStyle) {
+        this.#style = style;
+    }
+
+    /**
+     * Sets the menu's size variant.
+     *
+     * @param {MenuSize} size - Menu size, e.g., 'm' or 'l'.
+     */
+    set menuSize(size: MenuSize) {
+        this.#size = size;
+    }
+
+    /**
+     * Enables or disables animation for menu buttons.
+     *
+     * @param {boolean} b - True to enable animations, false otherwise.
+     */
+    set animation(b: boolean) {
+        this.#animated = b;
+    }
+
+    /** Called when the element is inserted into the DOM; triggers rendering. */
+    connectedCallback() {
+        this.render();
+    }
+
+    /**
+     * Renders the menu layout and appends button elements.
+     *
+     * @remarks
+     * Uses CSS grid classes according to style and size settings.
+     * Button elements are created using the {@link createBtn} helper with animation option.
+     */
+    render() {
+        this.role = 'navigation';
+        this.id = 'menu';
+        this.className = 'w-full gap-r box-border';
+        this.#menuLinks.className = `w-full grid justify-items-center \
+		auto-cols-fr row-${this.#size}`;
+
+        this.#style === 'horizontal'
+            ? this.#menuLinks.classList.add('grid-flow-col')
+            : this.#menuLinks.classList.add('grid-flow-rows');
+
+        this.#linkInfo.forEach((item) => {
+            const link = createLink(item, this.#animated);
+            this.#menuLinks.append(link);
+            this.#linkList.set(item.datalink, link);
+        });
+    }
+}
+
+if (!customElements.get('nav-menu-wrapper')) {
+    customElements.define('nav-menu-wrapper', NavigationMenu, { extends: 'nav' });
+}
+
+
+/**
+ * Custom HTML div element representing a menu with configurable style and elements.
+ *
+ * @remarks
+ * The menu supports two styles: 'horizontal' and 'vertical', which control the grid layout direction.
+ * It supports both icon and textual buttons.
+ * Menu elements are configured using {@link buttonData} and created via {@link createBtn}.
+ */
+export class ActionMenu extends HTMLElement {
     #size: MenuSize;
     #animated: boolean;
     #style: MenuStyle;
@@ -91,8 +195,8 @@ export class Menu extends HTMLElement {
     }
 }
 
-if (!customElements.get('menu-wrapper')) {
-    customElements.define('menu-wrapper', Menu, { extends: 'nav' });
+if (!customElements.get('action-menu-wrapper')) {
+    customElements.define('action-menu-wrapper', ActionMenu, { extends: 'nav' });
 }
 
 //TODO: update SocialMenu to Setting button when view is 'self'
@@ -108,7 +212,7 @@ if (!customElements.get('menu-wrapper')) {
  * - `stranger` alters icon to add user
  * - `self` hides the menu entirely
  */
-export class SocialMenu extends Menu {
+export class SocialMenu extends ActionMenu {
     #view: ProfileView;
 
     constructor() {
@@ -234,7 +338,7 @@ export class DropdownMenu extends HTMLDivElement {
      */
     get selectedElement(): HTMLLIElement | null {
         for (let i = 0; i < this.#listboxOptions.length; i++) {
-			const option = this.#listboxOptions[i]
+            const option = this.#listboxOptions[i];
             if (option && option.hasAttribute('selected')) return option;
         }
         return null;
@@ -304,9 +408,9 @@ export class DropdownMenu extends HTMLDivElement {
         this.#listbox.removeAttribute('hidden');
         if (this.#currentFocus === -1 && isKeyboard) this.#moveFocus(1);
         else if (this.#currentFocus !== -1) {
-			const focusedOption = this.#listboxOptions[this.#currentFocus];
-			if (focusedOption) focusedOption.focus();
-		}
+            const focusedOption = this.#listboxOptions[this.#currentFocus];
+            if (focusedOption) focusedOption.focus();
+        }
     }
 
     //TODO: make the toggle focus only on keyboard navigation.
@@ -349,8 +453,8 @@ export class DropdownMenu extends HTMLDivElement {
         this.#currentFocus =
             (this.#currentFocus + delta + this.#listboxOptions.length) %
             this.#listboxOptions.length;
-		const focusedOption = this.#listboxOptions[this.#currentFocus];
-       if (focusedOption) focusedOption.focus();
+        const focusedOption = this.#listboxOptions[this.#currentFocus];
+        if (focusedOption) focusedOption.focus();
     }
 
     /**

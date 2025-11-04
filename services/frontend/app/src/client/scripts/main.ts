@@ -1,37 +1,30 @@
+import { computeViewportSize, loadHistoryLocation } from './event-listeners.js';
+import { Layout } from '../web-elements/layouts/layout.js';
 import { Router } from './spaRouter/router.class.js';
 import { routes } from './spaRouter/routes.js';
+
 // import { pong } from './game/pong.js';
 // import { addLanguageEvents } from './language/languageEvents.js';
 // import { initLanguageCSR } from './language/translation.js';
 
 export const router = new Router(routes);
 
-function sanitisePath(path: string) {
-    if (path == "/")
-        return path;
-    return path.replace(/\/+$/, '');
+declare global {
+  interface HTMLElement {
+    layoutInstance: Layout | null;
+  }
 }
 
-document.addEventListener('click', (event) => {
-    const link = (event.target as HTMLElement).closest('[data-link]');
-    if (link) {
-        event.preventDefault();
-        const path = link.getAttribute('href');
-		if (path !== null) {
-	        window.history.pushState({}, '', path);
-	        const cleanPath = sanitisePath(path);
-			console.log(path);
-			router._loadRoute(cleanPath);
-		}
-    }
-});
+if (window) {
+	computeViewportSize();
+	/** Handles window resize so things stay cute */
+    window.addEventListener('resize', computeViewportSize);
+	/** Enables back/forward navigation arrows */
+    window.addEventListener('popstate', loadHistoryLocation);
+}
 
-window.addEventListener('popstate', () => {
-    const cleanPath = sanitisePath(window.location.pathname);
-    router._loadRoute(cleanPath);
-});
-
-router._loadRoute(router._getCurrentURL())
+document.body.layoutInstance = null;
+router.loadRoute(router.currentPath);
 
 // if (router._getCurrentURL() === '/game/match')
 //     pong(); //TODO: find a way to render it server side

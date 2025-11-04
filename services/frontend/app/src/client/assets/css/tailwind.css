@@ -5,13 +5,11 @@
 @font-face {
 	font-family: PixelOperator;
 	src: url(/assets/fonts/PixelOperator.woff) format("woff");
-	/* src: url(../public/fonts/PixelOperator.woff); */
 }
 
 @font-face {
 	font-family: PixelOperatorBold;
 	src: url(/assets/fonts/PixelOperator-Bold.woff) format("woff");
-	/* src: url(../public/fonts/PixelOperator-Bold.woff); */
 }
 
 @layer theme {
@@ -168,6 +166,11 @@
 		--image-cont-size: 8.36rem;
 	}
 
+	.ifs {
+		--image-size: 16.36rem;
+		--image-cont-size: 18.36rem;
+	}
+
 	.thin {
 		--border-w: 2px;
 		--inner-border-w: 1px;
@@ -223,13 +226,14 @@
 
 	body {
 		margin: 0;
-		height: auto;
 		background: linear-gradient(180deg,
 				var(--gradient1) 0%,
 				var(--gradient2),
 				var(--gradient3),
 				var(--gradient4) 100%);
 		background-repeat: no-repeat;
+		display: grid;
+		place-content: center;
 	}
 
 	p,
@@ -385,7 +389,9 @@
 	}
 
 	button:hover>span,
-	button:focus-visible>span {
+	button:focus-visible>span,
+	a:hover>span,
+	a:focus-visible>span {
 		display: inline-block;
 		transform-origin: bottom center;
 		animation: dance 1.2s ease-in-out infinite;
@@ -644,17 +650,28 @@
 	}
 
 	.title-shadow {
-		text-shadow: -0px -0px var(--title-shadow),
-			-0.2px -0.1px var(--title-shadow), -0.4px -0.2px var(--title-shadow),
-			-0.6px -0.4px var(--title-shadow), -0.8px -0.4px var(--title-shadow),
-			-1px -0.5px var(--title-shadow), -1.2px -0.6px var(--title-shadow),
-			-1.4px -0.7px var(--title-shadow), -1.6px -0.8px var(--title-shadow),
-			-1.8px -0.9px var(--title-shadow), -2px -1px var(--title-shadow),
-			-2.2px -1.1px var(--title-shadow), -2.4px -1.2px var(--title-shadow),
-			-2.6px -1.3px var(--title-shadow), -2.8px -1.4px var(--title-shadow),
-			-3px -1.5px var(--title-shadow), -3.2px -1.6px var(--title-shadow),
-			-3.4px -1.7px var(--title-shadow), -3.6px -1.8px var(--title-shadow),
-			-3.8px -1.9px var(--title-shadow), -4px -2px var(--title-shadow);
+		text-shadow: 
+			-0.0px -0.0px var(--title-shadow),
+			-0.2px -0.1px var(--title-shadow),
+			-0.4px -0.2px var(--title-shadow),
+			-0.6px -0.4px var(--title-shadow),
+			-0.8px -0.4px var(--title-shadow),
+			-1.0px -0.5px var(--title-shadow),
+			-1.2px -0.6px var(--title-shadow),
+			-1.4px -0.7px var(--title-shadow),
+			-1.6px -0.8px var(--title-shadow),
+			-1.8px -0.9px var(--title-shadow),
+			-2.0px -1.0px var(--title-shadow),
+			-2.2px -1.1px var(--title-shadow),
+			-2.4px -1.2px var(--title-shadow),
+			-2.6px -1.3px var(--title-shadow),
+			-2.8px -1.4px var(--title-shadow),
+			-3.0px -1.5px var(--title-shadow),
+			-3.2px -1.6px var(--title-shadow),
+			-3.4px -1.7px var(--title-shadow),
+			-3.6px -1.8px var(--title-shadow),
+			-3.8px -1.9px var(--title-shadow),
+			-4.0px -2.0px var(--title-shadow);
 	}
 
 	.avatar-wrapper {

@@ -7,7 +7,7 @@
  * - `imedium`: Medium size
  * - `ilarge`: Large size
  */
-export type Size = 'iicon' | 'ismall' | 'imedium' | 'ilarge';
+export type Size = 'iicon' | 'ismall' | 'imedium' | 'ilarge' | 'ifs';
 
 /**
  * Menu orientation styles for layout rendering.
@@ -150,6 +150,12 @@ export interface buttonData {
     img: ImgData | null;
     ariaLabel: string;
     style?: BtnStyles;
+}
+
+export interface navigationLinksData {
+    datalink: string;
+    href: string;
+    title: string;
 }
 
 /**

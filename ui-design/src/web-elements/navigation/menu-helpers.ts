@@ -24,7 +24,7 @@ export function createMenu(
     size?: MenuSize,
     animated?: boolean,
 ): Menu {
-    const el = document.createElement('nav', { is: 'menu-wrapper' }) as Menu;
+    const el = document.createElement('nav', { is: 'nav-menu-wrapper' }) as Menu;
     el.MenuElements = content;
     el.MenuStyle = style;
     if (size) el.MenuSize = size;

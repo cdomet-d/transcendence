@@ -15,7 +15,7 @@ export class CustomTitle extends HTMLElement {
         const validLevel = ['1', '2', '3'].includes(level) ? level : '1';
         const validSize = ['0', '1', '2', '3'].includes(level) ? level : '1';
         this.innerHTML = `<h${validLevel}
-		class="f-yellow
+		class="f-yellow f-bold
 		text-center
 		title-shadow
 		whitepre

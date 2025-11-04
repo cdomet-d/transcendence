@@ -8,7 +8,7 @@ interface routeInterface {
 
 export class Router {
     /*                            PROPERTIES                                  */
-    _routes: Array< routeInterface >;
+    _routes: Array<routeInterface>;
 
     /*                           CONSTRUCTORS                                 */
     constructor(routes: routeInterface[]) {
@@ -16,32 +16,42 @@ export class Router {
     }
 
     /*                             METHODS                                    */
-    _getCurrentURL() {
+    #getRouteFromPath(path: string): routeInterface | undefined {
+        return this._routes.find((route) => route.path === path);
+    }
+
+	/** Getter for current path
+	*	@returns `window.location.pathname`
+	*/
+	get currentPath() {
         return window.location.pathname;
     }
 
-    _matchUrlToRoute(path: string): routeInterface | undefined {
-        return this._routes.find(route => route.path === path);
+    // resolveUrl() {
+    //     const route: routeInterface | undefined = this.#getRouteFromPath(this.currentPath);
+    //     if (!route) renderNotFound;
+    //     else route.callback;
+    // }
+
+    sanitisePath(path: string) {
+        if (path == '/') return path;
+        return path.replace(/\/+$/, '');
     }
 
-    _getCallback() {
-        const route: routeInterface | undefined = this._matchUrlToRoute(this._getCurrentURL());
-        if (!route)
-            renderNotFound;
-    	else 
-			route.callback;
-    }
-
-    _loadRoute(path: string) {
-        const matchedRoute = this._matchUrlToRoute(path);
+	/**
+	 * Parses the defined route array to check if the current URL is defined as a route.
+	 * Calls `renderNotFount()` if the route was not found, and the route's callback otherwise.
+	 */
+    loadRoute(path: string) {
+        const matchedRoute = this.#getRouteFromPath(path);
         if (!matchedRoute) {
-				renderNotFound;
+            renderNotFound();
             return;
         }
-        matchedRoute.callback();
         
-        if (matchedRoute.path === '/game/match')
-            pong();
+		matchedRoute.callback();
+
+        if (matchedRoute.path === '/game/match') pong();
         //TODO: eventually if other features need their script add an element script to routeInterface
     }
 }

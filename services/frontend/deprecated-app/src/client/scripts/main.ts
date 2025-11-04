@@ -20,14 +20,14 @@ document.addEventListener('click', (event) => {
 		if (path !== null) {
 	        window.history.pushState({}, '', path);
 	        const cleanPath = sanitisePath(path);
-			router._loadRoute(cleanPath);
+			router.loadRoute(cleanPath);
 		}
     }
 });
 
 window.addEventListener('popstate', () => {
     const cleanPath = sanitisePath(window.location.pathname);
-    router._loadRoute(cleanPath);
+    router.loadRoute(cleanPath);
 });
 
 if (router._getCurrentURL() === '/game/match')

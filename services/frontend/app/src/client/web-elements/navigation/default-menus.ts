@@ -1,9 +1,9 @@
-import type { buttonData, TabData } from '../types-interfaces.js';
+import type { buttonData, navigationLinksData, TabData } from '../types-interfaces.js';
 
-export const mainMenu: buttonData[] = [
-    { content: 'Leaderboard', type: 'button', img: null, ariaLabel: 'Leaderboard Menu Button' },
-    { content: 'Play', type: 'button', img: null, ariaLabel: 'Pong Game Menu Button' },
-    { content: 'Profile', type: 'button', img: null, ariaLabel: 'User Profile Menu Button' },
+export const mainMenu: navigationLinksData[] = [
+    { title: 'Leaderboard', datalink: 'leaderboard', href: '/leaderboard' },
+    { title: 'Play', datalink: 'pong-settings', href: '/pong-settings' },
+    { title: 'Profile', datalink: 'profile', href: '/user/' },
 ];
 
 export const gameMenu: buttonData[] = [

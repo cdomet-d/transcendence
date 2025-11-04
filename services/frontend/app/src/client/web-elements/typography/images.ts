@@ -1,4 +1,4 @@
-import type { ImgData } from '../types-interfaces.js';
+import type { ImgData, Size } from '../types-interfaces.js';
 import { createIcon } from './helpers.js';
 
 /**
@@ -91,15 +91,20 @@ export class NoResults extends HTMLDivElement {
             alt: 'A crying blue pixel art blob',
             id: 'no-results',
             size: 'ilarge',
-            src: 'assets/icons/no-result.png',
+            src: 'assets/images/no-result.png',
         };
     }
+
+	set size(size: Size) {
+		this.#noResultsImg.size = size; 
+	}
 
     connectedCallback() {
         const img = createIcon(this.#noResultsImg);
         const p = document.createElement('p');
         p.innerText = "There's nothing here :<";
         this.append(p, img);
+		p.classList.add('text-center', 'f-s', 'f-yellow', 'f-bold');
         img.classList.add('breathe', 'justify-self-center');
         this.render();
     }

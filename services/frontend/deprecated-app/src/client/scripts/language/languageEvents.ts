@@ -25,7 +25,7 @@ export function addLanguageEvents() {
 }
 
 function rerenderPage() {
-	const callback = router._getCallback();
+	const callback = router.getCallback();
 	const langDropdown = document.getElementById('lang-dropdown-container');
 	const page = document.getElementById('page');
 	if (!langDropdown || !page)

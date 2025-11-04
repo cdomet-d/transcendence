@@ -1,8 +1,8 @@
-import { createDropdown, createMenu } from './menu-helpers.js';
+import { createDropdown, createNavMenu } from './menu-helpers.js';
 import { createForm } from '../forms/helpers.js';
 import { createIcon } from '../typography/helpers.js';
 import { createNotificationBox } from '../users/notifications-helpers.js';
-import { DropdownMenu, Menu } from './menus.js';
+import { DropdownMenu, NavigationMenu } from './menus.js';
 import { Icon } from '../typography/images.js';
 import { iMeta } from '../default-values.js';
 import { NotifBox } from '../users/notifications.js';
@@ -17,15 +17,15 @@ import { mainMenu, languageMenu } from './default-menus.js';
 export class PageHeader extends HTMLElement {
     #home: Icon;
     #searchbar: Searchbar;
-    #mainNav: Menu;
-    #notif: NotifBox;
+    #mainNav: NavigationMenu;
+	#notif: NotifBox;
     #language: DropdownMenu;
 
     constructor() {
         super();
         this.#home = createIcon(iMeta);
         this.#searchbar = createForm('search-form');
-        this.#mainNav = createMenu(mainMenu, 'horizontal', 'm', false);
+        this.#mainNav = createNavMenu(mainMenu, 'horizontal', 'm', false);
         this.#notif = createNotificationBox();
         this.#language = createDropdown(languageMenu, 'Language', 'static');
     }

@@ -1,5 +1,5 @@
 import type { buttonData, GameType } from '../types-interfaces.js';
-import { createMenu } from '../navigation/menu-helpers.js';
+import { createActionMenu } from '../navigation/menu-helpers.js';
 
 //TODO: Make notifications tab-focusable
 //TODO: Buttons are actually a form
@@ -58,7 +58,7 @@ class NotifContent extends HTMLDivElement {
 
     /** Called when the element is connected; renders text and buttons within the container. */
     connectedCallback() {
-        const buttons = createMenu(notificationBtns, 'horizontal', 's');
+        const buttons = createActionMenu(notificationBtns, 'horizontal', 's');
         this.append(this.#text, buttons);
         this.className = 'grid grid-cols-[65%_32%] gap-s';
         this.id = 'notification';

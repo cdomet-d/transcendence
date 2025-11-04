@@ -12,6 +12,7 @@ function notFound(request: FastifyRequest, reply: FastifyReply) {
         .header('Content-Type', 'json')
         .send({ error: 'Not Found', message: 'The requested page does not exist' });
 }
+
 try {
     const serv: FastifyInstance = Fastify(options);
     serv.setNotFoundHandler(notFound);
@@ -25,13 +26,52 @@ try {
 }
 
 async function addPlugins(serv: FastifyInstance) {
+	// console.log(__dirname)
     await serv
-        .register(servRoutes)
         .register(fastifyStatic, {
-            root: '/app/dist/client/',
-            prefix: '/',
+            root: '/dist/client',
+            prefix: '/public/',
             decorateReply: true,
         })
+
+        .register(servRoutes)
+		// .register(fastifyStatic, {
+        //     root: '/app/dist/client/scripts',
+        //     prefix: '/public/scripts/',
+        //     decorateReply: false,
+        // })
+
+		// .register(fastifyStatic, {
+        //     root: '/app/dist/client/web-elements',
+        //     prefix: '/public/web-elements/',
+        //     decorateReply: false,
+        // })
+		
+        // .register(fastifyStatic, {
+        //     root: '/app/dist/client/css/',
+        //     prefix: '/public/css/',
+        //     decorateReply: false,
+        // })
+        // .register(fastifyStatic, {
+        //     root: '/app/dist/client/assets/fonts/',
+        //     prefix: '/public/fonts/',
+        //     setHeaders(res, path, stat) {
+        //         res.setHeader('Content-Type', 'font/woff');
+        //     },
+        //     decorateReply: false,
+        // })
+
+
+        // .register(fastifyStatic, {
+        //     root: '/app/dist/client/assets/images/',
+        //     prefix: '/public/images/',
+        //     decorateReply: false,
+        // })
+        // .register(fastifyStatic, {
+        //     root: '/app/dist/client/assets/locales/',
+        //     prefix: '/public/locales/',
+        //     decorateReply: false,
+        // })
         .register(
             cookie /*, {
 					secret: "", //TODO: add secret ?

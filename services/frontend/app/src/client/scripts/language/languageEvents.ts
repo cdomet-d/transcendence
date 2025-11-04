@@ -25,13 +25,12 @@ export function addLanguageEvents() {
 }
 
 function rerenderPage() {
-	const callback = router._getCallback();
 	const langDropdown = document.getElementById('lang-dropdown-container');
 	const page = document.getElementById('page');
 	if (!langDropdown || !page)
 		return; //TODO: handle error
 
-	callback;
+	router.loadRoute(router.currentPath);
 	langDropdown.innerHTML = renderLanguageDropdownButton();
 	addLanguageEvents();
 }

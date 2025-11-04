@@ -21,24 +21,24 @@ export class Router {
         return window.location.pathname;
     }
 
-    _matchUrlToRoute(path: string): routeInterface | undefined {
+    #matchUrlToRoute(path: string): routeInterface | undefined {
         return this._routes.find(route => route.path === path);
     }
 
-    _getCallback() : routeInterface["callback"] {
-        const route: routeInterface | undefined = this._matchUrlToRoute(this._getCurrentURL());
+    getCallback() : routeInterface["callback"] {
+        const route: routeInterface | undefined = this.#matchUrlToRoute(this._getCurrentURL());
         if (!route)
             return renderNotFound;
         return route.callback;
     }
 
-    _loadRoute(path: string) {
+    loadRoute(path: string) {
         const page = document.getElementById('page');
         const header = document.getElementById('header');
 
         if (!page || !header) return; //TODO: handle error
 
-        const matchedRoute = this._matchUrlToRoute(path);
+        const matchedRoute = this.#matchUrlToRoute(path);
         if (!matchedRoute) {
             // throw new Error('Route not found');
             page.innerHTML = renderNotFound();

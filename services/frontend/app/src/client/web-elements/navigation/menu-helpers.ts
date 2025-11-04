@@ -4,9 +4,35 @@ import type {
     ProfileView,
     DropdownBg,
     buttonData,
+	navigationLinksData,
 } from '../types-interfaces.js';
 
-import { Menu, SocialMenu, DropdownMenu } from './menus.js';
+import { NavigationMenu, ActionMenu, SocialMenu, DropdownMenu } from './menus.js';
+
+/**
+ * Creates a menu wrapper element with specified buttons, style, and optional size and animation.
+ *
+ * @param {navigationLinksData[]} content - Array of button metadata objects for menu buttons.
+ * @param {MenuStyle} style - Menu layout style, either 'vertical' or 'horizontal'.
+ * @param {MenuSize} [size] - Optional menu size variant.
+ * @param {boolean} [animated] - Optional flag to enable animation effects on menu buttons.
+ * @returns {Menu} A configured {@link Menu} div element.
+ *
+ */
+export function createNavMenu(
+    content: navigationLinksData[],
+    style: MenuStyle,
+    size?: MenuSize,
+    animated?: boolean,
+): NavigationMenu {
+    const el = document.createElement('nav', { is: 'nav-menu-wrapper' }) as NavigationMenu;
+    el.linkList = content;
+    el.menuStyle = style;
+    if (size) el.menuSize = size;
+    if (animated) el.animation = animated;
+    return el;
+}
+
 
 /**
  * Creates a menu wrapper element with specified buttons, style, and optional size and animation.
@@ -18,20 +44,19 @@ import { Menu, SocialMenu, DropdownMenu } from './menus.js';
  * @returns {Menu} A configured {@link Menu} div element.
  *
  */
-export function createMenu(
+export function createActionMenu(
     content: buttonData[],
     style: MenuStyle,
     size?: MenuSize,
     animated?: boolean,
-): Menu {
-    const el = document.createElement('nav', { is: 'menu-wrapper' }) as Menu;
+): ActionMenu {
+    const el = document.createElement('nav', { is: 'action-menu-wrapper' }) as ActionMenu;
     el.MenuElements = content;
     el.MenuStyle = style;
     if (size) el.MenuSize = size;
     if (animated) el.animation = animated;
     return el;
 }
-
 /**
  * Creates a social menu with button content and profile view context.
  *
