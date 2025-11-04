@@ -1,5 +1,6 @@
 import { pong } from '../game/pong.js';
 import { router } from '../main.js';
+import type { idsObj } from '../game/pong.js';
 
 let wsInstance: any = null;
 
@@ -24,19 +25,12 @@ function wsConnect() {
 
 		ws.onmessage = (message: any) => {
 			// console.log("Client received WS message!");
-
-			const gameRequest/* : gameRequest */ = JSON.parse(message.data);
-			const gameID: number = gameRequest.gameID;
-			if (gameRequest.event === "declined") {
-				console.log("Error: Failed to start game: #" + gameID);
-				return;
-			} else if (gameRequest.event === "approved") {
-				window.history.pushState({}, '', '/game/match');
-				router._loadRoute('/game/match');
-				console.log("Client ready to connect game #" + gameID);
-				// ws connect to "/game/match" and send userID + gameID
-				pong(gameRequest);
-			}
+			const ids: idsObj = JSON.parse(message.data);
+			window.history.pushState({}, '', '/game/match');
+			router._loadRoute('/game/match');
+			console.log("Client ready to connect game #" + ids.gameID);
+			// ws connect to "/game/match" and send userID + gameID
+			pong(ids);
 		}
 
 		// TODO: this ugly, make pretty

@@ -1,15 +1,13 @@
 import { renderGame } from "./game.render.utils.js";
 import { Game } from "./game.class.js";
 
-interface gameRequest {
-	event: string,
+export interface idsObj {
 	userID: number,
 	gameID: number
 }
 
-// adding parameter to pong() and wsRequest(): gameRequest '{"userID", "gameID"}'
-export function pong(gameRequest: gameRequest) {
-	console.log("game request obj: ", gameRequest);
+export function pong(ids: idsObj) {
+	console.log("game request obj: ", ids);
 
 	const ctx = getCanvasContext();
 	if (!ctx) {
@@ -19,7 +17,7 @@ export function pong(gameRequest: gameRequest) {
 	const game: Game = new Game(ctx, false); //TODO: need to know if game is local or remote
 	renderGame(game); //TODO: before rendering need to receive players names
 	import("./ws.req.js").then(({ wsRequest }) => {
-		wsRequest(game, {gameID: gameRequest.gameID, userID: gameRequest.userID});
+		wsRequest(game, ids);
 	}) //TODO: can import fail ?
 }
 

@@ -21,47 +21,15 @@ export async function natsSubscription(serv: FastifyInstance) {
 		for await (const msg of sub) {
 
 			const _gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
-			serv.log.info(`Received message: ${JSON.stringify(_gameInfo)}`);
+			// serv.log.info(`Received message: ${JSON.stringify(_gameInfo)}`);
 			serv.gameRegistry.addGame(new Game(_gameInfo, serv.nc));
 
 			// Approval given HERE from PONG if game is ok to start
-			if (msg.reply) {
-				const gameReply = {
-					event: "approved",
-					game: _gameInfo
-				}
-				natsPublish(msg.reply, JSON.stringify(gameReply));
-			} else { // Real question is: What could go wrong? Honestly? I'd like to know, I'm being serious
-				// const gameReply = {
-				// 	event: "declined",
-				// 	game: _gameInfo
-				// }
-				// natsPublish("game.reply", JSON.stringify(gameReply));
-				console.log(`Error: No reply subject provided in "game.request"`);
-				return;
-			}
+			if (msg.reply)
+				natsPublish(msg.reply, JSON.stringify({ gameID: _gameInfo.gameID, users: _gameInfo.users}));
 		}
 	})();
 
 	// serv.gameRegistry.addGame(new Game(gameobj, serv.nc)); //TODO: for testing
 };
 
-// import type { user } from '../classes/game.class.js';
-// const player1: user = {
-// 	username: "cha",
-// 	userID: 1
-// }
-
-// const player2: user = {
-// 	username: "sweet",
-// 	userID: 2
-// }
-
-// const gameobj: gameInfo = {
-// 	gameID: 1,
-// 	score: [0, 0],
-// 	local: true,
-// 	users: [player1, player2],
-// 	winnerID: 0,
-// 	loserID: 0,
-// }
