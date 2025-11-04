@@ -2,6 +2,17 @@ export const HEIGHT = 270;
 export const WIDTH = 480;
 import type { coordinates, repObj } from "./mess.validation.js";
 
+interface customObj {
+	canvasHeight: number,
+	canvasWidth: number,
+	ballRadius: number,
+	paddleWidth: number,
+	paddleHeight: number,
+	paddleSpeed: number,
+	ballSpeed: {dx: number, dy: number} // TODO: only dx ?
+	//ball and paddle colors
+}
+
 export interface keysObj {
 	_w: boolean,
 	_s: boolean,
@@ -56,8 +67,8 @@ export class Game {
 			dx: 0.3, 
 			dy: 0.03, 
 		};
-		this.#_leftPaddle = {x: 10, y: 108}; //TODO: put operation
-		this.#_rightPaddle = {x: 460, y: 108};
+		this.#_leftPaddle = {x: 10, y: HEIGHT / 2 - 27/*half height paddle */}; //TODO: put operation
+		this.#_rightPaddle = {x: WIDTH - 20/*paddle width + 10*/, y: HEIGHT / 2 - 27};
 		this.#_paddleSpeed = 0.2;
 		this.#_frameId = 0
 		this.#_delta = 0;

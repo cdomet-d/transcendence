@@ -56,7 +56,7 @@ function upperAndBottomWallCollision(game: Game, newY: number): number {
 
 function leftPadCollision(game: Game, leftPad: coordinates, newX: number, newY: number): boolean {
 	const ball: coordinates = {x: newX - (leftPad.x + 5), y: newY - (leftPad.y + 27)};
-	const paddle: coordinates = {x :(10 / 2), y:(54 / 2)};
+	const paddle: coordinates = {x: 5, y: 27};
 	if (distBallPad(ball, paddle) <= BALL_RADIUS) {
 		[game.ball.x, game.ball.y] = getPosition(game, leftPad, newX, newY);
 		return true;
@@ -66,7 +66,7 @@ function leftPadCollision(game: Game, leftPad: coordinates, newX: number, newY: 
 
 function rightPadCollision(game: Game, rightPad: coordinates, newX: number, newY: number): boolean {
 	const ball: coordinates = {x: newX - (rightPad.x + 5), y: newY - (rightPad.y + 27)};
-	const paddle: coordinates = {x :(10 / 2), y:(54 / 2)};
+	const paddle: coordinates = {x: 5, y: 27};
 	if (distBallPad(ball, paddle) <= BALL_RADIUS) {
 		[game.ball.x, game.ball.y] = getPosition(game, rightPad, newX, newY);
 		return true

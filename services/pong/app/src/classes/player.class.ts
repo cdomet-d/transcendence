@@ -32,16 +32,16 @@ export class Player {
 		this.#_reply = {
 			_ID: 0, 
 			_timestamp: 0, 
-			_leftPad: {x: 10, y: 108},
-			_rightPad: {x: 460, y: 108}, 
+			_leftPad: {x: 10, y: HEIGHT / 2 - 27/*half height paddle */}, //TODO: put operation
+			_rightPad: {x: WIDTH - 20/*paddle width + 10*/, y: HEIGHT / 2 - 27}, 
 			_ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025}, 
 			_score: [0, 0]
 		};
 		this.#_serverSide = serverSide;
 		if (serverSide === "right")
-			this.#_paddle = {x: 460, y: 108};
+			this.#_paddle = {x: WIDTH - 20/*paddle width + 10*/, y: HEIGHT / 2 - 27};
 		else
-			this.#_paddle = {x: 10, y: 108};
+			this.#_paddle = {x: 10, y: HEIGHT / 2 - 27/*half height paddle */};
 		this.#_clientSide = clientSide;
 		this.#_score = 0;
 	}
