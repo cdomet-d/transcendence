@@ -3,9 +3,6 @@ export const WIDTH = 480;
 import type { coordinates, repObj } from "./mess.validation.js";
 
 interface customObj {
-	canvasHeight: number,
-	canvasWidth: number,
-	ballRadius: number,
 	paddleWidth: number,
 	paddleHeight: number,
 	paddleSpeed: number,
