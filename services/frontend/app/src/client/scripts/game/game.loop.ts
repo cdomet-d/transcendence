@@ -16,6 +16,10 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 	return async function gameLoop(timestamp: number) {
 		const latestReply: repObj | undefined = game.replyHistory[game.replyHistory.length - 1];
 
+		// opponent paddle interpolation
+		if (!game.local)
+			interpolation(game);
+
 		// client paddle && ball reconciliation
 		if (latestReply !== undefined && game.reqHistory.has(latestReply._ID))
 			reconciliation(game, latestReply);
@@ -28,10 +32,6 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 			game.delta -= TIME_STEP;
 		}
 
-		// opponent paddle interpolation
-		if (!game.local)
-			interpolation(game);
-		
 		// ball dead reckoning
 		deadReckoning(game, latestReply);
 		
