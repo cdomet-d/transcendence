@@ -21,8 +21,8 @@ export async function natsSubscription(serv: FastifyInstance) {
 		for await (const msg of sub) {
 
 			const _gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
+			serv.log.info(`Received message: ${JSON.stringify(_gameInfo)}`);
 			serv.gameRegistry.addGame(new Game(_gameInfo, serv.nc));
-			// console.log(`Received message: ${JSON.stringify(_gameInfo)}`);
 
 			// Approval given HERE from PONG if game is ok to start
 			if (msg.reply) {
@@ -46,22 +46,22 @@ export async function natsSubscription(serv: FastifyInstance) {
 	// serv.gameRegistry.addGame(new Game(gameobj, serv.nc)); //TODO: for testing
 };
 
-import type { user } from '../classes/game.class.js';
-const player1: user = {
-	_username: "cha",
-	_userID: 1
-}
+// import type { user } from '../classes/game.class.js';
+// const player1: user = {
+// 	username: "cha",
+// 	userID: 1
+// }
 
-const player2: user = {
-	_username: "sweet",
-	_userID: 2
-}
+// const player2: user = {
+// 	username: "sweet",
+// 	userID: 2
+// }
 
-const gameobj: gameInfo = {
-	_gameID: 1,
-	_score: [0, 0],
-	_local: true,
-	_users: [player1, player2],
-	_winner: 0,
-	_loser: 0,
-}
+// const gameobj: gameInfo = {
+// 	gameID: 1,
+// 	score: [0, 0],
+// 	local: true,
+// 	users: [player1, player2],
+// 	winnerID: 0,
+// 	loserID: 0,
+// }
