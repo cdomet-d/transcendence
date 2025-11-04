@@ -7,18 +7,19 @@ export const HEIGHT = 270;
 export const WIDTH = 480;
 
 export interface user {
-	_username: string,
-	_userID: number,
+	userID: number,
+	username: string,
 	//_score: number; //TODO: needed?
 }
 
 export interface gameInfo {
-	_gameID: number,
-	_score: [number, number],
-	_local: boolean,
-	_users: [user, user],
-	_winner: number,
-	_loser: number
+	gameID: number,
+	tournamentID: number,
+	remote: boolean,
+	users: [user, user],
+	score: [number, number],
+	winnerID: number,
+	loserID: number
 }
 
 export interface ballObj {
@@ -76,7 +77,7 @@ export class Game {
 	}
 
 	get gameID(): number {
-		return this.#_gameInfo._gameID;
+		return this.#_gameInfo.gameID;
 	}
 
 	get players(): playerTab {
@@ -84,11 +85,13 @@ export class Game {
 	}
 
 	get local(): boolean {
-		return this.#_gameInfo._local;
+		if (this.#_gameInfo.remote)
+			return false
+		return true;
 	}
 
 	get randUserID(): number {
-		return this.#_gameInfo._users[1]!._userID;
+		return this.#_gameInfo.users[1]!.userID;
 	}
 		
 	get ball(): ballObj {
@@ -160,8 +163,8 @@ export class Game {
 	}
 
 	public fillGameInfos() {
-		const user1: number = this.#_gameInfo._users[0]._userID;
-		const user2: number = this.#_gameInfo._users[1]._userID;
+		const user1: number = this.#_gameInfo.users[0].userID;
+		const user2: number = this.#_gameInfo.users[1].userID;
 		let score1: number = 0;
 		let score2: number = 0;
 		if (this.#_players[0]) {
@@ -176,14 +179,14 @@ export class Game {
 			else
 				score2 = this.#_players[1].score;
 		}
-		this.#_gameInfo._score = [score1, score2];
+		this.#_gameInfo.score = [score1, score2];
 		if (score1 > score2) {
-			this.#_gameInfo._winner = user1;
-			this.#_gameInfo._loser = user2;
+			this.#_gameInfo.winnerID = user1;
+			this.#_gameInfo.loserID = user2;
 		}
 		else {
-			this.#_gameInfo._winner = user2;
-			this.#_gameInfo._loser = user1;
+			this.#_gameInfo.winnerID = user2;
+			this.#_gameInfo.loserID = user1;
 		}
 		console.log("GAME INFO", JSON.stringify(this.#_gameInfo));
 	}
