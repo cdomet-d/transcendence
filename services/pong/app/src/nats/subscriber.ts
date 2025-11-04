@@ -25,8 +25,14 @@ export async function natsSubscription(serv: FastifyInstance) {
 			serv.gameRegistry.addGame(new Game(_gameInfo, serv.nc));
 
 			// Approval given HERE from PONG if game is ok to start
-			if (msg.reply)
-				natsPublish(msg.reply, JSON.stringify({ gameID: _gameInfo.gameID, users: _gameInfo.users}));
+			if (msg.reply) {
+				const game = {
+					gameID: _gameInfo.gameID,
+					users: _gameInfo.users,
+					remote: _gameInfo.remote
+				}
+				natsPublish(msg.reply, JSON.stringify(game));
+			}
 		}
 	})();
 

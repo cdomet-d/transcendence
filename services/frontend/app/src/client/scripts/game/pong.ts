@@ -1,23 +1,24 @@
 import { renderGame } from "./game.render.utils.js";
 import { Game } from "./game.class.js";
 
-export interface idsObj {
+export interface gameRequest {
 	userID: number,
-	gameID: number
+	gameID: number,
+	remote: boolean
 }
 
-export function pong(ids: idsObj) {
-	console.log("game request obj: ", ids);
+export function pong(gameReq: gameRequest) {
+	console.log("game request obj: ", gameReq);
 
 	const ctx = getCanvasContext();
 	if (!ctx) {
 		console.log("error: context not supported");
 		return; //TODO: display capibara ?
 	}
-	const game: Game = new Game(ctx, false); //TODO: need to know if game is local or remote
+	const game: Game = new Game(ctx, gameReq.remote);
 	renderGame(game); //TODO: before rendering need to receive players names
 	import("./ws.req.js").then(({ wsRequest }) => {
-		wsRequest(game, ids);
+		wsRequest(game, {gameID: gameReq.gameID, userID: gameReq.userID});
 	}) //TODO: can import fail ?
 }
 

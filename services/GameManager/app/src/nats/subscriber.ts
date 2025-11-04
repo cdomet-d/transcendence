@@ -3,12 +3,12 @@ import { connect, StringCodec } from 'nats';
 import { wsSend } from '../lobby/wsHandler.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
 import { wsClientsMap } from '../lobby/wsHandler.js';
-import type { userInfo } from '../manager.js';
 
 // TODO: move to manager.js with others
-export interface idsObj {
+export interface gameRequest {
 	userID: number,
-	gameID: number
+	gameID: number,
+	remote: boolean
 }
 
 interface user {
@@ -24,7 +24,7 @@ export async function natsSubscribe() {
 	(async () => {
 		for await (const msg of pregame) {
 			const sc = StringCodec();
-			const game: {gameID: number, users: user[]} = JSON.parse(sc.decode(msg.data));
+			const game: {gameID: number, users: user[], remote: boolean} = JSON.parse(sc.decode(msg.data));
 			// console.log(`GM received in "game.reply" : `, payload);
 
 			// signal BOTH client via WS their game is ready
@@ -35,11 +35,12 @@ export async function natsSubscribe() {
 				const userID = game.users[i]!.userID;
 				const socket = wsClientsMap.get(userID);
 
-				const ids: idsObj = {
+				const gameReq: gameRequest = {
 					userID: userID,
-					gameID: game.gameID
+					gameID: game.gameID,
+					remote: game.remote
 				}
-				wsSend(socket, JSON.stringify(ids));
+				wsSend(socket, JSON.stringify(gameReq));
 			}
 		}
 	})();

@@ -43,9 +43,12 @@ export class Game {
 	#_clockOffset: number;
 
 	/*                            CONSTRUCTORS                               */
-	constructor(ctx: CanvasRenderingContext2D, local: boolean) {
+	constructor(ctx: CanvasRenderingContext2D, remote: boolean) {
 		this.#_ctx = ctx;
-		this.#_local = local;
+		if (remote)
+			this.#_local = false;
+		else
+			this.#_local = true;
 		this.#_score = [0, 0];
 		this.#_ball = {
 			x: WIDTH / 2, 
