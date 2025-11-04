@@ -25,18 +25,29 @@ import { NatsConnection } from 'nats';
 //init server
 export async function init(): Promise<FastifyInstance> {
 	const serv: FastifyInstance = Fastify(options);
-	serv.decorate("gameRegistry", new GameRegistry());
+	
+	//plugins
+	addPlugins(serv);
 
-	//nats
+	// decorations
+	serv.decorate("gameRegistry", new GameRegistry());
 	const nc: NatsConnection = await initNatsConnection();
 	serv.decorate("nc", nc);
 	await natsSubscription(serv);
 
-	//plugins
-	addPlugins(serv);
-	await serv.ready();
+	//hooks
+	addHooks(serv);
 
+	await serv.ready();
 	return (serv);
+}
+
+//add hook
+function addHooks(serv: FastifyInstance) {
+	serv.addHook('onClose', (instance, done) => {
+	  instance.nc.close();
+	  done()
+	})
 }
 
 //add plugins
