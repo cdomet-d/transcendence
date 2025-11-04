@@ -50,7 +50,7 @@ export async function natsSubscribe() {
 		for await (const msg of postgame) {
 			const sc = StringCodec();
 			const payload = sc.decode(msg.data);
-			console.log(`GM received following in "game.over" :\n`, payload);
+			console.log(`GM received following in "game.over" :\n`, JSON.stringify(payload));
 
 			tournamentState(payload);
 		}
