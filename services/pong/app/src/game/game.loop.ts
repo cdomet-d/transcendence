@@ -55,7 +55,7 @@ function endGame(player1: Player, player2: Player, game: Game) {
 	sendToPlayers(game, player1, player2);
 	game.fillGameInfos();
 	const sc = StringCodec();
-	game.nc.publish("game.end", sc.encode(JSON.stringify(game.infos)));
+	game.nc.publish("game.over", sc.encode(JSON.stringify(game.infos)));
 	player1.socket.close();
 	if (!game.local)
 		player2.socket.close();
