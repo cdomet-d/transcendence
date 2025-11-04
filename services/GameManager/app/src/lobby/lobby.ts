@@ -43,6 +43,7 @@ export function addUserToLobby(uid: number, lobbyID: number) {
 	const lobby/* : lobbyInfo | undefined */ = lobbyMap.get(lobbyID);
 	if (!lobby) {
 		console.log("Error: lobbyID not found in GM lobbyMap!");
+		return;
 	}
 	lobby?.userList.push({ userID: uid });
 	console.log(`User #${uid} has been added to lobby`);
@@ -81,11 +82,11 @@ function getUniqueLobbyID(): number {
 
 
 export function printPlayersInLobby(lobbyID: number) {
-	const lobby = lobbyMap.get(1);
+	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) {
 		console.log("AAAH PAS DE LOBBY");
 	}
 	lobby?.userList.forEach(user => {
-		console.log(`User #${user.userID} is in Lobby #1`);
+		console.log(`User #${user.userID} is in Lobby #${lobbyID}`);
 	});
 }

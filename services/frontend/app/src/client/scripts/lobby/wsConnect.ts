@@ -69,9 +69,9 @@ function wsConnect() {
 	}
 }
 
-function handleTournamentStart() {
+function handleTournamentStart(format: string) {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-		const message = createGameRequestForm();
+		const message = createGameRequestForm(format);
 		console.log("Client sending REQUEST_FORM to GM:\n", message);
 		wsInstance.send(message);
 	} else {

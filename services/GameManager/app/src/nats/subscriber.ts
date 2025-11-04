@@ -17,8 +17,8 @@ export async function natsSubscribe() {
 			const game = payload.game;
 			// console.log(`GM received in "game.reply" : `, payload);
 
-			for (let i = 0; i < game.users.length; i++) {
-				const userID = game.users[i].userID;
+			for (let i = 0; i < game.userList.length; i++) {
+				const userID = game.userList[i].userID;
 				const socket = wsClientsMap.get(userID);
 
 				const gameRequest: gameRequest = {

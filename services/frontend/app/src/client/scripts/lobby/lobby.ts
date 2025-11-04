@@ -3,7 +3,7 @@ import { handleTournamentStart, handleLobbyRequest } from "./wsConnect.js";
 
 interface lobbyInfo {
 	remote: boolean,
-	format: "quick" | "tournament",
+	format: "quick" | "tournament" | string,
 	userList: userInfo[],
 	players: number
 	// gameSettings: gameSettingsObj
@@ -45,10 +45,15 @@ function attachLobbyMenuListeners() {
 }
 
 function attachTournamentListener() {
-	const startButton = document.getElementById('start-tournament-btn');
+	const startTournamentButton = document.getElementById('start-tournament-btn');
+	const startQuickmatchButton = document.getElementById('start-quickmatch-btn');
 
-	if (startButton) {
-		startButton.addEventListener('click', handleTournamentStart);
+	if (startTournamentButton) {
+		startTournamentButton.addEventListener('click', () => handleTournamentStart("tournament"));
+	}
+
+	if (startQuickmatchButton) {
+		startQuickmatchButton.addEventListener('click', () => handleTournamentStart("quick"));
 	}
 }
 
@@ -58,18 +63,18 @@ interface gameRequestForm {
 }
 
 // TODO: gameRequestForm 's payload is basically lobbyInfo
-function createGameRequestForm(): string {
+function createGameRequestForm(format: string): string {
 	const gameRequestForm: gameRequestForm = {
 		event: "GAME_REQUEST",
 		payload: {
-			format: "tournament",
+			format: format,
 			remote: true,
-			players: 4,
+			players: format === "quick" ? 2 : 4,
 			userList: [
 				{ userID: 1, username: "sam" },
 				{ userID: 2, username: "alex" },
-				{ userID: 3, username: "cha" },
-				{ userID: 4, username: "coco" }
+				// { userID: 3, username: "cha" },
+				// { userID: 4, username: "coco" }
 			]
 		}
 	};
