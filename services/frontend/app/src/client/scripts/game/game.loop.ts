@@ -56,7 +56,7 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 }
 
 function interpolation(game: Game) {
-	const renderTime: number = performance.now() - 100; //TODO: put 100 in a var
+	const renderTime: number = performance.now() - 150; //TODO: put 150 in a var
 	const updates: [repObj, repObj] | null = game.getReplies(renderTime);
 
 	if (updates) {
