@@ -20,7 +20,7 @@ function wsConnect() {
 	}
 
 	ws.onopen = () => {
-		console.log("WebSocket connection established!")
+		console.log("LOBBY webSocket connection established!")
 
 		ws.onmessage = (message: any) => {
 			// console.log("Client received WS message!");
@@ -35,7 +35,7 @@ function wsConnect() {
 				router._loadRoute('/game/match');
 				console.log("Client ready to connect game #" + gameID);
 				// ws connect to "/game/match" and send userID + gameID
-				pong(message.data);
+				pong(gameRequest);
 			}
 		}
 
