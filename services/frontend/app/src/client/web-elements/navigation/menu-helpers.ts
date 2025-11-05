@@ -22,13 +22,11 @@ import { NavigationMenu, ActionMenu, SocialMenu, DropdownMenu } from './menus.js
 export function createNavMenu(
     content: navigationLinksData[],
     style: MenuStyle,
-    size?: MenuSize,
     animated?: boolean,
 ): NavigationMenu {
     const el = document.createElement('nav', { is: 'nav-menu-wrapper' }) as NavigationMenu;
     el.linkList = content;
     el.menuStyle = style;
-    if (size) el.menuSize = size;
     if (animated) el.animation = animated;
     return el;
 }

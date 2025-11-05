@@ -9,12 +9,12 @@ const emptyLink: navigationLinksData = {
 export class NavigationLinks extends HTMLAnchorElement {
     #info: navigationLinksData;
     #animated: boolean;
-	#clickHandler: (ev: Event) => void;
+    #clickHandler: (ev: Event) => void;
     constructor() {
         super();
         this.#info = emptyLink;
         this.#animated = false;
-		this.#clickHandler = this.#loadNewPage.bind(this);
+        this.#clickHandler = this.#loadNewPage.bind(this);
     }
 
     set info(data: navigationLinksData) {
@@ -30,7 +30,7 @@ export class NavigationLinks extends HTMLAnchorElement {
     }
 
     #loadNewPage(ev: Event) {
-		console.log('Load page')
+        console.log('Load page');
         const link = (ev.target as HTMLElement).closest('[data-link]');
         if (link) {
             ev.preventDefault();
@@ -45,23 +45,17 @@ export class NavigationLinks extends HTMLAnchorElement {
     }
 
     connectedCallback() {
-		this.addEventListener('click', this.#clickHandler);
+        this.addEventListener('click', this.#clickHandler);
         this.render();
     }
 
-	disconnectedCallback() {
-		this.removeEventListener('click', this.#clickHandler);
-	}
+    disconnectedCallback() {
+        this.removeEventListener('click', this.#clickHandler);
+    }
 
     /** Renders simple textual button content. */
     renderTextualBtn() {
         this.textContent = this.#info.title;
-        this.classList.add(
-            'hover:transform',
-            'hover:scale-[1.02]',
-            'focus-visible:transform',
-            'focus-visible:scale-[1.02]'
-        );
     }
 
     /** Renders animated button text letter-by-letter. */
@@ -75,13 +69,15 @@ export class NavigationLinks extends HTMLAnchorElement {
             this.append(letterSpan);
             index += 0.1;
         }
-        this.classList.add('t1', 'button-shadow');
+        this.classList.add('t2', 'button-shadow');
     }
 
     render() {
         this.className =
             'box-border brdr pad-xs input-emphasis outline-hidden \
-			overflow-hidden whitenowrap cursor-pointer button bg-yellow';
+			overflow-hidden whitenowrap cursor-pointer button bg-yellow\
+			 w-full text-center hover:transform hover:scale-[1.02] \
+			 focus-visible:transform focus-visible:scale-[1.02]' ;
         if (this.#info.title && !this.#animated) {
             this.renderTextualBtn();
         } else if (this.#info.title && this.#animated) {

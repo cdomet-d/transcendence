@@ -25,24 +25,28 @@ export class PageHeader extends HTMLElement {
         super();
         this.#home = createIcon(iMeta);
         this.#searchbar = createForm('search-form');
-        this.#mainNav = createNavMenu(mainMenu, 'horizontal', 'm', false);
+        this.#mainNav = createNavMenu(mainMenu, 'horizontal', false);
         this.#notif = createNotificationBox();
         this.#language = createDropdown(languageMenu, 'Language', 'static');
     }
 
     connectedCallback() {
-        this.append(this.#home, this.#searchbar, this.#notif, this.#mainNav, this.#language);
+        this.append(this.#home, this.#searchbar, this.#mainNav, this.#language, this.#notif);
         this.render();
     }
 
     render() {
         this.classList.add(
             'box-border',
+			'pad-xs',
             'w-full',
             'grid',
             'gap-xs',
             'header',
-            'place-content-center',
+			'fixed',
+			'top-0',
+			'left-0',
+			'justify-evenly'
         );
     }
 }

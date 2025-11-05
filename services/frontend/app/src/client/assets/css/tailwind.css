@@ -179,11 +179,11 @@
 	}
 
 	.sidebar-right {
-		grid-template-columns: 61% 37.8%;
+		grid-template-columns: 60% 36.8%;
 	}
 
 	.sidebar-left {
-		grid-template-columns: 37.8% 61%;
+		grid-template-columns: 36.8% 60%;
 	}
 
 	/* Used to hide some UI elements from viewing users, 
@@ -225,15 +225,13 @@
 	}
 
 	body {
-		margin: 0;
+		margin: 0 auto;
 		background: linear-gradient(180deg,
 				var(--gradient1) 0%,
 				var(--gradient2),
 				var(--gradient3),
 				var(--gradient4) 100%);
 		background-repeat: no-repeat;
-		display: grid;
-		place-content: center;
 	}
 
 	p,
@@ -383,7 +381,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		min-width: var(--l);
+		min-width: var(--m);
 		height: 100%;
 		width: 100%;
 	}
@@ -584,7 +582,7 @@
 	}
 
 	.header {
-		grid-template-columns: 5% 45% 5% 35% 10%;
+		grid-template-columns: 37.5px 40% 35% 8% 5%;
 		grid-template-rows: var(--ml);
 		place-items: center;
 	}
@@ -650,7 +648,7 @@
 	}
 
 	.title-shadow {
-		text-shadow: 
+		text-shadow:
 			-0.0px -0.0px var(--title-shadow),
 			-0.2px -0.1px var(--title-shadow),
 			-0.4px -0.2px var(--title-shadow),

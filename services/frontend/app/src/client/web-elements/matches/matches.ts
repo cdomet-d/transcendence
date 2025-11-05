@@ -1,4 +1,5 @@
 import type { MatchOutcome } from '../types-interfaces.js';
+import { createNoResult } from '../typography/helpers.js';
 
 /**
  * Creates an InlineMatch element and populates it with match outcome data.
@@ -10,6 +11,18 @@ export function createMatchOutcome(match: MatchOutcome): InlineMatch {
     el.match = match;
     el.createSpans();
     return el;
+}
+
+/**
+ * Creates a match history element and populates it with match data.
+ *
+ * @param {MatchOutcome[]} matches - Array of match outcome objects.
+ * @returns {MatchHistory} A {@link MatchHistory} div element containing the match history.
+ */
+export function createMatchHistory(matches: MatchOutcome[]): MatchHistory {
+	const el = document.createElement('div', { is: 'match-history' }) as MatchHistory;
+	el.setHistory(matches);
+	return el;
 }
 
 /**
@@ -57,6 +70,7 @@ export class InlineMatch extends HTMLDivElement {
             span.textContent = key;
         }
         this.classList.add('bg-yellow');
+		this.id = 'lb-header'
         return this;
     }
 
@@ -72,6 +86,7 @@ export class InlineMatch extends HTMLDivElement {
             span.id = key;
             span.textContent = this.#data[key as keyof MatchOutcome].toString();
         }
+		this.id = 'match'
         return this;
     }
     connectedCallback() {
@@ -98,19 +113,31 @@ if (!customElements.get('inline-match')) {
 export class MatchHistory extends HTMLDivElement {
     constructor() {
         super();
+		this.createHeader();
     }
+
+	createHeader() {
+        const header = document.createElement('div', { is: 'inline-match' }) as InlineMatch;
+        this.append(header.createHeader());
+	}
 
     /**
      * Populates the match history with a header and InlineMatch elements for each match.
      * @param matches - Array of match outcome data.
      */
     setHistory(matches: MatchOutcome[]) {
-        const header = document.createElement('div', { is: 'inline-match' }) as InlineMatch;
-        this.append(header.createHeader());
-
-        matches.forEach((el) => {
-            this.append(createMatchOutcome(el));
-        });
+		const currentHistory = Array.from(this.children);
+		console.log(currentHistory);
+		currentHistory.forEach((el) => {
+			 if (el.id !== 'lb-header') el.remove();
+		})
+        if (matches.length < 1) {
+            this.append(createNoResult('ilarge'));
+        } else {
+            matches.forEach((el) => {
+                this.append(createMatchOutcome(el));
+            });
+        }
     }
 
     connectedCallback() {

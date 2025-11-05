@@ -1,7 +1,6 @@
 import { TabContainer } from './tabs.js';
-import { MatchHistory } from '../stats/matches.js';
 import { UserMasonery } from '../users/user-profile-containers.js';
-import type { MatchOutcome, TabData, UserData } from '../types-interfaces.js';
+import type { TabData, UserData } from '../types-interfaces.js';
 
 /**
  * Creates a tab wrapper element containing an array of tabs.
@@ -13,18 +12,6 @@ import type { MatchOutcome, TabData, UserData } from '../types-interfaces.js';
 export function createTabs(list: TabData[]): TabContainer {
     const el = document.createElement('div', { is: 'tab-container' }) as TabContainer;
     el.tabList = list;
-    return el;
-}
-
-/**
- * Creates a match history element and populates it with match data.
- *
- * @param {MatchOutcome[]} matches - Array of match outcome objects.
- * @returns {MatchHistory} A {@link MatchHistory} div element containing the match history.
- */
-export function createMatchHistory(matches: MatchOutcome[]): MatchHistory {
-    const el = document.createElement('div', { is: 'match-history' }) as MatchHistory;
-    el.setHistory(matches);
     return el;
 }
 

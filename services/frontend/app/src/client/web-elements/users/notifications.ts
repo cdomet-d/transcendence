@@ -139,8 +139,9 @@ class NotifPanel extends HTMLDivElement {
     constructor() {
         super();
         this.id = 'notifPopup';
-        this.className = 'hidden fixed';
+        this.className = 'hidden fixed z-1';
         this.#content = document.createElement('div');
+        this.append(this.#content);
     }
 
     /** Adds a default message when the list has no notifications. */
@@ -157,10 +158,9 @@ class NotifPanel extends HTMLDivElement {
 
         const notifDecor = document.createElement('img');
         notifDecor.src = '/public/images/notification-bubble.png';
-        notifDecor.className = 'h-[32px] w-[16px] absolute right-[-20px] top-[8px]';
-
         this.#content.append(notifDecor);
-        this.append(this.#content);
+        notifDecor.className = 'h-[32px] w-[16px] absolute right-[-20px] top-[4px]';
+
     }
 
     /** Toggles the panel's visible state by switching its `selected` attribute. */
@@ -247,8 +247,9 @@ export class NotifBox extends HTMLDivElement {
     computePanelPos() {
         const pos = this.#toggle.getBoundingClientRect();
         const popupWidth = this.#popup.offsetWidth;
-        const pOffsetLeft = pos.left - (popupWidth + 16);
-        const pOffsetTop = pos.top - 8;
+		console.log(popupWidth)
+        const pOffsetLeft = pos.left - (popupWidth + 24);
+        const pOffsetTop = pos.top;
 
         this.#popup.style.position = 'fixed';
         this.#popup.style.left = `${pOffsetLeft}px`;

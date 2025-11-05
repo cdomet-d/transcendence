@@ -1,0 +1,43 @@
+import { createMatchHistory, MatchHistory} from './matches.js';
+import type { MatchOutcome } from '../types-interfaces.js';
+
+export class Leaderboard extends HTMLDivElement {
+    #data: MatchOutcome[];
+    #matches: MatchHistory;
+    constructor() {
+        super();
+        this.#data = [];
+        this.#matches = createMatchHistory(this.#data);
+		this.append(this.#matches)
+	}
+
+    set data(newData: MatchOutcome[]) {
+		this.#data = newData;
+    }
+
+	update() {
+		console.log('updating')
+        this.#matches.remove();
+        this.#matches = createMatchHistory(this.#data);
+		this.append(this.#matches)
+	}
+
+	connectedCallback() {
+		this.render();
+	}
+
+    render() {
+		this.id = 'leaderboard'
+        this.className = 'bg brdr pad-s overflow-y-auto overflow-x-hidden';
+    }
+}
+
+if (!customElements.get('leader-board')) {
+    customElements.define('leader-board', Leaderboard, { extends: 'div' });
+}
+
+export function createLeaderboard(data: MatchOutcome[]): Leaderboard {
+	const el = document.createElement('div', {is: 'leader-board'}) as Leaderboard
+	el.data = data;
+	return el;
+}

@@ -1,43 +1,42 @@
-import { createLink } from '../web-elements/navigation/buttons-helpers.js';
 import { createHeading, createNoResult } from '../web-elements/typography/helpers.js';
-import { FullscreenPage } from '../web-elements/layouts/fullscreen.js';
-import { pageWithHeader } from '../web-elements/layouts/page-with-header.js';
+import type { HTMLElementTagMap } from '../web-elements/layouts/helpers.js';
 import { renderPageTemplate } from './page.template.js';
 import { translate } from '../scripts/language/translation.js';
-import type { navigationLinksData } from '../web-elements/types-interfaces.js';
 import type { Layout } from '../web-elements/layouts/layout.js';
+import { createLayout } from '../web-elements/layouts/helpers.js';
+import { mainMenu } from '../web-elements/navigation/default-menus.js';
+import { createNavMenu } from '../web-elements/navigation/menu-helpers.js';
+// import type { MatchHistory } from '../web-elements/matches/matches.js';
+// import { matchesHistory } from '../web-elements/default-values.js';
+import { createLeaderboard } from '../web-elements/matches/leaderboard.js';
 
-interface HTMLElementTagMap {
-    'page-w-header': pageWithHeader;
-    'full-screen': FullscreenPage;
-}
-
-const layoutPerPage: { [key: string]: string } = {
-    home: 'full-screen',
+const layoutPerPage: { [key: string]: keyof HTMLElementTagMap } = {
+    home: 'page-w-header',
     regitration: 'full-screen',
     error: 'full-screen',
     game: 'full-screen',
+    central: 'page-w-header',
     leaderboard: 'page-w-header',
     lobby: 'page-w-header',
     profile: 'page-w-header',
     userSettings: 'page-w-header',
 };
 
-function prepareLayout<K extends keyof HTMLElementTagMap>(curLayout: Layout | null, HTMLMapKey: K, page: string) {
-	if (!layoutPerPage[page]) throw new Error ('Requested page is undefined');
+function updatePageTitle(newPage: string) {
+    document.title = `🌻 BigT - ${newPage} 🌻`;
+}
+
+function prepareLayout(curLayout: Layout | null, page: string) {
+    if (!layoutPerPage[page]) throw new Error('Requested page is undefined');
     console.log(curLayout?.id, layoutPerPage[page]);
-    if (!curLayout) {
-        const newLayout = document.createElement('div', {
-            is: HTMLMapKey,
-        }) as HTMLElementTagMap[K];
-        document.body.append(newLayout);
-        document.body.layoutInstance = newLayout;
-    } else if (curLayout.id !== layoutPerPage[page]) {
-        curLayout.clearAll();
-        curLayout.remove();
-        const newLayout = document.createElement('div', {
-            is: HTMLMapKey,
-        }) as HTMLElementTagMap[K];
+
+    const HTMLMapKey: keyof HTMLElementTagMap = layoutPerPage[page] as keyof HTMLElementTagMap;
+    if (!curLayout || curLayout.id !== layoutPerPage[page]) {
+        if (curLayout) {
+            curLayout.clearAll();
+            curLayout.remove();
+        }
+        const newLayout = createLayout(HTMLMapKey);
         document.body.append(newLayout);
         document.body.layoutInstance = newLayout;
     } else {
@@ -47,48 +46,29 @@ function prepareLayout<K extends keyof HTMLElementTagMap>(curLayout: Layout | nu
 
 export function renderNotFound() {
     console.log('renderNotFound');
-    prepareLayout(document.body.layoutInstance, 'full-screen', 'error');
+    prepareLayout(document.body.layoutInstance, 'error');
     document.body.layoutInstance!.appendAndCache(createNoResult('ifs'));
+    updatePageTitle('Not Found');
 }
 
 export function renderHome() {
+	//TODO: dynamic layout: fullscreen if the user is not logged in, header if he is
     console.log('RenderHome');
-    prepareLayout(document.body.layoutInstance, 'full-screen', 'home');
-    const playButtonData: navigationLinksData = {
-        title: 'PLAY',
-        href: '/register',
-        datalink: '/register',
-    };
+    prepareLayout(document.body.layoutInstance, 'home');
     document.body.layoutInstance!.appendAndCache(
         createHeading('0', 'PONG!'),
-        createLink(playButtonData, true)
+        createNavMenu(mainMenu, 'vertical', true)
     );
+    updatePageTitle('Home');
 }
 
-export function renderCentral(): string {
-    return renderPageTemplate({
-        title: translate('CENTRAL'),
-        nextButtons: [
-            { href: '/game/tournament', label: translate('Tournament') },
-            { href: '/quickMatch', label: translate('Quick Match') },
-            { href: '/account', label: translate('Profile') },
-            { href: '/game/leaderboard', label: translate('Leaderboard') },
-            { href: '/game/match', label: translate('Game') },
-        ],
-        backHref: '/',
-        showBack: true,
-        homeHref: '/',
-    });
-}
-
-export function renderLeaderboard(): string {
-    return renderPageTemplate({
-        title: 'LEADERBOARD',
-        nextButtons: [],
-        backHref: '/central',
-        showBack: true,
-        homeHref: '/',
-    });
+export function renderLeaderboard() {
+    console.log('renderLeaderboard');
+   prepareLayout(document.body.layoutInstance, 'leaderboard');
+   document.body.layoutInstance!.appendAndCache(createLeaderboard([]))
+//    const history: Leaderboard | undefined = document.body.layoutInstance?.components.get('leaderboard') as Leaderboard;
+//    history.data = matchesHistory;
+//    history.update();
 }
 
 export function renderProfile(): string {

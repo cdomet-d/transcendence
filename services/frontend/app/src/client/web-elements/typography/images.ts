@@ -93,6 +93,7 @@ export class NoResults extends HTMLDivElement {
             size: 'ilarge',
             src: '/public/images/no-result.png',
         };
+		this.id = 'NoResults'
     }
 
 	set size(size: Size) {

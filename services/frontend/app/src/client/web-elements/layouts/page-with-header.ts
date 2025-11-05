@@ -1,26 +1,22 @@
+import { PageHeader } from '../navigation/header.js';
 import { Layout } from './layout.js';
 
 export class pageWithHeader extends Layout {
-	constructor() {
-		super();
+    #header: PageHeader;
+
+    constructor() {
+        super();
+        this.#header = document.createElement('header', { is: 'page-header' }) as PageHeader;
+        this.append(this.#header);
 		this.id = 'page-w-header';
-	}
+    }
 
-	override clearAll(): void {
-		super.components.forEach((el) => {
-			if (el.id !== 'header') el.remove();
-		})
-		for (const key in super.components) {
-			if (key !== 'header') super.components.delete(key);
-		}
-	}
-
-	render() {
-		super.render();
-		this.classList.add('grid', 'place-content-center', 'v-gap-l');
-	}
+    render() {
+        super.render();
+        this.classList.add('grid', 'items-stretch', 'v-gap-l');
+    }
 }
 
 if (!customElements.get('page-w-header')) {
-	customElements.define('page-w-header', pageWithHeader, { extends: 'div' });
+    customElements.define('page-w-header', pageWithHeader, { extends: 'div' });
 }

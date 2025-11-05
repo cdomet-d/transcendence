@@ -20,7 +20,6 @@ import type { NavigationLinks } from './links.js';
  * Menu elements are configured using {@link buttonData} and created via {@link createBtn}.
  */
 export class NavigationMenu extends HTMLElement {
-    #size: MenuSize;
     #animated: boolean;
     #style: MenuStyle;
 
@@ -35,7 +34,6 @@ export class NavigationMenu extends HTMLElement {
         this.#menuLinks = document.createElement('ul');
 
         this.#style = 'horizontal';
-        this.#size = 'm';
         this.#animated = false;
 
         this.append(this.#menuLinks);
@@ -57,15 +55,6 @@ export class NavigationMenu extends HTMLElement {
      */
     set menuStyle(style: MenuStyle) {
         this.#style = style;
-    }
-
-    /**
-     * Sets the menu's size variant.
-     *
-     * @param {MenuSize} size - Menu size, e.g., 'm' or 'l'.
-     */
-    set menuSize(size: MenuSize) {
-        this.#size = size;
     }
 
     /**
@@ -92,9 +81,9 @@ export class NavigationMenu extends HTMLElement {
     render() {
         this.role = 'navigation';
         this.id = 'menu';
-        this.className = 'w-full gap-r box-border';
-        this.#menuLinks.className = `w-full grid justify-items-center \
-		auto-cols-fr row-${this.#size}`;
+        this.className = 'w-full box-border';
+        this.#menuLinks.className = `w-full grid gap-r justify-items-center \
+		auto-cols-fr auto-row-fr`;
 
         this.#style === 'horizontal'
             ? this.#menuLinks.classList.add('grid-flow-col')
@@ -111,7 +100,6 @@ export class NavigationMenu extends HTMLElement {
 if (!customElements.get('nav-menu-wrapper')) {
     customElements.define('nav-menu-wrapper', NavigationMenu, { extends: 'nav' });
 }
-
 
 /**
  * Custom HTML div element representing a menu with configurable style and elements.
