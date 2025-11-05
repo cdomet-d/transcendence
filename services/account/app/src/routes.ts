@@ -9,6 +9,7 @@ interface AccountSettingsRow {
 export async function accountRoutes(serv: FastifyInstance) {
 
 	//usersStatus is always a hardcoded 1 for now, not even sure to keep it honestly
+	//TESTED
 	serv.post('/internal/account/register', async (request, reply) => {
 		try {
 			const { username, hashedPassword } = request.body as { username: string, hashedPassword: string };
@@ -37,19 +38,20 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/internal/account/login', async (request, reply) => {
+	//TESTED
+	serv.post('/internal/account/login', async (request, reply) => {
 		try {
 			const { username } = request.body as { username: string };
 			const { password } = request.body as { password: string };
 
 			const query = `
-				SELECT userId, hashedPassword FROM account WHERE username = ?
+				SELECT userID, hashedPassword FROM account WHERE username = ?
 			`
 			const user = await serv.dbAccount.get(query, [username]);
 			if (!user)
-				return (reply.code(401).send({ message: '[ACCOUNT] Invalid credentials.' }));
-
+				return (reply.code(401).send({ message: '[ACCOUNT] Account not found.' }));
 			const passwordMatches = await bcrypt.compare(password, user.hashedPassword);
+
 			if (!passwordMatches)
 				return (reply.code(401).send({ message: '[ACCOUNT] Invalid credentials.' }));
 
@@ -64,6 +66,8 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//TESTED but 
+	//TODO :fix 409 error return
 	serv.patch('/internal/account/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
@@ -106,6 +110,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 				success: true,
 				message: 'Account updated successfully!'
 			}));
+
 		} catch (error) {
 			if (error && typeof error === 'object' && 'code' in error && (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE')
 				return (reply.code(409).send({ success: false, message: 'This username is already taken.' }));
@@ -116,7 +121,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 
 	serv.delete('/internal/account', async (request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const { userID } = request.body as { userID: string };
 
 			const query = `DELETE FROM account WHERE userID = ?`;
 
@@ -130,6 +135,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//TODO: modify this route to return a userData interface if possible (see where this route is used)
 	serv.get('/internal/account/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
