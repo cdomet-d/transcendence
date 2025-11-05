@@ -1,5 +1,5 @@
 import type { WebSocket } from '@fastify/websocket';
-import { HEIGHT, WIDTH, type ballObj } from './game.class.js';
+import { HEIGHT, paddleSpec, WIDTH, type ballObj } from './game.class.js';
 
 export interface coordinates {
 	x: number;
@@ -26,22 +26,22 @@ export class Player {
 	#_reply: repObj;
 
 	/*                            CONSTRUCTORS                               */
-	constructor(userID: number, socket: WebSocket, serverSide: string, clientSide: string) {
+	constructor(userID: number, socket: WebSocket, serverSide: string, clientSide: string, padSpec: paddleSpec) {
 		this.#_userID = userID;
 		this.#_socket = socket;
 		this.#_reply = {
 			_ID: 0, 
 			_timestamp: 0, 
-			_leftPad: {x: 10, y: HEIGHT / 2 - 27/*half height paddle */}, //TODO: put operation
-			_rightPad: {x: WIDTH - 20/*paddle width + 10*/, y: HEIGHT / 2 - 27}, 
-			_ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025}, 
+			_leftPad: {x: 10, y: HEIGHT / 2 - padSpec.halfHeight}, //TODO: put operation
+			_rightPad: {x: WIDTH - (padSpec.width + 10), y: HEIGHT / 2 - padSpec.halfHeight}, 
+			_ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, radius: 10}, 
 			_score: [0, 0]
 		};
 		this.#_serverSide = serverSide;
 		if (serverSide === "right")
-			this.#_paddle = {x: WIDTH - 20/*paddle width + 10*/, y: HEIGHT / 2 - 27};
+			this.#_paddle = {x: WIDTH - (padSpec.width + 10), y: HEIGHT / 2 - padSpec.halfHeight};
 		else
-			this.#_paddle = {x: 10, y: HEIGHT / 2 - 27/*half height paddle */};
+			this.#_paddle = {x: 10, y: HEIGHT / 2 - padSpec.halfHeight};
 		this.#_clientSide = clientSide;
 		this.#_score = 0;
 	}

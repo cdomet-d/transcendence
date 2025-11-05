@@ -27,6 +27,15 @@ export interface ballObj {
 	y: number,
 	dx: number,
 	dy: number,
+	radius: number
+}
+
+export interface paddleSpec {
+	speed: number
+	width: number,
+	height: number,
+	halfWidth: number,
+	halfHeight: number
 }
 
 export interface playerReq {
@@ -44,7 +53,7 @@ export class Game {
 	#_players: playerTab; //TODO: replace tab with 2 player objects ?
 	#_ball: ballObj;
 	#_ballDir: number;
-	#_paddleSpeed: number;
+	#_paddleSpec: paddleSpec;
 	#_reqHistory: reqTab;
 	#_lastTick: number;
 	#_timeoutIDs: Array< NodeJS.Timeout >;
@@ -58,10 +67,17 @@ export class Game {
 			x: WIDTH / 2, 
 			y: HEIGHT / 2, 
 			dx: 0.3, 
-			dy: 0.03
+			dy: 0.03,
+			radius: 10
 		};
+		this.#_paddleSpec = {
+			speed: 0.2,
+			width: 10, 
+			height: 54, 
+			halfWidth: 10 / 2, 
+			halfHeight: 54 / 2
+		}; //custom
 		this.#_ballDir = -1;
-		this.#_paddleSpeed = 0.2;
 		this.#_reqHistory = new Array();
 		this.#_lastTick = 0;
 		this.#_timeoutIDs = new Array();
@@ -97,9 +113,9 @@ export class Game {
 	get ball(): ballObj {
 		return this.#_ball;
 	}
-	
-	get paddleSpeed(): number {
-		return this.#_paddleSpeed;
+
+	get padSpec(): paddleSpec {
+		return this.#_paddleSpec;
 	}
 
 	get reqHistory(): reqTab {
@@ -132,7 +148,7 @@ export class Game {
 		let serverSide: string = "left";
 		if (this.#_players.length === 1)
 			serverSide = "right";
-		const player: Player = new Player(userID, socket, serverSide, clientSide);
+		const player: Player = new Player(userID, socket, serverSide, clientSide, this.#_paddleSpec);
 		this.#_players.push(player);
 	}
 
