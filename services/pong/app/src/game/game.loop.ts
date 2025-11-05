@@ -4,7 +4,7 @@ import { updatePaddlePos } from './paddle.js';
 import { Player } from "../classes/player.class.js";
 import { StringCodec } from 'nats';
 
-const SERVER_TICK: number = 1000 / 20; // 20UPS
+const SERVER_TICK: number = 1000 / 40; // 20UPS
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export async function gameLoop(game: Game, player1: Player, player2: Player) {
@@ -22,13 +22,13 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 	let simulatedTime = 0;
 	for (const playerReq of reqsToProcess) {
 		const player: Player = playerReq._id === 1 ? player1 : player2;
-		simulatedTime = moveBall(game, simulatedTime, playerReq._req._timeStamp - tickStart);
+		simulatedTime = moveBall(game, simulatedTime, playerReq._req._timeStamp - tickStart, TIME_STEP);
 		if (simulatedTime === -1)
 			return;
 		updatePaddlePos(player, playerReq._req._keys, game.paddleSpeed);
 		player.reply._ID = playerReq._req._ID;
 	}
-	if (moveBall(game, simulatedTime, SERVER_TICK) === -1)
+	if (moveBall(game, simulatedTime, SERVER_TICK, 0) === -1)
 		return;
 	sendToPlayers(game, player1, player2);
 
@@ -40,8 +40,8 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 	game.addTimoutID(setTimeout(gameLoop, Math.max(0, delay), game, player1, player2));
 }
 
-function moveBall(game: Game, simulatedTime: number, end: number): number {
-	while(simulatedTime + TIME_STEP <= end) {
+function moveBall(game: Game, simulatedTime: number, end: number, i: number): number {
+	while(simulatedTime + i <= end) {
 		if (updateBallPos(game, game.players[0]!, game.players[1]!)) {
 			endGame(game.players[0]!, game.players[1]!, game);
 			return -1;

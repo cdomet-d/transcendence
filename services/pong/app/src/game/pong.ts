@@ -5,7 +5,7 @@ import { gameLoop } from './game.loop.js';
 import { syncClocks } from './syncClocks.js';
  
 const START_DELAY = 500;
-const SERVER_TICK: number = 1000 / 20; // 20UPS
+const SERVER_TICK: number = 1000 / 40; // 20UPS
 
 export async function setUpGame(game: Game) {
 	if (!game.players[0] || !game.players[1])
