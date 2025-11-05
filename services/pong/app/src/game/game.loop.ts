@@ -25,7 +25,7 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 		simulatedTime = moveBall(game, simulatedTime, playerReq._req._timeStamp - tickStart, TIME_STEP);
 		if (simulatedTime === -1)
 			return;
-		updatePaddlePos(player, playerReq._req._keys, game.padSpec);
+		updatePaddlePos(player, playerReq._req._keys, game);
 		player.reply._ID = playerReq._req._ID;
 	}
 	if (moveBall(game, simulatedTime, SERVER_TICK, 0) === -1)

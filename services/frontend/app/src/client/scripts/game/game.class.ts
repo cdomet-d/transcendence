@@ -5,8 +5,12 @@ import type { coordinates, repObj } from "./mess.validation.js";
 export interface keysObj {
 	_w: boolean,
 	_s: boolean,
+    _a: boolean,
+    _d: boolean,
 	_ArrowUp: boolean,
 	_ArrowDown: boolean,
+    _ArrowLeft: boolean,
+    _ArrowRight: boolean,
 }
 
 export interface reqObj {
@@ -86,7 +90,10 @@ export class Game {
 		this.#_lastFrameTime = 0;
 		this.#_req = { 
 			_ID: 0, 
-			_keys: {_w: false, _s: false, _ArrowUp: false, _ArrowDown: false}, 
+			_keys: {
+				_w: false, _s: false, _a: false, _d: false,
+				_ArrowUp: false, _ArrowDown: false, _ArrowLeft: false, _ArrowRight: false
+			}, 
 			_timeStamp: 0
 		};
 		this.#_reqHistory = new Map();

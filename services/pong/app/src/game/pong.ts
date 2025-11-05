@@ -40,8 +40,8 @@ function setMessEvent(player: Player, playerNbr: number, game: Game) {
 		let req: reqObj; //TODO: rm timestamp
 		try { req = JSON.parse(payload); }
 		catch (err) { return; };
-		if (!validRequest(req))
-			return;
+		// if (!validRequest(req))
+		// 	return;
 		game.addReq(req, playerNbr);
 	})
 }

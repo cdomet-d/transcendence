@@ -15,7 +15,6 @@ export function wsRequest(game: Game, ids: {gameID: number, userID: number}) {
 
 	ws.onopen = () => {
 		console.log("PONG webSocket connection established!");
-		addMessEvent(game, ws);
 		ws.addEventListener('message', (event) => {
 			const signal: number = JSON.parse(event.data);
 			// console.log("SIGNAL:", signal, "TYPE", typeof(signal));
@@ -32,13 +31,12 @@ export function wsRequest(game: Game, ids: {gameID: number, userID: number}) {
 }
 
 async function setUpGame(game: Game, ws: WebSocket, ballDir: number) {
-	// addMessEvent(game, ws);
-
 	// const result: [number, number, startObj] | null = await syncClocks(ws)
 	// if (!result) return;
 	// const [offset, halfTripTime, start] = result;
 	// game.clockOffset = offset;
 	game.ball.dx *= ballDir;
+	addMessEvent(game, ws);
 	window.addEventListener("keydown", createKeyDownEvent(game.req._keys));
 	window.addEventListener("keyup", createKeyUpEvent(game.req._keys));
 

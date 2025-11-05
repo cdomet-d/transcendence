@@ -28,7 +28,7 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		game.delta += (timestamp - game.lastFrameTime);
 		game.lastFrameTime = timestamp;
 		while (game.delta >= TIME_STEP) { //TODO: add update limit
-			updatePaddlePos(game, game.req._keys, TIME_STEP);
+			updatePaddlePos(game, game.req._keys);
 			game.delta -= TIME_STEP;
 		}
 
@@ -60,7 +60,7 @@ function interpolation(game: Game) {
 	const updates: [repObj, repObj] | null = game.getReplies(renderTime);
 
 	if (updates) {
-		console.log("IN INTERPOLATION");
+		// console.log("IN INTERPOLATION");
 		const t = (renderTime - updates[0]._timestamp) / 
 					(updates[1]._timestamp - updates[0]._timestamp);
 		game.rightPad.y = lerp(updates[0]._rightPad.y, updates[1]._rightPad.y, t);
@@ -73,7 +73,7 @@ function lerp(start: number, end: number, t: number): number {
 }
 
 function reconciliation(game: Game, latestReply: repObj) {
-	console.log("IN RECONCILIATION")
+	// console.log("IN RECONCILIATION")
 	const id: number = latestReply._ID;
 	game.deleteReq(id);
 
@@ -83,7 +83,7 @@ function reconciliation(game: Game, latestReply: repObj) {
 	game.ball = { ...latestReply._ball };
 
 	for (let i = id + 1; game.reqHistory.has(i); i++) {
-		updatePaddlePos(game, game.reqHistory.get(i)!._keys, TIME_STEP);
+		updatePaddlePos(game, game.reqHistory.get(i)!._keys);
 		deadReckoning(game, latestReply);
 	}
 }

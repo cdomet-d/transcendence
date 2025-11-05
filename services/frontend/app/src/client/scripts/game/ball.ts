@@ -2,7 +2,7 @@ import { Game, HEIGHT, WIDTH, type ballObj } from "./game.class.js";
 import type { coordinates, repObj } from "./mess.validation.js";
 
 export function deadReckoning(game: Game, latestReply: repObj | undefined) {
-	console.log("IN DEADRECKONING");
+	// console.log("IN DEADRECKONING");
 	let timeSinceUpdate: number = performance.now() - game.lastFrameTime;
 	let ball: ballObj = { ...game.ball };
 	if (latestReply !== undefined) {

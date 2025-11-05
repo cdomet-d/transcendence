@@ -3,8 +3,12 @@ import { Ajv } from 'ajv';
 export interface keysObj {
 	_w: boolean,
 	_s: boolean,
+    _a: boolean,
+    _d: boolean,
 	_ArrowUp: boolean,
 	_ArrowDown: boolean,
+    _ArrowLeft: boolean,
+    _ArrowRight: boolean,
 	[key: string]: boolean,
 }
 
@@ -37,12 +41,16 @@ const reqObjSchema = {
         _keys: {
             type: 'object',
             additionalProperties: { type: 'boolean' },
-            required: ['_w', '_s', '_ArrowUp', '_ArrowDown'],
+            required: ['_w', '_s', '_a', '_d', '_ArrowUp', '_ArrowDown', '_ArrowLeft', '_ArrowRight'],
             properties: {
                 _w: { type: 'boolean' },
                 _s: { type: 'boolean' },
+                _a: { type: 'boolean' },
+                _d: { type: 'boolean' },
                 _ArrowUp: { type: 'boolean' },
                 _ArrowDown: { type: 'boolean' },
+                _ArrowLeft: { type: 'boolean' },
+                _ArrowRight: { type: 'boolean' },
             }
         }
     }
