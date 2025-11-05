@@ -16,6 +16,7 @@ export function pong(gameReq: gameRequest) {
 		return; //TODO: display capibara ?
 	}
 	const game: Game = new Game(ctx, gameReq.remote);
+	//TODO: set strokeStyle and fillStyle
 	renderGame(game); //TODO: before rendering need to receive players names
 	import("./ws.req.js").then(({ wsRequest }) => {
 		wsRequest(game, {gameID: gameReq.gameID, userID: gameReq.userID});
