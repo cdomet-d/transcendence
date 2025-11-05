@@ -22,17 +22,7 @@ interface whitelist {
 	userIDs: number[]
 }
 
-export const lobbyMap: Map<number | undefined, lobbyInfo> = new Map(); // '| undefined' needed here
-
-/*
-FRONT:
-show Lobby Room
-	LobbyID
-	participants
-	game settings
-	Start button greyed out while Lobby != full (HOST ONLY CAN START GAME?)
-
-*/
+export const lobbyMap: Map<number | undefined, lobbyInfo> = new Map();
 
 export function createLobby(hostID: number, format: string) {
 	const lobby: lobbyInfo = makeLobbyInfo(hostID, format);
@@ -49,7 +39,6 @@ export function addUserToLobby(uid: number, lobbyID: number) {
 	console.log(`User #${uid} has been added to lobby`);
 }
 
-
 function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 	const lobbyID: number = getUniqueLobbyID();
 
@@ -58,13 +47,13 @@ function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 		whitelist: {
 			lobbyId: lobbyID,
 			hostID: hostID,
-			userIDs: [hostID] // put invitee ID here on invite
+			userIDs: [hostID] // 1. put invitee ID here on invite
 		},
-		joinable: true, // TODO turn this off when game/tournament starts
+		joinable: true,
 		userList: [
-			{ userID: hostID } // and add them there when they join
+			{ userID: hostID } // 2. add invitees there when they join
 		],
-		remote: true, // TODO TBD
+		remote: true, // TODO: TBD
 		format: format,
 		nbPlayers: format === "quick" ? 2 : 4
 	}
@@ -80,11 +69,11 @@ function getUniqueLobbyID(): number {
 	return uniqueID;
 }
 
-
 export function printPlayersInLobby(lobbyID: number) {
 	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) {
 		console.log("AAAH PAS DE LOBBY");
+		return;
 	}
 	lobby?.userList.forEach(user => {
 		console.log(`User #${user.userID} is in Lobby #${lobbyID}`);

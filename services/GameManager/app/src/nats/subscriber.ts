@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { StringCodec } from 'nats';
 import { wsSend } from '../lobby/wsHandler.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';

@@ -1,11 +1,11 @@
 import { renderLobbyMenu } from "../../pages/html.pages.js";
-import { handleTournamentStart, handleLobbyRequest } from "./wsConnect.js";
+import { handleGameStart, handleLobbyRequest } from "./wsConnect.js";
 
 interface lobbyInfo {
+	userList: userInfo[],
 	remote: boolean,
 	format: "quick" | "tournament" | string,
-	userList: userInfo[],
-	players: number
+	nbPlayers: number
 	// gameSettings: gameSettingsObj
 }
 
@@ -24,6 +24,7 @@ function lobby() {
 	})
 }
 
+// FRONT
 function attachLobbyMenuListeners() {
 	const createQuickBtn = document.getElementById('create-quick-btn');
 	const createTournamentBtn = document.getElementById('create-tournament-btn');
@@ -44,32 +45,32 @@ function attachLobbyMenuListeners() {
 	}
 }
 
-function attachTournamentListener() {
+function attachGameListener() {
 	const startTournamentButton = document.getElementById('start-tournament-btn');
 	const startQuickmatchButton = document.getElementById('start-quickmatch-btn');
 
 	if (startTournamentButton) {
-		startTournamentButton.addEventListener('click', () => handleTournamentStart("tournament"));
+		startTournamentButton.addEventListener('click', () => handleGameStart("tournament"));
 	}
 
 	if (startQuickmatchButton) {
-		startQuickmatchButton.addEventListener('click', () => handleTournamentStart("quick"));
+		startQuickmatchButton.addEventListener('click', () => handleGameStart("quick"));
 	}
 }
+// FRONT
 
 interface gameRequestForm {
 	event: "GAME_REQUEST",
 	payload: lobbyInfo
 }
 
-// TODO: gameRequestForm 's payload is basically lobbyInfo
 function createGameRequestForm(format: string): string {
 	const gameRequestForm: gameRequestForm = {
 		event: "GAME_REQUEST",
 		payload: {
 			format: format,
 			remote: true,
-			players: format === "quick" ? 2 : 4,
+			nbPlayers: format === "quick" ? 2 : 4,
 			userList: [
 				{ userID: 1, username: "sam" },
 				{ userID: 2, username: "alex" },
@@ -82,7 +83,7 @@ function createGameRequestForm(format: string): string {
 	return JSON.stringify(gameRequestForm);
 }
 
-interface lobbyForm {
+interface lobbyCreationForm {
 	event: "LOBBY_REQUEST",
 	payload: {
 		action: "create" | "join" | string, // '| string' is for type compatibility
@@ -93,7 +94,7 @@ interface lobbyForm {
 }
 
 function createLobbyRequestForm(action: string, format: string): string {
-	const lobbyForm: lobbyForm = {
+	const lobbyCreationForm: lobbyCreationForm = {
 		event: "LOBBY_REQUEST",
 		payload: {
 			action: action,
@@ -102,7 +103,7 @@ function createLobbyRequestForm(action: string, format: string): string {
 			// userID: , // TODO: how to retrieve uid here (GM creates UIDs lol)
 		}
 	}
-	return JSON.stringify(lobbyForm);
+	return JSON.stringify(lobbyCreationForm);
 }
 
-export { createGameRequestForm, createLobbyRequestForm, lobby, handleTournamentStart, attachTournamentListener }
+export { createGameRequestForm, createLobbyRequestForm, lobby, handleGameStart, attachGameListener }

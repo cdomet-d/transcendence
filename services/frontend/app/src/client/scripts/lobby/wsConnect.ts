@@ -1,7 +1,7 @@
 import { renderLobby } from '../../pages/html.pages.js';
 import { pong } from '../game/pong.js';
 import { router } from '../main.js';
-import { createGameRequestForm, createLobbyRequestForm, attachTournamentListener } from './lobby.js';
+import { createGameRequestForm, createLobbyRequestForm, attachGameListener } from './lobby.js';
 
 let wsInstance: WebSocket | null = null;
 
@@ -23,17 +23,15 @@ function wsConnect() {
 
 	ws.onmessage = (message: MessageEvent) => {
 		try {
-			// console.log("Client received WS message!");
-
-			// Lobby
+			// LobbyRequest
 			const data = JSON.parse(message.data);
-			if (data.lobby === "created" || data.lobby === "joined") { // CREATE OR JOIN, SAME STORY
-				console.log(data.lobby, " lobby successfully!")
+			if (data.lobby && (data.lobby === "created" || data.lobby === "joined")) {
+				console.log(data.lobby, "lobby successfully!")
 
 				const app = document.getElementById('app');
 				if (app) {
 					app.innerHTML = renderLobby();
-					attachTournamentListener();
+					attachGameListener();
 				} else {
 					console.log("Error: could not find HTMLElement: 'app'");
 					return;
@@ -59,23 +57,23 @@ function wsConnect() {
 	}
 
 	ws.onerror = (err: any) => {
-		console.log("error:", err);
-		return; //TODO: handle error properly
+		console.log("Error:", err);
+		return;
 	}
 
 	ws.onclose = () => {
 		console.log("WebSocket connection closed!");
-		// TODO: Check wether deconnection was expected or not 
+		// TODO: Check wether deconnection was expected or not
 	}
 }
 
-function handleTournamentStart(format: string) {
+function handleGameStart(format: string) {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 		const message = createGameRequestForm(format);
-		console.log("Client sending REQUEST_FORM to GM:\n", message);
+		console.log("Client sending GAME_FORM to GM:\n", message);
 		wsInstance.send(message);
 	} else {
-		console.log("Error: WebSocket is not open for REQUEST_FORM");
+		console.log("Error: WebSocket is not open for GAME_FORM");
 	}
 }
 
@@ -88,4 +86,4 @@ function handleLobbyRequest(action: string, format: string): void {
 	}
 }
 
-export { wsConnect, handleLobbyRequest, handleTournamentStart };
+export { wsConnect, handleLobbyRequest, handleGameStart };

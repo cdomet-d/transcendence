@@ -16,17 +16,15 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 			console.log("Error: Message received by GM is empty or corrupted!")
 		}
 
-		// RECEIVE EVENT
 		const event = data.event;
-		if (!event || event && (event !== "GAME_REQUEST" && event !== "GAME_REQUEST" && event !== "LOBBY_REQUEST")) {
+		if (!event || event && (event !== "GAME_REQUEST" && event !== "LOBBY_REQUEST")) {
 			console.log("Error: Wrong or empty request received in GM!");
 			return;
 		}
 
-		// PAYLOAD MAY BE lobbyInfo OR lobbyForm
 		const payload = data.payload;
 		if (!payload) {
-			console.log("Error: payload received by GM is empty!");
+			console.log("Error: payload received by GM is corrupt or empty!");
 			return;
 		}
 
@@ -34,31 +32,26 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 		if (event === "GAME_REQUEST") {
 			processGameRequest(payload);
 		} else if (event === "LOBBY_REQUEST") {
-
-			const userID = getUniqueUserID(); // HAHAHA this bad but no choice
+			const userID = getUniqueUserID(); // TODO: DB??
 			const action: string = payload.action;
 			if (!action) {
 				console.log("Error: GM received data but not data.action!");
 				return;
 			}
-
-			console.log(`GM received: ${action}`);
-
+			// console.log(`GM received: ${action}`);
 			wsClientsMap.set(userID, socket);
 			req.server.log.info("User #" + userID + " added to clientMap");
+			
 			if (action === "create") {
 				createLobby(userID, payload.format);
-				// function needs more info: format, nbPlayers, remote
 				wsSend(socket, JSON.stringify({ lobby: "created" }));
 			} else if (action === "join") {
-				addUserToLobby(userID, 99); // TODO: replace 1 aka lobbyID with one given in invitation
+				addUserToLobby(userID, 99); // TODO: replace 99 (lobbyID) with one given in invitation
 				wsSend(socket, JSON.stringify({ lobby: "joined" }));
 			}
 
 			printPlayersInLobby(1);
-
 		}
-
 	});
 }
 
@@ -69,7 +62,6 @@ export function wsSend(ws: WebSocket, message: string): void {
 		const payload = JSON.parse(message);
 		console.log(`Error: Connection for userID < ${payload.userID} > not found or not open...`);
 		console.log(`\tCould not start game with gameID < ${payload.gameID} > `);
-		// TODO: handle this error 
 	}
 }
 

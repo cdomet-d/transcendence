@@ -8,6 +8,7 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 	}
 
 	const game: GM.game = {
+		lobbyID: lobbyInfo.lobbyID!,
 		gameID: 99,
 		remote: true,
 		userList: lobbyInfo.userList,

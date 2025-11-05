@@ -8,15 +8,8 @@ interface userInfo {
 	username?: string
 }
 
-// interface lobbyInfo {
-// 	remote: boolean,
-// 	format: "quick" | "tournament",
-// 	users: userInfo[],
-// 	players: number
-// 	// gameSettings: gameSettingsObj
-// }
-
 interface game {
+	lobbyID: number,
 	gameID: number,
 	tournamentID?: number,
 	remote: boolean,
@@ -41,24 +34,21 @@ interface gameRequest {
 export type { userInfo, game, tournament, gameRequest }
 
 export function processGameRequest(lobbyInfo: lobbyInfo) {
-	// Filter request
 	if (lobbyInfo.format === "tournament") {
 		const tournament: tournament | undefined = createTournament(lobbyInfo);
 		if (tournament === undefined) {
-			console.log("Error: tournament object undefined!");
+			console.log("Error: Could not create tournament");
 			return;
 		}
+		lobbyInfo.joinable = false; // TODO: turn back to true when tournament over
 		startTournament(tournament);
 	} else if (lobbyInfo.format === "quick") {
-		// create gameObj
 		const quickmatch: game | boolean = createGameObj(lobbyInfo);
 		if (quickmatch === false) {
-			console.log("Error: Something went wrong");
+			console.log("Error: Something went wrong!");
 			return;
 		}
+		lobbyInfo.joinable = false; // TODO: turn back to true when game over
 		startGame(quickmatch);
-		// send it to PONG
-		// wait for approval from PONG
-		// signal involved clients game ready for them
 	}
 }

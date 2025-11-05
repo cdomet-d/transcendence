@@ -41,7 +41,7 @@ export class Router {
 			return;
 		}
 
-		// TODO try to load header once and change display instead of function calling everytime
+		// TODO: try to load header once and change display instead of function calling everytime
 		if (matchedRoute.path === '/') {
 			// header.style.display = "hidden";
 			clearHeader();

@@ -14,7 +14,6 @@ export async function tournamentState(payload: string) {
 		return;
 	}
 
-	// find game object in bracket
 	const index = tournamentObj.bracket.findIndex((obj) => obj.gameID === game.gameID);
 	if (index === -1) {
 		console.log("Error: game not found in tournament bracket!");
@@ -23,7 +22,6 @@ export async function tournamentState(payload: string) {
 
 	// TODO: send full GameObj to DB??
 
-	// get next GameObj
 	const nextGame = getNextGameInBracket(tournamentObj);
 	if (nextGame === undefined) { // tournament is over
 		// handle end of tournament
@@ -46,15 +44,11 @@ export async function tournamentState(payload: string) {
 		nextPlayers.player2 = { userID: game.winnerID, username: username };
 	}
 
-	// when both players are ready start next game
 	if (nextPlayers.player1 && nextPlayers.player2) {
-		tournamentObj.bracket[index] = game; // update local tournamnetObj
+		tournamentObj.bracket[index] = game; // update local tournamentObj
 		nextGame.userList = [nextPlayers.player1, nextPlayers.player2];
 		startGame(nextGame);
 		nextPlayersMap.delete(nextGameID);
-		
-		// waiting screen for winner?
-		// back to menu for loser?
 	}
 }
 
