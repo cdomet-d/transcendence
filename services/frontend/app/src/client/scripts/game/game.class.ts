@@ -7,7 +7,7 @@ interface customObj {
 	paddleHeight: number,
 	paddleSpeed: number,
 	ballSpeed: {dx: number, dy: number} // TODO: only dx ?
-	//ball and paddle colors
+	//ball and paddle colors only relevant client side 
 }
 
 export interface keysObj {
@@ -30,6 +30,13 @@ export interface ballObj {
 	dy: number,
 }
 
+interface paddleSize {
+	width: number,
+	height: number,
+	halfWidth: number,
+	halfHeight: number
+}
+
 type requestMap = Map< number, reqObj >;
 type replyTab = Array< repObj >;
 
@@ -40,7 +47,9 @@ export class Game {
 	#_score: [number, number];
 	#_leftPaddle: coordinates;
 	#_rightPaddle: coordinates;
+	#_padSize: paddleSize;
 	#_ball: ballObj;
+	#_ballRadius: number;
 	#_paddleSpeed: number;
 	#_frameId: number;
 	#_delta: number;
@@ -61,12 +70,14 @@ export class Game {
 		this.#_ball = {
 			x: WIDTH / 2, 
 			y: HEIGHT / 2, 
-			dx: 0.3, 
-			dy: 0.03, 
+			dx: 0.3, //custom
+			dy: 0.03, //custom
 		};
-		this.#_leftPaddle = {x: 10, y: HEIGHT / 2 - 27/*half height paddle */}; //TODO: put operation
-		this.#_rightPaddle = {x: WIDTH - 20/*paddle width + 10*/, y: HEIGHT / 2 - 27};
-		this.#_paddleSpeed = 0.2;
+		this.#_ballRadius = 10;
+		this.#_padSize = { width: 10, height: 54, halfWidth: 10 / 2, halfHeight: 54 / 2}; //custom
+		this.#_leftPaddle = {x: 10, y: HEIGHT / 2 - this.#_padSize.halfHeight};
+		this.#_rightPaddle = {x: WIDTH - (this.#_padSize.width + 10), y: HEIGHT / 2 - this.#_padSize.halfHeight};
+		this.#_paddleSpeed = 0.2; //custom
 		this.#_frameId = 0
 		this.#_delta = 0;
 		this.#_lastFrameTime = 0;
@@ -85,12 +96,20 @@ export class Game {
 		return this.#_ball;
 	}
 
+	get ballRadius(): number {
+		return this.#_ballRadius;
+	}
+
 	get leftPad(): coordinates {
 		return this.#_leftPaddle;
 	}
 
 	get rightPad(): coordinates {
 		return this.#_rightPaddle;
+	}
+
+	get padSize(): paddleSize {
+		return this.#_padSize;
 	}
 
 	get paddleSpeed(): number {
