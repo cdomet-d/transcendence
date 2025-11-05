@@ -1,4 +1,4 @@
-import { Game, HEIGHT, WIDTH, type ballObj } from "../classes/game.class.js";
+import { Game, HEIGHT, WIDTH } from "../classes/game.class.js";
 import type { coordinates, Player } from "../classes/player.class.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
@@ -37,7 +37,7 @@ function upperAndBottomWallCollision(game: Game, newY: number): number {
 }
 
 function sideWallCollision(game: Game, player1: Player, player2: Player, newX: number): boolean {
-	if (newX - game.ball.radius >= WIDTH + 50 || newX + game.ball.radius <= -50) {
+	if (newX - game.ball.radius >= WIDTH + 100 || newX + game.ball.radius <= -100) {
 		updateScore(game, player1, player2, newX)
 		game.ball.x = WIDTH / 2;
 		game.ball.y = HEIGHT / 2;

@@ -3,6 +3,7 @@ import { Game } from './game.class.js';
 // import type { startObj } from './mess.validation.js';
 import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from "./game.events.js";
 // import { syncClocks } from './syncClocks.js';
+import { renderGame } from "./game.render.utils.js";
 
 export function wsRequest(game: Game, ids: {gameID: number, userID: number}) {
 	const ws = new WebSocket('wss://localhost:8443/api/game/match'); //?gameID=1');
@@ -25,6 +26,7 @@ export function wsRequest(game: Game, ids: {gameID: number, userID: number}) {
 	}
 
 	ws.onclose = () => {
+		renderGame(game);
 		window.cancelAnimationFrame(game.frameId);
 	}
 }

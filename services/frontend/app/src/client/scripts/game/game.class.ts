@@ -1,5 +1,5 @@
-export const HEIGHT = 270;
-export const WIDTH = 480;
+export const HEIGHT = 600;
+export const WIDTH = 800;
 import type { coordinates, repObj } from "./mess.validation.js";
 
 export interface keysObj {
@@ -64,21 +64,21 @@ export class Game {
 			y: HEIGHT / 2, 
 			dx: 0.3, //custom
 			dy: 0.03, //custom
-			radius: 10
+			radius: 20
 		};
 		this.#_paddleSpec = {
 			speed: 0.2,
-			width: 10, 
-			height: 54, 
-			halfWidth: 10 / 2, 
-			halfHeight: 54 / 2
+			width: 20, 
+			height: HEIGHT / 5, 
+			halfWidth: 20 / 2, 
+			halfHeight: HEIGHT / 10
 		}; //custom
 		this.#_leftPaddle = {
-			x: 10, 
+			x: 20, 
 			y: HEIGHT / 2 - this.#_paddleSpec.halfHeight
 		};
 		this.#_rightPaddle = {
-			x: WIDTH - (this.#_paddleSpec.width + 10), 
+			x: WIDTH - (this.#_paddleSpec.width + 20), 
 			y: HEIGHT / 2 - this.#_paddleSpec.halfHeight
 		};
 		this.#_frameId = 0

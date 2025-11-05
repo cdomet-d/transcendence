@@ -78,8 +78,8 @@ export function renderGame(): string {
 	let html: string = `
 		<div class="min-h-screen flex flex-col items-center justify-center bg-white">
 			<h1 class="text-4xl font-bold mb-6"> Game Screen </h1>
-			<canvas id="canvas" width="480" height="270"
-			class="mb-6 bg-aliceblue border-4 border-[#8ec7fc] rounded-[20px]">
+			<canvas id="canvas" width="800" height="600"
+			class="mb-6 bg-aliceblue border-10 border-[#8ec7fc] rounded-[20px]">
 			pong game <!-- fallback if unable to be displayed -->
 			</canvas>
 			<a href="/central" data-link id="back-btn" 

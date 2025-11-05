@@ -32,16 +32,16 @@ export class Player {
 		this.#_reply = {
 			_ID: 0, 
 			_timestamp: 0, 
-			_leftPad: {x: 10, y: HEIGHT / 2 - padSpec.halfHeight}, //TODO: put operation
-			_rightPad: {x: WIDTH - (padSpec.width + 10), y: HEIGHT / 2 - padSpec.halfHeight}, 
-			_ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, radius: 10}, 
+			_leftPad: {x: 20, y: HEIGHT / 2 - padSpec.halfHeight}, //TODO: put operation
+			_rightPad: {x: WIDTH - (padSpec.width + 20), y: HEIGHT / 2 - padSpec.halfHeight}, 
+			_ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.025, radius: 20}, 
 			_score: [0, 0]
 		};
 		this.#_serverSide = serverSide;
 		if (serverSide === "right")
-			this.#_paddle = {x: WIDTH - (padSpec.width + 10), y: HEIGHT / 2 - padSpec.halfHeight};
+			this.#_paddle = {x: WIDTH - (padSpec.width + 20), y: HEIGHT / 2 - padSpec.halfHeight};
 		else
-			this.#_paddle = {x: 10, y: HEIGHT / 2 - padSpec.halfHeight};
+			this.#_paddle = {x: 20, y: HEIGHT / 2 - padSpec.halfHeight};
 		this.#_clientSide = clientSide;
 		this.#_score = 0;
 	}

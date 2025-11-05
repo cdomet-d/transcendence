@@ -30,7 +30,7 @@ function updateBallPos(game: Game, newX: number, newY: number) {
 }
 
 function sideWallCollision(game: Game, newX: number): boolean {
-	if (newX - game.ball.radius >= WIDTH + 50 || newX + game.ball.radius <= -50) {
+	if (newX - game.ball.radius >= WIDTH + 100 || newX + game.ball.radius <= -100) {
 		game.ball.x = WIDTH / 2;
 		game.ball.y = HEIGHT / 2;
 		game.ball.dx = 0;
