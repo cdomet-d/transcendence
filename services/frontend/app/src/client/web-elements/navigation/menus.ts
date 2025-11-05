@@ -243,7 +243,7 @@ export class SocialMenu extends ActionMenu {
      */
     friend(icon: Icon) {
         this.classList.remove('hidden');
-        icon.src = '/assets/icons/remove-user.png';
+        icon.src = '/public/images/remove-user.png';
     }
 
     /**
@@ -253,7 +253,7 @@ export class SocialMenu extends ActionMenu {
      */
     stranger(icon: Icon) {
         this.classList.remove('hidden');
-        icon.src = '/assets/icons/add-user.png';
+        icon.src = '/public/images/add-user.png';
     }
 
     /** Updates menu UI for 'self' view by hiding the menu. */

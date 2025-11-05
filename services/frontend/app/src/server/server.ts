@@ -5,6 +5,8 @@ import cookie from '@fastify/cookie';
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import { fileURLToPath } from 'url';
+import * as path from 'path';
 
 function notFound(request: FastifyRequest, reply: FastifyReply) {
     reply
@@ -13,65 +15,46 @@ function notFound(request: FastifyRequest, reply: FastifyReply) {
         .send({ error: 'Not Found', message: 'The requested page does not exist' });
 }
 
+const serv: FastifyInstance = Fastify(options);
+
 try {
-    const serv: FastifyInstance = Fastify(options);
     serv.setNotFoundHandler(notFound);
     await addPlugins(serv);
     await serv.ready();
     await serv.listen({ port: 1212, host: '0.0.0.0' });
-    serv.log.info('Server running on 1212');
 } catch (err) {
-    console.error('server error:', err);
+    serv.log.error(err);
     process.exit(1);
 }
 
 async function addPlugins(serv: FastifyInstance) {
-	// console.log(__dirname)
     await serv
+        .register(servRoutes)
         .register(fastifyStatic, {
-            root: '/dist/client',
+            root: '/app/dist/client',
             prefix: '/public/',
             decorateReply: true,
         })
-
-        .register(servRoutes)
-		// .register(fastifyStatic, {
-        //     root: '/app/dist/client/scripts',
-        //     prefix: '/public/scripts/',
-        //     decorateReply: false,
-        // })
-
-		// .register(fastifyStatic, {
-        //     root: '/app/dist/client/web-elements',
-        //     prefix: '/public/web-elements/',
-        //     decorateReply: false,
-        // })
-		
-        // .register(fastifyStatic, {
-        //     root: '/app/dist/client/css/',
-        //     prefix: '/public/css/',
-        //     decorateReply: false,
-        // })
-        // .register(fastifyStatic, {
-        //     root: '/app/dist/client/assets/fonts/',
-        //     prefix: '/public/fonts/',
-        //     setHeaders(res, path, stat) {
-        //         res.setHeader('Content-Type', 'font/woff');
-        //     },
-        //     decorateReply: false,
-        // })
-
-
-        // .register(fastifyStatic, {
-        //     root: '/app/dist/client/assets/images/',
-        //     prefix: '/public/images/',
-        //     decorateReply: false,
-        // })
-        // .register(fastifyStatic, {
-        //     root: '/app/dist/client/assets/locales/',
-        //     prefix: '/public/locales/',
-        //     decorateReply: false,
-        // })
+        .register(fastifyStatic, {
+            root: '/app/dist/client/assets/fonts',
+            prefix: '/public/fonts/',
+            decorateReply: false,
+            setHeaders: (res, pathName) => {
+                if (pathName.endsWith('.woff')) {
+                    res.setHeader('Content-Type', 'font/woff');
+                }
+            },
+        })
+        .register(fastifyStatic, {
+            root: '/app/dist/client/assets/images',
+            prefix: '/public/images/',
+            decorateReply: false,
+            setHeaders: (res, pathName) => {
+                if (pathName.endsWith('.png')) {
+                    res.setHeader('Content-Type', 'img/png');
+                }
+            },
+        })
         .register(
             cookie /*, {
 					secret: "", //TODO: add secret ?

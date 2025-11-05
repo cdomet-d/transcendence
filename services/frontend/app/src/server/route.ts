@@ -24,7 +24,7 @@ function handler(req: FastifyRequest, rep: FastifyReply) {
 }
 
 const servRoutes: FastifyPluginCallback = function (serv, options, done) {
-    serv.get('/', handler);
+    serv.get('/*', handler);
     done();
 }
 
