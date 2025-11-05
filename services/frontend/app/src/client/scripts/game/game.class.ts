@@ -20,9 +20,11 @@ export interface ballObj {
 	y: number,
 	dx: number,
 	dy: number,
+	radius: number
 }
 
-interface paddleSize {
+interface paddleSpec {
+	speed: number
 	width: number,
 	height: number,
 	halfWidth: number,
@@ -39,10 +41,8 @@ export class Game {
 	#_score: [number, number];
 	#_leftPaddle: coordinates;
 	#_rightPaddle: coordinates;
-	#_padSize: paddleSize;
+	#_paddleSpec: paddleSpec;
 	#_ball: ballObj;
-	#_ballRadius: number;
-	#_paddleSpeed: number;
 	#_frameId: number;
 	#_delta: number;
 	#_lastFrameTime: number;
@@ -64,9 +64,10 @@ export class Game {
 			y: HEIGHT / 2, 
 			dx: 0.3, //custom
 			dy: 0.03, //custom
+			radius: 10
 		};
-		this.#_ballRadius = 10;
-		this.#_padSize = { 
+		this.#_paddleSpec = {
+			speed: 0.2,
 			width: 10, 
 			height: 54, 
 			halfWidth: 10 / 2, 
@@ -74,13 +75,12 @@ export class Game {
 		}; //custom
 		this.#_leftPaddle = {
 			x: 10, 
-			y: HEIGHT / 2 - this.#_padSize.halfHeight
+			y: HEIGHT / 2 - this.#_paddleSpec.halfHeight
 		};
 		this.#_rightPaddle = {
-			x: WIDTH - (this.#_padSize.width + 10), 
-			y: HEIGHT / 2 - this.#_padSize.halfHeight
+			x: WIDTH - (this.#_paddleSpec.width + 10), 
+			y: HEIGHT / 2 - this.#_paddleSpec.halfHeight
 		};
-		this.#_paddleSpeed = 0.2; //custom
 		this.#_frameId = 0
 		this.#_delta = 0;
 		this.#_lastFrameTime = 0;
@@ -99,10 +99,6 @@ export class Game {
 		return this.#_ball;
 	}
 
-	get ballRadius(): number {
-		return this.#_ballRadius;
-	}
-
 	get leftPad(): coordinates {
 		return this.#_leftPaddle;
 	}
@@ -111,14 +107,10 @@ export class Game {
 		return this.#_rightPaddle;
 	}
 
-	get padSize(): paddleSize {
-		return this.#_padSize;
+	get padSpec(): paddleSpec {
+		return this.#_paddleSpec;
 	}
-
-	get paddleSpeed(): number {
-		return this.#_paddleSpeed;
-	}
-
+	
 	get req(): reqObj {
 		return this.#_req;
 	}

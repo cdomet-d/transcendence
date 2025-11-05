@@ -3,13 +3,13 @@ import { type keysObj, HEIGHT, type Game } from './game.class.js';
 
 export function updatePaddlePos(game: Game, keys: keysObj, delta: number) {
     if (keys._w)
-        up(game.leftPad, game.paddleSpeed, delta);
+        up(game.leftPad, game.padSpec.speed, delta);
     if (keys._s)
-        down(game.leftPad, game.paddleSpeed, delta, game.padSize.height);
+        down(game.leftPad, game.padSpec.speed, delta, game.padSpec.height);
     if (keys._ArrowUp && game.local)
-        up(game.rightPad, game.paddleSpeed, delta);
+        up(game.rightPad, game.padSpec.speed, delta);
     if (keys._ArrowDown && game.local)
-        down(game.rightPad, game.paddleSpeed, delta, game.padSize.height);
+        down(game.rightPad, game.padSpec.speed, delta, game.padSpec.height);
 }
 
 function up(pad: coordinates, padSpeed: number, delta: number) {
