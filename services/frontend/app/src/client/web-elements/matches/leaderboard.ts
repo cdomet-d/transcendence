@@ -28,7 +28,7 @@ export class Leaderboard extends HTMLDivElement {
 
     render() {
 		this.id = 'leaderboard'
-        this.className = 'bg brdr pad-s overflow-y-auto overflow-x-hidden';
+        this.className = 'bg min-h-96 brdr pad-s overflow-y-auto overflow-x-hidden';
     }
 }
 

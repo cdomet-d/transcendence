@@ -406,6 +406,11 @@
 		cursor: not-allowed;
 		color: var(--disabled);
 	}
+
+	.grid > * {
+		justify-content: center;
+		align-content: center;
+	}
 }
 
 @layer components {}

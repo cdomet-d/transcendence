@@ -11,7 +11,7 @@ import { createNavMenu } from '../web-elements/navigation/menu-helpers.js';
 import { createLeaderboard } from '../web-elements/matches/leaderboard.js';
 
 const layoutPerPage: { [key: string]: keyof HTMLElementTagMap } = {
-    home: 'page-w-header',
+    home: 'full-screen',
     regitration: 'full-screen',
     error: 'full-screen',
     game: 'full-screen',

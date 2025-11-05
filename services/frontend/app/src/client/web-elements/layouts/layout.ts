@@ -8,7 +8,7 @@ export class Layout extends HTMLDivElement {
     constructor() {
         super();
         this.#innerComponents = new Map<string, HTMLElement>();
-        this.className = 'box-border grid grid-cols-[75%] grid-rows-[75%] place-content-center';
+        this.className = 'box-border grid grid-cols-[75%] min-h-full auto-rows-auto place-content-center';
     }
 
     /**
