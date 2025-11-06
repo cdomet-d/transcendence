@@ -10,7 +10,7 @@
     "module": "nodenext",
     "target": "esnext",
     "lib": ["esnext"],
-    "types": ["node"],
+    "types": ["node", "jest"],
 
     // Other Outputs
     // "sourceMap": true,
@@ -37,6 +37,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
   },
-  "include": ["src/**/*", "../../gateway/app/src/routeAccount.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }

@@ -21,6 +21,7 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "@types/sqlite3": "^5.1.0"
+    "@types/sqlite3": "^5.1.0",
+    "ts-jest": "^29.4.5"
   }
 }
