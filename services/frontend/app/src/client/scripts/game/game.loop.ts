@@ -78,8 +78,11 @@ function reconciliation(game: Game, latestReply: repObj) {
 	game.deleteReq(id);
 
 	game.leftPad.y = latestReply._leftPad.y;
-	if (game.local)
+	game.leftPad.x = latestReply._leftPad.x
+	if (game.local) {
+		game.rightPad.x = latestReply._rightPad.x;
 		game.rightPad.y = latestReply._rightPad.y;
+	}
 	game.ball = { ...latestReply._ball };
 
 	for (let i = id + 1; game.reqHistory.has(i); i++) {
