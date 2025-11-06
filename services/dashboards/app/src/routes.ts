@@ -114,6 +114,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 		try {
 			const { gameID } = request.body as { gameID: string };
 
+			//Should I add a 400 if gameID not provided ?
+
 			const query = `
 				DELETE FROM gameMatchInfo WHERE gameID = ?
 			`;

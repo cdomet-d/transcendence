@@ -1,20 +1,19 @@
-import Fastify from 'fastify'
-import type { FastifyInstance } from 'fastify';
-import { options } from './serv.conf.js';
-import dbConnector from "./db.js"
-import { dashboardRoutes } from './routes.js';
-
-const serv: FastifyInstance = Fastify(options);
-
-serv.register(dbConnector);
-serv.register(dashboardRoutes);
+import { buildServer } from './app.js';
 
 const start = async () => {
+	let serv;
 	try {
-		serv.listen({ port: 1515, host: '0.0.0.0' });
-	}
-	catch (err) {
-		console.error('server error:', err);
+		serv = await buildServer();
+
+		console.log('listening on 1515');
+		await serv.listen({ port: 1515, host: '0.0.0.0' });
+
+	} catch (err) {
+		if (serv) {
+			serv.log.error(err, 'Server failed to start');
+		} else {
+			console.error('Error during server build:', err);
+		}
 		process.exit(1);
 	}
 };

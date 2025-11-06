@@ -1,6 +1,6 @@
 import fastify, { type FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
-import { accountRoutes } from './routes.js';
+import { dashboardRoutes } from './routes.js';
 import dbConnector from "./db.js";
 
 export async function buildServer(): Promise<FastifyInstance> {
@@ -14,7 +14,7 @@ export async function buildServer(): Promise<FastifyInstance> {
 	});
 
 	serv.register(dbConnector);
-	serv.register(accountRoutes);
+	serv.register(dashboardRoutes);
 
 	await (serv.ready());
 
