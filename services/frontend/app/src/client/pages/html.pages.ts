@@ -88,6 +88,16 @@ export function renderLobbyMenu(): string {
             class="py-3 px-8 rounded-full border border-black bg-gradient-to-br from-blue-500 to-blue-700 shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
                 Join
             </button>
+			
+			<button id="create-quick-btn"
+			class="py-3 px-8 rounded-full border border-black bg-gradient-to-br from-cyan-700 to-cyan-900 shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
+				CreateQuick
+			</button>
+
+            <button id="join-quick-btn"
+            class="py-3 px-8 rounded-full border border-black bg-gradient-to-br from-pink-500 to-pink-700 shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
+                JoinQuick
+            </button>
 
             <a href="/central" data-link id="back-btn"
             class="absolute bottom-8 left-1/2 transform -translate-x-1/2 py-3 px-8 rounded-full border border-black bg-gradient-to-br from-[#ffcc00] to-[#ea9800] shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
@@ -104,6 +114,11 @@ export function renderLobby(): string {
 		    <button id="start-tournament-btn"
 			class="py-3 px-8 rounded-full border border-black bg-gradient-to-br from-blue-500 to-blue-700 shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
 		        Start Tournament
+		    </button>
+
+		    <button id="start-quickmatch-btn"
+			class="py-3 px-8 rounded-full border border-black bg-gradient-to-br from-fuchsia-600 to-fuchsia-800 shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
+		        Start Quickmatch
 		    </button>
 
 		    <a href="/central" data-link id="back-btn"

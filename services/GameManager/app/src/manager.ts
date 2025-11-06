@@ -1,26 +1,19 @@
 import { createTournament } from "./tournament/tournamentCreation.js";
-import { startTournament } from "./tournament/tournamentStart.js";
+import { startGame, startTournament } from "./tournament/tournamentStart.js";
 import type { lobbyInfo } from './lobby/lobby.js'
-
+import { createGameObj } from "./quickmatch/createGame.js";
 
 interface userInfo {
 	userID?: number,
 	username?: string
 }
 
-// interface lobbyInfo {
-// 	remote: boolean,
-// 	format: "quick" | "tournament",
-// 	users: userInfo[],
-// 	players: number
-// 	// gameSettings: gameSettingsObj
-// }
-
 interface game {
+	lobbyID: number,
 	gameID: number,
-	tournamentID: number,
+	tournamentID?: number,
 	remote: boolean,
-	users: userInfo[] | undefined | null,
+	userList: userInfo[] | undefined | null,
 	score: string,
 	winnerID: number,
 	loserID: number,
@@ -41,18 +34,21 @@ interface gameRequest {
 export type { userInfo, game, tournament, gameRequest }
 
 export function processGameRequest(lobbyInfo: lobbyInfo) {
-	// Filter request
 	if (lobbyInfo.format === "tournament") {
 		const tournament: tournament | undefined = createTournament(lobbyInfo);
 		if (tournament === undefined) {
-			console.log("Error: tournament object undefined!");
+			console.log("Error: Could not create tournament");
 			return;
 		}
+		lobbyInfo.joinable = false; // TODO: turn back to true when tournament over
 		startTournament(tournament);
 	} else if (lobbyInfo.format === "quick") {
-		// create gameObj
-		// send it to PONG
-		// wait for approval from PONG
-		// signal involved clients game ready for them
+		const quickmatch: game | boolean = createGameObj(lobbyInfo);
+		if (quickmatch === false) {
+			console.log("Error: Something went wrong!");
+			return;
+		}
+		lobbyInfo.joinable = false; // TODO: turn back to true when game over
+		startGame(quickmatch);
 	}
 }

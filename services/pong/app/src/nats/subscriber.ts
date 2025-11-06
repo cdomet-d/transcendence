@@ -58,7 +58,6 @@ const player2: user = {
 	_userID: 2
 }
 
-// TODO: SLight type conflict to resolve between Charlotte and I
 const gameobj: gameInfo = {
 	_gameID: 1,
 	_score: [],

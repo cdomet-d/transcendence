@@ -8,13 +8,12 @@ const nextPlayersMap: Map<number, { player1?: userInfo, player2?: userInfo }> = 
 export async function tournamentState(payload: string) {
 	const game: game = JSON.parse(payload);
 
-	const tournamentObj = tournamentMap.get(game.tournamentID);
+	const tournamentObj = tournamentMap.get(game.tournamentID!);
 	if (!tournamentObj) {
 		console.log("Error: Could not make tournamentObj!");
 		return;
 	}
 
-	// find game object in bracket
 	const index = tournamentObj.bracket.findIndex((obj) => obj.gameID === game.gameID);
 	if (index === -1) {
 		console.log("Error: game not found in tournament bracket!");
@@ -23,7 +22,6 @@ export async function tournamentState(payload: string) {
 
 	// TODO: send full GameObj to DB??
 
-	// get next GameObj
 	const nextGame = getNextGameInBracket(tournamentObj);
 	if (nextGame === undefined) { // tournament is over
 		// handle end of tournament
@@ -46,31 +44,27 @@ export async function tournamentState(payload: string) {
 		nextPlayers.player2 = { userID: game.winnerID, username: username };
 	}
 
-	// when both players are ready start next game
 	if (nextPlayers.player1 && nextPlayers.player2) {
-		tournamentObj.bracket[index] = game; // update local tournamnetObj
-		nextGame.users = [nextPlayers.player1, nextPlayers.player2];
+		tournamentObj.bracket[index] = game; // update local tournamentObj
+		nextGame.userList = [nextPlayers.player1, nextPlayers.player2];
 		startGame(nextGame);
 		nextPlayersMap.delete(nextGameID);
-		
-		// waiting screen for winner?
-		// back to menu for loser?
 	}
 }
 
 function getUsernameFromID(userID: number, game: game): string {
-	if (game.users?.length === 2) {
-		if (game.users[0]?.userID === userID)
-			return game.users[0]?.username!;
+	if (game.userList?.length === 2) {
+		if (game.userList[0]?.userID === userID)
+			return game.userList[0]?.username!;
 		else
-			return game.users[1]?.username!;
+			return game.userList[1]?.username!;
 	}
 	return "Error: Couldn't find username from userID in gameObj!";
 }
 
 function getNextGameInBracket(tournament: tournament): game | undefined {
 	tournament.bracket.forEach((GameObj) => {
-		if (GameObj.users === null) {
+		if (GameObj.userList === null) {
 			return GameObj;
 		}
 	});

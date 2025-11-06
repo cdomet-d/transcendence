@@ -11,8 +11,8 @@ export interface lobbyInfo {
 	joinable?: boolean,
 	userList: userInfo[],
 	remote: boolean,
-	format: "quick" | "tournament",
-	players: number
+	format: "quick" | "tournament" | string,
+	nbPlayers: number
 	// gameSettings?: string
 }
 
@@ -22,20 +22,10 @@ interface whitelist {
 	userIDs: number[]
 }
 
-export const lobbyMap: Map<number | undefined, lobbyInfo> = new Map(); // '| undefined' needed here
+export const lobbyMap: Map<number | undefined, lobbyInfo> = new Map();
 
-/*
-FRONT:
-show Lobby Room
-	LobbyID
-	participants
-	game settings
-	Start button greyed out while Lobby != full (HOST ONLY CAN START GAME?)
-
-*/
-
-export function createLobby(hostID: number) {
-	const lobby: lobbyInfo = makeLobbyInfo(hostID);
+export function createLobby(hostID: number, format: string) {
+	const lobby: lobbyInfo = makeLobbyInfo(hostID, format);
 	lobbyMap.set(lobby.lobbyID, lobby);
 }
 
@@ -43,13 +33,13 @@ export function addUserToLobby(uid: number, lobbyID: number) {
 	const lobby/* : lobbyInfo | undefined */ = lobbyMap.get(lobbyID);
 	if (!lobby) {
 		console.log("Error: lobbyID not found in GM lobbyMap!");
+		return;
 	}
 	lobby?.userList.push({ userID: uid });
 	console.log(`User #${uid} has been added to lobby`);
 }
 
-
-function makeLobbyInfo(hostID: number): lobbyInfo {
+function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 	const lobbyID: number = getUniqueLobbyID();
 
 	const lobby: lobbyInfo = {
@@ -57,15 +47,15 @@ function makeLobbyInfo(hostID: number): lobbyInfo {
 		whitelist: {
 			lobbyId: lobbyID,
 			hostID: hostID,
-			userIDs: [hostID] // put invitees here
+			userIDs: [hostID] // 1. put invitee ID here on invite
 		},
 		joinable: true,
 		userList: [
-			{ userID: hostID } // and add them there when they join
+			{ userID: hostID } // 2. add invitees there when they join
 		],
-		remote: true,
-		format: "tournament",
-		players: 4
+		remote: true, // TODO: TBD
+		format: format,
+		nbPlayers: format === "quick" ? 2 : 4
 	}
 
 	return lobby;
@@ -79,13 +69,13 @@ function getUniqueLobbyID(): number {
 	return uniqueID;
 }
 
-
 export function printPlayersInLobby(lobbyID: number) {
-	const lobby = lobbyMap.get(1);
+	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) {
 		console.log("AAAH PAS DE LOBBY");
+		return;
 	}
 	lobby?.userList.forEach(user => {
-		console.log(`User #${user.userID} is in Lobby #1`);
+		console.log(`User #${user.userID} is in Lobby #${lobbyID}`);
 	});
 }
