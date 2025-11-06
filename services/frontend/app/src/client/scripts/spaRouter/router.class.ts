@@ -2,6 +2,7 @@ import { render404 } from '../../pages/html.pages.js';
 import { clearHeader, renderHeader } from '../../pages/header.js'
 import { lobby } from '../lobby/lobby.js'
 import type { routeInterface } from '../spaRouter/routes.js'
+import { pong } from '../game/pong.js';
 
 export class Router {
 	/*                            PROPERTIES                                  */
@@ -52,7 +53,9 @@ export class Router {
 
     	page.innerHTML = matchedRoute.callback();
 
-		if (matchedRoute.path === '/game/lobby')
-			lobby();
+		// if (matchedRoute.path === '/game/lobby')
+		// 	lobby();
+		if (matchedRoute.path === '/game/match')
+			pong({userID: 1, gameID: 1, remote: false})
 	}
 }

@@ -12,30 +12,50 @@ export async function initNatsConnection(): Promise<NatsConnection> {
 }
 
 export async function natsSubscription(serv: FastifyInstance) {
-	const sc = StringCodec();
+	// const sc = StringCodec();
 
-	const sub = serv.nc.subscribe('game.request');
-	// console.log(`Listening for messages on "game.request"...`);
+	// const sub = serv.nc.subscribe('game.request');
+	// // console.log(`Listening for messages on "game.request"...`);
 
-	(async () => {
-		for await (const msg of sub) {
+	// (async () => {
+	// 	for await (const msg of sub) {
 
-			const _gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
-			// serv.log.info(`Received message: ${JSON.stringify(_gameInfo)}`);
-			serv.gameRegistry.addGame(new Game(_gameInfo, serv.nc));
+	// 		const _gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
+	// 		// serv.log.info(`Received message: ${JSON.stringify(_gameInfo)}`);
+	// 		serv.gameRegistry.addGame(new Game(_gameInfo, serv.nc));
 
-			// Approval given HERE from PONG if game is ok to start
-			if (msg.reply) {
-				const game = {
-					gameID: _gameInfo.gameID,
-					users: _gameInfo.users,
-					remote: _gameInfo.remote
-				}
-				natsPublish(msg.reply, JSON.stringify(game));
-			}
-		}
-	})();
+	// 		// Approval given HERE from PONG if game is ok to start
+	// 		if (msg.reply) {
+	// 			const game = {
+	// 				gameID: _gameInfo.gameID,
+	// 				users: _gameInfo.users,
+	// 				remote: _gameInfo.remote
+	// 			}
+	// 			natsPublish(msg.reply, JSON.stringify(game));
+	// 		}
+	// 	}
+	// })();
 
-	// serv.gameRegistry.addGame(new Game(gameobj, serv.nc)); //TODO: for testing
+	serv.gameRegistry.addGame(new Game(gameobj, serv.nc)); //TODO: for testing
 };
 
+import type { user } from '../classes/game.class.js';
+const player1: user = {
+	userID: 1,
+	username: "cha",
+}
+
+const player2: user = {
+	userID: 2,
+	username: "sweet",
+}
+
+const gameobj: gameInfo = {
+	gameID: 1,
+	tournamentID: 99,
+	remote: false,
+	users: [player1, player2],
+	score: [0, 0],
+	winnerID: 0,
+	loserID: 0,
+}
