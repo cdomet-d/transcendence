@@ -67,6 +67,7 @@ export type FontSize = 't0' | 't1' | 't2' | 't3' | 'f-s' | 'f-m' | 'f-l' | 'f-re
  */
 export type FontColor = 'f-yellow' | 'f-orange';
 
+export type Theme = 'dark' | 'light';
 /**
  * Font weight options.
  *
@@ -156,6 +157,7 @@ export interface navigationLinksData {
     datalink: string;
     href: string;
     title: string;
+	img: ImgData | null;
 }
 
 /**

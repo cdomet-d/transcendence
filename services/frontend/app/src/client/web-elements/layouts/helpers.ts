@@ -1,16 +1,6 @@
-import { FullscreenPage } from './fullscreen.js';
-import { pageWithHeader } from './page-with-header.js';
+import { Layout } from "./layout.js";
 
-export interface HTMLElementTagMap {
-    'page-w-header': pageWithHeader;
-    'full-screen': FullscreenPage;
-}
-
-export function createLayout<K extends keyof HTMLElementTagMap>(
-    HTMLMapKey: K
-): HTMLElementTagMap[K] {
-    const el = document.createElement('div', {
-        is: HTMLMapKey as string,
-    }) as HTMLElementTagMap[K];
-    return el;
+export function createLayout(){
+    const el = document.createElement('div', { is: 'layout'}) as Layout;
+    return el; 
 }

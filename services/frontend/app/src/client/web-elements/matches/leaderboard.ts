@@ -1,14 +1,25 @@
-import { createMatchHistory, MatchHistory} from './matches.js';
+import { createMatchHistory, createMatchOutcome, InlineMatch, MatchHistory} from './matches.js';
 import type { MatchOutcome } from '../types-interfaces.js';
+
+const emptyMatch: MatchOutcome = {
+	date: '',
+	opponent: '',
+	outcome: '',
+	score: '',
+	duration: '',
+	tournament: true,
+};
 
 export class Leaderboard extends HTMLDivElement {
     #data: MatchOutcome[];
     #matches: MatchHistory;
+	#header: InlineMatch;
     constructor() {
         super();
         this.#data = [];
         this.#matches = createMatchHistory(this.#data);
-		this.append(this.#matches)
+        this.#header = createMatchOutcome(emptyMatch, true);
+		this.append(this.#header, this.#matches)
 	}
 
     set data(newData: MatchOutcome[]) {
@@ -28,8 +39,8 @@ export class Leaderboard extends HTMLDivElement {
 
     render() {
 		this.id = 'leaderboard'
-        this.className = 'bg min-h-96 brdr pad-s overflow-y-auto overflow-x-hidden';
-    }
+        this.className = 'bg content-h brdr overflow-y-auto overflow-x-hidden flex flex-col justify-start';
+		}
 }
 
 if (!customElements.get('leader-board')) {

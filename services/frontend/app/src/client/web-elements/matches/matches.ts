@@ -6,10 +6,10 @@ import { createNoResult } from '../typography/helpers.js';
  * @param match - The match outcome data.
  * @returns {InlineMatch} The populated InlineMatch element.
  */
-export function createMatchOutcome(match: MatchOutcome): InlineMatch {
+export function createMatchOutcome(match: MatchOutcome, header: boolean): InlineMatch {
     const el = document.createElement('div', { is: 'inline-match' }) as InlineMatch;
     el.match = match;
-    el.createSpans();
+	header ? el.createHeader() : el.createSpans();
     return el;
 }
 
@@ -69,7 +69,7 @@ export class InlineMatch extends HTMLDivElement {
             span.id = key;
             span.textContent = key;
         }
-        this.classList.add('bg-yellow');
+        this.classList.add('bg-yellow', 'sticky', 'top-0');
 		this.id = 'lb-header'
         return this;
     }
@@ -97,7 +97,7 @@ export class InlineMatch extends HTMLDivElement {
      * Renders the InlineMatch element with default styles.
      */
     render() {
-        this.classList.add('box-border', 'grid', 'grid-cols-6', 'text-center');
+        this.classList.add('box-border', 'grid', 'grid-cols-6', 'h-m', 'text-center');
     }
 }
 
@@ -113,13 +113,7 @@ if (!customElements.get('inline-match')) {
 export class MatchHistory extends HTMLDivElement {
     constructor() {
         super();
-		this.createHeader();
     }
-
-	createHeader() {
-        const header = document.createElement('div', { is: 'inline-match' }) as InlineMatch;
-        this.append(header.createHeader());
-	}
 
     /**
      * Populates the match history with a header and InlineMatch elements for each match.
@@ -132,10 +126,10 @@ export class MatchHistory extends HTMLDivElement {
 			 if (el.id !== 'lb-header') el.remove();
 		})
         if (matches.length < 1) {
-            this.append(createNoResult('ilarge'));
+            this.append(createNoResult('light', 'ifs'));
         } else {
             matches.forEach((el) => {
-                this.append(createMatchOutcome(el));
+                this.append(createMatchOutcome(el, false));
             });
         }
     }
@@ -146,7 +140,7 @@ export class MatchHistory extends HTMLDivElement {
 
     render() {
         this.id = 'match-history';
-        this.classList.add('grid', 'grid-flow-rows');
+        this.classList.add('grid', 'grid-flow-rows', 'gap-xs', 'grid-auto-rows-auto', 'h-full');
     }
 }
 

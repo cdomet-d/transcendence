@@ -1,9 +1,9 @@
 import type { buttonData, navigationLinksData, TabData } from '../types-interfaces.js';
 
 export const mainMenu: navigationLinksData[] = [
-    { title: 'Leaderboard', datalink: 'leaderboard', href: '/leaderboard' },
-    { title: 'Play', datalink: 'pong-settings', href: '/pong-settings' },
-    { title: 'Profile', datalink: 'profile', href: '/user/' },
+    { title: 'Leaderboard', datalink: 'leaderboard', href: '/leaderboard', img: null },
+    { title: 'Play', datalink: 'pong-settings', href: '/pong-settings', img: null },
+    { title: 'Profile', datalink: 'profile', href: '/user/', img: null },
 ];
 
 

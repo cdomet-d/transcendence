@@ -1,4 +1,4 @@
-import type { ImgData, Size } from '../types-interfaces.js';
+import type { ImgData, Size, Theme } from '../types-interfaces.js';
 import { createIcon } from './helpers.js';
 
 /**
@@ -84,6 +84,7 @@ if (!customElements.get('user-avatar')) {
 
 export class NoResults extends HTMLDivElement {
     #noResultsImg: ImgData;
+	#theme: Theme;
 
     constructor() {
         super();
@@ -94,10 +95,15 @@ export class NoResults extends HTMLDivElement {
             src: '/public/images/no-result.png',
         };
 		this.id = 'NoResults'
+		this.#theme = 'dark'
     }
 
 	set size(size: Size) {
 		this.#noResultsImg.size = size; 
+	}
+
+	set theme(theme: Theme) {
+		this.#theme = theme; 
 	}
 
     connectedCallback() {
@@ -105,13 +111,13 @@ export class NoResults extends HTMLDivElement {
         const p = document.createElement('p');
         p.innerText = "There's nothing here :<";
         this.append(p, img);
-		p.classList.add('text-center', 'f-s', 'f-yellow', 'f-bold');
+		p.classList.add('text-center', 'f-s', `${this.#theme}`, 'f-bold');
         img.classList.add('breathe', 'justify-self-center');
         this.render();
     }
 
     render() {
-        this.className = 'w-full box-border grid justify-center';
+        this.className = 'w-full box-border grid';
     }
 }
 

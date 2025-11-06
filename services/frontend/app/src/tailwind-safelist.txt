@@ -54,3 +54,6 @@ ismall
 imedium
 ilarge
 ifs
+
+light
+dark

@@ -1,10 +1,17 @@
 import type { navigationLinksData } from '../types-interfaces.js';
+import { createIcon } from '../typography/helpers.js';
 import { router } from '../../scripts/main.js';
 
 const emptyLink: navigationLinksData = {
     datalink: '',
     href: '',
     title: '',
+    img: {
+        alt: '',
+        size: 'iicon',
+        src: '',
+        id: '',
+    },
 };
 export class NavigationLinks extends HTMLAnchorElement {
     #info: navigationLinksData;
@@ -54,12 +61,17 @@ export class NavigationLinks extends HTMLAnchorElement {
     }
 
     /** Renders simple textual button content. */
-    renderTextualBtn() {
+    #renderTextLink() {
         this.textContent = this.#info.title;
     }
 
+    /** Renders button icon if image metadata is provided. */
+    #renderIconLink() {
+        if (this.#info.img) this.append(createIcon(this.#info.img));
+    }
+
     /** Renders animated button text letter-by-letter. */
-    renderAnimatedBtn() {
+    #renderAnimatedLink() {
         let index: number = 0;
         for (const char of this.#info.title!) {
             const letterSpan = document.createElement('span');
@@ -72,16 +84,23 @@ export class NavigationLinks extends HTMLAnchorElement {
         this.classList.add('t2', 'button-shadow');
     }
 
+    #styleButton() {
+        this.classList.add('brdr', 'input-emphasis', 'whitenowrap', 'button', 'bg-yellow', 'w-full');
+    }
+
     render() {
         this.className =
-            'box-border brdr pad-xs input-emphasis outline-hidden \
-			overflow-hidden whitenowrap cursor-pointer button bg-yellow\
-			 w-full text-center hover:transform hover:scale-[1.02] \
-			 focus-visible:transform focus-visible:scale-[1.02]' ;
-        if (this.#info.title && !this.#animated) {
-            this.renderTextualBtn();
+            'box-border pad-xs  outline-hidden \
+			overflow-hidden  cursor-pointer   text-center \
+			hover:transform hover:scale-[1.02] \
+			focus-visible:transform focus-visible:scale-[1.02]';
+        if (this.#info.img) this.#renderIconLink();
+        else if (this.#info.title && !this.#animated) {
+            this.#renderTextLink();
+            this.#styleButton();
         } else if (this.#info.title && this.#animated) {
-            this.renderAnimatedBtn();
+            this.#renderAnimatedLink();
+            this.#styleButton();
         }
         this.href = this.#info.href;
         this.title = this.#info.title;

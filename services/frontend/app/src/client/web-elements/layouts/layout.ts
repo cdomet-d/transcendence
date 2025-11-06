@@ -1,4 +1,3 @@
-
 export class Layout extends HTMLDivElement {
     /**
      * 	The layout's cache.
@@ -8,7 +7,8 @@ export class Layout extends HTMLDivElement {
     constructor() {
         super();
         this.#innerComponents = new Map<string, HTMLElement>();
-        this.className = 'box-border grid grid-cols-[75%] min-h-full auto-rows-auto place-content-center';
+        this.className =
+            'box-border grid grid-cols-[75%] min-h-full auto-rows-auto place-content-center gap-m';
     }
 
     /**
@@ -42,7 +42,7 @@ export class Layout extends HTMLDivElement {
      */
     appendAndCache(...el: HTMLElement[]) {
         el.forEach((component) => {
-			console.log('Appending:', component.tagName);
+            console.log('Appending:', component.tagName);
             this.append(component);
             this.#innerComponents.set(component.id, component);
         });
@@ -53,6 +53,17 @@ export class Layout extends HTMLDivElement {
     }
 
     render() {
-        this.classList.add('grid');
+        this.classList.add(
+            'grid',
+            'h-screen',
+            'min-w-80',
+            'place-content-between',
+            'grid-auto-rows-auto',
+            'single-col-xl'
+        );
     }
+}
+
+if (!customElements.get('custom-layout')) {
+    customElements.define('custom-layout', Layout, { extends: 'div' });
 }

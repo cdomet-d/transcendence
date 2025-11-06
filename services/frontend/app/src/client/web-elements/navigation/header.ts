@@ -1,13 +1,23 @@
 import { createDropdown, createNavMenu } from './menu-helpers.js';
 import { createForm } from '../forms/helpers.js';
-import { createIcon } from '../typography/helpers.js';
 import { createNotificationBox } from '../users/notifications-helpers.js';
 import { DropdownMenu, NavigationMenu } from './menus.js';
-import { Icon } from '../typography/images.js';
-import { iMeta } from '../default-values.js';
 import { NotifBox } from '../users/notifications.js';
 import { Searchbar } from '../forms/search.js';
 import { mainMenu, languageMenu } from './default-menus.js';
+import type { navigationLinksData } from '../types-interfaces.js';
+
+const homeLink: navigationLinksData[] = [{
+	datalink: 'home',
+	href: '/',
+	title: 'Home',
+	img: {
+		alt: 'A cute pixel art blob',
+		size: 'imedium',
+		src: '/public/images/default-avatar.png',
+		id: 'home-link',
+	}
+}];
 
 /**
  * Custom element for the main page header.
@@ -15,15 +25,15 @@ import { mainMenu, languageMenu } from './default-menus.js';
  * Extends HTMLElement.
  */
 export class PageHeader extends HTMLElement {
-    #home: Icon;
+    #home: NavigationMenu;
     #searchbar: Searchbar;
     #mainNav: NavigationMenu;
-	#notif: NotifBox;
+    #notif: NotifBox;
     #language: DropdownMenu;
 
     constructor() {
         super();
-        this.#home = createIcon(iMeta);
+        this.#home = createNavMenu(homeLink, 'horizontal', false);
         this.#searchbar = createForm('search-form');
         this.#mainNav = createNavMenu(mainMenu, 'horizontal', false);
         this.#notif = createNotificationBox();
@@ -38,15 +48,15 @@ export class PageHeader extends HTMLElement {
     render() {
         this.classList.add(
             'box-border',
-			'pad-xs',
-            'w-full',
+            'w-screen',
             'grid',
-            'gap-xs',
             'header',
-			'fixed',
-			'top-0',
-			'left-0',
-			'justify-evenly'
+			'grid-cols-5',
+			'gap-xs',
+            'absolute',
+            'top-0',
+            'left-0',
+            'justify-between'
         );
     }
 }

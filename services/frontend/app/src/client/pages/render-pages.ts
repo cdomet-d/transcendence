@@ -1,16 +1,12 @@
 import { createHeading, createNoResult } from '../web-elements/typography/helpers.js';
-import type { HTMLElementTagMap } from '../web-elements/layouts/helpers.js';
 import { renderPageTemplate } from './page.template.js';
 import { translate } from '../scripts/language/translation.js';
 import type { Layout } from '../web-elements/layouts/layout.js';
-import { createLayout } from '../web-elements/layouts/helpers.js';
 import { mainMenu } from '../web-elements/navigation/default-menus.js';
 import { createNavMenu } from '../web-elements/navigation/menu-helpers.js';
-// import type { MatchHistory } from '../web-elements/matches/matches.js';
-// import { matchesHistory } from '../web-elements/default-values.js';
 import { createLeaderboard } from '../web-elements/matches/leaderboard.js';
 
-const layoutPerPage: { [key: string]: keyof HTMLElementTagMap } = {
+const layoutPerPage: { [key: string]: string } = {
     home: 'full-screen',
     regitration: 'full-screen',
     error: 'full-screen',
@@ -26,33 +22,30 @@ function updatePageTitle(newPage: string) {
     document.title = `🌻 BigT - ${newPage} 🌻`;
 }
 
-function prepareLayout(curLayout: Layout | null, page: string) {
+function prepareLayout(curLayout: Layout | undefined, page: string) {
     if (!layoutPerPage[page]) throw new Error('Requested page is undefined');
+    if (!curLayout) throw new Error('Something is wrong with the document\'s layout - page cannot be charged')
     console.log(curLayout?.id, layoutPerPage[page]);
 
-    const HTMLMapKey: keyof HTMLElementTagMap = layoutPerPage[page] as keyof HTMLElementTagMap;
-    if (!curLayout || curLayout.id !== layoutPerPage[page]) {
-        if (curLayout) {
-            curLayout.clearAll();
-            curLayout.remove();
-        }
-        const newLayout = createLayout(HTMLMapKey);
-        document.body.append(newLayout);
-        document.body.layoutInstance = newLayout;
+	curLayout.clearAll();
+    if (layoutPerPage[page] === 'full-screen') {
+        document.body.header?.classList.add('hidden');
+        document.body.header?.setAttribute('hidden', '');
     } else {
-        curLayout.clearAll();
+        document.body.header?.classList.remove('hidden');
+        document.body.header?.removeAttribute('hidden');
     }
 }
 
 export function renderNotFound() {
     console.log('renderNotFound');
     prepareLayout(document.body.layoutInstance, 'error');
-    document.body.layoutInstance!.appendAndCache(createNoResult('ifs'));
+    document.body.layoutInstance!.appendAndCache(createNoResult('dark', 'ifs'));
     updatePageTitle('Not Found');
 }
 
 export function renderHome() {
-	//TODO: dynamic layout: fullscreen if the user is not logged in, header if he is
+    //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is
     console.log('RenderHome');
     prepareLayout(document.body.layoutInstance, 'home');
     document.body.layoutInstance!.appendAndCache(
@@ -64,11 +57,11 @@ export function renderHome() {
 
 export function renderLeaderboard() {
     console.log('renderLeaderboard');
-   prepareLayout(document.body.layoutInstance, 'leaderboard');
-   document.body.layoutInstance!.appendAndCache(createLeaderboard([]))
-//    const history: Leaderboard | undefined = document.body.layoutInstance?.components.get('leaderboard') as Leaderboard;
-//    history.data = matchesHistory;
-//    history.update();
+    prepareLayout(document.body.layoutInstance, 'leaderboard');
+    document.body.layoutInstance!.appendAndCache(
+        createHeading('1', 'Leaderboard'),
+        createLeaderboard([])
+    );
 }
 
 export function renderProfile(): string {
