@@ -124,7 +124,7 @@ export class Winstreak extends HTMLSpanElement {
     render() {
         this.id = 'winstreak';
         this.className = 'flex flex-initial gap-s items-center even';
-        this.#val.className = 'f-bold text-[16px]';
+        this.#val.className = 'f-bold dark';
     }
 }
 
@@ -156,7 +156,8 @@ export class Biography extends HTMLParagraphElement {
 
     render() {
         this.id = 'biography';
-        this.className = 'box-border max-h[6.5rem] leading-[1rem] biography place-self-stretch';
+        this.className =
+            'box-border max-h[6.5rem] leading-[1rem] biography place-self-stretch bg thin brdr light';
     }
 }
 

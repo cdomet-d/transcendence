@@ -39,7 +39,7 @@ export const user: types.UserData = {
     biography: '(╯°□°)╯︵ ┻━┻',
     id: '256',
     relation: 'stranger',
-    profileColor: 'bg-4F9FFF',
+    profileColor: 'bg-BE5103',
     language: 'English',
     status: true,
     username: 'CrimeGoose',

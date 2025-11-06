@@ -3,7 +3,7 @@ import type { buttonData, navigationLinksData, TabData } from '../types-interfac
 export const mainMenu: navigationLinksData[] = [
     { title: 'Leaderboard', datalink: 'leaderboard', href: '/leaderboard', img: null },
     { title: 'Play', datalink: 'pong-settings', href: '/pong-settings', img: null },
-    { title: 'Profile', datalink: 'profile', href: '/user/', img: null },
+    { title: 'Profile', datalink: 'profile', href: '/user', img: null },
 ];
 
 export const gameMenu: buttonData[] = [
@@ -63,7 +63,7 @@ export const backgroundMenu: buttonData[] = [
     { ariaLabel: 'Snow', content: 'Mysterious Snow', img: null, type: 'button' },
 ];
 
-export const tabs: TabData[] = [
+export const profileTabs: TabData[] = [
     { id: 'friends', content: 'Friends', default: true, panelContent: [] },
     { id: 'history', content: 'Game history', default: false, panelContent: [] },
     { id: 'stats', content: 'Statistics', default: false, panelContent: [] },

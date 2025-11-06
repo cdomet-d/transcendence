@@ -3,8 +3,11 @@ import { createLeaderboard } from '../web-elements/matches/leaderboard.js';
 import { createNavMenu } from '../web-elements/navigation/menu-helpers.js';
 import { mainMenu } from '../web-elements/navigation/default-menus.js';
 import { renderPageTemplate } from './page.template.js';
-import type { Layout } from '../web-elements/layouts/layout.js';
+import { Layout } from '../web-elements/layouts/layout.js';
+import { ProfileWithTabs } from '../web-elements/users/user-profile-containers.js';
+import { user } from '../web-elements/default-values.js';
 
+//TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
     central: 'page-w-header',
     error: 'full-screen',
@@ -45,7 +48,6 @@ export function renderNotFound() {
 }
 
 export function renderHome() {
-    //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is
     console.log('RenderHome');
     prepareLayout(document.body.layoutInstance, 'home');
     document.body.layoutInstance!.appendAndCache(
@@ -67,6 +69,14 @@ export function renderLeaderboard() {
 export function renderProfile() {
     console.log('renderProfile');
     prepareLayout(document.body.layoutInstance, 'profile');
+    console.log('---');
+    document.body.layoutInstance?.appendAndCache(
+        document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
+    );
+    console.log('---');
+    const el = document.body.layoutInstance?.components.get('user-profile') as ProfileWithTabs;
+    el!.profile = user;
+    console.log('---');
 }
 
 export function renderTournament(): string {
@@ -92,7 +102,9 @@ export function renderGame(): string {
 			pong game <!-- fallback if unable to be displayed -->
 			</canvas>
 			<a href="/central" data-link id="back-btn" 
-			class="mt-4 py-3 px-8 rounded-full border-1 border-black bg-gradient-to-br from-[#ffcc00] to-[#ea9800] shadow-md hover:scale-105 transition-all text-white text-lg font-semibold">
+			class="mt-4 py-3 px-8 rounded-full border-1 border-black \
+			bg-gradient-to-br from-[#ffcc00] to-[#ea9800] shadow-md \
+			hover:scale-105 transition-all text-white text-lg font-semibold">
 			Back
 			</a>
 		</div>

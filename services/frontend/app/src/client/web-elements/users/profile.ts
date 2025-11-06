@@ -44,49 +44,72 @@ export class UserProfile extends HTMLDivElement {
      * Sets the user's status (online/offline).
      */
     set status(status: boolean) {
-        this.#username.status = status;
+        if (status !== this.#username.status) {
+            console.log('status');
+            this.#username.status = status;
+        }
     }
 
     /**
      * Sets the user's avatar image data.
      */
     set avatar(profilePic: ImgData) {
-        this.#avatar.metadata = profilePic;
+        if (this.#avatar.metadata !== profilePic) {
+            console.log('avatar');
+            this.#avatar.metadata = profilePic;
+            this.#avatar.classList.add('row-span-3', 'place-self-center');
+        }
     }
 
     /**
      * Sets the user's biography text.
      */
     set biography(bio: string) {
-        this.#biography.content = bio;
+        if (bio !== this.#biography.content) {
+            console.log('bio');
+            this.#biography.content = bio;
+            this.#biography.classList.add('row-span-2');
+        }
     }
 
     /**
      * Sets the user's winstreak value.
      */
     set winstreak(val: string) {
-        this.#winstreak.winstreakValue = val;
+        if (val !== this.#winstreak.winstreakValue) {
+            this.#winstreak.winstreakValue = val;
+            console.log('wstreak');
+        }
     }
 
     /**
      * Sets the profile view type for the action menu.
      */
     set profileView(v: ProfileView) {
-        this.#actionButtons.view = v;
+        if (this.#actionButtons.view !== v) {
+            console.log('actionButtonView');
+            this.#actionButtons.view = v;
+        }
     }
 
     /**
      * Sets the user's profile age (days since joined).
      */
     set profileAge(val: string) {
-        this.#joinedSince.textContent = `Joined ${val} days ago`;
+        if (this.#joinedSince.textContent !== `Joined ${val} days ago`) {
+            this.#joinedSince.textContent = `Joined ${val} days ago`;
+            console.log('profileAge');
+        }
     }
 
     /**
      * Sets the user's username.
      */
     set username(name: string) {
-        this.#username.name = name;
+        if (this.#username.name !== name) {
+            console.log('userName');
+            this.#username.name = name;
+        }
     }
 
     /**
@@ -94,6 +117,7 @@ export class UserProfile extends HTMLDivElement {
      */
     set color(newColor: string) {
         if (this.#color !== newColor) {
+            console.log('color');
             this.classList.remove(this.#color);
             this.#color = newColor;
             this.classList.add(this.#color);
@@ -104,15 +128,15 @@ export class UserProfile extends HTMLDivElement {
      * Sets all user information at once from a UserData object.
      */
     set userInfo(user: UserData) {
-        this.profileId = user.id;
         this.avatar = user.avatar;
-        this.username = user.username;
-        this.status = user.status;
-        this.winstreak = user.winstreak;
-        this.profileView = user.relation;
         this.biography = user.biography;
-        this.profileAge = user.since;
         this.color = user.profileColor;
+        this.profileAge = user.since;
+        this.profileId = user.id;
+        this.profileView = user.relation;
+        this.status = user.status;
+        this.username = user.username;
+        this.winstreak = user.winstreak;
     }
 
     get getAvatar() {
@@ -144,13 +168,6 @@ export class UserProfile extends HTMLDivElement {
     }
 
     connectedCallback() {
-        this.className = `pad-xs box-border items-center place-items-center justify-items-center thin brdr ${
-            this.#color
-        }`;
-        this.render();
-    }
-
-    render() {
         this.append(
             this.#avatar,
             this.#username,
@@ -159,11 +176,16 @@ export class UserProfile extends HTMLDivElement {
             this.#actionButtons,
             this.#winstreak,
         );
+        this.render();
+    }
+
+    render() {
+        this.className = `pad-s box-border brdr ${this.#color}`;
         this.#username.customizeStyle('f-yellow', 'f-m', 'f-bold', true);
-        this.#joinedSince.classList.add('f-clear');
-        this.#biography.classList.add('row-span-2', 'f-clear');
-        this.#avatar.classList.add('row-span-3');
-        this.classList.add('grid', 'user-profile-header-grid');
+        this.#joinedSince.classList.add('place-self-center', 'dark');
+        this.#biography.classList.add('row-span-2');
+        this.#avatar.classList.add('row-span-3', 'place-self-center');
+        this.classList.add('grid', 'gap-s', 'user-profile-header-grid');
     }
 }
 

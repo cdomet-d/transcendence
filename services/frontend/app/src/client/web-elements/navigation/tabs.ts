@@ -1,10 +1,10 @@
 import { createMatchHistory } from '../matches/matches.js';
 import { createUserMasonery } from './tabs-helpers.js';
 import { MatchHistory } from '../matches/matches.js';
-import { NoResults } from '../typography/images.js';
 import { TabButton, TabButtonWrapper } from './buttons.js';
 import { UserMasonery } from '../users/user-profile-containers.js';
 import type { MatchOutcome, TabData, UserData } from '../types-interfaces.js';
+import { createNoResult } from '../typography/helpers.js';
 
 /**
  * Creates a tab panel extending HTMLDivElement.
@@ -211,18 +211,19 @@ export class TabContainer extends HTMLDivElement {
         });
     }
 
-    populatePanels(tab: TabData, el: TabPanel) {
+    populatePanels(tab: TabData, el?: TabPanel) {
         if (tab.panelContent.length > 0) {
             if (tab.id === 'history')
-                el.appendContent(
+                this.#tabPanels[tab.id]?.appendContent(
                     createMatchHistory(tab.panelContent as MatchOutcome[]) as MatchHistory,
                 );
             else if (tab.id === 'friends')
-                el.appendContent(
+                this.#tabPanels[tab.id]?.appendContent(
                     createUserMasonery(tab.panelContent as UserData[]) as UserMasonery,
                 );
         } else {
-            el.appendContent(document.createElement('div', { is: 'no-results' }) as NoResults);
+            if (el) el.appendContent(createNoResult('light', 'ifs'));
+            else console.log('No such tab - do better');
         }
     }
 
@@ -231,7 +232,7 @@ export class TabContainer extends HTMLDivElement {
      */
     render() {
         this.className =
-            'w-full bg brdr overflow-hidden grid items-stretch grid-flow-row grid-cols-[1fr] grid-rows-[var(--s)_1fr]';
+            'w-full h-full overflow-hidden grid items-stretch grid-flow-row grid-cols-1 grid-rows-[var(--s)_1fr]';
         this.append(this.#createTabButtons());
         this.#createPanels();
     }

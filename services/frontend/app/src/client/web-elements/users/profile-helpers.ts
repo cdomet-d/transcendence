@@ -1,5 +1,26 @@
-import type { UserData } from '../types-interfaces.js';
+import type { ImgData, Size, UserData } from '../types-interfaces.js';
 import { UserProfile, UserCardSocial, UserInline } from './profile.js';
+
+export function setAvatar(av: ImgData, size: Size, el: UserProfile | UserCardSocial | UserInline) {
+    const avatar = { ...av };
+    avatar.size = size;
+    el.avatar = avatar;
+}
+
+export function setUserProfileCommonValues(
+    user: UserData,
+    size: Size,
+    el: UserProfile | UserCardSocial | UserInline,
+) {
+    el.color = user.profileColor;
+    el.profileId = user.id;
+    el.profileView = user.relation;
+    el.status = user.status;
+    el.username = user.username;
+    el.winstreak = user.winstreak;
+    setAvatar(user.avatar, size, el);
+}
+
 /**
  * Creates a user card element with avatar, username, and social menu.
  *
@@ -9,14 +30,7 @@ import { UserProfile, UserCardSocial, UserInline } from './profile.js';
  */
 export function createUserCardSocial(user: UserData): UserCardSocial {
     const el = document.createElement('div', { is: 'user-card-social' }) as UserCardSocial;
-    const avatar = { ...user.avatar };
-    avatar.size = 'imedium';
-    el.profileId = user.id;
-    el.avatar = avatar;
-    el.color = user.profileColor;
-    el.username = user.username;
-    el.status = user.status;
-    el.profileView = user.relation;
+    setUserProfileCommonValues(user, 'imedium', el);
     return el;
 }
 
@@ -29,14 +43,7 @@ export function createUserCardSocial(user: UserData): UserCardSocial {
  */
 export function createUserInline(user: UserData): UserInline {
     const el = document.createElement('div', { is: 'user-inline' }) as UserInline;
-    const avatar = { ...user.avatar };
-    avatar.size = 'iicon';
-    el.profileId = user.id;
-    el.avatar = avatar;
-    el.username = user.username;
-    el.status = user.status;
-    el.winstreak = user.winstreak;
-    el.color = user.profileColor;
+    setUserProfileCommonValues(user, 'iicon', el);
     return el;
 }
 
@@ -48,14 +55,7 @@ export function createUserInline(user: UserData): UserInline {
  */
 export function createUserProfile(user: UserData): UserProfile {
     const el = document.createElement('div', { is: 'user-profile' }) as UserProfile;
-    const avatar = { ...user.avatar };
-    avatar.size = 'ilarge';
-    el.profileId = user.id;
-    el.avatar = avatar;
-    el.username = user.username;
-    el.status = user.status;
-    el.winstreak = user.winstreak;
-    el.profileView = user.relation;
+    setUserProfileCommonValues(user, 'ilarge', el);
     el.biography = user.biography;
     el.profileAge = user.since;
     return el;

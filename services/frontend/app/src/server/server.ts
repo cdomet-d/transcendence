@@ -5,8 +5,6 @@ import cookie from '@fastify/cookie';
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { fileURLToPath } from 'url';
-import * as path from 'path';
 
 function notFound(request: FastifyRequest, reply: FastifyReply) {
     reply
