@@ -3,8 +3,8 @@ import type { reqObj } from '../game/mess.validation.js';
 import type { WebSocket } from '@fastify/websocket';
 import { NatsConnection } from 'nats';
 
-export const HEIGHT = 600;
-export const WIDTH = 800;
+export const HEIGHT = 500;
+export const WIDTH = 700;
 
 export interface user {
 	userID: number,
@@ -68,14 +68,14 @@ export class Game {
 			y: HEIGHT / 2, 
 			dx: 0.3, 
 			dy: 0.03,
-			radius: 20
+			radius: 15
 		};
 		this.#_paddleSpec = {
 			speed: 0.2,
-			width: 20, 
-			height: HEIGHT / 5, 
-			halfWidth: 20 / 2, 
-			halfHeight: HEIGHT / 10
+			width: 18, 
+			height: HEIGHT / 6, 
+			halfWidth: 18 / 2, 
+			halfHeight: HEIGHT / 12
 		}; //custom
 		this.#_ballDir = -1;
 		this.#_reqHistory = new Array();
