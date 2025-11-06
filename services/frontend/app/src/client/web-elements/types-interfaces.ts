@@ -130,8 +130,8 @@ export interface InputFieldsData {
  * @property {string} src - Image source URL.
  */
 export interface ImgData {
-    alt: string;
     id: string;
+    alt: string;
     size: Size;
     src: string;
 }

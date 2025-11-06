@@ -58,7 +58,7 @@ class NotifContent extends HTMLDivElement {
 
     /** Called when the element is connected; renders text and buttons within the container. */
     connectedCallback() {
-        const buttons = createActionMenu(notificationBtns, 'horizontal', 's');
+        const buttons = createActionMenu(notificationBtns, 'horizontal');
         this.append(this.#text, buttons);
         this.className = 'grid grid-cols-[65%_32%] gap-s';
         this.id = 'notification';

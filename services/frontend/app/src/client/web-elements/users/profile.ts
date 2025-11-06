@@ -45,7 +45,7 @@ export class UserProfile extends HTMLDivElement {
      */
     set status(status: boolean) {
         if (status !== this.#username.status) {
-            console.log('status');
+            // console.log('status');
             this.#username.status = status;
         }
     }
@@ -55,7 +55,7 @@ export class UserProfile extends HTMLDivElement {
      */
     set avatar(profilePic: ImgData) {
         if (this.#avatar.metadata !== profilePic) {
-            console.log('avatar');
+            // console.log('avatar');
             this.#avatar.metadata = profilePic;
             this.#avatar.classList.add('row-span-3', 'place-self-center');
         }
@@ -66,7 +66,7 @@ export class UserProfile extends HTMLDivElement {
      */
     set biography(bio: string) {
         if (bio !== this.#biography.content) {
-            console.log('bio');
+            // console.log('bio');
             this.#biography.content = bio;
             this.#biography.classList.add('row-span-2');
         }
@@ -78,7 +78,7 @@ export class UserProfile extends HTMLDivElement {
     set winstreak(val: string) {
         if (val !== this.#winstreak.winstreakValue) {
             this.#winstreak.winstreakValue = val;
-            console.log('wstreak');
+            // console.log('wstreak');
         }
     }
 
@@ -87,7 +87,7 @@ export class UserProfile extends HTMLDivElement {
      */
     set profileView(v: ProfileView) {
         if (this.#actionButtons.view !== v) {
-            console.log('actionButtonView');
+            // console.log('actionButtonView');
             this.#actionButtons.view = v;
         }
     }
@@ -98,7 +98,7 @@ export class UserProfile extends HTMLDivElement {
     set profileAge(val: string) {
         if (this.#joinedSince.textContent !== `Joined ${val} days ago`) {
             this.#joinedSince.textContent = `Joined ${val} days ago`;
-            console.log('profileAge');
+            // console.log('profileAge');
         }
     }
 
@@ -107,7 +107,7 @@ export class UserProfile extends HTMLDivElement {
      */
     set username(name: string) {
         if (this.#username.name !== name) {
-            console.log('userName');
+            // console.log('userName');
             this.#username.name = name;
         }
     }
@@ -117,7 +117,7 @@ export class UserProfile extends HTMLDivElement {
      */
     set color(newColor: string) {
         if (this.#color !== newColor) {
-            console.log('color');
+            // console.log('color');
             this.classList.remove(this.#color);
             this.#color = newColor;
             this.classList.add(this.#color);

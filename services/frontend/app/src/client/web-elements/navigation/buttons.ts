@@ -1,4 +1,5 @@
 import { createIcon } from '../typography/helpers.js';
+import { Icon } from '../typography/images.js';
 import type { buttonData } from '../types-interfaces.js';
 
 //TODO: Migrate to inheritance ?
@@ -14,6 +15,7 @@ import type { buttonData } from '../types-interfaces.js';
  */
 export class CustomButton extends HTMLButtonElement {
     #btn: buttonData;
+    #icon?: Icon;
     #animated: boolean;
 
     static get observedAttributes(): string[] {
@@ -32,6 +34,10 @@ export class CustomButton extends HTMLButtonElement {
      */
     set btn(src: buttonData) {
         this.#btn = src;
+    }
+
+    get icon(): Icon | undefined {
+        return this.#icon;
     }
 
     /**
@@ -93,7 +99,12 @@ export class CustomButton extends HTMLButtonElement {
 
     /** Renders button icon if image metadata is provided. */
     renderIconBtn() {
-        if (this.#btn.img) this.append(createIcon(this.#btn.img));
+        if (this.#btn.img) {
+            const icon = createIcon(this.#btn.img);
+            this.append(icon);
+            this.id = this.#btn.img.id;
+            if (this.#btn.img.id === 'friendship') this.#icon = icon;
+        }
     }
 
     #dynamicStyling() {

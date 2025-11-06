@@ -1,6 +1,5 @@
 import type {
     MenuStyle,
-    MenuSize,
     ProfileView,
     DropdownBg,
     buttonData,
@@ -25,7 +24,8 @@ export function createNavMenu(
     animated?: boolean,
 ): NavigationMenu {
     const el = document.createElement('nav', { is: 'nav-menu-wrapper' }) as NavigationMenu;
-    el.linkList = content;
+    console.log(style);
+    el.menuContent = content;
     el.menuStyle = style;
     if (animated) el.animation = animated;
     return el;
@@ -36,7 +36,6 @@ export function createNavMenu(
  *
  * @param {buttonData[]} content - Array of button metadata objects for menu buttons.
  * @param {MenuStyle} style - Menu layout style, either 'vertical' or 'horizontal'.
- * @param {MenuSize} [size] - Optional menu size variant.
  * @param {boolean} [animated] - Optional flag to enable animation effects on menu buttons.
  * @returns {Menu} A configured {@link Menu} div element.
  *
@@ -44,13 +43,11 @@ export function createNavMenu(
 export function createActionMenu(
     content: buttonData[],
     style: MenuStyle,
-    size?: MenuSize,
     animated?: boolean,
 ): ActionMenu {
     const el = document.createElement('nav', { is: 'action-menu-wrapper' }) as ActionMenu;
-    el.MenuElements = content;
-    el.MenuStyle = style;
-    if (size) el.MenuSize = size;
+    el.menuContent = content;
+    el.menuStyle = style;
     if (animated) el.animation = animated;
     return el;
 }
@@ -69,8 +66,8 @@ export function createSocialMenu(
     v: ProfileView,
 ): SocialMenu {
     const el = document.createElement('nav', { is: 'social-menu' }) as SocialMenu;
-    el.MenuElements = content;
-    el.MenuStyle = style;
+    el.menuContent = content;
+    el.menuStyle = style;
     el.view = v;
     return el;
 }

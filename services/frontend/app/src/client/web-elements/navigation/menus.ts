@@ -1,74 +1,21 @@
 import { createBtn, createLink } from './buttons-helpers.js';
 import type {
     buttonData,
-    MenuStyle,
     ProfileView,
-    MenuSize,
     DropdownBg,
     navigationLinksData,
 } from '../types-interfaces.js';
 import type { Icon } from '../typography/images.js';
 import type { CustomButton } from './buttons.js';
-import type { NavigationLinks } from './links.js';
+import { Menu } from './basemenu.js';
 
-/**
- * Custom HTML div element representing a menu with configurable style and elements.
- *
- * @remarks
- * The menu supports two styles: 'horizontal' and 'vertical', which control the grid layout direction.
- * It supports both icon and textual buttons.
- * Menu elements are configured using {@link buttonData} and created via {@link createBtn}.
- */
-export class NavigationMenu extends HTMLElement {
-    #animated: boolean;
-    #style: MenuStyle;
-
+export class NavigationMenu extends Menu {
     #menuLinks: HTMLUListElement;
-    #linkList: Map<string, NavigationLinks>;
-    #linkInfo: navigationLinksData[];
 
     constructor() {
         super();
-        this.#linkList = new Map<string, NavigationLinks>();
-        this.#linkInfo = [];
         this.#menuLinks = document.createElement('ul');
-
-        this.#style = 'horizontal';
-        this.#animated = false;
-
         this.append(this.#menuLinks);
-    }
-
-    /**
-     * Sets the menu's button elements.
-     *
-     * @param {navigationLinksData[]} list - Array of navigationLinksData for menu buttons.
-     */
-    set linkList(list: navigationLinksData[]) {
-        this.#linkInfo = list;
-    }
-
-    /**
-     * Sets the menu's layout style.
-     *
-     * @param {MenuStyle} style - menuStyle, either 'horizontal' or 'vertical'.
-     */
-    set menuStyle(style: MenuStyle) {
-        this.#style = style;
-    }
-
-    /**
-     * Enables or disables animation for menu buttons.
-     *
-     * @param {boolean} b - True to enable animations, false otherwise.
-     */
-    set animation(b: boolean) {
-        this.#animated = b;
-    }
-
-    /** Called when the element is inserted into the DOM; triggers rendering. */
-    connectedCallback() {
-        this.render();
     }
 
     /**
@@ -78,21 +25,17 @@ export class NavigationMenu extends HTMLElement {
      * Uses CSS grid classes according to style and size settings.
      * Button elements are created using the {@link createBtn} helper with animation option.
      */
-    render() {
-        this.role = 'navigation';
-        this.id = 'menu';
-        this.className = 'w-full box-border';
+    override render() {
         this.#menuLinks.className = `w-full grid gap-r justify-items-center \
 		auto-cols-fr auto-row-fr`;
-
-        this.#style === 'horizontal'
+        super.menuStyle === 'horizontal'
             ? this.#menuLinks.classList.add('grid-flow-col')
-            : this.#menuLinks.classList.add('grid-flow-rows');
-
-        this.#linkInfo.forEach((item) => {
-            const link = createLink(item, this.#animated);
+            : this.#menuLinks.classList.add('grid-flow-row');
+        super.navInfo.forEach((item) => {
+            const el = item as navigationLinksData;
+            const link = createLink(el, super.animated);
             this.#menuLinks.append(link);
-            this.#linkList.set(item.datalink, link);
+            super.cache.set(el.datalink, link);
         });
     }
 }
@@ -109,59 +52,9 @@ if (!customElements.get('nav-menu-wrapper')) {
  * It supports both icon and textual buttons.
  * Menu elements are configured using {@link buttonData} and created via {@link createBtn}.
  */
-export class ActionMenu extends HTMLElement {
-    #size: MenuSize;
-    #animated: boolean;
-    #style: MenuStyle;
-    #elements: Array<buttonData>;
-
+export class ActionMenu extends Menu {
     constructor() {
         super();
-        this.#elements = [];
-        this.#style = 'horizontal';
-        this.#size = 'm';
-        this.#animated = false;
-    }
-
-    /**
-     * Sets the menu's button elements.
-     *
-     * @param {Array<buttonData>} list - Array of buttonData for menu buttons.
-     */
-    set MenuElements(list: Array<buttonData>) {
-        this.#elements = list;
-    }
-
-    /**
-     * Sets the menu's layout style.
-     *
-     * @param {MenuStyle} style - MenuStyle, either 'horizontal' or 'vertical'.
-     */
-    set MenuStyle(style: MenuStyle) {
-        this.#style = style;
-    }
-
-    /**
-     * Sets the menu's size variant.
-     *
-     * @param {MenuSize} size - Menu size, e.g., 'm' or 'l'.
-     */
-    set MenuSize(size: MenuSize) {
-        this.#size = size;
-    }
-
-    /**
-     * Enables or disables animation for menu buttons.
-     *
-     * @param {boolean} b - True to enable animations, false otherwise.
-     */
-    set animation(b: boolean) {
-        this.#animated = b;
-    }
-
-    /** Called when the element is inserted into the DOM; triggers rendering. */
-    connectedCallback() {
-        this.render();
     }
 
     /**
@@ -171,20 +64,22 @@ export class ActionMenu extends HTMLElement {
      * Uses CSS grid classes according to style and size settings.
      * Button elements are created using the {@link createBtn} helper with animation option.
      */
-    render() {
-        this.role = 'navigation';
-        this.id = 'menu';
-        this.className = `w-full gap-r box-border grid justify-items-center auto-cols-fr row-${
-            this.#size
-        }`;
-        if (this.#style === 'horizontal') this.classList.add('grid-flow-col');
-        if (this.#style === 'vertical') this.classList.add('grid-flow-rows');
-        this.#elements.forEach((item) => this.append(createBtn(item, this.#animated)));
+    override render() {
+        super.render();
+        this.role = 'menu';
+        this.id = 'action-menu';
+        super.navInfo.forEach((item) => {
+            const el = item as buttonData;
+            const button = createBtn(el, super.animated);
+            button.role = 'menuitem';
+            this.append(button);
+            super.cache.set(button.id, button);
+        });
     }
 }
 
 if (!customElements.get('action-menu-wrapper')) {
-    customElements.define('action-menu-wrapper', ActionMenu, { extends: 'nav' });
+    customElements.define('action-menu-wrapper', ActionMenu, { extends: 'div' });
 }
 
 //TODO: update SocialMenu to Setting button when view is 'self'
@@ -205,6 +100,7 @@ export class SocialMenu extends ActionMenu {
 
     constructor() {
         super();
+        this.id = 'social-menu';
         this.#view = 'stranger';
     }
 
@@ -220,8 +116,8 @@ export class SocialMenu extends ActionMenu {
 
     /** Called when element connects to DOM; calls base and updates view. */
     override connectedCallback(): void {
-        super.connectedCallback();
         this.updateView();
+        super.connectedCallback();
     }
 
     /**
@@ -251,11 +147,11 @@ export class SocialMenu extends ActionMenu {
 
     /** Updates the menu appearance based on the current {@link ProfileView}. */
     updateView() {
-        this.id = 'social-menu';
-        const icon = this.querySelector('#friendship') as Icon;
-        if (!icon) return;
-        if (this.#view === 'friend') this.friend(icon);
-        else if (this.#view === 'stranger') this.stranger(icon);
+        const icon = super.cache.get('friendship') as CustomButton;
+        console.log('In updateView In Social Menu : social menu icon', icon?.icon);
+        if (!icon || !icon.icon) return;
+        if (this.#view === 'friend') this.friend(icon.icon);
+        else if (this.#view === 'stranger') this.stranger(icon.icon);
         else if (this.#view === 'self') this.self();
     }
 }

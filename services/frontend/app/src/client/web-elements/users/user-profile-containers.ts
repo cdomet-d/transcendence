@@ -14,7 +14,7 @@ export const user: UserData = {
     },
     biography: '(╯°□°)╯︵ ┻━┻',
     id: '256',
-    relation: 'stranger',
+    relation: 'friend',
     profileColor: 'bg-BE5103',
     language: 'English',
     status: true,
