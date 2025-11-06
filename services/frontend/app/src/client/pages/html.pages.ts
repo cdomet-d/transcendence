@@ -79,7 +79,7 @@ export function renderGame(): string {
 		<div class="min-h-screen flex flex-col items-center justify-center bg-white">
 			<h1 class="text-4xl font-bold mb-6"> Game Screen </h1>
 			<canvas id="canvas" width="700" height="500"
-			class="mb-6 bg-aliceblue border-10 border-[#8ec7fc] rounded-[20px]">
+			class="mb-6 bg-aliceblue border-10 border-[#8ec7fc]">
 			pong game <!-- fallback if unable to be displayed -->
 			</canvas>
 			<a href="/central" data-link id="back-btn" 
