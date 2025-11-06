@@ -2,12 +2,11 @@
 import type { FastifyPluginCallback } from 'fastify';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 // import { buildHtmlPage } from './build.html.js';
-import { setLangVars } from '../client/scripts/language/translation.js'
+import { setLangVars } from '../client/scripts/language/translation.js';
 
 function initLanguageSSR(req: FastifyRequest) {
     let savedLang: string | undefined = req.cookies.lang;
-    if (!savedLang)
-        savedLang = "en";
+    if (!savedLang) savedLang = 'en';
     setLangVars(savedLang);
 }
 
@@ -26,6 +25,6 @@ function handler(req: FastifyRequest, rep: FastifyReply) {
 const servRoutes: FastifyPluginCallback = function (serv, options, done) {
     serv.get('/*', handler);
     done();
-}
+};
 
 export { servRoutes };

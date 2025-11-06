@@ -9,7 +9,7 @@ import { createNoResult } from '../typography/helpers.js';
 export function createMatchOutcome(match: MatchOutcome, header: boolean): InlineMatch {
     const el = document.createElement('div', { is: 'inline-match' }) as InlineMatch;
     el.match = match;
-	header ? el.createHeader() : el.createSpans();
+    header ? el.createHeader() : el.createSpans();
     return el;
 }
 
@@ -20,9 +20,9 @@ export function createMatchOutcome(match: MatchOutcome, header: boolean): Inline
  * @returns {MatchHistory} A {@link MatchHistory} div element containing the match history.
  */
 export function createMatchHistory(matches: MatchOutcome[]): MatchHistory {
-	const el = document.createElement('div', { is: 'match-history' }) as MatchHistory;
-	el.setHistory(matches);
-	return el;
+    const el = document.createElement('div', { is: 'match-history' }) as MatchHistory;
+    el.setHistory(matches);
+    return el;
 }
 
 /**
@@ -70,7 +70,7 @@ export class InlineMatch extends HTMLDivElement {
             span.textContent = key;
         }
         this.classList.add('bg-yellow', 'sticky', 'top-0');
-		this.id = 'lb-header'
+        this.id = 'lb-header';
         return this;
     }
 
@@ -86,7 +86,7 @@ export class InlineMatch extends HTMLDivElement {
             span.id = key;
             span.textContent = this.#data[key as keyof MatchOutcome].toString();
         }
-		this.id = 'match'
+        this.id = 'match';
         return this;
     }
     connectedCallback() {
@@ -120,11 +120,11 @@ export class MatchHistory extends HTMLDivElement {
      * @param matches - Array of match outcome data.
      */
     setHistory(matches: MatchOutcome[]) {
-		const currentHistory = Array.from(this.children);
-		console.log(currentHistory);
-		currentHistory.forEach((el) => {
-			 if (el.id !== 'lb-header') el.remove();
-		})
+        const currentHistory = Array.from(this.children);
+        console.log(currentHistory);
+        currentHistory.forEach((el) => {
+            if (el.id !== 'lb-header') el.remove();
+        });
         if (matches.length < 1) {
             this.append(createNoResult('light', 'ifs'));
         } else {

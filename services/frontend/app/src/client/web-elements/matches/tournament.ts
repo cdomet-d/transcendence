@@ -148,7 +148,7 @@ export class TournamentBrackets extends HTMLDivElement {
         let playerIndex = 0;
 
         for (let i = 0; i <= this.#matches.length; i++) {
-			const round = this.#matches[i];
+            const round = this.#matches[i];
             if (round && matchNb === round.length) {
                 this.#matches[i]!.forEach((m) => {
                     m.players = players[playerIndex]!;

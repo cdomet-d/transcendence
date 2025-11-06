@@ -59,7 +59,7 @@ export class Layout extends HTMLDivElement {
             'min-w-80',
             'place-content-between',
             'grid-auto-rows-auto',
-            'single-col-xl'
+            'single-col-xl',
         );
     }
 }

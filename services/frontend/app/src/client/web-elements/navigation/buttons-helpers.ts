@@ -18,7 +18,7 @@ export function createBtn(btn: buttonData, animated?: boolean): CustomButton {
 }
 
 export function createLink(link: navigationLinksData, animated?: boolean) {
-	const el = document.createElement('a', { is: 'nav-link' }) as NavigationLinks;
+    const el = document.createElement('a', { is: 'nav-link' }) as NavigationLinks;
     el.info = link;
     if (animated) el.animation = animated;
     return el;

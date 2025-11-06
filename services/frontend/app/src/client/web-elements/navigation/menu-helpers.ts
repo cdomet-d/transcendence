@@ -4,7 +4,7 @@ import type {
     ProfileView,
     DropdownBg,
     buttonData,
-	navigationLinksData,
+    navigationLinksData,
 } from '../types-interfaces.js';
 
 import { NavigationMenu, ActionMenu, SocialMenu, DropdownMenu } from './menus.js';
@@ -30,7 +30,6 @@ export function createNavMenu(
     if (animated) el.animation = animated;
     return el;
 }
-
 
 /**
  * Creates a menu wrapper element with specified buttons, style, and optional size and animation.

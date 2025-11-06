@@ -18,10 +18,7 @@ function checkProxy(address: string, hop: number): boolean {
 }
 
 const options = {
-    logger: {
-        file: '/app/server.log',
-        level: 'info',
-    },
+    logger: { file: '/app/server.log', level: 'info' },
     trustProxy: checkProxy,
     https: {
         key: fs.readFileSync('/run/secrets/ssl-key.pem'),

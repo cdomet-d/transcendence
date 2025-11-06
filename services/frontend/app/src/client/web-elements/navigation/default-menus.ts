@@ -6,7 +6,6 @@ export const mainMenu: navigationLinksData[] = [
     { title: 'Profile', datalink: 'profile', href: '/user/', img: null },
 ];
 
-
 export const gameMenu: buttonData[] = [
     { content: 'Local game', type: 'button', img: null, ariaLabel: 'Play a local game' },
     { content: 'Remote game', type: 'button', img: null, ariaLabel: 'Play a remote game' },

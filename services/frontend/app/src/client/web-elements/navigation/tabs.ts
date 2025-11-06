@@ -111,7 +111,7 @@ export class TabContainer extends HTMLDivElement {
         this.#tabList = tabList;
         if (!this.#isValidTabList(this.#tabList))
             throw new Error(
-                'Duplicate Tab.data will lead to UI confusion. Check your TabInfo array.'
+                'Duplicate Tab.data will lead to UI confusion. Check your TabInfo array.',
             );
     }
 
@@ -215,11 +215,11 @@ export class TabContainer extends HTMLDivElement {
         if (tab.panelContent.length > 0) {
             if (tab.id === 'history')
                 el.appendContent(
-                    createMatchHistory(tab.panelContent as MatchOutcome[]) as MatchHistory
+                    createMatchHistory(tab.panelContent as MatchOutcome[]) as MatchHistory,
                 );
             else if (tab.id === 'friends')
                 el.appendContent(
-                    createUserMasonery(tab.panelContent as UserData[]) as UserMasonery
+                    createUserMasonery(tab.panelContent as UserData[]) as UserMasonery,
                 );
         } else {
             el.appendContent(document.createElement('div', { is: 'no-results' }) as NoResults);

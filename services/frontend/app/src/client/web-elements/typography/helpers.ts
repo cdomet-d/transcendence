@@ -45,7 +45,7 @@ export function createAvatar(metadata?: ImgData): Avatar {
 
 export function createNoResult(theme: Theme, size: Size): NoResults {
     const el = document.createElement('div', { is: 'no-results' }) as NoResults;
-	el.theme = theme;
+    el.theme = theme;
     el.size = size;
     return el;
 }

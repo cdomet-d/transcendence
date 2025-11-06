@@ -2,7 +2,6 @@ import { router } from './main.js';
 
 /** Cleans up URL if it is not normalized */
 
-
 interface WindowSize {
     width: number;
     height: number;
@@ -22,4 +21,3 @@ export function loadHistoryLocation() {
     const cleanPath = router.sanitisePath(window.location.pathname);
     router.loadRoute(cleanPath);
 }
-

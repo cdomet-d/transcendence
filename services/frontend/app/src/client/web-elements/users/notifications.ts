@@ -160,7 +160,6 @@ class NotifPanel extends HTMLDivElement {
         notifDecor.src = '/public/images/notification-bubble.png';
         this.#content.append(notifDecor);
         notifDecor.className = 'h-[32px] w-[16px] absolute right-[-20px] top-[4px]';
-
     }
 
     /** Toggles the panel's visible state by switching its `selected` attribute. */
@@ -247,7 +246,7 @@ export class NotifBox extends HTMLDivElement {
     computePanelPos() {
         const pos = this.#toggle.getBoundingClientRect();
         const popupWidth = this.#popup.offsetWidth;
-		console.log(popupWidth)
+        console.log(popupWidth);
         const pOffsetLeft = pos.left - (popupWidth + 24);
         const pOffsetTop = pos.top;
 

@@ -7,17 +7,19 @@ import { Searchbar } from '../forms/search.js';
 import { mainMenu, languageMenu } from './default-menus.js';
 import type { navigationLinksData } from '../types-interfaces.js';
 
-const homeLink: navigationLinksData[] = [{
-	datalink: 'home',
-	href: '/',
-	title: 'Home',
-	img: {
-		alt: 'A cute pixel art blob',
-		size: 'imedium',
-		src: '/public/images/default-avatar.png',
-		id: 'home-link',
-	}
-}];
+const homeLink: navigationLinksData[] = [
+    {
+        datalink: 'home',
+        href: '/',
+        title: 'Home',
+        img: {
+            alt: 'A cute pixel art blob',
+            size: 'imedium',
+            src: '/public/images/default-avatar.png',
+            id: 'home-link',
+        },
+    },
+];
 
 /**
  * Custom element for the main page header.
@@ -51,12 +53,12 @@ export class PageHeader extends HTMLElement {
             'w-screen',
             'grid',
             'header',
-			'grid-cols-5',
-			'gap-xs',
+            'grid-cols-5',
+            'gap-xs',
             'absolute',
             'top-0',
             'left-0',
-            'justify-between'
+            'justify-between',
         );
     }
 }

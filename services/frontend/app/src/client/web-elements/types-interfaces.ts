@@ -157,7 +157,7 @@ export interface navigationLinksData {
     datalink: string;
     href: string;
     title: string;
-	img: ImgData | null;
+    img: ImgData | null;
 }
 
 /**

@@ -1,7 +1,4 @@
-type NavButton = {
-    href: string;
-    label: string;
-};
+type NavButton = { href: string; label: string };
 
 interface Element {
     title: string;
@@ -31,7 +28,7 @@ export function renderPageTemplate({
 				>
 					${btn.label}
 				</a>
-			`
+			`,
                 )
                 .join('')}
 		</div>

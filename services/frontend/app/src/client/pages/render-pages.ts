@@ -1,20 +1,19 @@
 import { createHeading, createNoResult } from '../web-elements/typography/helpers.js';
-import { renderPageTemplate } from './page.template.js';
-import { translate } from '../scripts/language/translation.js';
-import type { Layout } from '../web-elements/layouts/layout.js';
-import { mainMenu } from '../web-elements/navigation/default-menus.js';
-import { createNavMenu } from '../web-elements/navigation/menu-helpers.js';
 import { createLeaderboard } from '../web-elements/matches/leaderboard.js';
+import { createNavMenu } from '../web-elements/navigation/menu-helpers.js';
+import { mainMenu } from '../web-elements/navigation/default-menus.js';
+import { renderPageTemplate } from './page.template.js';
+import type { Layout } from '../web-elements/layouts/layout.js';
 
 const layoutPerPage: { [key: string]: string } = {
-    home: 'full-screen',
-    regitration: 'full-screen',
+    central: 'page-w-header',
     error: 'full-screen',
     game: 'full-screen',
-    central: 'page-w-header',
+    home: 'full-screen',
     leaderboard: 'page-w-header',
     lobby: 'page-w-header',
     profile: 'page-w-header',
+    regitration: 'full-screen',
     userSettings: 'page-w-header',
 };
 
@@ -24,10 +23,11 @@ function updatePageTitle(newPage: string) {
 
 function prepareLayout(curLayout: Layout | undefined, page: string) {
     if (!layoutPerPage[page]) throw new Error('Requested page is undefined');
-    if (!curLayout) throw new Error('Something is wrong with the document\'s layout - page cannot be charged')
+    if (!curLayout)
+        throw new Error("Something is wrong with the document's layout - page cannot be charged");
     console.log(curLayout?.id, layoutPerPage[page]);
 
-	curLayout.clearAll();
+    curLayout.clearAll();
     if (layoutPerPage[page] === 'full-screen') {
         document.body.header?.classList.add('hidden');
         document.body.header?.setAttribute('hidden', '');
@@ -50,7 +50,7 @@ export function renderHome() {
     prepareLayout(document.body.layoutInstance, 'home');
     document.body.layoutInstance!.appendAndCache(
         createHeading('0', 'PONG!'),
-        createNavMenu(mainMenu, 'vertical', true)
+        createNavMenu(mainMenu, 'vertical', true),
     );
     updatePageTitle('Home');
 }
@@ -60,21 +60,13 @@ export function renderLeaderboard() {
     prepareLayout(document.body.layoutInstance, 'leaderboard');
     document.body.layoutInstance!.appendAndCache(
         createHeading('1', 'Leaderboard'),
-        createLeaderboard([])
+        createLeaderboard([]),
     );
 }
 
-export function renderProfile(): string {
-    return renderPageTemplate({
-        title: 'PROFILE',
-        nextButtons: [
-            { href: '/accountSettings', label: translate('Account Settings') },
-            { href: '/editProfile', label: translate('Edit Profile') },
-        ],
-        backHref: '/central',
-        showBack: true,
-        homeHref: '/',
-    });
+export function renderProfile() {
+    console.log('renderProfile');
+    prepareLayout(document.body.layoutInstance, 'profile');
 }
 
 export function renderTournament(): string {

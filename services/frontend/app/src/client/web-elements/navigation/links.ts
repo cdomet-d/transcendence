@@ -6,12 +6,7 @@ const emptyLink: navigationLinksData = {
     datalink: '',
     href: '',
     title: '',
-    img: {
-        alt: '',
-        size: 'iicon',
-        src: '',
-        id: '',
-    },
+    img: { alt: '', size: 'iicon', src: '', id: '' },
 };
 export class NavigationLinks extends HTMLAnchorElement {
     #info: navigationLinksData;
@@ -85,7 +80,14 @@ export class NavigationLinks extends HTMLAnchorElement {
     }
 
     #styleButton() {
-        this.classList.add('brdr', 'input-emphasis', 'whitenowrap', 'button', 'bg-yellow', 'w-full');
+        this.classList.add(
+            'brdr',
+            'input-emphasis',
+            'whitenowrap',
+            'button',
+            'bg-yellow',
+            'w-full',
+        );
     }
 
     render() {

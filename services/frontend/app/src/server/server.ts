@@ -58,6 +58,6 @@ async function addPlugins(serv: FastifyInstance) {
         .register(
             cookie /*, {
 					secret: "", //TODO: add secret ?
-				}*/
+				}*/,
         );
 }

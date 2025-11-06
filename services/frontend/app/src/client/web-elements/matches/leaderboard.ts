@@ -1,46 +1,47 @@
-import { createMatchHistory, createMatchOutcome, InlineMatch, MatchHistory} from './matches.js';
+import { createMatchHistory, createMatchOutcome, InlineMatch, MatchHistory } from './matches.js';
 import type { MatchOutcome } from '../types-interfaces.js';
 
 const emptyMatch: MatchOutcome = {
-	date: '',
-	opponent: '',
-	outcome: '',
-	score: '',
-	duration: '',
-	tournament: true,
+    date: '',
+    opponent: '',
+    outcome: '',
+    score: '',
+    duration: '',
+    tournament: true,
 };
 
 export class Leaderboard extends HTMLDivElement {
     #data: MatchOutcome[];
     #matches: MatchHistory;
-	#header: InlineMatch;
+    #header: InlineMatch;
     constructor() {
         super();
         this.#data = [];
         this.#matches = createMatchHistory(this.#data);
         this.#header = createMatchOutcome(emptyMatch, true);
-		this.append(this.#header, this.#matches)
-	}
-
-    set data(newData: MatchOutcome[]) {
-		this.#data = newData;
+        this.append(this.#header, this.#matches);
     }
 
-	update() {
-		console.log('updating')
+    set data(newData: MatchOutcome[]) {
+        this.#data = newData;
+    }
+
+    update() {
+        console.log('updating');
         this.#matches.remove();
         this.#matches = createMatchHistory(this.#data);
-		this.append(this.#matches)
-	}
+        this.append(this.#matches);
+    }
 
-	connectedCallback() {
-		this.render();
-	}
+    connectedCallback() {
+        this.render();
+    }
 
     render() {
-		this.id = 'leaderboard'
-        this.className = 'bg content-h brdr overflow-y-auto overflow-x-hidden flex flex-col justify-start';
-		}
+        this.id = 'leaderboard';
+        this.className =
+            'bg content-h brdr overflow-y-auto overflow-x-hidden flex flex-col justify-start';
+    }
 }
 
 if (!customElements.get('leader-board')) {
@@ -48,7 +49,7 @@ if (!customElements.get('leader-board')) {
 }
 
 export function createLeaderboard(data: MatchOutcome[]): Leaderboard {
-	const el = document.createElement('div', {is: 'leader-board'}) as Leaderboard
-	el.data = data;
-	return el;
+    const el = document.createElement('div', { is: 'leader-board' }) as Leaderboard;
+    el.data = data;
+    return el;
 }
