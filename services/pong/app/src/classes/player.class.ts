@@ -102,7 +102,7 @@ export class Player {
 		this.#_reply._leftPad.y = this.#_paddle.y;
 		this.#_reply._rightPad.y = opponent.paddle.y;
 		this.#_reply._ball = { ...ball };
-		if (this.#_serverSide === "right") {
+		if (this.#_serverSide === "right" && this.#_clientSide === "left") {
 			this.#_reply._ball.x = WIDTH - ball.x;
 			this.#_reply._ball.dx *= -1;
 			this.#_reply._leftPad.x = WIDTH - this.#_paddle.x;
