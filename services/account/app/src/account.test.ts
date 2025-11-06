@@ -7,23 +7,17 @@ let app: FastifyInstance;
 
 // 'beforeAll' runs once, before any tests start
 beforeAll(async () => {
-	// Build the server (it will use the test DB thanks to our npm script)
 	app = await buildServer();
 });
 
 // 'afterAll' runs once, after all tests are finished
 afterAll(async () => {
-	// Close the server and database connection
 	await app.close();
 });
 
 // 'beforeEach' runs before EACH 'it' test block
 beforeEach(async () => {
-	// We wipe the tables to ensure each test is isolated
-	// This is better than 'npm run test:setup' for isolation
 	await app.dbAccount.exec('DELETE FROM account');
-	// You can re-run your seed.sql here if you want
-	// For this test, let's just insert what we need
 });
 
 
@@ -60,7 +54,7 @@ describe('GET /internal/account/:userID', () => {
 		expect(body.message).toBe('User data not found.');
 	});
 });
-``
+
 describe('POST /internal/account/register', () => {
 	it('should create a user if the username is not already taken', async () => {
 		const newUser = {
