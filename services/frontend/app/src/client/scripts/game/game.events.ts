@@ -37,15 +37,15 @@ export function createKeyDownEvent(keys: keysObj) {
 			keys._ArrowRight = true;
 	}
 }
-
+// TODO: put back querty keys
 export function createKeyUpEvent(keys: keysObj) {
 	return function keyUpEvent(event: KeyboardEvent): void {
 		event.preventDefault();
-		if (event.key === "w")
+		if (event.key === "z")
 			keys._w = false;
 		if (event.key === "s")
 			keys._s = false;
-		if (event.key === "a")
+		if (event.key === "q")
 			keys._a = false;
 		if (event.key === "d")
 			keys._d = false;
