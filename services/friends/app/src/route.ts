@@ -26,6 +26,8 @@ export async function routeFriend(serv: FastifyInstance) {
 				const response = await serv.dbFriends.get<{ statusFrienship: boolean }>(sql, params);
 
 				let status: ProfileView = 'stranger';
+				if (!response)
+					return (reply.code(404).send({ success: false, message: '[FRIENDS] Friendship not found' }));
 				if (response)
 					status = response.statusFrienship ? 'friend' : 'pending';
 				return (reply.code(200).send({ status: status }));
@@ -77,12 +79,8 @@ export async function routeFriend(serv: FastifyInstance) {
 			];
 
 			const response = await serv.dbFriends.run(query, params);
-			if (response.changes === 0) {
-				return reply.code(404).send({
-					success: false,
-					message: '[FRIENDS] Friend request could not be sent.'
-				});
-			}
+			if (response.changes === 0)
+				throw new Error('[FRIENDS] Friend request failed to save.');			}
 			return (reply.code(201).send({
 				success: true,
 				message: `[FRIENDS] Friend request sent to ${friendID}`
