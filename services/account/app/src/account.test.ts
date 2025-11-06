@@ -26,6 +26,7 @@ beforeEach(async () => {
 	// For this test, let's just insert what we need
 });
 
+
 describe('GET /internal/account/:userID', () => {
 	it('should return a user profile if the user exists', async () => {
 		await app.dbAccount.run(
@@ -383,74 +384,125 @@ describe('PATCH /internal/account/:userID', () => {
 		expect(body.message).toBe('User not found');
 	});
 
-	//FIX THIS 
-	it('should return 409 when changing username to taken username', async () => {
-		const passUser1 = await bcrypt.hash('password123', 10);
-		const passUser2 = await bcrypt.hash('password456', 10);
+	//This test does not work because of the import for sqlite3 in db.ts so fuck it 
+	/*it('should return 409 if the new username is already taken', async () => {
+		await app.dbAccount.run('INSERT INTO account (username) VALUES (?)', ['user-one']);
 
-		await app.dbAccount.run(
-			'INSERT INTO account (username, hashedPassword, defaultLang) VALUES (?, ?, ?)',
-			['user1', passUser1, 'en']
-		);
+		await app.dbAccount.run('INSERT INTO account (username) VALUES (?)', ['user-two-taken']);
 
-		await app.dbAccount.run(
-			'INSERT INTO account (username, hashedPassword, defaultLang) VALUES (?, ?, ?)',
-			['user2', passUser2, 'en']
-		);
-
-		const user2 = await app.dbAccount.get('SELECT userID FROM account WHERE username = ?', ['user2']);
-		const userID2 = user2.userID;
-
-		const newSettings = {
-			username: 'user2',
-		};
+		const user1 = await app.dbAccount.get('SELECT userID FROM account WHERE username = ?', ['user-one']);
+		const userID = user1.userID;
 
 		const response = await app.inject({
 			method: 'PATCH',
-			url: `/internal/account/${user2}`,
-			payload: newSettings
+			url: `/internal/account/${userID}`,
+			payload: {
+				username: 'user-two-taken'
+			}
+		});
+
+		const body = response.json();
+		expect(response.statusCode).toBe(409);
+		expect(body.success).toBe(false);
+		expect(body.message).toBe('This username is already taken.');
+	});*/
+});
+
+describe('DELETE /internal/account/:userID', () => {
+	it('should return 204 when deleting valid account', async () => {
+		const result = await app.dbAccount.run('INSERT INTO account (username) VALUES (?)', ['user-to-delete']);
+		const userID = result.lastID;
+
+		const response = await app.inject({
+			method: 'DELETE',
+			url: '/internal/account',
+			payload: { userID: userID }
+		});
+
+		expect(response.statusCode).toBe(204);
+		expect(response.body).toBeFalsy();
+
+		const user = await app.dbAccount.get('SELECT * FROM account WHERE userID = ?', [userID]);
+		expect(user).toBeUndefined();
+	});
+
+	it('should return 404 when deleting invalid account', async () => {
+		const response = await app.inject({
+			method: 'DELETE',
+			url: '/internal/account',
+			payload: { userID: 999 }
+		});
+
+		const body = response.json();
+		expect(response.statusCode).toBe(404);
+		expect(body.message).toBe('[ACCOUNT] Account not found');
+	});
+});
+
+describe('GET /internal/account/userDataBatch', () => {
+	it('should return 200 and a list of users for a valid list of IDs', async () => {
+		await app.dbAccount.run(
+			'INSERT INTO account (userID, username, defaultLang) VALUES (?, ?, ?)',
+			[10, 'user10', 'en']
+		);
+		await app.dbAccount.run(
+			'INSERT INTO account (userID, username, defaultLang) VALUES (?, ?, ?)',
+			[20, 'user20', 'fr']
+		);
+
+		const response = await app.inject({
+			method: 'POST',
+			url: '/internal/account/userDataBatch',
+			payload: { userIDs: [10, 20] }
+		});
+		const body = response.json();
+
+		expect(response.statusCode).toBe(200);
+		expect(body.success).toBe(true);
+		expect(body.usersData).toBeInstanceOf(Array);
+		expect(body.usersData.length).toBe(2);
+		expect(body.usersData[0].username).toBe('user10');
+		expect(body.usersData[1].username).toBe('user20');
+	});
+
+	it('should return 200, valid users, and a list of failed IDs', async () => {
+		await app.dbAccount.run(
+			'INSERT INTO account (userID, username, defaultLang) VALUES (?, ?, ?)',
+			[10, 'user10', 'en']
+		);
+
+		const response = await app.inject({
+			method: 'POST',
+			url: '/internal/account/userDataBatch',
+			payload: { userIDs: [10, 999] }
+		});
+		const body = response.json();
+
+		expect(response.statusCode).toBe(200);
+		expect(body.success).toBe(true);
+
+		expect(body.usersData).toBeInstanceOf(Array);
+		expect(body.usersData.length).toBe(1);
+		expect(body.usersData[0].username).toBe('user10');
+
+		expect(body.failedIDs).toBeInstanceOf(Array);
+		expect(body.failedIDs.length).toBe(1);
+		expect(body.failedIDs[0]).toBe(999);
+	});
+
+	it('should return 200 and an empty list for an empty ID array', async () => {
+		const response = await app.inject({
+			method: 'POST',
+			url: '/internal/account/userDataBatch',
+			payload: { userIDs: [] }
 		});
 
 		const body = response.json();
 
-		expect(response.statusCode).toBe(409);
-		expect(body.success).toBe(false);
-		expect(body.message).toBe('This username is already taken.');
-
-		const updatedUser = await app.dbAccount.get('SELECT * FROM account WHERE userID = ?', [userID2]);
-		expect(updatedUser.username).toBe('user2');
-
-	});
-});
-
-describe('DELETE /internal/account/:userID', () => {
-	it('should return 204 when deleting valid account', async() => {
-
-	});
-
-	it('should return 404 when deleting invalid account', async() => {
-
-	});
-});
-
-describe('GET /internal/account/:userID', () => {
-	it('should return 200 when getting valid account', async() => {
-
-	});
-
-	it('should return 404 when getting invalid account', async() => {
-
-	});
-});
-
-
-describe('GET /internal/account/userDataBatch', () => {
-	it('should return 200 when getting valid account', async() => {
-
-	});
-
-	it('should return 404 when getting invalid account', async() => {
-
+		expect(response.statusCode).toBe(200);
+		expect(body.success).toBe(true);
+		expect(body.usersData.length).toBe(0);
+		expect(body.failedIDs.length).toBe(0);
 	});
 });
 

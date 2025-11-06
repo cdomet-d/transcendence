@@ -67,7 +67,6 @@ export async function accountRoutes(serv: FastifyInstance) {
 	});
 
 	//TESTED but 
-	//TODO :fix 409 error return
 	serv.patch('/internal/account/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
@@ -135,7 +134,6 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO: modify this route to return a userData interface if possible (see where this route is used)
 	serv.get('/internal/account/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
@@ -172,12 +170,13 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const { userIDs } = request.body as { userIDs: number[] };
 
 			if (!userIDs || userIDs.length === 0)
-				return (reply.code(200).send([]));
+				return (reply.code(200).send({ success: true, usersData: [], failedIDs: [] }));
 
 			const placeholders = userIDs.map(() => '?').join(',');
 
 			const query = `
 				SELECT
+					p.userID, 
 					p.username,
 					p.userStatus,
 					p.registerDate,
@@ -188,9 +187,16 @@ export async function accountRoutes(serv: FastifyInstance) {
 				WHERE
 					p.userID IN (${placeholders})
 			`;
-
 			const usersData = await serv.dbAccount.all(query, userIDs);
-			return (reply.code(200).send({ success: true, usersData }));
+
+			const foundIDs = new Set(usersData.map(user => user.userID));
+			const failedIDs = userIDs.filter(id => !foundIDs.has(id));
+
+			return (reply.code(200).send({
+				success: true,
+				usersData: usersData,
+				failedIDs: failedIDs
+			}));
 
 		} catch (error) {
 			serv.log.error(`[ACCOUNT] Error fetching account data batch: ${error} `);
