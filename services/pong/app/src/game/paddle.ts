@@ -14,9 +14,9 @@ export function updatePaddlePos(player: Player, keys: keysObj, game: Game) {
     if ((player.left && keys._a))
         left(player.paddle, game, 0);
     if ((player.left && keys._d))
-        right(player.paddle, game, WIDTH / 2 - game.ball.radius / 2 - game.padSpec.width);
+        right(player.paddle, game, WIDTH / 2 - game.ball.radius - game.padSpec.width);
     if (player.right && keys._ArrowLeft)
-        left(player.paddle, game, WIDTH / 2 + game.ball.radius / 2);
+        left(player.paddle, game, WIDTH / 2 + game.ball.radius);
     if (player.right && keys._ArrowRight)
         right(player.paddle, game, WIDTH);
 }
@@ -44,7 +44,6 @@ function left(pad: coordinates, game: Game, limit: number) {
 }
 
 function right(pad: coordinates, game: Game, limit: number) {
-    console.log("IN RIGHT");
     if (pad.x + (game.padSpec.speed * TIME_STEP) < limit)
         pad.x += (game.padSpec.speed * TIME_STEP)
     else

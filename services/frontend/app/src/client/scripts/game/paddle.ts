@@ -12,14 +12,14 @@ export function updatePaddlePos(game: Game, keys: keysObj) {
     if (keys._a)
         left(game.leftPad, game, 0);
     if (keys._d)
-        right(game.leftPad, game, WIDTH / 2 - game.ball.radius / 2 - game.padSpec.width);
+        right(game.leftPad, game, WIDTH / 2 - game.ball.radius - game.padSpec.width);
     if (game.local) {
         if (keys._ArrowUp)
             up(game.rightPad, game.padSpec.speed);
         if (keys._ArrowDown)
             down(game.rightPad, game.padSpec.speed, game.padSpec.height);
         if (keys._ArrowLeft)
-            left(game.rightPad, game, WIDTH / 2 + game.ball.radius / 2);
+            left(game.rightPad, game, WIDTH / 2 + game.ball.radius);
         if (keys._ArrowRight)
             right(game.rightPad, game, WIDTH);
     }
