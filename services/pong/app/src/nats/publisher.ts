@@ -1,7 +1,4 @@
-import dotenv from 'dotenv';
 import { connect, StringCodec, type NatsConnection } from 'nats';
-
-dotenv.config();
 
 let nc: NatsConnection;
 

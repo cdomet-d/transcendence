@@ -59,21 +59,6 @@ export function renderProfile(): string {
 	});
 }
 
-// TODO: delete this comment
-// export function renderTournament(): string {
-// 	return renderPageTemplate({
-// 		title: "TOURNAMENT",
-// 		nextButtons: [
-// 			{ href: "/404", label: "4 players" },
-// 			{ href: "/404", label: "8 players" },
-
-// 		],
-// 		backHref: "/central",
-// 		showBack: true,
-// 		homeHref: "/"
-// 	});
-// }
-
 export function renderGame(): string {
 	let html: string = `
 		<div class="min-h-screen flex flex-col items-center justify-center bg-white">
@@ -91,12 +76,49 @@ export function renderGame(): string {
 	return html;
 }
 
+export function renderLobbyMenu(): string {
+    let html: string = `
+        <div class="relative min-h-screen flex flex-col items-center justify-center space-y-6">
+            <button id="create-btn"
+            class="py-3 px-8 rounded-full border border-black bg-gradient-to-br from-green-500 to-green-700 shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
+                Create
+            </button>
+
+            <button id="join-btn"
+            class="py-3 px-8 rounded-full border border-black bg-gradient-to-br from-blue-500 to-blue-700 shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
+                Join
+            </button>
+			
+			<button id="create-quick-btn"
+			class="py-3 px-8 rounded-full border border-black bg-gradient-to-br from-cyan-700 to-cyan-900 shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
+				CreateQuick
+			</button>
+
+            <button id="join-quick-btn"
+            class="py-3 px-8 rounded-full border border-black bg-gradient-to-br from-pink-500 to-pink-700 shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
+                JoinQuick
+            </button>
+
+            <a href="/central" data-link id="back-btn"
+            class="absolute bottom-8 left-1/2 transform -translate-x-1/2 py-3 px-8 rounded-full border border-black bg-gradient-to-br from-[#ffcc00] to-[#ea9800] shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
+                Back
+            </a>
+        </div>
+    `;
+    return html;
+}
+
 export function renderLobby(): string {
 	let html: string = `
 		<div class="relative min-h-screen flex flex-col items-center justify-center">
 		    <button id="start-tournament-btn"
 			class="py-3 px-8 rounded-full border border-black bg-gradient-to-br from-blue-500 to-blue-700 shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
 		        Start Tournament
+		    </button>
+
+		    <button id="start-quickmatch-btn"
+			class="py-3 px-8 rounded-full border border-black bg-gradient-to-br from-fuchsia-600 to-fuchsia-800 shadow-md hover:scale-105 transition-transform text-white text-lg font-semibold">
+		        Start Quickmatch
 		    </button>
 
 		    <a href="/central" data-link id="back-btn"

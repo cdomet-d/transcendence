@@ -30,6 +30,4 @@ function getCanvasContext(): CanvasRenderingContext2D | null {
 	return ctx;
 }
 
-// window.addEventListener("load", );
-
 export { pong };
