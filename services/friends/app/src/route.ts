@@ -92,15 +92,16 @@ export async function routeFriend(serv: FastifyInstance) {
 		}
 	});
 
+	//TODO: should we use friendship ID or combination of userIDs ? 
 	//accept a friend request
-	serv.patch('internal/friendships/:id', async (request, reply) => {
+	serv.patch('/internal/friendships/:id', async (request, reply) => {
 		try {
 			const { receiverID: receiverID } = request.body as { receiverID: number };
 			const { friendID: friendID } = request.body as { friendID: number };
 
 			const friendshipID = await friendshipExistsUsersID(serv.dbFriends, receiverID, friendID);
 			if (!friendshipID) {
-				return reply.code(409).send({
+				return reply.code(404).send({
 					success: false,
 					message: '[FRIENDS] Friendship doesnt exists!'
 				});
@@ -116,7 +117,7 @@ export async function routeFriend(serv: FastifyInstance) {
 
 			const response = await serv.dbFriends.run(query, params);
 			if (response.changes === 0) {
-				return reply.code(404).send({
+				return reply.code(400).send({
 					success: false,
 					message: '[FRIENDS] Friendship could not be accepted.'
 				});
@@ -175,4 +176,4 @@ export async function routeFriend(serv: FastifyInstance) {
 			throw (error);
 		}
 	});
-}
+});

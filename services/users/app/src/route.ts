@@ -90,7 +90,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//get user profile
+	//POST user profile
 	serv.post('/internal/users/profile', async (request, reply) => {
 		try {
 			const { userIDs } = request.body as { userIDs: number[] };
@@ -136,12 +136,8 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const createProfile = await serv.dbUsers.run(queryProfile, paramsProfile);
-			if (createProfile.changes === 0) {
-				return (reply.code(500).send({
-					success: false,
-					message: 'Profile could not be created.'
-				}));
-			}
+			if (createProfile.changes === 0)
+				throw new Error('Database Error: Profile INSERT failed (0 changes).');
 
 			const queryStats = `
 				INSERT INTO userStats (userID, longestMatch, shorestMatch, totalMatch, totalWins,
@@ -150,12 +146,9 @@ export async function userRoutes(serv: FastifyInstance) {
 			`;
 
 			const createStats = await serv.dbUsers.run(queryStats, [userID]);
-			if (createStats.changes === 0) {
-				return (reply.code(500).send({
-					success: false,
-					message: 'Stats could not be created.'
-				}));
-			}
+			if (createStats.changes === 0)
+				throw new Error('Database Error: Stats INSERT failed (0 changes).');
+
 			return (reply.code(201).send({ success: true, message: 'Profile created successfully!' }));
 
 		} catch (error) {
@@ -319,7 +312,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('internal/users/:userID/userData', async (request, reply) => {
+	serv.get('/internal/users/:userID/userData', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 

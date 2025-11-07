@@ -19,6 +19,8 @@ beforeEach(async () => {
 	await app.dbAccount.exec('DELETE FROM account');
 });
 
+//TODO code thez actual tests
+
 describe('GET /internal/friends/friendship', () => {
 	it('should return 200 and the status of friendship if a friendship is found between two users', async () => {
 
@@ -41,7 +43,7 @@ describe('GET /internal/friends/friendship', () => {
 	});
 });
 
-describe('POST /internal/friends/frienship', () => {
+desccribe('POST /internal/friends/frienship', () => {
 	it('should return 409 if the friendship between two users already exists', async () => {
 
 	});
@@ -50,7 +52,40 @@ describe('POST /internal/friends/frienship', () => {
 
 	});
 
-	it('should return 404 if the friendship between two users was not found', async () => {
+});
+
+describe('PATCH /internal/friendships/:id', () => {
+
+	it('should return 404 if the friendship was not found', async () => {
+
+	});
+
+	it('should return 400 if the friendship could not be accepted', async () => {
+
+	});
+
+	it('should return 200 if the friendship was accepted', async () => {
+
+	});
+
+});
+
+describe('DELETE /internal/friendships', () => {
+
+	it('should return 404 if the friendship was not found', async () => {
+
+	});
+
+	it('should return 204 if the friendship was deleted', async () => {
+
+	});
+
+
+});
+
+describe('DELETE /internal/friendships', () => {
+
+	it('should return 204 if all friendships were deleted', async () => {
 
 	});
 });
