@@ -93,22 +93,30 @@ function distBallPad(p: coordinates, b: coordinates): number {
 }
 
 function getPosition(game: Game, paddle: coordinates, newX: number, newY: number): [number, number] {
+	// console.log("IN GETPOSITION")
 	const side: string = getCollisionSide(game, paddle);
 	const offset: number = game.ball.radius + 1;
+	const incPaddle: coordinates = {x: paddle.x - game.ball.radius, y: paddle.y - game.ball.radius};
+	const padHeight: number = game.padSpec.height + 2 * game.ball.radius;
+	const padWidth: number = game.padSpec.width + 2 * game.ball.radius;
 
 	switch (side) {
 		case "left":
+			[newX, newY] = lineIntersection({x: game.ball.x, y: game.ball.y}, {x: newX, y: newY}, incPaddle, {x: incPaddle.x, y: incPaddle.y + padHeight});
 			[game.ball.dx, game.ball.dy] = incVelocity(-Math.abs(game.ball.dx), game.ball.dy);
-			return [paddle.x - offset, newY];
+			return [newX, newY];
 		case "right":
+			[newX, newY] = lineIntersection({x: game.ball.x, y: game.ball.y}, {x: newX, y: newY}, {x: incPaddle.x + padWidth, y: incPaddle.y}, {x: incPaddle.x + padWidth, y: incPaddle.y + padHeight});
 			[game.ball.dx, game.ball.dy] = incVelocity(Math.abs(game.ball.dx), game.ball.dy);
-			return [paddle.x + game.padSpec.width + offset, newY];
+			return [newX, newY];
 		case "top":
+			[newX, newY] = lineIntersection({x: game.ball.x, y: game.ball.y}, {x: newX, y: newY}, incPaddle, {x: incPaddle.x + padWidth, y: incPaddle.y});
 			[game.ball.dx, game.ball.dy] = incVelocity(game.ball.dx, -Math.abs(game.ball.dy));
-			return [newX, paddle.y - offset];
+			return [newX, newY];
 		case "bottom":
+			[newX, newY] = lineIntersection({x: game.ball.x, y: game.ball.y}, {x: newX, y: newY}, {x: incPaddle.x, y: incPaddle.y + padHeight}, {x: incPaddle.x + padWidth, y: incPaddle.y + padHeight});
 			[game.ball.dx, game.ball.dy] = incVelocity(game.ball.dx, Math.abs(game.ball.dy));
-			return [newX, paddle.y + game.padSpec.height + offset];
+			return [newX, newY];
 		case "topleft":
 			[game.ball.dx, game.ball.dy] = incVelocity(game.ball.dx * -1, game.ball.dy * -1);
 			return [paddle.x - offset, paddle.y - offset];
@@ -124,6 +132,15 @@ function getPosition(game: Game, paddle: coordinates, newX: number, newY: number
 		default:
 			return [newX, newY];
 	}
+}
+
+function lineIntersection(p1: coordinates, p2: coordinates, p3: coordinates, p4: coordinates): [number, number] {
+	const denom: number = (p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y - p1.y);
+	const t: number = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x)) / denom;
+	// const u: number = ((p2.x - p1.x) * (p1.y - p3.y) - (p2.y - p1.y) * (p1.x - p3.x)) / denom;
+	const newX: number = p1.x + t * (p2.x - p1.x);
+	const newY: number = p1.y + t * (p2.y - p1.y);
+	return [newX, newY];
 }
 
 function getCollisionSide(game: Game, paddle: coordinates): string {
@@ -147,23 +164,10 @@ function getCollisionSide(game: Game, paddle: coordinates): string {
         else
 			return dy < 0 ? "topleft" : "bottomleft";
     }
-	// if (absX > absY)
-    //     return dx > 0 ? "right" : "left";
-    // else
-    //     return dy > 0 ? "bottom" : "top";
-    if (absX > absY) {
-		if (dx > 0 && game.ball.dx < 0)
-			return "right";
-		if (dx < 0 && game.ball.dx > 0)
-			return "left";
-	}
-    else {
-		if (dy > 0 && game.ball.dy < 0)
-			return "bottom";
-		if (dy < 0 && game.ball.dy > 0)
-			return "top";
-	}
-	return "null";
+	if (absX > absY)
+        return dx > 0 ? "right" : "left";
+    else
+        return dy > 0 ? "bottom" : "top";
 }
 
 function incVelocity(dx: number, dy: number): [number, number] {
