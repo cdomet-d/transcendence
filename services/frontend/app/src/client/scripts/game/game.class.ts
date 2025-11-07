@@ -27,7 +27,7 @@ export interface ballObj {
 	radius: number
 }
 
-interface paddleSpec {
+export interface paddleSpec {
 	speed: number
 	width: number,
 	height: number,
