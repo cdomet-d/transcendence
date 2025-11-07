@@ -27,7 +27,6 @@ tournament || ##### |  4/8  |
     -   userID
 }
 
-
 tournament {
     - tournamentID
     - winnerID
