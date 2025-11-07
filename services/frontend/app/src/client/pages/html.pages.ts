@@ -77,7 +77,6 @@ export function renderProfile(): string {
 export function renderGame(): string {
 	let html: string = `
 		<div class="min-h-screen flex flex-col items-center justify-center bg-white">
-			<h1 class="text-4xl font-bold mb-6"> Game Screen </h1>
 			<canvas id="canvas" width="700" height="500"
 			class="mb-6 border-7 border-[#808080]">
 			pong game <!-- fallback if unable to be displayed -->
