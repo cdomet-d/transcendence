@@ -10,19 +10,25 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 //     setLangVars(savedLang);
 // }
 
-function handler(req: FastifyRequest, rep: FastifyReply) {
+function handler(req: FastifyRequest, res: FastifyReply) {
     // initLanguageSSR(req);
     // const url: string | undefined = req.routeOptions.url;
     // if (!url) {
-    //     rep.callNotFound();
+    //     res.callNotFound();
     //     return;
     // }
     // const html = buildHtmlPage(url);
-    rep.header('Content-Type', 'text/html');
-    rep.sendFile('pages/index.html');
+	// res.setHeader('Content-Type', 'text/html');
+	console.log('SERVING HTML')
+	try {
+    	res.sendFile('index.html');
+	} catch {
+		console.log('ERROR')
+	}
 }
 
 const servRoutes: FastifyPluginCallback = function (serv, options, done) {
+	console.log('IN THE DYNAMIC ROUTES')
     serv.get('/*', handler);
     done();
 };

@@ -1,8 +1,7 @@
-import { computeViewportSize, loadHistoryLocation } from './event-listeners.js';
-import { Layout } from '../web-elements/layouts/layout.js';
-import { PageHeader } from '../web-elements/navigation/header.js';
-import { Router } from './spaRouter/router.class.js';
-import { routes } from './spaRouter/routes.js';
+import { loadHistoryLocation } from './scripts/event-listeners.js';
+import { Layout } from './web-elements/layouts/layout.js';
+import { PageHeader } from './web-elements/navigation/header.js';
+import { Router, routes } from './scripts/router.js';
 
 // import { pong } from './game/pong.js';
 // import { addLanguageEvents } from './language/languageEvents.js';
@@ -18,9 +17,9 @@ declare global {
 }
 
 if (window) {
-    computeViewportSize();
+    // computeViewportSize();
     /** Handles window resize so things stay cute */
-    window.addEventListener('resize', computeViewportSize);
+    // window.addEventListener('resize', computeViewportSize);
     /** Enables back/forward navigation arrows */
     window.addEventListener('popstate', loadHistoryLocation);
 }

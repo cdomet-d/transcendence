@@ -102,7 +102,7 @@ class NotifToggle extends HTMLDivElement {
     /** Creates and assembles the toggle icon and the alert indicator. */
     #render() {
         const notifIcon = document.createElement('img');
-        notifIcon.src = '../public/images/notification.png';
+        notifIcon.src = '../public/assets/images/notification.png';
 
         notifIcon.className = 'imedium isize z-1';
         notifIcon.id = 'notifToggle';
@@ -157,7 +157,7 @@ class NotifPanel extends HTMLDivElement {
         this.#content.className = 'box-border bg brdr pad-xs w-[fit-content] relative grid gap-s';
 
         const notifDecor = document.createElement('img');
-        notifDecor.src = '/public/images/notification-bubble.png';
+        notifDecor.src = '/public/assets/images/notification-bubble.png';
         this.#content.append(notifDecor);
         notifDecor.className = 'h-[32px] w-[16px] absolute right-[-20px] top-[4px]';
     }

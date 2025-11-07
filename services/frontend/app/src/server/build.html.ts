@@ -1,4 +1,4 @@
-import { routes } from '../client/scripts/spaRouter/routes.js';
+import { routes } from '../client/scripts/router.js';
 // import { renderHeader } from '../client/pages/header.js';
 // import { renderLanguageDropdownButton } from '../client/pages/languageDropdownButton.js'
 

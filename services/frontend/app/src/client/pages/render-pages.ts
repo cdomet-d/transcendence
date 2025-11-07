@@ -24,6 +24,12 @@ function updatePageTitle(newPage: string) {
     document.title = `🌻 BigT - ${newPage} 🌻`;
 }
 
+// function clearUrlParameters() {
+//     const curURL = window.location.pathname;
+//     const newURL = curURL.replace(/:/g, '');
+//     window.history.replaceState(null, '', newURL);
+// }
+
 function prepareLayout(curLayout: Layout | undefined, page: string) {
     if (!layoutPerPage[page]) throw new Error('Requested page is undefined');
     if (!curLayout)
@@ -65,8 +71,10 @@ export function renderLeaderboard() {
     );
 }
 
-export function renderProfile() {
-    console.log('renderProfile');
+export function renderProfile(param?: string) {
+    console.log('renderProfile', param);
+    if (!param) renderNotFound();
+	// clearUrlParameters()
     //TODO: API call here to fetch user data
     prepareLayout(document.body.layoutInstance, 'profile');
     document.body.layoutInstance?.appendAndCache(

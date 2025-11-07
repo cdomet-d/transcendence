@@ -1,6 +1,6 @@
 import type { navigationLinksData } from '../types-interfaces.js';
 import { createIcon } from '../typography/helpers.js';
-import { router } from '../../scripts/main.js';
+import { router } from '../../main.js';
 
 const emptyLink: navigationLinksData = { datalink: '', href: '', title: '', img: null };
 
@@ -38,7 +38,6 @@ export class NavigationLinks extends HTMLAnchorElement {
             ev.preventDefault();
             const path = link.getAttribute('href');
             if (path) {
-                console.log(path);
                 window.history.pushState({}, '', path);
                 const cleanPath = router.sanitisePath(path);
                 router.loadRoute(cleanPath);

@@ -15,7 +15,7 @@ const homeLink: navigationLinksData[] = [
         img: {
             alt: 'A cute pixel art blob',
             size: 'imedium',
-            src: '/public/images/default-avatar.png',
+            src: '/public/assets/images/default-avatar.png',
             id: 'home-link',
         },
     },

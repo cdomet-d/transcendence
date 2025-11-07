@@ -1,10 +1,10 @@
 {
 	"compilerOptions": {
 		"outDir": "./dist",
-		"rootDir": "./src",
+		"rootDir": "./src/",
 		"target": "ES2022",
 		"useDefineForClassFields": true,
-		"module": "ESNext",
+		"module": "esnext",
 		"lib": [
 			"ES2022",
 			"dom",
@@ -12,26 +12,27 @@
 			"DOM.Iterable"
 		],
 		"skipLibCheck": true,
-
 		/* Bundler mode */
 		"moduleResolution": "bundler",
 		"verbatimModuleSyntax": true,
 		"moduleDetection": "force",
 		"noEmit": false,
 		"noEmitOnError": false,
-
+		"esModuleInterop": true,
 		/* Linting */
 		"strict": true,
 		"noUnusedLocals": true,
-		"noUnusedParameters": true,
+		// "noUnusedParameters": true,
 		"erasableSyntaxOnly": true,
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true,
 		"noImplicitOverride": true
 	},
 	"include": [
-		"src/client/**/*"
-, "src/client/web-elements"	],
+		"src/server/**/*",
+		"src/client/**/*",
+		"src/client/web-elements"
+	],
 	"exclude": [
 		"node_modules",
 		"dist"

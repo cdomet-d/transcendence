@@ -1,10 +1,23 @@
-import { renderNotFound } from '../../pages/render-pages.js';
-import { pong } from '../game/pong.js';
+import { renderNotFound } from '../pages/render-pages.js';
+import { pong } from './game/pong.js';
+// import { match } from 'path-to-regexp';
+import * as page from '../pages/render-pages.js';
 
-interface routeInterface {
+export interface routeInterface {
     path: string;
-    callback: () => void;
+    callback: (param?: string) => void;
 }
+
+export const routes: routeInterface[] = [
+    { path: '/', callback: page.renderHome },
+    { path: '/404', callback: page.renderNotFound },
+    { path: '/leaderboard', callback: page.renderLeaderboard },
+    //TODO: handle dynamic URL to serve the user's profile, not a generic profile page
+    { path: '/user/:login', callback: page.renderProfile },
+    //   { path: '/central', callback: page.renderCentral },
+    //   { path: '/game/tournament', callback: page.renderTournament },
+    //   { path: '/game/match', callback: page.renderGame},
+];
 
 export class Router {
     /*                            PROPERTIES                                  */
@@ -17,6 +30,7 @@ export class Router {
 
     /*                             METHODS                                    */
     #getRouteFromPath(path: string): routeInterface | undefined {
+        console.log(path);
         return this._routes.find((route) => route.path === path);
     }
 
@@ -27,21 +41,9 @@ export class Router {
         return window.location.pathname;
     }
 
-    // resolveUrl() {
-    //     const route: routeInterface | undefined = this.#getRouteFromPath(this.currentPath);
-    //     if (!route) renderNotFound;
-    //     else route.callback;
-    // }
-
     sanitisePath(path: string) {
         if (path == '/') return path;
         return path.replace(/\/+$/, '');
-    }
-
-    splitRoute(path: string) {
-        console.log(path);
-        const splitPath = path.split('/');
-        console.log(splitPath);
     }
 
     /**
@@ -50,8 +52,9 @@ export class Router {
      */
     loadRoute(path: string) {
         const matchedRoute = this.#getRouteFromPath(path);
+		// const test = match('/user/:login')
+		// console.log(test);
         if (!matchedRoute) {
-            this.splitRoute(path);
             renderNotFound();
             return;
         }
