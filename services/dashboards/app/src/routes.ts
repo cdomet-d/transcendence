@@ -112,7 +112,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	//delete a game
 	serv.delete('/internal/dashboard/games/:gameID', async (request, reply) => {
 		try {
-			const { gameID } = request.body as { gameID: string };
+			const { gameID } = request.params as { gameID: string };
 
 			//Should I add a 400 if gameID not provided ?
 

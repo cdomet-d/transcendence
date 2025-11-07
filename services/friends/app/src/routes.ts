@@ -156,7 +156,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			serv.log.error(`[FRIENDS] Error deleting friendship: ${error}`);
 			throw (error);
 		}
-	});
+	});	
 
 	serv.delete('/internal/friends/:userID/friendships', async (request, reply) => {
 		try {

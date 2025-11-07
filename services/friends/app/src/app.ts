@@ -1,6 +1,6 @@
 import fastify, { type FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
-import { routeFriend } from './route.js';
+import { routeFriend } from './routes.js';
 import dbConnector from "./db.js";
 
 export async function buildServer(): Promise<FastifyInstance> {
