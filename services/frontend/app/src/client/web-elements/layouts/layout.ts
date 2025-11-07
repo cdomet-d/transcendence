@@ -6,6 +6,7 @@ export class Layout extends HTMLDivElement {
 
     constructor() {
         super();
+        this.id = 'layout';
         this.#innerComponents = new Map<string, HTMLElement>();
         this.className =
             'box-border grid grid-cols-[75%] min-h-full auto-rows-auto place-content-center gap-m';

@@ -5,7 +5,7 @@ import { mainMenu } from '../web-elements/navigation/default-menus.js';
 import { renderPageTemplate } from './page.template.js';
 import { Layout } from '../web-elements/layouts/layout.js';
 import { ProfileWithTabs } from '../web-elements/users/user-profile-containers.js';
-import { user } from '../web-elements/default-values.js';
+// import { user } from '../web-elements/default-values.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -28,7 +28,6 @@ function prepareLayout(curLayout: Layout | undefined, page: string) {
     if (!layoutPerPage[page]) throw new Error('Requested page is undefined');
     if (!curLayout)
         throw new Error("Something is wrong with the document's layout - page cannot be charged");
-    console.log(curLayout?.id, layoutPerPage[page]);
 
     curLayout.clearAll();
     if (layoutPerPage[page] === 'full-screen') {
@@ -68,15 +67,11 @@ export function renderLeaderboard() {
 
 export function renderProfile() {
     console.log('renderProfile');
+    //TODO: API call here to fetch user data
     prepareLayout(document.body.layoutInstance, 'profile');
-    console.log('---');
     document.body.layoutInstance?.appendAndCache(
         document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
     );
-    console.log('---');
-    const el = document.body.layoutInstance?.components.get('user-profile') as ProfileWithTabs;
-    el!.profile = user;
-    console.log('---');
 }
 
 export function renderTournament(): string {

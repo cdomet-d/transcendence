@@ -27,7 +27,6 @@ try {
 
 async function addPlugins(serv: FastifyInstance) {
     await serv
-        .register(servRoutes)
         .register(fastifyStatic, {
             root: '/app/dist/client',
             prefix: '/public/',
@@ -53,6 +52,7 @@ async function addPlugins(serv: FastifyInstance) {
                 }
             },
         })
+        .register(servRoutes)
         .register(
             cookie /*, {
 					secret: "", //TODO: add secret ?

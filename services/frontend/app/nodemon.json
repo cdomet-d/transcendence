@@ -1,8 +1,11 @@
 {
-  "watch": ["./src/server", "./src/client"],
-  "ext": "ts",
-  "ignore": ["dist/"],
-  "exec": "tsc --project tsconfig.node.json && node dist/server/server.js"
+	"watch": [
+		"./src/server",
+		"./src/client"
+	],
+	"ext": "ts",
+	"ignore": [
+		"dist/"
+	],
+	"exec": "tsc --project tsconfig.node.json && node dist/server/server.js"
 }
-
-

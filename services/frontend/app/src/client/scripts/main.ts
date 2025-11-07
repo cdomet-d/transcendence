@@ -30,6 +30,7 @@ document.body.header = document.createElement('header', { is: 'page-header' }) a
 if (!document.body.layoutInstance || !document.body.header) {
     throw new Error('Error initializing HTML Layouts - page cannot be charged.');
 }
+
 document.body.append(document.body.header, document.body.layoutInstance);
 router.loadRoute(router.currentPath);
 

@@ -148,7 +148,6 @@ export class SocialMenu extends ActionMenu {
     /** Updates the menu appearance based on the current {@link ProfileView}. */
     updateView() {
         const icon = super.cache.get('friendship') as CustomButton;
-        console.log('In updateView In Social Menu : social menu icon', icon?.icon);
         if (!icon || !icon.icon) return;
         if (this.#view === 'friend') this.friend(icon.icon);
         else if (this.#view === 'stranger') this.stranger(icon.icon);

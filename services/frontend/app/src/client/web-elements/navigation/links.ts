@@ -2,12 +2,8 @@ import type { navigationLinksData } from '../types-interfaces.js';
 import { createIcon } from '../typography/helpers.js';
 import { router } from '../../scripts/main.js';
 
-const emptyLink: navigationLinksData = {
-    datalink: '',
-    href: '',
-    title: '',
-    img: { alt: '', size: 'iicon', src: '', id: '' },
-};
+const emptyLink: navigationLinksData = { datalink: '', href: '', title: '', img: null };
+
 export class NavigationLinks extends HTMLAnchorElement {
     #info: navigationLinksData;
     #animated: boolean;
@@ -21,6 +17,10 @@ export class NavigationLinks extends HTMLAnchorElement {
 
     set info(data: navigationLinksData) {
         this.#info = data;
+    }
+
+    get info() {
+        return this.#info;
     }
 
     /**
@@ -44,15 +44,6 @@ export class NavigationLinks extends HTMLAnchorElement {
                 router.loadRoute(cleanPath);
             }
         }
-    }
-
-    connectedCallback() {
-        this.addEventListener('click', this.#clickHandler);
-        this.render();
-    }
-
-    disconnectedCallback() {
-        this.removeEventListener('click', this.#clickHandler);
     }
 
     /** Renders simple textual button content. */
@@ -90,9 +81,18 @@ export class NavigationLinks extends HTMLAnchorElement {
         );
     }
 
+    connectedCallback() {
+        this.addEventListener('click', this.#clickHandler);
+        this.render();
+    }
+
+    disconnectedCallback() {
+        this.removeEventListener('click', this.#clickHandler);
+    }
+
     render() {
         this.className =
-            'box-border pad-xs  outline-hidden \
+            'box-border pad-xs outline-hidden \
 			overflow-hidden  cursor-pointer   text-center \
 			hover:transform hover:scale-[1.02] \
 			focus-visible:transform focus-visible:scale-[1.02]';

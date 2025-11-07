@@ -1,17 +1,17 @@
 // import fsp from 'fs/promises';
+// import { buildHtmlPage } from './build.html.js';
 import type { FastifyPluginCallback } from 'fastify';
 import type { FastifyRequest, FastifyReply } from 'fastify';
-// import { buildHtmlPage } from './build.html.js';
-import { setLangVars } from '../client/scripts/language/translation.js';
+// import { setLangVars } from '../client/scripts/language/translation.js';
 
-function initLanguageSSR(req: FastifyRequest) {
-    let savedLang: string | undefined = req.cookies.lang;
-    if (!savedLang) savedLang = 'en';
-    setLangVars(savedLang);
-}
+// function initLanguageSSR(req: FastifyRequest) {
+//     let savedLang: string | undefined = req.cookies['lang'];
+//     if (!savedLang) savedLang = 'en';
+//     setLangVars(savedLang);
+// }
 
 function handler(req: FastifyRequest, rep: FastifyReply) {
-    initLanguageSSR(req);
+    // initLanguageSSR(req);
     // const url: string | undefined = req.routeOptions.url;
     // if (!url) {
     //     rep.callNotFound();

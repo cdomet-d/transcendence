@@ -21,7 +21,6 @@ function handler(req: FastifyRequest, rep: FastifyReply) {
     const html = buildHtmlPage(url);
     rep.header('Content-Type', 'text/html');
     rep.send(html);
-    // rep.html(); //for vite
 }
 
 const servRoutes: FastifyPluginCallback = function (serv, options, done) {
@@ -30,7 +29,7 @@ const servRoutes: FastifyPluginCallback = function (serv, options, done) {
     serv.get('/account', handler);
     serv.get('/auth', handler);
     serv.get('/user/friends', handler);
-    serv.get('/users', handler);
+    serv.get('/user', handler);
     serv.get('/game/leaderboard', handler);
     serv.get('/game/tournament', handler);
     serv.get('/game/match', handler);

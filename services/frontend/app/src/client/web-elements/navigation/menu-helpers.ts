@@ -13,7 +13,6 @@ import { NavigationMenu, ActionMenu, SocialMenu, DropdownMenu } from './menus.js
  *
  * @param {navigationLinksData[]} content - Array of button metadata objects for menu buttons.
  * @param {MenuStyle} style - Menu layout style, either 'vertical' or 'horizontal'.
- * @param {MenuSize} [size] - Optional menu size variant.
  * @param {boolean} [animated] - Optional flag to enable animation effects on menu buttons.
  * @returns {Menu} A configured {@link Menu} div element.
  *
@@ -24,7 +23,6 @@ export function createNavMenu(
     animated?: boolean,
 ): NavigationMenu {
     const el = document.createElement('nav', { is: 'nav-menu-wrapper' }) as NavigationMenu;
-    console.log(style);
     el.menuContent = content;
     el.menuStyle = style;
     if (animated) el.animation = animated;

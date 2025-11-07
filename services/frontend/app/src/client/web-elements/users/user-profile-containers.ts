@@ -13,8 +13,8 @@ export const user: UserData = {
         src: '/public/images/magenta-avatar.png',
     },
     biography: '(╯°□°)╯︵ ┻━┻',
-    id: '256',
-    relation: 'friend',
+    id: '64',
+    relation: 'stranger',
     profileColor: 'bg-BE5103',
     language: 'English',
     status: true,
@@ -67,6 +67,7 @@ export class ProfileWithTabs extends HTMLDivElement {
     }
 
     set profile(user: UserData) {
+        console.log('for user: ', user.id, 'view:', user.relation);
         this.#userProfile.userInfo = user;
     }
 

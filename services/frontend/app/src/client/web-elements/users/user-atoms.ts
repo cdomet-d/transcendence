@@ -1,3 +1,4 @@
+import { NavigationLinks } from '../navigation/links.js';
 import type { FontWeight, FontSize, FontColor, ImgData } from '../types-interfaces.js';
 import { createIcon } from '../typography/helpers.js';
 import type { Icon } from '../typography/images.js';
@@ -8,8 +9,7 @@ import type { Icon } from '../typography/images.js';
  */
 export class Username extends HTMLDivElement {
     #status: HTMLDivElement;
-    #name: HTMLDivElement;
-    #link: HTMLAnchorElement;
+    #link: NavigationLinks;
     #isLogged: boolean;
 
     // TODO: make the user-status a percentage of username fontSize ?
@@ -21,19 +21,17 @@ export class Username extends HTMLDivElement {
         super();
         this.#isLogged = false;
         this.#status = document.createElement('div');
-        this.#name = document.createElement('div');
-        this.#link = document.createElement('a');
-        this.#name.append(this.#link);
-        this.append(this.#name, this.#status);
+        this.#link = document.createElement('a', { is: 'nav-link' }) as NavigationLinks;
+        this.append(this.#link, this.#status);
     }
 
     /**
      * Sets the username text.
      */
     set name(val: string) {
-        this.#link.innerText = val;
-        //TODO: HUUUUM...
-        this.#link.href = `/users/${val}`;
+        this.#link.info.title = val;
+        this.#link.info.datalink = val;
+        this.#link.info.href = `/user/${val}`;
         this.render();
     }
 
@@ -55,6 +53,7 @@ export class Username extends HTMLDivElement {
      * @param shadow - Whether to add a shadow class to the username.
      */
     customizeStyle(fcolor?: FontColor, fsize?: FontSize, fweight?: FontWeight, shadow?: boolean) {
+        this.#link.className = '';
         if (fsize) this.#link.classList.add(fsize);
         if (fcolor) this.#link.classList.add(fcolor);
         if (fweight) this.#link.classList.add(fweight);
@@ -73,9 +72,9 @@ export class Username extends HTMLDivElement {
      */
     render() {
         this.id = 'username';
-        this.#status.className = 'user-status';
-        this.className = 'true false f-yellow f-s grid gap-s username justify-items-center';
+        this.className = 'true false f-yellow grid f-m gap-s username justify-items-center';
         this.#link.classList.add('flex', 'items-center');
+        this.#status.className = 'user-status';
         if (this.#isLogged) {
             this.#status.classList.toggle('true');
         } else {

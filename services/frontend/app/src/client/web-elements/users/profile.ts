@@ -181,7 +181,7 @@ export class UserProfile extends HTMLDivElement {
 
     render() {
         this.className = `pad-s box-border brdr ${this.#color}`;
-        this.#username.customizeStyle('f-yellow', 'f-m', 'f-bold', true);
+        this.#username.customizeStyle('f-yellow', 'f-m', 'f-bold', false);
         this.#joinedSince.classList.add('place-self-center', 'dark');
         this.#biography.classList.add('row-span-2');
         this.#avatar.classList.add('row-span-3', 'place-self-center');

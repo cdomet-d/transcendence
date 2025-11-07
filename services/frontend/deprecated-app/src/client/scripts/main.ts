@@ -13,10 +13,12 @@ function sanitisePath(path: string) {
 }
 
 document.addEventListener('click', (event) => {
+	console.log('Do we even get there ?')
     const link = (event.target as HTMLElement).closest('[data-link]');
     if (link) {
         event.preventDefault();
         const path = link.getAttribute('href');
+		console.log('In event listener')
 		if (path !== null) {
 	        window.history.pushState({}, '', path);
 	        const cleanPath = sanitisePath(path);
@@ -26,6 +28,7 @@ document.addEventListener('click', (event) => {
 });
 
 window.addEventListener('popstate', () => {
+	and
     const cleanPath = sanitisePath(window.location.pathname);
     router.loadRoute(cleanPath);
 });

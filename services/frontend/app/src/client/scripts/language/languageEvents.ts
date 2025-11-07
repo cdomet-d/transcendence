@@ -14,7 +14,7 @@ export function addLanguageEvents() {
 
     options.querySelectorAll('.dropdown-item').forEach((item) => {
         item.addEventListener('click', () => {
-            const lang = (item as HTMLElement).dataset.lang;
+            const lang = (item as HTMLElement).dataset['lang'];
             if (lang && lang !== currentLang) {
                 changeLanguage(lang);
                 options.classList.add('hidden'); //TODO: what is this for ?

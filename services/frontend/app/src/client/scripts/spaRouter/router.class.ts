@@ -38,6 +38,12 @@ export class Router {
         return path.replace(/\/+$/, '');
     }
 
+    splitRoute(path: string) {
+        console.log(path);
+        const splitPath = path.split('/');
+        console.log(splitPath);
+    }
+
     /**
      * Parses the defined route array to check if the current URL is defined as a route.
      * Calls `renderNotFount()` if the route was not found, and the route's callback otherwise.
@@ -45,6 +51,7 @@ export class Router {
     loadRoute(path: string) {
         const matchedRoute = this.#getRouteFromPath(path);
         if (!matchedRoute) {
+            this.splitRoute(path);
             renderNotFound();
             return;
         }
