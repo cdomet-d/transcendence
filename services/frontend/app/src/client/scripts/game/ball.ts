@@ -3,6 +3,13 @@ import type { coordinates, repObj } from "./mess.validation.js";
 
 export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 	// console.log("IN DEADRECKONING");
+	let newX: number = 0;
+	let newY: number = 0;
+	[newX, newY] = futurePos(game, latestReply)
+	updateBallPos(game, newX, newY);
+}
+
+export function futurePos(game: Game, latestReply: repObj | undefined): [number, number] {
 	let timeSinceUpdate: number = performance.now() - game.lastFrameTime;
 	let ball: ballObj = { ...game.ball };
 	if (latestReply !== undefined) {
@@ -11,9 +18,9 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 	}
 	if (timeSinceUpdate > 100) //TODO: add var for 100
 		timeSinceUpdate = 100;
-	let newX: number = ball.x + ball.dx * timeSinceUpdate;
-	let newY: number = ball.y + ball.dy * timeSinceUpdate;
-	updateBallPos(game, newX, newY);
+	const newX: number = ball.x + ball.dx * timeSinceUpdate;
+	const newY: number = ball.y + ball.dy * timeSinceUpdate;
+	return [newX, newY]
 }
 
 function updateBallPos(game: Game, newX: number, newY: number) {
@@ -67,7 +74,7 @@ function getPosition(game: Game, paddle: coordinates, newX: number, newY: number
 	const incPaddle: coordinates = {x: paddle.x - game.ball.radius, y: paddle.y - game.ball.radius};
 	const padHeight: number = game.padSpec.height + 2 * game.ball.radius;
 	const padWidth: number = game.padSpec.width + 2 * game.ball.radius;
-	const side: string = getCollisionSide(game, incPaddle, padHeight, padWidth);
+	const side: string = getCollisionSide(game, paddle);
 	let res: [number, number] | null;
 
 	switch (side) {
@@ -112,15 +119,15 @@ function lineIntersection(p1: coordinates, p2: coordinates, p3: coordinates, p4:
 	return [newX, newY];
 }
 
-function getCollisionSide(game: Game, paddle: coordinates, padHeight: number, padWidth: number): string {
-    const padCenterX = paddle.x + padWidth / 2;
-    const padCenterY = paddle.y + padHeight / 2;
+function getCollisionSide(game: Game, paddle: coordinates): string {
+    const padCenterX = paddle.x + game.padSpec.halfWidth;
+    const padCenterY = paddle.y + game.padSpec.halfHeight;
 
     const dx = game.ball.x - padCenterX;
     const dy = game.ball.y - padCenterY;
 
-    const normalizedX = dx / (padWidth / 2);
-    const normalizedY = dy / (padHeight / 2);
+    const normalizedX = dx / game.padSpec.halfWidth;
+    const normalizedY = dy / game.padSpec.halfHeight;
 
     const absX = Math.abs(normalizedX);
     const absY = Math.abs(normalizedY);
