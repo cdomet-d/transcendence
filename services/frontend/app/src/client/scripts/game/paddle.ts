@@ -24,10 +24,10 @@ export function updatePaddlePos(game: Game, keys: keysObj) {
         if (keys._ArrowRight)
             right(game.rightPad, game, WIDTH - game.padSpec.width);
     }
-    if (leftPadCollision(game, game.leftPad, game.ball.x, game.ball.y))
-        return;
-    if (rightPadCollision(game, game.rightPad, game.ball.x, game.ball.y))
-        return;
+    // if (leftPadCollision(game, game.leftPad, game.ball.x, game.ball.y))
+    //     return;
+    // if (rightPadCollision(game, game.rightPad, game.ball.x, game.ball.y))
+    //     return;
 }
 
 function up(pad: coordinates, padSpeed: number) {
