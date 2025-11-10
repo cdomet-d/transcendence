@@ -91,34 +91,29 @@ function getPosition(game: Game, paddle: coordinates, newX: number, newY: number
 	let xOffset: number = 1;
 	if (game.ball.dx > 0)
 		xOffset *= -1;
-	let [nx, ny]: [number, number] = [0, 0];
 	switch (side) {
 		case "left":
 			newPos = lineIntersection(p1, p2, incPaddle, {x: incPaddle.x, y: incPaddle.y + padHeight});
 			if (!newPos) return false;
-			[nx, ny] = normal(game, newPos);
-			[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, nx, ny);
+			[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, -1, 0);
 			[game.ball.x, game.ball.y] = [newPos.x - 1, newPos.y + yOffset];
 			return true;
 		case "right":
 			newPos = lineIntersection(p1, p2, {x: incPaddle.x + padWidth, y: incPaddle.y}, {x: incPaddle.x + padWidth, y: incPaddle.y + padHeight});
 			if (!newPos) return false;
-			[nx, ny] = normal(game, newPos);
-			[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, nx, ny);
+			[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, 1, 0);
 			[game.ball.x, game.ball.y] = [newPos.x + 1, newPos.y + 1];
 			return true;
 		case "top":
 			newPos = lineIntersection(p1, p2, incPaddle, {x: incPaddle.x + padWidth, y: incPaddle.y});
 			if (!newPos) return false;
-			[nx, ny] = normal(game, newPos);
-			[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, nx, ny);
+			[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, 0, -1);
 			[game.ball.x, game.ball.y] = [newPos.x + xOffset, newPos.y - 1];
 			return true;
 		case "bottom":
 			newPos = lineIntersection(p1, p2, {x: incPaddle.x, y: incPaddle.y + padHeight}, {x: incPaddle.x + padWidth, y: incPaddle.y + padHeight});
 			if (!newPos) return false;
-			[nx, ny] = normal(game, newPos);
-			[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, nx, ny);
+			[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, 0, 1);
 			[game.ball.x, game.ball.y] = [newPos.x + xOffset, newPos.y - 1];
 			return true;
 		case "topright":
