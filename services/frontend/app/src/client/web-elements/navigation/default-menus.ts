@@ -3,7 +3,7 @@ import type { buttonData, navigationLinksData, TabData } from '../types-interfac
 export const mainMenu: navigationLinksData[] = [
     { title: 'Leaderboard', datalink: 'leaderboard', href: '/leaderboard', img: null },
     { title: 'Play', datalink: 'pong-settings', href: '/pong-settings', img: null },
-    { title: 'Profile', datalink: 'profile', href: '/user', img: null },
+    { title: 'Profile', datalink: 'profile', href: '/user/:login', img: null },
 ];
 
 export const gameMenu: buttonData[] = [

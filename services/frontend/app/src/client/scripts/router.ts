@@ -1,11 +1,11 @@
 import { renderNotFound } from '../pages/render-pages.js';
 import { pong } from './game/pong.js';
-// import { match } from 'path-to-regexp';
+import { match, type Match } from 'path-to-regexp';
 import * as page from '../pages/render-pages.js';
 
 export interface routeInterface {
     path: string;
-    callback: (param?: string) => void;
+    callback: (param?: Match<Partial<Record<string, string | string[]>>>) => void;
 }
 
 export const routes: routeInterface[] = [
@@ -51,17 +51,32 @@ export class Router {
      * Calls `renderNotFount()` if the route was not found, and the route's callback otherwise.
      */
     loadRoute(path: string) {
-        const matchedRoute = this.#getRouteFromPath(path);
-		// const test = match('/user/:login')
-		// console.log(test);
+        let matchedRoute = this.#getRouteFromPath(path);
+        let res: Match<Partial<Record<string, string | string[]>>> = false;
+
+        if (!matchedRoute) {
+            for (const route of this._routes) {
+                const dynRoute = match(route.path);
+                res = dynRoute(path);
+                if (res) {
+                    matchedRoute = route;
+                    break;
+                }
+            }
+        }
+
         if (!matchedRoute) {
             renderNotFound();
             return;
         }
 
-        matchedRoute.callback();
+        matchedRoute.callback(res ? res : undefined);
 
         if (matchedRoute.path === '/game/match') pong();
         //TODO: eventually if other features need their script add an element script to routeInterface
     }
 }
+
+// Argument of type 'Partial<Record<string, string | string[]>> | undefined'
+// is not assignable to parameter of type
+// 					'Match<Partial<Record<string, string | string[]>>> | undefined'.

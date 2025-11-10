@@ -5,7 +5,7 @@ import cookie from '@fastify/cookie';
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import * as path from 'path'
+import * as path from 'path';
 import { fileURLToPath } from 'url';
 
 function notFound(request: FastifyRequest, reply: FastifyReply) {
@@ -31,7 +31,7 @@ try {
 
 async function addPlugins(serv: FastifyInstance) {
     console.log('ADDING PLUGINS');
-	console.log(path.dirname(fileURLToPath(import.meta.url)))
+    console.log(path.dirname(fileURLToPath(import.meta.url)));
     await serv
         .register(fastifyStatic, {
             root: '/app/dist/client/',
@@ -42,11 +42,13 @@ async function addPlugins(serv: FastifyInstance) {
                     res.setHeader('Content-Type', 'font/woff');
                 } else if (pathName.endsWith('.png')) {
                     res.setHeader('Content-Type', 'image/png');
+                } else if (pathName.endsWith('.js')) {
+                    res.setHeader('Content-Type', 'application/javascript');
                 }
             },
         })
-        .get('/', (req, res) => {
-			console.log('SERVING HTML IN ADDPLUGIN')
+        .get('/*', (req, res) => {
+            console.log('SERVING HTML IN ADDPLUGIN');
             res.sendFile('index.html');
         })
         .register(

@@ -18,17 +18,17 @@ function handler(req: FastifyRequest, res: FastifyReply) {
     //     return;
     // }
     // const html = buildHtmlPage(url);
-	// res.setHeader('Content-Type', 'text/html');
-	console.log('SERVING HTML')
-	try {
-    	res.sendFile('index.html');
-	} catch {
-		console.log('ERROR')
-	}
+    // res.setHeader('Content-Type', 'text/html');
+    console.log('SERVING HTML');
+    try {
+        res.sendFile('index.html');
+    } catch {
+        console.log('ERROR');
+    }
 }
 
 const servRoutes: FastifyPluginCallback = function (serv, options, done) {
-	console.log('IN THE DYNAMIC ROUTES')
+    console.log('IN THE DYNAMIC ROUTES');
     serv.get('/*', handler);
     done();
 };

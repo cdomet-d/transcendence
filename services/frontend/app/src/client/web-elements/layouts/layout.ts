@@ -57,7 +57,7 @@ export class Layout extends HTMLDivElement {
         this.classList.add(
             'grid',
             'h-dvh',
-			'w-dvw',
+            'w-dvw',
             'min-w-80',
             'place-content-between',
             'grid-auto-rows-auto',

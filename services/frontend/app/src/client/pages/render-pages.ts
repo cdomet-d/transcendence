@@ -5,6 +5,7 @@ import { mainMenu } from '../web-elements/navigation/default-menus.js';
 import { renderPageTemplate } from './page.template.js';
 import { Layout } from '../web-elements/layouts/layout.js';
 import { ProfileWithTabs } from '../web-elements/users/user-profile-containers.js';
+import { type Match } from 'path-to-regexp';
 // import { user } from '../web-elements/default-values.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
@@ -71,10 +72,10 @@ export function renderLeaderboard() {
     );
 }
 
-export function renderProfile(param?: string) {
-    console.log('renderProfile', param);
+export function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
+    console.log('renderProfile');
     if (!param) renderNotFound();
-	// clearUrlParameters()
+    param ? console.log(param.params.login) : console.log('No parameter, which should not happen');
     //TODO: API call here to fetch user data
     prepareLayout(document.body.layoutInstance, 'profile');
     document.body.layoutInstance?.appendAndCache(
