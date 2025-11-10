@@ -75,7 +75,7 @@ function getPosition(game: Game, paddle: coordinates, newX: number, newY: number
 	const padHeight: number = game.padSpec.height + 2 * game.ball.radius;
 	const padWidth: number = game.padSpec.width + 2 * game.ball.radius;
 	const side: string = getCollisionSide(game, paddle);
-	let res: coordinates | null;
+	let newPos: coordinates | null;
 	const topright: coordinates = {x: paddle.x + game.padSpec.width + offset, y: paddle.y - offset};
 	const topleft: coordinates = {x: paddle.x - offset, y: paddle.y - offset};
 	const bottomright: coordinates = {x: paddle.x + game.padSpec.width + offset, y: paddle.y + game.padSpec.height + offset};
@@ -89,32 +89,32 @@ function getPosition(game: Game, paddle: coordinates, newX: number, newY: number
 	let [nx, ny]: [number, number] = [0, 0];
 	switch (side) {
 		case "left":
-			res = lineIntersection(p1, p2, incPaddle, {x: incPaddle.x, y: incPaddle.y + padHeight});
-			if (!res) return false;
-			[nx, ny] = normal(game, res);
+			newPos = lineIntersection(p1, p2, incPaddle, {x: incPaddle.x, y: incPaddle.y + padHeight});
+			if (!newPos) return false;
+			[nx, ny] = normal(game, newPos);
 			[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, nx, ny);
-			[game.ball.x, game.ball.y] = [res.x - 1, res.y + yOffset];
+			[game.ball.x, game.ball.y] = [newPos.x - 1, newPos.y + yOffset];
 			return true;
 		case "right":
-			res = lineIntersection(p1, p2, {x: incPaddle.x + padWidth, y: incPaddle.y}, {x: incPaddle.x + padWidth, y: incPaddle.y + padHeight});
-			if (!res) return false;
-			[nx, ny] = normal(game, res);
+			newPos = lineIntersection(p1, p2, {x: incPaddle.x + padWidth, y: incPaddle.y}, {x: incPaddle.x + padWidth, y: incPaddle.y + padHeight});
+			if (!newPos) return false;
+			[nx, ny] = normal(game, newPos);
 			[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, nx, ny);
-			[game.ball.x, game.ball.y] = [res.x + 1, res.y + 1];
+			[game.ball.x, game.ball.y] = [newPos.x + 1, newPos.y + 1];
 			return true;
 		case "top":
-			res = lineIntersection(p1, p2, incPaddle, {x: incPaddle.x + padWidth, y: incPaddle.y});
-			if (!res) return false;
-			[nx, ny] = normal(game, res);
+			newPos = lineIntersection(p1, p2, incPaddle, {x: incPaddle.x + padWidth, y: incPaddle.y});
+			if (!newPos) return false;
+			[nx, ny] = normal(game, newPos);
 			[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, nx, ny);
-			[game.ball.x, game.ball.y] = [res.x + xOffset, res.y - 1];
+			[game.ball.x, game.ball.y] = [newPos.x + xOffset, newPos.y - 1];
 			return true;
 		case "bottom":
-			res = lineIntersection(p1, p2, {x: incPaddle.x, y: incPaddle.y + padHeight}, {x: incPaddle.x + padWidth, y: incPaddle.y + padHeight});
-			if (!res) return false;
-			[nx, ny] = normal(game, res);
+			newPos = lineIntersection(p1, p2, {x: incPaddle.x, y: incPaddle.y + padHeight}, {x: incPaddle.x + padWidth, y: incPaddle.y + padHeight});
+			if (!newPos) return false;
+			[nx, ny] = normal(game, newPos);
 			[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, nx, ny);
-			[game.ball.x, game.ball.y] = [res.x + xOffset, res.y - 1];
+			[game.ball.x, game.ball.y] = [newPos.x + xOffset, newPos.y - 1];
 			return true;
 		case "topright":
 			if (corner(game, paddle, newX, newY, topright)) {
