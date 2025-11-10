@@ -15,7 +15,7 @@ export function updatePaddlePos(game: Game, keys: keysObj) {
     if (keys._a)
         left(game.leftPad, game, 0, step);
     if (keys._d)
-        right(game.leftPad, game, WIDTH / 2 - game.ball.radius - game.padSpec.width, step);
+        right(game.leftPad, game, WIDTH / 2 - game.ball.radius - 1 - game.padSpec.width, step);
     newX = game.ball.x - step.x;
 	newY = game.ball.y - step.y;
     if (leftPadCollision(game, game.leftPad, newX, newY)) {
@@ -31,7 +31,7 @@ export function updatePaddlePos(game: Game, keys: keysObj) {
         if (keys._ArrowDown)
             down(game.rightPad, game.padSpec, step);
         if (keys._ArrowLeft)
-            left(game.rightPad, game, WIDTH / 2 + game.ball.radius, step);
+            left(game.rightPad, game, WIDTH / 2 + game.ball.radius + 1, step);
         if (keys._ArrowRight)
             right(game.rightPad, game, WIDTH - game.padSpec.width, step);
         newX = game.ball.x - step.x;
@@ -72,5 +72,5 @@ function right(pad: coordinates, game: Game, limit: number, step: coordinates) {
 	if (pad.x + (game.padSpec.speed * TIME_STEP) < limit)
 		step.x += (game.padSpec.speed * TIME_STEP)
 	else
-		step.x += limit - pad.x - game.padSpec.width;
+		step.x += limit - pad.x;
 }
