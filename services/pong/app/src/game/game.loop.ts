@@ -26,6 +26,8 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 		if (simulatedTime === -1)
 			return;
 		updatePaddlePos(player, playerReq._req._keys, game);
+		// if (playerReq._id === 1)
+			// console.log("IN UPDATEPADDLE:\n LEFT PADDLE:", JSON.stringify(game.players[0]!.paddle), "BALL:", JSON.stringify(game.ball));
 		player.reply._ID = playerReq._req._ID;
 	}
 	if (moveBall(game, simulatedTime, SERVER_TICK, 0) === -1)
@@ -46,6 +48,7 @@ function moveBall(game: Game, simulatedTime: number, end: number, i: number): nu
 			endGame(game.players[0]!, game.players[1]!, game);
 			return -1;
 		}
+		// console.log("IN MOVEBALL:\ LEFT PADDLE:", JSON.stringify(game.players[0]!.paddle), "BALL:", JSON.stringify(game.ball));
 		simulatedTime += TIME_STEP;
 	}
 	return simulatedTime;

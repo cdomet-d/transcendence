@@ -81,30 +81,77 @@ function getPosition(game: Game, paddle: coordinates, newX: number, newY: number
 		case "left":
 			res = lineIntersection(p1, p2, incPaddle, {x: incPaddle.x, y: incPaddle.y + padHeight});
 			if (!res) return false;
-			[game.ball.x, game.ball.y] = [res[0] - 1, res[1]];
+			[game.ball.x, game.ball.y] = [res[0] - 1, res[1] + 1]; //TODO: faire + ou - 1 selon la direction
 			[game.ball.dx, game.ball.dy] = updateVelocity(-Math.abs(game.ball.dx), game.ball.dy);
 			return true;
 		case "right":
 			res = lineIntersection(p1, p2, {x: incPaddle.x + padWidth, y: incPaddle.y}, {x: incPaddle.x + padWidth, y: incPaddle.y + padHeight});
 			if (!res) return false;
-			[game.ball.x, game.ball.y] = [res[0] + 1, res[1]];
+			[game.ball.x, game.ball.y] = [res[0] + 1, res[1] + 1];
 			[game.ball.dx, game.ball.dy] = updateVelocity(Math.abs(game.ball.dx), game.ball.dy);
 			return true;
 		case "top":
 			res = lineIntersection(p1, p2, incPaddle, {x: incPaddle.x + padWidth, y: incPaddle.y});
 			if (!res) return false;
-			[game.ball.x, game.ball.y] = [res[0], res[1] - 1];
+			[game.ball.x, game.ball.y] = [res[0] + 1, res[1] - 1];
 			[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, -Math.abs(game.ball.dy));
 			return true;
 		case "bottom":
 			res = lineIntersection(p1, p2, {x: incPaddle.x, y: incPaddle.y + padHeight}, {x: incPaddle.x + padWidth, y: incPaddle.y + padHeight});
 			if (!res) return false;
-			[game.ball.x, game.ball.y] = [res[0], res[1] - 1];
+			[game.ball.x, game.ball.y] = [res[0] + 1, res[1] - 1];
 			[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, Math.abs(game.ball.dy));
 			return true;
+		case "topright":
+			if (corner(game, paddle, newX, newY)) {
+				[game.ball.x, game.ball.y] = [paddle.x + game.padSpec.width + offset, paddle.y - offset];
+				return true;
+			}
+			return false;
+		case "topleft":
+			if (corner(game, paddle, newX, newY)) {
+				[game.ball.x, game.ball.y] = [paddle.x - offset, paddle.y - offset];
+				return true;
+			}
+			return false;
+		case "bottomright":
+			if (corner(game, paddle, newX, newY)) {
+				[game.ball.x, game.ball.y] = [paddle.x + game.padSpec.width + offset, paddle.y + game.padSpec.height + offset];
+				return true;
+			}
+			return false;
+		case "bottomleft":
+			if (corner(game, paddle, newX, newY)) {
+				[game.ball.x, game.ball.y] = [paddle.x - offset, paddle.y + game.padSpec.height + offset];
+				return true;
+			}
+			return false;
 		default:
 			return false;
 	}
+}
+
+function corner(game: Game, paddle: coordinates, newX: number, newY: number): boolean {
+	const ball: coordinates = {
+		x: newX - (paddle.x + game.padSpec.halfWidth), 
+		y: newY - (paddle.y + game.padSpec.halfHeight)};
+	const paddleCadrant: coordinates = {
+		x: game.padSpec.halfWidth, 
+		y: game.padSpec.halfHeight
+	};
+	if (distBallPad(ball, paddleCadrant) < game.ball.radius) {
+		[game.ball.dx, game.ball.dy] = updateVelocity(-game.ball.dx, -game.ball.dy);
+		return true;
+	}
+	return false;
+}
+
+function distBallPad(p: coordinates, b: coordinates): number {
+    const d: coordinates = {x: Math.abs(p.x) - b.x, y: Math.abs(p.y) - b.y};
+	d.x = Math.max(d.x, 0.0);
+	d.y = Math.max(d.y, 0.0);
+	const length: number = Math.sqrt(d.x * d.x + d.y * d.y);
+    return length + Math.min(Math.max(d.x, d.y), 0.0);
 }
 
 function lineIntersection(p1: coordinates, p2: coordinates, p3: coordinates, p4: coordinates): [number, number] | null {
