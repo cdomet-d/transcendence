@@ -1,9 +1,11 @@
+import { createMatchHistory } from '../matches/matches.js';
 import type { buttonData, navigationLinksData, TabData } from '../types-interfaces.js';
+import { createUserMasonery } from './tabs-helpers.js';
 
 export const mainMenu: navigationLinksData[] = [
     { title: 'Leaderboard', datalink: 'leaderboard', href: '/leaderboard', img: null },
     { title: 'Play', datalink: 'pong-settings', href: '/pong-settings', img: null },
-    { title: 'Profile', datalink: 'profile', href: '/user/:login', img: null },
+    { title: 'Profile', datalink: 'profile', href: '/user/default', img: null },
 ];
 
 export const gameMenu: buttonData[] = [
@@ -64,7 +66,7 @@ export const backgroundMenu: buttonData[] = [
 ];
 
 export const profileTabs: TabData[] = [
-    { id: 'friends', content: 'Friends', default: true, panelContent: [] },
-    { id: 'history', content: 'Game history', default: false, panelContent: [] },
-    { id: 'stats', content: 'Statistics', default: false, panelContent: [] },
+    { id: 'friends', content: 'Friends', default: true, panelContent: null },
+    { id: 'history', content: 'Game history', default: false, panelContent: null },
+    { id: 'stats', content: 'Statistics', default: false, panelContent: null },
 ];

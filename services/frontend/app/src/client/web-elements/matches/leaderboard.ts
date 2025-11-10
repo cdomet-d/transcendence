@@ -27,7 +27,7 @@ export class Leaderboard extends HTMLDivElement {
     }
 
     update() {
-        console.log('updating');
+        console.log('UPDATE LEADERBOARD');
         this.#matches.remove();
         this.#matches = createMatchHistory(this.#data);
         this.append(this.#matches);

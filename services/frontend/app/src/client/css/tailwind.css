@@ -185,7 +185,7 @@
 	}
 
 	.sidebar-right {
-		grid-template-columns: 80% 20%;
+		grid-template-columns: 70% 25%;
 	}
 
 	.sidebar-left {
@@ -379,7 +379,6 @@
 		justify-content: center;
 		min-width: var(--s);
 		height: 100%;
-		width: 100%;
 	}
 
 	button:hover>span,

@@ -2,11 +2,13 @@ import { createHeading, createNoResult } from '../web-elements/typography/helper
 import { createLeaderboard } from '../web-elements/matches/leaderboard.js';
 import { createNavMenu } from '../web-elements/navigation/menu-helpers.js';
 import { mainMenu } from '../web-elements/navigation/default-menus.js';
-import { renderPageTemplate } from './page.template.js';
 import { Layout } from '../web-elements/layouts/layout.js';
 import { ProfileWithTabs } from '../web-elements/users/user-profile-containers.js';
 import { type Match } from 'path-to-regexp';
-// import { user } from '../web-elements/default-values.js';
+import { createForm } from '../web-elements/forms/helpers.js';
+import { localPong, remotePong } from '../web-elements/forms/default-forms.js';
+import type { TabData } from '../web-elements/types-interfaces.js';
+import { createTabs } from '../web-elements/navigation/tabs-helpers.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -24,12 +26,6 @@ const layoutPerPage: { [key: string]: string } = {
 function updatePageTitle(newPage: string) {
     document.title = `🌻 BigT - ${newPage} 🌻`;
 }
-
-// function clearUrlParameters() {
-//     const curURL = window.location.pathname;
-//     const newURL = curURL.replace(/:/g, '');
-//     window.history.replaceState(null, '', newURL);
-// }
 
 function prepareLayout(curLayout: Layout | undefined, page: string) {
     if (!layoutPerPage[page]) throw new Error('Requested page is undefined');
@@ -70,31 +66,47 @@ export function renderLeaderboard() {
         createHeading('1', 'Leaderboard'),
         createLeaderboard([]),
     );
+    updatePageTitle('Leaderboard');
 }
 
 export function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
     console.log('renderProfile');
-    if (!param) renderNotFound();
-    param ? console.log(param.params.login) : console.log('No parameter, which should not happen');
-    //TODO: API call here to fetch user data
-    prepareLayout(document.body.layoutInstance, 'profile');
-    document.body.layoutInstance?.appendAndCache(
-        document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
-    );
+    if (param) {
+        //TODO: API call with login here to fetch user data
+        const login = param.params.login;
+        prepareLayout(document.body.layoutInstance, 'profile');
+        document.body.layoutInstance?.appendAndCache(
+            document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
+        );
+        updatePageTitle('User ' + login);
+    } else {
+        console.log('No parameter, which should not happen');
+        renderNotFound();
+    }
 }
 
-export function renderTournament(): string {
-    return renderPageTemplate({
-        title: 'TOURNAMENT',
-        nextButtons: [
-            { href: '/404', label: '4 players' },
-            { href: '/404', label: '8 players' },
-            { href: '/404', label: '16 players' },
-        ],
-        backHref: '/central',
-        showBack: true,
-        homeHref: '/',
-    });
+export function renderLobby() {
+    const pongOptions: TabData[] = [
+        {
+            id: 'pong-local',
+            content: 'Play local',
+            default: false,
+            panelContent: createForm('local-pong-settings', localPong),
+        },
+        {
+            id: 'pong-remote',
+            content: 'Play remote',
+            default: true,
+            panelContent: createForm('remote-pong-settings', remotePong),
+        },
+    ];
+    prepareLayout(document.body.layoutInstance, 'lobby');
+    const wrapper = document.createElement('div');
+    wrapper.id = 'pong-settings';
+    wrapper.className =
+        'bg content-h brdr overflow-y-auto overflow-x-hidden flex flex-col justify-start';
+    wrapper.append(createTabs(pongOptions));
+    document.body.layoutInstance?.appendAndCache(wrapper);
 }
 
 export function renderGame(): string {

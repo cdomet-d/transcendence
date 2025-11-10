@@ -200,8 +200,8 @@ export class InputGroup extends HTMLDivElement {
      * @private
      */
     #setInputAttributes() {
-        this.#input.id = this.#info.id;
         this.#input.name = this.#info.id;
+        this.#input.id = this.#info.id;
         this.#input.placeholder = this.#info.placeholder;
         this.#input.pattern = this.#info.pattern;
         this.#input.type = this.#info.type;

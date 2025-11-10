@@ -4,6 +4,7 @@ import { UserProfile } from './profile.js';
 import { TabContainer } from '../navigation/tabs.js';
 import { createTabs } from '../navigation/tabs-helpers.js';
 import { profileTabs } from '../navigation/default-menus.js';
+import { createNoResult } from '../typography/helpers.js';
 
 export const user: UserData = {
     avatar: {
@@ -67,7 +68,6 @@ export class ProfileWithTabs extends HTMLDivElement {
     }
 
     set profile(user: UserData) {
-        console.log('for user: ', user.id, 'view:', user.relation);
         this.#userProfile.userInfo = user;
     }
 

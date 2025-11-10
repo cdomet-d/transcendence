@@ -109,7 +109,7 @@ export class Searchbar extends BaseForm {
         super.renderButtons();
         this.append(this.#results);
 
-        this.classList.add('sidebar-right', 'search-gap', 'relative', 'w-5/6');
+        this.classList.add('sidebar-right', 'search-gap', 'relative');
         this.#results.className =
             'hidden absolute brdr bg min-h-fit max-h-l pad-xs overflow-y-auto box-border';
         this.setResultPos();

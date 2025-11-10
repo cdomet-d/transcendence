@@ -32,7 +32,7 @@ export class NavigationLinks extends HTMLAnchorElement {
     }
 
     #loadNewPage(ev: Event) {
-        console.log('Load page');
+        console.log('Page load');
         const link = (ev.target as HTMLElement).closest('[data-link]');
         if (link) {
             ev.preventDefault();

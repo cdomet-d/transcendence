@@ -1,6 +1,6 @@
 import { InputGroup, TextAreaGroup } from './fields.js';
-import { Checkbox, RadioButton } from './buttons.js';
-import type { InputFieldsData } from '../types-interfaces.js';
+import { Checkbox, RadioButton, RadioFieldSet } from './buttons.js';
+import type { InputFieldsData, Radio } from '../types-interfaces.js';
 
 /**
  * Creates a custom input group container.
@@ -47,5 +47,11 @@ export function createCheckbox(btnName: string, btnId: string): Checkbox {
     const el = document.createElement('div', { is: 'checkbox-input' }) as Checkbox;
     el.inputId = btnId;
     el.inputName = btnName;
+    return el;
+}
+
+export function createFieldset(data: Radio): RadioFieldSet {
+    const el = document.createElement('fieldset', { is: 'radio-fieldset' }) as RadioFieldSet;
+    el.buttons = data;
     return el;
 }

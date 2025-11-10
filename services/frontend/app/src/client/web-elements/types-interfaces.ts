@@ -172,7 +172,7 @@ export interface TabData {
     content: string;
     default: boolean;
     id: string;
-    panelContent: UserData[] | MatchOutcome[];
+    panelContent: HTMLElement | null;
 }
 
 /**
@@ -218,9 +218,16 @@ export interface FormDetails {
     ariaLabel: string;
     button: buttonData;
     fields: InputFieldsData[];
+    radio?: Radio;
     heading: string;
     id: string;
     method: string;
+}
+
+export interface Radio {
+    name: string;
+    legend: string;
+    buttons: InputFieldsData[];
 }
 
 /**

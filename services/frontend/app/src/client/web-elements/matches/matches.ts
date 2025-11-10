@@ -121,12 +121,11 @@ export class MatchHistory extends HTMLDivElement {
      */
     setHistory(matches: MatchOutcome[]) {
         const currentHistory = Array.from(this.children);
-        console.log(currentHistory);
         currentHistory.forEach((el) => {
             if (el.id !== 'lb-header') el.remove();
         });
         if (matches.length < 1) {
-            this.append(createNoResult('light', 'ifs'));
+            // this.append(createNoResult('light', 'ifs'));
         } else {
             matches.forEach((el) => {
                 this.append(createMatchOutcome(el, false));

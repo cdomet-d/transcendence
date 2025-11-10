@@ -1,3 +1,7 @@
+import type { Radio } from '../types-interfaces';
+import { InputLabel } from './fields';
+import { createRadioButton } from './helpers';
+
 /**
  * Custom radio button element.
  * Extends HTMLDivElement.
@@ -87,4 +91,40 @@ export class Checkbox extends HTMLDivElement {
 
 if (!customElements.get('checkbox-input')) {
     customElements.define('checkbox-input', Checkbox, { extends: 'div' });
+}
+
+export class RadioFieldSet extends HTMLFieldSetElement {
+    constructor() {
+        super();
+    }
+
+    set buttons(input: Radio) {
+        const legend = document.createElement('legend');
+        legend.innerText = input.legend;
+        this.append(legend);
+        legend.className = 'w-full';
+        input.buttons.forEach((el) => {
+            const btn = createRadioButton(input.name, el.id);
+            const label = document.createElement('label');
+            const wrap = document.createElement('span');
+            btn.setAttribute('value', el.id);
+            label.setAttribute('for', el.id);
+            label.innerText = el.labelContent;
+            wrap.append(label, btn);
+            this.append(wrap);
+            wrap.className = 'flex flex-col w-fit gap-xs';
+        });
+    }
+
+    connectedCallback() {
+        this.render();
+    }
+
+    render() {
+        this.className = 'flex text-center justify-between w-5/6';
+    }
+}
+
+if (!customElements.get('radio-fieldset')) {
+    customElements.define('radio-fieldset', RadioFieldSet, { extends: 'fieldset' });
 }

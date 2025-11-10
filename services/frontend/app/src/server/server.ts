@@ -5,8 +5,6 @@ import cookie from '@fastify/cookie';
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import * as path from 'path';
-import { fileURLToPath } from 'url';
 
 function notFound(request: FastifyRequest, reply: FastifyReply) {
     reply
@@ -31,7 +29,6 @@ try {
 
 async function addPlugins(serv: FastifyInstance) {
     console.log('ADDING PLUGINS');
-    console.log(path.dirname(fileURLToPath(import.meta.url)));
     await serv
         .register(fastifyStatic, {
             root: '/app/dist/client/',

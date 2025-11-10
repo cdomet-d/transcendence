@@ -119,7 +119,7 @@ export class CustomButton extends HTMLButtonElement {
     /** Updates button styles and content according to current state. */
     render() {
         this.className =
-            'box-border brdr pad-xs input-emphasis outline-hidden overflow-hidden whitenowrap cursor-pointer button';
+            'box-border w-full brdr pad-xs input-emphasis outline-hidden overflow-hidden whitenowrap cursor-pointer button';
 
         if (this.#btn.content && !this.#animated) {
             this.renderTextualBtn();
@@ -190,7 +190,7 @@ export class TabButton extends HTMLButtonElement {
     /** Updates styles depending on selection state. */
     render() {
         this.className =
-            'tab z-2 h-full pad-xs thin brdr overflow-hidden outline-hidden box-border flex justify-center items-center hover:transform-none';
+            'tab z-2 h-full w-full pad-xs thin brdr overflow-hidden outline-hidden box-border flex justify-center items-center hover:transform-none';
 
         if (this.hasAttribute('selected')) {
             this.classList.remove('bg-yellow', 'brdr', 'z-2');

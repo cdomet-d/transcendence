@@ -246,7 +246,6 @@ export class NotifBox extends HTMLDivElement {
     computePanelPos() {
         const pos = this.#toggle.getBoundingClientRect();
         const popupWidth = this.#popup.offsetWidth;
-        console.log(popupWidth);
         const pOffsetLeft = pos.left - (popupWidth + 24);
         const pOffsetTop = pos.top;
 

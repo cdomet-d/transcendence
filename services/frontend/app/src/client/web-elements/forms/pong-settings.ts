@@ -33,15 +33,28 @@ export class LocalPongSettings extends BaseForm {
         this.#backgroundSelector = createDropdown(backgroundMenu, 'Select background', 'static');
     }
 
+    styleFields() {
+        super.contentMap['title']?.classList.add('col-span-2');
+        super.contentMap['paddlesize']?.classList.add('col-start-1');
+        super.contentMap['paddlespeed']?.classList.add('col-start-1');
+        super.contentMap['ballspeed']?.classList.add('col-start-1');
+        super.contentMap['opponent']?.classList.add('row-start-2', 'col-start-2');
+        this.#backgroundSelector.classList.add('row-start-3', 'col-start-2');
+        super.contentMap['submit']?.classList.remove('w-full');
+        super.contentMap['submit']?.classList.add('row-start-5', 'col-span-2', 'w-5/6');
+    }
+
     /**
      * Renders the local pong settings form.
      * Appends the title, background selector, fields, and buttons.
      */
     override render() {
         super.renderTitle();
-        this.append(this.#backgroundSelector);
         this.renderFields();
+        this.append(this.#backgroundSelector);
         this.renderButtons();
+        this.styleFields();
+        this.classList.add('sidebar-left');
     }
 }
 
@@ -110,13 +123,17 @@ export class RemotePongSettings extends LocalPongSettings {
     /**
      * Applies custom styles to form fields and buttons.
      */
-    styleFields() {
-        this.#searchbar.classList.add('row-start-2', 'col-start-2');
-        super.dropdownMenu.classList.add('row-start-5', 'col-start-1');
+    override styleFields() {
+        console.log(super.contentMap);
+        super.contentMap['title']?.classList.add('col-span-2');
+        super.contentMap['radio']?.classList.add('col-start-2', 'row-start-2');
+        this.#searchbar.classList.add('row-start-3', 'col-start-2');
+        // super.dropdownMenu.classList.add('row-start-5', 'col-start-1');
         super.contentMap['paddlespeed']?.classList.add('col-start-1');
         super.contentMap['ballspeed']?.classList.add('col-start-1');
         super.contentMap['paddlesize']?.classList.add('col-start-1');
-        super.contentMap['submit']?.classList.add('row-start-5', 'col-start-2');
+        super.contentMap['submit']?.classList.remove('w-full');
+        super.contentMap['submit']?.classList.add('row-start-6', 'col-span-2', 'w-5/6');
     }
 
     /**
@@ -124,7 +141,7 @@ export class RemotePongSettings extends LocalPongSettings {
      */
     styleInviteList() {
         this.#guestWrapper.className =
-            'brdr grid row-m gap-xs pad-xs overflow-y-auto box-border row-start-3 col-start-2 row-span-2 place-self-stretch';
+            'brdr grid row-m gap-xs pad-xs overflow-y-auto box-border row-start-4 col-start-2 row-span-2 place-self-stretch';
     }
 
     /**

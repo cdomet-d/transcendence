@@ -12,10 +12,8 @@ export const routes: routeInterface[] = [
     { path: '/', callback: page.renderHome },
     { path: '/404', callback: page.renderNotFound },
     { path: '/leaderboard', callback: page.renderLeaderboard },
-    //TODO: handle dynamic URL to serve the user's profile, not a generic profile page
     { path: '/user/:login', callback: page.renderProfile },
-    //   { path: '/central', callback: page.renderCentral },
-    //   { path: '/game/tournament', callback: page.renderTournament },
+    { path: '/pong-settings', callback: page.renderLobby },
     //   { path: '/game/match', callback: page.renderGame},
 ];
 
@@ -30,7 +28,6 @@ export class Router {
 
     /*                             METHODS                                    */
     #getRouteFromPath(path: string): routeInterface | undefined {
-        console.log(path);
         return this._routes.find((route) => route.path === path);
     }
 
@@ -76,7 +73,3 @@ export class Router {
         //TODO: eventually if other features need their script add an element script to routeInterface
     }
 }
-
-// Argument of type 'Partial<Record<string, string | string[]>> | undefined'
-// is not assignable to parameter of type
-// 					'Match<Partial<Record<string, string | string[]>>> | undefined'.

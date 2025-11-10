@@ -1,7 +1,6 @@
 import type { InputGroup, TextAreaGroup } from '../inputs/fields.js';
 import type { FormDetails } from '../types-interfaces.js';
-
-import { createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
+import { createFieldset, createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
 import { createHeading } from '../typography/helpers.js';
 import { createBtn } from '../navigation/buttons-helpers.js';
 
@@ -97,6 +96,12 @@ export class BaseForm extends HTMLFormElement {
             this.append(el);
             if (field.type === 'textarea') el.classList.add('row-span-3');
         });
+
+        if (this.#formData.radio) {
+            const radio = createFieldset(this.#formData.radio);
+            this.#formContent['radio'] = radio;
+            this.append(radio);
+        }
     }
 
     /**

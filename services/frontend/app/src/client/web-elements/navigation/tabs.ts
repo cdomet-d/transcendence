@@ -1,9 +1,5 @@
-import { createMatchHistory } from '../matches/matches.js';
-import { createUserMasonery } from './tabs-helpers.js';
-import { MatchHistory } from '../matches/matches.js';
 import { TabButton, TabButtonWrapper } from './buttons.js';
-import { UserMasonery } from '../users/user-profile-containers.js';
-import type { MatchOutcome, TabData, UserData } from '../types-interfaces.js';
+import type { TabData } from '../types-interfaces.js';
 import { createNoResult } from '../typography/helpers.js';
 
 /**
@@ -33,7 +29,9 @@ export class TabPanel extends HTMLDivElement {
      * @param innerContent - The HTMLElement to append as the new content of the panel.
      */
     appendContent(innerContent: HTMLElement) {
-        while (this.firstChild) this.removeChild(this.firstChild);
+        while (this.firstChild) {
+            this.firstChild.remove();
+        }
         this.append(innerContent);
     }
 
@@ -96,7 +94,8 @@ export class TabContainer extends HTMLDivElement {
 
     constructor() {
         super();
-        this.#tabList = [{ id: 'default', content: 'default', default: true, panelContent: [] }];
+        this.id = 'tab-wrapper';
+        this.#tabList = [{ id: 'default', content: 'default', default: true, panelContent: null }];
         this.#tabPanels = {};
         this.#tabHeaders = {};
     }
@@ -200,30 +199,23 @@ export class TabContainer extends HTMLDivElement {
             const el = document.createElement('div', { is: 'tab-panel' }) as TabPanel;
             this.#tabPanels[tab.id] = el;
             el.setAttribute('data-content', tab.id);
-            el.textContent = tab.content;
             if (tab.default && !isSet) {
                 isSet = true;
                 el.setAttribute('selected', '');
             }
             this.append(el);
             el.classList.add('pad-xs');
-            this.populatePanels(tab, el);
+            this.populatePanels(tab);
         });
     }
 
-    populatePanels(tab: TabData, el?: TabPanel) {
-        if (tab.panelContent.length > 0) {
-            if (tab.id === 'history')
-                this.#tabPanels[tab.id]?.appendContent(
-                    createMatchHistory(tab.panelContent as MatchOutcome[]) as MatchHistory,
-                );
-            else if (tab.id === 'friends')
-                this.#tabPanels[tab.id]?.appendContent(
-                    createUserMasonery(tab.panelContent as UserData[]) as UserMasonery,
-                );
+    populatePanels(tab: TabData) {
+        if (tab && tab.panelContent) {
+            this.#tabPanels[tab.id]?.appendContent(tab.panelContent);
         } else {
-            if (el) el.appendContent(createNoResult('light', 'ifs'));
-            else console.log('No such tab - do better');
+            if (tab && !tab.panelContent) {
+                this.#tabPanels[tab.id]?.appendContent(createNoResult('light', 'ifs'));
+            } else console.log('No such tab - do better');
         }
     }
 

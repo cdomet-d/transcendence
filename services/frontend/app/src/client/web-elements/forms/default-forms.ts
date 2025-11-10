@@ -99,14 +99,6 @@ export const localPong: FormDetails = {
     method: 'post',
     fields: [
         {
-            id: 'opponent',
-            labelContent: 'Opponent Nickname',
-            pattern: usernamePattern,
-            placeholder: "Challenger's nickname",
-            type: 'text',
-            required: true,
-        },
-        {
             id: 'ballspeed',
             labelContent: 'Starting Ball Speed',
             max: '5',
@@ -138,6 +130,14 @@ export const localPong: FormDetails = {
             required: true,
             step: '1',
             type: 'range',
+        },
+        {
+            id: 'opponent',
+            labelContent: 'Opponent Nickname',
+            pattern: usernamePattern,
+            placeholder: "Challenger's nickname",
+            type: 'text',
+            required: true,
         },
     ],
     button: { type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
@@ -184,6 +184,37 @@ export const remotePong: FormDetails = {
             type: 'range',
         },
     ],
+    radio: {
+        name: 'nbPlayers',
+        legend: 'Pick a number of players!',
+        buttons: [
+            {
+                id: '2',
+                labelContent: '2',
+                pattern: '',
+                placeholder: '',
+                required: true,
+                type: 'radio',
+            },
+            {
+                id: '4',
+                labelContent: '4',
+                pattern: '',
+                placeholder: '',
+                required: true,
+                type: 'radio',
+            },
+            {
+                id: '8',
+                labelContent: '8',
+                pattern: '',
+                placeholder: '',
+                required: true,
+                type: 'radio',
+            },
+        ],
+    },
+
     button: { type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
 };
 
