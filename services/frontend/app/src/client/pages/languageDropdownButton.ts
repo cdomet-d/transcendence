@@ -7,9 +7,9 @@ function renderLanguageDropdownButton(): string {
 		  ${currentLang}
 		</button>
 		<div id="language-options" class="dropdown-content hidden absolute bg-white border rounded shadow-md mt-1">
-		  <div class="dropdown-item" data-lang="en">English</div>
-		  <div class="dropdown-item" data-lang="fr">Français</div>
-		  <div class="dropdown-item" data-lang="es">Español</div>
+		  <div class="dropdown-item" data-lang="English">English</div>
+		  <div class="dropdown-item" data-lang="French">Français</div>
+		  <div class="dropdown-item" data-lang="Spanish">Español</div>
 		</div>
 	</div>
   `;

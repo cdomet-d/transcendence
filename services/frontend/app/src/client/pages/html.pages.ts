@@ -4,7 +4,7 @@ import { renderPageTemplate } from './page.template.js'
 export function renderHome(): string {
 	let html = `
 		<div class="min-h-screen flex items-center justify-center bg-white">
-			<a
+			<button
 				href="/central"
 				data-link
 				id="play-btn"
@@ -13,7 +13,7 @@ export function renderHome(): string {
 			>
 				<span class="absolute inset-0 rounded-full border-2 border-black/80 pointer-events-none"></span>
 				<span class="relative z-10">${translate('Play')}</span>
-			</a>
+			</button>
 		</div>
 	`;
 	return html;
@@ -58,6 +58,33 @@ export function renderProfile(): string {
 		homeHref: "/"
 	});
 }
+
+/* export function sendFriendRequest(): string {
+	return renderPageTemplate({
+		title: "send request",
+		nextButtons: [
+			{ href: "/home", label: translate("Back") },
+		],
+		backHref: "/central",
+		showBack: true,
+		homeHref: "/"
+	});
+} */
+
+// TODO: delete this comment
+// export function renderTournament(): string {
+// 	return renderPageTemplate({
+// 		title: "TOURNAMENT",
+// 		nextButtons: [
+// 			{ href: "/404", label: "4 players" },
+// 			{ href: "/404", label: "8 players" },
+
+// 		],
+// 		backHref: "/central",
+// 		showBack: true,
+// 		homeHref: "/"
+// 	});
+// }
 
 export function renderGame(): string {
 	let html: string = `

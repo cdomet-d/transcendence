@@ -5,17 +5,23 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon",
-    "start": "tsc && node dist/server.js"
+    "start": "tsc && node dist/server.js",
+    "test:setup": "rm -f /usr/data/testDB.db && /usr/local/bin/testDB.sh",
+    "test": "npm run test:setup && DATABASE_PATH=/usr/data/testDB.db jest"
   },
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@fastify/cors": "^11.1.0",
     "@types/node": "^24.3.1",
     "fastify": "^5.5.0",
-    "typescript": "^5.9.2"
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "ts-jest": "^29.4.5"
   }
 }

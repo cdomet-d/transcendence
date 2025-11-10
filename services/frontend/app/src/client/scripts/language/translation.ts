@@ -1,17 +1,17 @@
-import en from '../../assets/locales/en.json' with { type: "json" };
-import fr from '../../assets/locales/fr.json' with { type: "json" };
-import es from '../../assets/locales/es.json' with { type: "json" };
+import English from '../../assets/locales/English.json' with { type: "json" };
+import French from '../../assets/locales/French.json' with { type: "json" };
+import Spanish from '../../assets/locales/Spanish.json' with { type: "json" };
 
 type TranslationMap = Record<string, string>;
 
-const resources: Record<string, TranslationMap> = { en, fr, es };
-export let currentLang: string = "en";
-let translation: TranslationMap = en;
+const resources: Record<string, TranslationMap> = { English, French, Spanish };
+export let currentLang: string = "English";
+let translation: TranslationMap = English;
 
 export function initLanguageCSR() {
 	let savedLang: string | null = localStorage.getItem('selectedLanguage');
 	if (!savedLang)
-		savedLang = "en";
+		savedLang = "English";
 	setLangVars(savedLang);
 }
 

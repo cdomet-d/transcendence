@@ -9,6 +9,9 @@ node_modules/
 dist/
 output.css
 package-lock.json
+*.db
+*.log*
 jest.results.txt
 .vscode/
 ok
+notes
