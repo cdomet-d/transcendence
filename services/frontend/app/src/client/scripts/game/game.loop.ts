@@ -30,6 +30,11 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		while (game.delta >= TIME_STEP) { //TODO: add update limit
 			updatePaddlePos(game, game.req._keys);
 			game.delta -= TIME_STEP;
+			// request to server
+			game.req._timeStamp = performance.now();// + game.clockOffset;
+			ws.send(JSON.stringify(game.req));
+			game.addReq(game.req);
+			game.req._ID += 1; //TODO: overflow
 		}
 
 		// ball dead reckoning
@@ -39,12 +44,6 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		if (latestReply !== undefined)
 			if (await handleScore(game, latestReply))
 				return;
-
-		// request to server
-		game.req._timeStamp = performance.now();// + game.clockOffset;
-		ws.send(JSON.stringify(game.req));
-		game.addReq(game.req);
-		game.req._ID += 1; //TODO: overflow
 
 		//draw new frame
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
