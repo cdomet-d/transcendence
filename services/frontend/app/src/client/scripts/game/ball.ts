@@ -7,7 +7,7 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 	let newX: number = 0;
 	let newY: number = 0;
 	[newX, newY] = futurePos(game, latestReply)
-	// updateBallPos(game, newX, newY);
+	updateBallPos(game, newX, newY);
 }
 
 export function futurePos(game: Game, latestReply: repObj | undefined): [number, number] {
@@ -24,10 +24,10 @@ export function futurePos(game: Game, latestReply: repObj | undefined): [number,
 	return [newX, newY]
 }
 
-const TIME_STEP: number = 1000 / 60; // 60FPS
-export function updateBallPos(game: Game) {//, newX: number, newY: number) {
-	let newX: number = game.ball.x + (game.ball.dx * TIME_STEP);
-	let newY: number = game.ball.y + (game.ball.dy * TIME_STEP);
+// const TIME_STEP: number = 1000 / 60; // 60FPS
+export function updateBallPos(game: Game, newX: number, newY: number) {
+	// let newX: number = game.ball.x + (game.ball.dx * TIME_STEP);
+	// let newY: number = game.ball.y + (game.ball.dy * TIME_STEP);
 	if (sideWallCollision(game, newX))
 		return false;
 	newY = upperAndBottomWallCollision(game, newY);
@@ -40,18 +40,18 @@ export function updateBallPos(game: Game) {//, newX: number, newY: number) {
 	game.ball.y = newY;
 }
 
-let ballDir = -1;
+// let ballDir = -1;
 function sideWallCollision(game: Game, newX: number): boolean {
 	if (newX - game.ball.radius >= WIDTH + 100 || newX + game.ball.radius <= -100) {
 		game.ball.x = WIDTH / 2;
 		game.ball.y = HEIGHT / 2;
 		game.ball.dx = 0;
 		game.ball.dy = 0;
-		setTimeout(() => {
-			game.ball.dx = 0.3 * ballDir;
-			game.ball.dy = 0.03;
-			ballDir *= -1;
-		}, 1000);
+		// setTimeout(() => {
+		// 	game.ball.dx = 0.3 * ballDir;
+		// 	game.ball.dy = 0.03;
+		// 	ballDir *= -1;
+		// }, 1000);
 		return true;
 	}
 	return false;
@@ -85,10 +85,9 @@ function sides(game: Game, paddle: coordinates, newX: number, newY: number, side
 	let p4: coordinates = {x: 0, y: 0};
 	let n: coordinates = {x: 0, y: 0};
 
-	const offset: number = game.ball.radius + 1;
-	const inflatedPad: coordinates = {x: paddle.x - offset, y: paddle.y - offset};
-	const padHeight: number = game.padSpec.height + 2 * offset;
-	const padWidth: number = game.padSpec.width + 2 * offset;
+	const inflatedPad: coordinates = {x: paddle.x - game.ball.radius, y: paddle.y - game.ball.radius};
+	const padHeight: number = game.padSpec.height + 2 * game.ball.radius;
+	const padWidth: number = game.padSpec.width + 2 * game.ball.radius;
 
 	switch (side) {
 		case "left":
@@ -116,17 +115,18 @@ function sides(game: Game, paddle: coordinates, newX: number, newY: number, side
 	newPos = lineIntersection(p1, p2, p3, p4);
 	if (!newPos) return false;
 	[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, n.x, n.y);
-	[game.ball.x, game.ball.y] = [newPos.x + 0.1, newPos.y + 0.1];
+	[game.ball.x, game.ball.y] = [newPos.x + 1 * n.x, newPos.y + 1 * n.y];
 	return true;
 }
 
 function corners(game: Game, paddle: coordinates, newX: number, newY: number, side: string): boolean {
-	const offset: number = game.ball.radius + 1;
+	const offset: number = game.ball.radius;
 	const topright: coordinates = {x: paddle.x + game.padSpec.width + offset, y: paddle.y - offset};
 	const topleft: coordinates = {x: paddle.x - offset, y: paddle.y - offset};
 	const bottomright: coordinates = {x: paddle.x + game.padSpec.width + offset, y: paddle.y + game.padSpec.height + offset};
 	const bottomleft: coordinates = {x: paddle.x - offset, y: paddle.y + game.padSpec.height + offset};
 	let corner: coordinates = {x: 0, y: 0};
+
 	switch (side) {
 		case "topright":
 			corner = topright;
@@ -144,7 +144,7 @@ function corners(game: Game, paddle: coordinates, newX: number, newY: number, si
 			return false;
 	}
 	if (cornerIntersection(game, paddle, newX, newY, corner)) {
-		[game.ball.x, game.ball.y] = [corner.x + 0.1, corner.y + 0.1];
+		[game.ball.x, game.ball.y] = [corner.x + 1, corner.y + 1];
 		return true;
 	}
 	return false;
@@ -167,13 +167,12 @@ function getCollisionSide(game: Game, paddle: coordinates): string {
 
     if (Math.abs(absX - absY) < cornerThreshold) {
         if (dx > 0) 
-			return "right";
+			return dy < 0 ? "topright" : "bottomright";
         else
-			return "left";
+			return dy < 0 ? "topleft" : "bottomleft";
     }
 	if (absX > absY)
         return dx > 0 ? "right" : "left";
     else
         return dy > 0 ? "bottom" : "top";
 }
-
