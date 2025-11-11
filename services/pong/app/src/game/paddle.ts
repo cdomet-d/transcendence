@@ -1,7 +1,7 @@
 import type { coordinates, Player } from '../classes/player.class.js';
 import type { keysObj } from './mess.validation.js';
 import { Game, HEIGHT, WIDTH, type paddleSpec } from '../classes/game.class.js'
-import { leftPadCollision, rightPadCollision } from './ball.js';
+import { paddleCollision } from './ball.js';
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function updatePaddlePos(player: Player, keys: keysObj, game: Game) {
@@ -18,11 +18,9 @@ export function updatePaddlePos(player: Player, keys: keysObj, game: Game) {
 		left(player.paddle, game, WIDTH / 2 + game.ball.radius + 1, step);
 	if (player.right && keys._ArrowRight)
 		right(player.paddle, game, WIDTH - game.padSpec.width, step);
-
 	const newX: number = game.ball.x - step.x;
 	const newY: number = game.ball.y - step.y;
-	if (leftPadCollision(game, player.paddle, newX, newY) 
-		|| rightPadCollision(game, player.paddle, newX, newY)) {
+	if (paddleCollision(game, player.paddle, newX, newY)) {
 		game.ball.x += step.x;
 		game.ball.y += step.y;
 	}
