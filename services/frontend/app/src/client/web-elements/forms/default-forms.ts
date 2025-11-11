@@ -82,10 +82,10 @@ export const search: FormDetails = {
         {
             id: 'searchbar',
             labelContent: 'Searchbar',
-            pattern: '',
+            pattern: usernamePattern,
             placeholder: 'Search...',
             type: 'text',
-            required: false,
+            required: true,
         },
     ],
     button: { type: 'submit', content: 'Search', img: null, ariaLabel: '' },
@@ -184,37 +184,6 @@ export const remotePong: FormDetails = {
             type: 'range',
         },
     ],
-    radio: {
-        name: 'nbPlayers',
-        legend: 'Pick a number of players!',
-        buttons: [
-            {
-                id: '2',
-                labelContent: '2',
-                pattern: '',
-                placeholder: '',
-                required: true,
-                type: 'radio',
-            },
-            {
-                id: '4',
-                labelContent: '4',
-                pattern: '',
-                placeholder: '',
-                required: true,
-                type: 'radio',
-            },
-            {
-                id: '8',
-                labelContent: '8',
-                pattern: '',
-                placeholder: '',
-                required: true,
-                type: 'radio',
-            },
-        ],
-    },
-
     button: { type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
 };
 

@@ -38,6 +38,20 @@ export class CustomInput extends HTMLInputElement {
                 new CustomEvent('validation', { detail: { feedback }, bubbles: true }),
             );
         }
+
+        if (this.getAttribute('type') === 'text') {
+            const el = event.target as HTMLInputElement;
+            const usrnm = el.value;
+            console.log(el.validity);
+            let feedback: Array<string> = [];
+            if (!/[A-Za-z0-9]/.test(usrnm)) feedback.push('Forbidden character');
+            if (usrnm.length < 4 || usrnm.length > 18)
+                feedback.push(`Range for pw is 4-18, current length is: ${usrnm.length}`);
+
+            this.dispatchEvent(
+                new CustomEvent('validation', { detail: { feedback }, bubbles: true }),
+            );
+        }
     }
 
     connectedCallback() {
@@ -219,7 +233,7 @@ export class InputGroup extends HTMLDivElement {
         this.append(this.#label, this.#input, this.#inputFeedback);
 
         this.className = 'box-border relative w-full';
-        this.#inputFeedback.className = 'brdr bg hidden';
+        this.#inputFeedback.className = 'brdr bg absolute z-1 hidden';
 
         this.#isRequiredField();
         this.#setInputAttributes();

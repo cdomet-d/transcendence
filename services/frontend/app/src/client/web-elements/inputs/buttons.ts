@@ -112,7 +112,7 @@ export class RadioFieldSet extends HTMLFieldSetElement {
             label.innerText = el.labelContent;
             wrap.append(label, btn);
             this.append(wrap);
-            wrap.className = 'flex flex-col w-fit gap-xs';
+            wrap.className = 'flex w-fit h-fit gap-xs';
         });
     }
 
@@ -121,7 +121,7 @@ export class RadioFieldSet extends HTMLFieldSetElement {
     }
 
     render() {
-        this.className = 'flex text-center justify-between w-5/6';
+        this.className = 'flex text-center justify-between w-5/6 pad-xs';
     }
 }
 

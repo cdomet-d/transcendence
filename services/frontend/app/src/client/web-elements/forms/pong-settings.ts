@@ -75,6 +75,11 @@ export class RemotePongSettings extends LocalPongSettings {
     #guestWrapper: HTMLDivElement;
     #invitedUsers: UserData[] | null;
 
+    //TODO: Add event listener on Searchbar's SUBMIT to capture invitations.
+    //TODO: Add API call to /api/user to get requested user and store it in an
+    // array of user that will be displayed in #guestWrapper
+    // TODO: track the number of invited users and allow form submission when there are 2, 4 or 8 players.
+
     constructor() {
         super();
 
@@ -124,16 +129,14 @@ export class RemotePongSettings extends LocalPongSettings {
      * Applies custom styles to form fields and buttons.
      */
     override styleFields() {
-        console.log(super.contentMap);
         super.contentMap['title']?.classList.add('col-span-2');
-        super.contentMap['radio']?.classList.add('col-start-2', 'row-start-2');
-        this.#searchbar.classList.add('row-start-3', 'col-start-2');
-        // super.dropdownMenu.classList.add('row-start-5', 'col-start-1');
+        this.#searchbar.classList.add('row-start-2', 'col-start-2');
+        super.dropdownMenu.classList.add('row-start-5', 'col-start-1');
         super.contentMap['paddlespeed']?.classList.add('col-start-1');
         super.contentMap['ballspeed']?.classList.add('col-start-1');
         super.contentMap['paddlesize']?.classList.add('col-start-1');
         super.contentMap['submit']?.classList.remove('w-full');
-        super.contentMap['submit']?.classList.add('row-start-6', 'col-span-2', 'w-5/6');
+        super.contentMap['submit']?.classList.add('row-start-5', 'col-span-2', 'w-5/6');
     }
 
     /**
@@ -141,7 +144,7 @@ export class RemotePongSettings extends LocalPongSettings {
      */
     styleInviteList() {
         this.#guestWrapper.className =
-            'brdr grid row-m gap-xs pad-xs overflow-y-auto box-border row-start-4 col-start-2 row-span-2 place-self-stretch';
+            'brdr grid row-m gap-xs pad-xs overflow-y-auto box-border row-start-3 col-start-2 row-span-2 place-self-stretch';
     }
 
     /**

@@ -2,7 +2,7 @@ import * as types from './types-interfaces.js';
 
 export const biographyPattern: string = '^[A-Za-z0-9\\s,\\.\\?!:\\)\\(\\/\\-_]{0,256}$';
 export const passwordPattern: string = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{12,64}$';
-export const usernamePattern: string = '^[A-Za-z0-9_\\-]{4,18}$';
+export const usernamePattern: string = '^[A-Za-z0-9]{4,18}$';
 
 export const socialMenu: types.buttonData[] = [
     {

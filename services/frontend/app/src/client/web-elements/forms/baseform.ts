@@ -36,7 +36,8 @@ export class BaseForm extends HTMLFormElement {
         super();
         this.#formData = emptyForm;
         this.#submitHandler = this.submitHandler.bind(this);
-        this.className = 'w-full grid row-l gap-s place-items-center justify-center box-border';
+        this.className =
+            'w-full h-full grid grid-auto-rows-auto gap-s place-items-center justify-center box-border pad-m';
         this.#formContent = {};
     }
 
@@ -94,6 +95,8 @@ export class BaseForm extends HTMLFormElement {
                 this.#formContent[field.id] = el;
             }
             this.append(el);
+            el.classList.remove('w-full');
+            el.classList.add('w-5/6');
             if (field.type === 'textarea') el.classList.add('row-span-3');
         });
 

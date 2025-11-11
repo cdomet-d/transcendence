@@ -1,6 +1,4 @@
-import { createMatchHistory } from '../matches/matches.js';
 import type { buttonData, navigationLinksData, TabData } from '../types-interfaces.js';
-import { createUserMasonery } from './tabs-helpers.js';
 
 export const mainMenu: navigationLinksData[] = [
     { title: 'Leaderboard', datalink: 'leaderboard', href: '/leaderboard', img: null },
@@ -62,7 +60,6 @@ export const backgroundMenu: buttonData[] = [
     { ariaLabel: 'farm', content: 'Adorable Farm', img: null, type: 'button' },
     { ariaLabel: 'forest', content: 'Enchanted Forest', img: null, type: 'button' },
     { ariaLabel: 'underwater', content: 'Magical Underwater', img: null, type: 'button' },
-    { ariaLabel: 'Snow', content: 'Mysterious Snow', img: null, type: 'button' },
 ];
 
 export const profileTabs: TabData[] = [
