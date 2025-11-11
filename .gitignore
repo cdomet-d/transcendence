@@ -1,12 +1,12 @@
 
 _logs/
+*.log
 .env
 .env
 .gitignore
 .notes/
 .secrets/
 .vscode/
-*.log
 *.pem
 dist/
 jest.results.txt
