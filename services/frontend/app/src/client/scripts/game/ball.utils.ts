@@ -18,16 +18,16 @@ export function cornerIntersection(game: Game, paddle: coordinates, newX: number
     return false;
 }
 
-function normal(game: Game, border: coordinates): [number, number] {
-    let nx: number = game.ball.x - border.x;
-    let ny: number = game.ball.y - border.y;
+function normal(game: Game, point: coordinates): [number, number] {
+    let nx: number = game.ball.x - point.x;
+    let ny: number = game.ball.y - point.y;
     const len: number = Math.hypot(nx, ny);
     nx /= len;
     ny /= len;
     return [nx, ny];
 }
 
-function distBallPad(p: coordinates, b: coordinates): number {
+export function distBallPad(p: coordinates, b: coordinates): number {
     const d: coordinates = {x: Math.abs(p.x) - b.x, y: Math.abs(p.y) - b.y};
     d.x = Math.max(d.x, 0.0);
     d.y = Math.max(d.y, 0.0);
