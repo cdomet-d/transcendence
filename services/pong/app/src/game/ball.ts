@@ -67,12 +67,12 @@ function updateScore(game: Game, player1: Player, player2: Player, newX: number)
 }
 
 export function paddleCollision(game: Game, paddle: coordinates, newX: number, newY: number): boolean {
-	// const side: string = getCollisionSide(game, paddle);
+	const side: string = getCollisionSide(game, paddle);
 	
-	// if (sides(game, paddle, newX, newY, side))
-	// 	return true;
-	// return corners(game, paddle, newX, newY, side);
-	return paddleCollisionBis(game, paddle, newX, newY);
+	if (sides(game, paddle, newX, newY, side))
+		return true;
+	return corners(game, paddle, newX, newY, side);
+	// return paddleCollisionBis(game, paddle, newX, newY);
 }
 
 function sides(game: Game, paddle: coordinates, newX: number, newY: number, side: string): boolean {
