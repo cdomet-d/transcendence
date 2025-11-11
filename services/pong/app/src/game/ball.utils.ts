@@ -27,7 +27,7 @@ function normal(game: Game, border: coordinates): [number, number] {
     return [nx, ny];
 }
 
-function distBallPad(p: coordinates, b: coordinates): number {
+export function distBallPad(p: coordinates, b: coordinates): number {
     const d: coordinates = {x: Math.abs(p.x) - b.x, y: Math.abs(p.y) - b.y};
     d.x = Math.max(d.x, 0.0);
     d.y = Math.max(d.y, 0.0);

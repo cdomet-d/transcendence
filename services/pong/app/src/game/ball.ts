@@ -1,6 +1,7 @@
 import { Game, HEIGHT, WIDTH } from "../classes/game.class.js";
 import type { coordinates, Player } from "../classes/player.class.js";
 import { lineIntersection, cornerIntersection, updateVelocity } from "./ball.utils.js";
+import { paddleCollisionBis } from "./test.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 const MAX_SCORE: number = 5;
@@ -66,11 +67,12 @@ function updateScore(game: Game, player1: Player, player2: Player, newX: number)
 }
 
 export function paddleCollision(game: Game, paddle: coordinates, newX: number, newY: number): boolean {
-	const side: string = getCollisionSide(game, paddle);
+	// const side: string = getCollisionSide(game, paddle);
 	
-	if (sides(game, paddle, newX, newY, side))
-		return true;
-	return corners(game, paddle, newX, newY, side);
+	// if (sides(game, paddle, newX, newY, side))
+	// 	return true;
+	// return corners(game, paddle, newX, newY, side);
+	return paddleCollisionBis(game, paddle, newX, newY);
 }
 
 function sides(game: Game, paddle: coordinates, newX: number, newY: number, side: string): boolean {

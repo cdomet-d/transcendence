@@ -1,6 +1,7 @@
 import { Game, HEIGHT, WIDTH, type ballObj } from "./game.class.js";
 import type { coordinates, repObj } from "./mess.validation.js";
 import { lineIntersection, cornerIntersection, updateVelocity } from "./ball.utils.js";
+import { paddleCollisionBis } from "./test.js";
 
 export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 	// console.log("IN DEADRECKONING");
@@ -70,11 +71,12 @@ function upperAndBottomWallCollision(game: Game, newY: number): number {
 }
 
 export function paddleCollision(game: Game, paddle: coordinates, newX: number, newY: number): boolean {
-	const side: string = getCollisionSide(game, paddle);
+	// const side: string = getCollisionSide(game, paddle);
 	
-	if (sides(game, paddle, newX, newY, side))
-		return true;
-	return corners(game, paddle, newX, newY, side);
+	// if (sides(game, paddle, newX, newY, side))
+	// 	return true;
+	// return corners(game, paddle, newX, newY, side);
+	return paddleCollisionBis(game, paddle, newX, newY);
 }
 
 function sides(game: Game, paddle: coordinates, newX: number, newY: number, side: string): boolean {
@@ -153,7 +155,7 @@ function corners(game: Game, paddle: coordinates, newX: number, newY: number, si
 function getCollisionSide(game: Game, paddle: coordinates): string {
     const padCenterX = paddle.x + game.padSpec.halfWidth;
     const padCenterY = paddle.y + game.padSpec.halfHeight;
-
+	
     const dx = game.ball.x - padCenterX;
     const dy = game.ball.y - padCenterY;
 

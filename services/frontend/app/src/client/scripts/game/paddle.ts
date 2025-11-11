@@ -1,6 +1,7 @@
 import type { coordinates } from './mess.validation.js';
 import { Game, type keysObj, HEIGHT, WIDTH, type paddleSpec } from './game.class.js';
 import { paddleCollision } from './ball.js';
+import { distBallPad } from './ball.utils.js';
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 

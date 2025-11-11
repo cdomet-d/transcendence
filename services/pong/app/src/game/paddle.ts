@@ -2,6 +2,8 @@ import type { coordinates, Player } from '../classes/player.class.js';
 import type { keysObj } from './mess.validation.js';
 import { Game, HEIGHT, WIDTH, type paddleSpec } from '../classes/game.class.js'
 import { paddleCollision } from './ball.js';
+import { distBallPad } from './ball.utils.js';
+
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function updatePaddlePos(player: Player, keys: keysObj, game: Game) {
