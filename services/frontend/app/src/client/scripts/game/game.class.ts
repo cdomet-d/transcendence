@@ -53,7 +53,7 @@ export class Game {
 	#_req: reqObj;
 	#_reqHistory: requestMap;
 	#_replyHistory: replyTab;
-	#_clockOffset: number;
+	// #_clockOffset: number;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(ctx: CanvasRenderingContext2D, remote: boolean) {
@@ -71,7 +71,7 @@ export class Game {
 			radius: 15
 		};
 		this.#_paddleSpec = {
-			speed: 0.2,
+			speed: 0.3,
 			width: 18, 
 			height: HEIGHT / 6, 
 			halfWidth: 18 / 2, 
@@ -98,7 +98,7 @@ export class Game {
 		};
 		this.#_reqHistory = new Map();
 		this.#_replyHistory = new Array();
-		this.#_clockOffset = 0;
+		// this.#_clockOffset = 0;
 	}
 
 	/*                              GETTERS                                  */
@@ -154,9 +154,9 @@ export class Game {
 		return this.#_score;
 	}
 
-	get clockOffset(): number {
-		return this.#_clockOffset;
-	}
+	// get clockOffset(): number {
+	// 	return this.#_clockOffset;
+	// }
 
 	/*                              SETTERS                                  */
 	set leftPad(newPos: number) {
@@ -184,9 +184,9 @@ export class Game {
 		this.#_lastFrameTime = val;
 	}
 
-	set clockOffset(offset: number) {
-		this.#_clockOffset = offset;
-	}
+	// set clockOffset(offset: number) {
+	// 	this.#_clockOffset = offset;
+	// }
 
     /*                              METHODS                                  */
 	public addReq(req: reqObj) {

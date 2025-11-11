@@ -71,7 +71,7 @@ export class Game {
 			radius: 15
 		};
 		this.#_paddleSpec = {
-			speed: 0.2,
+			speed: 0.3,
 			width: 18, 
 			height: HEIGHT / 6, 
 			halfWidth: 18 / 2, 
