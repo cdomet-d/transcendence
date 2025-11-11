@@ -60,7 +60,8 @@ services:
     environment:
       - NGINXIP=nginx
       - PORT=3939
-      - SECRET=${SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
