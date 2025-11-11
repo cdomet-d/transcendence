@@ -1,25 +1,21 @@
 import { renderNotFound } from '../../pages/html.pages.js';
 import { clearHeader, renderHeader } from '../../pages/header.js'
-import { pong } from '../game/pong.js';
-
-interface routeInterface {
-    path: string;
-    callback: () => string;
-}
+import { lobby } from '../lobby/lobby.js'
+import type { routeInterface } from '../spaRouter/routes.js'
 
 export class Router {
-    /*                            PROPERTIES                                  */
-    _routes: Array< routeInterface >;
+	/*                            PROPERTIES                                  */
+	_routes: Array<routeInterface>;
 
-    /*                           CONSTRUCTORS                                 */
-    constructor(routes: routeInterface[]) {
-        this._routes = routes;
-    }
+	/*                           CONSTRUCTORS                                 */
+	constructor(routes: routeInterface[]) {
+		this._routes = routes;
+	}
 
-    /*                             METHODS                                    */
-    _getCurrentURL() {
-        return window.location.pathname;
-    }
+	/*                             METHODS                                    */
+	_getCurrentURL() {
+		return window.location.pathname;
+	}
 
     #matchUrlToRoute(path: string): routeInterface | undefined {
         return this._routes.find(route => route.path === path);
@@ -36,7 +32,7 @@ export class Router {
         const page = document.getElementById('page');
         const header = document.getElementById('header');
 
-        if (!page || !header) return; //TODO: handle error
+		if (!page || !header) return; //TODO: handle error
 
         const matchedRoute = this.#matchUrlToRoute(path);
         if (!matchedRoute) {
@@ -45,19 +41,18 @@ export class Router {
             return;
         }
 
-        // TODO try to load header once and change display instead of function calling everytime
-        if (matchedRoute.path === '/') {
-            // header.style.display = "hidden";
-            clearHeader();
-        } else {
-            // header.style.display = "block";
-            document.getElementById('header')!.innerHTML = renderHeader();
-        }
+		// TODO: try to load header once and change display instead of function calling everytime
+		if (matchedRoute.path === '/') {
+			// header.style.display = "hidden";
+			clearHeader();
+		} else {
+			// header.style.display = "block";
+			document.getElementById('header')!.innerHTML = renderHeader();
+		}
 
-        page.innerHTML = matchedRoute.callback();
-        
-        if (matchedRoute.path === '/game/match')
-            pong();
-        //TODO: eventually if other features need their script add an element script to routeInterface
-    }
+		page.innerHTML = matchedRoute.callback();
+
+		if (matchedRoute.path === '/game/lobby')
+			lobby();
+	}
 }

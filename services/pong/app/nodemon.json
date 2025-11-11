@@ -2,5 +2,5 @@
   "watch": ["src"],
   "ext": "ts",
   "ignore": ["dist"],
-  "exec": "tsc && node dist/server.js"
+  "exec": "tsc --project tsconfig.node.json && node dist/server.js"
 }

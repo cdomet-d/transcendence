@@ -1,8 +1,8 @@
 import * as page from '../../pages/html.pages.js'
 
-interface routeInterface {
-    path: string;
-    callback: () => string;
+export interface routeInterface {
+	path: string;
+	callback: () => string;
 }
 
 export const routes: routeInterface[] = [

@@ -1,0 +1,24 @@
+{
+  "name": "gamemanager",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "tsc && node dist/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "@types/node": "^24.3.1",
+    "dotenv": "^17.2.3",
+    "fastify": "^5.5.0",
+    "nats": "^2.29.3",
+    "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
