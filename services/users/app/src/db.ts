@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import sqlite3 from 'sqlite3';
-import * as sqlite3 from 'sqlite3';
+// import * as sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 
 const dbpath = '/usr/data/users.db';

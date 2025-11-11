@@ -319,7 +319,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('internal/users/:userID/userData', async (request, reply) => {
+	serv.get('/internal/users/:userID/userData', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 
