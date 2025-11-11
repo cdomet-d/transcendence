@@ -1,5 +1,5 @@
-import { createBtn } from './buttons-helpers.js';
-import type { buttonData, MenuStyle, navigationLinksData } from '../types-interfaces.js';
+import { createBtn, createLink } from './buttons-helpers.js';
+import type { buttonData, MenuData, MenuStyle, navigationLinksData } from '../types-interfaces.js';
 import type { CustomButton } from './buttons.js';
 import type { NavigationLinks } from './links.js';
 
@@ -15,14 +15,18 @@ export class Menu extends HTMLElement {
     #style: MenuStyle;
     #animated: boolean;
     #cache: Map<string, NavigationLinks | CustomButton>;
-    #linkInfo: buttonData[] | navigationLinksData[];
+    #linkInfo: MenuData | null;
+    #menuLinks: HTMLUListElement;
 
     constructor() {
         super();
         this.#cache = new Map<string, NavigationLinks | CustomButton>();
-        this.#linkInfo = [];
+        this.#linkInfo = null;
         this.#style = 'horizontal';
         this.#animated = false;
+
+        this.#menuLinks = document.createElement('ul');
+        this.append(this.#menuLinks);
     }
 
     /**
@@ -30,7 +34,7 @@ export class Menu extends HTMLElement {
      *
      * @param {buttonData[] | navigationLinksData[]} list - Array of objects containing the data for the menus items
      */
-    set menuContent(list: buttonData[] | navigationLinksData[]) {
+    set menuContent(list: MenuData) {
         this.#linkInfo = list;
     }
 
@@ -60,7 +64,7 @@ export class Menu extends HTMLElement {
         return this.#animated;
     }
 
-    get navInfo(): buttonData[] | navigationLinksData[] {
+    get navInfo(): MenuData | null {
         return this.#linkInfo;
     }
 
@@ -73,6 +77,25 @@ export class Menu extends HTMLElement {
         this.render();
     }
 
+    renderBtns() {
+        if (!this.#linkInfo || !this.#linkInfo.buttons) throw new Error('Undefined data');
+        this.#linkInfo.buttons.forEach((button) => {
+            const el = createBtn(button, this.#animated);
+            el.role = 'menuitem';
+            this.#menuLinks.append(el);
+            this.#cache.set(el.id, el);
+        });
+    }
+
+    renderLinks() {
+        if (!this.#linkInfo || !this.#linkInfo.links) throw new Error('Undefined data');
+        this.#linkInfo.links.forEach((link) => {
+            const el = createLink(link, this.#animated);
+            el.role = 'menuitem';
+            this.#menuLinks.append(el);
+            this.#cache.set(el.id, el);
+        });
+    }
     /**
      * Renders the menu layout and appends button elements.
      *
@@ -81,9 +104,15 @@ export class Menu extends HTMLElement {
      * Button elements are created using the {@link createBtn} helper with animation option.
      */
     render() {
-        this.className = `w-full grid gap-r justify-items-center \
+        this.#menuLinks.className = `w-full grid gap-r justify-items-center \
 		auto-cols-fr auto-row-fr`;
-        if (this.#style === 'horizontal') this.classList.add('grid-flow-col');
-        if (this.#style === 'vertical') this.classList.add('grid-flow-rows');
+        if (this.#style === 'horizontal') this.#menuLinks.classList.add('grid-flow-col');
+        if (this.#style === 'vertical') this.#menuLinks.classList.add('grid-flow-rows');
+        if (this.#linkInfo && this.#linkInfo.buttons) this.renderBtns();
+        if (this.#linkInfo && this.#linkInfo.links) this.renderLinks();
     }
+}
+
+if (!customElements.get('base-menu')) {
+    customElements.define('base-menu', Menu, { extends: 'nav' });
 }

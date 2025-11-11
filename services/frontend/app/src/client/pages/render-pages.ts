@@ -1,14 +1,19 @@
 import { createHeading, createNoResult } from '../web-elements/typography/helpers.js';
 import { createLeaderboard } from '../web-elements/matches/leaderboard.js';
-import { createNavMenu } from '../web-elements/navigation/menu-helpers.js';
-import { mainMenu } from '../web-elements/navigation/default-menus.js';
+import { createMenu } from '../web-elements/navigation/menu-helpers.js';
+import { main } from '../web-elements/navigation/default-menus.js';
 import { Layout } from '../web-elements/layouts/layout.js';
 import { ProfileWithTabs } from '../web-elements/users/user-profile-containers.js';
 import { type Match } from 'path-to-regexp';
-import { createForm } from '../web-elements/forms/helpers.js';
-import { localPong, remotePong } from '../web-elements/forms/default-forms.js';
-import type { TabData } from '../web-elements/types-interfaces.js';
 import { createTabs } from '../web-elements/navigation/tabs-helpers.js';
+import { type TabData } from '../web-elements/types-interfaces.js';
+import { createForm } from '../web-elements/forms/helpers.js';
+import {
+    localPong,
+    registrationForm,
+    remotePong,
+    userSettingsForm,
+} from '../web-elements/forms/default-forms.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -25,6 +30,13 @@ const layoutPerPage: { [key: string]: string } = {
 
 function updatePageTitle(newPage: string) {
     document.title = `🌻 BigT - ${newPage} 🌻`;
+}
+
+function createWrapper(id: string): HTMLDivElement {
+    const el = document.createElement('div');
+    el.id = id;
+    el.className = 'bg content-h brdr overflow-y-auto overflow-x-hidden justify-start';
+    return el;
 }
 
 function prepareLayout(curLayout: Layout | undefined, page: string) {
@@ -54,9 +66,16 @@ export function renderHome() {
     prepareLayout(document.body.layoutInstance, 'home');
     document.body.layoutInstance!.appendAndCache(
         createHeading('0', 'PONG!'),
-        createNavMenu(mainMenu, 'vertical', true),
+        createMenu(main, 'vertical', true),
     );
     updatePageTitle('Home');
+}
+
+export function renderAuth() {
+    console.log('renderAuth');
+    prepareLayout(document.body.layoutInstance, 'home');
+    document.body.layoutInstance!.appendAndCache(createForm('default-form', registrationForm));
+    updatePageTitle('Register or Login');
 }
 
 export function renderLeaderboard() {
@@ -85,7 +104,16 @@ export function renderProfile(param?: Match<Partial<Record<string, string | stri
     }
 }
 
+export function renderSettings() {
+    console.log('renderSettings');
+    //TODO: API call with login here to fetch user data
+    prepareLayout(document.body.layoutInstance, 'profile');
+    document.body.layoutInstance?.appendAndCache(createForm('settings-form', userSettingsForm));
+    updatePageTitle('Settings');
+}
+
 export function renderLobby() {
+    prepareLayout(document.body.layoutInstance, 'lobby');
     const pongOptions: TabData[] = [
         {
             id: 'pong-local',
@@ -100,11 +128,7 @@ export function renderLobby() {
             panelContent: createForm('remote-pong-settings', remotePong),
         },
     ];
-    prepareLayout(document.body.layoutInstance, 'lobby');
-    const wrapper = document.createElement('div');
-    wrapper.id = 'pong-settings';
-    wrapper.className =
-        'bg content-h brdr overflow-y-auto overflow-x-hidden flex flex-col justify-start';
+    const wrapper = createWrapper('pongsettings');
     wrapper.append(createTabs(pongOptions));
     document.body.layoutInstance?.appendAndCache(wrapper);
 }

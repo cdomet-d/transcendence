@@ -96,6 +96,11 @@ export type BtnStyles = 'green' | 'red';
  */
 export type GameType = '1 vs 1' | 'tournament';
 
+export interface MenuData {
+    buttons?: buttonData[];
+    links?: navigationLinksData[];
+}
+
 /**
  * Metadata describing an HTML input field.
  *

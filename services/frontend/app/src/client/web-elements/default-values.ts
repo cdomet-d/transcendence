@@ -4,31 +4,6 @@ export const biographyPattern: string = '^[A-Za-z0-9\\s,\\.\\?!:\\)\\(\\/\\-_]{0
 export const passwordPattern: string = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{12,64}$';
 export const usernamePattern: string = '^[A-Za-z0-9]{4,18}$';
 
-export const socialMenu: types.buttonData[] = [
-    {
-        ariaLabel: 'Add user as friend',
-        content: null,
-        type: 'button',
-        img: {
-            alt: 'a small pixel art blue blob with a green plus sign',
-            id: 'friendship',
-            size: 'ismall',
-            src: '/public/assets/images/add-user.png',
-        },
-    },
-    {
-        ariaLabel: 'Challenge user to a game',
-        content: null,
-        type: 'button',
-        img: {
-            alt: 'two overlapping pixel art ping pong paddles',
-            id: 'challenge',
-            size: 'ismall',
-            src: '/public/assets/images/challenge.png',
-        },
-    },
-];
-
 export const user: types.UserData = {
     avatar: {
         alt: 'pp',

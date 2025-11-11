@@ -1,5 +1,5 @@
-import type { buttonData, GameType } from '../types-interfaces.js';
-import { createActionMenu } from '../navigation/menu-helpers.js';
+import type { GameType, MenuData } from '../types-interfaces.js';
+import { createMenu } from '../navigation/menu-helpers.js';
 
 //TODO: Make notifications tab-focusable
 //TODO: Buttons are actually a form
@@ -11,22 +11,24 @@ import { createActionMenu } from '../navigation/menu-helpers.js';
  * Each button has a fixed `type`, `content`, accessibility `ariaLabel`, and display `style`.
  * Used by {@link NotifContent} to render Accept/Decline actions.
  */
-const notificationBtns: Array<buttonData> = [
-    {
-        type: 'button',
-        content: 'Decline',
-        img: null,
-        ariaLabel: 'Decline invitation',
-        style: 'red',
-    },
-    {
-        type: 'button',
-        content: 'Accept',
-        img: null,
-        ariaLabel: 'Accept invitation',
-        style: 'green',
-    },
-];
+const notificationBtns: MenuData = {
+    buttons: [
+        {
+            type: 'button',
+            content: 'Decline',
+            img: null,
+            ariaLabel: 'Decline invitation',
+            style: 'red',
+        },
+        {
+            type: 'button',
+            content: 'Accept',
+            img: null,
+            ariaLabel: 'Accept invitation',
+            style: 'green',
+        },
+    ],
+};
 
 //TODO: determine if we want to keep notifications forever or delete them as the users "validates" them.
 // - if we keep them: set a timeout on the menu to avoid the user attempting to reach a lobby that was closed
@@ -58,7 +60,7 @@ class NotifContent extends HTMLDivElement {
 
     /** Called when the element is connected; renders text and buttons within the container. */
     connectedCallback() {
-        const buttons = createActionMenu(notificationBtns, 'horizontal');
+        const buttons = createMenu(notificationBtns, 'horizontal');
         this.append(this.#text, buttons);
         this.className = 'grid grid-cols-[65%_32%] gap-s';
         this.id = 'notification';

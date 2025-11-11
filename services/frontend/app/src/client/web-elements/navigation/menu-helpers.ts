@@ -3,52 +3,12 @@ import type {
     ProfileView,
     DropdownBg,
     buttonData,
-    navigationLinksData,
+    MenuData,
 } from '../types-interfaces.js';
 
-import { NavigationMenu, ActionMenu, SocialMenu, DropdownMenu } from './menus.js';
+import { SocialMenu, DropdownMenu } from './menus.js';
+import { Menu } from './basemenu.js';
 
-/**
- * Creates a menu wrapper element with specified buttons, style, and optional size and animation.
- *
- * @param {navigationLinksData[]} content - Array of button metadata objects for menu buttons.
- * @param {MenuStyle} style - Menu layout style, either 'vertical' or 'horizontal'.
- * @param {boolean} [animated] - Optional flag to enable animation effects on menu buttons.
- * @returns {Menu} A configured {@link Menu} div element.
- *
- */
-export function createNavMenu(
-    content: navigationLinksData[],
-    style: MenuStyle,
-    animated?: boolean,
-): NavigationMenu {
-    const el = document.createElement('nav', { is: 'nav-menu-wrapper' }) as NavigationMenu;
-    el.menuContent = content;
-    el.menuStyle = style;
-    if (animated) el.animation = animated;
-    return el;
-}
-
-/**
- * Creates a menu wrapper element with specified buttons, style, and optional size and animation.
- *
- * @param {buttonData[]} content - Array of button metadata objects for menu buttons.
- * @param {MenuStyle} style - Menu layout style, either 'vertical' or 'horizontal'.
- * @param {boolean} [animated] - Optional flag to enable animation effects on menu buttons.
- * @returns {Menu} A configured {@link Menu} div element.
- *
- */
-export function createActionMenu(
-    content: buttonData[],
-    style: MenuStyle,
-    animated?: boolean,
-): ActionMenu {
-    const el = document.createElement('nav', { is: 'action-menu-wrapper' }) as ActionMenu;
-    el.menuContent = content;
-    el.menuStyle = style;
-    if (animated) el.animation = animated;
-    return el;
-}
 /**
  * Creates a social menu with button content and profile view context.
  *
@@ -58,15 +18,19 @@ export function createActionMenu(
  * @returns {SocialMenu} A {@link SocialMenu} div element reflecting the profile view.
  *
  */
-export function createSocialMenu(
-    content: buttonData[],
-    style: MenuStyle,
-    v: ProfileView,
-): SocialMenu {
+export function createSocialMenu(content: MenuData, style: MenuStyle, v: ProfileView): SocialMenu {
     const el = document.createElement('nav', { is: 'social-menu' }) as SocialMenu;
     el.menuContent = content;
     el.menuStyle = style;
     el.view = v;
+    return el;
+}
+
+export function createMenu(content: MenuData, style: MenuStyle, animated?: boolean): Menu {
+    const el = document.createElement('nav', { is: 'base-menu' }) as Menu;
+    el.menuContent = content;
+    el.menuStyle = style;
+    if (animated) el.animation = animated;
     return el;
 }
 

@@ -11,10 +11,12 @@ export interface routeInterface {
 export const routes: routeInterface[] = [
     { path: '/', callback: page.renderHome },
     { path: '/404', callback: page.renderNotFound },
+    { path: '/auth', callback: page.renderAuth },
     { path: '/leaderboard', callback: page.renderLeaderboard },
     { path: '/user/:login', callback: page.renderProfile },
-    { path: '/pong-settings', callback: page.renderLobby },
-    //   { path: '/game/match', callback: page.renderGame},
+    { path: '/user/settings', callback: page.renderSettings },
+    { path: '/lobby', callback: page.renderLobby },
+    // { path: '/game/match', callback: page.renderGame},
 ];
 
 export class Router {

@@ -1,25 +1,11 @@
-import { createDropdown, createNavMenu } from './menu-helpers.js';
+import { createDropdown, createMenu } from './menu-helpers.js';
 import { createForm } from '../forms/helpers.js';
 import { createNotificationBox } from '../users/notifications-helpers.js';
-import { DropdownMenu, NavigationMenu } from './menus.js';
+import { DropdownMenu } from './menus.js';
 import { NotifBox } from '../users/notifications.js';
 import { Searchbar } from '../forms/search.js';
-import { mainMenu, languageMenu } from './default-menus.js';
-import type { navigationLinksData } from '../types-interfaces.js';
-
-const homeLink: navigationLinksData[] = [
-    {
-        datalink: 'home',
-        href: '/',
-        title: 'Home',
-        img: {
-            alt: 'A cute pixel art blob',
-            size: 'imedium',
-            src: '/public/assets/images/default-avatar.png',
-            id: 'home-link',
-        },
-    },
-];
+import { languageMenu, main, homeLink } from './default-menus.js';
+import { Menu } from './basemenu.js';
 
 /**
  * Custom element for the main page header.
@@ -27,17 +13,17 @@ const homeLink: navigationLinksData[] = [
  * Extends HTMLElement.
  */
 export class PageHeader extends HTMLElement {
-    #home: NavigationMenu;
+    #home: Menu;
     #searchbar: Searchbar;
-    #mainNav: NavigationMenu;
+    #mainNav: Menu;
     #notif: NotifBox;
     #language: DropdownMenu;
 
     constructor() {
         super();
-        this.#home = createNavMenu(homeLink, 'horizontal', false);
+        this.#home = createMenu(homeLink, 'horizontal', false);
         this.#searchbar = createForm('search-form');
-        this.#mainNav = createNavMenu(mainMenu, 'horizontal', false);
+        this.#mainNav = createMenu(main, 'horizontal', false);
         this.#notif = createNotificationBox();
         this.#language = createDropdown(languageMenu, 'Language', 'static');
     }

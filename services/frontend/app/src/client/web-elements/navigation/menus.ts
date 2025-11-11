@@ -1,86 +1,8 @@
-import { createBtn, createLink } from './buttons-helpers.js';
-import type {
-    buttonData,
-    ProfileView,
-    DropdownBg,
-    navigationLinksData,
-} from '../types-interfaces.js';
+import { createBtn } from './buttons-helpers.js';
+import type { buttonData, ProfileView, DropdownBg } from '../types-interfaces.js';
 import type { Icon } from '../typography/images.js';
 import type { CustomButton } from './buttons.js';
 import { Menu } from './basemenu.js';
-
-export class NavigationMenu extends Menu {
-    #menuLinks: HTMLUListElement;
-
-    constructor() {
-        super();
-        this.#menuLinks = document.createElement('ul');
-        this.append(this.#menuLinks);
-    }
-
-    /**
-     * Renders the menu layout and appends button elements.
-     *
-     * @remarks
-     * Uses CSS grid classes according to style and size settings.
-     * Button elements are created using the {@link createBtn} helper with animation option.
-     */
-    override render() {
-        this.#menuLinks.className = `w-full grid gap-r justify-items-center \
-		auto-cols-fr auto-row-fr`;
-        super.menuStyle === 'horizontal'
-            ? this.#menuLinks.classList.add('grid-flow-col')
-            : this.#menuLinks.classList.add('grid-flow-row');
-        super.navInfo.forEach((item) => {
-            const el = item as navigationLinksData;
-            const link = createLink(el, super.animated);
-            this.#menuLinks.append(link);
-            super.cache.set(el.datalink, link);
-        });
-    }
-}
-
-if (!customElements.get('nav-menu-wrapper')) {
-    customElements.define('nav-menu-wrapper', NavigationMenu, { extends: 'nav' });
-}
-
-/**
- * Custom HTML div element representing a menu with configurable style and elements.
- *
- * @remarks
- * The menu supports two styles: 'horizontal' and 'vertical', which control the grid layout direction.
- * It supports both icon and textual buttons.
- * Menu elements are configured using {@link buttonData} and created via {@link createBtn}.
- */
-export class ActionMenu extends Menu {
-    constructor() {
-        super();
-    }
-
-    /**
-     * Renders the menu layout and appends button elements.
-     *
-     * @remarks
-     * Uses CSS grid classes according to style and size settings.
-     * Button elements are created using the {@link createBtn} helper with animation option.
-     */
-    override render() {
-        super.render();
-        this.role = 'menu';
-        this.id = 'action-menu';
-        super.navInfo.forEach((item) => {
-            const el = item as buttonData;
-            const button = createBtn(el, super.animated);
-            button.role = 'menuitem';
-            this.append(button);
-            super.cache.set(button.id, button);
-        });
-    }
-}
-
-if (!customElements.get('action-menu-wrapper')) {
-    customElements.define('action-menu-wrapper', ActionMenu, { extends: 'div' });
-}
 
 //TODO: update SocialMenu to Setting button when view is 'self'
 //TODO: each button is actually a form, lol
@@ -95,7 +17,7 @@ if (!customElements.get('action-menu-wrapper')) {
  * - `stranger` alters icon to add user
  * - `self` hides the menu entirely
  */
-export class SocialMenu extends ActionMenu {
+export class SocialMenu extends Menu {
     #view: ProfileView;
 
     constructor() {

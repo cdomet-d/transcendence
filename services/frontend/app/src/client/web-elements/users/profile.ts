@@ -1,7 +1,7 @@
 import { Avatar } from '../typography/images.js';
 import { Biography, Username, Winstreak } from './user-atoms.js';
 import { createSocialMenu } from '../navigation/menu-helpers.js';
-import { socialMenu } from '../default-values.js';
+import { social } from '../navigation/default-menus.js';
 import { SocialMenu } from '../navigation/menus.js';
 import type { UserData, ImgData, ProfileView } from '../types-interfaces.js';
 
@@ -24,7 +24,7 @@ export class UserProfile extends HTMLDivElement {
      */
     constructor() {
         super();
-        this.#actionButtons = createSocialMenu(socialMenu, 'horizontal', 'stranger');
+        this.#actionButtons = createSocialMenu(social, 'horizontal', 'stranger');
         this.#avatar = document.createElement('div', { is: 'user-avatar' }) as Avatar;
         this.#biography = document.createElement('p', { is: 'user-bio' }) as Biography;
         this.#joinedSince = document.createElement('span') as HTMLSpanElement;

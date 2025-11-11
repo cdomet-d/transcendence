@@ -37,7 +37,7 @@ export class BaseForm extends HTMLFormElement {
         this.#formData = emptyForm;
         this.#submitHandler = this.submitHandler.bind(this);
         this.className =
-            'w-full h-full grid grid-auto-rows-auto gap-s place-items-center justify-center box-border pad-m';
+            'w-full h-full grid grid-auto-rows-auto gap-m place-items-center justify-center box-border pad-m';
         this.#formContent = {};
     }
 
@@ -97,14 +97,8 @@ export class BaseForm extends HTMLFormElement {
             this.append(el);
             el.classList.remove('w-full');
             el.classList.add('w-5/6');
-            if (field.type === 'textarea') el.classList.add('row-span-3');
+            if (field.type === 'textarea') el.classList.add('row-span-3', 'h-full');
         });
-
-        if (this.#formData.radio) {
-            const radio = createFieldset(this.#formData.radio);
-            this.#formContent['radio'] = radio;
-            this.append(radio);
-        }
     }
 
     /**
@@ -115,6 +109,10 @@ export class BaseForm extends HTMLFormElement {
         const submit = createBtn(this.#formData.button);
         this.#formContent['submit'] = submit;
         this.append(submit);
+        if (!submit.classList.contains('bg-red')) {
+            submit.classList.remove('w-full');
+            submit.classList.add('w-5/6');
+        }
     }
 
     /**
