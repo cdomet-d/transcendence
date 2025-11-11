@@ -1,54 +1,36 @@
 import type { coordinates } from './mess.validation.js';
 import { Game, type keysObj, HEIGHT, WIDTH, type paddleSpec } from './game.class.js';
-import { futurePos, leftPadCollision, rightPadCollision } from './ball.js';
+import { paddleCollision } from './ball.js';
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
-export function updatePaddlePos(game: Game, keys: keysObj) {
-	let step: coordinates = {x: 0, y: 0};
-    let newX: number = 0;
-    let newY: number = 0;
-    if (keys._w)
-        up(game.leftPad, game.padSpec.speed, step);
-    if (keys._s)
-        down(game.leftPad, game.padSpec, step);
-    if (keys._a)
-        left(game.leftPad, game, 0, step);
-    if (keys._d)
-        right(game.leftPad, game, WIDTH / 2 - game.ball.radius - 1 - game.padSpec.width, step);
-    newX = game.ball.x - step.x;
-	newY = game.ball.y - step.y;
-    if (leftPadCollision(game, game.leftPad, newX, newY)) {
-        game.ball.x += step.x;
+export function updatePaddlePos(paddle: coordinates, leftSide: boolean, game: Game, keys: keysObj) {
+	const step: coordinates = {x: 0, y: 0};
+	if ((leftSide && keys._w) || (!leftSide && keys._ArrowUp))
+		up(paddle, game.padSpec.speed, step);
+	if ((leftSide && keys._s) || (!leftSide && keys._ArrowDown))
+		down(paddle, game.padSpec, step);
+	if (leftSide && keys._a)
+		left(paddle, game, 0, step);
+	if (leftSide && keys._d)
+		right(paddle, game, WIDTH / 2 - game.ball.radius - 1 - game.padSpec.width, step);
+	if (!leftSide && keys._ArrowLeft)
+		left(paddle, game, WIDTH / 2 + game.ball.radius + 1, step);
+	if (!leftSide && keys._ArrowRight)
+		right(paddle, game, WIDTH - game.padSpec.width, step);
+	const newX: number = game.ball.x - step.x;
+	const newY: number = game.ball.y - step.y;
+	if (paddleCollision(game, paddle, newX, newY)) {
+		game.ball.x += step.x;
 		game.ball.y += step.y;
 	}
-    game.leftPad.x += step.x;
-    game.leftPad.y += step.y;
-    if (game.local) {
-        step = {x: 0, y: 0};
-        if (keys._ArrowUp)
-            up(game.rightPad, game.padSpec.speed, step);
-        if (keys._ArrowDown)
-            down(game.rightPad, game.padSpec, step);
-        if (keys._ArrowLeft)
-            left(game.rightPad, game, WIDTH / 2 + game.ball.radius + 1, step);
-        if (keys._ArrowRight)
-            right(game.rightPad, game, WIDTH - game.padSpec.width, step);
-        newX = game.ball.x - step.x;
-        newY = game.ball.y - step.y;
-        if (rightPadCollision(game, game.rightPad, newX, newY)) {
-            game.ball.x += step.x;
-            game.ball.y += step.y;
-        }
-        game.rightPad.x += step.x;
-        game.rightPad.y += step.y;
-    }
+	paddle.x += step.x;
+	paddle.y += step.y;
 }
 
 function up(pad: coordinates, padSpeed: number, step: coordinates) {
-	if (pad.y - (padSpeed * TIME_STEP) > 0) {
+	if (pad.y - (padSpeed * TIME_STEP) > 0)
 		step.y -= (padSpeed * TIME_STEP);
-	}
 	else
 		step.y -= pad.y;
 }
