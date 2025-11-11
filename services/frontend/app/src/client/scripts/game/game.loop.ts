@@ -2,7 +2,7 @@ import { renderGame } from "./game.render.utils.js";
 import { Game, HEIGHT, WIDTH } from "./game.class.js";
 import { updatePaddlePos } from "./paddle.js";
 import type { repObj } from "./mess.validation.js";
-import { deadReckoning } from "./ball.js";
+import { deadReckoning, updateBallPos } from "./ball.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 const MAX_SCORE: number = 5;
@@ -14,36 +14,39 @@ export async function startGame(game: Game, ws: WebSocket) {
 
 function FrameRequestCallback(game: Game, ws: WebSocket) {
 	return async function gameLoop(timestamp: number) {
-		const latestReply: repObj | undefined = game.replyHistory[game.replyHistory.length - 1];
+		// const latestReply: repObj | undefined = game.replyHistory[game.replyHistory.length - 1];
 
 		// opponent paddle interpolation
-		if (!game.local)
-			interpolation(game);
+		// if (!game.local)
+		// 	interpolation(game);
 
 		// client paddle && ball reconciliation
-		if (latestReply !== undefined && game.reqHistory.has(latestReply._ID))
-			reconciliation(game, latestReply);
+		// if (latestReply !== undefined && game.reqHistory.has(latestReply._ID))
+		// 	reconciliation(game, latestReply);
 
 		// client paddle prediction
 		game.delta += (timestamp - game.lastFrameTime);
 		game.lastFrameTime = timestamp;
 		while (game.delta >= TIME_STEP) { //TODO: add update limit
-			updatePaddlePos(game, game.req._keys);
+			updateBallPos(game);//, newX, newY);
+			updatePaddlePos(game.leftPad, true, game, game.req._keys);
+			if (game.local)
+				updatePaddlePos(game.rightPad, false, game, game.req._keys);
 			game.delta -= TIME_STEP;
 			// request to server
-			game.req._timeStamp = performance.now();// + game.clockOffset;
-			ws.send(JSON.stringify(game.req));
-			game.addReq(game.req);
-			game.req._ID += 1; //TODO: overflow
+			// game.req._timeStamp = performance.now();// + game.clockOffset;
+			// ws.send(JSON.stringify(game.req));
+			// game.addReq(game.req);
+			// game.req._ID += 1; //TODO: overflow
 		}
 
 		// ball dead reckoning
-		deadReckoning(game, latestReply);
+		// deadReckoning(game, latestReply);
 		
 		// score
-		if (latestReply !== undefined)
-			if (await handleScore(game, latestReply))
-				return;
+		// if (latestReply !== undefined)
+		// 	if (await handleScore(game, latestReply))
+		// 		return;
 
 		//draw new frame
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
@@ -85,7 +88,9 @@ function reconciliation(game: Game, latestReply: repObj) {
 	game.ball = { ...latestReply._ball };
 
 	for (let i = id + 1; game.reqHistory.has(i); i++) {
-		updatePaddlePos(game, game.reqHistory.get(i)!._keys);
+		updatePaddlePos(game.leftPad, true, game, game.reqHistory.get(i)!._keys);
+		if (game.local)
+			updatePaddlePos(game.rightPad, false, game, game.req._keys);
 		deadReckoning(game, latestReply);
 	}
 }
