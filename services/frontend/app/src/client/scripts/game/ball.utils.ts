@@ -1,5 +1,5 @@
-import { Game } from "./game.class";
-import { type coordinates } from "./mess.validation";
+import { Game } from "./game.class.js";
+import { type coordinates } from "./mess.validation.js";
 
 export function cornerIntersection(game: Game, paddle: coordinates, newX: number, newY: number, corner: coordinates): boolean {
     const ball: coordinates = {
@@ -39,7 +39,7 @@ export function lineIntersection(p1: coordinates, p2: coordinates, p3: coordinat
 	const denom: number = (p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y - p1.y);
 	if (denom === 0) return null;
 	const t: number = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x)) / denom;
-	if ( t > 1 || t < 0) return null;
+	if (t > 1 || t < 0) return null;
 	const u: number = ((p2.x - p1.x) * (p1.y - p3.y) - (p2.y - p1.y) * (p1.x - p3.x)) / denom;
 	if (u > 1 || u < 0) return null;
 	const newX: number = p1.x + t * (p2.x - p1.x);
