@@ -1,5 +1,4 @@
 import type { MatchOutcome } from '../types-interfaces.js';
-import { createNoResult } from '../typography/helpers.js';
 
 /**
  * Creates an InlineMatch element and populates it with match outcome data.

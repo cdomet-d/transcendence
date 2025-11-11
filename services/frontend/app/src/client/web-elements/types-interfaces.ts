@@ -1,6 +1,4 @@
-/**
- * Size options for Avatar components.
- *
+/** Size options for Avatar components.
  * @remarks
  * - `iicon`: Extra small, icon size
  * - `ismall`: Small size
@@ -9,18 +7,14 @@
  */
 export type Size = 'iicon' | 'ismall' | 'imedium' | 'ilarge' | 'ifs';
 
-/**
- * Menu orientation styles for layout rendering.
- *
+/** Menu orientation styles for layout rendering.
  * @remarks
  * - `vertical`: Stacked menu items
  * - `horizontal`: Inline menu items
  */
 export type MenuStyle = 'vertical' | 'horizontal';
 
-/**
- * Menu sizing scale.
- *
+/** Menu sizing scale.
  * @remarks
  * - `s`: Small size
  * - `m`: Medium size
@@ -28,18 +22,14 @@ export type MenuStyle = 'vertical' | 'horizontal';
  */
 export type MenuSize = 's' | 'm' | 'l';
 
-/**
- * Dropdown background styling modes.
- *
+/** Dropdown background styling modes.
  * @remarks
  * - `dynamic`: allows dynamic styling, meaning that background of the toggle will change according to the selected option.
  * - `static`: disallows dynamic styling
  */
 export type DropdownBg = 'dynamic' | 'static';
 
-/**
- * Relationship between viewer and a profile.
- *
+/** Relationship between viewer and a profile.
  * @remarks
  * - `self`: Profile belongs to the viewer
  * - `friend`: Viewer is friends with the profile owner
@@ -48,9 +38,7 @@ export type DropdownBg = 'dynamic' | 'static';
  */
 export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
 
-/**
- * Allowed font sizes for text styling.
- *
+/** Allowed font sizes for text styling.
  * @remarks
  * - `t1`, `t2`, `t3`: Title sizes (largest to smallest)
  * - `f-s`, `f-m`, `f-l`: Font sizes small → large
@@ -58,40 +46,37 @@ export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
  */
 export type FontSize = 't0' | 't1' | 't2' | 't3' | 'f-s' | 'f-m' | 'f-l' | 'f-regular';
 
-/**
- * Font color style names used in UI themes.
- *
+/** Font color style names used in UI themes.
  * @remarks
  * - `f-yellow`: Yellow text color
  * - `f-orange`: Orange text color
  */
 export type FontColor = 'f-yellow' | 'f-orange';
 
+/** Styles the color of the text depending on the background
+ * @remarks
+ * - `dark`: for dark background
+ * - `light`: for light background
+ */
 export type Theme = 'dark' | 'light';
-/**
- * Font weight options.
- *
+
+/** Font weight options.
  * @remarks
  * - `f-bold`: Bold font weight
  */
 export type FontWeight = 'f-bold';
 
-/**
- * HTML button type attribute values.
- *
+/** HTML button type attribute values.
  * @remarks
  * Matches native `<button type="...">` options.
  */
 export type BtnType = 'button' | 'submit' | 'reset';
 
-/**
- * Limits allowed modifications to button style. Names are pretty self-explanatory: the button is either green or red.
+/** Limits allowed modifications to button style. Names are pretty self-explanatory: the button is either green or red.
  */
 export type BtnStyles = 'green' | 'red';
 
-/**
- * Describes the type of game a user is invited to.
- *
+/** Describes the type of game a user is invited to.
  * Used by notifications.
  */
 export type GameType = '1 vs 1' | 'tournament';
@@ -101,9 +86,7 @@ export interface MenuData {
     links?: navigationLinksData[];
 }
 
-/**
- * Metadata describing an HTML input field.
- *
+/** Metadata describing an HTML input field.
  * @property {string} id - Unique identifier for the input element.
  * @property {string} labelContent - Visible text for the label element.
  * @property {string} pattern - Regex pattern string for input validation.
@@ -126,9 +109,7 @@ export interface InputFieldsData {
     step?: string;
 }
 
-/**
- * Image metadata for display elements.
- *
+/** Image metadata for display elements.
  * @property {string} alt - Alt text for accessibility.
  * @property {string} id - Unique image identifier.
  * @property {Size} size - Predefined image size variant (see {@link Size})
@@ -141,10 +122,9 @@ export interface ImgData {
     src: string;
 }
 
-/**
- * Button metadata for UI rendering.
- *
+/** Button metadata for UI rendering.
  * @property {BtnType} type - Button functional type - see {@link BtnType}.
+ * @property {string} id - The button's id for cache retrieval
  * @property {string | null} content - Text content of the button.
  * @property {ImgData | null} img - Optional image metadata associated with the button - see {@link ImgData}
  * @property {string} ariaLabel - Accessibility label for screen readers.
@@ -167,9 +147,7 @@ export interface navigationLinksData {
     img: ImgData | null;
 }
 
-/**
- * Metadata describing a tab component.
- *
+/** Metadata describing a tab component.
  * @property {string} content - Visible text or HTML content within the tab button.
  * @property {boolean} default - Whether this is the default active tab on load.
  * @property {string} id - Unique tab identifier.
@@ -182,9 +160,7 @@ export interface TabData {
     panelContent: HTMLElement | null;
 }
 
-/**
- * User profile data model.
- *
+/** User profile data model.
  * @property {ImgData} avatar - User's avatar image metadata.
  * @property {string} biography - Short biography text.
  * @property {string} id - Unique user identifier string.
@@ -209,9 +185,7 @@ export interface UserData {
     winstreak: string;
 }
 
-/**
- * Form metadata describing action, fields, and buttons.
- *
+/** Form metadata describing action, fields, and buttons.
  * @property {string} action - Form submission URL.
  * @property {string} ariaLabel - Accessibility label for form.
  * @property {buttonData} button - Form button metadata.
@@ -225,21 +199,12 @@ export interface FormDetails {
     ariaLabel: string;
     button: buttonData;
     fields: InputFieldsData[];
-    radio?: Radio;
     heading: string;
     id: string;
     method: string;
 }
 
-export interface Radio {
-    name: string;
-    legend: string;
-    buttons: InputFieldsData[];
-}
-
-/**
- * Describes outcome of a match.
- *
+/** Describes outcome of a match.
  * @property {string} date - Date of the match.
  * @property {string} opponent - Opponent name.
  * @property {string} outcome - Result (win/loss/draw).
@@ -256,9 +221,7 @@ export interface MatchOutcome {
     tournament: boolean;
 }
 
-/**
- * Match participants data.
- *
+/** Match participants data.
  * @property {UserData} player1 - First player data.
  * @property {UserData} player2 - Second player data.
  */

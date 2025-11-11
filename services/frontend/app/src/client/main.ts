@@ -17,10 +17,6 @@ declare global {
 }
 
 if (window) {
-    // computeViewportSize();
-    /** Handles window resize so things stay cute */
-    // window.addEventListener('resize', computeViewportSize);
-    /** Enables back/forward navigation arrows */
     window.addEventListener('popstate', loadHistoryLocation);
 }
 

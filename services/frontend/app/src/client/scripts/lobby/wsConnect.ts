@@ -1,6 +1,6 @@
-import { renderLobby } from '../../pages/html.pages.js';
+// import { renderLobby } from '../../pages/html.pages.js';
+import { router } from '../../main.js';
 import { pong } from '../game/pong.js';
-import { router } from '../main.js';
 import { createGameRequestForm, createLobbyRequestForm, attachGameListener } from './lobby.js';
 
 let wsInstance: WebSocket | null = null;
@@ -30,7 +30,7 @@ function wsConnect() {
 
 				const app = document.getElementById('app');
 				if (app) {
-					app.innerHTML = renderLobby();
+					// app.innerHTML = renderLobby();
 					attachGameListener();
 				} else {
 					console.log("Error: could not find HTMLElement: 'app'");
@@ -47,7 +47,7 @@ function wsConnect() {
 				return;
 			} else if (gameRequest.event === "approved") {
 				window.history.pushState({}, '', '/game/match');
-				router._loadRoute('/game/match');
+				router.loadRoute('/game/match');
 				console.log("Client ready to connect game: #" + gameID);
 				pong(message.data); // ws connect to "/game/match" and send userID + gameID
 			}

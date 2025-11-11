@@ -8,16 +8,16 @@ export interface routeInterface {
     callback: (param?: Match<Partial<Record<string, string | string[]>>>) => void;
 }
 
-export const routes: routeInterface[] = [
-    { path: '/', callback: page.renderHome },
-    { path: '/404', callback: page.renderNotFound },
-    { path: '/auth', callback: page.renderAuth },
-    { path: '/leaderboard', callback: page.renderLeaderboard },
-    { path: '/user/:login', callback: page.renderProfile },
-    { path: '/user/settings', callback: page.renderSettings },
-    { path: '/lobby', callback: page.renderLobby },
-    // { path: '/game/match', callback: page.renderGame},
-];
+	export const routes: routeInterface[] = [
+		{ path: '/', callback: page.renderHome },
+		{ path: '/404', callback: page.renderNotFound },
+		{ path: '/auth', callback: page.renderAuth },
+		{ path: '/leaderboard', callback: page.renderLeaderboard },
+		{ path: '/user/:login', callback: page.renderProfile },
+		{ path: '/user/settings', callback: page.renderSettings },
+		{ path: '/lobby', callback: page.renderLobby },
+		// { path: '/game/match', callback: page.renderGame},
+	];
 
 export class Router {
     /*                            PROPERTIES                                  */
@@ -45,8 +45,7 @@ export class Router {
         return path.replace(/\/+$/, '');
     }
 
-    /**
-     * Parses the defined route array to check if the current URL is defined as a route.
+    /** Parses the defined route array to check if the current URL is defined as a route.
      * Calls `renderNotFount()` if the route was not found, and the route's callback otherwise.
      */
     loadRoute(path: string) {
@@ -71,7 +70,7 @@ export class Router {
 
         matchedRoute.callback(res ? res : undefined);
 
-        if (matchedRoute.path === '/game/match') pong();
+        if (matchedRoute.path === '/game/match') pong('default');
         //TODO: eventually if other features need their script add an element script to routeInterface
     }
 }

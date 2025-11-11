@@ -42,7 +42,7 @@ export const userSettingsForm: FormDetails = {
             required: false,
         },
     ],
-    button: { type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+    button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
 };
 
 export const registrationForm: FormDetails = {
@@ -69,7 +69,7 @@ export const registrationForm: FormDetails = {
             required: false,
         },
     ],
-    button: { type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+    button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
 };
 
 export const search: FormDetails = {
@@ -88,7 +88,7 @@ export const search: FormDetails = {
             required: true,
         },
     ],
-    button: { type: 'submit', content: 'Search', img: null, ariaLabel: '' },
+    button: { id: 'submit', type: 'submit', content: 'Search', img: null, ariaLabel: '' },
 };
 
 export const localPong: FormDetails = {
@@ -140,7 +140,7 @@ export const localPong: FormDetails = {
             required: true,
         },
     ],
-    button: { type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
+    button: { id: 'submit', type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
 };
 
 export const remotePong: FormDetails = {
@@ -184,7 +184,7 @@ export const remotePong: FormDetails = {
             type: 'range',
         },
     ],
-    button: { type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
+    button: { id: 'submit', type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
 };
 
 export const deleteAccount: FormDetails = {
@@ -194,5 +194,5 @@ export const deleteAccount: FormDetails = {
     id: 'account-deletion-request',
     method: 'post',
     fields: [],
-    button: { type: 'submit', content: 'Delete account', img: null, ariaLabel: '', style: 'red' },
+    button: { id: 'submit', type: 'submit', content: 'Delete account', img: null, ariaLabel: '', style: 'red' },
 };

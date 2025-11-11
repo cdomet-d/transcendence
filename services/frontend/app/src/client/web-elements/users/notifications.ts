@@ -14,14 +14,16 @@ import { createMenu } from '../navigation/menu-helpers.js';
 const notificationBtns: MenuData = {
     buttons: [
         {
-            type: 'button',
+            id: 'decline',
+			type: 'button',
             content: 'Decline',
             img: null,
             ariaLabel: 'Decline invitation',
             style: 'red',
         },
         {
-            type: 'button',
+            id: 'accept',
+			type: 'button',
             content: 'Accept',
             img: null,
             ariaLabel: 'Accept invitation',

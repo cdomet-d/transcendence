@@ -1,21 +1,20 @@
 import type { InputGroup, TextAreaGroup } from '../inputs/fields.js';
 import type { FormDetails } from '../types-interfaces.js';
-import { createFieldset, createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
+import { createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
 import { createHeading } from '../typography/helpers.js';
 import { createBtn } from '../navigation/buttons-helpers.js';
 
 const emptyForm: FormDetails = {
     action: '',
     ariaLabel: '',
-    button: { type: 'button', content: '', img: null, ariaLabel: '' },
+    button: { id: '', type: 'button', content: '', img: null, ariaLabel: '' },
     fields: [],
     heading: '',
     id: '',
     method: '',
 };
 
-/**
- * The parent class from which all forms derives.
+/** The parent class from which all forms derives.
  *
  * It handles field and button rendering, as well as setting up a default submit behavior that can be overidden in descendant classes.
  * @class BaseForm
@@ -26,8 +25,8 @@ export class BaseForm extends HTMLFormElement {
     #formData: FormDetails;
     #submitHandler: (ev: SubmitEvent) => void;
 
-    /**
-     * A map-like object to store the individual elements of a form to allow repositionning and easy manipulation.
+	// TODO: actually make it a map ?
+    /** A map-like object to store the individual elements of a form to allow repositionning and easy manipulation.
      * It's basically a cache.
      */
     #formContent: { [key: string]: HTMLElement };
@@ -41,7 +40,11 @@ export class BaseForm extends HTMLFormElement {
         this.#formContent = {};
     }
 
-    set details(form: FormDetails) {
+	/**
+	 * Sets the details of the form - expects a {@link FormDetails} object.
+	 * Can also be `got`.
+	 */
+	set details(form: FormDetails) {
         this.#formData = form;
     }
 
@@ -49,15 +52,13 @@ export class BaseForm extends HTMLFormElement {
         return this.#formData;
     }
 
-    /**
-     * Getter for `formContent`, the form's cache.
+    /** Getter for `formContent`, the form's cache.
      */
     get contentMap() {
         return this.#formContent;
     }
 
-    /**
-     * Handles the default submit event for the form.
+    /** Handles the default submit event for the form.
      * Prevents default submission and logs form data.
      * Can be overridden in subclasses for custom behavior.
      * @param ev - The submit event.
@@ -68,8 +69,7 @@ export class BaseForm extends HTMLFormElement {
         console.log(formResults);
     }
 
-    /**
-     * Renders the form title if a heading is provided in form details.
+    /** Renders the form title if a heading is provided in form details.
      * Appends the title element to the form and caches it in `formContent`.
      */
     renderTitle() {
@@ -80,8 +80,7 @@ export class BaseForm extends HTMLFormElement {
         }
     }
 
-    /**
-     * Renders all fields defined in the form details.
+    /** Renders all fields defined in the form details.
      * Creates input or textarea groups as needed, appends them, and caches them in `formContent`.
      */
     renderFields() {
@@ -101,8 +100,7 @@ export class BaseForm extends HTMLFormElement {
         });
     }
 
-    /**
-     * Renders the form's submit button as defined in form details.
+    /** Renders the form's submit button as defined in form details.
      * Appends the button to the form and caches it in `formContent`.
      */
     renderButtons() {
@@ -115,8 +113,7 @@ export class BaseForm extends HTMLFormElement {
         }
     }
 
-    /**
-     * Called when the element is inserted into the DOM.
+    /** Called when the element is inserted into the DOM.
      * Sets form attributes, attaches the submit event handler, and renders the form.
      */
     connectedCallback() {
@@ -132,8 +129,7 @@ export class BaseForm extends HTMLFormElement {
         this.removeEventListener('submit', (ev) => this.#submitHandler(ev));
     }
 
-    /**
-     * Renders the form by calling the title, fields, and button renderers.
+    /** Renders the form by calling the title, fields, and button renderers.
      */
     render() {
         this.renderTitle();
