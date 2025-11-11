@@ -373,11 +373,10 @@
 		height: var(--m);
 	}
 
-	button {
+	button, a {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		min-width: var(--s);
 		height: 100%;
 	}
 

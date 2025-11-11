@@ -1,5 +1,4 @@
 import { createIcon } from '../typography/helpers.js';
-import { Icon } from '../typography/images.js';
 import type { buttonData } from '../types-interfaces.js';
 
 //TODO: Migrate to inheritance ?
@@ -13,9 +12,9 @@ import type { buttonData } from '../types-interfaces.js';
  * @property {buttonData} btn - Button configuration data.
  * @property {boolean} animation - Controls animated text rendering.
  */
+
 export class CustomButton extends HTMLButtonElement {
     #btn: buttonData;
-    #icon?: Icon;
     #animated: boolean;
 
     static get observedAttributes(): string[] {
@@ -24,7 +23,7 @@ export class CustomButton extends HTMLButtonElement {
 
     constructor() {
         super();
-        this.#btn = { type: 'button', content: null, ariaLabel: '', img: null };
+        this.#btn = { id: '', type: 'button', content: null, ariaLabel: '', img: null };
         this.#animated = false;
     }
 
@@ -34,10 +33,6 @@ export class CustomButton extends HTMLButtonElement {
      */
     set btn(src: buttonData) {
         this.#btn = src;
-    }
-
-    get icon(): Icon | undefined {
-        return this.#icon;
     }
 
     /**
@@ -102,9 +97,18 @@ export class CustomButton extends HTMLButtonElement {
         if (this.#btn.img) {
             const icon = createIcon(this.#btn.img);
             this.append(icon);
-            this.id = this.#btn.img.id;
-            if (this.#btn.img.id === 'friendship') this.#icon = icon;
         }
+    }
+
+    styleButton() {
+        this.classList.add(
+            'brdr',
+            'input-emphasis',
+            'whitenowrap',
+            'button',
+            'bg-yellow',
+            'w-full',
+        );
     }
 
     #dynamicStyling() {
@@ -119,7 +123,8 @@ export class CustomButton extends HTMLButtonElement {
     /** Updates button styles and content according to current state. */
     render() {
         this.className =
-            'box-border w-full brdr pad-xs input-emphasis outline-hidden overflow-hidden whitenowrap cursor-pointer button';
+            'box-border w-full brdr pad-xs input-emphasis outline-hidden \
+			overflow-hidden whitenowrap cursor-pointer button';
 
         if (this.#btn.content && !this.#animated) {
             this.renderTextualBtn();
@@ -131,6 +136,7 @@ export class CustomButton extends HTMLButtonElement {
         this.#dynamicStyling();
         this.type = this.#btn.type;
         this.ariaLabel = this.#btn.ariaLabel;
+        this.id = this.#btn.id;
     }
 }
 

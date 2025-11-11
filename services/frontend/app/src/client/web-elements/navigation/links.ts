@@ -2,12 +2,14 @@ import type { navigationLinksData } from '../types-interfaces.js';
 import { createIcon } from '../typography/helpers.js';
 import { router } from '../../main.js';
 
-const emptyLink: navigationLinksData = { datalink: '', href: '', title: '', img: null };
+const emptyLink: navigationLinksData = { id: '', datalink: '', href: '', title: '', img: null };
 
 export class NavigationLinks extends HTMLAnchorElement {
     #info: navigationLinksData;
     #animated: boolean;
+
     #clickHandler: (ev: Event) => void;
+
     constructor() {
         super();
         this.#info = emptyLink;
@@ -52,7 +54,10 @@ export class NavigationLinks extends HTMLAnchorElement {
 
     /** Renders button icon if image metadata is provided. */
     #renderIconLink() {
-        if (this.#info.img) this.append(createIcon(this.#info.img));
+        if (this.#info.img) {
+            const icon = createIcon(this.#info.img);
+            this.append(icon);
+        }
     }
 
     /** Renders animated button text letter-by-letter. */
@@ -69,7 +74,7 @@ export class NavigationLinks extends HTMLAnchorElement {
         this.classList.add('t2', 'button-shadow');
     }
 
-    #styleButton() {
+    styleButton() {
         this.classList.add(
             'brdr',
             'input-emphasis',
@@ -98,13 +103,14 @@ export class NavigationLinks extends HTMLAnchorElement {
         if (this.#info.img) this.#renderIconLink();
         else if (this.#info.title && !this.#animated) {
             this.#renderTextLink();
-            this.#styleButton();
+            this.styleButton();
         } else if (this.#info.title && this.#animated) {
             this.#renderAnimatedLink();
-            this.#styleButton();
+            this.styleButton();
         }
         this.href = this.#info.href;
         this.title = this.#info.title;
+        this.id = this.#info.id;
         this.setAttribute('data-link', this.#info.datalink);
     }
 }

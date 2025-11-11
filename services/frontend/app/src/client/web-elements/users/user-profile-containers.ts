@@ -4,7 +4,6 @@ import { UserProfile } from './profile.js';
 import { TabContainer } from '../navigation/tabs.js';
 import { createTabs } from '../navigation/tabs-helpers.js';
 import { profileTabs } from '../navigation/default-menus.js';
-import { createNoResult } from '../typography/helpers.js';
 
 export const user: UserData = {
     avatar: {
@@ -15,7 +14,7 @@ export const user: UserData = {
     },
     biography: '(╯°□°)╯︵ ┻━┻',
     id: '64',
-    relation: 'stranger',
+    relation: 'self',
     profileColor: 'bg-BE5103',
     language: 'English',
     status: true,
@@ -87,7 +86,7 @@ export class ProfileWithTabs extends HTMLDivElement {
         this.append(this.#userProfile, this.#userTabs);
         this.id = 'user-profile';
         this.className =
-            'bg content-h brdr overflow-y-auto overflow-x-hidden flex flex-col justify-start';
+            'bg content-h min-w-fit brdr overflow-y-auto overflow-x-hidden flex flex-col justify-start';
     }
 }
 

@@ -1,5 +1,5 @@
 import { createBtn, createLink } from './buttons-helpers.js';
-import type { buttonData, MenuData, MenuStyle, navigationLinksData } from '../types-interfaces.js';
+import type { buttonData, MenuData, MenuStyle } from '../types-interfaces.js';
 import type { CustomButton } from './buttons.js';
 import type { NavigationLinks } from './links.js';
 
@@ -82,6 +82,7 @@ export class Menu extends HTMLElement {
         this.#linkInfo.buttons.forEach((button) => {
             const el = createBtn(button, this.#animated);
             el.role = 'menuitem';
+            el.id = button.id;
             this.#menuLinks.append(el);
             this.#cache.set(el.id, el);
         });

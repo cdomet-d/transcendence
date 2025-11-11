@@ -152,6 +152,7 @@ export interface ImgData {
  */
 export interface buttonData {
     type: BtnType;
+    id: string;
     content: string | null;
     img: ImgData | null;
     ariaLabel: string;
@@ -159,6 +160,7 @@ export interface buttonData {
 }
 
 export interface navigationLinksData {
+    id: string;
     datalink: string;
     href: string;
     title: string;

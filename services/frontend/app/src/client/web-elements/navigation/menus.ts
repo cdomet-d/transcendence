@@ -1,6 +1,5 @@
 import { createBtn } from './buttons-helpers.js';
 import type { buttonData, ProfileView, DropdownBg } from '../types-interfaces.js';
-import type { Icon } from '../typography/images.js';
 import type { CustomButton } from './buttons.js';
 import { Menu } from './basemenu.js';
 
@@ -38,41 +37,40 @@ export class SocialMenu extends Menu {
 
     /** Called when element connects to DOM; calls base and updates view. */
     override connectedCallback(): void {
-        this.updateView();
         super.connectedCallback();
+        this.updateView();
     }
 
-    /**
-     * Updates menu UI for 'friend' profile view.
-     *
-     * @param {Icon} icon - The icon element to update.
-     */
-    friend(icon: Icon) {
-        this.classList.remove('hidden');
-        icon.src = '/public/assets/images/remove-user.png';
+    clearView() {
+        console.log('clearView');
+        super.cache.forEach((el) => {
+            el.classList.add('hidden');
+        });
     }
 
-    /**
-     * Updates menu UI for 'stranger' profile view.
-     *
-     * @param {Icon} icon - The icon element to update.
-     */
-    stranger(icon: Icon) {
-        this.classList.remove('hidden');
-        icon.src = '/public/assets/images/add-user.png';
+    friend() {
+        super.cache.get('removeFriend')?.classList.remove('hidden');
+        super.cache.get('challenge')?.classList.remove('hidden');
+    }
+
+    stranger() {
+        super.cache.get('addFriend')?.classList.remove('hidden');
+        super.cache.get('challenge')?.classList.remove('hidden');
     }
 
     /** Updates menu UI for 'self' view by hiding the menu. */
     self() {
-        this.classList.add('hidden');
+        super.cache.get('settings')?.classList.remove('hidden');
     }
 
     /** Updates the menu appearance based on the current {@link ProfileView}. */
     updateView() {
-        const icon = super.cache.get('friendship') as CustomButton;
-        if (!icon || !icon.icon) return;
-        if (this.#view === 'friend') this.friend(icon.icon);
-        else if (this.#view === 'stranger') this.stranger(icon.icon);
+        // console.log(super.cache);
+        // console.log(this.#view);
+        super.cache.get('challenge')?.styleButton();
+        this.clearView();
+        if (this.#view === 'friend') this.friend();
+        else if (this.#view === 'stranger') this.stranger();
         else if (this.#view === 'self') this.self();
     }
 }
@@ -109,7 +107,7 @@ export class DropdownMenu extends HTMLDivElement {
         this.#optionListData = [];
         this.#listboxOptions = [];
         this.#listbox = document.createElement('ul');
-        this.#toggle = createBtn({ type: 'button', content: '', img: null, ariaLabel: '' });
+        this.#toggle = createBtn({ id: '', type: 'button', content: '', img: null, ariaLabel: '' });
         this.#currentFocus = -1;
         this.#keynavHandler = this.keyboardNavHandler.bind(this);
         this.#mouseNavHandler = this.mouseNavHandler.bind(this);
