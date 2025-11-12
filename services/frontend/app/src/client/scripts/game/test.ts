@@ -44,7 +44,7 @@ function collision(game: Game, newX: number, newY: number, p3: coordinates, p4: 
     const p1: coordinates = {x: game.ball.x, y: game.ball.y};
 	const p2: coordinates = {x: newX, y: newY};
 
-    newPos = lineIntersection(p1, p2, p3, p4);
+    newPos = lineIntersection(game, p1, p2, p3, p4);
     if (!newPos) return false;
     [game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, n.x, n.y);
     [game.ball.x, game.ball.y] = [newPos.x + 1 * n.x, newPos.y + 1 * n.y];

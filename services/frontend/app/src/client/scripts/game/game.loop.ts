@@ -30,7 +30,6 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		while (game.delta >= TIME_STEP) { //TODO: add update limit
 			// ball dead reckoning
 			// deadReckoning(game, latestReply);
-			updateBallPos(game);
 			// opponent paddle interpolation
 			// if (!game.local)
 			// 	interpolation(game);
@@ -38,6 +37,7 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 			updatePaddlePos(game.leftPad, true, game, game.req._keys);
 			if (game.local)
 				updatePaddlePos(game.rightPad, false, game, game.req._keys);
+			updateBallPos(game);
 			// request to server			
 			// game.req._timeStamp = performance.now();// + game.clockOffset;
 			// ws.send(JSON.stringify(game.req));
