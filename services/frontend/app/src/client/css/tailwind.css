@@ -374,10 +374,18 @@
 	}
 
 	button, a {
+		cursor: pointer;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		height: 100%;
+	}
+
+	button:hover,
+	button:focus-visible,
+	a:hover,
+	a:focus-visible {
+		transform: scale(1.04);
 	}
 
 	button:hover>span,
@@ -391,7 +399,6 @@
 	}
 
 	button:active {
-		cursor: pointer;
 		transform: scale(1);
 	}
 

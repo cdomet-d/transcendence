@@ -14,6 +14,7 @@ import {
     remotePong,
     userSettingsForm,
 } from '../web-elements/forms/default-forms.js';
+import { user } from '../web-elements/default-values.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -108,7 +109,9 @@ export function renderSettings() {
     console.log('renderSettings');
     //TODO: API call with login here to fetch user data
     prepareLayout(document.body.layoutInstance, 'profile');
-    document.body.layoutInstance?.appendAndCache(createForm('settings-form', userSettingsForm));
+    document.body.layoutInstance?.appendAndCache(
+        createForm('settings-form', userSettingsForm, user),
+    );
     updatePageTitle('Settings');
 }
 

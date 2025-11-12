@@ -44,16 +44,21 @@ export class UserSettingsForm extends BaseForm {
      * Appends color and language selections to the form data if changed.
      * @param ev - The submit event.
      */
-    override submitHandler(ev: SubmitEvent) {
+    override async submitHandler(ev: SubmitEvent) {
         ev.preventDefault();
         const f = new FormData(this);
         const colSelection = this.#colors.selectedElement;
-        if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
-            f.append('color', 'bg-' + colSelection.id);
         const langSelection = this.#languages.selectedElement;
-        if (langSelection && langSelection.id !== this.#user.language)
-            f.append('language', langSelection.id);
-        console.log(f);
+        console.log(this.#user);
+        if (this.#user) {
+            console.log('user is defined');
+            if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
+                f.append('color', 'bg-' + colSelection.id);
+            if (langSelection && langSelection.id !== this.#user.language)
+                f.append('language', langSelection.id);
+        }
+        const data = await this.sendForm(this.details.action, this.details.method, f);
+        console.log(data);
     }
 
     /**
