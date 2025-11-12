@@ -30,7 +30,7 @@ export async function validateCredentials(log: any, username: string, password: 
 
 
 export async function createAccount(log: any, username: string, hashedPassword: string): Promise<{ userID: number }> {
-	const url = `https://account:1414/internal/account/register`
+	const url = `http://account:1414/internal/account/register`
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -56,7 +56,7 @@ export async function createAccount(log: any, username: string, hashedPassword: 
 }
 
 export async function createUserProfile(log: any, userID: number, username: string): Promise<ProfileCreationResult> {
-	const url = `https://users:2626/internal/users/${userID}/profile`;
+	const url = `http://users:2626/internal/users/${userID}/profile`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -82,7 +82,7 @@ export async function createUserProfile(log: any, userID: number, username: stri
 }
 
 export async function deleteAccount(log: any, userID: number): Promise<void> {
-	const url = `https://account:1414/internal/account`;
+	const url = `http://account:1414/internal/account`;
 	let response: Response;
 	try {
 		response = await fetch(url, {

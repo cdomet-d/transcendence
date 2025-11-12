@@ -1,12 +1,11 @@
 'use strict'
 // Third-party modules 
-import jwt from 'jsonwebtoken';
 import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
 import cookie from '@fastify/cookie';
 // Local modules
 import { options } from './serv.conf.js'
-// import { initNatsConnection, natsSubscription } from './nats/subscriber.js';
+import { bffAccountRoutes } from './authentication/authentication.js';
 
 (async () => {
 	try {
@@ -37,6 +36,7 @@ export async function init(): Promise<FastifyInstance> {
 //add plugins
 function addPlugins(serv: FastifyInstance) {
 	serv.register(cookie);
+	serv.register(bffAccountRoutes);
 }
 
 //run server

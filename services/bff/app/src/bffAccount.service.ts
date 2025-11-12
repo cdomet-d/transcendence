@@ -117,60 +117,60 @@ export async function updatePassword(log: any, userID: number, hashedPassword: s
 	return;
 }
 
-export async function createAccount(log: any, username: string, hashedPassword: string): Promise<{ userID: number }> {
-	const url = `https://account:1414/internal/account/register`
-	let response: Response;
-	try {
-		response = await fetch(url, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ username: username, password: hashedPassword })
-		});
-	} catch (error) {
-		log.error(`[BFF] User service is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
-	}
+// export async function createAccount(log: any, username: string, hashedPassword: string): Promise<{ userID: number }> {
+// 	const url = `http://account:1414/internal/account/register`
+// 	let response: Response;
+// 	try {
+// 		response = await fetch(url, {
+// 			method: 'POST',
+// 			headers: { 'Content-Type': 'application/json' },
+// 			body: JSON.stringify({ username: username, password: hashedPassword })
+// 		});
+// 	} catch (error) {
+// 		log.error(`[BFF] User service is unreachable: ${error}`);
+// 		throw new Error('User service is unreachable.');
+// 	}
 
-	if (response.status === 409) {
-		log.warn(`[BFF] Username already taken for account creation`);
-		const errorBody = (await response.json()) as { message: string };
-		throw { code: 409, message: errorBody.message || 'Username is already taken.' };
-	}
-	if (!response.ok) {
-		log.error(`[BFF] User service failed with status ${response.status}`);
-		throw new Error('User service failed.');
-	}
-	return (response.json() as Promise<{ userID: number }>);
-}
+// 	if (response.status === 409) {
+// 		log.warn(`[BFF] Username already taken for account creation`);
+// 		const errorBody = (await response.json()) as { message: string };
+// 		throw { code: 409, message: errorBody.message || 'Username is already taken.' };
+// 	}
+// 	if (!response.ok) {
+// 		log.error(`[BFF] User service failed with status ${response.status}`);
+// 		throw new Error('User service failed.');
+// 	}
+// 	return (response.json() as Promise<{ userID: number }>);
+// }
 
-export async function createUserProfile(log: any, userID: number, username: string): Promise<ProfileCreationResult> {
-	const url = `https://users:2626/internal/users/${userID}/profile`;
-	let response: Response;
-	try {
-		response = await fetch(url, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ username: username })
-		});
-	} catch (error) {
-		log.error(`[BFF] User service is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
-	}
-	if (response.status === 409) {
-		log.warn(`[BFF] Username already taken for profile creation`);
-		const errorBody = (await response.json()) as { message: string };
-		throw { code: 409, message: errorBody.message || 'Username is already taken.' };
-	}
-	if (!response.ok) {
-		log.warn(`[BFF] Internal server error`);
-		throw new Error(`Profile service failed with status ${response.status}`);
-	}
-	const data = await response.json();
-	return { errorCode: 'success', data: data };
-}
+// export async function createUserProfile(log: any, userID: number, username: string): Promise<ProfileCreationResult> {
+// 	const url = `http://users:2626/internal/users/${userID}/profile`;
+// 	let response: Response;
+// 	try {
+// 		response = await fetch(url, {
+// 			method: 'POST',
+// 			headers: { 'Content-Type': 'application/json' },
+// 			body: JSON.stringify({ username: username })
+// 		});
+// 	} catch (error) {
+// 		log.error(`[BFF] User service is unreachable: ${error}`);
+// 		throw new Error('User service is unreachable.');
+// 	}
+// 	if (response.status === 409) {
+// 		log.warn(`[BFF] Username already taken for profile creation`);
+// 		const errorBody = (await response.json()) as { message: string };
+// 		throw { code: 409, message: errorBody.message || 'Username is already taken.' };
+// 	}
+// 	if (!response.ok) {
+// 		log.warn(`[BFF] Internal server error`);
+// 		throw new Error(`Profile service failed with status ${response.status}`);
+// 	}
+// 	const data = await response.json();
+// 	return { errorCode: 'success', data: data };
+// }
 
 export async function deleteAccount(log: any, userID: number): Promise<void> {
-	const url = `https://account:1414/internal/account`;
+	const url = `http://account:1414/internal/account`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -300,7 +300,7 @@ export async function updateProfileColor(log: any, userID: number, profileColor:
 }
 
 export async function updateDefaultLang(log: any, userID: number, defaultLang: string): Promise<void> {
-	const url = `https://users:2626/internal/account/${userID}`;
+	const url = `http://users:2626/internal/account/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -331,7 +331,7 @@ export async function updateDefaultLang(log: any, userID: number, defaultLang: s
 }
 
 export async function updateAvatar(log: any, userID: number, avatar: string): Promise<void> {
-	const url = `https://users:2626/internal/users/${userID}`;
+	const url = `http://users:2626/internal/users/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {

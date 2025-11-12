@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-and-long-key-for
 
 export async function bffAccountRoutes(serv: FastifyInstance) {
 
-	serv.post('/account/login', async (request, reply) => {
+	serv.post('/login', async (request, reply) => {
 		try {
 			const { username, password } = request.body as { username: string, password: string };
 
@@ -19,10 +19,11 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 			if (!validationResponse)
 				return reply.code(401).send({ message: 'Invalid credentials.' });
 
-			const UserAuth = validationResponse;
+			const UserAuth: UserAuth = validationResponse;
 
 			const payload = { userID: UserAuth.userID, username: UserAuth.username };
 			const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+            reply.setCookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', path: '/' });
 
 			return reply.code(200).send({ token: token });
 		} catch (error) {
@@ -31,9 +32,11 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/account/register', async (request, reply) => {
+	serv.post('/register', async (request, reply) => {
 		let newAccountId: number | null = null;
 		try {
+			request.server.log.info(`LA REQUEST EN QUESTION ${request}`);
+			console.log("RQST:", request);
 			const { username, password } = request.body as { username: string, password: string };
 
 			if (!username || !password)

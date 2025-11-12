@@ -65,6 +65,8 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
+    ports:
+      - "3939:3939"
     volumes:
       - ./services/auth/app:/usr/app
   dashboard:
