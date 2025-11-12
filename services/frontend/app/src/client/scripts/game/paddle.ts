@@ -63,10 +63,12 @@ function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
 			const t: number = game.t;//(newBall.x - game.ball.x) / (newX - game.ball.x);
 			const nx = step.x / len;
 			const ny = step.y / len;
-			paddle.x += (step.x * t) - nx * (game.ball.radius + 1);
-			paddle.y += (step.y * t) - ny * (game.ball.radius + 1);
-			step.x *= (1 - t);
-			step.y *= (1 - t);
+			const x: number = (step.x * t) - nx * (game.ball.radius + 1);
+			const y: number = (step.y * t) - ny * (game.ball.radius + 1);
+			paddle.x += x;
+			paddle.y += y;
+			step.x -= x;
+			step.y -= y;
 			game.ball.x += game.ball.dx * TIME_STEP;
 			game.ball.y += game.ball.dy * TIME_STEP;
 		}
