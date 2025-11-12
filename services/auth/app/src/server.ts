@@ -5,7 +5,7 @@ import type { FastifyInstance } from 'fastify';
 import cookie from '@fastify/cookie';
 // Local modules
 import { options } from './serv.conf.js'
-import { bffAccountRoutes } from './authentication/authentication.js';
+import { authenticationRoutes } from './authentication/authentication.js';
 
 (async () => {
 	try {
@@ -36,7 +36,7 @@ export async function init(): Promise<FastifyInstance> {
 //add plugins
 function addPlugins(serv: FastifyInstance) {
 	serv.register(cookie);
-	serv.register(bffAccountRoutes);
+	serv.register(authenticationRoutes);
 }
 
 //run server

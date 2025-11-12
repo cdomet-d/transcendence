@@ -8,9 +8,9 @@ import { createAccount, deleteAccount, createUserProfile, validateCredentials } 
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-and-long-key-for-development';
 
-export async function bffAccountRoutes(serv: FastifyInstance) {
+export async function authenticationRoutes(serv: FastifyInstance) {
 
-	serv.post('/login', async (request, reply) => {
+	serv.post('/login/', async (request, reply) => {
 		try {
 			const { username, password } = request.body as { username: string, password: string };
 
@@ -32,7 +32,7 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/register', async (request, reply) => {
+	serv.post('/register/', async (request, reply) => {
 		let newAccountId: number | null = null;
 		try {
 			request.server.log.info(`LA REQUEST EN QUESTION ${request}`);
