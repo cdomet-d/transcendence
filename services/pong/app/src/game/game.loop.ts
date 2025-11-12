@@ -36,8 +36,8 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 	game.reqHistory = futureReqs;
 
 	// new loop
-	const delay: number = SERVER_TICK - (performance.now() - start);
-	game.addTimoutID(setTimeout(gameLoop, Math.max(0, delay), game, player1, player2));
+	// const delay: number = SERVER_TICK - (performance.now() - start);
+	// game.addTimoutID(setTimeout(gameLoop, Math.max(0, delay), game, player1, player2));
 }
 
 function moveBall(game: Game, simulatedTime: number, end: number, i: number): number {

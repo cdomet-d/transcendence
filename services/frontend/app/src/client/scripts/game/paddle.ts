@@ -18,15 +18,7 @@ export function updatePaddlePos(paddle: coordinates, leftSide: boolean, game: Ga
 		left(paddle, game, WIDTH / 2 + game.ball.radius + 1, step);
 	if (!leftSide && keys._ArrowRight)
 		right(paddle, game, WIDTH - game.padSpec.width, step);
-	const newX: number = game.ball.x - step.x;
-	const newY: number = game.ball.y - step.y;
-	if (paddleCollision(game, paddle, newX, newY)) {
-		game.ball.x += step.x;
-		game.ball.y += step.y;
-	}
-	paddle.x += step.x;
-	paddle.y += step.y;
-	// movePaddle(game, paddle, step);
+	movePaddle(game, paddle, step);
 }
 
 function up(pad: coordinates, padSpeed: number, step: coordinates) {

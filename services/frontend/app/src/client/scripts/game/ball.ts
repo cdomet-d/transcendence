@@ -8,7 +8,7 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 	let newX: number = 0;
 	let newY: number = 0;
 	[newX, newY] = futurePos(game, latestReply)
-	updateBallPos(game, newX, newY);
+	// updateBallPos(game, newX, newY);
 }
 
 export function futurePos(game: Game, latestReply: repObj | undefined): [number, number] {
@@ -25,10 +25,10 @@ export function futurePos(game: Game, latestReply: repObj | undefined): [number,
 	return [newX, newY]
 }
 
-// const TIME_STEP: number = 1000 / 60; // 60FPS
-export function updateBallPos(game: Game, newX: number, newY: number) {
-	// let newX: number = game.ball.x + (game.ball.dx * TIME_STEP);
-	// let newY: number = game.ball.y + (game.ball.dy * TIME_STEP);
+const TIME_STEP: number = 1000 / 60; // 60FPS
+export function updateBallPos(game: Game) {//}, newX: number, newY: number) {
+	let newX: number = game.ball.x + (game.ball.dx * TIME_STEP);
+	let newY: number = game.ball.y + (game.ball.dy * TIME_STEP);
 	if (sideWallCollision(game, newX))
 		return false;
 	newY = upperAndBottomWallCollision(game, newY);
@@ -41,18 +41,18 @@ export function updateBallPos(game: Game, newX: number, newY: number) {
 	game.ball.y = newY;
 }
 
-// let ballDir = -1;
+let ballDir = -1;
 function sideWallCollision(game: Game, newX: number): boolean {
 	if (newX - game.ball.radius >= WIDTH + 100 || newX + game.ball.radius <= -100) {
 		game.ball.x = WIDTH / 2;
 		game.ball.y = HEIGHT / 2;
 		game.ball.dx = 0;
 		game.ball.dy = 0;
-		// setTimeout(() => {
-		// 	game.ball.dx = 0.3 * ballDir;
-		// 	game.ball.dy = 0.03;
-		// 	ballDir *= -1;
-		// }, 1000);
+		setTimeout(() => {
+			game.ball.dx = 0.3 * ballDir;
+			game.ball.dy = 0.03;
+			ballDir *= -1;
+		}, 1000);
 		return true;
 	}
 	return false;
