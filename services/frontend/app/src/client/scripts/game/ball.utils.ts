@@ -52,9 +52,14 @@ export function updateVelocity(dx: number, dy: number, nx: number, ny: number): 
     const dot = dx * nx + dy * ny;
 	dx = dx - 2 * dot * nx;
 	dy = dy - 2 * dot * ny;
-	if (dx <= 0.5 && dx >= -0.5)
-		dx *= 1.2;
-	if (dy <= 0.5 && dy >= -0.5)
-		dy *= 1.2;
+
+    let speed = Math.hypot(dx, dy);
+
+    const maxSpeed = 10;
+    const boostedSpeed = Math.min(speed * 1.025, maxSpeed);
+
+    const factor = boostedSpeed / speed;
+    dx *= factor;
+    dy *= factor;
 	return [dx, dy];
 }
