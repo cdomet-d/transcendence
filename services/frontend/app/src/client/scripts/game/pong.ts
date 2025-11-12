@@ -1,5 +1,6 @@
 import { renderGame } from "./game.render.utils.js";
 import { Game } from "./game.class.js";
+import { wsRequest } from "./ws.req.js";
 
 export interface gameRequest {
 	userID: number,
@@ -18,9 +19,7 @@ export function pong(gameReq: gameRequest) {
 	const game: Game = new Game(ctx, gameReq.remote);
 	//TODO: set strokeStyle and fillStyle
 	renderGame(game); //TODO: before rendering need to receive players names
-	import("./ws.req.js").then(({ wsRequest }) => {
-		wsRequest(game, {gameID: gameReq.gameID, userID: gameReq.userID});
-	}) //TODO: can import fail ?
+	wsRequest(game, {gameID: gameReq.gameID, userID: gameReq.userID});
 }
 
 function getCanvasContext(): CanvasRenderingContext2D | null {
