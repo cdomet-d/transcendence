@@ -61,6 +61,9 @@ function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
 			game.ball.x = temp.x;
 			game.ball.y = temp.y;
 			const t: number = game.t;//(newBall.x - game.ball.x) / (newX - game.ball.x);
+			// const totalDist = Math.hypot(newX - game.ball.x, newY - game.ball.y);
+			// const movedDist = Math.hypot(newBall.x - game.ball.x, newBall.y - game.ball.y);
+			// const t = movedDist / totalDist;
 			const nx = step.x / len;
 			const ny = step.y / len;
 			const x: number = (step.x * t) - nx * (game.ball.radius + 1);
@@ -69,7 +72,7 @@ function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
 			paddle.y += y;
 			step.x -= x;
 			step.y -= y;
-			game.ball.x += game.ball.dx * TIME_STEP;
+			game.ball.x += game.ball.dx * TIME_STEP; //TODO: utiliser le temps qu'il reste de la frame pas TIME_STEP
 			game.ball.y += game.ball.dy * TIME_STEP;
 		}
 		else {
