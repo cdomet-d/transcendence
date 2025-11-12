@@ -23,8 +23,15 @@ export class Searchbar extends BaseForm {
         super();
         super.details = search;
         this.#results = document.createElement('div');
+        this.submitHandler = this.submitHandlerImplementation.bind(this);
         this.setResultPos = this.setResultPos.bind(this);
         this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
+    }
+
+    //TODO: maybe we can just attempt to get the user ?
+    override async submitHandlerImplementation(ev: SubmitEvent) {
+        ev.preventDefault();
+        // const form = new FormData(this);
     }
 
     override connectedCallback() {

@@ -73,7 +73,7 @@ export const registrationForm: FormDetails = {
 };
 
 export const search: FormDetails = {
-    action: '/api/search/',
+    action: '/api/user/',
     heading: '',
     ariaLabel: 'Search for a user',
     id: 'searchform',

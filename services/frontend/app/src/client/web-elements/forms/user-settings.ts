@@ -25,6 +25,7 @@ export class UserSettingsForm extends BaseForm {
     constructor() {
         super();
         this.#user = user;
+        this.submitHandler = this.submitHandlerImplementation.bind(this);
         this.#accountDelete = createForm('default-form', deleteAccount);
         this.#avatar = createAvatar(this.#user.avatar);
         this.#colors = createDropdown(userColorsMenu, 'Pick color', 'dynamic');
@@ -44,21 +45,20 @@ export class UserSettingsForm extends BaseForm {
      * Appends color and language selections to the form data if changed.
      * @param ev - The submit event.
      */
-    override async submitHandler(ev: SubmitEvent) {
+    override async submitHandlerImplementation(ev: SubmitEvent) {
         ev.preventDefault();
         const f = new FormData(this);
         const colSelection = this.#colors.selectedElement;
         const langSelection = this.#languages.selectedElement;
-        console.log(this.#user);
         if (this.#user) {
-            console.log('user is defined');
             if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
                 f.append('color', 'bg-' + colSelection.id);
             if (langSelection && langSelection.id !== this.#user.language)
                 f.append('language', langSelection.id);
         }
-        const data = await this.sendForm(this.details.action, this.details.method, f);
-        console.log(data);
+
+
+        await this.sendForm(this.details.action, this.details.method, f);
     }
 
     /**
