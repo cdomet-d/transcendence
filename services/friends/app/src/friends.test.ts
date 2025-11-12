@@ -19,10 +19,10 @@ beforeEach(async () => {
 	await app.dbFriends.exec('DELETE FROM friendship');
 });
 
-afterEach(async () => {
+/* afterEach(async () => {
 	// Restore any mocks
 	jest.restoreAllMocks();
-});
+}); */
 
 describe('GET /internal/friends/friendship', () => {
 	it('should return 200 and "friend" status for an accepted friendship', async () => {
@@ -130,7 +130,7 @@ describe('GET /internal/friends/friendship', () => {
 	});
 });
 
-desccribe('POST /internal/friends/frienship', () => {
+describe('POST /internal/friends/frienship', () => {
 	it('should return 409 if the friendship between two users already exists', async () => {
 
 		await app.dbFriends.run(
@@ -158,7 +158,7 @@ desccribe('POST /internal/friends/frienship', () => {
 	it('should return 500 if the database INSERT fails to make changes', async () => {
 
 		const dbSpy = jest.spyOn(app.dbFriends, 'run');
-		dbSpy.mockResolvedValue({ changes: 0, lastID: 0 });
+		dbSpy.mockResolvedValue({ changes: 0, lastID: 0 } as any);
 
 		const payload = {
 			senderID: 1,
@@ -225,7 +225,7 @@ describe('PATCH /internal/friendships/:id', () => {
 	it('should return 400 if the friendship could not be accepted', async () => {
 		const insertResult = await app.dbFriends.run(
 			'INSERT INTO friendship (userID, friendID, statusFrienship) VALUES (?, ?, ?)',
-			[1DELETED, 2, false]
+			[1, 2, false]
 		);
 		const friendshipID = insertResult.lastID;
 

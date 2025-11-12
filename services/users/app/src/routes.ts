@@ -5,7 +5,7 @@ interface UserProfile {
 	userID: number;
 	username: string;
 	avatar: string;
-	biographygraphy: string;
+	biography: string;
 	profileColor: string;
 	winstreak: number;
 }

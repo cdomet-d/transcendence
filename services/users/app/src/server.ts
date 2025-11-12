@@ -1,26 +1,19 @@
-import Fastify from 'fastify'
-import type { FastifyInstance } from 'fastify';
-import cors from '@fastify/cors';
-import { userRoutes } from './routes.js';
-import dbConnector from "./db.js"
-
-const serv: FastifyInstance = Fastify({
-	logger: true
-});
-
-serv.register(cors, {
-  origin: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
-});
-
-serv.register(userRoutes);
-serv.register(dbConnector);
+import { buildServer } from "./app.js";
 
 const start = async () => {
+	let serv;
 	try {
+		serv = await buildServer();
+
+		console.log('listening on 2626');
 		await serv.listen({ port: 2626, host: '0.0.0.0' });
+
 	} catch (err) {
-		serv.log.error(err);
+		if (serv) {
+			serv.log.error(err, 'Server failed to start');
+		} else {
+			console.error('Error during server build:', err);
+		}
 		process.exit(1);
 	}
 };
