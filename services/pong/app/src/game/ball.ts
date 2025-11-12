@@ -1,7 +1,7 @@
 import { Game, HEIGHT, WIDTH } from "../classes/game.class.js";
 import type { coordinates, Player } from "../classes/player.class.js";
 import { lineIntersection, cornerIntersection, updateVelocity } from "./ball.utils.js";
-import { paddleCollisionBis } from "./test.js";
+// import { paddleCollisionBis } from "./test.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 const MAX_SCORE: number = 5;

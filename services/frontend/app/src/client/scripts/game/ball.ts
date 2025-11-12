@@ -1,7 +1,7 @@
 import { Game, HEIGHT, WIDTH, type ballObj } from "./game.class.js";
 import type { coordinates, repObj } from "./mess.validation.js";
 import { lineIntersection, cornerIntersection, updateVelocity } from "./ball.utils.js";
-import { paddleCollisionBis } from "./test.js";
+// import { paddleCollisionBis } from "./test.js";
 
 export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 	// console.log("IN DEADRECKONING");
@@ -146,7 +146,7 @@ function corners(game: Game, paddle: coordinates, newX: number, newY: number, si
 			return false;
 	}
 	if (cornerIntersection(game, paddle, newX, newY, corner)) {
-		[game.ball.x, game.ball.y] = [corner.x + 1, corner.y + 1];
+		[game.ball.x, game.ball.y] = [corner.x + 1, corner.y + 1];//TODO: +1 pas ouf
 		return true;
 	}
 	return false;
