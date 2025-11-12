@@ -6,6 +6,7 @@ import { deadReckoning, updateBallPos } from "./ball.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 const MAX_SCORE: number = 5;
+const MAX_UPDATES_PER_FRAME = 5;
 
 export async function startGame(game: Game, ws: WebSocket) {
 	game.lastFrameTime = performance.now();
@@ -27,7 +28,8 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 
 		game.delta += (timestamp - game.lastFrameTime);
 		game.lastFrameTime = timestamp;
-		while (game.delta >= TIME_STEP) { //TODO: add update limit
+		let updates: number = 0;
+		while (game.delta >= TIME_STEP && updates < MAX_UPDATES_PER_FRAME) { //TODO: add update limit
 			// ball dead reckoning
 			// deadReckoning(game, latestReply);
 			// opponent paddle interpolation
@@ -44,7 +46,10 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 			// game.addReq(game.req);
 			// game.req._ID += 1; //TODO: overflow
 			game.delta -= TIME_STEP;
+			updates++;
 		}
+		if (updates === MAX_UPDATES_PER_FRAME)
+			game.delta = 0;
 
 		//draw new frame
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
