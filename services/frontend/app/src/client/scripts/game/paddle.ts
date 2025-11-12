@@ -1,7 +1,6 @@
 import type { coordinates } from './mess.validation.js';
-import { Game, type keysObj, HEIGHT, WIDTH, type paddleSpec, type ballObj } from './game.class.js';
+import { Game, type keysObj, HEIGHT, WIDTH, type paddleSpec } from './game.class.js';
 import { paddleCollision } from './ball.js';
-import { distBallPad } from './ball.utils.js';
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
@@ -60,33 +59,33 @@ function right(pad: coordinates, game: Game, limit: number, step: coordinates) {
 }
 
 function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
-	while (step.x > 0 || step.y > 0) {
+	let x: number = Math.abs(step.x);
+	let y: number = Math.abs(step.y);
+	while (x > 0 || y > 0) {
 		const newX: number = game.ball.x - step.x;
 		const newY: number = game.ball.y - step.y;
 		const temp: coordinates = { x: game.ball.x, y: game.ball.y }; 
 		if (paddleCollision(game, paddle, newX, newY)) {
-			const newBall: ballObj = { ...game.ball };
+			const newBall: coordinates = { x: game.ball.x, y: game.ball.y };
 			game.ball.x = temp.x;
 			game.ball.y = temp.y;
 			const t: number = (newBall.x - game.ball.x) / (newX - game.ball.x);
 			paddle.x += step.x * t;
 			paddle.y += step.y * t;
-			step.x -= step.x * t;
-			if (step.x < 0)
+			x -= Math.abs(step.x * t);
+			if (x < 0)
 				step.x = 0;
-			step.y -= step.y * t;
-			if (step.y < 0)
+			y -= Math.abs(step.y * t);
+			if (y < 0)
 				step.y = 0;
 			game.ball.x += game.ball.dx * TIME_STEP;
 			game.ball.y += game.ball.dy * TIME_STEP;
-			// game.ball.x += step.x;
-			// game.ball.y += step.y;
 		}
 		else {
 			paddle.x += step.x;
 			paddle.y += step.y;
-			step.x = 0;
-			step.y = 0;
+			x = 0;
+			y = 0;
 		}
 	}
 }
