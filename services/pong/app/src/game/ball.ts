@@ -102,7 +102,6 @@ function sides(game: Game, paddle: coordinates, newX: number, newY: number, side
 			p3 = inflatedPad;
 			p4 = {x: inflatedPad.x + padWidth, y: inflatedPad.y};
 			n = {x: 0, y: -1};
-			newPos = lineIntersection(p1, p2, p3, p4);
 			break;
 		case "bottom":
 			p3 = {x: inflatedPad.x, y: inflatedPad.y + padHeight};
