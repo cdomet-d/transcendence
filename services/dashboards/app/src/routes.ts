@@ -42,7 +42,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const response = await serv.dbStats.run(query, params);
 			if (!response.changes) {
 				serv.log.error('[DASHBOARD] Game creation query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: '[DASHBOARD] Internal server error during game creation' }));
+				throw(new Error('[DASHBOARD] Internal server error during game creation'))
 			}
 
 			return (reply.code(201).send({
@@ -156,7 +156,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const response = await serv.dbStats.run(query, [playerIDsString]);
 			if (!response.changes) {
 				serv.log.error('[DASHBOARD] Tournament creation query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: '[DASHBOARD] Internal server error during game creation' }));
+				throw(new Error('[DASHBOARD] Internal server error during game creation');)
 			}
 
 			return (reply.code(201).send({

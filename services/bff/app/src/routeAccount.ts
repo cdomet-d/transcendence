@@ -97,9 +97,7 @@ export async function bffAccountRoutes(serv: FastifyInstance) {
 					msg: `[CRITICAL][BFF] Partial deletion for userID: ${userID}.`,
 					failures: failures.map(f => (f as PromiseRejectedResult).reason?.message || f.reason)
 				});
-				return reply.code(500).send({
-					message: '[BFF] Failed to completely delete account. Please contact support.'
-				});
+				throw new Error('[BFF] Failed to completely delete account. Please contact support.') ;
 			}
 
 			return (reply.code(204).send());
