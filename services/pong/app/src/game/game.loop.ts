@@ -63,7 +63,7 @@ function endGame(player1: Player, player2: Player, game: Game) {
 }
 
 function sendToPlayers(game: Game, player1: Player, player2: Player) {
-	player1.sendReply(game.ball, player2);
+	player1.sendReply(game.ball, player2, game.padSpec.width);
 	if (!game.local)
-		player2.sendReply(game.ball, player1);
+		player2.sendReply(game.ball, player1, game.padSpec.width);
 }

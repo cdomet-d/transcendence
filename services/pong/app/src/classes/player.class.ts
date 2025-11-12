@@ -97,7 +97,7 @@ export class Player {
 	}
 
 	/*                              METHODS                                  */
-	public sendReply(ball: ballObj, opponent: Player) {
+	public sendReply(ball: ballObj, opponent: Player, padWidth: number) {
 		// paddles and ball
 		this.#_reply._leftPad.y = this.#_paddle.y;
 		this.#_reply._rightPad.y = opponent.paddle.y;
@@ -106,7 +106,7 @@ export class Player {
 			this.#_reply._ball.x = WIDTH - ball.x;
 			this.#_reply._ball.dx *= -1;
 			this.#_reply._leftPad.x = WIDTH - this.#_paddle.x;
-			this.#_reply._rightPad.x = WIDTH - opponent.paddle.x;
+			this.#_reply._rightPad.x = WIDTH - opponent.paddle.x - padWidth;
 		}
 		else {
 			this.#_reply._leftPad.x = this.#_paddle.x;
