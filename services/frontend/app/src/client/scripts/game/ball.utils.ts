@@ -35,7 +35,7 @@ export function distBallPad(p: coordinates, b: coordinates): number {
     return length + Math.min(Math.max(d.x, d.y), 0.0);
 }
 
-export function lineIntersection(p1: coordinates, p2: coordinates, p3: coordinates, p4: coordinates): coordinates | null {
+export function lineIntersection(game: Game, p1: coordinates, p2: coordinates, p3: coordinates, p4: coordinates): coordinates | null {
 	const denom: number = (p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y - p1.y);
 	if (denom === 0) return null;
 	const t: number = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x)) / denom;
@@ -44,6 +44,7 @@ export function lineIntersection(p1: coordinates, p2: coordinates, p3: coordinat
 	if (u > 1 || u < 0) return null;
 	const newX: number = p1.x + t * (p2.x - p1.x);
 	const newY: number = p1.y + t * (p2.y - p1.y);
+    game.t = t;
 	return {x: newX, y: newY};
 }
 

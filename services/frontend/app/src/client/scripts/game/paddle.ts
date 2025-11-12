@@ -51,9 +51,8 @@ function right(pad: coordinates, game: Game, limit: number, step: coordinates) {
 }
 
 function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
-	let x: number = Math.abs(step.x);
-	let y: number = Math.abs(step.y);
-	while (x > 0 || y > 0) {
+	let len = Math.hypot(step.x, step.y);
+	while (len > 0.0001) {
 		const newX: number = game.ball.x - step.x;
 		const newY: number = game.ball.y - step.y;
 		const temp: coordinates = { x: game.ball.x, y: game.ball.y }; 
@@ -61,23 +60,21 @@ function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
 			const newBall: coordinates = { x: game.ball.x, y: game.ball.y };
 			game.ball.x = temp.x;
 			game.ball.y = temp.y;
-			const t: number = (newBall.x - game.ball.x) / (newX - game.ball.x);
-			paddle.x += step.x * t;
-			paddle.y += step.y * t;
-			x -= Math.abs(step.x * t);
-			if (x < 0)
-				step.x = 0;
-			y -= Math.abs(step.y * t);
-			if (y < 0)
-				step.y = 0;
+			const t: number = game.t;//(newBall.x - game.ball.x) / (newX - game.ball.x);
+			const nx = step.x / len;
+			const ny = step.y / len;
+			paddle.x += (step.x * t) - nx * (game.ball.radius + 1);
+			paddle.y += (step.y * t) - ny * (game.ball.radius + 1);
+			step.x *= (1 - t);
+			step.y *= (1 - t);
 			game.ball.x += game.ball.dx * TIME_STEP;
 			game.ball.y += game.ball.dy * TIME_STEP;
 		}
 		else {
 			paddle.x += step.x;
 			paddle.y += step.y;
-			x = 0;
-			y = 0;
+			break;
 		}
+		len = Math.hypot(step.x, step.y);
 	}
 }

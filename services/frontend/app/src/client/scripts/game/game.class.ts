@@ -53,6 +53,7 @@ export class Game {
 	#_req: reqObj;
 	#_reqHistory: requestMap;
 	#_replyHistory: replyTab;
+	#_t: number;
 	// #_clockOffset: number;
 
 	/*                            CONSTRUCTORS                               */
@@ -98,6 +99,7 @@ export class Game {
 		};
 		this.#_reqHistory = new Map();
 		this.#_replyHistory = new Array();
+		this.#_t = 0;
 		// this.#_clockOffset = 0;
 	}
 
@@ -154,11 +156,18 @@ export class Game {
 		return this.#_score;
 	}
 
+	get t(): number {
+		return this.#_t;
+	}
 	// get clockOffset(): number {
 	// 	return this.#_clockOffset;
 	// }
 
 	/*                              SETTERS                                  */
+	set t(t: number) {
+		this.#_t = t;
+	}
+
 	set leftPad(newPos: number) {
 		this.#_leftPaddle.y = newPos;
 	}
