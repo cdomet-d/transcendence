@@ -126,8 +126,8 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const queryProfile = `
 				INSERT INTO userProfile
-				(userID, username, avatar, biography, profileColor, activityStatus, lastConnection)
-				VALUES (?, ?, default, default, default, 1, ?)
+				(userID, username, activityStatus, lastConnection)
+				VALUES (?, ?, 1, ?)
 			`;
 			const paramsProfile = [
 				userID,
