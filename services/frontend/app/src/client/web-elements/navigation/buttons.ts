@@ -118,7 +118,7 @@ export class CustomButton extends HTMLButtonElement {
     render() {
         this.className =
             'box-border w-full brdr pad-xs input-emphasis outline-hidden \
-			overflow-hidden whitenowrap button';
+			overflow-hidden whitenowrap';
 
         if (this.#btn.content && !this.#animated) {
             this.renderTextualBtn();

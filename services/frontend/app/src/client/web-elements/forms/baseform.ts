@@ -26,20 +26,19 @@ export class BaseForm extends HTMLFormElement {
     submitHandler: (ev: SubmitEvent) => void;
     validationHandler: () => void;
 
-    // TODO: actually make it a map ?
-    /** A map-like object to store the individual elements of a form to allow repositionning and easy manipulation.
+    /** A map storing the individual elements of a form to allow easy manipulation.
      * It's basically a cache.
      */
-    #formContent: { [key: string]: HTMLElement };
+    #formContent: Map<string, HTMLElement>;
 
     constructor() {
         super();
         this.#formData = emptyForm;
         this.submitHandler = this.submitHandlerImplementation.bind(this);
         this.validationHandler = this.#validate.bind(this);
-        this.#formContent = {};
+        this.#formContent = new Map<string, HTMLElement>();
         this.className =
-            'w-full h-full grid grid-auto-rows-auto gap-m place-items-center justify-center box-border pad-m';
+            'w-full h-full grid grid-auto-rows-auto form-gap place-items-center justify-center box-border pad-m';
     }
 
     /**
@@ -60,9 +59,8 @@ export class BaseForm extends HTMLFormElement {
         return this.#formContent;
     }
 
-    async sendForm(url: string, req: RequestInit, form: FormData) {
+    async sendForm(url: string, req: RequestInit) {
         console.log(url);
-
         try {
             const response = await fetch(url, req);
             if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
@@ -73,6 +71,20 @@ export class BaseForm extends HTMLFormElement {
         }
     }
 
+    createReqBody(form: FormData): string {
+        const fObject = Object.fromEntries(form.entries());
+        const jsonBody = JSON.stringify(fObject);
+        return jsonBody;
+    }
+
+    initReq(): RequestInit {
+        const req: RequestInit = {
+            method: this.#formData.method,
+            headers: { 'Content-Type': 'application/json' },
+        };
+        return req;
+    }
+
     /** Handles the default submit event for the form.
      * Prevents default submission and logs form data.
      * Can be overridden in subclasses for custom behavior.
@@ -81,29 +93,21 @@ export class BaseForm extends HTMLFormElement {
     async submitHandlerImplementation(ev: SubmitEvent) {
         ev.preventDefault();
         const form = new FormData(this);
-		const req: RequestInit = {
-			method: this.#formData.method,
-			headers: {'Content-Type': 'application/json'},
-		}
-
-		if (req.method !== 'GET') {
-			const fObject = Object.fromEntries(form.entries());
-			const jsonBody = JSON.stringify(fObject);
-			req.body = jsonBody;
-		} else {
-			// TODO: handle URL path parameter for get method 
-		}
-	
-
-        const data = await this.sendForm(this.#formData.action, req, form);
-        console.log(data);
+        const req = this.initReq();
+        if (req.method === 'post') {
+            req.body = this.createReqBody(form);
+        } else {
+            console.log(form.entries);
+        }
+        console.log(req.method, req.body);
+        await this.sendForm(this.#formData.action, req);
     }
 
     #validate() {
         if (!this.checkValidity()) {
-            this.#formContent['submit'].setAttribute('disabled', '');
+            this.#formContent.get('submit')?.setAttribute('disabled', '');
         } else {
-            this.#formContent['submit'].removeAttribute('disabled');
+            this.#formContent.get('submit')?.removeAttribute('disabled');
         }
     }
 
@@ -113,7 +117,7 @@ export class BaseForm extends HTMLFormElement {
     renderTitle() {
         if (this.#formData.heading) {
             const title = createHeading('1', this.#formData.heading);
-            this.#formContent['title'] = title;
+            this.#formContent.set('title', title);
             this.append(title);
         }
     }
@@ -126,10 +130,10 @@ export class BaseForm extends HTMLFormElement {
             let el: HTMLElement;
             if (field.type !== 'textarea') {
                 el = createInputGroup(field) as InputGroup;
-                this.#formContent[field.id] = el;
+                this.#formContent.set(field.id, el);
             } else {
                 el = createTextAreaGroup(field) as TextAreaGroup;
-                this.#formContent[field.id] = el;
+                this.#formContent.set(field.id, el);
             }
             this.append(el);
             el.classList.remove('w-full');
@@ -143,7 +147,7 @@ export class BaseForm extends HTMLFormElement {
      */
     renderButtons() {
         const submit = createBtn(this.#formData.button);
-        this.#formContent['submit'] = submit;
+        this.#formContent.set('submit', submit);
         this.append(submit);
         if (!submit.classList.contains('bg-red')) {
             submit.classList.remove('w-full');

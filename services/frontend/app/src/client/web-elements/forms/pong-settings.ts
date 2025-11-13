@@ -34,14 +34,14 @@ export class LocalPongSettings extends BaseForm {
     }
 
     styleFields() {
-        super.contentMap['title']?.classList.add('col-span-2');
-        super.contentMap['paddlesize']?.classList.add('col-start-1');
-        super.contentMap['paddlespeed']?.classList.add('col-start-1');
-        super.contentMap['ballspeed']?.classList.add('col-start-1');
-        super.contentMap['opponent']?.classList.add('row-start-2', 'col-start-2');
+        super.contentMap.get('title')?.classList.add('col-span-2');
+        super.contentMap.get('paddlesize')?.classList.add('col-start-1');
+        super.contentMap.get('paddlespeed')?.classList.add('col-start-1');
+        super.contentMap.get('ballspeed')?.classList.add('col-start-1');
+        super.contentMap.get('opponent')?.classList.add('row-start-2', 'col-start-2');
         this.#backgroundSelector.classList.add('row-start-3', 'col-start-2');
-        super.contentMap['submit']?.classList.remove('w-full');
-        super.contentMap['submit']?.classList.add('row-start-5', 'col-span-2', 'w-5/6');
+        super.contentMap.get('submit')?.classList.remove('w-full');
+        super.contentMap.get('submit')?.classList.add('row-start-5', 'col-span-2', 'w-5/6');
     }
 
     /**
@@ -129,14 +129,14 @@ export class RemotePongSettings extends LocalPongSettings {
      * Applies custom styles to form fields and buttons.
      */
     override styleFields() {
-        super.contentMap['title']?.classList.add('col-span-2');
+        super.contentMap.get('title')?.classList.add('col-span-2');
         this.#searchbar.classList.add('row-start-2', 'col-start-2');
         super.dropdownMenu.classList.add('row-start-5', 'col-start-1');
-        super.contentMap['paddlespeed']?.classList.add('col-start-1');
-        super.contentMap['ballspeed']?.classList.add('col-start-1');
-        super.contentMap['paddlesize']?.classList.add('col-start-1');
-        super.contentMap['submit']?.classList.remove('w-full');
-        super.contentMap['submit']?.classList.add('row-start-5', 'col-span-2', 'w-5/6');
+        super.contentMap.get('paddlespeed')?.classList.add('col-start-1');
+        super.contentMap.get('ballspeed')?.classList.add('col-start-1');
+        super.contentMap.get('paddlesize')?.classList.add('col-start-1');
+        super.contentMap.get('submit')?.classList.remove('w-full');
+        super.contentMap.get('submit')?.classList.add('row-start-5', 'col-span-2', 'w-5/6');
     }
 
     /**

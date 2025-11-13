@@ -8,6 +8,9 @@ import { userColorsMenu, languageMenu } from '../navigation/default-menus.js';
 import type { Avatar } from '../typography/images.js';
 import type { DropdownMenu } from '../navigation/menus.js';
 import type { UserData } from '../types-interfaces.js';
+// import imageCompression from 'browser-image-compression';
+// import { read } from 'fs';
+
 /**
  * Custom form element for user settings, including avatar, color, language, and account deletion.
  * Extends BaseForm.
@@ -40,6 +43,27 @@ export class UserSettingsForm extends BaseForm {
         this.#user = details;
     }
 
+    #fileToBinary(f: FormData): Promise<string | undefined> {
+        console.log('in fetchHandler', f.get('upload'));
+        const reader = new FileReader();
+        const file = f.get('upload');
+        if (!file || !(file instanceof File)) throw new Error('Error processing avatar');
+        return new Promise((resolve, reject) => {
+            reader.onload = () => {
+                const res = reader.result;
+                if (typeof res === 'string') resolve(res);
+                else resolve(undefined);
+            };
+            reader.onerror = () => {
+                reject(reader.error);
+            };
+            reader.onabort = () => {
+                reject(new DOMException('Aborted reading', 'AbortError'));
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
     /**
      * Handles the submit event for the form.
      * Appends color and language selections to the form data if changed.
@@ -50,6 +74,7 @@ export class UserSettingsForm extends BaseForm {
         const f = new FormData(this);
         const colSelection = this.#colors.selectedElement;
         const langSelection = this.#languages.selectedElement;
+
         if (this.#user) {
             if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
                 f.append('color', 'bg-' + colSelection.id);
@@ -57,8 +82,19 @@ export class UserSettingsForm extends BaseForm {
                 f.append('language', langSelection.id);
         }
 
-
-        await this.sendForm(this.details.action, this.details.method, f);
+        if (f.get('upload') && this.#user) {
+            try {
+                const binaryAvatar = await this.#fileToBinary(f);
+				if (binaryAvatar) f.append('avatar', binaryAvatar);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+		f.delete('upload');
+        const req = this.initReq();
+        req.body = this.createReqBody(f);
+        console.log(req.method, req.body);
+        await this.sendForm(this.details.action, req);
     }
 
     /**
@@ -83,7 +119,7 @@ export class UserSettingsForm extends BaseForm {
         super.renderButtons();
         this.append(this.#accountDelete);
         this.#avatar.classList.add('row-span-2');
-        super.contentMap['title']?.classList.add('row-span-2');
+        super.contentMap.get('title')?.classList.add('row-span-2');
         this.classList.add('sidebar-left');
     }
 }

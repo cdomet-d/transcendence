@@ -3,7 +3,7 @@ import { usernamePattern, passwordPattern } from '../default-values.js';
 
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
 export const userSettingsForm: FormDetails = {
-    action: 'https://localhost:8443/api/account/settings',
+    action: 'https://localhost:8443/api/account/settings/',
     heading: 'Settings',
     ariaLabel: 'User settings',
     id: 'user-settings',
@@ -46,7 +46,7 @@ export const userSettingsForm: FormDetails = {
 };
 
 export const registrationForm: FormDetails = {
-    action: 'https://localhost:8443/api/auth/browser',
+    action: 'https://localhost:8443/api/auth/browser/',
     heading: 'Register',
     ariaLabel: 'Create an account',
     id: 'account-create',
@@ -73,7 +73,7 @@ export const registrationForm: FormDetails = {
 };
 
 export const search: FormDetails = {
-    action: '/api/user/',
+    action: 'https://localhost:8443/api/user/',
     heading: '',
     ariaLabel: 'Search for a user',
     id: 'searchform',
@@ -92,7 +92,7 @@ export const search: FormDetails = {
 };
 
 export const localPong: FormDetails = {
-    action: '/api/game/lobby',
+    action: 'https://localhost:8443/api/game/lobby/',
     heading: 'Local Pong',
     ariaLabel: 'Pong settings',
     id: 'local-pong-settings',
@@ -144,7 +144,7 @@ export const localPong: FormDetails = {
 };
 
 export const remotePong: FormDetails = {
-    action: '/api/game/lobby',
+    action: 'https://localhost:8443/api/game/lobby/',
     heading: 'Remote Pong',
     ariaLabel: 'Remote Pong settings',
     id: 'remote-pong-settings',
@@ -188,7 +188,7 @@ export const remotePong: FormDetails = {
 };
 
 export const deleteAccount: FormDetails = {
-    action: '/api/account',
+    action: 'https://localhost:8443/api/account/',
     heading: '',
     ariaLabel: 'Account deletion request',
     id: 'account-deletion-request',

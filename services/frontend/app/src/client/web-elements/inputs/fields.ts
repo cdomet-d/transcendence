@@ -1,4 +1,5 @@
 import type { InputFieldsData } from '../types-interfaces.js';
+const MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
 
 //TODO: feedback on username
 //TODO: err message on required field empty
@@ -46,10 +47,11 @@ export class CustomInput extends HTMLInputElement {
         let feedback: string[] = [];
         if (!/[A-Za-z0-9]/.test(val)) feedback.push('Forbidden character');
         if (val.length < 4 || val.length > 18)
-            feedback.push(`Range for pw is 4-18, current length is: ${val.length}`);
+            feedback.push(`Username should be 4-18 character long, is: ${val.length}`);
         return feedback;
     }
 
+	// TODO: test large file
     #typeFile(el: HTMLInputElement): string[] {
         const file = el.files;
         const allowed = ['image/jpeg', 'image/png', 'image/gif'];
@@ -58,6 +60,10 @@ export class CustomInput extends HTMLInputElement {
             if (!allowed.includes(file[0].type)) {
                 el.setCustomValidity('invalid extension');
                 feedback.push(`Invalid extension: ${file[0].type}`);
+            if (file[0].size >= MAX_FILE_SIZE_BYTES) {
+                el.setCustomValidity('too large');
+                feedback.push(`File is too large [max: 2MB]`);
+            }
             } else {
                 el.setCustomValidity('');
             }
