@@ -14,52 +14,52 @@
           maxLength: 128
           type: string
 
-    responses:
-      BadRequest:
-        content:
-          application/json:
-            example:
-              code: 400
-              message: Malformed parameters could not be processed
-            schema:
-              $ref: "#/components/schemas/response"
-        description: Bad Request
-      Forbidden:
-        content:
-          application/json:
-            example:
-              code: 403
-              message: You are not authorized to access this ressource
-            schema:
-              $ref: "#/components/schemas/response"
-        description: Forbidden
-      MethodNotAllowed:
-        content:
-          application/json:
-            example:
-              code: 405
-              message: This operation is not allowed on this ressource
-            schema:
-              $ref: "#/components/schemas/response"
-        description: Unsupported request
-      NotFound:
-        content:
-          application/json:
-            example:
-              code: 404
-              message: User not found
-            schema:
-              $ref: "#/components/schemas/response"
-        description: Not Found
-      Success:
-        content:
-          application/json:
-            example:
-              code: 200
-              message: Successful operation
-            schema:
-              $ref: "#/components/schemas/response"
-        description: Signals the operation was successful
+  responses:
+    BadRequest:
+      content:
+        application/json:
+          example:
+            code: 400
+            message: Malformed parameters could not be processed
+          schema:
+            $ref: "#/components/schemas/response"
+      description: Bad Request
+    Forbidden:
+      content:
+        application/json:
+          example:
+            code: 403
+            message: You are not authorized to access this ressource
+          schema:
+            $ref: "#/components/schemas/response"
+      description: Forbidden
+    MethodNotAllowed:
+      content:
+        application/json:
+          example:
+            code: 405
+            message: This operation is not allowed on this ressource
+          schema:
+            $ref: "#/components/schemas/response"
+      description: Unsupported request
+    NotFound:
+      content:
+        application/json:
+          example:
+            code: 404
+            message: Not found
+          schema:
+            $ref: "#/components/schemas/response"
+      description: Not Found
+    Success:
+      content:
+        application/json:
+          example:
+            code: 200
+            message: Successful operation
+          schema:
+            $ref: "#/components/schemas/response"
+      description: Signals the operation was successful
 
       Unauthorized:
         content:
@@ -408,19 +408,19 @@
           - score
         type: object
 
-      password:
-        description: |
-          the user's password. It must be at least 12 characters long, and contain:
-          - at least one **uppercase letter** [A-Z]
-          - at least one **lowercase letter** [a-z]
-          - at least one **digit** [0 - 9]
-          - at least one **special characters** [@ $ ! % * ? &]
-        example: $FillinglessPie1249%
-        format: password
-        maxLength: 256
-        minLength: 12
-        pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{12,}$
-        type: string
+    password:
+      description: |
+        the user's password. It must be at least 12 characters long, and contain:
+        - at least one **uppercase letter** [A-Z]
+        - at least one **lowercase letter** [a-z]
+        - at least one **digit** [0 - 9]
+        - at least one **special characters** [@ $ ! % * ? &]
+      example: $FillinglessPie1249%
+      format: password
+      maxLength: 256
+      minLength: 12
+      pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{12,256}$
+      type: string
 
       profile:
         description: a user's profile

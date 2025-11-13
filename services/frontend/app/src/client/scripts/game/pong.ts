@@ -29,5 +29,4 @@ function getCanvasContext(): CanvasRenderingContext2D | null {
 	const ctx = canvas.getContext('2d');
 	return ctx;
 }
-
 export { pong };

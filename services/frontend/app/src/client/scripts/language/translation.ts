@@ -1,6 +1,6 @@
-import English from '../../assets/locales/English.json' with { type: "json" };
-import French from '../../assets/locales/French.json' with { type: "json" };
-import Spanish from '../../assets/locales/Spanish.json' with { type: "json" };
+import en from '../../assets/locales/en.json' with { type: 'json' };
+import fr from '../../assets/locales/fr.json' with { type: 'json' };
+import es from '../../assets/locales/es.json' with { type: 'json' };
 
 type TranslationMap = Record<string, string>;
 
@@ -9,28 +9,27 @@ export let currentLang: string = "English";
 let translation: TranslationMap = English;
 
 export function initLanguageCSR() {
-	let savedLang: string | null = localStorage.getItem('selectedLanguage');
-	if (!savedLang)
-		savedLang = "English";
-	setLangVars(savedLang);
+    let savedLang: string | null = localStorage.getItem('selectedLanguage');
+    if (!savedLang) savedLang = 'en';
+    setLangVars(savedLang);
 }
 
 export function setLangVars(savedLang: string) {
-	if (resources[savedLang]) {
-		currentLang = savedLang;
-		translation = resources[savedLang];
-	}
+    if (resources[savedLang]) {
+        currentLang = savedLang;
+        translation = resources[savedLang];
+    }
 }
 
 export function translate(key: string): string {
-	return (translation[key] || key);
+    return translation[key] || key;
 }
 
 export function changeLanguage(lang: string) {
-	if (resources[lang]) {
-		currentLang = lang;
-		translation = resources[lang];
-		localStorage.setItem('selectedLanguage', lang);
-		document.cookie = `lang=${lang};path=/;max-age=31536000`;
-	}
+    if (resources[lang]) {
+        currentLang = lang;
+        translation = resources[lang];
+        localStorage.setItem('selectedLanguage', lang);
+        document.cookie = `lang=${lang};path=/;max-age=31536000`;
+    }
 }

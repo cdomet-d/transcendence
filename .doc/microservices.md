@@ -11,7 +11,7 @@ Cybersec is handled into each container
   - Edit information
 
 - Friend management
-- Search bar
+- search bar
 - Matchmaking
 - Gameplay
 
