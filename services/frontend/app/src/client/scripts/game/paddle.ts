@@ -51,27 +51,20 @@ function right(pad: coordinates, game: Game, limit: number, step: coordinates) {
 }
 
 function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
-	let len = Math.hypot(step.x, step.y);
-	while (len > 0.0001) {
-		const nextX: number = game.ball.x - step.x;
-		const nextY: number = game.ball.y - step.y;
-		const result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);
-		if (!result) {
-			paddle.x += step.x;
-			paddle.y += step.y;
-			break;
-		}
-		const t: number = result[0];
-		const n: coordinates = result[1];
-		const x: number = (step.x * t) - n.x * (game.ball.radius + 1);
-		const y: number = (step.y * t) - n.y * (game.ball.radius + 1);
-		paddle.x += x;
-		paddle.y += y;
-		step.x -= x;
-		step.y -= y;
-		[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, n.x, n.y);
-		game.ball.x += game.ball.dx * TIME_STEP; //TODO: utiliser le temps qu'il reste de la frame pas TIME_STEP
-		game.ball.y += game.ball.dy * TIME_STEP;
-		len = Math.hypot(step.x, step.y);
+	const nextX: number = game.ball.x - step.x;
+	const nextY: number = game.ball.y - step.y;
+	const result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);
+	if (!result) {
+		paddle.x += step.x;
+		paddle.y += step.y;
+		return;
 	}
+	const [t, n] = result;
+	let len = Math.hypot(step.x, step.y);
+	const contactDist = len * t;
+	const nx = step.x / len;
+	const ny = step.y / len;
+	paddle.x += nx * (contactDist - game.ball.radius - 1);
+	paddle.y += ny * (contactDist - game.ball.radius - 1);
+	[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, nx, ny);
 }
