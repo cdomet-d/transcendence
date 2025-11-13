@@ -14,14 +14,18 @@ export function raycast(game: Game, paddle: coordinates, nextX: number, nextY: n
     const inflatedPad: coordinates = {x: paddle.x - game.ball.radius, y: paddle.y - game.ball.radius};
     const padHeight: number = game.padSpec.height + 2 * game.ball.radius;
     const padWidth: number = game.padSpec.width + 2 * game.ball.radius;
+    const leftX: number = inflatedPad.x;
+    const rightX: number = inflatedPad.x + padWidth;
+    const topY: number = inflatedPad.y;
+    const bottomY: number = inflatedPad.y + padHeight;
 
     const p1: coordinates = {x: game.ball.x, y: game.ball.y};
     const p2: coordinates = {x: nextX, y: nextY};
     const sides = [
-        {p3: inflatedPad, p4: {x: inflatedPad.x, y: inflatedPad.y + padHeight}, n: {x: -1, y: 0}},
-        {p3: {x: inflatedPad.x + padWidth, y: inflatedPad.y}, p4: {x: inflatedPad.x + padWidth, y: inflatedPad.y + padHeight}, n: {x: 1, y: 0}},
-        {p3: inflatedPad, p4: {x: inflatedPad.x + padWidth, y: inflatedPad.y}, n: {x: 0, y: -1}},
-        {p3: {x: inflatedPad.x, y: inflatedPad.y + padHeight}, p4: {x: inflatedPad.x + padWidth, y: inflatedPad.y + padHeight}, n: {x: 0, y: 1}}
+        {p3: inflatedPad, p4: {x: leftX, y: bottomY}, n: {x: -1, y: 0}}, //left
+        {p3: {x: rightX, y: topY}, p4: {x: rightX, y: bottomY}, n: {x: 1, y: 0}}, //right
+        {p3: inflatedPad, p4: {x: rightX, y: topY}, n: {x: 0, y: -1}}, //top
+        {p3: {x: leftX, y: bottomY}, p4: {x: rightX, y: bottomY}, n: {x: 0, y: 1}} //bottom
     ]
   
     let smallestT: number = Infinity;
