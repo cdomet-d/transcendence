@@ -334,34 +334,4 @@ SET totalPlayedGame = totalPlayedGame + 1
 WHERE userID = 101;
 ```
 
-
-TODO :
-* ~~Change the way the database in instancieted in the code (connect db to fastify like in accessibility container)~~
-* ~~For larger GET API calls, should make a get function per column or can a function that gets all the needed informations will be better ? Maybe even both ?~~ (I did both)
-* ~~Clean code in friends container's routes.ts file~~ 
-* ~~check all reply to add success of the request~~
-* ~~Change all request to https~~
-* ~~Update which routes should or shoudn't have a variable parameter~~
-* ~~Check correct error returns for await fecth~~
-* ~~Add check for every serv.run~~
-* ~~add the "user" to container~~
-* ~~add a Orchestration Service~~
-* ~~Do nginx config~~
-* ~~fix the user interface registered in fastify that causes error in multiple route.ts~~
-
-* secure extern API calls and understand what it actually means
-* check all internal and external https request
-* Add .env varaible for db setup to ensure flexibility
-* check batch-fechting endpoint
-* Plug languageDB route to front to see if translation works
-* Add function for leaderboard (plus de wins all over)
-* Faire function search bar user
-* check all get to see if they do return the value they get from db
-* check all fetch in gateway to see if they actually match route they mean to call
-* clean all unused functions in all route.ts files
-* ~~add the creation of a profile and stat when creting account in the gateway~~
-* Define game card object w/ Coralie
-* Define friendsList card object w/ Coralie
-* changer toutes les 500 
-
-notion : https://www.notion.so/28fec36dccef8049863ee403e618e675?v=28fec36dccef804badbc000c4d0f3703&source=copy_link
+//DOC NOT UP TO DATE YET (WIP)
