@@ -1,6 +1,6 @@
 import type { coordinates } from './mess.validation.js';
 import { Game, type keysObj, HEIGHT, WIDTH, type paddleSpec } from './game.class.js';
-import { paddleCollision } from './ball.js';
+import { updateVelocity, raycast } from './collision.utils.js';
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
@@ -53,33 +53,25 @@ function right(pad: coordinates, game: Game, limit: number, step: coordinates) {
 function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
 	let len = Math.hypot(step.x, step.y);
 	while (len > 0.0001) {
-		const newX: number = game.ball.x - step.x;
-		const newY: number = game.ball.y - step.y;
-		const temp: coordinates = { x: game.ball.x, y: game.ball.y }; 
-		if (paddleCollision(game, paddle, newX, newY)) {
-			const newBall: coordinates = { x: game.ball.x, y: game.ball.y };
-			game.ball.x = temp.x;
-			game.ball.y = temp.y;
-			const t: number = game.t;//(newBall.x - game.ball.x) / (newX - game.ball.x);
-			// const totalDist = Math.hypot(newX - game.ball.x, newY - game.ball.y);
-			// const movedDist = Math.hypot(newBall.x - game.ball.x, newBall.y - game.ball.y);
-			// const t = movedDist / totalDist;
-			const nx = step.x / len;
-			const ny = step.y / len;
-			const x: number = (step.x * t) - nx * (game.ball.radius + 1);
-			const y: number = (step.y * t) - ny * (game.ball.radius + 1);
-			paddle.x += x;
-			paddle.y += y;
-			step.x -= x;
-			step.y -= y;
-			game.ball.x += game.ball.dx * TIME_STEP; //TODO: utiliser le temps qu'il reste de la frame pas TIME_STEP
-			game.ball.y += game.ball.dy * TIME_STEP;
-		}
-		else {
+		const nextX: number = game.ball.x - step.x;
+		const nextY: number = game.ball.y - step.y;
+		const result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);
+		if (!result) {
 			paddle.x += step.x;
 			paddle.y += step.y;
 			break;
 		}
+		const t: number = result[0];
+		const n: coordinates = result[1];
+		const x: number = (step.x * t) - n.x * (game.ball.radius + 1);
+		const y: number = (step.y * t) - n.y * (game.ball.radius + 1);
+		paddle.x += x;
+		paddle.y += y;
+		step.x -= x;
+		step.y -= y;
+		[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, n.x, n.y);
+		game.ball.x += game.ball.dx * TIME_STEP; //TODO: utiliser le temps qu'il reste de la frame pas TIME_STEP
+		game.ball.y += game.ball.dy * TIME_STEP;
 		len = Math.hypot(step.x, step.y);
 	}
 }
