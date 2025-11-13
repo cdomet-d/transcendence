@@ -41,6 +41,11 @@ export class UserSettingsForm extends BaseForm {
         this.contentMap.get('upload')?.addEventListener('input', this.#previewAvatar);
     }
 
+    override disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.contentMap.get('upload')?.removeEventListener('input', this.#previewAvatar);
+    }
+
     /**
      * Sets the user data for the form.
      * @param details - The user data object.

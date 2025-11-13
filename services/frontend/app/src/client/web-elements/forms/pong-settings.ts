@@ -28,9 +28,20 @@ export class LocalPongSettings extends BaseForm {
         return this.#backgroundSelector;
     }
 
+    override async submitHandlerImplementation(ev: SubmitEvent): Promise<void> {
+        ev.preventDefault();
+        const f = new FormData(this);
+        const background = this.#backgroundSelector.selectedElement;
+
+        if (background) f.append('background', background.id);
+        const req = this.initReq();
+        req.body = this.createReqBody(f);
+        await this.sendForm(this.details.action, req);
+    }
     constructor() {
         super();
         this.#backgroundSelector = createDropdown(backgroundMenu, 'Select background', 'static');
+        this.submitHandler = this.submitHandlerImplementation.bind(this);
     }
 
     styleFields() {
@@ -74,6 +85,7 @@ export class RemotePongSettings extends LocalPongSettings {
     #searchbar: Searchbar;
     #guestWrapper: HTMLDivElement;
     #invitedUsers: UserData[] | null;
+    // #inviteHandler: (ev: SubmitEvent) => void
 
     //TODO: Add event listener on Searchbar's SUBMIT to capture invitations.
     //TODO: Add API call to /api/user to get requested user and store it in an
@@ -86,15 +98,31 @@ export class RemotePongSettings extends LocalPongSettings {
         this.#searchbar = createForm('search-form');
         this.#guestWrapper = document.createElement('div');
         this.#invitedUsers = null;
+        // this.#inviteHandler = this.#inviteHandlerImplementation.bind(this);
     }
 
+    // #inviteHandlerImplementation(ev: SubmitEvent) {
+    // 	ev.preventDefault();
+    // 	const form = new FormData(this.#searchbar);
+    // 	console.log(form);
+    // }
+
+    override connectedCallback(): void {
+        super.connectedCallback();
+        // this.#searchbar.addEventListener('submit', this.#inviteHandler)
+    }
+
+    override disconnectedCallback(): void {
+        super.disconnectedCallback();
+        // this.#searchbar.removeEventListener('submit', this.#inviteHandler)
+    }
     /**
      * Sets the invited users and updates the guest list display.
      * @param users - Array of invited user data.
      */
     set invitedUsers(users: UserData[]) {
         this.#invitedUsers = users;
-        this.#displayInvitedUser();
+        this.#displayInvitedUsers();
     }
 
     /**
@@ -111,7 +139,7 @@ export class RemotePongSettings extends LocalPongSettings {
      * Appends user inline elements for each invited user.
      * @private
      */
-    #displayInvitedUser() {
+    #displayInvitedUsers() {
         if (this.#guestWrapper.firstChild) this.#clearResults();
 
         if (!this.#invitedUsers || this.#invitedUsers.length < 1) {
@@ -160,7 +188,7 @@ export class RemotePongSettings extends LocalPongSettings {
         super.renderButtons();
         this.styleFields();
         this.styleInviteList();
-        this.#displayInvitedUser();
+        this.#displayInvitedUsers();
         this.classList.add('sidebar-left');
     }
 }

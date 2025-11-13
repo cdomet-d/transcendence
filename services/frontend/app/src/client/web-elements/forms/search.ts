@@ -23,15 +23,30 @@ export class Searchbar extends BaseForm {
         super();
         super.details = search;
         this.#results = document.createElement('div');
-        this.submitHandler = this.submitHandlerImplementation.bind(this);
+        // this.submitHandler = this.submitHandlerImplementation.bind(this);
         this.setResultPos = this.setResultPos.bind(this);
         this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
     }
 
-    //TODO: maybe we can just attempt to get the user ?
+    #createQueryURL(form: FormData) {
+        const target = form.get('searchbar');
+        if (target) super.details.action += target;
+        console.log(super.details.action);
+    }
+
+    // TODO: maybe we can just attempt to get the user ?
     override async submitHandlerImplementation(ev: SubmitEvent) {
         ev.preventDefault();
-        // const form = new FormData(this);
+        const form = new FormData(this);
+        this.#createQueryURL(form);
+        this.initReq;
+        try {
+            const response = await this.sendForm(super.details.action, this.initReq());
+            const searchResults = await response.json();
+            this.displayResults(searchResults as UserData[]);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     override connectedCallback() {

@@ -77,7 +77,7 @@ export class BaseForm extends HTMLFormElement {
         return this.#formContent;
     }
 
-    async sendForm(url: string, req: RequestInit) {
+    async sendForm(url: string, req: RequestInit): Promise<Response> {
         try {
             const response = await fetch(url, req);
             if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
@@ -85,12 +85,14 @@ export class BaseForm extends HTMLFormElement {
             return response;
         } catch (error) {
             console.error('Fetch failed', error);
+            throw error;
         }
     }
 
     createReqBody(form: FormData): string {
         const fObject = Object.fromEntries(form.entries());
         const jsonBody = JSON.stringify(fObject);
+        console.log(jsonBody);
         return jsonBody;
     }
 
@@ -113,10 +115,8 @@ export class BaseForm extends HTMLFormElement {
         const req = this.initReq();
         if (req.method === 'post') {
             req.body = this.createReqBody(form);
-        } else {
-            console.log(form.entries);
         }
-        console.log(req.method, req.body);
+        console.log(this.#formData.action, req.method, req.body);
         await this.sendForm(this.#formData.action, req);
     }
 
