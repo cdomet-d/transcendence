@@ -51,7 +51,7 @@ export class CustomInput extends HTMLInputElement {
         return feedback;
     }
 
-	// TODO: test large file
+    // TODO: test large file
     #typeFile(el: HTMLInputElement): string[] {
         const file = el.files;
         const allowed = ['image/jpeg', 'image/png', 'image/gif'];
@@ -60,10 +60,10 @@ export class CustomInput extends HTMLInputElement {
             if (!allowed.includes(file[0].type)) {
                 el.setCustomValidity('invalid extension');
                 feedback.push(`Invalid extension: ${file[0].type}`);
-            if (file[0].size >= MAX_FILE_SIZE_BYTES) {
-                el.setCustomValidity('too large');
-                feedback.push(`File is too large [max: 2MB]`);
-            }
+                if (file[0].size >= MAX_FILE_SIZE_BYTES) {
+                    el.setCustomValidity('too large');
+                    feedback.push(`File is too large [max: 2MB]`);
+                }
             } else {
                 el.setCustomValidity('');
             }

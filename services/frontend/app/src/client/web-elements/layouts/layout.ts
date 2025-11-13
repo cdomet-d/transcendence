@@ -52,7 +52,8 @@ export class Layout extends HTMLDivElement {
     }
 
     render() {
-        this.className = 'box-border grid h-dvh w-dvw grid-auto-rows-auto place-content-center layout-col gap-s';
+        this.className =
+            'box-border grid h-dvh w-dvw grid-auto-rows-auto place-content-center layout-col gap-s';
     }
 }
 

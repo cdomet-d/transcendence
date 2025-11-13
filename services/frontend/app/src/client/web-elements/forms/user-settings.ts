@@ -9,7 +9,6 @@ import type { Avatar } from '../typography/images.js';
 import type { DropdownMenu } from '../navigation/menus.js';
 import type { UserData } from '../types-interfaces.js';
 // import imageCompression from 'browser-image-compression';
-// import { read } from 'fs';
 
 /**
  * Custom form element for user settings, including avatar, color, language, and account deletion.
@@ -21,6 +20,7 @@ export class UserSettingsForm extends BaseForm {
     #colors: DropdownMenu;
     #languages: DropdownMenu;
     #avatar: Avatar;
+    #previewAvatar: (ev: Event) => void;
 
     /**
      * Initializes the user settings form with user data, avatar, color and language dropdowns, and account deletion form.
@@ -29,10 +29,16 @@ export class UserSettingsForm extends BaseForm {
         super();
         this.#user = user;
         this.submitHandler = this.submitHandlerImplementation.bind(this);
+        this.#previewAvatar = this.#previewAvatarImplementation.bind(this);
         this.#accountDelete = createForm('default-form', deleteAccount);
         this.#avatar = createAvatar(this.#user.avatar);
         this.#colors = createDropdown(userColorsMenu, 'Pick color', 'dynamic');
         this.#languages = createDropdown(languageMenu, 'Pick language', 'static');
+    }
+
+    override connectedCallback(): void {
+        super.connectedCallback();
+        this.contentMap.get('upload')?.addEventListener('input', this.#previewAvatar);
     }
 
     /**
@@ -43,11 +49,34 @@ export class UserSettingsForm extends BaseForm {
         this.#user = details;
     }
 
-    #fileToBinary(f: FormData): Promise<string | undefined> {
-        console.log('in fetchHandler', f.get('upload'));
+    async #previewAvatarImplementation(ev: Event) {
+        let target: HTMLInputElement | null = null;
+        if (ev.target instanceof HTMLInputElement) {
+            target = ev.target as HTMLInputElement;
+        }
+        if (!target) return;
+        const file = target.files;
+        if (!file) return;
+        try {
+            const binaryAvatar = await this.#fileToBinary(file[0]);
+            if (binaryAvatar) {
+                this.#user.avatar.src = binaryAvatar;
+                this.#avatar.metadata = this.#user.avatar;
+            }
+        } catch (error) {
+            //TODO: better error handling;
+            console.error(error);
+        }
+    }
+    /**
+     * Converts uploaded file to binary string to send it in the request body.
+     * @throws `Error` if no file is found,  `DOMException` if conversion to DataURL fails.
+     * @param f - `Form Data`
+     * @returns `Promise<string | undefined>`
+     */
+    #fileToBinary(file: File): Promise<string | undefined> {
         const reader = new FileReader();
-        const file = f.get('upload');
-        if (!file || !(file instanceof File)) throw new Error('Error processing avatar');
+
         return new Promise((resolve, reject) => {
             reader.onload = () => {
                 const res = reader.result;
@@ -69,7 +98,7 @@ export class UserSettingsForm extends BaseForm {
      * Appends color and language selections to the form data if changed.
      * @param ev - The submit event.
      */
-    override async submitHandlerImplementation(ev: SubmitEvent) {
+    override async submitHandlerImplementation(ev: SubmitEvent): Promise<void> {
         ev.preventDefault();
         const f = new FormData(this);
         const colSelection = this.#colors.selectedElement;
@@ -83,17 +112,20 @@ export class UserSettingsForm extends BaseForm {
         }
 
         if (f.get('upload') && this.#user) {
+            const file = f.get('upload');
+            if (!file || !(file instanceof File)) throw new Error('Error processing avatar');
             try {
-                const binaryAvatar = await this.#fileToBinary(f);
-				if (binaryAvatar) f.append('avatar', binaryAvatar);
+                const binaryAvatar = await this.#fileToBinary(file);
+                if (binaryAvatar) f.append('avatar', binaryAvatar);
             } catch (error) {
+                //TODO: better error handling;
                 console.error(error);
             }
         }
-		f.delete('upload');
+
+        f.delete('upload');
         const req = this.initReq();
         req.body = this.createReqBody(f);
-        console.log(req.method, req.body);
         await this.sendForm(this.details.action, req);
     }
 

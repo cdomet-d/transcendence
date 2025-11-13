@@ -41,6 +41,24 @@ export class BaseForm extends HTMLFormElement {
             'w-full h-full grid grid-auto-rows-auto form-gap place-items-center justify-center box-border pad-m';
     }
 
+    /** Called when the element is inserted into the DOM.
+     * Sets form attributes, attaches the submit event handler, and renders the form.
+     */
+    connectedCallback() {
+        this.action = this.#formData.action;
+        this.ariaLabel = this.#formData.ariaLabel;
+        this.id = this.#formData.id;
+        this.method = this.#formData.method;
+        this.addEventListener('submit', this.submitHandler);
+        this.addEventListener('input', this.validationHandler);
+        this.render();
+    }
+
+    disconnectedCallback() {
+        this.removeEventListener('submit', this.submitHandler);
+        this.removeEventListener('input', this.validationHandler);
+    }
+
     /**
      * Sets the details of the form - expects a {@link FormDetails} object.
      * Can also be `got`.
@@ -60,7 +78,6 @@ export class BaseForm extends HTMLFormElement {
     }
 
     async sendForm(url: string, req: RequestInit) {
-        console.log(url);
         try {
             const response = await fetch(url, req);
             if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
@@ -153,24 +170,6 @@ export class BaseForm extends HTMLFormElement {
             submit.classList.remove('w-full');
             submit.classList.add('w-5/6');
         }
-    }
-
-    /** Called when the element is inserted into the DOM.
-     * Sets form attributes, attaches the submit event handler, and renders the form.
-     */
-    connectedCallback() {
-        this.action = this.#formData.action;
-        this.ariaLabel = this.#formData.ariaLabel;
-        this.id = this.#formData.id;
-        this.method = this.#formData.method;
-        this.addEventListener('submit', this.submitHandler);
-        this.addEventListener('input', this.validationHandler);
-        this.render();
-    }
-
-    disconnectedCallback() {
-        this.removeEventListener('submit', this.submitHandler);
-        this.removeEventListener('input', this.validationHandler);
     }
 
     /** Renders the form by calling the title, fields, and button renderers.
