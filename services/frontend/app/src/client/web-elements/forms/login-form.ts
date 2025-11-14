@@ -1,6 +1,6 @@
 import { BaseForm } from './baseform';
 
-export class RegistrationForm extends BaseForm {
+export class LoginForm extends BaseForm {
     constructor() {
         super();
     }
@@ -23,6 +23,6 @@ export class RegistrationForm extends BaseForm {
     }
 }
 
-if (!customElements.get('registration-form')) {
-    customElements.define('registration-form', RegistrationForm, { extends: 'form' });
+if (!customElements.get('login-form')) {
+    customElements.define('login-form', LoginForm, { extends: 'form' });
 }

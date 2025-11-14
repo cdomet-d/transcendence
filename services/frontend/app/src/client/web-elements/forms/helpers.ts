@@ -4,6 +4,7 @@ import { RemotePongSettings, LocalPongSettings } from './pong-settings.js';
 import { Searchbar } from './search.js';
 import { UserSettingsForm } from './user-settings.js';
 import { RegistrationForm } from './registration-form.js';
+import { LoginForm } from './login-form.js';
 
 /**
  * Merges with the existing HTMLElementTag map.
@@ -15,6 +16,7 @@ interface HTMLElementTagMap {
     'default-form': BaseForm;
     'local-pong-settings': LocalPongSettings;
     'registration-form': RegistrationForm;
+    'login-form': LoginForm;
     'remote-pong-settings': RemotePongSettings;
     'search-form': Searchbar;
     'settings-form': UserSettingsForm;

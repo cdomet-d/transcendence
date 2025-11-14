@@ -11,7 +11,7 @@ export interface routeInterface {
 export const routes: routeInterface[] = [
     { path: '/', callback: page.renderHome },
     { path: '/404', callback: page.renderNotFound },
-    { path: '/auth', callback: page.renderAuth },
+    { path: '/auth', callback: page.renderRegisterAuth },
     { path: '/leaderboard', callback: page.renderLeaderboard },
     { path: '/user/:login', callback: page.renderProfile },
     { path: '/user/settings', callback: page.renderSettings },

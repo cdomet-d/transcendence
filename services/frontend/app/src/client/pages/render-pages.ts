@@ -11,6 +11,7 @@ import { createForm } from '../web-elements/forms/helpers.js';
 import {
     localPong,
     registrationForm,
+    loginForm,
     remotePong,
     userSettingsForm,
 } from '../web-elements/forms/default-forms.js';
@@ -72,11 +73,18 @@ export function renderHome() {
     updatePageTitle('Home');
 }
 
-export function renderAuth() {
-    console.log('renderAuth');
+export function renderRegisterAuth() {
+    console.log('renderRegisterAuth');
     prepareLayout(document.body.layoutInstance, 'home');
     document.body.layoutInstance!.appendAndCache(createForm('registration-form', registrationForm));
-    updatePageTitle('Register or Login');
+    updatePageTitle('Register');
+}
+
+export function renderLoginAuth() {
+    console.log('renderLoginAuth');
+    prepareLayout(document.body.layoutInstance, 'home');
+    document.body.layoutInstance!.appendAndCache(createForm('login-form', loginForm));
+    updatePageTitle('Login');
 }
 
 export function renderLeaderboard() {
