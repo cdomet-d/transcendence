@@ -1,32 +1,50 @@
 {
-  "name": "frontend",
-  "version": "1.0.0",
-  "private": true,
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "css": "npx @tailwindcss/cli -i ./src/css/src.css -o ./src/css/output.css",
-    "css:watch": "npx @tailwindcss/cli -i ./src/css/src.css -o ./src/css/output.css --watch",
-    "dev": "concurrently \"npm run css:watch\" \"nodemon\""
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@fastify/cookie": "^11.0.2",
-    "@fastify/static": "^8.2.0",
-    "@tailwindcss/cli": "^4.1.13",
-    "@types/node": "^24.3.0",
-    "bcrypt": "^6.0.0",
-    "fastify": "^5.5.0",
-    "tailwindcss": "^4.1.12",
-    "typescript": "^5.9.2"
-  },
-  "devDependencies": {
-    "@fastify/vite": "^8.2.0",
-    "@tailwindcss/vite": "^4.1.12",
-    "concurrently": "^9.2.1",
-    "nodemon": "^3.1.10",
-    "vite": "^7.1.4"
-  },
-  "type": "module"
+	"name": "frontend",
+	"version": "1.0.0",
+	"private": true,
+	"main": "server.js",
+	"type": "module",
+	"description": "",
+	"author": "",
+	"license": "ISC",
+	"scripts": {
+		"copy:html": "mkdir -p dist/client && cp -r src/client/index.html dist/client",
+		"copy:assets": "mkdir -p dist/client/ && cp -r src/client/assets dist/client && npm run copy:html",
+		"build:css": "postcss ./src/client/css/tailwind.css -o ./dist/client/css/output.css",
+		"build": "node build.js && npm run build:css && npm run copy:assets",
+		"watch" : "node build.js --watch && npm run build:css",
+		"dev": "concurrently \"npm run watch\" \"nodemon\"",
+
+		"format": "npx prettier --write \"./src/**/*.ts\"",
+		"lint": "eslint ."
+	},
+	"keywords": [],
+	"dependencies": {
+		"@fastify/cookie": "^11.0.2",
+		"@fastify/static": "^8.2.0",
+		"@tailwindcss/cli": "^4.1.13",
+		"@tailwindcss/postcss": "^4.1.13",
+		"fastify": "^5.5.0",
+		"mime": "^4.1.0",
+		"postcss-import": "^16.1.1",
+		"tailwindcss": "^4.1.13",
+		"typescript": "^5.9.3"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.37.0",
+		"@tailwindcss/vite": "^4.1.12",
+		"@types/node": "^24.6.0",
+		"@typescript-eslint/eslint-plugin": "^8.46.1",
+		"autoprefixer": "^10.4.21",
+		"concurrently": "^9.2.1",
+		"esbuild": "^0.25.12",
+		"eslint": "^9.37.0",
+		"globals": "^16.4.0",
+		"nodemon": "^3.1.10",
+		"path-to-regexp": "^8.3.0",
+		"postcss": "^8.5.6",
+		"postcss-cli": "^11.0.1",
+		"tailwindcss": "^4.1.13",
+		"typescript": "^5.9.3"
+	}
 }

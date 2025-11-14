@@ -1,4 +1,4 @@
-import { renderLobbyMenu } from "../../pages/html.pages.js";
+// import { renderLobbyMenu } from "../../pages/html.pages.js";
 import { handleGameStart, handleLobbyRequest } from "./wsConnect.js";
 
 interface lobbyInfo {
@@ -17,7 +17,7 @@ interface userInfo {
 
 
 function lobby() {
-	renderLobbyMenu();
+	// renderLobbyMenu();
 	attachLobbyMenuListeners();
 	import("./wsConnect.js").then(({ wsConnect }) => {
 		wsConnect();
