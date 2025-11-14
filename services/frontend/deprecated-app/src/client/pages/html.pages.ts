@@ -59,33 +59,6 @@ export function renderProfile(): string {
 	});
 }
 
-/* export function sendFriendRequest(): string {
-	return renderPageTemplate({
-		title: "send request",
-		nextButtons: [
-			{ href: "/home", label: translate("Back") },
-		],
-		backHref: "/central",
-		showBack: true,
-		homeHref: "/"
-	});
-} */
-
-// TODO: delete this comment
-// export function renderTournament(): string {
-// 	return renderPageTemplate({
-// 		title: "TOURNAMENT",
-// 		nextButtons: [
-// 			{ href: "/404", label: "4 players" },
-// 			{ href: "/404", label: "8 players" },
-
-// 		],
-// 		backHref: "/central",
-// 		showBack: true,
-// 		homeHref: "/"
-// 	});
-// }
-
 export function renderGame(): string {
 	let html: string = `
 		<div class="min-h-screen flex flex-col items-center justify-center bg-white">

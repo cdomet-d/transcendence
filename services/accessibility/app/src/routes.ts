@@ -21,7 +21,7 @@ export async function languageRoutes(serv: FastifyInstance) {
 				reply.code(404).send({ message: 'Translation not found' });
 		} catch (error) {
 			serv.log.error(error);
-			reply.code(500).send({ message: 'Database error' });
+			throw (error)
 		}
 	});
 }

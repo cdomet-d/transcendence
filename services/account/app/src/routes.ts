@@ -18,7 +18,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 				return (reply.code(409).send({ message: 'Username taken' }));
 
 			const query = `
-				INSERT INTO account (hashedPassword, username, userStatus, registerDate, defaultLang)
+				INSERT INTO account (hashedPassword, username, userRole, registerDate, defaultLang)
 				VALUES (?, ?, 1, ?, ?)
 			`;
 			const params = [hashedPassword, username, new Date().toISOString(), 'English'];
@@ -49,7 +49,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			`
 			const user = await serv.dbAccount.get(query, [username]);
 			if (!user)
-				return (reply.code(401).send({ message: '[ACCOUNT] Account not found.' }));
+				return (reply.code(404).send({ message: '[ACCOUNT] Account not found.' }));
 			const passwordMatches = await bcrypt.compare(password, user.hashedPassword);
 
 			if (!passwordMatches)
@@ -141,7 +141,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const query = `
 				SELECT
 					username,
-					userStatus,
+					userRole,
 					registerDate,
 					defaultLang
 				FROM
@@ -178,7 +178,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 				SELECT
 					p.userID, 
 					p.username,
-					p.userStatus,
+					p.userRole,
 					p.registerDate,
 					p.defaultLang,
 					p.registerDate
@@ -196,6 +196,40 @@ export async function accountRoutes(serv: FastifyInstance) {
 				success: true,
 				usersData: usersData,
 				failedIDs: failedIDs
+			}));
+
+		} catch (error) {
+			serv.log.error(`[ACCOUNT] Error fetching account data batch: ${error} `);
+			throw (error);
+		}
+	});
+
+	serv.post('/internal/account/:userID/userDataBatch', async (request, reply) => {
+		try {
+			const { userID } = request.params as { userID: string };
+
+			const query = `
+				SELECT
+					p.userID, 
+					p.username,
+					p.registerDate,
+					p.defaultLang,
+				FROM
+					account p
+				WHERE
+					p.userID  = ?
+			`;
+			const accountData = await serv.dbAccount.all(query, userID);
+			if (!accountData) {
+				return (reply.code(404).send({
+					success: false,
+					message: 'Account data not found.'
+				}));
+			}
+
+			return (reply.code(200).send({
+				success: true,
+				accountData: accountData,
 			}));
 
 		} catch (error) {

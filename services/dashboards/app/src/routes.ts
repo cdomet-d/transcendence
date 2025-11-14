@@ -42,7 +42,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const response = await serv.dbStats.run(query, params);
 			if (!response.changes) {
 				serv.log.error('[DASHBOARD] Game creation query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: '[DASHBOARD] Internal server error during game creation' }));
+				throw(new Error('[DASHBOARD] Internal server error during game creation'))
 			}
 
 			return (reply.code(201).send({
@@ -112,7 +112,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	//delete a game
 	serv.delete('/internal/dashboard/games/:gameID', async (request, reply) => {
 		try {
-			const { gameID } = request.body as { gameID: string };
+			const { gameID } = request.params as { gameID: string };
 
 			//Should I add a 400 if gameID not provided ?
 
@@ -156,7 +156,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const response = await serv.dbStats.run(query, [playerIDsString]);
 			if (!response.changes) {
 				serv.log.error('[DASHBOARD] Tournament creation query succeeded but did not insert a row.');
-				return (reply.code(500).send({ message: '[DASHBOARD] Internal server error during game creation' }));
+				throw(new Error('[DASHBOARD] Internal server error during game creation'));
 			}
 
 			return (reply.code(201).send({
@@ -206,7 +206,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 
 			const response = await serv.dbStats.run(query, [tournamentID]);
 			if (!response.changes)
-				return (reply.code(404).send({ message: 'Tournament not found.' }));serv.log.error('[DASHBOARD] Tournament deletion query succeeded but did not delete a row.');
+				return (reply.code(404).send({ message: 'Tournament not found.' }));
+				serv.log.error('[DASHBOARD] Tournament deletion query succeeded but did not delete a row.');
 
 			return (reply.code(204).send({
 				success: true,

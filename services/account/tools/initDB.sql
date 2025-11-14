@@ -1,8 +1,8 @@
 CREATE TABLE account (
-	userID INTEGER PRIMARY KEY,
+	userID INTEGER PRIMARY KEY AUTOINCREMENT,
 	hashedPassword TEXT,
 	username TEXT UNIQUE,
-	userStatus INTEGER,
+	userRole INTEGER,
 	registerDate TEXT,
 	defaultLang TEXT
 );

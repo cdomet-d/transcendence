@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "nodemon",
     "start": "tsc && node dist/server.js",
+    "//": "This MUST point to your friends DB setup script",
     "test:setup": "rm -f /usr/data/testDB.db && /usr/local/bin/testDB.sh",
-    "test": "npm run test:setup && DATABASE_PATH=/usr/data/testDB.db jest"
+    "//": "This NOW includes the NODE_OPTIONS flag",
+    "test": "npm run test:setup && DATABASE_PATH=/usr/data/testDB.db NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +23,8 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.2.0",
     "nodemon": "^3.1.10",
     "ts-jest": "^29.4.5"
   }

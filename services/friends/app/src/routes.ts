@@ -26,6 +26,8 @@ export async function routeFriend(serv: FastifyInstance) {
 				const response = await serv.dbFriends.get<{ statusFrienship: boolean }>(sql, params);
 
 				let status: ProfileView = 'stranger';
+				if (!response)
+					return (reply.code(404).send({ success: false, message: '[FRIENDS] Friendship not found' }));
 				if (response)
 					status = response.statusFrienship ? 'friend' : 'pending';
 				return (reply.code(200).send({ status: status }));
@@ -77,12 +79,8 @@ export async function routeFriend(serv: FastifyInstance) {
 			];
 
 			const response = await serv.dbFriends.run(query, params);
-			if (response.changes === 0) {
-				return reply.code(404).send({
-					success: false,
-					message: '[FRIENDS] Friend request could not be sent.'
-				});
-			}
+			if (response.changes === 0)
+				throw new Error('[FRIENDS] Friend request failed to save.');
 			return (reply.code(201).send({
 				success: true,
 				message: `[FRIENDS] Friend request sent to ${friendID}`
@@ -94,15 +92,16 @@ export async function routeFriend(serv: FastifyInstance) {
 		}
 	});
 
+	//TODO: should we use friendship ID or combination of userIDs ? 
 	//accept a friend request
-	serv.patch('internal/friendships/:id', async (request, reply) => {
+	serv.patch('/internal/friendships/:id', async (request, reply) => {
 		try {
 			const { receiverID: receiverID } = request.body as { receiverID: number };
 			const { friendID: friendID } = request.body as { friendID: number };
 
 			const friendshipID = await friendshipExistsUsersID(serv.dbFriends, receiverID, friendID);
 			if (!friendshipID) {
-				return reply.code(409).send({
+				return reply.code(404).send({
 					success: false,
 					message: '[FRIENDS] Friendship doesnt exists!'
 				});
@@ -118,7 +117,7 @@ export async function routeFriend(serv: FastifyInstance) {
 
 			const response = await serv.dbFriends.run(query, params);
 			if (response.changes === 0) {
-				return reply.code(404).send({
+				return reply.code(400).send({
 					success: false,
 					message: '[FRIENDS] Friendship could not be accepted.'
 				});
@@ -157,7 +156,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			serv.log.error(`[FRIENDS] Error deleting friendship: ${error}`);
 			throw (error);
 		}
-	});
+	});	
 
 	serv.delete('/internal/friends/:userID/friendships', async (request, reply) => {
 		try {
@@ -177,4 +176,4 @@ export async function routeFriend(serv: FastifyInstance) {
 			throw (error);
 		}
 	});
-}
+});

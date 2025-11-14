@@ -74,9 +74,6 @@ Lasty, even is the table will remain pretty small, being able to make shorter, s
 
 ### Usage and associated functions
 
-TODO :
-* ~~get translation of a word by word and language code~~
-
 This databases won't have a function to update the data via the code. 
 To add translation I think the best course of action will be to directly modify the seed.sql which adds data to the database at launch.
 
@@ -130,10 +127,117 @@ We don't have totalLosses because it can easily be computed by totalMatch and to
 
 averageMatchDuration will be in seconds.
 
+### Routes
+
+#### GET
+
+* **GET fetch userProfile with userID** : `/internal/users/:userID`
+
+    userID send as `request.params`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | profile not found |
+    |   200    | profile found  |
+
+* **GET fetch userProfile with username** :  `/internal/users`
+
+    userID send as `request.query`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | profile not found |
+    |   400    | username not sent with query |
+    |   200    | profile found  |
+
+* **GET userStats with userID** : `/internal/users/:userID/stats`
+
+    userID sent as `request.params`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | profile not found |
+    |   200    | stats found  |
+
+* **GET userData with userID** : `/internal/users/:userID/userData`
+
+    userID sent as `request.params`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | profile not found |
+    |   200    | stats found  |
+
+#### POST 
+
+* **POST fetch multiple userProfile with userIDs** : `/internal/users/profile`
+
+    userIDs sent as `request.body`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   400    | userIDs not sent in body |
+    |   200    | profile found  |
+
+    _Note_ : We are not sending 404 in this query because we want to fetch a list of profile even if one of the userID doesn't have a linked profile in the database.
+
+* **POST post a userProfile and userStats** : `/internal/users/:userID/profile`
+
+    userID sent as `request.params`
+    username sent as `request.body`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   409    | username taken |
+    |   201    | profile and stats created  |
+
+* **POST fetch userDatas with userIDs (batch query)** : `/internal/users/userDataBatch`
+
+    userIDs sent as `request.body`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   200    | profile found  |
+
+    _Note :_ if there is no profile to be found (no userID sent) or none of the provided userID has a profile linked with it, we will sent a empty json
+
+#### PATCH 
+
+* **PATCH patch userProfile (profile settings) with userID** : `/internal/users/:userID`
+
+    userID sent as `request.params`
+    settings sent as `request.body`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   400    | no paramater to update  |
+    |   404    | profile not found |
+    |   409    | username taken |
+    |   200    | profile updated  |
+
+* **PATCH patch userStats with userID** : `/internal/users/:userID/stats`
+
+    userID sent as `request.params`
+    stats sent as `request.body`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | profile not found |
+    |   200    | stats updated or not stats to update  |
+
+#### DELETE
+
+* **DELETE usersProfile and userStats with userID** : `/internal/users/:userID`
+
+    userID sent as `request.params`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | profile not found |
+    |   204    | profile deleted  |
+
 ### Usage and associated functions
 
-TODO :
-* add curl examplus of function usages
 * userStats
     * ~~get user stats by userID~~
         
@@ -201,6 +305,7 @@ TODO :
         curl -X POST \  -H "Content-Type: application/json" \
         -d '{"newUsername": "<username>"}' \
         http://localhost:2626/users/updateUsername/<userID>
+
 ## Account
 
 ### General overview
@@ -210,10 +315,67 @@ The table has the following column :
 * hashedPassword &rarr; text
 * username &rarr; text (__unique__)
 * email &rarr; text (__unique__)
-* userStatus &rarr; integer
+* userRole &rarr; integer
 * registerDate &rarr; datetime
 
-The userStatus column stored the role of the user (admin, user). I don't know yet if it will be needed yet.
+The userRole column stored the role of the user (admin, user). I don't know yet if it will be needed yet.
+
+### Routes
+
+#### GET
+
+* GET fetch settings of an account with userID ; `/internal/account/:userID`
+
+
+
+#### POST
+
+* POST register an account : `/internal/account/register`
+
+    username and password sent as `request.body`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   409    | username taken |
+    |   201    | account created  |
+
+* POST login with an account : `/internal/account/login`
+
+    username and password sent as `request.body`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | account not found |
+    |   401    | password or username invalid |
+    |   200    | logged in  |
+
+
+#### PATCH
+
+* PATCH accout settings with userID
+
+    userID sent as `request.params`
+    settings sent as `request.body`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   400    | no settings to update |
+    |   404    | account not found |
+    |   409    | username taken |
+    |   200    | settings updated  |
+
+
+#### DELETE
+
+* DELETE account : `/internal/account`
+
+    userID sent as `request.body`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | account not found |
+    |   204    | account deleted  |
+
 
 ### Usage and associated functions
 
@@ -223,7 +385,7 @@ TODO :
 * update password
 * verify email for connection
 * update username (if we want to allow it)
-* get userStatus (if we implement admin features)
+* get userRole (if we implement admin features)
 
 ## Friends
 
@@ -334,34 +496,4 @@ SET totalPlayedGame = totalPlayedGame + 1
 WHERE userID = 101;
 ```
 
-
-TODO :
-* ~~Change the way the database in instancieted in the code (connect db to fastify like in accessibility container)~~
-* ~~For larger GET API calls, should make a get function per column or can a function that gets all the needed informations will be better ? Maybe even both ?~~ (I did both)
-* ~~Clean code in friends container's routes.ts file~~ 
-* ~~check all reply to add success of the request~~
-* ~~Change all request to https~~
-* ~~Update which routes should or shoudn't have a variable parameter~~
-* ~~Check correct error returns for await fecth~~
-* ~~Add check for every serv.run~~
-* ~~add the "user" to container~~
-* ~~add a Orchestration Service~~
-* ~~Do nginx config~~
-* ~~fix the user interface registered in fastify that causes error in multiple route.ts~~
-
-* secure extern API calls and understand what it actually means
-* check all internal and external https request
-* Add .env varaible for db setup to ensure flexibility
-* check batch-fechting endpoint
-* Plug languageDB route to front to see if translation works
-* Add function for leaderboard (plus de wins all over)
-* Faire function search bar user
-* check all get to see if they do return the value they get from db
-* check all fetch in gateway to see if they actually match route they mean to call
-* clean all unused functions in all route.ts files
-* ~~add the creation of a profile and stat when creting account in the gateway~~
-* Define game card object w/ Coralie
-* Define friendsList card object w/ Coralie
-* changer toutes les 500 
-
-notion : https://www.notion.so/28fec36dccef8049863ee403e618e675?v=28fec36dccef804badbc000c4d0f3703&source=copy_link
+//DOC NOT UP TO DATE YET (WIP)

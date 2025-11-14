@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import type { UserProfileView, userData } from './bff.interface.js';
 import * as bcrypt from 'bcrypt';
-import { fetchProfileData, fetchUserID, processMatches, fetchUserProfile, fetchFriendList, fetchUserStats, fetchRelationship } from './bffUserProfile.service.js';
+import { fetchProfileData, buildFullUserData, fetchUserID, processMatches, fetchFriendList, fetchUserStats, fetchRelationship } from './bffUserProfile.service.js';
 import { updatePassword, fetchUserDataAccount, updateUsername, updateBio, updateProfileColor, updateDefaultLang, updateAvatar } from './bffAccount.service.js';
 
 
@@ -9,15 +9,17 @@ import { updatePassword, fetchUserDataAccount, updateUsername, updateBio, update
 export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	//get's profile + stats + game + friendslist
-	serv.get('/users/profile', async (request, reply) => {
+/* 	serv.get('/users/profile', async (request, reply) => {
 		try {
+			const { username: targetUsername } = request.body as { username: string };
+
 			const [
 				userData,
 				stats,
 				friends,
 				recentMatches
 			] = await Promise.all([
-				fetchUserProfile(serv.log, request.user.userID),
+				buildFullUserData(serv.log, request.user.userID),
 				fetchUserStats(serv.log, request.user.userID),
 				fetchFriendList(serv.log, request.user.userID),
 				processMatches(serv.log, String(request.user.userID))
@@ -39,7 +41,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			serv.log.error(`[BFF] Error building user profile view: ${error}`);
 			throw (error);
 		}
-	});
+	}); */
 
 	serv.patch('/users/settings', async (request, reply) => {
 		try {
@@ -97,7 +99,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/users/:userID/profile', async (request, reply) => {
+	serv.get('/users/:username/profile', async (request, reply) => {
 		try {
 			const { username: targetUsername } = request.params as { username: string };
 			const { userID: viewerUserID } = request.user as { userID: number };
@@ -125,7 +127,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				profileColor: ProfileData.profileColor,
 				language: AccountData.defaultLang,
 				since: AccountData.registerDate,
-				status: AccountData.userStatus,
+				status: ProfileData.userStatus,
+				winstreak: ProfileData.winstreak,
 				relation: relation,
 			};
 

@@ -9,8 +9,7 @@ COPY ./tools /usr/local/bin/
 RUN chmod +x /usr/local/bin/friends.sh
 
 RUN chmod +x /usr/local/bin/createDB.sh
-
-#RUN chmod -x /usr/data/friends.db
+RUN chmod +x /usr/local/bin/testDB.sh
 
 RUN apk update && apk add --no-cache sqlite
 

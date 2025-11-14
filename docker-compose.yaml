@@ -135,6 +135,8 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
+    ports:
+      - "1818:1818"
     volumes:
       - ./services/bff/app:/usr/app
     # user: "${T_UID}:${T_GID}"

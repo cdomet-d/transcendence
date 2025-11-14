@@ -5,7 +5,7 @@ interface UserProfile {
 	userID: number;
 	username: string;
 	avatar: string;
-	biographygraphy: string;
+	biography: string;
 	profileColor: string;
 	winstreak: number;
 }
@@ -28,7 +28,7 @@ interface UserStats {
 }
 
 export async function userRoutes(serv: FastifyInstance) {
-	//USER PROFILE
+	//USER PROFILE/internal/users/${userID}/profile
 
 	//GET /internal/users/<userID>
 	serv.get('/internal/users/:userID', async (request, reply) => {
@@ -90,7 +90,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//get user profile
+	//POST user profile
 	serv.post('/internal/users/profile', async (request, reply) => {
 		try {
 			const { userIDs } = request.body as { userIDs: number[] };
@@ -126,8 +126,8 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const queryProfile = `
 				INSERT INTO userProfile
-				(userID, username, avatar, biography, profileColor, activityStatus, lastConnection)
-				VALUES (?, ?, 'default', 'default', 'default', 1, ?)
+				(userID, username, activityStatus, lastConnection)
+				VALUES (?, ?, 1, ?)
 			`;
 			const paramsProfile = [
 				userID,
@@ -136,12 +136,8 @@ export async function userRoutes(serv: FastifyInstance) {
 			];
 
 			const createProfile = await serv.dbUsers.run(queryProfile, paramsProfile);
-			if (createProfile.changes === 0) {
-				return (reply.code(500).send({
-					success: false,
-					message: 'Profile could not be created.'
-				}));
-			}
+			if (createProfile.changes === 0)
+				throw new Error('Database Error: Profile INSERT failed (0 changes).');
 
 			const queryStats = `
 				INSERT INTO userStats (userID, longestMatch, shorestMatch, totalMatch, totalWins,
@@ -150,12 +146,9 @@ export async function userRoutes(serv: FastifyInstance) {
 			`;
 
 			const createStats = await serv.dbUsers.run(queryStats, [userID]);
-			if (createStats.changes === 0) {
-				return (reply.code(500).send({
-					success: false,
-					message: 'Stats could not be created.'
-				}));
-			}
+			if (createStats.changes === 0)
+				throw new Error('Database Error: Stats INSERT failed (0 changes).');
+
 			return (reply.code(201).send({ success: true, message: 'Profile created successfully!' }));
 
 		} catch (error) {
@@ -328,6 +321,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					p.avatar,
 					p.biography,
 					p.profileColor,
+					p.activityStatus,
 					s.winStreak
 				FROM
 					userProfile p
