@@ -31,6 +31,10 @@ export class BaseForm extends HTMLFormElement {
      */
     #formContent: Map<string, HTMLElement>;
 
+    /* -------------------------------------------------------------------------- */
+    /*                                   Default                                  */
+    /* -------------------------------------------------------------------------- */
+
     constructor() {
         super();
         this.#formData = emptyForm;
@@ -58,6 +62,18 @@ export class BaseForm extends HTMLFormElement {
         this.removeEventListener('submit', this.submitHandler);
         this.removeEventListener('input', this.validationHandler);
     }
+    /** Renders the form by calling the title, fields, and button renderers.
+     */
+    render() {
+        this.renderTitle();
+        this.renderFields();
+        this.renderButtons();
+        this.#validate();
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                                   Setters                                  */
+    /* -------------------------------------------------------------------------- */
 
     /**
      * Sets the details of the form - expects a {@link FormDetails} object.
@@ -67,27 +83,25 @@ export class BaseForm extends HTMLFormElement {
         this.#formData = form;
     }
 
+    /* -------------------------------------------------------------------------- */
+    /*                                   Getters                                  */
+    /* -------------------------------------------------------------------------- */
+
     get details() {
         return this.#formData;
     }
 
-    /** Getter for `formContent`, the form's cache.
+    /**
+     * Getter for `formContent`, the form's cache.
      */
     get contentMap() {
         return this.#formContent;
     }
 
-    async sendForm(url: string, req: RequestInit): Promise<Response> {
-        try {
-            const response = await fetch(url, req);
-            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-            console.log('Fetch successful', response);
-            return response;
-        } catch (error) {
-            console.error('Fetch failed', error);
-            throw error;
-        }
-    }
+    // TODO: add getter for single element
+    /* -------------------------------------------------------------------------- */
+    /*                            Event listeners                                 */
+    /* -------------------------------------------------------------------------- */
 
     createReqBody(form: FormData): string {
         const fObject = Object.fromEntries(form.entries());
@@ -102,6 +116,18 @@ export class BaseForm extends HTMLFormElement {
             headers: { 'Content-Type': 'application/json' },
         };
         return req;
+    }
+
+    async sendForm(url: string, req: RequestInit): Promise<Response> {
+        try {
+            const response = await fetch(url, req);
+            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+            console.log('Fetch successful', response);
+            return response;
+        } catch (error) {
+            console.error('Fetch failed', error);
+            throw error;
+        }
     }
 
     /** Handles the default submit event for the form.
@@ -128,6 +154,10 @@ export class BaseForm extends HTMLFormElement {
         }
     }
 
+    /* -------------------------------------------------------------------------- */
+    /*                                  Rendering                                 */
+    /* -------------------------------------------------------------------------- */
+
     /** Renders the form title if a heading is provided in form details.
      * Appends the title element to the form and caches it in `formContent`.
      */
@@ -140,7 +170,8 @@ export class BaseForm extends HTMLFormElement {
     }
 
     /** Renders all fields defined in the form details.
-     * Creates input or textarea groups as needed, appends them, and caches them in `formContent`.
+     * Creates input or textarea groups as needed, appends them, and caches
+     * them in `formContent`.
      */
     renderFields() {
         this.#formData.fields.forEach((field) => {
@@ -170,15 +201,6 @@ export class BaseForm extends HTMLFormElement {
             submit.classList.remove('w-full');
             submit.classList.add('w-5/6');
         }
-    }
-
-    /** Renders the form by calling the title, fields, and button renderers.
-     */
-    render() {
-        this.renderTitle();
-        this.renderFields();
-        this.renderButtons();
-        this.#validate();
     }
 }
 

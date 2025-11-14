@@ -22,8 +22,13 @@ export class UserSettingsForm extends BaseForm {
     #avatar: Avatar;
     #previewAvatar: (ev: Event) => void;
 
+    /* -------------------------------------------------------------------------- */
+    /*                                   Default                                  */
+    /* -------------------------------------------------------------------------- */
+
     /**
-     * Initializes the user settings form with user data, avatar, color and language dropdowns, and account deletion form.
+     * Initializes the user settings form with user data, avatar, color and
+     * language dropdowns, and account deletion form.
      */
     constructor() {
         super();
@@ -46,6 +51,40 @@ export class UserSettingsForm extends BaseForm {
         this.contentMap.get('upload')?.removeEventListener('input', this.#previewAvatar);
     }
 
+    /* -------------------------------------------------------------------------- */
+    /*                                  Rendering                                 */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * Renders the user settings form, including avatar, title, fields,
+     * dropdowns, buttons, and account deletion form.
+     * Applies custom styles to certain fields.
+     */
+    override render() {
+        this.append(this.#avatar);
+        super.renderTitle();
+        super.renderFields();
+        this.renderDropdowns();
+        super.renderButtons();
+        this.append(this.#accountDelete);
+        this.#avatar.classList.add('row-span-2');
+        super.contentMap.get('title')?.classList.add('row-span-2');
+        this.classList.add('sidebar-left');
+    }
+
+    /**
+     * Renders the color and language dropdown menus.
+     */
+    renderDropdowns() {
+        const dropdownWrapper = document.createElement('div');
+        dropdownWrapper.append(this.#colors, this.#languages);
+        dropdownWrapper.className = 'grid gap-s grid-flow-col';
+        this.append(dropdownWrapper);
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                                   Setters                                  */
+    /* -------------------------------------------------------------------------- */
     /**
      * Sets the user data for the form.
      * @param details - The user data object.
@@ -53,6 +92,10 @@ export class UserSettingsForm extends BaseForm {
     set user(details: UserData) {
         this.#user = details;
     }
+
+    /* -------------------------------------------------------------------------- */
+    /*                               Event listeners                              */
+    /* -------------------------------------------------------------------------- */
 
     async #previewAvatarImplementation(ev: Event) {
         let target: HTMLInputElement | null = null;
@@ -72,30 +115,6 @@ export class UserSettingsForm extends BaseForm {
             //TODO: better error handling;
             console.error(error);
         }
-    }
-    /**
-     * Converts uploaded file to binary string to send it in the request body.
-     * @throws `Error` if no file is found,  `DOMException` if conversion to DataURL fails.
-     * @param f - `Form Data`
-     * @returns `Promise<string | undefined>`
-     */
-    #fileToBinary(file: File): Promise<string | undefined> {
-        const reader = new FileReader();
-
-        return new Promise((resolve, reject) => {
-            reader.onload = () => {
-                const res = reader.result;
-                if (typeof res === 'string') resolve(res);
-                else resolve(undefined);
-            };
-            reader.onerror = () => {
-                reject(reader.error);
-            };
-            reader.onabort = () => {
-                reject(new DOMException('Aborted reading', 'AbortError'));
-            };
-            reader.readAsDataURL(file);
-        });
     }
 
     /**
@@ -120,6 +139,7 @@ export class UserSettingsForm extends BaseForm {
             const file = f.get('upload');
             if (!file || !(file instanceof File)) throw new Error('Error processing avatar');
             try {
+                // TODO: compress images
                 const binaryAvatar = await this.#fileToBinary(file);
                 if (binaryAvatar) f.append('avatar', binaryAvatar);
             } catch (error) {
@@ -135,29 +155,28 @@ export class UserSettingsForm extends BaseForm {
     }
 
     /**
-     * Renders the color and language dropdown menus.
+     * Converts uploaded file to binary string to send it in the request body.
+     * @throws `Error` if no file is found,  `DOMException` if conversion to DataURL fails.
+     * @param f - `Form Data`
+     * @returns `Promise<string | undefined>`
      */
-    renderDropdowns() {
-        const dropdownWrapper = document.createElement('div');
-        dropdownWrapper.append(this.#colors, this.#languages);
-        dropdownWrapper.className = 'grid gap-s grid-flow-col';
-        this.append(dropdownWrapper);
-    }
+    #fileToBinary(file: File): Promise<string | undefined> {
+        const reader = new FileReader();
 
-    /**
-     * Renders the user settings form, including avatar, title, fields, dropdowns, buttons, and account deletion form.
-     * Applies custom styles to certain fields.
-     */
-    override render() {
-        this.append(this.#avatar);
-        super.renderTitle();
-        super.renderFields();
-        this.renderDropdowns();
-        super.renderButtons();
-        this.append(this.#accountDelete);
-        this.#avatar.classList.add('row-span-2');
-        super.contentMap.get('title')?.classList.add('row-span-2');
-        this.classList.add('sidebar-left');
+        return new Promise((resolve, reject) => {
+            reader.onload = () => {
+                const res = reader.result;
+                if (typeof res === 'string') resolve(res);
+                else resolve(undefined);
+            };
+            reader.onerror = () => {
+                reject(reader.error);
+            };
+            reader.onabort = () => {
+                reject(new DOMException('Aborted reading', 'AbortError'));
+            };
+            reader.readAsDataURL(file);
+        });
     }
 }
 

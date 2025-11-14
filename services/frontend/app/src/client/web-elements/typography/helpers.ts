@@ -1,6 +1,6 @@
 import { CustomTitle } from './typography.js';
 import { Icon, Avatar, NoResults } from './images.js';
-import type { ImgData, Size, Theme } from '../types-interfaces.js';
+import type { ImgData, Size, ColorTheme } from '../types-interfaces.js';
 
 /**
  * Creates a heading element with a specified level.
@@ -43,7 +43,7 @@ export function createAvatar(metadata?: ImgData): Avatar {
     return el;
 }
 
-export function createNoResult(theme: Theme, size: Size): NoResults {
+export function createNoResult(theme: ColorTheme, size: Size): NoResults {
     const el = document.createElement('div', { is: 'no-results' }) as NoResults;
     el.theme = theme;
     el.size = size;

@@ -141,7 +141,6 @@ export function renderGame() {
     console.log('renderGame');
     prepareLayout(document.body.layoutInstance, 'game');
 
-	const court = document.createElement('div', {is: 'pong-court'}) as PongCourt;
-	document.body.layoutInstance?.appendAndCache(court);
-
+    const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
+    document.body.layoutInstance?.appendAndCache(court);
 }

@@ -19,6 +19,9 @@ export class Searchbar extends BaseForm {
     #searchInput: InputGroup;
     #results: HTMLDivElement;
 
+    /* -------------------------------------------------------------------------- */
+    /*                                   Default                                  */
+    /* -------------------------------------------------------------------------- */
     constructor() {
         super();
         super.details = search;
@@ -27,6 +30,58 @@ export class Searchbar extends BaseForm {
         this.setResultPos = this.setResultPos.bind(this);
         this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
     }
+
+    override connectedCallback() {
+        super.connectedCallback();
+        window.addEventListener('resize', this.setResultPos);
+        window.addEventListener('scroll', this.setResultPos);
+    }
+
+    override disconnectedCallback() {
+        super.disconnectedCallback();
+        window.removeEventListener('resize', this.setResultPos);
+        window.removeEventListener('scroll', this.setResultPos);
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                                  Rendering                                 */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * Renders the search bar structure including input, submit button, search icon, and results container.
+     * Sets form attributes and class names appropriately.
+     */
+    override render() {
+        const img = this.createSearchIcon() as HTMLImageElement;
+        if (super.details.fields[0]) this.#searchInput = createInputGroup(super.details.fields[0]);
+
+        this.#searchInput.append(img);
+        this.append(this.#searchInput);
+        super.renderButtons();
+        this.append(this.#results);
+
+        this.classList.add('sidebar-right', 'search-gap', 'relative');
+        this.#results.className =
+            'hidden absolute brdr bg min-h-fit max-h-l pad-xs overflow-y-auto box-border';
+        this.setResultPos();
+    }
+
+    /**
+     * Creates and returns an image element used as the search icon within the input field.
+     *
+     * @returns {HTMLImageElement} The search icon image element.
+     */
+    createSearchIcon(): HTMLImageElement {
+        const img = document.createElement('img');
+        img.className = 'w-s h-s absolute top-[6px] left-[6px]';
+        img.src = '/public/assets/images/search-icon.png';
+        img.alt = 'A pixel art magnifier';
+        return img;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                               Event listeners                              */
+    /* -------------------------------------------------------------------------- */
 
     #createQueryURL(form: FormData) {
         const target = form.get('searchbar');
@@ -48,18 +103,9 @@ export class Searchbar extends BaseForm {
         }
     }
 
-    override connectedCallback() {
-        super.connectedCallback();
-        window.addEventListener('resize', this.setResultPos);
-        window.addEventListener('scroll', this.setResultPos);
-    }
-
-    override disconnectedCallback() {
-        super.disconnectedCallback();
-        window.removeEventListener('resize', this.setResultPos);
-        window.removeEventListener('scroll', this.setResultPos);
-    }
-
+    /* -------------------------------------------------------------------------- */
+    /*                              Result Rendering                              */
+    /* -------------------------------------------------------------------------- */
     /**
      * Clears all displayed search results from the results container.
      */
@@ -70,26 +116,11 @@ export class Searchbar extends BaseForm {
     }
 
     /**
-     * Adds a user element representing a single user to the search results container.
-     *
      * @param {UserData} user - User data to render inline.
      */
     addUser(user: UserData) {
         const el = createUserInline(user);
         this.#results.append(el);
-    }
-
-    /**
-     * Creates and returns an image element used as the search icon within the input field.
-     *
-     * @returns {HTMLImageElement} The search icon image element.
-     */
-    createSearchIcon(): HTMLImageElement {
-        const img = document.createElement('img');
-        img.className = 'w-s h-s absolute top-[6px] left-[6px]';
-        img.src = '/public/assets/images/search-icon.png';
-        img.alt = 'A pixel art magnifier';
-        return img;
     }
 
     /**
@@ -115,25 +146,6 @@ export class Searchbar extends BaseForm {
         const pos = this.#searchInput.getBoundingClientRect();
         this.#results.style.top = `44px`;
         this.#results.style.width = `${pos.width}px`;
-    }
-
-    /**
-     * Renders the search bar structure including input, submit button, search icon, and results container.
-     * Sets form attributes and class names appropriately.
-     */
-    override render() {
-        const img = this.createSearchIcon() as HTMLImageElement;
-        if (super.details.fields[0]) this.#searchInput = createInputGroup(super.details.fields[0]);
-
-        this.#searchInput.append(img);
-        this.append(this.#searchInput);
-        super.renderButtons();
-        this.append(this.#results);
-
-        this.classList.add('sidebar-right', 'search-gap', 'relative');
-        this.#results.className =
-            'hidden absolute brdr bg min-h-fit max-h-l pad-xs overflow-y-auto box-border';
-        this.setResultPos();
     }
 }
 
