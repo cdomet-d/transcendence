@@ -4,13 +4,6 @@ import { updateVelocity, raycast } from "./collision.utils.js";
 
 export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 	// console.log("IN DEADRECKONING");
-	let nextX: number = 0;
-	let nextY: number = 0;
-	[nextX, nextY] = nextPosition(game, latestReply)
-	// updateBallPos(game, nextX, nextY);
-}
-
-export function nextPosition(game: Game, latestReply: repObj | undefined): [number, number] {
 	let timeSinceUpdate: number = performance.now() - game.lastFrameTime;
 	let ball: ballObj = { ...game.ball };
 	if (latestReply !== undefined) {
@@ -21,7 +14,7 @@ export function nextPosition(game: Game, latestReply: repObj | undefined): [numb
 		timeSinceUpdate = 100;
 	const nextX: number = ball.x + ball.dx * timeSinceUpdate;
 	const nextY: number = ball.y + ball.dy * timeSinceUpdate;
-	return [nextX, nextY]
+	// updateBallPos(game, nextX, nextY);
 }
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
