@@ -1,8 +1,7 @@
 import type { coordinates, Player } from '../classes/player.class.js';
 import type { keysObj } from './mess.validation.js';
 import { Game, HEIGHT, WIDTH, type paddleSpec, type ballObj } from '../classes/game.class.js'
-import { paddleCollision } from './ball.js';
-import { distBallPad } from './ball.utils.js';
+import { updateVelocity, raycast, bounce } from './collision.utils.js';
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
@@ -20,7 +19,7 @@ export function updatePaddlePos(player: Player, keys: keysObj, game: Game) {
 		left(player.paddle, game, WIDTH / 2 + game.ball.radius + 1, step);
 	if (player.right && keys._ArrowRight)
 		right(player.paddle, game, WIDTH - game.padSpec.width, step);
-	movePaddle(game, player, step);
+	movePaddle(game, player.paddle, step);
 }
 
 function up(pad: coordinates, padSpeed: number, step: coordinates) {
@@ -52,34 +51,26 @@ function right(pad: coordinates, game: Game, limit: number, step: coordinates) {
 		step.x += limit - pad.x;
 }
 
-function movePaddle(game: Game, player: Player, step: coordinates) {
-	let x: number = Math.abs(step.x);
-	let y: number = Math.abs(step.y);
-	while (x > 0 || y > 0) {
-		const newX: number = game.ball.x - step.x;
-		const newY: number = game.ball.y - step.y;
-		const temp: coordinates = { x: game.ball.x, y: game.ball.y }; 
-		if (paddleCollision(game, player.paddle, newX, newY)) {
-			const newBall: coordinates = { x: game.ball.x, y: game.ball.y };
-			game.ball.x = temp.x;
-			game.ball.y = temp.y;
-			const t: number = (newBall.x - game.ball.x) / (newX - game.ball.x);
-			player.paddle.x += step.x * t;
-			player.paddle.y += step.y * t;
-			x -= Math.abs(step.x * t);
-			if (x < 0)
-				step.x = 0;
-			y -= Math.abs(step.y * t);
-			if (y < 0)
-				step.y = 0;
-			game.ball.x += game.ball.dx * TIME_STEP;
-			game.ball.y += game.ball.dy * TIME_STEP;
-		}
-		else {
-			player.paddle.x += step.x;
-			player.paddle.y += step.y;
-			x = 0;
-			y = 0;
-		}
+function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
+	const nextX: number = game.ball.x - step.x;
+	const nextY: number = game.ball.y - step.y;
+	const result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);
+	if (!result) {
+		paddle.x += step.x;
+		paddle.y += step.y;
+		return;
 	}
+	const [t, n] = result;
+	let len = Math.hypot(step.x, step.y);
+	const contactDist = len * t - game.ball.radius - 1;
+	if (contactDist <= 0) {
+		bounce(game, paddle, n.x);
+		return;
+	}
+	const nx = step.x / len;
+	const ny = step.y / len;
+	paddle.x += nx * contactDist;
+	paddle.y += ny * contactDist;
+	// [game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, nx, ny);
+	bounce(game, paddle, n.x);
 }
