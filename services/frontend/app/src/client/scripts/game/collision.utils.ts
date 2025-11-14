@@ -2,9 +2,9 @@ import { Game } from "./game.class.js";
 import { type coordinates } from "./mess.validation.js";
 
 export function raycast(game: Game, paddle: coordinates, nextX: number, nextY: number): [number, coordinates] | null {
-	const inflatedPad: coordinates = {x: paddle.x - game.ball.radius, y: paddle.y - game.ball.radius};
-	const padHeight: number = game.padSpec.height + 2 * game.ball.radius;
-	const padWidth: number = game.padSpec.width + 2 * game.ball.radius;
+	const inflatedPad: coordinates = {x: paddle.x - game.ball.r, y: paddle.y - game.ball.r};
+	const padHeight: number = game.padSpec.h + 2 * game.ball.r;
+	const padWidth: number = game.padSpec.w + 2 * game.ball.r;
 	const leftX: number = inflatedPad.x;
 	const rightX: number = inflatedPad.x + padWidth;
 	const topY: number = inflatedPad.y;
@@ -66,8 +66,8 @@ export function bounce(game: Game, paddle: coordinates, nx: number) {
 	let pos: number = 0;
 	let normalizedPos: number = 0;
 	let speed = Math.hypot(game.ball.dx, game.ball.dy);
-	pos = game.ball.y - (paddle.y + game.padSpec.halfHeight);
-	normalizedPos = pos / game.padSpec.halfHeight;
+	pos = game.ball.y - (paddle.y + game.padSpec.halfH);
+	normalizedPos = pos / game.padSpec.halfH;
 	normalizedPos = Math.max(-1, Math.min(1, normalizedPos));
 	const angle: number = normalizedPos * maxAngle;
 	if (nx < 0) {

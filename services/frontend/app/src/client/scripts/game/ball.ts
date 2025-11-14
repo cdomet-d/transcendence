@@ -5,7 +5,6 @@ import { updateVelocity, raycast, bounce } from "./collision.utils.js";
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function deadReckoning(game: Game, latestReply: repObj | undefined) {
-	// console.log("IN DEADRECKONING");
 	let timeSinceUpdate: number = performance.now() - game.lastFrameTime;
 	let ball: ballObj = { ...game.ball };
 	if (latestReply !== undefined) {
@@ -32,7 +31,7 @@ export function updateBallPos(game: Game, nextX: number, nextY: number) {
 }
 
 function sideWallCollision(game: Game, nextX: number): boolean {
-	if (nextX - game.ball.radius >= WIDTH + 100 || nextX + game.ball.radius <= -100) {
+	if (nextX - game.ball.r >= WIDTH + 100 || nextX + game.ball.r <= -100) {
 		game.ball.x = WIDTH / 2;
 		game.ball.y = HEIGHT / 2;
 		game.ball.dx = 0;
@@ -43,12 +42,12 @@ function sideWallCollision(game: Game, nextX: number): boolean {
 }
 
 function upperAndBottomWallCollision(game: Game, nextY: number): number {
-	if (nextY - game.ball.radius <= 0) {
-		nextY = game.ball.radius + 1;
+	if (nextY - game.ball.r <= 0) {
+		nextY = game.ball.r + 1;
 		game.ball.dy = updateVelocity(game.ball.dx, game.ball.dy, 0, 1)[1];
 	}
-	if (nextY + game.ball.radius >= HEIGHT) {
-		nextY = HEIGHT - (game.ball.radius + 1);
+	if (nextY + game.ball.r >= HEIGHT) {
+		nextY = HEIGHT - (game.ball.r + 1);
 		game.ball.dy = updateVelocity(game.ball.dx, game.ball.dy, 0, -1)[1];
 	}
 	return nextY;

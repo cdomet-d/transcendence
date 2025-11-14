@@ -27,15 +27,15 @@ export interface ballObj {
 	y: number,
 	dx: number,
 	dy: number,
-	radius: number
+	r: number
 }
 
 export interface paddleSpec {
 	speed: number
-	width: number,
-	height: number,
-	halfWidth: number,
-	halfHeight: number
+	w: number,
+	h: number,
+	halfW: number,
+	halfH: number
 }
 
 export interface playerReq {
@@ -68,14 +68,14 @@ export class Game {
 			y: HEIGHT / 2, 
 			dx: 0.3, 
 			dy: 0.03,
-			radius: 15
+			r: 15
 		};
 		this.#_paddleSpec = {
 			speed: 0.3,
-			width: 18, 
-			height: HEIGHT / 6, 
-			halfWidth: 18 / 2, 
-			halfHeight: HEIGHT / 12
+			w: 18, 
+			h: HEIGHT / 6, 
+			halfW: 18 / 2, 
+			halfH: HEIGHT / 12
 		}; //custom
 		this.#_ballDir = -1;
 		this.#_reqHistory = new Array();

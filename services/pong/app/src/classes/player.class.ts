@@ -34,30 +34,30 @@ export class Player {
 			_timestamp: 0, 
 			_leftPad: {
 				x: 25, 
-				y: HEIGHT / 2 - padSpec.halfHeight
+				y: HEIGHT / 2 - padSpec.halfH
 			},
 			_rightPad: {
-				x: WIDTH - (padSpec.width + 25), 
-				y: HEIGHT / 2 - padSpec.halfHeight
+				x: WIDTH - (padSpec.w + 25), 
+				y: HEIGHT / 2 - padSpec.halfH
 			},
 			_ball: {
 				x: WIDTH / 2, 
 				y: HEIGHT / 2, 
 				dx: 0.3,
 				dy: 0.03, 
-				radius: 15}, 
+				r: 15}, 
 			_score: [0, 0]
 		};
 		this.#_serverSide = serverSide;
 		if (serverSide === "right")
 			this.#_paddle = {
-				x: WIDTH - (padSpec.width + 25), 
-				y: HEIGHT / 2 - padSpec.halfHeight
+				x: WIDTH - (padSpec.w + 25), 
+				y: HEIGHT / 2 - padSpec.halfH
 			};
 		else
 			this.#_paddle = {
 				x: 25, 
-				y: HEIGHT / 2 - padSpec.halfHeight
+				y: HEIGHT / 2 - padSpec.halfH
 			};
 		this.#_clientSide = clientSide;
 		this.#_score = 0;

@@ -24,15 +24,15 @@ export interface ballObj {
 	y: number,
 	dx: number,
 	dy: number,
-	radius: number
+	r: number
 }
 
 export interface paddleSpec {
 	speed: number
-	width: number,
-	height: number,
-	halfWidth: number,
-	halfHeight: number
+	w: number,
+	h: number,
+	halfW: number,
+	halfH: number
 }
 
 type requestMap = Map< number, reqObj >;
@@ -68,22 +68,22 @@ export class Game {
 			y: HEIGHT / 2, 
 			dx: 0.3, //custom
 			dy: 0.03, //custom
-			radius: 13
+			r: 13
 		};
 		this.#_paddleSpec = {
 			speed: 0.3,
-			width: 18, 
-			height: HEIGHT / 6, 
-			halfWidth: 18 / 2, 
-			halfHeight: HEIGHT / 12
+			w: 18, 
+			h: HEIGHT / 6, 
+			halfW: 18 / 2, 
+			halfH: HEIGHT / 12
 		}; //custom
 		this.#_leftPaddle = {
 			x: 25, 
-			y: HEIGHT / 2 - this.#_paddleSpec.halfHeight
+			y: HEIGHT / 2 - this.#_paddleSpec.halfH
 		};
 		this.#_rightPaddle = {
-			x: WIDTH - (this.#_paddleSpec.width + 25), 
-			y: HEIGHT / 2 - this.#_paddleSpec.halfHeight
+			x: WIDTH - (this.#_paddleSpec.w + 25), 
+			y: HEIGHT / 2 - this.#_paddleSpec.halfH
 		};
 		this.#_frameId = 0
 		this.#_delta = 0;

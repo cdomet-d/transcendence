@@ -14,11 +14,11 @@ export function updatePaddlePos(player: Player, keys: keysObj, game: Game) {
 	if ((player.left && keys._a))
 		left(player.paddle, game, 0, step);
 	if ((player.left && keys._d))
-		right(player.paddle, game, WIDTH / 2 - game.ball.radius - 1 - game.padSpec.width, step);
+		right(player.paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, step);
 	if (player.right && keys._ArrowLeft)
-		left(player.paddle, game, WIDTH / 2 + game.ball.radius + 1, step);
+		left(player.paddle, game, WIDTH / 2 + game.ball.r + 1, step);
 	if (player.right && keys._ArrowRight)
-		right(player.paddle, game, WIDTH - game.padSpec.width, step);
+		right(player.paddle, game, WIDTH - game.padSpec.w, step);
 	movePaddle(game, player.paddle, step);
 }
 
@@ -30,10 +30,10 @@ function up(pad: coordinates, padSpeed: number, step: coordinates) {
 }
 
 function down(pad: coordinates, padSpec: paddleSpec, step: coordinates) {
-	if (pad.y + (padSpec.speed * TIME_STEP) < (HEIGHT - padSpec.height))
+	if (pad.y + (padSpec.speed * TIME_STEP) < (HEIGHT - padSpec.h))
 		step.y += (padSpec.speed * TIME_STEP);
 	else
-		step.y += HEIGHT - pad.y - padSpec.height;
+		step.y += HEIGHT - pad.y - padSpec.h;
 }
 //TODO: check if ball is between paddle and wall
 
@@ -62,7 +62,7 @@ function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
 	}
 	const [t, n] = result;
 	let len = Math.hypot(step.x, step.y);
-	const contactDist = len * t - game.ball.radius - 1;
+	const contactDist = len * t - game.ball.r - 1;
 	if (contactDist <= 0) {
 		bounce(game, paddle, n.x);
 		return;
