@@ -35,8 +35,6 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 	serv.post('/register/', async (request, reply) => {
 		let newAccountId: number | null = null;
 		try {
-			request.server.log.info(`LA REQUEST EN QUESTION ${request}`);
-			console.log("RQST:", request);
 			const { username, password } = request.body as { username: string, password: string };
 
 			if (!username || !password)

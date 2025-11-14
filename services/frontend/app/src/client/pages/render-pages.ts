@@ -75,7 +75,7 @@ export function renderHome() {
 export function renderAuth() {
     console.log('renderAuth');
     prepareLayout(document.body.layoutInstance, 'home');
-    document.body.layoutInstance!.appendAndCache(createForm('default-form', registrationForm));
+    document.body.layoutInstance!.appendAndCache(createForm('registration-form', registrationForm));
     updatePageTitle('Register or Login');
 }
 
