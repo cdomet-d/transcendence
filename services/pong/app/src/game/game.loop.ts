@@ -4,7 +4,7 @@ import { updatePaddlePos } from './paddle.js';
 import { Player } from "../classes/player.class.js";
 import { StringCodec } from 'nats';
 
-const SERVER_TICK: number = 1000 / 40; // 20UPS
+const SERVER_TICK: number = 1000 / 50; // 40UPS
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export async function gameLoop(game: Game, player1: Player, player2: Player) {
