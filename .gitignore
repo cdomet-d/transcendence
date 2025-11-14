@@ -12,5 +12,8 @@ dist/
 jest.results.txt
 node_modules/
 package-lock.json
+*.db
+*.log*
 services/pong/app/dist/
 services/pong/app/static/style-dist.css
+notes
