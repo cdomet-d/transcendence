@@ -14,12 +14,14 @@ export function pong(gameReq: gameRequest) {
 	const ctx = getCanvasContext();
 	if (!ctx) {
 		console.log("error: context not supported");
-		return; //TODO: display capibara ?
+		return;
 	}
-	const game: Game = new Game(ctx, gameReq.remote, true);
-	//TODO: set strokeStyle and fillStyle
+	const game: Game = new Game(ctx, gameReq.remote, false);
+	//TODO: set strokeStyle and fillStyle //changes paddle and ball colour
 	renderGame(game); //TODO: before rendering need to receive players names
-	wsRequest(game, {gameID: gameReq.gameID, userID: gameReq.userID});
+	// window.addEventListener("load", (event) => {
+		wsRequest(game, {gameID: gameReq.gameID, userID: gameReq.userID});
+	// });
 }
 
 function getCanvasContext(): CanvasRenderingContext2D | null {
@@ -33,4 +35,3 @@ function getCanvasContext(): CanvasRenderingContext2D | null {
 	return ctx;
 }
 
-//TODO: window.addEventListener("load", );

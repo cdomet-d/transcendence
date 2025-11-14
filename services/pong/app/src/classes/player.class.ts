@@ -105,7 +105,7 @@ export class Player {
 		if (this.#_serverSide === "right" && this.#_clientSide === "left") {
 			this.#_reply._ball.x = WIDTH - ball.x;
 			this.#_reply._ball.dx *= -1;
-			this.#_reply._leftPad.x = WIDTH - this.#_paddle.x;
+			this.#_reply._leftPad.x = WIDTH - this.#_paddle.x - padWidth;
 			this.#_reply._rightPad.x = WIDTH - opponent.paddle.x - padWidth;
 		}
 		else {

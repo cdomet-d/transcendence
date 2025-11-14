@@ -85,3 +85,4 @@ export function bounce(game: Game, paddle: coordinates, nx: number) {
 	game.ball.dx *= factor;
 	game.ball.dy *= factor;
 }
+//TODO: take into account paddle speed
