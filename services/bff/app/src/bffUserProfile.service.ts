@@ -1,11 +1,10 @@
 import type {
 	ProfileDataBatch, ProfileDataBatchResponse, ProfileView,
 	ProfileData, UserStats, StatsResponse, Matches, RawMatches, Friends,
-	ProfileDataResponse,
-	userData
+	userData, AccountData
 } from "./bff.interface.js";
 
-export async function fetchUserProfile(log: any, userID: number): Promise<userData | null> {
+/* export async function fetchUserProfile(log: any, userID: number): Promise<userData | null> {
 	const url = `http://users:2626/internal/users/${userID}/profile`;
 	let response: Response;
 
@@ -28,7 +27,7 @@ export async function fetchUserProfile(log: any, userID: number): Promise<userDa
 	const data = await response.json() as userData;
 	return (data);
 }
-
+ */
 export async function fetchUserID(log: any, username: string): Promise<number> {
 	const url = `http://users:2626/internal/users?username=${username}`;
 
@@ -122,14 +121,14 @@ export async function fetchProfileData(log: any, userID: number): Promise<Profil
 		throw new Error('User service failed.');
 	}
 
-	const body = (await response.json()) as ProfileDataResponse;
+	const body = (await response.json()) as { success: boolean, userData: ProfileData };
 
-	if (!body.success || !body.profileData) {
+	if (!body.success || !body.userData) {
 		log.error(`[BFF] User service (userData) returned 200 OK but with a failure body.`);
 		throw new Error('User service returned invalid data.');
 	}
 
-	return (body.profileData);
+	return body.userData;
 }
 
 export async function fetchProfileDataBatch(log: any, userIDs: number[]): Promise<ProfileDataBatch[]> {
@@ -289,4 +288,94 @@ export async function fetchRelationship(log: any, userID: number, username: stri
 
 	const friendshipData = await friendsResponse.json() as { status: ProfileView };
 	return (friendshipData.status);
+}
+
+/**
+ * Fetches private account data (username, settings, etc.)
+ */
+export async function fetchUserDataAccount(log: any, userID: number): Promise<AccountData> {
+	const url = `http://account:1414/internal/account/${userID}`; // FIX: Changed from /userData
+	let response: Response;
+
+	try {
+		response = await fetch(url);
+	} catch (error) {
+		log.error(`[BFF] Account service is unreachable: ${error}`);
+		throw new Error('Account service is unreachable.');
+	}
+
+	if (response.status === 404) {
+		log.warn(`[BFF] Account data not found for user ${userID}`);
+		throw new Error('User data not found.');
+	}
+
+	if (!response.ok) {
+		log.error(`[BFF] Account service failed with status ${response.status}`);
+		throw new Error('User service failed.');
+	}
+
+	// FIX: The route '/internal/account/:userID' returns { success: true, userData: {...} }
+	// Your interface defined 'accountData'. We'll follow the route's response.
+	const body = (await response.json()) as { success: boolean, userData: AccountData };
+
+	if (!body.success || !body.userData) {
+		log.error(`[BFF] Account service (userData) returned 200 OK but with a failure body.`);
+		throw new Error('Account service returned invalid data.');
+	}
+
+	return body.userData;
+}
+
+export async function fetchView(log: any, viewerID: number, targetID: number): Promise<ProfileView> {
+	if (viewerID === targetID) {
+		return 'self';
+	}
+
+	const url = `http://friends:1616/internal/friendships?userA=${viewerID}&userB=${targetID}`;
+	let response: Response;
+
+	try {
+		response = await fetch(url);
+	} catch (error) {
+		log.error(`[BFF] Friends service (relationship) is unreachable: ${error}`);
+		throw new Error('Friends service is unreachable.');
+	}
+
+	if (!response.ok) {
+		log.error(`[BFF] Friends service (relationship) failed: ${response.status}`);
+		throw new Error('Friends service failed.');
+	}
+
+	const body = await response.json() as { status: ProfileView };
+	return body.status || 'stranger';
+}
+
+
+export async function buildFullUserData(log: any, viewerUserID: number, targetUserID: number): Promise<userData> {
+	const [
+		accountData,
+		profileData
+	] = await Promise.all([
+		fetchUserDataAccount(log, targetUserID),
+		fetchProfileData(log, targetUserID)
+	]);
+
+	const relationship = await fetchView(log, viewerUserID, targetUserID);
+
+	const combinedData: userData = {
+		userID: accountData.userID,
+		username: accountData.username,
+		since: accountData.registerDate,
+		language: accountData.defaultLang,
+		status: profileData.userStatus,
+
+		avatar: profileData.avatar,
+		biography: profileData.biography,
+		profileColor: profileData.profileColor,
+		winstreak: profileData.winstreak,
+
+		relation: relationship
+	};
+
+	return (combinedData);
 }

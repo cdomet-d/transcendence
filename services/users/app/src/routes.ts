@@ -28,7 +28,7 @@ interface UserStats {
 }
 
 export async function userRoutes(serv: FastifyInstance) {
-	//USER PROFILE
+	//USER PROFILE/internal/users/${userID}/profile
 
 	//GET /internal/users/<userID>
 	serv.get('/internal/users/:userID', async (request, reply) => {
@@ -321,6 +321,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					p.avatar,
 					p.biography,
 					p.profileColor,
+					p.activityStatus,
 					s.winStreak
 				FROM
 					userProfile p

@@ -6,7 +6,7 @@ declare module 'fastify' {
 	}
 	
 	export interface FastifyRequest {
-		user: {TODO 
+		user: { 
 			userID: number;
 			username: string;
 		};

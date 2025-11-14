@@ -19,8 +19,8 @@ serv.register(bffAccountRoutes);
 
 const start = async () => {
 	try {
-		console.log('listening on 4040');
-		await serv.listen({ port: 4040, host: '0.0.0.0' });
+		console.log('listening on 1818');
+		await serv.listen({ port: 1818, host: '0.0.0.0' });
 	}
 	catch (err) {
 		console.error('server error:', err);

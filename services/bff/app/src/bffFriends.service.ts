@@ -40,13 +40,12 @@ export async function createFriendRequest(log: any, senderID: number, friendID: 
 
 	if (response.status === 409) {
 		log.warn(`[BFF] Friend request failed: Friendship already exists between ${senderID} and ${friendID}`);
-		const errorBody = await response.json() as { message: string };
-		throw { code: 409, message: errorBody.message || 'Friendship already exists.' };
+		return ;
 	}
 
 	if (response.status === 404) {
 		log.error(`[BFF] Friends service (sendrequest) reported 404: Friend request could not be sent.`);
-		throw new Error('Friend request could not be sent due to a server error.');
+		throw new Error('Friend request could not be sent, user could not be found');
 	}
 
 	if (!response.ok) {

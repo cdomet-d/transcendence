@@ -13,8 +13,9 @@ export interface userData {
 	language: string,
 	profileColor: string,
 	relation: ProfileView,
-	status: userStatus,
+	status: boolean,
 	username: string,
+	winstreak: string, 
 	since: string
 }
 
@@ -55,6 +56,7 @@ export interface ProfileData {
 	biography: string,
 	profileColor: string,
 	winstreak: string,
+	userStatus: boolean
 }
 
 export interface ProfileDataResponse {
@@ -95,7 +97,6 @@ export interface AccountData {
 	username: string,
 	registerDate: string,
 	userID: string,
-	userStatus: userStatus,
 	defaultLang: string
 }
 
@@ -103,7 +104,8 @@ export interface UserProfile {
 	userID: number;
 	username: string;
 	avatar: string;
-	biographygraphy: string;
+	biography: string;
+	status: string
 	profileColor: string;
 }
 

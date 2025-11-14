@@ -80,7 +80,7 @@ export async function routeFriend(serv: FastifyInstance) {
 
 			const response = await serv.dbFriends.run(query, params);
 			if (response.changes === 0)
-				throw new Error('[FRIENDS] Friend request failed to save.');			}
+				throw new Error('[FRIENDS] Friend request failed to save.');
 			return (reply.code(201).send({
 				success: true,
 				message: `[FRIENDS] Friend request sent to ${friendID}`
