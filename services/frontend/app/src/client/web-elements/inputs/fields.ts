@@ -1,4 +1,5 @@
 import type { InputFieldsData } from '../types-interfaces.js';
+const MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
 
 //TODO: feedback on username
 //TODO: err message on required field empty
@@ -9,10 +10,16 @@ import type { InputFieldsData } from '../types-interfaces.js';
  */
 export class CustomInput extends HTMLInputElement {
     #inputCallback: (event: Event) => void;
+    #inputValidation: Map<string, (el: HTMLInputElement) => string[]>;
 
     constructor() {
         super();
         this.#inputCallback = (event) => this.inputFeedback(event);
+        this.#inputValidation = new Map<string, (el: HTMLInputElement) => string[]>();
+
+        this.#inputValidation.set('password', this.#typePassword);
+        this.#inputValidation.set('text', this.#typeText);
+        this.#inputValidation.set('file', this.#typeFile);
     }
 
     //TODO: allow hide on ESC
@@ -22,36 +29,60 @@ export class CustomInput extends HTMLInputElement {
      * Dispatches a 'validation' event with feedback details.
      * @param event - The input event.
      */
+
+    #typePassword(el: HTMLInputElement): string[] {
+        const val = el.value;
+        let feedback: string[] = [];
+        if (!/[A-Z]/.test(val)) feedback.push('missing an uppercase letter');
+        if (!/[a-z]/.test(val)) feedback.push('missing an lowercase letter');
+        if (!/[0-9]/.test(val)) feedback.push('missing an number');
+        if (!/[!@#$%^&*()\-_=+{};:,<.>]/.test(val)) feedback.push('missing a special character');
+        if (val.length < 12 || val.length > 64)
+            feedback.push(`Password should be 12-64 characters long, is: ${val.length}`);
+        return feedback;
+    }
+
+    #typeText(el: HTMLInputElement): string[] {
+        const val = el.value;
+        let feedback: string[] = [];
+        if (!/[A-Za-z0-9]/.test(val)) feedback.push('Forbidden character');
+        if (val.length < 4 || val.length > 18)
+            feedback.push(`Username should be 4-18 character long, is: ${val.length}`);
+        return feedback;
+    }
+
+    // TODO: test large file
+    #typeFile(el: HTMLInputElement): string[] {
+        const file = el.files;
+        const allowed = ['image/jpeg', 'image/png', 'image/gif'];
+        let feedback: string[] = [];
+        if (file && file[0]) {
+            if (!allowed.includes(file[0].type)) {
+                el.setCustomValidity('invalid extension');
+                feedback.push(`Invalid extension: ${file[0].type}`);
+                if (file[0].size >= MAX_FILE_SIZE_BYTES) {
+                    el.setCustomValidity('too large');
+                    feedback.push(`File is too large [max: 2MB]`);
+                }
+            } else {
+                el.setCustomValidity('');
+            }
+        }
+        return feedback;
+    }
     inputFeedback(event: Event) {
-        if (this.getAttribute('type') === 'password') {
-            const el = event.target as HTMLInputElement;
-            const pw = el.value;
-            let feedback: Array<string> = [];
-            if (!/[A-Z]/.test(pw)) feedback.push('missing an uppercase letter');
-            if (!/[a-z]/.test(pw)) feedback.push('missing an lowercase letter');
-            if (!/[0-9]/.test(pw)) feedback.push('missing an number');
-            if (!/[!@#$%^&*()\-_=+{};:,<.>]/.test(pw)) feedback.push('missing a special character');
-            if (pw.length < 12 || pw.length > 64)
-                feedback.push(`Range for pw is 12-64, current length is: ${pw.length}`);
-
-            this.dispatchEvent(
-                new CustomEvent('validation', { detail: { feedback }, bubbles: true }),
-            );
+        let target: HTMLInputElement | null = null;
+        if (event.target instanceof HTMLInputElement) {
+            target = event.target as HTMLInputElement;
         }
 
-        if (this.getAttribute('type') === 'text') {
-            const el = event.target as HTMLInputElement;
-            const usrnm = el.value;
-            console.log(el.validity);
-            let feedback: Array<string> = [];
-            if (!/[A-Za-z0-9]/.test(usrnm)) feedback.push('Forbidden character');
-            if (usrnm.length < 4 || usrnm.length > 18)
-                feedback.push(`Range for pw is 4-18, current length is: ${usrnm.length}`);
-
-            this.dispatchEvent(
-                new CustomEvent('validation', { detail: { feedback }, bubbles: true }),
-            );
-        }
+        if (!target) return;
+        const type = target.getAttribute('type');
+        if (!type) return;
+        const fn = this.#inputValidation.get(type);
+        if (!fn) return;
+        let feedback = fn(target);
+        this.dispatchEvent(new CustomEvent('validation', { detail: { feedback }, bubbles: true }));
     }
 
     connectedCallback() {
@@ -151,10 +182,12 @@ export class InputGroup extends HTMLDivElement {
      */
     #displayInputFeedback(event: Event) {
         const ev = event as CustomEvent;
+
         if (ev.detail.feedback.length > 0) this.#inputFeedback.classList.remove('hidden');
         else this.#inputFeedback.classList.add('hidden');
         if (this.#inputFeedback.firstChild)
             this.#inputFeedback.removeChild(this.#inputFeedback.firstChild);
+
         const list = document.createElement('ul');
         list.className = 'pad-xs list-inside';
         for (let i: number = 0; i < ev.detail.feedback.length; i++) {
@@ -163,7 +196,11 @@ export class InputGroup extends HTMLDivElement {
             ul.className = 'list-disc';
             list.append(ul);
         }
-        this.#inputFeedback.append(list);
+
+        if (ev.detail.feedback.length > 0) {
+            this.#inputFeedback.append(list);
+            this.dispatchEvent(new CustomEvent('disable-submit', { bubbles: true }));
+        }
     }
 
     //TODO: add disconnected callback
@@ -207,6 +244,7 @@ export class InputGroup extends HTMLDivElement {
             'file:w-[5rem]',
             'file:h-[26px]',
         );
+        this.#input.setAttribute('accept', 'image/jpeg,image/png,image/gif');
     }
 
     /**
@@ -233,7 +271,7 @@ export class InputGroup extends HTMLDivElement {
         this.append(this.#label, this.#input, this.#inputFeedback);
 
         this.className = 'box-border relative w-full';
-        this.#inputFeedback.className = 'brdr bg absolute z-1 hidden';
+        this.#inputFeedback.className = 'brdr bg absolute hidden';
 
         this.#isRequiredField();
         this.#setInputAttributes();

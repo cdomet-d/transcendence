@@ -373,11 +373,20 @@
 		height: var(--m);
 	}
 
-	button, a {
+	button,
+	a {
+		cursor: pointer;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		height: 100%;
+	}
+
+	button:hover,
+	button:focus-visible,
+	a:hover,
+	a:focus-visible {
+		transform: scale(1.04);
 	}
 
 	button:hover>span,
@@ -391,7 +400,6 @@
 	}
 
 	button:active {
-		cursor: pointer;
 		transform: scale(1);
 	}
 
@@ -404,6 +412,10 @@
 	.grid>* {
 		justify-content: center;
 		align-content: center;
+	}
+
+	.layout-col {
+		grid-template-columns: minmax(600px, 60%);
 	}
 }
 
@@ -428,10 +440,6 @@
 
 	.row-xl {
 		grid-auto-rows: var(--xl);
-	}
-
-	.single-col-xl {
-		grid-template-columns: 60%;
 	}
 
 	.content-h {
@@ -487,10 +495,6 @@
 		width: var(--m);
 	}
 
-	.min-w-m {
-		min-width: var(--m);
-	}
-
 	.w-l {
 		width: var(--l);
 	}
@@ -503,8 +507,8 @@
 		width: var(--xxl);
 	}
 
-	.min-w-xl {
-		width: var(--xl);
+	.body-min-w {
+		min-width: var(--min-width);
 	}
 
 	.h-s {
@@ -547,6 +551,7 @@
 		gap: var(--sm) var(--sm);
 	}
 
+
 	.gap-m {
 		gap: var(--m) var(--m);
 	}
@@ -557,6 +562,10 @@
 
 	.v-gap-l {
 		gap: var(--m) var(--l);
+	}
+
+	.form-gap {
+		gap: var(--m) var(--s);
 	}
 
 	.search-gap {

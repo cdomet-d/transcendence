@@ -70,12 +70,6 @@ export class CustomButton extends HTMLButtonElement {
     /** Renders simple textual button content. */
     renderTextualBtn() {
         this.textContent = this.#btn.content;
-        this.classList.add(
-            'hover:transform',
-            'hover:scale-[1.02]',
-            'focus-visible:transform',
-            'focus-visible:scale-[1.02]',
-        );
     }
 
     /** Renders animated button text letter-by-letter. */
@@ -124,7 +118,7 @@ export class CustomButton extends HTMLButtonElement {
     render() {
         this.className =
             'box-border w-full brdr pad-xs input-emphasis outline-hidden \
-			overflow-hidden whitenowrap cursor-pointer button';
+			overflow-hidden whitenowrap';
 
         if (this.#btn.content && !this.#animated) {
             this.renderTextualBtn();

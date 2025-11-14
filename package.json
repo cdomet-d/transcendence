@@ -1,27 +1,5 @@
 {
-  "name": "transcendence",
-  "version": "1.0.0",
-  "description": "- [Useful stuff that helped us for the BigT](#useful-stuff-that-helped-us-for-the-bigt) \t- [Build a webapp with Fastify](#build-a-webapp-with-fastify) \t- [Web security enforcement through headers](#web-security-enforcement-through-headers) \t\t- [XSS (Cross Site Scripting)](#xss-cross-site-scripting) \t\t- [MIME Confusion Attacks](#mime-confusion-attacks) \t- [Server Side Rendering](#server-side-rendering) \t- [API](#api) \t- [Friendships](#friendships) \t- [Tools](#tools) \t- [Other useful things](#other-useful-things)",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cdomet-d/transcendence.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/cdomet-d/transcendence/issues"
-  },
-  "homepage": "https://github.com/cdomet-d/transcendence#readme",
-  "dependencies": {
-    "@fastify/cors": "^11.1.0",
-    "sqlite3": "^5.1.7"
-  },
   "devDependencies": {
-    "@types/sqlite3": "^5.1.0",
-    "ts-jest": "^29.4.5"
+    "typedoc": "^0.28.14"
   }
 }

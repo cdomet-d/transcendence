@@ -15,7 +15,7 @@ const notificationBtns: MenuData = {
     buttons: [
         {
             id: 'decline',
-			type: 'button',
+            type: 'button',
             content: 'Decline',
             img: null,
             ariaLabel: 'Decline invitation',
@@ -23,7 +23,7 @@ const notificationBtns: MenuData = {
         },
         {
             id: 'accept',
-			type: 'button',
+            type: 'button',
             content: 'Accept',
             img: null,
             ariaLabel: 'Accept invitation',
