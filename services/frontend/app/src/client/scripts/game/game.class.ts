@@ -42,6 +42,7 @@ export class Game {
 	/*                             PROPERTIES                                */
 	#_ctx: CanvasRenderingContext2D;
 	#_local: boolean;
+	#_horizontal: boolean;
 	#_score: [number, number];
 	#_leftPaddle: coordinates;
 	#_rightPaddle: coordinates;
@@ -56,12 +57,13 @@ export class Game {
 	// #_clockOffset: number;
 
 	/*                            CONSTRUCTORS                               */
-	constructor(ctx: CanvasRenderingContext2D, remote: boolean) {
+	constructor(ctx: CanvasRenderingContext2D, remote: boolean, horizontal: boolean) {
 		this.#_ctx = ctx;
 		if (remote)
 			this.#_local = false;
 		else
 			this.#_local = true;
+		this.#_horizontal = horizontal;
 		this.#_score = [0, 0];
 		this.#_ball = {
 			x: WIDTH / 2, 
@@ -140,6 +142,10 @@ export class Game {
 
 	get local(): boolean {
 		return this.#_local;
+	}
+
+	get horizontal(): boolean {
+		return this.#_horizontal;
 	}
 
 	get reqHistory(): requestMap {

@@ -16,7 +16,7 @@ export function pong(gameReq: gameRequest) {
 		console.log("error: context not supported");
 		return; //TODO: display capibara ?
 	}
-	const game: Game = new Game(ctx, gameReq.remote);
+	const game: Game = new Game(ctx, gameReq.remote, true);
 	//TODO: set strokeStyle and fillStyle
 	renderGame(game); //TODO: before rendering need to receive players names
 	wsRequest(game, {gameID: gameReq.gameID, userID: gameReq.userID});

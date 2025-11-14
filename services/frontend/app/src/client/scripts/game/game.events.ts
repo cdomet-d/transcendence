@@ -13,15 +13,15 @@ export function addMessEvent(game: Game, ws: WebSocket) {
 	};
 }
 
-export function createKeyDownEvent(keys: keysObj) {
+export function createKeyDownEvent(keys: keysObj, horizontal: boolean) {
 	return function keyDownEvent(event: KeyboardEvent): void {
 		if (event.key === "w")
 			keys._w = true;
 		if (event.key === "s")
 			keys._s = true;
-		if (event.key === "a")
+		if (horizontal && event.key === "a")
 			keys._a = true;
-		if (event.key === "d")
+		if (horizontal && event.key === "d")
 			keys._d = true;
 		if (event.key === "ArrowUp") {
 			event.preventDefault();
@@ -31,9 +31,9 @@ export function createKeyDownEvent(keys: keysObj) {
 			event.preventDefault();
 			keys._ArrowDown = true;
 		}
-		if (event.key === "ArrowLeft")
+		if (horizontal && event.key === "ArrowLeft")
 			keys._ArrowLeft = true;
-		if (event.key === "ArrowRight")
+		if (horizontal && event.key === "ArrowRight")
 			keys._ArrowRight = true;
 	}
 }

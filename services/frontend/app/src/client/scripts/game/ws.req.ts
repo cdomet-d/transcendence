@@ -37,7 +37,7 @@ async function setUpGame(game: Game, ws: WebSocket, ballDir: number) {
 	// game.clockOffset = offset;
 	game.ball.dx *= ballDir;
 	addMessEvent(game, ws);
-	window.addEventListener("keydown", createKeyDownEvent(game.req._keys));
+	window.addEventListener("keydown", createKeyDownEvent(game.req._keys, game.horizontal));
 	window.addEventListener("keyup", createKeyUpEvent(game.req._keys));
 
 	// wait
