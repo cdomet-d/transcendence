@@ -2,6 +2,8 @@ import { Game, HEIGHT, WIDTH, type ballObj } from "./game.class.js";
 import type { coordinates, repObj } from "./mess.validation.js";
 import { updateVelocity, raycast, bounce } from "./collision.utils.js";
 
+const TIME_STEP: number = 1000 / 60; // 60FPS
+
 export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 	// console.log("IN DEADRECKONING");
 	let timeSinceUpdate: number = performance.now() - game.lastFrameTime;
@@ -14,13 +16,10 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 		timeSinceUpdate = 100;
 	const nextX: number = ball.x + ball.dx * timeSinceUpdate;
 	const nextY: number = ball.y + ball.dy * timeSinceUpdate;
-	// updateBallPos(game, nextX, nextY);
+	updateBallPos(game, nextX, nextY);
 }
 
-const TIME_STEP: number = 1000 / 60; // 60FPS
-export function updateBallPos(game: Game) {//}, nextX: number, nextY: number) {
-	let nextX: number = game.ball.x + (game.ball.dx * TIME_STEP);
-	let nextY: number = game.ball.y + (game.ball.dy * TIME_STEP);
+export function updateBallPos(game: Game, nextX: number, nextY: number) {
 	if (sideWallCollision(game, nextX))
 		return false;
 	nextY = upperAndBottomWallCollision(game, nextY);
@@ -28,23 +27,16 @@ export function updateBallPos(game: Game) {//}, nextX: number, nextY: number) {
 		return false;
 	if (paddleCollision(game, game.rightPad, nextX, nextY))
 		return false;
-
 	game.ball.x = nextX;
 	game.ball.y = nextY;
 }
 
-let ballDir = -1;
 function sideWallCollision(game: Game, nextX: number): boolean {
 	if (nextX - game.ball.radius >= WIDTH + 100 || nextX + game.ball.radius <= -100) {
 		game.ball.x = WIDTH / 2;
 		game.ball.y = HEIGHT / 2;
 		game.ball.dx = 0;
 		game.ball.dy = 0;
-		setTimeout(() => {
-			game.ball.dx = 0.3 * ballDir;
-			game.ball.dy = 0.03;
-			ballDir *= -1;
-		}, 1000);
 		return true;
 	}
 	return false;
