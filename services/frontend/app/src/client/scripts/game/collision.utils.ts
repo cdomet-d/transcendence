@@ -1,15 +1,6 @@
 import { Game } from "./game.class.js";
 import { type coordinates } from "./mess.validation.js";
 
-// function normal(game: Game, point: coordinates): [number, number] {
-//     let nx: number = game.ball.x - point.x;
-//     let ny: number = game.ball.y - point.y;
-//     const len: number = Math.hypot(nx, ny);
-//     nx /= len;
-//     ny /= len;
-//     return [nx, ny];
-// }
-
 export function raycast(game: Game, paddle: coordinates, nextX: number, nextY: number): [number, coordinates] | null {
 	const inflatedPad: coordinates = {x: paddle.x - game.ball.radius, y: paddle.y - game.ball.radius};
 	const padHeight: number = game.padSpec.height + 2 * game.ball.radius;
