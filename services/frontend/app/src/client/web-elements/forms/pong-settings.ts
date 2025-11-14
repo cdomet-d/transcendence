@@ -8,8 +8,6 @@ import { NoResults } from '../typography/images.js';
 import type { Searchbar } from './search.js';
 import type { UserData } from '../types-interfaces.js';
 
-//TODO: Override parent submit event to append all relevant informations.
-
 /**
  * A form allowing user to create a local pong game.
  *
@@ -81,16 +79,18 @@ if (!customElements.get('local-pong-settings')) {
  * @extends {LocalPongSettings}
  * @remark customElement: `'remote-pong-settings'`
  */
+
+// Perhaps we should add an invite button and a remove button ?
+// TODO: Override searchbar submit event to add the the invited users to the guest list instead of loading their profile
+// TODO: Add event listener on Searchbar's SUBMIT to capture invitations.
+// TODO: Add API call to /api/user to get requested user and store it in an
+// array of user that will be displayed in #guestWrapper
+// TODO: track the number of invited users and allow form submission when there are 2, 4 or 8 players.
 export class RemotePongSettings extends LocalPongSettings {
     #searchbar: Searchbar;
     #guestWrapper: HTMLDivElement;
     #invitedUsers: UserData[] | null;
     // #inviteHandler: (ev: SubmitEvent) => void
-
-    //TODO: Add event listener on Searchbar's SUBMIT to capture invitations.
-    //TODO: Add API call to /api/user to get requested user and store it in an
-    // array of user that will be displayed in #guestWrapper
-    // TODO: track the number of invited users and allow form submission when there are 2, 4 or 8 players.
 
     constructor() {
         super();
