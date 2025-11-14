@@ -1,6 +1,6 @@
 import type { coordinates } from './mess.validation.js';
 import { Game, type keysObj, HEIGHT, WIDTH, type paddleSpec } from './game.class.js';
-import { updateVelocity, raycast } from './collision.utils.js';
+import { updateVelocity, raycast, bounce } from './collision.utils.js';
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
@@ -61,10 +61,13 @@ function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
 	}
 	const [t, n] = result;
 	let len = Math.hypot(step.x, step.y);
-	const contactDist = len * t;
+	const contactDist = len * t - game.ball.radius - 1;
 	const nx = step.x / len;
 	const ny = step.y / len;
-	paddle.x += nx * (contactDist - game.ball.radius - 1);
-	paddle.y += ny * (contactDist - game.ball.radius - 1);
-	[game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, nx, ny);
+	paddle.x += nx * contactDist;
+	paddle.y += ny * contactDist;
+	// [game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, nx, ny);
+	bounce(game, paddle, n.x);
+	game.ball.x += (game.ball.dx * TIME_STEP);
+	game.ball.y += (game.ball.dy * TIME_STEP);
 }
