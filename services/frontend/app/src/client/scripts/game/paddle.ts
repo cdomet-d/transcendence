@@ -62,12 +62,14 @@ function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
 	const [t, n] = result;
 	let len = Math.hypot(step.x, step.y);
 	const contactDist = len * t - game.ball.radius - 1;
+	if (contactDist <= 0) {
+		bounce(game, paddle, n.x);
+		return;
+	}
 	const nx = step.x / len;
 	const ny = step.y / len;
 	paddle.x += nx * contactDist;
 	paddle.y += ny * contactDist;
 	// [game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, nx, ny);
 	bounce(game, paddle, n.x);
-	game.ball.x += (game.ball.dx * TIME_STEP);
-	game.ball.y += (game.ball.dy * TIME_STEP);
 }
