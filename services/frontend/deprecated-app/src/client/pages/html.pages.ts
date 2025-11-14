@@ -4,7 +4,7 @@ import { renderPageTemplate } from './page.template.js'
 export function renderHome(): string {
 	let html = `
 		<div class="min-h-screen flex items-center justify-center bg-white">
-			<a
+			<button
 				href="/central"
 				data-link
 				id="play-btn"
@@ -13,7 +13,7 @@ export function renderHome(): string {
 			>
 				<span class="absolute inset-0 rounded-full border-2 border-black/80 pointer-events-none"></span>
 				<span class="relative z-10">${translate('Play')}</span>
-			</a>
+			</button>
 		</div>
 	`;
 	return html;

@@ -18,6 +18,13 @@ clean: stop
 	@rm -rf ./_logs
 	@docker system prune -f
 
+cleandb:
+	@rm services/account/data/*.db
+	@rm services/friends/data/*.db
+	@rm services/accessibility/data/*.db
+	@rm services/users/data/*.db
+	@rm services/dashboards/data/*.db
+
 fclean: clean
 	@docker system prune -a -f
 
@@ -36,7 +43,7 @@ stop:
 # 	@sh .scripts/setenv.sh
 
 help:
-	@printf "\n$(BB)%s$(RE)\n" "Welcome to Inception!"
+	@printf "\n$(BB)%s$(RE)\n" "Welcome to Transcendence!"
 	@printf "$(BU)%s$(RE)\n\n" "Make Rules:"
 	@printf "$(BG)%-15s$(RE) %s\n" "all"       "create default images"
 	@printf "$(BG)%-15s$(RE) %s\n" "backup"    "create images based on a database dump - the dump file should be named dump.sql and placed at the root of the user's session"

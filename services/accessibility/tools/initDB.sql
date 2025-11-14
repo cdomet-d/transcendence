@@ -1,0 +1,10 @@
+CREATE TABLE translations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    word TEXT NOT NULL,            -- key or phrase identifier (e.g., 'hello')
+    language_code TEXT NOT NULL,   -- language code like 'English', 'Spanish', 'French'
+    translation TEXT NOT NULL      -- actual translated text in the given language
+);
+
+--UNIQUE(word, language_code) <--- check if it works
+-- SELECT translation FROM translations WHERE word = 'hello' AND language_code = 'Spanish';
+-- Returns: 'Hola'

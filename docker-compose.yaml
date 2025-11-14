@@ -24,8 +24,11 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
+    ports:
+      - "1313:1313"
     volumes:
       - ./services/accessibility/app:/usr/app
+      - ./services/accessibility/data:/usr/data
   account:
     build:
       context: ./services/account
@@ -40,8 +43,11 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
+    ports:
+      - "1414:1414"
     volumes:
       - ./services/account/app:/usr/app
+      - ./services/account/data:/usr/data
   auth:
     build:
       context: ./services/auth
@@ -74,6 +80,7 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/dashboards/app:/usr/app
+      - ./services/dashboards/data:/usr/data
   friends:
     build:
       context: ./services/friends
@@ -88,8 +95,11 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
+    ports:
+      - "1616:1616"
     volumes:
       - ./services/friends/app:/usr/app
+      - ./services/friends/data:/usr/data
   frontend:
     build:
       context: ./services/frontend
@@ -106,6 +116,24 @@ services:
       - ssl-cert.pem
     volumes:
       - ./services/frontend/app:/app
+  bff:
+    build:
+      context: ./services/bff
+      dockerfile: Dockerfile
+    container_name: bff
+    image: bff:0.0.1
+    networks:
+      - transcendence
+    restart: unless-stopped
+    environment:
+      - NGINXIP=nginx
+    secrets:
+      - ssl-key.pem
+      - ssl-cert.pem
+    ports:
+      - "1818:1818"
+    volumes:
+      - ./services/bff/app:/usr/app
     # user: "${T_UID}:${T_GID}"
   gamemanager:
     build:
@@ -204,6 +232,40 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
+    ports:
+      - "2626:2626"
     volumes:
       - ./services/users/app:/usr/app
+      - ./services/users/data:/usr/data
 
+volumes:
+  friendsDB:
+    driver: local
+    driver_opts:
+      device: services/friends/data
+      o: bind
+      type: none
+  accessibilityDB:
+    driver: local
+    driver_opts:
+      device: services/accessibility/data
+      o: bind
+      type: none
+  accountDB:
+    driver: local
+    driver_opts:
+      device: services/account/data
+      o: bind
+      type: none
+  usersDB:
+    driver: local
+    driver_opts:
+      device: services/users/data
+      o: bind
+      type: none
+  statsDB:
+    driver: local
+    driver_opts:
+      device: services/dashboards/data
+      o: bind
+      type: none

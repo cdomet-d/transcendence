@@ -4,10 +4,17 @@ RUN mkdir -p /usr/app && chown -R 1000:1000 /usr/app
 
 WORKDIR /usr/app
 
-COPY ./tools/friends.sh /usr/local/bin/ 
+COPY ./tools /usr/local/bin/ 
 
 RUN chmod +x /usr/local/bin/friends.sh
 
+RUN chmod +x /usr/local/bin/createDB.sh
+RUN chmod +x /usr/local/bin/testDB.sh
+
+RUN apk update && apk add --no-cache sqlite
+
 EXPOSE 1616
+
+ENTRYPOINT ["/usr/local/bin/createDB.sh"]
 
 CMD ["friends.sh"]
