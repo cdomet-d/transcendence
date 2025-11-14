@@ -16,7 +16,7 @@ export const routes: routeInterface[] = [
     { path: '/user/:login', callback: page.renderProfile },
     { path: '/user/settings', callback: page.renderSettings },
     { path: '/lobby', callback: page.renderLobby },
-    // { path: '/game/match', callback: page.renderGame},
+    { path: '/game/match', callback: page.renderGame},
 ];
 
 export class Router {
@@ -70,7 +70,7 @@ export class Router {
 
         matchedRoute.callback(res ? res : undefined);
 
-        if (matchedRoute.path === '/game/match') pong('default');
+        // if (matchedRoute.path === '/game/match') pong('default');
         //TODO: eventually if other features need their script add an element script to routeInterface
     }
 }

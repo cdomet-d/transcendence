@@ -1,5 +1,5 @@
 import { createHeading, createNoResult } from '../web-elements/typography/helpers.js';
-import { createLeaderboard } from '../web-elements/matches/leaderboard.js';
+import { createLeaderboard } from '../web-elements/statistics/leaderboard.js';
 import { createMenu } from '../web-elements/navigation/menu-helpers.js';
 import { main } from '../web-elements/navigation/default-menus.js';
 import { Layout } from '../web-elements/layouts/layout.js';
@@ -15,6 +15,7 @@ import {
     userSettingsForm,
 } from '../web-elements/forms/default-forms.js';
 import { user } from '../web-elements/default-values.js';
+import { PongCourt } from '../web-elements/game/pong-court.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -136,21 +137,11 @@ export function renderLobby() {
     document.body.layoutInstance?.appendAndCache(wrapper);
 }
 
-export function renderGame(): string {
-    let html: string = `
-		<div class="min-h-screen flex flex-col items-center justify-center bg-white">
-			<h1 class="text-4xl font-bold mb-6"> Game Screen </h1>
-			<canvas id="canvas" width="480" height="270"
-			class="border mb-6 bg-aliceblue border-4 border-[#8ec7fc] rounded-[20px]">
-			pong game <!-- fallback if unable to be displayed -->
-			</canvas>
-			<a href="/central" data-link id="back-btn" 
-			class="mt-4 py-3 px-8 rounded-full border-1 border-black \
-			bg-gradient-to-br from-[#ffcc00] to-[#ea9800] shadow-md \
-			hover:scale-105 transition-all text-white text-lg font-semibold">
-			Back
-			</a>
-		</div>
-	`;
-    return html;
+export function renderGame() {
+    console.log('renderGame');
+    prepareLayout(document.body.layoutInstance, 'game');
+
+	const court = document.createElement('div', {is: 'pong-court'}) as PongCourt;
+	document.body.layoutInstance?.appendAndCache(court);
+
 }
