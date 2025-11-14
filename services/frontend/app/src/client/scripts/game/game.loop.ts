@@ -56,6 +56,8 @@ function interpolation(game: Game) {
 		const t = (renderTime - updates[0]._timestamp) / 
 					(updates[1]._timestamp - updates[0]._timestamp);
 		game.rightPad.y = lerp(updates[0]._rightPad.y, updates[1]._rightPad.y, t);
+		if (game.horizontal)
+			game.rightPad.x = lerp(updates[0]._rightPad.x, updates[1]._rightPad.x, t);
 		game.deleteReplies(game.replyHistory.indexOf(updates[0]) - 1);
 	}
 }
@@ -80,6 +82,7 @@ function reconciliation(game: Game, latestReply: repObj) {
 		updatePaddlePos(game.leftPad, true, game, game.reqHistory.get(i)!._keys);
 		if (game.local)
 			updatePaddlePos(game.rightPad, false, game, game.req._keys);
+		//TODO: do second paddle also when remote ?
 		deadReckoning(game, latestReply);
 	}
 }
