@@ -1,5 +1,5 @@
 import { renderNotFound } from '../pages/render-pages.js';
-import { pong } from './game/pong.js';
+// import { pong } from './game/pong.js';
 import { match, type Match } from 'path-to-regexp';
 import * as page from '../pages/render-pages.js';
 

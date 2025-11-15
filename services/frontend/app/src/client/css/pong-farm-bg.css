@@ -1,0 +1,79 @@
+.fence {
+	background-image: url("../assets/images/farm-scene/fence.png");
+	position: absolute;
+	left: 0px;
+	top: 820px;
+	width: 100%;
+	height: 310px;
+	z-index: 2;
+}
+
+.cow1 {
+	background-image: url("../assets/images/farm-scene/cow1.png");
+	position: absolute;
+	left: 1210px;
+	top: 830px;
+	width: 320px;
+	height: 250px;
+	z-index: 3;
+}
+
+.cow2 {
+	background-image: url("../assets/images/farm-scene/cow2.png");
+	position: absolute;
+	left: 1210px;
+	top: 830px;
+	width: 320px;
+	height: 250px;
+	z-index: 4;
+}
+
+.cow3 {
+	background-image: url("../assets/images/farm-scene/cow3.png");
+	position: absolute;
+	left: 1210px;
+	top: 830px;
+	width: 320px;
+	height: 250px;
+	z-index: 5;
+}
+
+.fgrass {
+	background-image: url("../assets/images/farm-scene/fgrass.png");
+	position: absolute;
+	left: 0px;
+	top: 800px;
+	width: 100%;
+	/* height: 310px; */
+	z-index: 6;
+}
+
+.cloud_r {
+	background-image: url("../assets/images/farm-scene/cloud-r.png");
+	position: absolute;
+	left: -390px;
+	top: 90px;
+	width: 720px;
+	height: 310px;
+	z-index: 7;
+}
+
+.cloud_l {
+	background-image: url("../assets/images/farm-scene/cloud-l.png");
+	position: absolute;
+	left: 1560px;
+	top: 400px;
+	width: 720px;
+	height: 310px;
+	z-index: 8;
+}
+
+.sky {
+	background-image: url("../assets/images/farm-scene/sky.png");
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	/* height: 1080px; */
+	z-index: 1;
+}

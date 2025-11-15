@@ -1,21 +1,17 @@
-import type { BackgroundTheme, ImgData } from '../types-interfaces';
+type Farm = ['fence', 'cow1', 'cow2', 'cow-3', 'fgrass', 'cloud_r', 'cloud_l', 'sky'];
+
+export const farm: Farm = ['fence', 'cow1', 'cow2', 'cow-3', 'fgrass', 'cloud_r', 'cloud_l', 'sky'];
 
 export class Layout extends HTMLDivElement {
     /**
      * 	The layout's cache.
      */
     #innerComponents: Map<string, HTMLElement>;
-
-    /**
-     * Array of assets metadata for custom background
-     */
-    #assets: ImgData[] | null;
-
     /**
      * Storage for the rendered assets
      */
     #assetCache: Map<string, HTMLElement>;
-    #theme: BackgroundTheme;
+    #assetsList: string[];
 
     /* -------------------------------------------------------------------------- */
     /*                                   Default                                  */
@@ -25,16 +21,29 @@ export class Layout extends HTMLDivElement {
         super();
         this.id = 'layout';
         this.#innerComponents = new Map<string, HTMLElement>();
-        this.#innerComponents = new Map<string, HTMLImageElement>();
-        this.#assets = null;
-        this.#theme = 'default';
+        this.#assetCache = new Map<string, HTMLSpanElement>();
+        this.#assetsList = [];
     }
 
     connectedCallback() {
         this.render();
     }
 
+    #renderTheme() {
+        if (this.#assetCache.size > 0) {
+            this.#assetCache.forEach((asset) => {
+                asset.remove();
+            });
+        }
+        this.#assetsList.forEach((asset) => {
+            const el = document.createElement('span');
+            el.className = asset;
+			this.appendAndCache(el);
+        });
+    }
+
     render() {
+		this.#renderTheme();
         this.className =
             'box-border grid h-dvh w-dvw grid-auto-rows-auto \
 			place-content-center layout-col gap-s';
@@ -43,16 +52,17 @@ export class Layout extends HTMLDivElement {
     /* -------------------------------------------------------------------------- */
     /*                                   Setters                                  */
     /* -------------------------------------------------------------------------- */
-    set assets(assets: ImgData[]) {
-        this.#assets = assets;
+    set theme(list: Farm) {
+        this.#assetsList = list;
+		this.#renderTheme();
     }
 
     /* -------------------------------------------------------------------------- */
     /*                                   Getters                                  */
     /* -------------------------------------------------------------------------- */
 
-    get assets(): ImgData[] | null {
-        return this.#assets;
+    get assetsCache(): Map<string, HTMLElement> {
+        return this.#assetCache;
     }
 
     /**
