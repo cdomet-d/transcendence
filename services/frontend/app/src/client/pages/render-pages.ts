@@ -143,7 +143,7 @@ export function renderGame() {
 
     // HERE logic will be needed from the game manager so that we know what theme the player picked.
     const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
-    document.body.layoutInstance?.appendAndCache(court);
     const layout = document.body.layoutInstance;
     if (layout) layout.theme = farm;
+    document.body.layoutInstance?.appendAndCache(court);
 }

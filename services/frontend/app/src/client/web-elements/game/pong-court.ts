@@ -17,7 +17,7 @@ export class PongCourt extends HTMLDivElement {
     }
 
     render() {
-        this.#canva.className = 'w-full h-full';
+        this.#canva.className = 'w-full h-full bg z-25';
         this.className = 'content-h w-[1117.8px] brdr';
     }
 }

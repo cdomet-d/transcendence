@@ -1,6 +1,6 @@
-type Farm = ['fence', 'cow1', 'cow2', 'cow-3', 'fgrass', 'cloud_r', 'cloud_l', 'sky'];
+type Farm = ['fence', 'cow1', 'cow2', 'cow3', 'fgrass', 'cloud_r', 'cloud_l', 'sky'];
 
-export const farm: Farm = ['fence', 'cow1', 'cow2', 'cow-3', 'fgrass', 'cloud_r', 'cloud_l', 'sky'];
+export const farm: Farm = ['fence', 'cow1', 'cow2', 'cow3', 'fgrass', 'cloud_r', 'cloud_l', 'sky'];
 
 export class Layout extends HTMLDivElement {
     /**
