@@ -1,4 +1,4 @@
-import { Game, type keysObj} from './game.class.js'
+import { Game, type keysObj} from './classes/game.class.js'
 import { validRep, type repObj } from './mess.validation.js';
 
 export function addMessEvent(game: Game, ws: WebSocket) {
@@ -15,11 +15,11 @@ export function addMessEvent(game: Game, ws: WebSocket) {
 
 export function createKeyDownEvent(keys: keysObj, horizontal: boolean) {
 	return function keyDownEvent(event: KeyboardEvent): void {
-		if (event.key === "w")
+		if (event.key === "z")
 			keys._w = true;
 		if (event.key === "s")
 			keys._s = true;
-		if (horizontal && event.key === "a")
+		if (horizontal && event.key === "q")
 			keys._a = true;
 		if (horizontal && event.key === "d")
 			keys._d = true;
@@ -41,11 +41,11 @@ export function createKeyDownEvent(keys: keysObj, horizontal: boolean) {
 export function createKeyUpEvent(keys: keysObj) {
 	return function keyUpEvent(event: KeyboardEvent): void {
 		event.preventDefault();
-		if (event.key === "w")
+		if (event.key === "z")
 			keys._w = false;
 		if (event.key === "s")
 			keys._s = false;
-		if (event.key === "a")
+		if (event.key === "q")
 			keys._a = false;
 		if (event.key === "d")
 			keys._d = false;

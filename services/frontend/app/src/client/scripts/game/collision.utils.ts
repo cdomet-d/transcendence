@@ -1,4 +1,4 @@
-import { Game } from "./game.class.js";
+import { Game } from "./classes/game.class.js";
 import { type coordinates } from "./mess.validation.js";
 
 export function raycast(game: Game, paddle: coordinates, nextX: number, nextY: number): [number, coordinates] | null {

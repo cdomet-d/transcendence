@@ -1,4 +1,4 @@
-import { Game, HEIGHT, WIDTH } from "./game.class.js";
+import { Game, HEIGHT, WIDTH } from "./classes/game.class.js";
 
 export function renderGame(game: Game) {
 	drawMiddleLine(game);

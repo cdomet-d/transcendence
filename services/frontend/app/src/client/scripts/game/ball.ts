@@ -1,4 +1,4 @@
-import { Game, HEIGHT, WIDTH, type ballObj } from "./game.class.js";
+import { Game, HEIGHT, WIDTH, type ballObj } from "./classes/game.class.js";
 import type { coordinates, repObj } from "./mess.validation.js";
 import { updateVelocity, raycast, bounce } from "./collision.utils.js";
 

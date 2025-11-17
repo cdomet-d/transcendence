@@ -1,5 +1,5 @@
 import { renderGame } from "./game.render.utils.js";
-import { Game, HEIGHT, WIDTH } from "./game.class.js";
+import { Game, HEIGHT, WIDTH } from "./classes/game.class.js";
 import { updatePaddlePos } from "./paddle.js";
 import type { repObj } from "./mess.validation.js";
 import { deadReckoning } from "./ball.js";

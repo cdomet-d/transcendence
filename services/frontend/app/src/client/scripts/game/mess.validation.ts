@@ -1,4 +1,4 @@
-import type { ballObj } from "./game.class.js";
+import type { ballObj } from "./classes/game.class.js";
 
 export interface coordinates {
 	x: number,

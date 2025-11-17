@@ -1,5 +1,5 @@
 import { renderGame } from "./game.render.utils.js";
-import { Game } from "./game.class.js";
+import { Game } from "./classes/game.class.js";
 import { wsRequest } from "./ws.req.js";
 
 export interface gameRequest {
@@ -20,7 +20,7 @@ export function pong(gameReq: gameRequest) {
 	//TODO: set strokeStyle and fillStyle //changes paddle and ball colour
 	renderGame(game); //TODO: before rendering need to receive players names
 	// window.addEventListener("load", (event) => {
-		wsRequest(game, {gameID: gameReq.gameID, userID: gameReq.userID});
+	wsRequest(game, {gameID: gameReq.gameID, userID: gameReq.userID});
 	// });
 }
 

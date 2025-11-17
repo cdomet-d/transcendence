@@ -1,6 +1,6 @@
 export const HEIGHT = 500;
 export const WIDTH = 700;
-import type { coordinates, repObj } from "./mess.validation.js";
+import type { coordinates, repObj } from "../mess.validation.js";
 
 export interface keysObj {
 	_w: boolean,

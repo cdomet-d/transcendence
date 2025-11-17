@@ -1,5 +1,5 @@
 import { startGame } from './game.loop.js';
-import { Game } from './game.class.js';
+import { Game } from './classes/game.class.js';
 // import type { startObj } from './mess.validation.js';
 import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from "./game.events.js";
 // import { syncClocks } from './syncClocks.js';
