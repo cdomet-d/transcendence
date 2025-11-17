@@ -2,7 +2,7 @@ import dns from 'dns';
 import fs from 'fs';
 
 function getNginxIP(): string | null {
-  const ip: string | undefined = process.env.NGINXIP;
+  const ip: string | undefined = process.env['NGINXIP'];
   if (ip === undefined)
     throw new Error('NGINXIP is undefined');
   dns.lookup(ip, (err, address) => {
@@ -21,9 +21,9 @@ function checkProxy(address: string, hop: number): boolean {
 }
 
 const options = {
-  logger: {
-    file: '/usr/app/server.log'
-  },
+//   logger: {
+//     file: '/usr/app/server.log'
+//   },
   trustProxy: checkProxy,
   https: {
     key: fs.readFileSync('/run/secrets/ssl-key.pem'),

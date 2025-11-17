@@ -18,5 +18,5 @@ else
     echo "TEST database already exists at $DB_FILE."
 fi
 
-sqlite3 "$DB_FILE" < "$SEED_FILE" 2> ../data/test_seed_error.logs
+sqlite3 "$DB_FILE" < "$SEED_FILE" 2> ../data/test_seed_error.log
 

@@ -1,0 +1,2 @@
+Parse error near line 1: table gameMatchInfo has no column named winnerID
+Parse error near line 2: no such table: tournamentInfo

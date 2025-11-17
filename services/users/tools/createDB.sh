@@ -16,7 +16,7 @@ else
     echo "Database already exists at $DB_FILE"
 fi
 
-sqlite3 "$DB_FILE" < "$SEED_FILE" 2> /usr/data/seed_error.logs
+sqlite3 "$DB_FILE" < "$SEED_FILE" 2> /usr/data/seed_error.log
 
 # Execute the command passed to the container (keeps it running)
 exec "$@"

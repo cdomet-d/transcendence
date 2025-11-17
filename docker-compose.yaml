@@ -24,8 +24,6 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
-    ports:
-      - "1313:1313"
     volumes:
       - ./services/accessibility/app:/usr/app
       - ./services/accessibility/data:/usr/data
@@ -43,8 +41,6 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
-    ports:
-      - "1414:1414"
     volumes:
       - ./services/account/app:/usr/app
       - ./services/account/data:/usr/data
@@ -95,8 +91,6 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
-    ports:
-      - "1616:1616"
     volumes:
       - ./services/friends/app:/usr/app
       - ./services/friends/data:/usr/data
@@ -130,14 +124,12 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
-    ports:
-      - "1818:1818"
     volumes:
       - ./services/bff/app:/usr/app
     # user: "${T_UID}:${T_GID}"
   gamemanager:
     build:
-      context: ./services/GameManager
+      context: ./services/game-manager
       dockerfile: Dockerfile
     container_name: gamemanager
     image: gamemanager:0.0.1
@@ -152,7 +144,7 @@ services:
       - ssl-key.pem
       - ssl-cert.pem
     volumes:
-      - ./services/GameManager/app:/usr/app
+      - ./services/game-manager/app:/usr/app
   monitoring:
     build:
       context: ./services/monitoring
@@ -179,8 +171,6 @@ services:
       - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
     networks:
       - transcendence
-    ports:
-      - "4222:4222"
     restart: unless-stopped
   nginx:
     build:
@@ -232,8 +222,6 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
-    ports:
-      - "2626:2626"
     volumes:
       - ./services/users/app:/usr/app
       - ./services/users/data:/usr/data

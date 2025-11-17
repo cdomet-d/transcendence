@@ -25,8 +25,8 @@ describe('Fastify server', () => {
             ws.close();
             setTimeout(async () => {
                 const logFilePath = '/usr/app/server.log';
-                const logs = await fs.readFile(logFilePath, 'utf-8');
-                expect(logs).toContain('WebSocket connection established');
+                const log = await fs.readFile(logFilePath, 'utf-8');
+                expect(log).toContain('WebSocket connection established');
                 done();
             }, 100);
         });

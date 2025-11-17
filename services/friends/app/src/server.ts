@@ -1,4 +1,4 @@
-import type { buildServer } from './app.js';
+import { buildServer } from './app.js';
 
 const start = async () => {
 	let serv;

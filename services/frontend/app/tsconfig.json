@@ -12,6 +12,7 @@
 			"DOM.Iterable"
 		],
 		"skipLibCheck": true,
+		
 		/* Bundler mode */
 		"moduleResolution": "bundler",
 		"verbatimModuleSyntax": true,
@@ -19,6 +20,7 @@
 		"noEmit": false,
 		"noEmitOnError": false,
 		"esModuleInterop": true,
+
 		/* Linting */
 		"strict": true,
 		"noUnusedLocals": true,

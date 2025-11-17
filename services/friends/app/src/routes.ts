@@ -176,4 +176,4 @@ export async function routeFriend(serv: FastifyInstance) {
 			throw (error);
 		}
 	});
-});
+}

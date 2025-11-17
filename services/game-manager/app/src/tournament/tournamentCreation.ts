@@ -1,4 +1,4 @@
-import type { userInfo, game, tournament } from '../../src/manager.js'
+import type { userInfo, game, tournament } from '../manager.js'
 import type { lobbyInfo } from '../lobby/lobby.js';
 
 export function createTournament(payload: lobbyInfo): tournament | undefined {
