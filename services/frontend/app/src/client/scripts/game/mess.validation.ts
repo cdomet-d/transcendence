@@ -1,26 +1,4 @@
-import type { ballObj } from "./classes/game.class.js";
-
-export interface coordinates {
-	x: number,
-	y: number,
-	[key: string]: number,
-}
-
-export interface repObj {
-	_ID: number,
-	_timestamp: number,
-	_leftPad: coordinates,
-	_rightPad: coordinates,
-	_ball: ballObj,
-	_score: [number, number]
-}
-
-export interface startObj {
-	clientTimeStamp: number,
-	serverTimeStamp: number,
-	delay: number,
-	ballDir: number,
-}
+import type { repObj, coordinates } from "./classes/game.interfaces.js";
 
 const coordSchema = {
 	type: 'object',

@@ -1,6 +1,6 @@
-import type { coordinates } from './mess.validation.js';
-import { Game, type keysObj, HEIGHT, WIDTH, type paddleSpec } from './classes/game.class.js';
+import { Game, HEIGHT, WIDTH } from './classes/game.class.js';
 import { updateVelocity, raycast, bounce } from './collision.utils.js';
+import type { keysObj, paddleSpec, coordinates } from './classes/game.interfaces.js';
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 

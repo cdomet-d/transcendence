@@ -1,39 +1,6 @@
 export const HEIGHT = 500;
 export const WIDTH = 700;
-import type { coordinates, repObj } from "../mess.validation.js";
-
-export interface keysObj {
-	_w: boolean,
-	_s: boolean,
-    _a: boolean,
-    _d: boolean,
-	_ArrowUp: boolean,
-	_ArrowDown: boolean,
-    _ArrowLeft: boolean,
-    _ArrowRight: boolean,
-}
-
-export interface reqObj {
-	_ID: number,
-	_keys: keysObj,
-	_timeStamp: number,
-}
-
-export interface ballObj {
-	x: number,
-	y: number,
-	dx: number,
-	dy: number,
-	r: number
-}
-
-export interface paddleSpec {
-	speed: number
-	w: number,
-	h: number,
-	halfW: number,
-	halfH: number
-}
+import type { reqObj, ballObj, paddleSpec, coordinates, repObj } from "./game.interfaces.js";
 
 type requestMap = Map< number, reqObj >;
 type replyTab = Array< repObj >;

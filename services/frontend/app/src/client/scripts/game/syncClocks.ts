@@ -1,5 +1,11 @@
-import type { startObj } from "./mess.validation.js";
 const MAX_SYNC = 3;
+
+export interface startObj {
+	clientTimeStamp: number,
+	serverTimeStamp: number,
+	delay: number,
+	ballDir: number,
+}
 
 export async function syncClocks(ws: WebSocket): Promise<[number, number, startObj] | null> {
     const offsetsTab: Array< number > = new Array();

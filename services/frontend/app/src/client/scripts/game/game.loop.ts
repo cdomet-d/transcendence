@@ -1,7 +1,7 @@
 import { renderGame } from "./game.render.utils.js";
 import { Game, HEIGHT, WIDTH } from "./classes/game.class.js";
+import type { repObj } from "./classes/game.interfaces.js";
 import { updatePaddlePos } from "./paddle.js";
-import type { repObj } from "./mess.validation.js";
 import { deadReckoning } from "./ball.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
