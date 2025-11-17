@@ -34,7 +34,6 @@ function down(pad: coordinates, padSpec: paddleSpec, step: coordinates) {
 	else
 		step.y += HEIGHT - pad.y - padSpec.h;
 }
-//TODO: check if ball is between paddle and wall
 
 function left(pad: coordinates, game: Game, limit: number, step: coordinates) {
 	if (pad.x  - (game.padSpec.speed * TIME_STEP) > limit)
