@@ -8,7 +8,7 @@ export function addMessEvent(game: Game, ws: WebSocket) {
 		// if (!validRep(rep)) {
 		// 	console.log("Error: invalid reply:", JSON.stringify(rep));
 		// 	return
-		// } //TODO: fix validRep
+		// } //TODO: fix validRep / or delete it ?
 		rep._timestamp = performance.now();
 		game.addReply(rep);
 	};
