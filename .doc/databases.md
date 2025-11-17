@@ -40,6 +40,82 @@ It will look like this :
 	const result = await serv.dbLanguage.get(query, [word, langCode]);
 ```
 
+## How do perfom a query 101
+
+A query to a database will always be perfomed through a defined route of the API. 
+To successfully perfom a query, we need to know a couple of things : 
+
+* The url to query
+* The parameters mandatory to provided
+* Which reply code or data we expect
+
+It's a function lol
+
+### URLs 
+
+[WIP as we are building the nginx configuration which will set the url format to the routes]
+
+### Parameters
+
+Depending on the format of the expected parameters for a request, a route will accepts them differently. You might see :
+
+- `request.params`
+    The parameter will be set in the called url directly. 
+    If we want to use :
+            
+        /internal/users/:userID
+
+    We will call the route like so : 
+
+    ```
+        const url = `http://users:2626/internal/users/<userID>/profile`;
+    let response: Response
+    try {
+    	response = await fetch(url)
+    } catch (error) {
+    	log.error(`[BFF] User service is unreachable: ${error}`);
+    	throw new Error('User service is unreachable.');
+    }
+    ```
+    
+    You can also export a variable in the url like so :
+    `http://users:2626/internal/users/${userID}/profile`
+
+
+- `request.body`
+
+    ```
+	const url = 'http://friends:1616/internal/friends/friendship';
+	let response: Response;
+
+	try {
+		response = await fetch(url, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ senderID, friendID })
+		});
+	} catch (error) {
+		log.error(`[BFF] Friends service (sendrequest) is unreachable: ${error}`);
+    }
+    ```
+    Here, the userIDs are sent as body (a json) in the fetch directly
+
+- `request.query`
+
+    ```
+	const url = `http://friends:1616/internal/friends/friendships?userID=${userID}&status=friend`;
+	let response: Response;
+
+	try {
+		response = await fetch(url);
+	} catch (error) {
+		log.error(`[BFF] User service is unreachable: ${error}`);
+		throw new Error('User service is unreachable.');
+	}
+    ```
+
+    Lastly, here the parameter are in the query of the request, meaning the parameters are not mandatory. 
+
 ## Accessibility
 
 ### General overview
@@ -236,76 +312,6 @@ averageMatchDuration will be in seconds.
     |   404    | profile not found |
     |   204    | profile deleted  |
 
-### Usage and associated functions
-
-* userStats
-    * ~~get user stats by userID~~
-        
-        ```curl http://localhost:2626/users/userStats/<userID>```
-    * ~~update all game stats~~
-    * ~~update longest match~~
-    * ~~update shorest match~~
-    * ~~update total match~~
-    * ~~update total wins~~
-    * ~~update win streak~~ 
-    * ~~update average match duration~~
-    * ~~update highest score~~
-
-* userProfile
-    * ~~get activity status by userID~~
-        
-        ``` curl http://localhost:2626/users/activity/<userID> ```
-    * ~~get profile info (username. avatar, biography, profile color, lastConnexion) by userID~~
-        
-        ``` curl http://localhost:2626/internal/users/profile/<userID> ```
-    * ~~get lastConnexion by userID~~
-        
-        ```curl http://localhost:2626/users/lastConnection/<userID> ```
-    * ~~update avatar~~
-            
-            curl -X POST \
-            -H "Content-Type: application/json" \
-            -d '{"newAvatar": "<new avatar>"}' \
-            http://localhost:2626/users/updateAvatar/<userID>
-    * updata biography
-        
-        ```
-        curl -X POST \
-        -H "Content-Type: application/json" \
-        -d '{"newbiography": "<biography>>"}' \
-        http://localhost:2626/users/updatebiography/<userID>
-    * update profileColor
-
-        ```
-        curl -X POST \  -H "Content-Type: application/json" \
-        -d '{"newProfileC": "<new color>"}' \    
-        http://localhost:2626/users/updateProfileColor/<userID> 
-    * update activity status
-
-        ```
-        //newStatus must be a number, between quotes works too :
-        curl -X POST \
-        -H "Content-Type: application/json" \
-        -d '{"newStatus": "<newStatus>"}' \
-        http://localhost:2626/users/updateActivityStatus/<userID>
-        
-        curl -X POST \
-        -H "Content-Type: application/json" \
-        -d '{"newStatus": <newStatus>}' \  
-        http://localhost:2626/users/updateActivityStatus/<userID>
-    * update lastConnexion
-        
-        ```
-        curl -X POST \  -H "Content-Type: application/json" \
-        -d '{"newConnection": "<DATETIME format YYYY-MM-DD HH:MM:SS>"}' \
-        http://localhost:2626/users/updateLastConnection/<userID>
-    * update username
-        
-        ```
-        curl -X POST \  -H "Content-Type: application/json" \
-        -d '{"newUsername": "<username>"}' \
-        http://localhost:2626/users/updateUsername/<userID>
-
 ## Account
 
 ### General overview
@@ -324,9 +330,23 @@ The userRole column stored the role of the user (admin, user). I don't know yet 
 
 #### GET
 
-* GET fetch settings of an account with userID ; `/internal/account/:userID`
+* GET fetch settings of an account with userID : `/internal/account/:userID`
 
+    userID sent as `request.params`
 
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | account not found |
+    |   200    | settings found and sent  |
+
+* GET fetch account data for userData interface (front communication) : `/internal/account/:userID/accountData`
+
+    userID sent as `request.params`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | account not found |
+    |   200    | account data found and sent  |
 
 #### POST
 
@@ -349,10 +369,21 @@ The userRole column stored the role of the user (admin, user). I don't know yet 
     |   401    | password or username invalid |
     |   200    | logged in  |
 
+* POST fetch multiple accounts : `/internal/account/accountDataBatch`
+
+    userIDs sent as `request.body` (as a json ? TODO check)
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   200    | accounts founds  |
+
+We never return 404 because we want to sent the accounts even if one is not found. 
+We sent the accountsData of the found accounts and an array of the IDs we didn't found an associated account
+
 
 #### PATCH
 
-* PATCH accout settings with userID
+* PATCH account settings with userID
 
     userID sent as `request.params`
     settings sent as `request.body`
@@ -409,16 +440,74 @@ For the statusFriendship :
 | 0      | pending  |
 | 1      | accepted |
 
-### Usage and associated functions
+### Routes
 
-* ~~Add a pending friendship request~~
-* ~~Change the statusFriendship to accepted~~
-* ~~Remove a frienship~~
-* ~~Check if the friendship exists~~
-* ~~Get all friends of a user~~
-* ~~Get all pending friendship~~
+#### GET
 
-TODO : write script of tests for everything that could go wrong
+* GET fetch relation between two users and get a user friendlist: `/internal/friends/friendship`
+
+    Depending on what parameters we send when calling the route, the outcome will be different.
+    If we want the relation between two users we send the userIDs of the users in the `request.query`
+
+    If we want the friendlist (pending or confirmed friendship) we send only one userID and what type of friendship (pending or confirmed )we want to query, also in `request.query`
+
+    For relation between two users :
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | friendship not found |
+    |   200    | friendship found and status returned  |
+
+
+    For a friendlist :
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   200    | friendlist found and friends returned  |
+
+#### POST
+
+* POST a friend request : `/internal/friends/friendship` 
+
+    senderID and receiverID sent as `request.body`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   409    | request already exists  |
+    |   201    | request created  |
+
+#### PATCH
+
+* PATCH accept friend request
+
+    receiverID and friendID sent as `request.body`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   409    | friendship already exists  |
+    |   400    | friendship could not be accepted  |
+    |   200    | friendship accepted  |
+
+
+#### DELETE
+
+* DELETE a friendshiup between two users : `/internal/friendship`
+
+    userA and userB sent as `request.body`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | friendship not found  |
+    |   204    | friendship deleted  |
+
+* DELETE every friendship a user is a part of (GRPD) : `/internal/friends/:userID/friendships`
+
+    userID sent as `request.params`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   204    | friendships deleted  |
+
 
 ## Dashboard
 
@@ -466,23 +555,83 @@ There is the question of the local game. If a game is local, the "invited" user 
 
 The playersIDs is currently thought of has a JSON array storing the userID of all tournament players. This data format allows for different tournament size and is pretty flexible in the event we implement other tournament size. TODO : Figure out if the JSON array format isn't to complicated and fast enough, and find a replacement if it's not optimized
 
-### Usage and associated functions
+### Routes
 
-#### gameMatchInfo
+#### GET
 
-* created a game and return gameID
-* update a game with gameID
-* get all tournament's game with tournament ID
-* get all game info with gameID
-* depending on how the front is, get only some of the info for game dashboard preview ?
-* get gameID (and/or gameInfo) with user ID (what game did a user played in)  
+* GET all games of a user : `/internal/dashboard/games`
 
-#### tournamentInfo
+    userID sent as `request.params`
 
-* create a tournament and return tournamentID
-* update tournament with tournamentID
-* get tournament info with tournmentID
-* get tournamentID with userID (what tournament did a user played in)
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   400    | userID not provided  |
+    |   200    | games found and returned |
+
+#### POST
+
+* POST a game : `/internal/dashboard/games`
+
+    local and tournamentID sent as `request.body`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   201    | game created and gameID returned |
+
+* POST a tournament : `/internal/dashboard/tournaments`
+
+    playerIDs sent as `request baody` (as json ? TODO check)
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   400    | playerIDs not provided  |
+    |   201    | tournament created and ID returned  |
+
+#### PATCH
+
+* PATCH update game stats : `/internal/dashboard/games/:gameID`
+
+    gameID sent as `request.params`
+    stats sent as `request.body` (as a json ? TODO check)
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   400    | no stats sent to update  |
+    |   404    | game not found  |
+    |   200    | stats updated  |
+
+* PATCH tournament winner : `/internal/dashboard/tournaments/:tournamentID`
+
+    tournamentID sent as `request.params` 
+    winnerID sent as `request.body` 
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   400    | tournamentID not provided |
+    |   404    | tournament not found  |
+    |   200    | tournament winner updated  |
+
+
+#### DELETE
+
+* DELETE a game : `/internal/dashboard/games/:gameID`
+
+    gameID sent as `request.params`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   400    | gameID not provided |
+    |   404    | game not found  |
+    |   204    | game deleted  |
+
+* DELETE a tournament : `/internal/dashboard/tournaments/:tournamentID`
+
+    tournamentID sent as `request.params` 
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | tournament not found |
+    |   204    | tournament deleted  |
 
 ## Miscellaneous
 
@@ -496,4 +645,4 @@ SET totalPlayedGame = totalPlayedGame + 1
 WHERE userID = 101;
 ```
 
-//DOC NOT UP TO DATE YET (WIP)
+[WIP] DOC NOT UP TO DATE YET (nginx conf not done yet)
