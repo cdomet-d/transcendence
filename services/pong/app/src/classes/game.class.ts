@@ -9,7 +9,6 @@ export const WIDTH = 700;
 export interface user {
 	userID: number,
 	username: string,
-	//_score: number; //TODO: needed?
 }
 
 export interface gameInfo {
@@ -159,15 +158,11 @@ export class Game {
 		})
 		this.#_players.splice(0, this.#_players.length);
 
-	} //TODO: to be removed. only for testing
+	}
 
 	public addReq(req: reqObj, id: number) {
 		const newReq: playerReq = { _id: id, _req: structuredClone(req)};
 		this.#_reqHistory.push(newReq);
-	}
-
-	public deleteReq(deleteCount: number) {
-		this.#_reqHistory.splice(0, deleteCount);
 	}
 
 	public addTimoutID(ID: NodeJS.Timeout) {
@@ -204,6 +199,5 @@ export class Game {
 			this.#_gameInfo.winnerID = user2;
 			this.#_gameInfo.loserID = user1;
 		}
-		console.log("GAME INFO", JSON.stringify(this.#_gameInfo));
 	}
 }
