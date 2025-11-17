@@ -16,7 +16,6 @@ export async function buildServer(): Promise<FastifyInstance> {
 	serv.register(dashboardRoutes);
 
 	await (serv.ready());
-
 	return (serv);
 }
 

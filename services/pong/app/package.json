@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon",
+        "dev": "nodemon -q",
     "test": "jest --verbose > jest.results.txt 2>&1",
     "start": "tsc && node dist/server.js"
   },

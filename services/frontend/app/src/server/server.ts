@@ -20,13 +20,13 @@ try {
     await addPlugins(serv);
     await serv.ready();
     await serv.listen({ port: 1212, host: '0.0.0.0' });
+    serv.log.info(serv.printRoutes());
 } catch (err) {
     serv.log.error(err);
     process.exit(1);
 }
 
 async function addPlugins(serv: FastifyInstance) {
-    console.log('ADDING PLUGINS');
     await serv
         .register(fastifyStatic, {
             root: '/app/dist/client/',

@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon",
+        "dev": "nodemon -q",
     "start": "tsc && node dist/server.js",
     "//": "This NOW includes the NODE_OPTIONS flag",
     "test:setup": "rm -f /usr/data/testDB.db && /usr/local/bin/testDB.sh",

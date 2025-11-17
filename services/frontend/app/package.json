@@ -13,7 +13,7 @@
 		"build:css": "postcss ./src/client/css/tailwind.css -o ./dist/client/css/output.css",
 		"build": "node build.js && npm run build:css && npm run copy:assets",
 		"watch": "node build.js --watch && npm run build:css",
-		"dev": "concurrently \"npm run watch\" \"nodemon\"",
+		"dev": "concurrently \"npm run watch\" \"nodemon -q\"",
 		"format": "npx prettier --write \"./src/**/*.ts\"",
 		"lint": "eslint ."
 	},

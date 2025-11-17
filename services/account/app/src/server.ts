@@ -6,8 +6,7 @@ const start = async () => {
 		serv = await buildServer();
 
 		await serv.listen({ port: 1414, host: '0.0.0.0' });
-		serv.log.info('Account service listening on 1414');
-
+		serv.log.info(serv.printRoutes())
 	} catch (err) {
 		if (serv) {
 			serv.log.error(err, 'Server failed to start');

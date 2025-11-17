@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DB_DIR="/usr/data/"
+DB_DIR="/usr/data"
 DB_FILE="$DB_DIR/friends.db"
 SEED_FILE="/usr/local/bin/seed.sql"
 
@@ -11,9 +11,9 @@ mkdir -p "$DB_DIR"
 if [ ! -f "$DB_FILE" ]; then
     echo "Creating SQLite database at $DB_FILE..."
     sqlite3 "$DB_FILE" < /usr/local/bin/initDB.sql
-    echo "Database created successfully!"
+    echo "[STARTUP] Database created successfully!"
 else
-    echo "Database already exists at $DB_FILE"
+    echo "[STARTUP] Database already exists at $DB_FILE"
 fi
 
 sqlite3 "$DB_FILE" < "$SEED_FILE" 2> /usr/data/seed_error.log

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon",
+        "dev": "nodemon -q",
     "start": "tsc && node dist/server.js"
   },
   "keywords": [],
