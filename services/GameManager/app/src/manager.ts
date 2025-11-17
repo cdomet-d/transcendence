@@ -1,23 +1,19 @@
 import { createTournament } from "./tournament/tournamentCreation.js";
-import { startTournament } from "./tournament/tournamentStart.js";
+import { startGame, startTournament } from "./tournament/tournamentStart.js";
+import type { lobbyInfo } from './lobby/lobby.js'
+import { createGameObj } from "./quickmatch/createGame.js";
 
 interface userInfo {
 	userID?: number,
 	username?: string
 }
 
-interface lobbyInfo {
-	users: userInfo[],
-	remote: boolean,
-	format: "quick" | "tournament"
-	// gameSettings: gameSettingsObj
-}
-
 interface game {
+	lobbyID: number,
 	gameID: number,
-	tournamentID: number,
+	tournamentID?: number,
 	remote: boolean,
-	users: userInfo[] | undefined | null,
+	userList: userInfo[] | undefined | null,
 	score: string,
 	winnerID: number,
 	loserID: number,
@@ -29,32 +25,30 @@ interface tournament {
 	bracket: game[]
 }
 
-export type { userInfo, lobbyInfo, game, tournament };
+interface gameRequest {
+	event: string,
+	userID: number,
+	gameID: number
+}
 
-// function receiveLobbyInfo(): lobbyInfo {
-//     const userArray: userInfo[] = [
-//             { userID: 1, username: "sam" },
-//             { userID: 2, username: "alex" },
-//             { userID: 3, username: "cha" },
-//             { userID: 4, username: "coco" }
-//         ];
-//     const lobbyInfo: lobbyInfo = { users: userArray, remote: true, format: "tournament" };
-//     return lobbyInfo;
-// }
+export type { userInfo, game, tournament, gameRequest }
 
-export function processLobbyRequest(lobbyInfo: lobbyInfo) {
-	// Filter request
+export function processGameRequest(lobbyInfo: lobbyInfo) {
 	if (lobbyInfo.format === "tournament") {
 		const tournament: tournament | undefined = createTournament(lobbyInfo);
 		if (tournament === undefined) {
-			console.log("Error: tournament object undefined!");
+			console.log("Error: Could not create tournament");
 			return;
 		}
+		lobbyInfo.joinable = false; // TODO: turn back to true when tournament over
 		startTournament(tournament);
 	} else if (lobbyInfo.format === "quick") {
-		// create gameObj
-		// send it to PONG
-		// wait for approval from PONG
-		// signal involved clients game ready for them
+		const quickmatch: game | boolean = createGameObj(lobbyInfo);
+		if (quickmatch === false) {
+			console.log("Error: Something went wrong!");
+			return;
+		}
+		lobbyInfo.joinable = false; // TODO: turn back to true when game over
+		startGame(quickmatch);
 	}
 }

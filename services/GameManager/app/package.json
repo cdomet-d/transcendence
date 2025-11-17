@@ -13,9 +13,9 @@
   "type": "module",
   "dependencies": {
     "@fastify/websocket": "^11.2.0",
-    "@types/node": "^24.3.0",
-    "async-mutex": "^0.5.0",
-    "fastify": "^5.4.0",
+    "@types/node": "^24.3.1",
+    "dotenv": "^17.2.3",
+    "fastify": "^5.5.0",
     "nats": "^2.29.3",
     "typescript": "^5.9.2"
   },

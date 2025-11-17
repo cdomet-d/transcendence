@@ -49,7 +49,7 @@ Anymous accounts are allowed and treated like deleted users.
 - Delete account
 - See user profile
 - Update user information
-- Search user
+- search user
 
 ### DB structure
 
@@ -91,7 +91,7 @@ Anymous accounts are allowed and treated like deleted users.
       - Last online
   - Home button
   - General leaderboard
-  - Search bar (to find user account)
+  - search bar (to find user account)
 - Matchmaking loading screen
 - Bracket page
 - Match page

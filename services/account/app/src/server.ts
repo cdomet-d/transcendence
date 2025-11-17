@@ -1,14 +1,22 @@
-import Fastify from 'fastify'
-import type { FastifyInstance } from 'fastify';
-import { options } from './serv.conf.js';
+import { buildServer } from './app.js';
 
-try {
-	const serv: FastifyInstance = Fastify(options);
-	serv.listen({ port: 1414, host: '0.0.0.0' }).then(() => {
-		serv.log.info("serv run");
-	});
-}
-catch (err) {
-	console.error('server error:', err);
-	process.exit(1);
-}
+const start = async () => {
+	let serv;
+	try {
+		serv = await buildServer();
+
+		console.log('listening on 1414');
+		await serv.listen({ port: 1414, host: '0.0.0.0' });
+
+	} catch (err) {
+		if (serv) {
+			serv.log.error(err, 'Server failed to start');
+		} else {
+			console.error('Error during server build:', err);
+		}
+		process.exit(1);
+	}
+};
+
+start();
+

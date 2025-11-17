@@ -9,6 +9,11 @@
 	- [API](#api)
 	- [Friendships](#friendships)
 	- [Tools](#tools)
+	- [Front-End theory](#front-end-theory)
+	- [Design Systems for Front-End](#design-systems-for-front-end)
+		- [Design Foundations](#design-foundations)
+		- [Libraries](#libraries)
+		- [Utilities](#utilities)
 	- [Other useful things](#other-useful-things)
 
 ## Build a webapp with Fastify
@@ -59,6 +64,38 @@
 
 - [JSON/YAML Vizualizer](https://todiagram.com/)
   - Useful to vizualise API objects.
+
+## Front-End theory
+
+- [The DOM API](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model)
+  - Dynamically generate and manipulate objects rendered to the client's screen
+
+## Design Systems for Front-End
+
+- [Ressource aggregator](https://github.com/sindresorhus/awesome?tab=readme-ov-file#front-end-development)
+  
+### Design Foundations
+
+- [Awesome Design Systems](https://github.com/klaufel/awesome-design-systems)
+- [Atomic Design and Design Tokens](https://www.contentful.com/blog/design-token-system/)
+- [Atomic Design by Brad Frost](https://atomicdesign.bradfrost.com/table-of-contents/)
+- [Design Tokens Explained](https://www.contentful.com/blog/design-token-system/)
+- [Firefox's Acorn](https://acorn.firefox.com/latest/home/acorn-aRSAh0Sp)
+- [Google's Material Design](https://m2.material.io/design/foundation-overview)
+- [Designing Tokens and integrating them in your workflow](https://www.michaelmang.dev/blog/introduction-to-design-tokens)
+
+### Libraries
+
+- [Charts & Graphics Libraries](https://github.com/wbkd/awesome-d3#readme)
+
+### Utilities
+
+- [UI/UX design inspiration](https://github.com/NoahBuscher/Inspire#readme)
+- [Make CSS classes into Tailwind](https://folge.me/tools/css-to-tailwind-converter)
+- [Amazon's Style Dictionnary Repo](https://github.com/style-dictionary)
+	- Allows developpers to transform JSON described tokens into CSS classes
+- [Style Dictionnary Visual Editor](https://www.style-dictionary-play.dev/)
+	- To get a feel of how Style Dictionnary works
   
 ## Other useful things
 

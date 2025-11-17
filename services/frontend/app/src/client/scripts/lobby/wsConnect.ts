@@ -1,8 +1,10 @@
+// import { renderLobby } from '../../pages/html.pages.js';
+import { router } from '../../main.js';
 import { pong } from '../game/pong.js';
-import { router } from '../main.js';
+import { createGameRequestForm, createLobbyRequestForm, attachGameListener } from './lobby.js';
 import type { gameRequest } from '../game/pong.js';
 
-let wsInstance: any = null;
+let wsInstance: WebSocket | null = null;
 
 function openWsConnection() {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
@@ -15,59 +17,68 @@ function openWsConnection() {
 function wsConnect() {
 	const ws: WebSocket = openWsConnection();
 
-	ws.onerror = (err: any) => {
-		console.log("error:", err);
-		return; //TODO: handle error properly
+	ws.onopen = () => {
+		console.log("WebSocket connection established!")
+		// enable buttons in html?
 	}
 
-	ws.onopen = () => {
-		console.log("LOBBY webSocket connection established!")
+	ws.onmessage = (message: MessageEvent) => {
+		try {
+			// LobbyRequest
+			const data = JSON.parse(message.data);
+			if (data.lobby && (data.lobby === "created" || data.lobby === "joined")) {
+				console.log(data.lobby, "lobby successfully!")
 
-		ws.onmessage = (message: any) => {
-			// console.log("Client received WS message!");
-			const gameReq: gameRequest = JSON.parse(message.data);
+				const app = document.getElementById('app');
+				if (app) {
+					// app.innerHTML = renderLobby();
+					attachGameListener();
+				} else {
+					console.log("Error: could not find HTMLElement: 'app'");
+					return;
+				}
+				return;
+			}
+
+			// GameRequest
+			const gameRequest: gameRequest = data;
 			window.history.pushState({}, '', '/game/match');
-			router._loadRoute('/game/match');
-			console.log("Client ready to connect game #" + gameReq.gameID);
-			// ws connect to "/game/match" and send userID + gameID
-			pong(gameReq);
+			router.loadRoute('/game/match');
+			console.log("Client ready to connect game: #" + gameRequest.gameID);
+			pong(gameRequest); // ws connect to "/game/match" and send userID + gameID
+		} catch (error) {
+			console.error("Error: Failed to parse WS message", error);
 		}
+	}
 
-		// TODO: this ugly, make pretty
-		const startButton = document.getElementById('start-tournament-btn');
-		if (startButton && ws.readyState === WebSocket.OPEN) {
-			startButton.addEventListener('click', () => {
-				const message = createRequestForm();
-				console.log("Client sending following to GM:\n", message);
-				ws.send(message);
-			});
-		}
+	ws.onerror = (err: any) => {
+		console.log("Error:", err);
+		return;
 	}
 
 	ws.onclose = () => {
 		console.log("WebSocket connection closed!");
-		// TODO: Check wether deconnection was expected or not 
+		// TODO: Check wether deconnection was expected or not
 	}
 }
 
-// TODO: this ugly, make pretty
-function createRequestForm(): string {
-	const requestForm = {
-		event: "TOURNAMENT_REQUEST",
-		payload: {
-			format: "tournament",
-			remote: "true",
-			players: "4",
-			users: [
-				{ userID: 1, username: "sam" },
-				{ userID: 2, username: "alex" },
-				{ userID: 3, username: "cha" },
-				{ userID: 4, username: "coco" }
-			]
-		}
-	};
-
-	return JSON.stringify(requestForm);
+function handleGameStart(format: string) {
+	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+		const message = createGameRequestForm(format);
+		console.log("Client sending GAME_FORM to GM:\n", message);
+		wsInstance.send(message);
+	} else {
+		console.log("Error: WebSocket is not open for GAME_FORM");
+	}
 }
 
-export { wsConnect };
+function handleLobbyRequest(action: string, format: string): void {
+	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+		console.log(`Client sending ${action} request`);
+		wsInstance.send(createLobbyRequestForm(action, format));
+	} else {
+		console.log(`Error: WebSocket is not open for ${action}`);
+	}
+}
+
+export { wsConnect, handleLobbyRequest, handleGameStart };

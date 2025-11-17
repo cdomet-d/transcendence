@@ -1,0 +1,292 @@
+@keyframes load {
+  0% {
+    transform: translateY(0%) scale3d(1, 1, 1);
+  }
+
+  10% {
+    transform: translateY(5%) scale3d(0.9, 1.1, 1);
+  }
+
+  20% {
+    transform: translateY(10%) scale3d(0.8, 1.2, 1);
+  }
+
+  30% {
+    transform: translateY(15%) scale3d(0.7, 1.3, 1);
+  }
+
+  40% {
+    transform: translateY(20%) scale3d(0.8, 1.2, 1);
+  }
+
+  50% {
+    transform: translateY(25%) scale3d(0.9, 1.1, 1);
+  }
+
+  60% {
+    transform: translateY(30%) scale3d(1, 1, 1);
+  }
+
+  70% {
+    transform: translateY(35%) scale3d(1.1, 0.9, 1);
+  }
+
+  80% {
+    transform: translateY(35%) scale3d(1.2, 0.8, 1);
+  }
+
+  90% {
+    transform: translateY(35%) scale3d(1.3, 0.7, 1);
+  }
+
+  100% {
+    transform: translateY(35%) scale3d(1.4, 0.6, 1);
+  }
+}
+
+@keyframes breathe {
+  0% {
+    transform: scale3d(1, 1, 1);
+  }
+
+  25% {
+    transform: scale3d(1, 1.05, 1);
+  }
+
+  50% {
+    transform: scale3d(1, 1, 1);
+  }
+
+  75% {
+    transform: scale3d(1, 0.95, 1);
+  }
+
+  100% {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+/* @keyframes dance {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+} */
+
+@keyframes dance {
+  0% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes melt {
+  0% {
+    transform: scaleY(1) scaleX(1);
+  }
+  80% {
+    transform: scaleY(0.2) scaleX(1.4);
+  }
+  100% {
+    transform: scaleY(0) scaleX(1.8);
+  }
+}
+
+@keyframes a-grow {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: 0 0;
+  }
+}
+
+.breathe {
+  transform-origin: bottom center;
+  animation: breathe 3s linear alternate infinite;
+}
+
+.load {
+  transform-origin: bottom center;
+  animation: load 0.5s linear alternate infinite;
+}
+
+.load:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.load:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.load:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.letter-dance > span {
+  display: inline-block;
+  transform-origin: bottom center;
+  animation: dance 1.2s ease-in-out infinite;
+}
+
+.letter-dance span:nth-child(1) {
+  animation-delay: 0s;
+}
+.letter-dance span:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.letter-dance span:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.letter-dance span:nth-child(4) {
+  animation-delay: 0.3s;
+}
+.letter-dance span:nth-child(5) {
+  animation-delay: 0.4s;
+}
+.letter-dance span:nth-child(6) {
+  animation-delay: 0.5s;
+}
+.letter-dance span:nth-child(7) {
+  animation-delay: 0.6s;
+}
+.letter-dance span:nth-child(8) {
+  animation-delay: 0.7s;
+}
+.letter-dance span:nth-child(9) {
+  animation-delay: 0.8s;
+}
+.letter-dance span:nth-child(10) {
+  animation-delay: 0.9s;
+}
+.letter-dance span:nth-child(11) {
+  animation-delay: 1s;
+}
+.letter-dance span:nth-child(12) {
+  animation-delay: 1.1;
+}
+.letter-dance span:nth-child(13) {
+  animation-delay: 1.2s;
+}
+.letter-dance span:nth-child(14) {
+  animation-delay: 1.3s;
+}
+.letter-dance span:nth-child(15) {
+  animation-delay: 1.4s;
+}
+.letter-dance span:nth-child(16) {
+  animation-delay: 1.5s;
+}
+.letter-dance span:nth-child(17) {
+  animation-delay: 1.6s;
+}
+.letter-dance span:nth-child(18) {
+  animation-delay: 1.7s;
+}
+.letter-dance span:nth-child(19) {
+  animation-delay: 1.8s;
+}
+.letter-dance span:nth-child(20) {
+  animation-delay: 1.9s;
+}
+
+.hover-dance:hover > span {
+  display: inline-block;
+  transform-origin: bottom center;
+  animation: dance 1.2s ease-in-out infinite;
+}
+
+.hover-dance span:nth-child(1) {
+  animation-delay: 0s;
+}
+.hover-dance span:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.hover-dance span:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.hover-dance span:nth-child(4) {
+  animation-delay: 0.3s;
+}
+.hover-dance span:nth-child(5) {
+  animation-delay: 0.4s;
+}
+.hover-dance span:nth-child(6) {
+  animation-delay: 0.5s;
+}
+.hover-dance span:nth-child(7) {
+  animation-delay: 0.6s;
+}
+.hover-dance span:nth-child(8) {
+  animation-delay: 0.7s;
+}
+.hover-dance span:nth-child(9) {
+  animation-delay: 0.8s;
+}
+.hover-dance span:nth-child(10) {
+  animation-delay: 0.9s;
+}
+.hover-dance span:nth-child(11) {
+  animation-delay: 1s;
+}
+.hover-dance span:nth-child(12) {
+  animation-delay: 1.1;
+}
+.hover-dance span:nth-child(13) {
+  animation-delay: 1.2s;
+}
+.hover-dance span:nth-child(14) {
+  animation-delay: 1.3s;
+}
+.hover-dance span:nth-child(15) {
+  animation-delay: 1.4s;
+}
+.hover-dance span:nth-child(16) {
+  animation-delay: 1.5s;
+}
+.hover-dance span:nth-child(17) {
+  animation-delay: 1.6s;
+}
+.hover-dance span:nth-child(18) {
+  animation-delay: 1.7s;
+}
+.hover-dance span:nth-child(19) {
+  animation-delay: 1.8s;
+}
+.letter-dance span:nth-child(20) {
+  animation-delay: 1.9s;
+}
+
+@keyframes melt {
+  0% {
+    transform: scaleY(1) translateY(0);
+    opacity: 0;
+  }
+  10%,
+  20% {
+    transform: scaleY(1) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(2) translateY(1em);
+    opacity: 0;
+  }
+}
+
+.letter-melt > span{
+  display: inline-block;
+  transform-origin: bottom center;
+  animation: melt 2.2s ease-in-out infinite;
+}
