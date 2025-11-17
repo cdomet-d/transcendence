@@ -12,25 +12,24 @@ export function raycast(game: Game, paddle: coordinates, nextX: number, nextY: n
 
 	const p1: coordinates = {x: game.ball.x, y: game.ball.y};
 	const p2: coordinates = {x: nextX, y: nextY};
-	const sides = [
+	const padSides = [
 		{p3: inflatedPad, p4: {x: leftX, y: bottomY}, n: {x: -1, y: 0}}, //left
 		{p3: {x: rightX, y: topY}, p4: {x: rightX, y: bottomY}, n: {x: 1, y: 0}}, //right
 		{p3: inflatedPad, p4: {x: rightX, y: topY}, n: {x: 0, y: -1}}, //top
 		{p3: {x: leftX, y: bottomY}, p4: {x: rightX, y: bottomY}, n: {x: 0, y: 1}} //bottom
 	]
 
-	let smallestT: number = Infinity;
+	let smallestT: number = 2;
 	let hitN: coordinates | null = null;
-	for (const side of sides) {
+	for (const side of padSides) {
 		const t: number | null = lineIntersection(p1, p2, side.p3, side.p4);
-		if (t != null && t < smallestT ) {
+		if (t !== null && t < smallestT ) {
 			smallestT = t;
 			hitN = side.n;
 		}
 	}
-	if (smallestT < Infinity && hitN) {
+	if (smallestT < 2 && hitN)
 		return [smallestT, hitN];
-	}
 	return null;
 }
 
