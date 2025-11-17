@@ -34,6 +34,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				INSERT INTO gameMatchInfo (gameStatus, tournamentID, localGame)
 				VALUES (0, ?, ?)
 			`;
+
 			const params = [
 				tournamentID,
 				local
@@ -42,7 +43,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const response = await serv.dbStats.run(query, params);
 			if (!response.changes) {
 				serv.log.error('[DASHBOARD] Game creation query succeeded but did not insert a row.');
-				throw(new Error('[DASHBOARD] Internal server error during game creation'))
+				throw (new Error('[DASHBOARD] Internal server error during game creation'))
 			}
 
 			return (reply.code(201).send({
@@ -72,7 +73,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const keysToUpdate = Object.keys(body).filter(key => validKeys.includes(key));
 
 			if (keysToUpdate.length === 0) {
-				return (reply.code(400).send({ message: 'No valid fields provided for update.' }));
+				return (reply.code(400).send({ message: '[DASHBOARD] No valid fields provided for update.' }));
 			}
 
 			const setClauses = keysToUpdate.map(key => `${key} = ?`).join(', ');
@@ -83,12 +84,12 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 
 			const response = await serv.dbStats.run(query, params);
 			if (response.changes === 0)
-				return (reply.code(404).send({ message: 'Game not found.' }));
+				return (reply.code(404).send({ message: '[DASHBOARD] Game not found.' }));
 
-			return (reply.code(200).send({ success: true, message: 'Game updated!' }));
+			return (reply.code(200).send({ success: true, message: '[DASHBOARD] Game updated!' }));
 
 		} catch (error) {
-			serv.log.error(`[GAMES] Error updating game: ${error}`);
+			serv.log.error(`[DASHBOARD] Error updating game: ${error}`);
 			throw (error);
 		}
 	});
@@ -98,7 +99,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 		try {
 			const { userID } = request.query as { userID?: string };
 			if (!userID)
-				return (reply.code(400).send({ message: 'userID query parameter is required.' }));
+				return (reply.code(400).send({ message: '[DASHBOARD] userID query parameter is required.' }));
 
 			const games = await getGameHistory(serv.dbStats, Number(userID));
 			return (reply.code(200).send(games));
@@ -114,7 +115,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 		try {
 			const { gameID } = request.params as { gameID: string };
 
-			//Should I add a 400 if gameID not provided ?
+			if (!gameID)
+				return (reply.code(400).send({ message: '[DASHBOARD] gameID query parameter is required.' }));
 
 			const query = `
 				DELETE FROM gameMatchInfo WHERE gameID = ?
@@ -156,7 +158,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const response = await serv.dbStats.run(query, [playerIDsString]);
 			if (!response.changes) {
 				serv.log.error('[DASHBOARD] Tournament creation query succeeded but did not insert a row.');
-				throw(new Error('[DASHBOARD] Internal server error during game creation'));
+				throw (new Error('[DASHBOARD] Internal server error during game creation'));
 			}
 
 			return (reply.code(201).send({
@@ -178,19 +180,19 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const { winnerID } = request.body as { winnerID: number };
 
 			if (winnerID === undefined)
-				return (reply.code(400).send({ message: 'winnerID is required.' }));
+				return (reply.code(400).send({ message: '[DASHBOARD] winnerID is required.' }));
 
 			const query = `UPDATE tournamentInfo SET winnerID = ? WHERE tournamentID = ?`;
 			const params = [winnerID, tournamentID];
 
 			const response = await serv.dbStats.run(query, params);
 			if (response.changes === 0)
-				return (reply.code(404).send({ message: 'Tournament not found.' }));
+				return (reply.code(404).send({ message: '[DASHBOARD] Tournament not found.' }));
 
-			return (reply.code(200).send({ success: true, message: 'Tournament updated!' }));
+			return (reply.code(200).send({ success: true, message: '[DASHBOARD] Tournament updated!' }));
 
 		} catch (error) {
-			serv.log.error(`[TOURNAMENTS] Error updating tournament: ${error}`);
+			serv.log.error(`[DASHBOARD] Error updating tournament: ${error}`);
 			throw (error);
 		}
 	});
@@ -198,7 +200,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	//delete a tournamement
 	serv.delete('/internal/dashboard/tournaments/:tournamentID', async (request, reply) => {
 		try {
-			const { tournamentID } = request.body as { tournamentID: number };
+			const { tournamentID } = request.params as { tournamentID: number };
 
 			const query = `
 				DELETE FROM tournamentInfo WHERE tournamentID = ?
@@ -206,8 +208,8 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 
 			const response = await serv.dbStats.run(query, [tournamentID]);
 			if (!response.changes)
-				return (reply.code(404).send({ message: 'Tournament not found.' }));
-				serv.log.error('[DASHBOARD] Tournament deletion query succeeded but did not delete a row.');
+				return (reply.code(404).send({ message: '[DASHBOARD] Tournament not found.' }));
+			serv.log.error('[DASHBOARD] Tournament deletion query succeeded but did not delete a row.');
 
 			return (reply.code(204).send({
 				success: true,
