@@ -43,22 +43,6 @@ export function lineIntersection(p1: coordinates, p2: coordinates, p3: coordinat
 	return t;
 }
 
-export function updateVelocity(dx: number, dy: number, nx: number, ny: number): [number, number] {
-	const dot = dx * nx + dy * ny;
-	dx = dx - 2 * dot * nx;
-	dy = dy - 2 * dot * ny;
-
-	let speed = Math.hypot(dx, dy);
-
-	const maxSpeed = 2;
-	const boostedSpeed = Math.min(speed * 1.04, maxSpeed);
-
-	const factor = boostedSpeed / speed;
-	dx *= factor;
-	dy *= factor;
-	return [dx, dy];
-}
-
 const maxAngleDeg: number = 45;
 const maxAngle: number = maxAngleDeg * Math.PI / 180; 
 export function bounce(game: Game, paddle: coordinates, nx: number) {

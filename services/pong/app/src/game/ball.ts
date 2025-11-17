@@ -1,6 +1,6 @@
 import { Game, HEIGHT, WIDTH } from "../classes/game.class.js";
 import type { Player } from "../classes/player.class.js";
-import { raycast, updateVelocity, bounce } from "./collision.utils.js";
+import { raycast, bounce } from "./collision.utils.js";
 import type { coordinates } from "../classes/game.interfaces.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
@@ -29,11 +29,11 @@ export function updateBallPos(game: Game, player1: Player, player2: Player): boo
 function upperAndBottomWallCollision(game: Game, nextY: number): number {
 	if (nextY - game.ball.r <= 0) {
 		nextY = game.ball.r + 1;
-		game.ball.dy = updateVelocity(game.ball.dx, game.ball.dy, 0, 1)[1];
+		game.ball.dy *= -1;
 	}
 	if (nextY + game.ball.r >= HEIGHT) {
 		nextY = HEIGHT - (game.ball.r + 1);
-		game.ball.dy = updateVelocity(game.ball.dx, game.ball.dy, 0, -1)[1];
+		game.ball.dy *= -1;
 	}
 	return nextY;
 }
@@ -73,7 +73,6 @@ export function paddleCollision(game: Game, paddle: coordinates, nextX: number, 
 	const [t, n] = result;
 	game.ball.x += game.ball.dx * TIME_STEP * t + 1 * n.x;
 	game.ball.y += game.ball.dy * TIME_STEP * t + 1 * n.y;
-	// [game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, n.x, n.y);
 	bounce(game, paddle, n.x);
 	const remainingStep: number = 1 - t;
 	game.ball.x += game.ball.dx * TIME_STEP * remainingStep;

@@ -1,6 +1,6 @@
 import type { Player } from '../classes/player.class.js';
 import { Game, HEIGHT, WIDTH } from '../classes/game.class.js'
-import { updateVelocity, raycast, bounce } from './collision.utils.js';
+import { raycast, bounce } from './collision.utils.js';
 import type { coordinates, keysObj, paddleSpec } from '../classes/game.interfaces.js';
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
@@ -72,6 +72,5 @@ function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
 	const ny = step.y / len;
 	paddle.x += nx * contactDist;
 	paddle.y += ny * contactDist;
-	// [game.ball.dx, game.ball.dy] = updateVelocity(game.ball.dx, game.ball.dy, nx, ny);
 	bounce(game, paddle, n.x);
 }
