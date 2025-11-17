@@ -70,7 +70,5 @@ export class Router {
 
         matchedRoute.callback(res ? res : undefined);
 
-        if (matchedRoute.path === '/game/match') pong('default');
-        //TODO: eventually if other features need their script add an element script to routeInterface
     }
 }
