@@ -20,6 +20,7 @@
     "typescript": "^5.9.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "pino-pretty": "^13.1.2"
   }
 }

@@ -19,11 +19,10 @@ serv.register(bffAccountRoutes);
 
 const start = async () => {
 	try {
-		console.log('listening on 1818');
 		await serv.listen({ port: 1818, host: '0.0.0.0' });
 	}
 	catch (err) {
-		console.error('server error:', err);
+		serv.log.error(err);
 		process.exit(1);
 	}
 };

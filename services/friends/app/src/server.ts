@@ -5,7 +5,7 @@ const start = async () => {
 	try {
 		serv = await buildServer();
 
-		console.log('listening on 1616');
+		serv.log.info('listening on 1616');
 		await serv.listen({ port: 1616, host: '0.0.0.0' });
 
 	} catch (err) {

@@ -12,9 +12,8 @@
 		"copy:assets": "mkdir -p dist/client/ && cp -r src/client/assets dist/client && npm run copy:html",
 		"build:css": "postcss ./src/client/css/tailwind.css -o ./dist/client/css/output.css",
 		"build": "node build.js && npm run build:css && npm run copy:assets",
-		"watch" : "node build.js --watch && npm run build:css",
+		"watch": "node build.js --watch && npm run build:css",
 		"dev": "concurrently \"npm run watch\" \"nodemon\"",
-
 		"format": "npx prettier --write \"./src/**/*.ts\"",
 		"lint": "eslint ."
 	},
@@ -42,6 +41,7 @@
 		"globals": "^16.4.0",
 		"nodemon": "^3.1.10",
 		"path-to-regexp": "^8.3.0",
+		"pino-pretty": "^13.1.2",
 		"postcss": "^8.5.6",
 		"postcss-cli": "^11.0.1",
 		"tailwindcss": "^4.1.13",

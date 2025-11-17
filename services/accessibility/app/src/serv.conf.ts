@@ -1,5 +1,6 @@
 import dns from 'dns';
 import fs from 'fs';
+// import pino from 'pi	no'
 
 function getNginxIP(): string | null {
   const ip: string | undefined = process.env['NGINXIP'];
@@ -21,9 +22,15 @@ function checkProxy(address: string, hop: number): boolean {
 }
 
 const options = {
-//   logger: {
-//     file: '/usr/app/server.log'
-//   },
+  logger: {
+    transport: {
+      target: 'pino-pretty',
+      options: {
+        colorize: true,
+        translateTime: 'yyyy-mm-dd HH:MM:ss' // local date and time with timezone offset
+      }
+	}
+  },
   trustProxy: checkProxy,
   https: {
     key: fs.readFileSync('/run/secrets/ssl-key.pem'),

@@ -5,8 +5,8 @@ const start = async () => {
 	try {
 		serv = await buildServer();
 
-		console.log('listening on 1414');
 		await serv.listen({ port: 1414, host: '0.0.0.0' });
+		serv.log.info('Account service listening on 1414');
 
 	} catch (err) {
 		if (serv) {

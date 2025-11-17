@@ -1,6 +1,6 @@
 #!/bin/sh
 
-npm install
+npm install -s
 
 npm run dev
 #npm start
