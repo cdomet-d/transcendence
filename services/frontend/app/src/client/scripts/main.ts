@@ -31,11 +31,11 @@ window.addEventListener('popstate', () => {
 	router._loadRoute(cleanPath);
 });
 
-// if (router._getCurrentURL() === '/game/lobby')
-// 	lobby();
+if (router._getCurrentURL() === '/game/lobby')
+	lobby();
 
-if (router._getCurrentURL() === '/game/match')
-	pong({userID: 1, gameID: 1, remote: false})
+// if (router._getCurrentURL() === '/game/match')
+// 	pong({userID: 1, gameID: 1, remote: false}) //TODO: for testing
 
 initLanguageCSR();
 addLanguageEvents();
