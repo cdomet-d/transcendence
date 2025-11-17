@@ -29,8 +29,5 @@ if (!document.body.layoutInstance || !document.body.header) {
 document.body.append(document.body.header, document.body.layoutInstance);
 router.loadRoute(router.currentPath);
 
-// if (router._getCurrentURL() === '/game/match')
-//     pong();
-
 // initLanguageCSR();
 // addLanguageEvents();
