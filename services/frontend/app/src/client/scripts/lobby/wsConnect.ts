@@ -18,7 +18,7 @@ function wsConnect() {
 	const ws: WebSocket = openWsConnection();
 
 	ws.onopen = () => {
-		console.log("WebSocket connection established!")
+		console.log("Lobby WebSocket connection established!")
 		// enable buttons in html?
 	}
 
