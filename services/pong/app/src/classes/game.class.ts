@@ -34,7 +34,7 @@ export class Game {
 			r: 15
 		};
 		this.#_paddleSpec = {
-			speed: 0.3,
+			speed: 0.4,
 			w: 18, 
 			h: HEIGHT / 6, 
 			halfW: 18 / 2, 

@@ -1,5 +1,5 @@
 import { Game, HEIGHT, WIDTH } from "./classes/game.class.js";
-import { raycast, bounce } from "./collision.utils.js";
+import { raycast, updateVelocity } from "./collision.utils.js";
 import type { ballObj, coordinates, repObj } from "./classes/game.interfaces.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
@@ -60,7 +60,7 @@ export function paddleCollision(game: Game, paddle: coordinates, nextX: number, 
 	const [t, n] = result;
 	game.ball.x += game.ball.dx * TIME_STEP * t + 1 * n.x;
 	game.ball.y += game.ball.dy * TIME_STEP * t + 1 * n.y;
-	bounce(game, paddle, n.x);
+	updateVelocity(game, paddle, n.x);
 	const remainingStep: number = 1 - t;
 	game.ball.x += game.ball.dx * TIME_STEP * remainingStep;
 	game.ball.y += game.ball.dy * TIME_STEP * remainingStep;
