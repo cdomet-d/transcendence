@@ -26,9 +26,9 @@ interface tournament {
 }
 
 interface gameRequest {
-	event: string,
 	userID: number,
-	gameID: number
+	gameID: number,
+	remote: boolean
 }
 
 export type { userInfo, game, tournament, gameRequest }

@@ -3,14 +3,7 @@ import { wsSend } from '../lobby/wsHandler.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
 import { wsClientsMap } from '../lobby/wsHandler.js';
 import { natsConnect } from './publisher.js';
-// import type { gameRequest } from '../manager.js';
-
-// TODO: move to manager.js with others
-export interface gameRequest {
-	userID: number,
-	gameID: number,
-	remote: boolean
-}
+import type { gameRequest } from '../manager.js';
 
 interface user {
 	userID: number,
@@ -28,8 +21,8 @@ export async function natsSubscribe() {
 			// console.log(`GM received in "game.reply" : `, payload);
 
 			if (game.users === null || game.users === undefined) return;
-			for (let i = 0; i < game.userList.length; i++) {
-				const userID = game.userList[i].userID;
+			for (let i = 0; i < game.users.length; i++) {
+				const userID = game.users[i]!.userID;
 				const socket = wsClientsMap.get(userID);
 
 				const gameReq: gameRequest = {
