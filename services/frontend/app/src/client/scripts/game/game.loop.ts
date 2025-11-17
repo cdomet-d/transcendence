@@ -6,7 +6,7 @@ import { deadReckoning } from "./ball.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 const MAX_SCORE: number = 5;
-const MAX_UPDATES_PER_FRAME = 5;
+const MAX_UPDATES_PER_FRAME = 8;
 
 export async function startGame(game: Game, ws: WebSocket) {
 	game.lastFrameTime = performance.now();
@@ -85,7 +85,7 @@ function reconciliation(game: Game, latestReply: repObj) {
 	for (let i = id + 1; game.reqHistory.has(i); i++) {
 		updatePaddlePos(game.leftPad, true, game, game.reqHistory.get(i)!._keys);
 		if (game.local)
-			updatePaddlePos(game.rightPad, false, game, game.req._keys);
+			updatePaddlePos(game.rightPad, false, game, game.reqHistory.get(i)!._keys);
 		//TODO: do second paddle also when remote ?
 		deadReckoning(game, latestReply);
 	}
