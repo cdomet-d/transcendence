@@ -1,10 +1,18 @@
+import type { CourtTheme } from '../types-interfaces';
+
 export class PongCourt extends HTMLDivElement {
     #canva: HTMLCanvasElement;
+    #theme: CourtTheme;
 
     constructor() {
         super();
         this.#canva = document.createElement('canvas');
+        this.#theme = 'default';
         this.id = 'pongcourt';
+    }
+
+    set theme(theme: CourtTheme) {
+        this.#theme = theme;
     }
 
     get canva(): HTMLCanvasElement {
@@ -17,8 +25,9 @@ export class PongCourt extends HTMLDivElement {
     }
 
     render() {
-        this.#canva.className = 'w-full h-full bg z-25';
-        this.className = 'content-h w-[1117.8px] brdr';
+        this.#canva.className = 'w-full h-full z-25';
+        this.className = 'content-h brdr z-50';
+		if (this.#theme === 'farm') this.classList.add('farm-court-bg')
     }
 }
 

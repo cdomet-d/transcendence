@@ -1,78 +1,74 @@
-.fence {
-	background-image: url("../assets/images/farm-scene/fence.png");
-	position: absolute;
-	left: 0px;
-	top: 820px;
-	width: 100%;
-	height: 310px;
-	z-index: 2;
+@keyframes slide-right {
+	0% {
+		transform: translateX(-5vw);
+	}
+	100% {
+		transform: translateX(115vw);
+	}
 }
 
-.cow1 {
-	background-image: url("../assets/images/farm-scene/cow1.png");
+@keyframes slide-left {
+	0% {
+		transform: translateX(20vw);
+	}
+	100% {
+		transform: translateX(-115vw);
+	}
+}
+
+.cow {
+	width: 14.1%;
 	position: absolute;
-	left: 1210px;
-	top: 830px;
-	width: 320px;
-	height: 250px;
+	left: 80.3%;
+	bottom: 0px;
 	z-index: 3;
 }
 
-.cow2 {
-	background-image: url("../assets/images/farm-scene/cow2.png");
+.fence {
+	width: 100vw;
 	position: absolute;
-	left: 1210px;
-	top: 830px;
-	width: 320px;
-	height: 250px;
-	z-index: 4;
-}
-
-.cow3 {
-	background-image: url("../assets/images/farm-scene/cow3.png");
-	position: absolute;
-	left: 1210px;
-	top: 830px;
-	width: 320px;
-	height: 250px;
-	z-index: 5;
+	left: 0px;
+	bottom: 0px;
+	z-index: 2;
 }
 
 .fgrass {
-	background-image: url("../assets/images/farm-scene/fgrass.png");
+	width: 100vw;
 	position: absolute;
 	left: 0px;
-	top: 800px;
-	width: 100%;
-	height: 310px;
+	bottom: 0px;
 	z-index: 6;
 }
 
 .cloud_r {
-	background-image: url("../assets/images/farm-scene/cloud-r.png");
+	width: 25.8%;
+	height: auto;
 	position: absolute;
-	left: -390px;
-	top: 90px;
-	width: 720px;
-	height: 310px;
+	left: -10.5%;
+	top: 7.4%;
 	z-index: 7;
+	animation: slide-right 45s linear infinite;
 }
 
 .cloud_l {
-	background-image: url("../assets/images/farm-scene/cloud-l.png");
+	width: 25.8%;
+	height: auto;
 	position: absolute;
-	left: 1560px;
-	top: 400px;
-	width: 720px;
-	height: 310px;
+	left: 83.4%;
+	top: 41.9%;
 	z-index: 8;
+	animation: slide-left 45s linear infinite;
 }
 
 .sky {
-	background-image: url("../assets/images/farm-scene/sky.png");
+	width: 100vw;
+	height: 100vh;
 	position: absolute;
 	left: 0px;
 	top: 0px;
-	width: 100%;
 	z-index: 1;
+}
+
+.farm-court-bg {
+	background-image: url('/public/assets/images/farm-scene/bg.png');
 }

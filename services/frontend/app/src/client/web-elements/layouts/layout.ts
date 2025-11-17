@@ -1,6 +1,43 @@
-type Farm = ['fence', 'cow1', 'cow2', 'cow3', 'fgrass', 'cloud_r', 'cloud_l', 'sky'];
+import type { ImgData } from '../types-interfaces';
 
-export const farm: Farm = ['fence', 'cow1', 'cow2', 'cow3', 'fgrass', 'cloud_r', 'cloud_l', 'sky'];
+export const farmAssets: ImgData[] = [
+    {
+        id: 'fence',
+        src: '/public/assets/images/farm-scene/fence.png',
+        alt: 'ahah',
+        size: 'iicon',
+    },
+    {
+        id: 'cow',
+        src: '/public/assets/images/farm-scene/cow.gif',
+        alt: 'ahah',
+        size: 'iicon',
+    },
+    {
+        id: 'fgrass',
+        src: '/public/assets/images/farm-scene/fgrass.png',
+        alt: 'ahah',
+        size: 'iicon',
+    },
+    {
+        id: 'cloud_r',
+        src: '/public/assets/images/farm-scene/cloud-r.png',
+        alt: 'ahah',
+        size: 'iicon',
+    },
+    {
+        id: 'cloud_l',
+        src: '/public/assets/images/farm-scene/cloud-l.png',
+        alt: 'ahah',
+        size: 'iicon',
+    },
+    {
+        id: 'sky',
+        src: '/public/assets/images/farm-scene/sky.png',
+        alt: 'ahah',
+        size: 'iicon',
+    },
+];
 
 export class Layout extends HTMLDivElement {
     /**
@@ -11,7 +48,7 @@ export class Layout extends HTMLDivElement {
      * Storage for the rendered assets
      */
     #assetCache: Map<string, HTMLElement>;
-    #assetsList: string[];
+    #assetsList: ImgData[];
 
     /* -------------------------------------------------------------------------- */
     /*                                   Default                                  */
@@ -36,25 +73,28 @@ export class Layout extends HTMLDivElement {
             });
         }
         this.#assetsList.forEach((asset) => {
-            const el = document.createElement('span');
-            el.className = asset;
-			this.appendAndCache(el);
+            const el = document.createElement('img');
+            el.id = asset.id;
+			el.className = asset.id;
+			el.alt = asset.alt;
+			el.src = asset.src;
+            this.appendAndCache(el);
         });
     }
 
     render() {
-		this.#renderTheme();
+        this.#renderTheme();
         this.className =
-            'box-border grid h-dvh w-dvw grid-auto-rows-auto \
-			place-content-center layout-col gap-s';
+            'box-border relative grid h-dvh w-dvw grid-auto-rows-auto \
+			place-content-center layout-col gap-s z-0';
     }
 
     /* -------------------------------------------------------------------------- */
     /*                                   Setters                                  */
     /* -------------------------------------------------------------------------- */
-    set theme(list: Farm) {
+    set theme(list: ImgData[]) {
         this.#assetsList = list;
-		this.#renderTheme();
+        this.#renderTheme();
     }
 
     /* -------------------------------------------------------------------------- */

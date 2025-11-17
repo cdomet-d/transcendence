@@ -263,3 +263,5 @@ export interface MatchParticipants {
     player1: UserData;
     player2: UserData;
 }
+
+export type CourtTheme = 'default' | 'farm' | 'ocean' | 'forest'

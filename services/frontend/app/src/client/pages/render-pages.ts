@@ -2,7 +2,7 @@ import { createHeading, createNoResult } from '../web-elements/typography/helper
 import { createLeaderboard } from '../web-elements/statistics/leaderboard.js';
 import { createMenu } from '../web-elements/navigation/menu-helpers.js';
 import { main } from '../web-elements/navigation/default-menus.js';
-import { farm, Layout } from '../web-elements/layouts/layout.js';
+import { farmAssets, Layout } from '../web-elements/layouts/layout.js';
 import { ProfileWithTabs } from '../web-elements/users/user-profile-containers.js';
 import { type Match } from 'path-to-regexp';
 import { createTabs } from '../web-elements/navigation/tabs-helpers.js';
@@ -144,6 +144,7 @@ export function renderGame() {
     // HERE logic will be needed from the game manager so that we know what theme the player picked.
     const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
     const layout = document.body.layoutInstance;
-    if (layout) layout.theme = farm;
+	court.theme = 'farm';
+    if (layout) layout.theme = farmAssets;
     document.body.layoutInstance?.appendAndCache(court);
 }
