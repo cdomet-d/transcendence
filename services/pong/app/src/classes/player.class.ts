@@ -77,13 +77,13 @@ export class Player {
 	}
 
 	get left(): boolean {
-		if (this.#_clientSide === "left")
+		if (this.#_serverSide === "left")
 			return true;
 		return false;
 	}
 
 	get right(): boolean {
-		if (this.#_clientSide === "right")
+		if (this.#_serverSide === "right")
 			return true;
 		return false;
 	}
