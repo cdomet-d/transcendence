@@ -1,5 +1,5 @@
 import { Game } from "../classes/game.class.js";
-import { type coordinates } from "../classes/player.class.js";
+import { type coordinates } from "../classes/game.interfaces.js";
 
 export function raycast(game: Game, paddle: coordinates, nextX: number, nextY: number): [number, coordinates] | null {
 	const inflatedPad: coordinates = {x: paddle.x - game.ball.r, y: paddle.y - game.ball.r};

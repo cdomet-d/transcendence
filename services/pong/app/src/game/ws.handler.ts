@@ -2,7 +2,8 @@ import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 import type { Game } from '../classes/game.class.js';
 import { setUpGame } from './pong.js';
-import { validIds, type idsObj } from './mess.validation.js';
+import { validIds } from './mess.validation.js';
+import type { idsObj } from '../classes/game.interfaces.js';
 import { natsSubscription } from '../nats/subscriber.js';
 
 export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): Promise< void > {

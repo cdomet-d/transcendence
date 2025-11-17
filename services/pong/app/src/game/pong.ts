@@ -1,6 +1,7 @@
 import type { Game } from '../classes/game.class.js';
 import type { Player } from '../classes/player.class.js';
-import { validRequest, type reqObj } from './mess.validation.js';
+import { validRequest } from './mess.validation.js';
+import type { reqObj } from '../classes/game.interfaces.js';
 import { gameLoop } from './game.loop.js';
 import { syncClocks } from './syncClocks.js';
  
@@ -37,10 +38,10 @@ export async function setUpGame(game: Game) {
 
 function setMessEvent(player: Player, playerNbr: number, game: Game) {
 	player.socket.on("message", (payload: string) => {
-		let req: reqObj; //TODO: rm timestamp
+		let req: reqObj;
 		try { req = JSON.parse(payload); }
 		catch (err) { return; };
-		// if (!validRequest(req))
+		// if (!validRequest(req)) //TODO: keep or not ? more secure but maybe slows down game
 		// 	return;
 		game.addReq(req, playerNbr);
 	})

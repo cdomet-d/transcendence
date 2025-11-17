@@ -1,6 +1,7 @@
 import { Game, HEIGHT, WIDTH } from "../classes/game.class.js";
-import type { coordinates, Player } from "../classes/player.class.js";
+import type { Player } from "../classes/player.class.js";
 import { raycast, updateVelocity, bounce } from "./collision.utils.js";
+import type { coordinates } from "../classes/game.interfaces.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 const MAX_SCORE: number = 5;

@@ -1,46 +1,10 @@
 import { Player } from './player.class.js';
-import type { reqObj } from '../game/mess.validation.js';
 import type { WebSocket } from '@fastify/websocket';
 import { NatsConnection } from 'nats';
+import type { reqObj, playerReq, gameInfo, ballObj, paddleSpec } from './game.interfaces.js';
 
 export const HEIGHT = 500;
 export const WIDTH = 700;
-
-export interface user {
-	userID: number,
-	username: string,
-}
-
-export interface gameInfo {
-	gameID: number,
-	tournamentID: number,
-	remote: boolean,
-	users: [user, user],
-	score: [number, number],
-	winnerID: number,
-	loserID: number
-}
-
-export interface ballObj {
-	x: number,
-	y: number,
-	dx: number,
-	dy: number,
-	r: number
-}
-
-export interface paddleSpec {
-	speed: number
-	w: number,
-	h: number,
-	halfW: number,
-	halfH: number
-}
-
-export interface playerReq {
-	_id: number,
-	_req: reqObj,
-} //TODO: find better way to register a req
 
 export type playerTab = Array< Player >;
 type reqTab = Array< playerReq >;

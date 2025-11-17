@@ -1,7 +1,8 @@
 import { connect, StringCodec, type NatsConnection } from 'nats';
 import { natsPublish } from './publisher.js'
-import { Game, type gameInfo } from '../classes/game.class.js';
+import { Game } from '../classes/game.class.js';
 import type { FastifyInstance } from 'fastify';
+import type { gameInfo } from '../classes/game.interfaces.js';
 
 export async function initNatsConnection(): Promise<NatsConnection> {
 	let token: string | undefined = process.env.NATS_SERVER_TOKEN;
@@ -39,7 +40,7 @@ export async function natsSubscription(serv: FastifyInstance) {
 	serv.gameRegistry.addGame(new Game(gameobj, serv.nc)); //TODO: for testing
 };
 
-import type { user } from '../classes/game.class.js';
+import type { user } from '../classes/game.interfaces.js';
 const player1: user = {
 	userID: 1,
 	username: "cha",
