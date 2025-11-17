@@ -12,12 +12,14 @@ const coordSchema = {
 
 const repObjSchema = {
 	type: 'object',
-	required: ['ID', 'leftPad', 'rightPad', 'ball'],
+	required: ['_ID', '_timestamp', '_leftPad', '_rightPad', '_ball', '_score'],
 	properties: {
-		ID: 'number',
-		leftPad: coordSchema,
-		rightPad: coordSchema,
-		ball: coordSchema,
+		_ID: 'number',
+		_timestamp: 'number',
+		_leftPad: coordSchema,
+		_rightPad: coordSchema,
+		_ball: coordSchema,
+		// _score: 
 	}
 }
 
