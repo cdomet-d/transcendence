@@ -26,10 +26,7 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		game.lastFrameTime = timestamp;
 		let updates: number = 0;
 		while (game.delta >= TIME_STEP && updates < MAX_UPDATES_PER_FRAME) {
-			game.req._timeStamp = performance.now();// + game.clockOffset;
-			ws.send(JSON.stringify(game.req));
-			game.addReq(game.req);
-			game.req._ID += 1; //TODO: overflow?
+			sendRequest(game, ws);
 			updatePaddlePos(game.leftPad, true, game, game.req._keys);
 			if (game.local)
 				updatePaddlePos(game.rightPad, false, game, game.req._keys);
@@ -48,8 +45,15 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 	}
 }
 
+function sendRequest(game: Game, ws: WebSocket) {
+	game.req._timeStamp = performance.now();// + game.clockOffset;
+	ws.send(JSON.stringify(game.req));
+	game.addReq(game.req);
+	game.req._ID += 1; //TODO: overflow?
+}
+
 function interpolation(game: Game) {
-	const renderTime: number = performance.now() - 20; //TODO: put 75 in a var
+	const renderTime: number = performance.now() - 20; //TODO: put in a var
 	const updates: [repObj, repObj] | null = game.getReplies(renderTime);
 
 	if (updates) {
