@@ -46,7 +46,7 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 }
 
 function sendRequest(game: Game, ws: WebSocket) {
-	game.req._timeStamp = performance.now();// + game.clockOffset;
+	game.req._timeStamp = performance.now();
 	ws.send(JSON.stringify(game.req));
 	game.addReq(game.req);
 	game.req._ID += 1; //TODO: overflow?

@@ -3,7 +3,6 @@ import type { Player } from '../classes/player.class.js';
 import { validRequest } from './mess.validation.js';
 import type { reqObj } from '../classes/game.interfaces.js';
 import { gameLoop } from './game.loop.js';
-import { syncClocks } from './syncClocks.js';
  
 const START_DELAY = 500;
 const SERVER_TICK: number = 1000 / 50;
@@ -17,15 +16,6 @@ export async function setUpGame(game: Game) {
 	// set players message event
 	setMessEvent(player1, 1, game);
 	setMessEvent(player2, 2, game);
-
-	// sync client & server clocks
-	// try {
-	// 	await syncClocks(game, player1, 1);
-	// 	if (!game.local)
-	// 		await syncClocks(game, player2, 2);
-	// } catch (err) {
-	// 	return; //TODO: handle error
-	// }
 
 	player1.socket.send(1);
 	if (!game.local)

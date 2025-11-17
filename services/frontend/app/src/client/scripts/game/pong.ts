@@ -19,7 +19,7 @@ export function pong(gameReq: gameRequest) {
 	const game: Game = new Game(ctx, gameReq.remote, false);
 	//TODO: set strokeStyle and fillStyle //changes paddle and ball colour
 	renderGame(game); //TODO: before rendering need to receive players names
-	// window.addEventListener("load", (event) => {
+	//TODO: window.addEventListener("load", (event) => {
 	wsRequest(game, {gameID: gameReq.gameID, userID: gameReq.userID});
 	// });
 }
