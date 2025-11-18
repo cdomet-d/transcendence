@@ -1,4 +1,4 @@
-import { router } from '../main.js';
+import { router } from './main.js';
 
 /** Cleans up URL if it is not normalized */
 interface WindowSize {

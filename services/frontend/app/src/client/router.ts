@@ -1,7 +1,6 @@
-import { renderNotFound } from '../pages/render-pages.js';
+import { renderNotFound } from './render-pages.js';
 import { match, type Match } from 'path-to-regexp';
-import * as page from '../pages/render-pages.js';
-import { lobby } from './lobby/lobby.js';
+import * as page from './render-pages.js';
 
 export interface routeInterface {
     path: string;

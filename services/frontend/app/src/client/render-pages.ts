@@ -1,21 +1,21 @@
-import { createHeading, createNoResult } from '../web-elements/typography/helpers.js';
-import { createLeaderboard } from '../web-elements/statistics/leaderboard.js';
-import { createMenu } from '../web-elements/navigation/menu-helpers.js';
-import { main } from '../web-elements/navigation/default-menus.js';
-import { farmAssets, Layout } from '../web-elements/layouts/layout.js';
-import { ProfileWithTabs } from '../web-elements/users/user-profile-containers.js';
+import { createHeading, createNoResult } from './web-elements/typography/helpers.js';
+import { createLeaderboard } from './web-elements/statistics/leaderboard.js';
+import { createMenu } from './web-elements/navigation/menu-helpers.js';
+import { main } from './web-elements/navigation/default-menus.js';
+import { farmAssets, Layout } from './web-elements/layouts/layout.js';
+import { ProfileWithTabs } from './web-elements/users/user-profile-containers.js';
 import { type Match } from 'path-to-regexp';
-import { createTabs } from '../web-elements/navigation/tabs-helpers.js';
-import { type TabData } from '../web-elements/types-interfaces.js';
-import { createForm } from '../web-elements/forms/helpers.js';
+import { createTabs } from './web-elements/navigation/tabs-helpers.js';
+import { type TabData } from './web-elements/types-interfaces.js';
+import { createForm } from './web-elements/forms/helpers.js';
 import {
     localPong,
     registrationForm,
     remotePong,
     userSettingsForm,
-} from '../web-elements/forms/default-forms.js';
-import { user } from '../web-elements/default-values.js';
-import { PongCourt } from '../web-elements/game/pong-court.js';
+} from './web-elements/forms/default-forms.js';
+import { user } from './web-elements/default-values.js';
+import { PongCourt } from './web-elements/game/pong-court.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
