@@ -1,5 +1,19 @@
 # Pong
 
+## game loop with fixed step
+the game loop 
+the ball and paddles' steps 
+
+## collisions
+
+## velocity
+
+## reconciliation
+
+## dead reckoning
+
+## interpolation
+
 ## Data exchange
 ### To sync client and server clocks:
 **client sends:** timestamp: number \
