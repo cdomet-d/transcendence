@@ -1,6 +1,6 @@
 import { options } from './serv.conf.js';
 // import { renderNotFound } from '../client/pages/html.pages.js';
-// import { servRoutes } from './route.js';
+import { servRoutes } from './route.js';
 import cookie from '@fastify/cookie';
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
@@ -42,10 +42,7 @@ async function addPlugins(serv: FastifyInstance) {
                 }
             },
         })
-        .get('/*', (req, res) => {
-            console.log('SERVING HTML IN ADDPLUGIN');
-            res.sendFile('index.html');
-        })
+		.register(servRoutes)
         .register(
             cookie /*, {
 					secret: "", //TODO: add secret ?

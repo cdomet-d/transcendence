@@ -26,7 +26,7 @@ export class PongCourt extends HTMLDivElement {
 
     render() {
         this.#canva.className = 'w-full h-full z-25';
-        this.className = 'content-h brdr z-50';
+        this.className = 'pong-court brdr z-50';
 		if (this.#theme === 'farm') this.classList.add('farm-court-bg')
     }
 }
@@ -34,3 +34,4 @@ export class PongCourt extends HTMLDivElement {
 if (!customElements.get('pong-court')) {
     customElements.define('pong-court', PongCourt, { extends: 'div' });
 }
+
