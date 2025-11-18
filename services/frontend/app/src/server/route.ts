@@ -1,5 +1,3 @@
-// import fsp from 'fs/promises';
-// import { buildHtmlPage } from './build.html.js';
 import type { FastifyPluginCallback } from 'fastify';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
