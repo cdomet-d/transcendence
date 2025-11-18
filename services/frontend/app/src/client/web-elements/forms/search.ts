@@ -19,10 +19,14 @@ export class Searchbar extends BaseForm {
     #searchInput: InputGroup;
     #results: HTMLDivElement;
 
+    /* -------------------------------------------------------------------------- */
+    /*                                   Default                                  */
+    /* -------------------------------------------------------------------------- */
     constructor() {
         super();
         super.details = search;
         this.#results = document.createElement('div');
+        this.submitHandler = this.submitHandlerImplementation.bind(this);
         this.setResultPos = this.setResultPos.bind(this);
         this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
     }
@@ -39,23 +43,27 @@ export class Searchbar extends BaseForm {
         window.removeEventListener('scroll', this.setResultPos);
     }
 
-    /**
-     * Clears all displayed search results from the results container.
-     */
-    clearResults() {
-        while (this.#results.firstChild) {
-            this.#results.removeChild(this.#results.firstChild);
-        }
-    }
+    /* -------------------------------------------------------------------------- */
+    /*                                  Rendering                                 */
+    /* -------------------------------------------------------------------------- */
 
     /**
-     * Adds a user element representing a single user to the search results container.
-     *
-     * @param {UserData} user - User data to render inline.
+     * Renders the search bar structure including input, submit button, search icon, and results container.
+     * Sets form attributes and class names appropriately.
      */
-    addUser(user: UserData) {
-        const el = createUserInline(user);
-        this.#results.append(el);
+    override render() {
+        const img = this.createSearchIcon() as HTMLImageElement;
+        if (super.details.fields[0]) this.#searchInput = createInputGroup(super.details.fields[0]);
+
+        this.#searchInput.append(img);
+        this.append(this.#searchInput);
+        super.renderButtons();
+        this.append(this.#results);
+
+        this.classList.add('sidebar-right', 'search-gap', 'relative');
+        this.#results.className =
+            'hidden absolute brdr bg min-h-fit max-h-l pad-xs overflow-y-auto box-border';
+        this.setResultPos();
     }
 
     /**
@@ -69,6 +77,50 @@ export class Searchbar extends BaseForm {
         img.src = '/public/assets/images/search-icon.png';
         img.alt = 'A pixel art magnifier';
         return img;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                               Event listeners                              */
+    /* -------------------------------------------------------------------------- */
+
+    #createQueryURL(form: FormData) {
+        const target = form.get('searchbar');
+        if (target) super.details.action += target;
+        console.log(super.details.action);
+    }
+
+    override async submitHandlerImplementation(ev: SubmitEvent) {
+        ev.preventDefault();
+        const form = new FormData(this);
+        this.#createQueryURL(form);
+        this.initReq;
+        try {
+            const response = await this.sendForm(super.details.action, this.initReq());
+            const searchResults = await response.json();
+            this.displayResults(searchResults as UserData[]);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                              Result Rendering                              */
+    /* -------------------------------------------------------------------------- */
+    /**
+     * Clears all displayed search results from the results container.
+     */
+    clearResults() {
+        while (this.#results.firstChild) {
+            this.#results.removeChild(this.#results.firstChild);
+        }
+    }
+
+    /**
+     * @param {UserData} user - User data to render inline.
+     */
+    addUser(user: UserData) {
+        const el = createUserInline(user);
+        this.#results.append(el);
     }
 
     /**
@@ -94,25 +146,6 @@ export class Searchbar extends BaseForm {
         const pos = this.#searchInput.getBoundingClientRect();
         this.#results.style.top = `44px`;
         this.#results.style.width = `${pos.width}px`;
-    }
-
-    /**
-     * Renders the search bar structure including input, submit button, search icon, and results container.
-     * Sets form attributes and class names appropriately.
-     */
-    override render() {
-        const img = this.createSearchIcon() as HTMLImageElement;
-        if (super.details.fields[0]) this.#searchInput = createInputGroup(super.details.fields[0]);
-
-        this.#searchInput.append(img);
-        this.append(this.#searchInput);
-        super.renderButtons();
-        this.append(this.#results);
-
-        this.classList.add('sidebar-right', 'search-gap', 'relative');
-        this.#results.className =
-            'hidden absolute brdr bg min-h-fit max-h-l pad-xs overflow-y-auto box-border';
-        this.setResultPos();
     }
 }
 

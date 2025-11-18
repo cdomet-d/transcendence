@@ -7,7 +7,7 @@ cmd pour créer un projet node.js et obtenir le fichier *package.json* : **npm i
 dans package.json on retrouve :
 
 - la liste de toutes les dépendances installées dans le dossier node_modules. \
- cmd pour installer un paquet : **npm install (ou juste i) *le nom du paquet*** (une fois le nom du paquet dans le fichier package.json il est possible de simplemnt faire **npm install** pour installer tous les paquets dans un nouvel environnement, cf. pong.sh)
+ cmd pour installer un paquet : **npm install -s (ou juste i) *le nom du paquet*** (une fois le nom du paquet dans le fichier package.json il est possible de simplemnt faire **npm install -s** pour installer tous les paquets dans un nouvel environnement, cf. pong.sh)
 - un ou plusieurs script qui sont lancés grace à: **npm run *nom du script*** (sauf si le nom du script est start il suffit de faire **npm start**, cf. pong.sh)
 
 **nodemon:** 

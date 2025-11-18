@@ -18,15 +18,15 @@ describe('Fastify server', () => {
     });
 
     test('WebSocket should respond correctly', (done) => {
-        const wsUrl = address.replace(/^https/, 'wss') + "/api/game/match";
+        const wsUrl = address.replace(/^https/, 'wss') + "/api/game";
         const ws = new WebSocket(wsUrl, { rejectUnauthorized: false });
 
         ws.on('open', () => {
             ws.close();
             setTimeout(async () => {
                 const logFilePath = '/usr/app/server.log';
-                const logs = await fs.readFile(logFilePath, 'utf-8');
-                expect(logs).toContain('WebSocket connection established');
+                const log = await fs.readFile(logFilePath, 'utf-8');
+                expect(log).toContain('WebSocket connection established');
                 done();
             }, 100);
         });

@@ -45,6 +45,7 @@ export class PageHeader extends HTMLElement {
             'top-0',
             'left-0',
             'justify-between',
+            'z-1',
         );
     }
 }

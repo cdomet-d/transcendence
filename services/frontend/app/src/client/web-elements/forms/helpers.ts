@@ -33,10 +33,14 @@ export function createForm<K extends keyof HTMLElementTagMap>(
     form?: FormDetails,
     user?: UserData,
 ): HTMLElementTagMap[K] {
-    const el = document.createElement('form', { is: tag }) as HTMLElementTagMap[K];
-    if (form) el.details = form;
-    if (tag === 'settings-form') el.user = user;
-    return el;
+    if (tag === 'settings-form' && !user) {
+        throw new Error('Missing user for user setting form.');
+    } else {
+        const el = document.createElement('form', { is: tag }) as HTMLElementTagMap[K];
+        if (form) el.details = form;
+        if (tag === 'settings-form') el.user = user;
+        return el;
+    }
 }
 
 /**

@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon",
+        "dev": "nodemon -q",
     "start": "tsc && node dist/server.js"
   },
   "author": "",
@@ -19,6 +19,7 @@
     "typescript": "^5.9.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "pino-pretty": "^13.1.2"
   }
 }

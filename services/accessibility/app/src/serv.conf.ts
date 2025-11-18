@@ -1,8 +1,9 @@
 import dns from 'dns';
 import fs from 'fs';
+// import pino from 'pi	no'
 
 function getNginxIP(): string | null {
-  const ip: string | undefined = process.env.NGINXIP;
+  const ip: string | undefined = process.env['NGINXIP'];
   if (ip === undefined)
     throw new Error('NGINXIP is undefined');
   dns.lookup(ip, (err, address) => {
@@ -22,7 +23,13 @@ function checkProxy(address: string, hop: number): boolean {
 
 const options = {
   logger: {
-    file: '/usr/app/server.log'
+    transport: {
+      target: 'pino-pretty',
+      options: {
+        colorize: true,
+        translateTime: 'yyyy-mm-dd HH:MM:ss' // local date and time with timezone offset
+      }
+	}
   },
   trustProxy: checkProxy,
   https: {

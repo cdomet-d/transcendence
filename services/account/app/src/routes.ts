@@ -10,7 +10,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 
 	//usersStatus is always a hardcoded 1 for now, not even sure to keep it honestly
 	//TESTED
-	serv.post('/internal/account/register', async (request, reply) => {
+	serv.post('/api/account/register', async (request, reply) => {
 		try {
 			const { username, hashedPassword } = request.body as { username: string, hashedPassword: string };
 			const usernameTaken = await checkUsernameUnique(serv.dbAccount, username);
@@ -39,7 +39,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 	});
 
 	//TESTED
-	serv.post('/internal/account/login', async (request, reply) => {
+	serv.post('/api/account/login', async (request, reply) => {
 		try {
 			const { username } = request.body as { username: string };
 			const { password } = request.body as { password: string };
@@ -67,7 +67,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 	});
 
 	//TESTED but 
-	serv.patch('/internal/account/:userID', async (request, reply) => {
+	serv.patch('/api/account/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 			const body = request.body as { [key: string]: any };
@@ -118,7 +118,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.delete('/internal/account', async (request, reply) => {
+	serv.delete('/api/account', async (request, reply) => {
 		try {
 			const { userID } = request.body as { userID: string };
 
@@ -134,7 +134,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/internal/account/:userID', async (request, reply) => {
+	serv.get('/api/account/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 

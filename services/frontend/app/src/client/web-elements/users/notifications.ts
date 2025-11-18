@@ -15,7 +15,7 @@ const notificationBtns: MenuData = {
     buttons: [
         {
             id: 'decline',
-			type: 'button',
+            type: 'button',
             content: 'Decline',
             img: null,
             ariaLabel: 'Decline invitation',
@@ -23,7 +23,7 @@ const notificationBtns: MenuData = {
         },
         {
             id: 'accept',
-			type: 'button',
+            type: 'button',
             content: 'Accept',
             img: null,
             ariaLabel: 'Accept invitation',
@@ -299,7 +299,7 @@ export class NotifBox extends HTMLDivElement {
     }
 
     //TODO: Improve notification polling with NATS messages when a user receives a notification
-    /** Sets up event listeners and polling logic when the container is attached to the DOM. */
+    /** Sets up Event listeners and polling logic when the container is attached to the DOM. */
     connectedCallback() {
         this.#newNotifIntervalId = setInterval(() => {
             this.#toggle.toggleAlert(this.#popup.checkUnreadNotification());
