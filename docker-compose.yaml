@@ -10,90 +10,90 @@ secrets:
         file: ${TSECRETS}/ssl-key.pem
 
 services:
-    accessibility:
-        build:
-            context: ./services/accessibility
-            dockerfile: Dockerfile
-        container_name: accessibility
-        image: accessibility:0.0.1
-        networks:
-            - transcendence
-        restart: unless-stopped
-        environment:
-            - NGINXIP=nginx
-        secrets:
-            - ssl-key.pem
-            - ssl-cert.pem
-        volumes:
-            - ./services/accessibility/app:/usr/app
-            - ./services/accessibility/data:/usr/data
-    account:
-        build:
-            context: ./services/account
-            dockerfile: Dockerfile
-        container_name: account
-        image: account:0.0.1
-        networks:
-            - transcendence
-        restart: unless-stopped
-        environment:
-            - NGINXIP=nginx
-        secrets:
-            - ssl-key.pem
-            - ssl-cert.pem
-        volumes:
-            - ./services/account/app:/usr/app
-            - ./services/account/data:/usr/data
-    auth:
-        build:
-            context: ./services/auth
-            dockerfile: Dockerfile
-        container_name: auth
-        image: auth:0.0.1
-        networks:
-            - transcendence
-        restart: unless-stopped
-        environment:
-            - NGINXIP=nginx
-        secrets:
-            - ssl-key.pem
-            - ssl-cert.pem
-        volumes:
-            - ./services/auth/app:/usr/app
-    dashboard:
-        build:
-            context: ./services/dashboards
-            dockerfile: Dockerfile
-        container_name: dashboard
-        image: dashboard:0.0.1
-        networks:
-            - transcendence
-        restart: unless-stopped
-        environment:
-            - NGINXIP=nginx
-        secrets:
-            - ssl-key.pem
-            - ssl-cert.pem
-        volumes:
-            - ./services/dashboards/app:/usr/app
-            - ./services/dashboards/data:/usr/data
-    friends:
-        build:
-            context: ./services/friends
-            dockerfile: Dockerfile
-        container_name: friends
-        image: friends:0.0.1
-        networks:
-            - transcendence
-        restart: unless-stopped
-        environment:
-            - NGINXIP=nginx
-        secrets:
-            - ssl-key.pem
-            - ssl-cert.pem
-        volumes:
-            - ./services/friends/app:/usr/app
-            - ./services/friends/data:/usr/data
+    # accessibility:
+    #     build:
+    #         context: ./services/accessibility
+    #         dockerfile: Dockerfile
+    #     container_name: accessibility
+    #     image: accessibility:0.0.1
+    #     networks:
+    #         - transcendence
+    #     restart: unless-stopped
+    #     environment:
+    #         - NGINXIP=nginx
+    #     secrets:
+    #         - ssl-key.pem
+    #         - ssl-cert.pem
+    #     volumes:
+    #         - ./services/accessibility/app:/usr/app
+    #         - ./services/accessibility/data:/usr/data
+    # account:
+    #     build:
+    #         context: ./services/account
+    #         dockerfile: Dockerfile
+    #     container_name: account
+    #     image: account:0.0.1
+    #     networks:
+    #         - transcendence
+    #     restart: unless-stopped
+    #     environment:
+    #         - NGINXIP=nginx
+    #     secrets:
+    #         - ssl-key.pem
+    #         - ssl-cert.pem
+    #     volumes:
+    #         - ./services/account/app:/usr/app
+    #         - ./services/account/data:/usr/data
+    # auth:
+    #     build:
+    #         context: ./services/auth
+    #         dockerfile: Dockerfile
+    #     container_name: auth
+    #     image: auth:0.0.1
+    #     networks:
+    #         - transcendence
+    #     restart: unless-stopped
+    #     environment:
+    #         - NGINXIP=nginx
+    #     secrets:
+    #         - ssl-key.pem
+    #         - ssl-cert.pem
+    #     volumes:
+    #         - ./services/auth/app:/usr/app
+    # dashboard:
+    #     build:
+    #         context: ./services/dashboards
+    #         dockerfile: Dockerfile
+    #     container_name: dashboard
+    #     image: dashboard:0.0.1
+    #     networks:
+    #         - transcendence
+    #     restart: unless-stopped
+    #     environment:
+    #         - NGINXIP=nginx
+    #     secrets:
+    #         - ssl-key.pem
+    #         - ssl-cert.pem
+    #     volumes:
+    #         - ./services/dashboards/app:/usr/app
+    #         - ./services/dashboards/data:/usr/data
+    # friends:
+    #     build:
+    #         context: ./services/friends
+    #         dockerfile: Dockerfile
+    #     container_name: friends
+    #     image: friends:0.0.1
+    #     networks:
+    #         - transcendence
+    #     restart: unless-stopped
+    #     environment:
+    #         - NGINXIP=nginx
+    #     secrets:
+    #         - ssl-key.pem
+    #         - ssl-cert.pem
+    #     volumes:
+    #         - ./services/friends/app:/usr/app
+    #         - ./services/friends/data:/usr/data
     frontend:
         build:
             context: ./services/frontend
@@ -110,23 +110,23 @@ services:
             - ssl-cert.pem
         volumes:
             - ./services/frontend/app:/app
-    bff:
-        build:
-            context: ./services/bff
-            dockerfile: Dockerfile
-        container_name: bff
-        image: bff:0.0.1
-        networks:
-            - transcendence
-        restart: unless-stopped
-        environment:
-            - NGINXIP=nginx
-        secrets:
-            - ssl-key.pem
-            - ssl-cert.pem
-        volumes:
-            - ./services/bff/app:/usr/app
-        # user: "${T_UID}:${T_GID}"
+    # bff:
+    #     build:
+    #         context: ./services/bff
+    #         dockerfile: Dockerfile
+    #     container_name: bff
+    #     image: bff:0.0.1
+    #     networks:
+    #         - transcendence
+    #     restart: unless-stopped
+    #     environment:
+    #         - NGINXIP=nginx
+    #     secrets:
+    #         - ssl-key.pem
+    #         - ssl-cert.pem
+    #     volumes:
+    #         - ./services/bff/app:/usr/app
+    #     # user: "${T_UID}:${T_GID}"
     gamemanager:
         build:
             context: ./services/game-manager
@@ -145,22 +145,22 @@ services:
             - ssl-cert.pem
         volumes:
             - ./services/game-manager/app:/usr/app
-    monitoring:
-        build:
-            context: ./services/monitoring
-            dockerfile: Dockerfile
-        container_name: monitoring
-        image: monitoring:0.0.1
-        networks:
-            - transcendence
-        restart: unless-stopped
-        environment:
-            - NGINXIP=nginx
-        secrets:
-            - ssl-key.pem
-            - ssl-cert.pem
-        volumes:
-            - ./services/monitoring/app:/usr/app
+    # monitoring:
+    #     build:
+    #         context: ./services/monitoring
+    #         dockerfile: Dockerfile
+    #     container_name: monitoring
+    #     image: monitoring:0.0.1
+    #     networks:
+    #         - transcendence
+    #     restart: unless-stopped
+    #     environment:
+    #         - NGINXIP=nginx
+    #     secrets:
+    #         - ssl-key.pem
+    #         - ssl-cert.pem
+    #     volumes:
+    #         - ./services/monitoring/app:/usr/app
     nats-server:
         build:
             context: ./services/NATS
@@ -190,17 +190,17 @@ services:
             - ssl-key.pem
             - ssl-cert.pem
         depends_on:
-            - account
+            # - account
             - pong
             - frontend
-            - dashboard
-            - friends
-            - users
+            # - dashboard
+            # - friends
+            # - users
             - gamemanager
-            - accessibility
-            - monitoring
-            - auth
-            - bff
+            # - accessibility
+            # - monitoring
+            # - auth
+            # - bff
     pong:
         build:
             context: ./services/pong
@@ -220,23 +220,23 @@ services:
         volumes:
             - ./services/pong/app:/usr/app
         # user: "${T_UID}:${T_GID}"
-    users:
-        build:
-            context: ./services/users
-            dockerfile: Dockerfile
-        container_name: users
-        image: users:0.0.1
-        networks:
-            - transcendence
-        restart: unless-stopped
-        environment:
-            - NGINXIP=nginx
-        secrets:
-            - ssl-key.pem
-            - ssl-cert.pem
-        volumes:
-            - ./services/users/app:/usr/app
-            - ./services/users/data:/usr/data
+    # users:
+    #     build:
+    #         context: ./services/users
+    #         dockerfile: Dockerfile
+    #     container_name: users
+    #     image: users:0.0.1
+    #     networks:
+    #         - transcendence
+    #     restart: unless-stopped
+    #     environment:
+    #         - NGINXIP=nginx
+    #     secrets:
+    #         - ssl-key.pem
+    #         - ssl-cert.pem
+    #     volumes:
+    #         - ./services/users/app:/usr/app
+    #         - ./services/users/data:/usr/data
 
 volumes:
     friendsDB:
