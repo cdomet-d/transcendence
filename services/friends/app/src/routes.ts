@@ -53,6 +53,7 @@ export async function routeFriend(serv: FastifyInstance) {
 		}
 	});
 
+	//create a pending friend request
 	serv.post('/internal/friends/friendship', async (request, reply) => {
 		try {
 			const { senderID: senderID } = request.body as { senderID: number };
@@ -92,9 +93,8 @@ export async function routeFriend(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO: should we use friendship ID or combination of userIDs ? 
 	//accept a friend request
-	serv.patch('/internal/friendships/:id', async (request, reply) => {
+	serv.patch('/internal/friendships/:userID', async (request, reply) => {
 		try {
 			const { receiverID: receiverID } = request.body as { receiverID: number };
 			const { friendID: friendID } = request.body as { friendID: number };
@@ -135,7 +135,8 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//DELETE /internal/friendships?userA=1&userB=2
-	serv.delete('/internal/friendships', async (request, reply) => {
+	//Delete a friendship between users
+	serv.delete('/internal/friendship', async (request, reply) => {
 		try {
 			const { userA, userB } = request.query as { userA: number, userB: number };
 
@@ -158,6 +159,7 @@ export async function routeFriend(serv: FastifyInstance) {
 		}
 	});	
 
+	//delete all friendship a user is a part of
 	serv.delete('/internal/friends/:userID/friendships', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };

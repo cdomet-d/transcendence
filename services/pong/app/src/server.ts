@@ -10,6 +10,7 @@ import { wsRoute } from './ws.route.js';
 import { options } from './serv.conf.js';
 import { initNatsConnection, natsSubscription } from './nats/subscriber.js';
 import { GameRegistry } from './classes/gameRegistry.class.js';
+import { NatsConnection } from 'nats';
 
 (async () => {
     try {
@@ -23,18 +24,30 @@ import { GameRegistry } from './classes/gameRegistry.class.js';
 
 //init server
 export async function init(): Promise<FastifyInstance> {
-    const serv: FastifyInstance = Fastify(options);
-    serv.decorate('gameRegistry', new GameRegistry());
+	const serv: FastifyInstance = Fastify(options);
+	
+	//plugins
+	addPlugins(serv);
 
-    //nats
-    const nc = await initNatsConnection();
-    serv.decorate('nc', nc);
-    await natsSubscription(serv);
+	// decorations
+	serv.decorate("gameRegistry", new GameRegistry());
+	const nc: NatsConnection = await initNatsConnection();
+	serv.decorate("nc", nc);
+	await natsSubscription(serv);
 
-    //plugins
-    addPlugins(serv);
-    await serv.ready();
-    return serv;
+	//hooks
+	addHooks(serv);
+
+	await serv.ready();
+	return (serv);
+}
+
+//add hook
+function addHooks(serv: FastifyInstance) {
+	serv.addHook('onClose', (instance, done) => {
+	  instance.nc.close();
+	  done()
+	})
 }
 
 //add plugins

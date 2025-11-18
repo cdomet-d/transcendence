@@ -1,27 +1,24 @@
-import type { Player } from '../classes/player.class.js';
-import { Game, HEIGHT, WIDTH } from '../classes/game.class.js'
+import { Game, HEIGHT, WIDTH } from './classes/game.class.js';
 import { raycast, updateVelocity } from './collision.utils.js';
-import type { coordinates, keysObj, paddleSpec } from '../classes/game.interfaces.js';
+import type { keysObj, paddleSpec, coordinates } from './classes/game.interfaces.js';
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
-export function updatePaddlePos(player: Player, keys: keysObj, game: Game) {
+export function updatePaddlePos(paddle: coordinates, leftSide: boolean, game: Game, keys: keysObj) {
 	const step: coordinates = {x: 0, y: 0};
-	if ((player.left && keys._w)
-		|| (player.right && (keys._ArrowUp|| !game.local && keys._w)))
-		up(player.paddle, game.padSpec.speed, step);
-	if ((player.left && keys._s)
-		|| (player.right && (keys._ArrowDown || !game.local && keys._s)))
-		down(player.paddle, game.padSpec, step);
-	if ((player.left && keys._a))
-		left(player.paddle, game, 0, step);
-	if ((player.left && keys._d))
-		right(player.paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, step);
-	if (player.right && (keys._ArrowLeft || !game.local && keys._d))
-		left(player.paddle, game, WIDTH / 2 + game.ball.r + 1, step);
-	if (player.right && (keys._ArrowRight || !game.local && keys._a))
-		right(player.paddle, game, WIDTH - game.padSpec.w, step);
-	movePaddle(game, player.paddle, step);
+	if ((leftSide && keys._w) || (!leftSide && keys._ArrowUp))
+		up(paddle, game.padSpec.speed, step);
+	if ((leftSide && keys._s) || (!leftSide && keys._ArrowDown))
+		down(paddle, game.padSpec, step);
+	if (leftSide && keys._a)
+		left(paddle, game, 0, step);
+	if (leftSide && keys._d)
+		right(paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, step);
+	if (!leftSide && keys._ArrowLeft)
+		left(paddle, game, WIDTH / 2 + game.ball.r + 1, step);
+	if (!leftSide && keys._ArrowRight)
+		right(paddle, game, WIDTH - game.padSpec.w, step);
+	movePaddle(game, paddle, step);
 }
 
 function up(pad: coordinates, padSpeed: number, step: coordinates) {
