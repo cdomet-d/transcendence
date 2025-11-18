@@ -1,12 +1,13 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
-import { Player } from "../classes/player.class.js";
 import type { Game } from '../classes/game.class.js';
 import { setUpGame } from './pong.js';
-import { validIds, type idsObj } from './mess.validation.js';
+import { validIds } from './mess.validation.js';
+import type { idsObj } from '../classes/game.interfaces.js';
+import { natsSubscription } from '../nats/subscriber.js';
 
-async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): Promise<void> {
-	this.log.info('WebSocket connection established');
+export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): Promise< void > {
+	this.log.info('PONG webSocket connection established');
 
 	const ids: idsObj = await waitForMessage(socket);
 
@@ -16,12 +17,17 @@ async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyR
 	if (game.players.length === 2)
 		throw new Error("not allowed");
 
-	getPlayersInGame(game, ids.userID, socket);
+	getPlayerInGame(game, ids.userID, socket);
+	
+	// socket.onerror = (event) => {}; //TODO
 
 	socket.on('close', () => {
-		if (game)
-			game.deletePlayers(); //TODO: to be rm
-		//TODO: delete game ? need to know if everything is done
+		if (game) {
+			game.cleanTimeoutIDs();
+			game.deletePlayers();
+			this.gameRegistry.deleteGame(game.gameID);
+			// natsSubscription(this); //TODO: only for testing
+		}
 	});
 }
 
@@ -40,12 +46,10 @@ export function waitForMessage(socket: WebSocket): Promise<idsObj> {
 	});
 }
 
-function getPlayersInGame(game: Game, userID: number, socket: WebSocket) {
-	game.addPlayer(new Player(userID, socket, false));
+function getPlayerInGame(game: Game, userID: number, socket: WebSocket) {
+	game.addPlayer(userID, socket, "left");
 	if (game.local)
-		game.addPlayer(new Player(game.randUserID, socket, true));
+		game.addPlayer(game.randUserID, socket, "right");
 	if (game.players.length === 2)
 		setUpGame(game);
 }
-
-export { wsHandler };
