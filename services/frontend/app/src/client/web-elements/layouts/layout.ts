@@ -143,6 +143,7 @@ export class Layout extends HTMLDivElement {
     appendAndCache(...el: HTMLElement[]) {
         el.forEach((component) => {
             console.log('Appending:', component.id);
+			component.classList.add('z-1');
             this.append(component);
             this.#innerComponents.set(component.id, component);
         });
