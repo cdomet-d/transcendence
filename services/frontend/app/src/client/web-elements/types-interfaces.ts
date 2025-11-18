@@ -264,9 +264,9 @@ export interface MatchParticipants {
     player2: UserData;
 }
 
-export type CourtTheme = 'default' | 'farm' | 'ocean' | 'forest'
+export type CourtTheme = 'default' | 'farm' | 'ocean' | 'forest';
 
-export interface pongTheme {	
-	color: string;
-	theme: CourtTheme;
+export interface pongTheme {
+    color: string;
+    theme: CourtTheme;
 }

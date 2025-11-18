@@ -143,7 +143,7 @@ export function renderGame() {
     prepareLayout(document.body.layoutInstance, 'game');
 
     // HERE logic will be needed from the game manager so that we know what theme the player picked.
-	// TODO: recover gameSetting object from game manager, but how ?
+    // TODO: recover gameSetting object from game manager, but how ?
     const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
     const layout = document.body.layoutInstance;
     court.theme = defaultTheme;

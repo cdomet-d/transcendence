@@ -1,18 +1,8 @@
 import type { ImgData } from '../types-interfaces';
 
 export const farmAssets: ImgData[] = [
-    {
-        id: 'fence',
-        src: '/public/assets/images/farm-scene/fence.png',
-        alt: 'ahah',
-        size: 'iicon',
-    },
-    {
-        id: 'cow',
-        src: '/public/assets/images/farm-scene/cow.gif',
-        alt: 'ahah',
-        size: 'iicon',
-    },
+    { id: 'fence', src: '/public/assets/images/farm-scene/fence.png', alt: 'ahah', size: 'iicon' },
+    { id: 'cow', src: '/public/assets/images/farm-scene/cow.gif', alt: 'ahah', size: 'iicon' },
     {
         id: 'fgrass',
         src: '/public/assets/images/farm-scene/fgrass.png',
@@ -31,12 +21,7 @@ export const farmAssets: ImgData[] = [
         alt: 'ahah',
         size: 'iicon',
     },
-    {
-        id: 'sky',
-        src: '/public/assets/images/farm-scene/sky.png',
-        alt: 'ahah',
-        size: 'iicon',
-    },
+    { id: 'sky', src: '/public/assets/images/farm-scene/sky.png', alt: 'ahah', size: 'iicon' },
 ];
 
 export class Layout extends HTMLDivElement {
@@ -75,9 +60,9 @@ export class Layout extends HTMLDivElement {
         this.#assetsList.forEach((asset) => {
             const el = document.createElement('img');
             el.id = asset.id;
-			el.className = asset.id;
-			el.alt = asset.alt;
-			el.src = asset.src;
+            el.className = asset.id;
+            el.alt = asset.alt;
+            el.src = asset.src;
             this.appendAndCache(el);
         });
     }
@@ -143,7 +128,7 @@ export class Layout extends HTMLDivElement {
     appendAndCache(...el: HTMLElement[]) {
         el.forEach((component) => {
             console.log('Appending:', component.id);
-			component.classList.add('z-1');
+            component.classList.add('z-1');
             this.append(component);
             this.#innerComponents.set(component.id, component);
         });

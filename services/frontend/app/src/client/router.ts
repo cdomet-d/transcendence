@@ -70,6 +70,6 @@ export class Router {
         matchedRoute.callback(res ? res : undefined);
 
         // if (matchedRoute.path === '/lobby')
-	    //     lobby();
+        //     lobby();
     }
 }

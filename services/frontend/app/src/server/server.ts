@@ -42,7 +42,7 @@ async function addPlugins(serv: FastifyInstance) {
                 }
             },
         })
-		.register(servRoutes)
+        .register(servRoutes)
         .register(
             cookie /*, {
 					secret: "", //TODO: add secret ?
