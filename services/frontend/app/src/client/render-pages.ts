@@ -15,7 +15,8 @@ import {
     userSettingsForm,
 } from './web-elements/forms/default-forms.js';
 import { user } from './web-elements/default-values.js';
-import { PongCourt } from './web-elements/game/pong-court.js';
+import { farm, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
+import { pong } from './pong/pong.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -142,9 +143,12 @@ export function renderGame() {
     prepareLayout(document.body.layoutInstance, 'game');
 
     // HERE logic will be needed from the game manager so that we know what theme the player picked.
+	// TODO: recover gameSetting object from game manager, but how ?
     const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
     const layout = document.body.layoutInstance;
-	court.theme = 'farm';
-    if (layout) layout.theme = farmAssets;
+    court.theme = defaultTheme;
+    if (layout) layout.theme = [];
     document.body.layoutInstance?.appendAndCache(court);
+
+    pong({ userID: 1, gameID: 1, remote: false }, court.ctx);
 }

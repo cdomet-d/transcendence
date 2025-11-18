@@ -1,5 +1,5 @@
-export const HEIGHT = 500;
-export const WIDTH = 700;
+export const HEIGHT = 558.9;
+export const WIDTH = 1000;
 import type { reqObj, ballObj, paddleSpec, coordinates, repObj } from "./game.interfaces.js";
 
 type requestMap = Map< number, reqObj >;
@@ -40,10 +40,10 @@ export class Game {
 		};
 		this.#_paddleSpec = {
 			speed: 0.4,
-			w: 18, 
-			h: HEIGHT / 6, 
-			halfW: 18 / 2, 
-			halfH: HEIGHT / 12
+			w: 20, 
+			h: HEIGHT / 5, 
+			halfW: 20 / 2, 
+			halfH: HEIGHT / 10
 		}; //custom
 		this.#_leftPaddle = {
 			x: 25, 

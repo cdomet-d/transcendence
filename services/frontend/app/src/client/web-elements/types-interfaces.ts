@@ -265,3 +265,8 @@ export interface MatchParticipants {
 }
 
 export type CourtTheme = 'default' | 'farm' | 'ocean' | 'forest'
+
+export interface pongTheme {	
+	color: string;
+	theme: CourtTheme;
+}

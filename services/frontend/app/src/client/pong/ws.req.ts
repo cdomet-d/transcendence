@@ -4,7 +4,7 @@ import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from "./game.event
 import { renderGame } from "./game.render.utils.js";
 
 export function wsRequest(game: Game, ids: {gameID: number, userID: number}) {
-	const ws = new WebSocket('wss://localhost:8443/api/game/match'); //?gameID=1');
+	const ws = new WebSocket('wss://localhost:8443/api/game/'); //?gameID=1');
 
     ws.onerror = (err) => {
         console.log('error:', err);

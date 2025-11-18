@@ -586,12 +586,12 @@
 	}
 
 	.pong-court {
-		min-width: 1117.8px;
-		max-width: 1117.8px;
-		width: 1117.8px;
+		min-width: 1000px;
+		max-width: 1000px;
+		width: 1000px;
 		height: 558.9px;
 		min-height: 558.9px;
-		max-height: 558.9px;
+		max-height: 558.9px;		
 	}
 
 	.outline-focus:focus,

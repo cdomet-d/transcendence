@@ -93,7 +93,7 @@ function reconciliation(game: Game, latestReply: repObj) {
 
 async function handleScore(game: Game, latestReply: repObj): Promise< boolean > {
 	if (latestReply._score[0] != game.score[0] || latestReply._score[1] != game.score[1]) {
-		//TODO update score css
+		//TODO update score UI
 
 		game.score[0] = latestReply._score[0];
 		game.score[1] = latestReply._score[1];
