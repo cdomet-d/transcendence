@@ -12,11 +12,14 @@ export async function accountRoutes(serv: FastifyInstance) {
 	//TESTED
 	serv.post('/internal/account/register', async (request, reply) => {
 		try {
-			const { username, hashedPassword } = request.body as { username: string, hashedPassword: string };
-			const usernameTaken = await checkUsernameUnique(serv.dbAccount, username);
-			if (usernameTaken)
-				return (reply.code(409).send({ message: 'Username taken' }));
+			const { username } = request.body as { username: string };
+			const { hashedPassword } = request.body as { hashedPassword: string };
 
+			//const usernameTaken = await checkUsernameUnique(serv.dbAccount, username);
+			//if (usernameTaken)
+			//	return (reply.code(409).send({ message: 'Username taken' }));
+
+			serv.log.error(`TAGRANDMERE ${hashedPassword}`);
 			const query = `
 				INSERT INTO account (hashedPassword, username, userRole, registerDate, defaultLang)
 				VALUES (?, ?, 1, ?, ?)
@@ -50,14 +53,15 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const user = await serv.dbAccount.get(query, [username]);
 			if (!user)
 				return (reply.code(404).send({ message: '[ACCOUNT] Account not found.' }));
-			const passwordMatches = await bcrypt.compare(password, user.hashedPassword);
+			//const passwordMatches = await bcrypt.compare(password, user.hashedPassword);
 
-			if (!passwordMatches)
+			if (user.hashedPassword !== password)
 				return (reply.code(401).send({ message: '[ACCOUNT] Invalid credentials.' }));
 
 			return (reply.code(200).send({
 				success: true,
 				message: '[ACCOUNT] Login successful!',
+				userID: user.userID
 			}));
 
 		} catch (error) {

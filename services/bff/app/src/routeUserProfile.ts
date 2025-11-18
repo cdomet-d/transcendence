@@ -9,9 +9,20 @@ import { updatePassword, fetchUserDataAccount, updateUsername, updateBio, update
 export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	//get's profile + stats + game + friendslist
-/* 	serv.get('/users/profile', async (request, reply) => {
+	serv.get('/bff/profile', async (request, reply) => {
 		try {
-			const { username: targetUsername } = request.body as { username: string };
+
+			serv.log.error("here");
+			const query = request.query as {
+				userA?: number,
+				userB?: number,
+			};
+
+			if (query.userA === undefined || query.userB === undefined) {
+				return reply.code(400).send({
+					message: '[BFF] Missing required query parameters: userA and userB are required.'
+				});
+			}
 
 			const [
 				userData,
@@ -19,10 +30,10 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				friends,
 				recentMatches
 			] = await Promise.all([
-				buildFullUserData(serv.log, request.user.userID),
-				fetchUserStats(serv.log, request.user.userID),
-				fetchFriendList(serv.log, request.user.userID),
-				processMatches(serv.log, String(request.user.userID))
+				buildFullUserData(serv.log, query.userA, query.userB),
+				fetchUserStats(serv.log, query.userA),
+				fetchFriendList(serv.log, query.userA),
+				processMatches(serv.log, query.userA)
 			]);
 
 			if (!userData || !stats)
@@ -41,7 +52,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			serv.log.error(`[BFF] Error building user profile view: ${error}`);
 			throw (error);
 		}
-	}); */
+	});
 
 	serv.patch('/users/settings', async (request, reply) => {
 		try {
@@ -91,6 +102,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		try {
 			const friendsList = await fetchFriendList(serv.log, request.user.userID);
 
+			serv.log.error(`zebi`);
 			return (reply.code(200).send(friendsList));
 
 		} catch (error) {
@@ -99,7 +111,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/users/:username/profile', async (request, reply) => {
+	serv.get('/users/card/:username', async (request, reply) => {
 		try {
 			const { username: targetUsername } = request.params as { username: string };
 			const { userID: viewerUserID } = request.user as { userID: number };
