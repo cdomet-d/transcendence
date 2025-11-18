@@ -1,26 +1,26 @@
 import type { ProfileCreationResult, UserAuth } from "./auth.interfaces.js";
 
-export async function validateCredentials(log: any, username: string, password: string): Promise<false | UserAuth> {
+export async function validateCredentials(log: any, username: string, hashedPassword: string): Promise<false | UserAuth> {
 	let response: Response;
 	const url = 'http://account:1414/internal/account/login';
 	try {
 		response = await fetch(url, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ username, password }),
+			body: JSON.stringify({ username, hashedPassword }),
 		});
 	} catch (error) {
-		log.error(`[BFF] Account service (login) is unreachable: ${error}`);
+		log.error(`[AUTH] Account service (login) is unreachable: ${error}`);
 		throw new Error('Account service is unreachable.');
 	}
 
 	if (response.status === 401) {
-		log.warn(`[BFF] Failed login attempt for user: ${username}`);
+		log.warn(`[AUTH] Failed login attempt for user: ${username}`);
 		return (false);
 	}
 
 	if (!response.ok) {
-		log.error(`[BFF] Account service (login) failed with status ${response.status}`);
+		log.error(`[AUTH] Account service (login) failed with status ${response.status}`);
 		throw new Error('Account service failed.');
 	}
 

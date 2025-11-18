@@ -1,12 +1,8 @@
 import type { FastifyInstance } from 'fastify';
-import type { UserAuth } from './auth.interfaces.js';
 
 import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
 
 import { createAccount, deleteAccount, createUserProfile, validateCredentials } from './auth.service.js';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-and-long-key-for-development';
 
 export async function authenticationRoutes(serv: FastifyInstance) {
 
@@ -19,10 +15,8 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			if (!validationResponse)
 				return reply.code(401).send({ message: 'Invalid credentials.' });
 
-			const UserAuth: UserAuth = validationResponse;
-
-			const payload = { userID: UserAuth.userID, username: UserAuth.username };
-			const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+			const tokenPayload = { userID: validationResponse.userID, username: username };
+			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
             reply.setCookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', path: '/' });
 
 			return reply.code(200).send({ token: token });
@@ -50,6 +44,11 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			newAccountId = newAccount.userID;
 
 			const profileResponse = createUserProfile(serv.log, newAccountId, username);
+
+			const tokenPayload = { userID: newAccountId, username: username };
+			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
+            reply.setCookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', path: '/' });
+
 			switch ((await profileResponse).errorCode) {
 				case 'success':
 					return reply.code(201).send({ message: '[BFF] Account and profile created successfully!' });

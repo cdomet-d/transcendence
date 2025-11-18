@@ -3,6 +3,7 @@
 import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
 import cookie from '@fastify/cookie';
+import fastifyJwt from '@fastify/jwt';
 // Local modules
 import { options } from './serv.conf.js'
 import { authenticationRoutes } from './authentication/authentication.js';
@@ -21,11 +22,6 @@ import { authenticationRoutes } from './authentication/authentication.js';
 export async function init(): Promise<FastifyInstance> {
 	const serv: FastifyInstance = Fastify(options);
 
-	//nats
-	// const nc = await initNatsConnection();
-	// serv.decorate("nc", nc);
-	// await natsSubscription(serv);
-
 	//plugins
 	addPlugins(serv);
 	await serv.ready();
@@ -35,6 +31,7 @@ export async function init(): Promise<FastifyInstance> {
 
 //add plugins
 function addPlugins(serv: FastifyInstance) {
+	serv.register(fastifyJwt, {secret: process.env.JWT_SECRET!});
 	serv.register(cookie);
 	serv.register(authenticationRoutes);
 }
