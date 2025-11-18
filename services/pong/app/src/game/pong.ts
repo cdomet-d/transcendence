@@ -1,67 +1,38 @@
 import type { Game } from '../classes/game.class.js';
-import { updatePaddlePos } from './paddle.js';
 import type { Player } from '../classes/player.class.js';
-import { validMess, type messObj, type keysObj } from './mess.validation.js';
+import { validRequest } from './mess.validation.js';
+import type { reqObj } from '../classes/game.interfaces.js';
+import { gameLoop } from './game.loop.js';
+ 
+const START_DELAY = 500;
+const SERVER_TICK: number = 1000 / 50;
 
-export function setUpGame(game: Game) {
+export async function setUpGame(game: Game) {
 	if (!game.players[0] || !game.players[1])
 		return; //TODO: deal with that
 	const player1: Player = game.players[0];
 	const player2: Player = game.players[1];
 
-	if (game.local) {
-		setMessEvent(player1, player2, local);
-		player1.socket.send(1);
-	}
-	else {
-		setMessEvent(player1, player2, remote);
-		setMessEvent(player2, player1, remote);
-		player1.socket.send(1);
-		player2.socket.send(1);
-	}
+	// set players message event
+	setMessEvent(player1, 1, game);
+	setMessEvent(player2, 2, game);
+
+	player1.socket.send(1);
+	if (!game.local)
+		player2.socket.send(-1);
+
+	// start game
+	await new Promise(res => game.addTimoutID(setTimeout(res, START_DELAY)));
+	game.addTimoutID(setTimeout(gameLoop, SERVER_TICK, game, player1, player2));
 }
 
-export function setMessEvent(player: Player, opponent: Player, sendReply: Function) {
-	let lastFrameTime: number = 0;
+function setMessEvent(player: Player, playerNbr: number, game: Game) {
 	player.socket.on("message", (payload: string) => {
-		let mess: messObj;
-		try { mess = JSON.parse(payload); }
+		let req: reqObj;
+		try { req = JSON.parse(payload); }
 		catch (err) { return; };
-		if (!validMess(mess))
-			return;
-		const keys: keysObj = mess._keys;
-		const delta: number = mess._timeStamp - lastFrameTime;
-		lastFrameTime = mess._timeStamp;
-		if (!keysDown(keys))
-			return;
-		sendReply(player, opponent, keys, delta);
+		// if (!validRequest(req)) //TODO: keep or not ? more secure but maybe slows down game
+		// 	return;
+		game.addReq(req, playerNbr);
 	})
-}
-
-function keysDown(keys: keysObj): boolean {
-	for (const key in keys) {
-		if (keys[key])
-			return true;
-	}
-	return false
-}
-
-export function local(player: Player, opponent: Player, keys: keysObj, delta: number) {
-	updatePaddlePos(player, keys, delta);
-	updatePaddlePos(opponent, keys, delta);
-	player.setMess("left", player.paddle.y);
-	player.setMess("right", opponent.paddle.y);
-	if (player.socket.readyState === 1)
-		player.socket.send(JSON.stringify(player.rep));
-	//TODO: handle case where socket isn't open
-}
-
-export function remote(player: Player, opponent: Player, keys: keysObj, delta: number) {
-	updatePaddlePos(player, keys, delta);
-	player.setMess("left", player.paddle.y);
-	opponent.setMess("right", player.paddle.y);
-	if (player.socket.readyState === 1)
-		player.socket.send(JSON.stringify(player.rep));
-	if (opponent.socket.readyState === 1)
-		opponent.socket.send(JSON.stringify(opponent.rep));
 }

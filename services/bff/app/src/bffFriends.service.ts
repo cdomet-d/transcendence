@@ -24,7 +24,7 @@ export async function findUserByUsername(log: any, username: string): Promise<Us
 }
 
 export async function createFriendRequest(log: any, senderID: number, friendID: number): Promise<void> {
-	const url = 'http://friends:1616/internal/friends/sendrequest';
+	const url = 'http://friends:1616/internal/friends/friendship';
 	let response: Response;
 
 	try {

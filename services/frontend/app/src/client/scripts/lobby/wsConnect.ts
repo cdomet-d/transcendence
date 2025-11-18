@@ -2,6 +2,7 @@
 import { router } from '../../main.js';
 import { pong } from '../game/pong.js';
 import { createGameRequestForm, createLobbyRequestForm, attachGameListener } from './lobby.js';
+import type { gameRequest } from '../game/pong.js';
 
 let wsInstance: WebSocket | null = null;
 
@@ -17,7 +18,7 @@ function wsConnect() {
 	const ws: WebSocket = openWsConnection();
 
 	ws.onopen = () => {
-		console.log("WebSocket connection established!")
+		console.log("Lobby WebSocket connection established!")
 		// enable buttons in html?
 	}
 
@@ -40,17 +41,11 @@ function wsConnect() {
 			}
 
 			// GameRequest
-			const gameRequest = data;
-			const gameID: number = gameRequest.gameID;
-			if (gameRequest.event === "declined") {
-				console.log("Error: Failed to start game: #" + gameID);
-				return;
-			} else if (gameRequest.event === "approved") {
-				window.history.pushState({}, '', '/game/match');
-				router.loadRoute('/game/match');
-				console.log("Client ready to connect game: #" + gameID);
-				pong(message.data); // ws connect to "/game/match" and send userID + gameID
-			}
+			const gameRequest: gameRequest = data;
+			window.history.pushState({}, '', '/game/match');
+			router.loadRoute('/game/match');
+			console.log("Client ready to connect game: #" + gameRequest.gameID);
+			pong(gameRequest); // ws connect to "/game/match" and send userID + gameID
 		} catch (error) {
 			console.error("Error: Failed to parse WS message", error);
 		}
