@@ -206,7 +206,7 @@ This table has the following column :
 * totalWins &rarr; integer
 * winStreak &rarr; integer
 * averageMatchDuration &rarr; integer
-* highestScore &rarr; integer
+* longuestPass &rarr; integer
 
 We don't have totalLosses because it can easily be computed by totalMatch and totalWin so we remove so useless SQL queries by not storing totalLosses.
 

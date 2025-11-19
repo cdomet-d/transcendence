@@ -1,5 +1,7 @@
 import { buildServer } from './app.js';
 
+
+//TODO add JWT to fastify serverto use cookies in delete all friendships 
 const start = async () => {
     let serv;
     try {

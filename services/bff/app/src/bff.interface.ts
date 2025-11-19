@@ -39,7 +39,7 @@ export interface UserStats {
 	totalWins: number;
 	winStreak: number;
 	averageMatchDuration: number;
-	highestScore: number;
+	longuestPass: number;
 	[key: string]: number;
 }
 

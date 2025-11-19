@@ -23,7 +23,7 @@ interface UserStats {
 	totalWins: number;
 	winStreak: number;
 	averageMatchDuration: number;
-	highestScore: number;
+	longuestPass: number;
 	[key: string]: number;
 }
 
@@ -110,7 +110,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const queryStats = `
 				INSERT INTO userStats (userID, longestMatch, shorestMatch, totalMatch, totalWins,
-				winStreak, averageMatchDuration, highestScore)
+				winStreak, averageMatchDuration, longuestPass)
 				VALUES (?, 0, 0, 0, 0, 0, 0, 0)
 			`;
 
@@ -234,7 +234,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				return reply.code(404).send({ success: false, message: 'User not found.' });
 
 			const updates: { [key: string]: number } = {};
-			const validFields = ['totalMatch', 'totalWins', 'longestMatch', 'shortestMatch', 'highestScore'];
+			const validFields = ['totalMatch', 'totalWins', 'longestMatch', 'shortestMatch', 'longuestPass'];
 
 			for (const action of actions) {
 				if (!validFields.includes(action.field))
@@ -427,7 +427,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				{ action: 'increment', field: 'totalWins', value: 1 },
 				{ action: 'setIfGreater', field: 'longestMatch', value: duration },
 				{ action: 'setIfLess', field: 'shortestMatch', value: duration },
-				{ action: 'setIfGreater', field: 'highestScore', value: winnerScore }
+				{ action: 'setIfGreater', field: 'longuestPass', value: winnerScore }
 			];
 
 			const loserActions = [
