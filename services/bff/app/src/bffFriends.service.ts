@@ -1,7 +1,7 @@
 import type { UserAuth } from './bff.interface.js';
 
 export async function findUserByUsername(log: any, username: string): Promise<UserAuth | null> {
-	const url = `https://users:2626/internal/users?username=${username}`;
+	const url = `http://users:2626/internal/users?username=${username}`;
 	let response: Response;
 
 	try {
@@ -24,7 +24,7 @@ export async function findUserByUsername(log: any, username: string): Promise<Us
 }
 
 export async function createFriendRequest(log: any, senderID: number, friendID: number): Promise<void> {
-	const url = 'https://friends:1616/internal/friends/friendship';
+	const url = 'http://friends:1616/internal/friends/friendship';
 	let response: Response;
 
 	try {
@@ -57,7 +57,7 @@ export async function createFriendRequest(log: any, senderID: number, friendID: 
 }
 
 export async function acceptFriendRequest(log: any, senderRequestID: number, friendID: number): Promise<void> {
-	const url = 'https://friends:1616/internal/friends/sendrequest';
+	const url = 'http://friends:1616/internal/friends/sendrequest';
 	let response: Response;
 	
 	try {
@@ -91,7 +91,7 @@ export async function acceptFriendRequest(log: any, senderRequestID: number, fri
 }
 
 export async function deleteFriendRequest(log: any, removerID: number, friendID: number): Promise<void> {
-		const url = 'https://friends:1616//internal/friends/deletefriendship';
+		const url = 'http://friends:1616//internal/friends/deletefriendship';
 	let response: Response;
 	
 	try {

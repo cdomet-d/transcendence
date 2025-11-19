@@ -4,7 +4,7 @@ import type { ProfileCreationResult, AccountData, AccountDataResponse, AccountDa
 
 export async function validateCredentials(log: any, username: string, password: string): Promise<boolean> {
 	let response: Response;
-	const url = 'https://account:1414/internal/account/login';
+	const url = 'http://account:1414/internal/account/login';
 	try {
 		response = await fetch(url, {
 			method: 'POST',
@@ -30,7 +30,7 @@ export async function validateCredentials(log: any, username: string, password: 
 }
 
 async function updateAccountUsername(userID: string, newUsername: string): Promise<Response> {
-	const url = `https://account:1414/internal/account/${userID}`;
+	const url = `http://account:1414/internal/account/${userID}`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
@@ -39,7 +39,7 @@ async function updateAccountUsername(userID: string, newUsername: string): Promi
 }
 
 async function updateUserProfileUsername(userID: string, newUsername: string): Promise<Response> {
-	const url = `https://users:2626/internal/users/${userID}`;
+	const url = `http://users:2626/internal/users/${userID}`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
@@ -85,7 +85,7 @@ export async function updateUsername(log: any, userID: number, newUsername: stri
 }
 
 export async function updatePassword(log: any, userID: number, hashedPassword: string): Promise<void> {
-	const url = `https://account:1414/internal/account/${userID}`;
+	const url = `http://account:1414/internal/account/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -118,7 +118,7 @@ export async function updatePassword(log: any, userID: number, hashedPassword: s
 }
 
 export async function deleteAccount(log: any, userID: number): Promise<void> {
-	const url = `https://account:1414/internal/account`;
+	const url = `http://account:1414/internal/account`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -146,7 +146,7 @@ export async function deleteAccount(log: any, userID: number): Promise<void> {
 }
 
 export async function deleteUser(log: any, userID: number): Promise<void> {
-	const url = `https://users:2626/internal/users/${userID}`;
+	const url = `http://users:2626/internal/users/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, { method: 'DELETE' });
@@ -169,7 +169,7 @@ export async function deleteUser(log: any, userID: number): Promise<void> {
 }
 
 export async function deleteFriendship(log: any, userID: number): Promise<Response | null> {
-	const url = `https://friends:1616/internal/friends/${userID}/friendships`;
+	const url = `http://friends:1616/internal/friends/${userID}/friendships`;
 	let response: Response;
 	try {
 		response = await fetch(url, { method: 'DELETE' });
@@ -186,7 +186,7 @@ export async function deleteFriendship(log: any, userID: number): Promise<Respon
 }
 
 export async function updateBio(log: any, userID: number, biography: string): Promise<void> {
-	const url = `https://account:1414/internal/users/${userID}`;
+	const url = `http://account:1414/internal/users/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -217,7 +217,7 @@ export async function updateBio(log: any, userID: number, biography: string): Pr
 }
 
 export async function updateProfileColor(log: any, userID: number, profileColor: string): Promise<void> {
-	const url = `https://account:1414/internal/users/${userID}/profileColor`;
+	const url = `http://account:1414/internal/users/${userID}/profileColor`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -248,7 +248,7 @@ export async function updateProfileColor(log: any, userID: number, profileColor:
 }
 
 export async function updateDefaultLang(log: any, userID: number, defaultLang: string): Promise<void> {
-	const url = `https://users:2626/internal/account/${userID}`;
+	const url = `http://users:2626/internal/account/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -279,7 +279,7 @@ export async function updateDefaultLang(log: any, userID: number, defaultLang: s
 }
 
 export async function updateAvatar(log: any, userID: number, avatar: string): Promise<void> {
-	const url = `https://users:2626/internal/users/${userID}`;
+	const url = `http://users:2626/internal/users/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -310,7 +310,7 @@ export async function updateAvatar(log: any, userID: number, avatar: string): Pr
 }
 
 export async function fetchUserDataAccount(log: any, userID: number): Promise<AccountData> {
-	const url = `https://account:1414/internal/account/${userID}/userData`;
+	const url = `http://account:1414/internal/account/${userID}/userData`;
 		let response: Response;
 	
 		try {
@@ -344,7 +344,7 @@ export async function fetchUserDataBatch(log: any, userIDs: number[]): Promise<A
 	if (!userIDs || userIDs.length === 0)
 		return [];
 
-	const url = 'https://account:1414/internal/account/userDataBatch';
+	const url = 'http://account:1414/internal/account/userDataBatch';
 	let response: Response;
 
 	try {
