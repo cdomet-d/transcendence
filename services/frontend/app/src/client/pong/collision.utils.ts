@@ -53,7 +53,7 @@ export function lineIntersection(
 }
 
 const maxSpeed = 0.75;
-const maxAngleDeg: number = 45;
+const maxAngleDeg: number = 40;
 const maxAngle: number = (maxAngleDeg * Math.PI) / 180;
 export function updateVelocity(game: Game, paddle: coordinates, nx: number) {
     let pos: number = 0;
@@ -68,8 +68,10 @@ export function updateVelocity(game: Game, paddle: coordinates, nx: number) {
     game.ball.dy = speed * Math.sin(angle);
 
     const boostedSpeed = Math.min(speed * 1.15, maxSpeed);
-    const factor = boostedSpeed / speed;
-    game.ball.dx *= factor;
-    game.ball.dy *= factor;
+	if (speed !== 0) {
+		const factor: number = boostedSpeed / speed;
+		game.ball.dx *= factor;
+		game.ball.dy *= factor;
+	}
 }
 //TODO: take into account paddle speed and direction ?
