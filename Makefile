@@ -31,10 +31,10 @@ stop:
 
 log:
 	@mkdir -p ./.docker-log/
-	@docker compose log > .docker-log/cont.log
+	@docker compose logs > .docker-log/cont.log
 
 watchlog: 
-	@docker compose log -f
+	@docker compose logs -f
 
 help:
 	@printf "\n$(BB)%s$(RE)\n" "Welcome to Transcendence!"

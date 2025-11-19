@@ -129,7 +129,7 @@ services:
     # user: "${T_UID}:${T_GID}"
   gamemanager:
     build:
-      context: ./services/GameManager
+      context: ./services/game-manager
       dockerfile: Dockerfile
     container_name: gamemanager
     image: gamemanager:0.0.1
@@ -144,7 +144,7 @@ services:
       - ssl-key.pem
       - ssl-cert.pem
     volumes:
-      - ./services/GameManager/app:/usr/app
+      - ./services/game-manager/app:/usr/app
   monitoring:
     build:
       context: ./services/monitoring
