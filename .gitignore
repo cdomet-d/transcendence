@@ -2,7 +2,6 @@
 _logs/
 *.log
 .env
-.env
 .gitignore
 .notes/
 .secrets/
@@ -16,4 +15,3 @@ package-lock.json
 *.log*
 services/pong/app/dist/
 services/pong/app/static/style-dist.css
-ok

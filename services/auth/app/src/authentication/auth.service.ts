@@ -2,7 +2,7 @@ import type { ProfileCreationResult, UserAuth } from "./auth.interfaces.js";
 
 export async function validateCredentials(log: any, username: string, hashedPassword: string): Promise<false | UserAuth> {
 	let response: Response;
-	const url = 'http://account:1414/internal/account/login';
+	const url = 'https://account:1414/internal/account/login';
 	try {
 		response = await fetch(url, {
 			method: 'POST',
@@ -30,7 +30,7 @@ export async function validateCredentials(log: any, username: string, hashedPass
 
 
 export async function createAccount(log: any, username: string, hashedPassword: string): Promise<{ userID: number }> {
-	const url = `http://account:1414/internal/account/register`
+	const url = `https://account:1414/internal/account/register`
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -56,7 +56,7 @@ export async function createAccount(log: any, username: string, hashedPassword: 
 }
 
 export async function createUserProfile(log: any, userID: number, username: string): Promise<ProfileCreationResult> {
-	const url = `http://users:2626/internal/users/${userID}/profile`;
+	const url = `https://users:2626/internal/users/${userID}/profile`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -82,7 +82,7 @@ export async function createUserProfile(log: any, userID: number, username: stri
 }
 
 export async function deleteAccount(log: any, userID: number): Promise<void> {
-	const url = `http://account:1414/internal/account`;
+	const url = `https://account:1414/internal/account`;
 	let response: Response;
 	try {
 		response = await fetch(url, {

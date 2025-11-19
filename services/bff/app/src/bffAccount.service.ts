@@ -4,7 +4,7 @@ import type { ProfileCreationResult, AccountData, AccountDataResponse, AccountDa
 
 export async function validateCredentials(log: any, username: string, password: string): Promise<boolean> {
 	let response: Response;
-	const url = 'http://account:1414/internal/account/login';
+	const url = 'https://account:1414/internal/account/login';
 	try {
 		response = await fetch(url, {
 			method: 'POST',
@@ -30,7 +30,7 @@ export async function validateCredentials(log: any, username: string, password: 
 }
 
 async function updateAccountUsername(userID: string, newUsername: string): Promise<Response> {
-	const url = `http://account:1414/internal/account/${userID}`;
+	const url = `https://account:1414/internal/account/${userID}`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
@@ -39,7 +39,7 @@ async function updateAccountUsername(userID: string, newUsername: string): Promi
 }
 
 async function updateUserProfileUsername(userID: string, newUsername: string): Promise<Response> {
-	const url = `http://users:2626/internal/users/${userID}`;
+	const url = `https://users:2626/internal/users/${userID}`;
 	return fetch(url, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
@@ -85,7 +85,7 @@ export async function updateUsername(log: any, userID: number, newUsername: stri
 }
 
 export async function updatePassword(log: any, userID: number, hashedPassword: string): Promise<void> {
-	const url = `http://account:1414/internal/account/${userID}`;
+	const url = `https://account:1414/internal/account/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -117,60 +117,8 @@ export async function updatePassword(log: any, userID: number, hashedPassword: s
 	return;
 }
 
-// export async function createAccount(log: any, username: string, hashedPassword: string): Promise<{ userID: number }> {
-// 	const url = `http://account:1414/internal/account/register`
-// 	let response: Response;
-// 	try {
-// 		response = await fetch(url, {
-// 			method: 'POST',
-// 			headers: { 'Content-Type': 'application/json' },
-// 			body: JSON.stringify({ username: username, password: hashedPassword })
-// 		});
-// 	} catch (error) {
-// 		log.error(`[BFF] User service is unreachable: ${error}`);
-// 		throw new Error('User service is unreachable.');
-// 	}
-
-// 	if (response.status === 409) {
-// 		log.warn(`[BFF] Username already taken for account creation`);
-// 		const errorBody = (await response.json()) as { message: string };
-// 		throw { code: 409, message: errorBody.message || 'Username is already taken.' };
-// 	}
-// 	if (!response.ok) {
-// 		log.error(`[BFF] User service failed with status ${response.status}`);
-// 		throw new Error('User service failed.');
-// 	}
-// 	return (response.json() as Promise<{ userID: number }>);
-// }
-
-// export async function createUserProfile(log: any, userID: number, username: string): Promise<ProfileCreationResult> {
-// 	const url = `http://users:2626/internal/users/${userID}/profile`;
-// 	let response: Response;
-// 	try {
-// 		response = await fetch(url, {
-// 			method: 'POST',
-// 			headers: { 'Content-Type': 'application/json' },
-// 			body: JSON.stringify({ username: username })
-// 		});
-// 	} catch (error) {
-// 		log.error(`[BFF] User service is unreachable: ${error}`);
-// 		throw new Error('User service is unreachable.');
-// 	}
-// 	if (response.status === 409) {
-// 		log.warn(`[BFF] Username already taken for profile creation`);
-// 		const errorBody = (await response.json()) as { message: string };
-// 		throw { code: 409, message: errorBody.message || 'Username is already taken.' };
-// 	}
-// 	if (!response.ok) {
-// 		log.warn(`[BFF] Internal server error`);
-// 		throw new Error(`Profile service failed with status ${response.status}`);
-// 	}
-// 	const data = await response.json();
-// 	return { errorCode: 'success', data: data };
-// }
-
 export async function deleteAccount(log: any, userID: number): Promise<void> {
-	const url = `http://account:1414/internal/account`;
+	const url = `https://account:1414/internal/account`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -198,7 +146,7 @@ export async function deleteAccount(log: any, userID: number): Promise<void> {
 }
 
 export async function deleteUser(log: any, userID: number): Promise<void> {
-	const url = `http://users:2626/internal/users/${userID}`;
+	const url = `https://users:2626/internal/users/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, { method: 'DELETE' });
@@ -221,7 +169,7 @@ export async function deleteUser(log: any, userID: number): Promise<void> {
 }
 
 export async function deleteFriendship(log: any, userID: number): Promise<Response | null> {
-	const url = `http://friends:1616/internal/friends/${userID}/friendships`;
+	const url = `https://friends:1616/internal/friends/${userID}/friendships`;
 	let response: Response;
 	try {
 		response = await fetch(url, { method: 'DELETE' });
@@ -238,7 +186,7 @@ export async function deleteFriendship(log: any, userID: number): Promise<Respon
 }
 
 export async function updateBio(log: any, userID: number, biography: string): Promise<void> {
-	const url = `http://account:1414/internal/users/${userID}`;
+	const url = `https://account:1414/internal/users/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -269,7 +217,7 @@ export async function updateBio(log: any, userID: number, biography: string): Pr
 }
 
 export async function updateProfileColor(log: any, userID: number, profileColor: string): Promise<void> {
-	const url = `http://account:1414/internal/users/${userID}/profileColor`;
+	const url = `https://account:1414/internal/users/${userID}/profileColor`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -300,7 +248,7 @@ export async function updateProfileColor(log: any, userID: number, profileColor:
 }
 
 export async function updateDefaultLang(log: any, userID: number, defaultLang: string): Promise<void> {
-	const url = `http://users:2626/internal/account/${userID}`;
+	const url = `https://users:2626/internal/account/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -331,7 +279,7 @@ export async function updateDefaultLang(log: any, userID: number, defaultLang: s
 }
 
 export async function updateAvatar(log: any, userID: number, avatar: string): Promise<void> {
-	const url = `http://users:2626/internal/users/${userID}`;
+	const url = `https://users:2626/internal/users/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -362,7 +310,7 @@ export async function updateAvatar(log: any, userID: number, avatar: string): Pr
 }
 
 export async function fetchUserDataAccount(log: any, userID: number): Promise<AccountData> {
-	const url = `http://account:1414/internal/account/${userID}/userData`;
+	const url = `https://account:1414/internal/account/${userID}/userData`;
 		let response: Response;
 	
 		try {
@@ -396,7 +344,7 @@ export async function fetchUserDataBatch(log: any, userIDs: number[]): Promise<A
 	if (!userIDs || userIDs.length === 0)
 		return [];
 
-	const url = 'http://account:1414/internal/account/userDataBatch';
+	const url = 'https://account:1414/internal/account/userDataBatch';
 	let response: Response;
 
 	try {

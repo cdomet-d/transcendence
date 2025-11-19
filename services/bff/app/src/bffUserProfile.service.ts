@@ -5,7 +5,7 @@ import type {
 } from "./bff.interface.js";
 
 /* export async function fetchUserProfile(log: any, userID: number): Promise<userData | null> {
-	const url = `http://users:2626/internal/users/${userID}/profile`;
+	const url = `https://users:2626/internal/users/${userID}/profile`;
 	let response: Response;
 
 	try {
@@ -29,7 +29,7 @@ import type {
 }
  */
 export async function fetchUserID(log: any, username: string): Promise<number> {
-	const url = `http://users:2626/internal/users?username=${username}`;
+	const url = `https://users:2626/internal/users?username=${username}`;
 
 	let response: Response;
 	try {
@@ -53,7 +53,7 @@ export async function fetchUserID(log: any, username: string): Promise<number> {
 }
 
 export async function fetchUserStats(log: any, userID: number): Promise<UserStats | null> {
-	const url = `http://users:2626/internal/users/${userID}/stats`;
+	const url = `https://users:2626/internal/users/${userID}/stats`;
 	let response: Response;
 
 	try {
@@ -77,7 +77,7 @@ export async function fetchUserStats(log: any, userID: number): Promise<UserStat
 
 //TODO fetch userData in friendlist.............................................
 export async function fetchFriendList(log: any, userID: number): Promise<Friends[]> {
-	const url = `http://friends:1616/internal/friends/friendships?userID=${userID}&status=friend`;
+	const url = `https://friends:1616/internal/friends/friendships?userID=${userID}&status=friend`;
 	let response: Response;
 
 	try {
@@ -101,7 +101,7 @@ export async function fetchFriendList(log: any, userID: number): Promise<Friends
 }
 
 export async function fetchProfileData(log: any, userID: number): Promise<ProfileData> {
-	const url = `http://users:2626/internal/users/${userID}/userData`;
+	const url = `https://users:2626/internal/users/${userID}/userData`;
 	let response: Response;
 
 	try {
@@ -135,7 +135,7 @@ export async function fetchProfileDataBatch(log: any, userIDs: number[]): Promis
 	if (!userIDs || userIDs.length === 0)
 		return [];
 
-	const url = 'http://users:2626/internal/users/userDataBatch';
+	const url = 'https://users:2626/internal/users/userDataBatch';
 	let response: Response;
 
 	try {
@@ -171,7 +171,7 @@ function formatDuration(seconds: number): string {
 }
 
 async function fetchMatches(log: any, userID: string): Promise<RawMatches[]> {
-	const url = `http://users:2626/internal/dashboard/${userID}/gameHistory`;
+	const url = `https://users:2626/internal/dashboard/${userID}/gameHistory`;
 	let response: Response;
 	try {
 		response = await fetch(url);
@@ -241,7 +241,7 @@ export async function processMatches(log: any, userID: string): Promise<Matches[
 }
 
 export async function fetchRelationship(log: any, userID: number, username: string): Promise<ProfileView> {
-	const url = `http://users:2626/internal/users/${username}/userID`;
+	const url = `https://users:2626/internal/users/${username}/userID`;
 
 	let response: Response;
 
@@ -271,7 +271,7 @@ export async function fetchRelationship(log: any, userID: number, username: stri
 	if (targetUserID === userID)
 		return 'self';
 
-	const friendsUrl = `http://friends-service:1616/internal/relationship?userA=${userID}&userB=${targetUserID}`;
+	const friendsUrl = `https://friends-service:1616/internal/relationship?userA=${userID}&userB=${targetUserID}`;
 	let friendsResponse: Response;
 
 	try {
@@ -294,7 +294,7 @@ export async function fetchRelationship(log: any, userID: number, username: stri
  * Fetches private account data (username, settings, etc.)
  */
 export async function fetchUserDataAccount(log: any, userID: number): Promise<AccountData> {
-	const url = `http://account:1414/internal/account/${userID}`; // FIX: Changed from /userData
+	const url = `https://account:1414/internal/account/${userID}`; // FIX: Changed from /userData
 	let response: Response;
 
 	try {
@@ -331,7 +331,7 @@ export async function fetchView(log: any, viewerID: number, targetID: number): P
 		return 'self';
 	}
 
-	const url = `http://friends:1616/internal/friendships?userA=${viewerID}&userB=${targetID}`;
+	const url = `https://friends:1616/internal/friendships?userA=${viewerID}&userB=${targetID}`;
 	let response: Response;
 
 	try {
