@@ -369,7 +369,7 @@ The userRole column stored the role of the user (admin, user). I don't know yet 
     |   401    | password or username invalid |
     |   200    | logged in  |
 
-* POST fetch multiple accounts : `/internal/account/accountDataBatch`
+* POST fetch multiple accounts : `/internal/account/accountBatch`
 
     userIDs sent as `request.body` (as a json ? TODO check)
 
@@ -646,3 +646,17 @@ WHERE userID = 101;
 ```
 
 [WIP] DOC NOT UP TO DATE YET (nginx conf not done yet)
+
+
+
+
+* servir le profile 
+* servir la leaderboard
+* servir les users pour search bar
+* envoyer les settings
+* servir userCard
+* supprimer le compte    ✅
+* envouyer demande d'ami ✅
+* accepter demande d'ami ✅
+* supprimer ami          ✅
+* servir traduction      ✅

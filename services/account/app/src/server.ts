@@ -7,6 +7,7 @@ const start = async () => {
 
 		console.log('listening on 1414');
 		await serv.listen({ port: 1414, host: '0.0.0.0' });
+		serv.log.info(serv.printRoutes());
 
 	} catch (err) {
 		if (serv) {

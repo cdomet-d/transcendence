@@ -81,7 +81,7 @@ export interface ProfileDataBatchResponse {
 }
 
 
-export interface AccountDataBatchResponse {
+export interface accountBatchResponse {
 	success: boolean;
 	accountData: AccountData[];
 	message?: string;

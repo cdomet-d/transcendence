@@ -70,7 +70,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TESTED but 
+	//TESTED
 	serv.patch('/internal/account/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
@@ -169,7 +169,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/internal/account/accountDataBatch', async (request, reply) => {
+	serv.post('/internal/account/accountBatch', async (request, reply) => {
 		try {
 			const { userIDs } = request.body as { userIDs: number[] };
 

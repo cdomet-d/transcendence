@@ -1,18 +1,18 @@
 import type { FastifyInstance } from 'fastify';
 import type { UserProfileView, userData } from './bff.interface.js';
 import * as bcrypt from 'bcrypt';
-import { fetchProfileData, buildFullUserData, fetchUserID, processMatches, fetchFriendList, fetchUserStats, fetchRelationship } from './bffUserProfile.service.js';
-import { updatePassword, fetchUserDataAccount, updateUsername, updateBio, updateProfileColor, updateDefaultLang, updateAvatar } from './bffAccount.service.js';
+import { fetchProfileData, buildFullUserData, fetchUserID, processMatches, fetchFriendList, fetchUserStats, fetchRelationship, updateBio, updateProfileColor, updateAvatar } from './bffUserProfile.service.js';
+import { updatePassword, fetchUserDataAccount, updateUsername,  updateDefaultLang, deleteAccount, deleteUser  } from './bffAccount.service.js';
+import { deleteFriendship } from './bffFriends.service.js'
 
 
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	//get's profile + stats + game + friendslist
-	serv.get('/bff/profile', async (request, reply) => {
+	serv.get('/profile', async (request, reply) => {
 		try {
 
-			serv.log.error("here");
 			const query = request.query as {
 				userA?: number,
 				userB?: number,
@@ -54,7 +54,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.patch('/users/settings', async (request, reply) => {
+	serv.patch('/settings', async (request, reply) => {
 		try {
 			const { userID } = request.user;
 			const body = request.body as any;
@@ -98,7 +98,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/friends/friendslist', async (request, reply) => {
+	serv.get('/friendslist', async (request, reply) => {
 		try {
 			const friendsList = await fetchFriendList(serv.log, request.user.userID);
 
@@ -154,6 +154,44 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				serv.log.error(`[BFF] Failed to build user profile: ${error.message}`);
 			else
 				serv.log.error(`[BFF] Failed to build user profile: An unknown error occurred.`);
+			throw (error);
+		}
+	});
+
+	serv.delete('/delete-account', async (request, reply) => {
+		try {
+			const userID = request.user.userID;
+
+			//UNCOMMENT FOR PASSWORD CHECK FOR ACCOUNT DELETION
+
+			//const username = request.user.username;
+			//const { password } = request.body as { password: string };
+			//if (!password) {
+			//	return (reply.code(400).send({ message: '[BFF] Password is required.' }));
+			//const validationResponse = await validateCredentials(username, password);
+			//if (!validationResponse)
+			//	return (reply.code(401).send({ message: '[BFF] Invalid credentials.' }));
+
+			const deletionResults = await Promise.allSettled([
+				deleteFriendship(serv.log, userID),
+				deleteUser(serv.log, userID),
+				deleteAccount(serv.log, userID)
+			]);
+
+			const failures = deletionResults.filter(response => response.status === 'rejected');
+
+			if (failures.length > 0) {
+				serv.log.error({
+					msg: `[CRITICAL][BFF] Partial deletion for userID: ${userID}.`,
+					failures: failures.map(f => (f as PromiseRejectedResult).reason?.message || f.reason)
+				});
+				throw new Error('[BFF] Failed to completely delete account. Please contact support.') ;
+			}
+
+			return (reply.code(204).send());
+
+		} catch (error) {
+			serv.log.error(`[BFF] Error during account deletion: ${error}`);
 			throw (error);
 		}
 	});
