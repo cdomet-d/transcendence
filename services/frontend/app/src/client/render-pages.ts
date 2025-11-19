@@ -3,7 +3,7 @@ import { createLeaderboard } from './web-elements/statistics/leaderboard.js';
 import { createMenu } from './web-elements/navigation/menu-helpers.js';
 import { main } from './web-elements/navigation/default-menus.js';
 import { farmAssets, Layout } from './web-elements/layouts/layout.js';
-import { ProfileWithTabs } from './web-elements/users/user-profile-containers.js';
+import { ProfileWithTabs, user } from './web-elements/users/user-profile-containers.js';
 import { type Match } from 'path-to-regexp';
 import { createTabs } from './web-elements/navigation/tabs-helpers.js';
 import { type TabData } from './web-elements/types-interfaces.js';
@@ -14,12 +14,14 @@ import {
     remotePong,
     userSettingsForm,
 } from './web-elements/forms/default-forms.js';
-import { user } from './web-elements/default-values.js';
+import { tournament } from './web-elements/default-values.js';
 import { farm, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
 import { pong } from './pong/pong.js';
+import { TournamentBrackets } from './web-elements/game/tournament.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
+    bracket: 'full-screen',
     central: 'page-w-header',
     error: 'full-screen',
     game: 'full-screen',
@@ -151,4 +153,13 @@ export function renderGame() {
     document.body.layoutInstance?.appendAndCache(court);
 
     pong({ userID: 1, gameID: 1, remote: false }, court.ctx);
+}
+
+export function renderBracket() {
+    console.log('renderBracket');
+    prepareLayout(document.body.layoutInstance, 'bracket');
+
+    const bracket = document.createElement('div', { is: 'tournament-bracket' }) as TournamentBrackets;
+    if (bracket) bracket.players = tournament;
+    document.body.layoutInstance?.appendAndCache(bracket);
 }

@@ -106,10 +106,10 @@ export class UserProfile extends HTMLDivElement {
      * Sets the user's username.
      */
     set username(name: string) {
-        if (this.#username.name !== name) {
-            // console.log('userName');
+        // if (this.#username.name !== name) {
+            console.log('userName');
             this.#username.name = name;
-        }
+        // }
     }
 
     /**
@@ -137,6 +137,7 @@ export class UserProfile extends HTMLDivElement {
         this.status = user.status;
         this.username = user.username;
         this.winstreak = user.winstreak;
+		this.render();
     }
 
     get getAvatar() {
@@ -168,6 +169,10 @@ export class UserProfile extends HTMLDivElement {
     }
 
     connectedCallback() {
+        this.render();
+    }
+
+    render() {
         this.append(
             this.#avatar,
             this.#username,
@@ -176,10 +181,6 @@ export class UserProfile extends HTMLDivElement {
             this.#actionButtons,
             this.#winstreak,
         );
-        this.render();
-    }
-
-    render() {
         this.className = `pad-s box-border brdr ${this.#color}`;
         this.#username.customizeStyle('f-yellow', 'f-m', 'f-bold', false);
         this.#joinedSince.classList.add('place-self-center', 'dark');
@@ -228,42 +229,19 @@ if (!customElements.get('user-card-social')) {
  * @remark You should use {@link createUserInline} which encapsulates creation logic.
  */
 export class UserInline extends UserProfile {
-    #clickHandler: (ev: MouseEvent) => void;
-
     constructor() {
         super();
-        this.#clickHandler = this.attachClick.bind(this);
     }
 
-    /**
-     * Handles click events on the element.
-     * Navigates to the user's profile page.
-     * @param ev - The mouse event.
-     */
-    attachClick(ev: MouseEvent) {
-        const clickedEl = ev.target as Element | null;
-        if (!clickedEl) return;
-        const link = clickedEl.closest('a') || this.querySelector('a');
-        if (!link) return;
-        ev.preventDefault();
-        // TODO: SPA routing logic goes there
-        // This is a placehold in the meantime
-        window.location.href = link.href;
-    }
     override connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('click', this.#clickHandler);
         this.render();
-    }
-
-    disconnectedCallback() {
-        this.removeEventListener('click', this.#clickHandler);
     }
 
     override render() {
         this.append(super.getAvatar, super.getUsername, super.getWinstreak);
         super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
-        this.classList.add('cursor-pointer', 'gap-s', 'flex', 'flex-initial', `${super.getColor}`);
+        this.classList.add('cursor-pointer', 'gap-s', 'flex', 'flex-initial', 'pad-xs', `${super.getColor}`);
     }
 }
 

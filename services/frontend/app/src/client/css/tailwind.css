@@ -504,7 +504,8 @@
 		width: var(--xl);
 	}
 
-	.w-xl {
+	.w-xxl {
+		min-width: var(--xxl);
 		width: var(--xxl);
 	}
 

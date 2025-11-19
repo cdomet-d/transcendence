@@ -15,6 +15,7 @@ export const routes: routeInterface[] = [
     { path: '/user/:login', callback: page.renderProfile },
     { path: '/user/settings', callback: page.renderSettings },
     { path: '/lobby', callback: page.renderLobby },
+    { path: '/bracket', callback: page.renderBracket },
     { path: '/game', callback: page.renderGame },
 ];
 
