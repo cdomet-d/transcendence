@@ -28,20 +28,31 @@ export class LocalPongSettings extends BaseForm {
         return this.#backgroundSelector;
     }
 
+    override async submitHandlerImplementation(ev: SubmitEvent): Promise<void> {
+        ev.preventDefault();
+        const f = new FormData(this);
+        const background = this.#backgroundSelector.selectedElement;
+
+        if (background) f.append('background', background.id);
+        const req = this.initReq();
+        req.body = this.createReqBody(f);
+        await this.sendForm(this.details.action, req);
+    }
     constructor() {
         super();
         this.#backgroundSelector = createDropdown(backgroundMenu, 'Select background', 'static');
+        this.submitHandler = this.submitHandlerImplementation.bind(this);
     }
 
     styleFields() {
-        super.contentMap['title']?.classList.add('col-span-2');
-        super.contentMap['paddlesize']?.classList.add('col-start-1');
-        super.contentMap['paddlespeed']?.classList.add('col-start-1');
-        super.contentMap['ballspeed']?.classList.add('col-start-1');
-        super.contentMap['opponent']?.classList.add('row-start-2', 'col-start-2');
+        super.contentMap.get('title')?.classList.add('col-span-2');
+        super.contentMap.get('paddlesize')?.classList.add('col-start-1');
+        super.contentMap.get('paddlespeed')?.classList.add('col-start-1');
+        super.contentMap.get('ballspeed')?.classList.add('col-start-1');
+        super.contentMap.get('opponent')?.classList.add('row-start-2', 'col-start-2');
         this.#backgroundSelector.classList.add('row-start-3', 'col-start-2');
-        super.contentMap['submit']?.classList.remove('w-full');
-        super.contentMap['submit']?.classList.add('row-start-5', 'col-span-2', 'w-5/6');
+        super.contentMap.get('submit')?.classList.remove('w-full');
+        super.contentMap.get('submit')?.classList.add('row-start-5', 'col-span-2', 'w-5/6');
     }
 
     /**
@@ -74,6 +85,7 @@ export class RemotePongSettings extends LocalPongSettings {
     #searchbar: Searchbar;
     #guestWrapper: HTMLDivElement;
     #invitedUsers: UserData[] | null;
+    // #inviteHandler: (ev: SubmitEvent) => void
 
     //TODO: Add event listener on Searchbar's SUBMIT to capture invitations.
     //TODO: Add API call to /api/user to get requested user and store it in an
@@ -86,15 +98,31 @@ export class RemotePongSettings extends LocalPongSettings {
         this.#searchbar = createForm('search-form');
         this.#guestWrapper = document.createElement('div');
         this.#invitedUsers = null;
+        // this.#inviteHandler = this.#inviteHandlerImplementation.bind(this);
     }
 
+    // #inviteHandlerImplementation(ev: SubmitEvent) {
+    // 	ev.preventDefault();
+    // 	const form = new FormData(this.#searchbar);
+    // 	console.log(form);
+    // }
+
+    override connectedCallback(): void {
+        super.connectedCallback();
+        // this.#searchbar.addEventListener('submit', this.#inviteHandler)
+    }
+
+    override disconnectedCallback(): void {
+        super.disconnectedCallback();
+        // this.#searchbar.removeEventListener('submit', this.#inviteHandler)
+    }
     /**
      * Sets the invited users and updates the guest list display.
      * @param users - Array of invited user data.
      */
     set invitedUsers(users: UserData[]) {
         this.#invitedUsers = users;
-        this.#displayInvitedUser();
+        this.#displayInvitedUsers();
     }
 
     /**
@@ -111,7 +139,7 @@ export class RemotePongSettings extends LocalPongSettings {
      * Appends user inline elements for each invited user.
      * @private
      */
-    #displayInvitedUser() {
+    #displayInvitedUsers() {
         if (this.#guestWrapper.firstChild) this.#clearResults();
 
         if (!this.#invitedUsers || this.#invitedUsers.length < 1) {
@@ -129,14 +157,14 @@ export class RemotePongSettings extends LocalPongSettings {
      * Applies custom styles to form fields and buttons.
      */
     override styleFields() {
-        super.contentMap['title']?.classList.add('col-span-2');
+        super.contentMap.get('title')?.classList.add('col-span-2');
         this.#searchbar.classList.add('row-start-2', 'col-start-2');
         super.dropdownMenu.classList.add('row-start-5', 'col-start-1');
-        super.contentMap['paddlespeed']?.classList.add('col-start-1');
-        super.contentMap['ballspeed']?.classList.add('col-start-1');
-        super.contentMap['paddlesize']?.classList.add('col-start-1');
-        super.contentMap['submit']?.classList.remove('w-full');
-        super.contentMap['submit']?.classList.add('row-start-5', 'col-span-2', 'w-5/6');
+        super.contentMap.get('paddlespeed')?.classList.add('col-start-1');
+        super.contentMap.get('ballspeed')?.classList.add('col-start-1');
+        super.contentMap.get('paddlesize')?.classList.add('col-start-1');
+        super.contentMap.get('submit')?.classList.remove('w-full');
+        super.contentMap.get('submit')?.classList.add('row-start-5', 'col-span-2', 'w-5/6');
     }
 
     /**
@@ -160,7 +188,7 @@ export class RemotePongSettings extends LocalPongSettings {
         super.renderButtons();
         this.styleFields();
         this.styleInviteList();
-        this.#displayInvitedUser();
+        this.#displayInvitedUsers();
         this.classList.add('sidebar-left');
     }
 }

@@ -3,7 +3,7 @@ import type { UserAuth } from './bff.interface.js';
 
 import * as bcrypt from 'bcrypt';
 
-import { createAccount, deleteFriendship, deleteAccount, createUserProfile, validateCredentials, deleteUser } from './bffAccount.service.js';
+import {/*  createAccount, */ deleteFriendship, deleteAccount,/*  createUserProfile,  */validateCredentials, deleteUser } from './bffAccount.service.js';
 
 
 export async function bffAccountRoutes(serv: FastifyInstance) {

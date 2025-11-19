@@ -6,10 +6,10 @@ import { renderGame } from "./game.render.utils.js";
 export function wsRequest(game: Game, ids: {gameID: number, userID: number}) {
 	const ws = new WebSocket('wss://localhost:8443/api/game/match'); //?gameID=1');
 
-	ws.onerror = (err) => {
-		console.log("error:", err);
-		return; //TODO: handle error properly
-	}
+    ws.onerror = (err) => {
+        console.log('error:', err);
+        return; //TODO: handle error properly
+    };
 
 	ws.onopen = () => {
 		console.log("PONG webSocket connection established!");

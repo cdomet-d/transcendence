@@ -8,7 +8,6 @@ export class Layout extends HTMLDivElement {
         super();
         this.id = 'layout';
         this.#innerComponents = new Map<string, HTMLElement>();
-        this.className = 'box-border grid min-h-full auto-rows-auto place-content-center gap-m';
     }
 
     /**
@@ -53,15 +52,8 @@ export class Layout extends HTMLDivElement {
     }
 
     render() {
-        this.classList.add(
-            'grid',
-            'h-dvh',
-            'w-dvw',
-            'min-w-60',
-            'place-content-between',
-            'grid-auto-rows-auto',
-            'single-col-xl',
-        );
+        this.className =
+            'box-border grid h-dvh w-dvw grid-auto-rows-auto place-content-center layout-col gap-s';
     }
 }
 

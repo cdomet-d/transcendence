@@ -12,15 +12,13 @@
 		"copy:assets": "mkdir -p dist/client/ && cp -r src/client/assets dist/client && npm run copy:html",
 		"build:css": "postcss ./src/client/css/tailwind.css -o ./dist/client/css/output.css",
 		"build": "node build.js && npm run build:css && npm run copy:assets",
-		"watch" : "node build.js --watch && npm run build:css",
+		"watch": "node build.js --watch && npm run build:css",
 		"dev": "concurrently \"npm run watch\" \"nodemon\"",
-
 		"format": "npx prettier --write \"./src/**/*.ts\"",
 		"lint": "eslint ."
 	},
 	"keywords": [],
 	"dependencies": {
-		"@fastify/cookie": "^11.0.2",
 		"@fastify/static": "^8.2.0",
 		"@tailwindcss/cli": "^4.1.13",
 		"@tailwindcss/postcss": "^4.1.13",
@@ -32,10 +30,13 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.37.0",
+		"@fastify/cookie": "^11.0.2",
 		"@tailwindcss/vite": "^4.1.12",
+		"@types/jsonwebtoken": "^9.0.10",
 		"@types/node": "^24.6.0",
 		"@typescript-eslint/eslint-plugin": "^8.46.1",
 		"autoprefixer": "^10.4.21",
+		"browser-image-compression": "^2.0.2",
 		"concurrently": "^9.2.1",
 		"esbuild": "^0.25.12",
 		"eslint": "^9.37.0",

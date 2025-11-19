@@ -4,9 +4,9 @@ import es from '../../assets/locales/es.json' with { type: 'json' };
 
 type TranslationMap = Record<string, string>;
 
-const resources: Record<string, TranslationMap> = { English, French, Spanish };
-export let currentLang: string = "English";
-let translation: TranslationMap = English;
+const resources: Record<string, TranslationMap> = { en, fr, es };
+export let currentLang: string = 'en';
+let translation: TranslationMap = en;
 
 export function initLanguageCSR() {
     let savedLang: string | null = localStorage.getItem('selectedLanguage');

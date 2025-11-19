@@ -71,9 +71,9 @@ export class ProfileWithTabs extends HTMLDivElement {
     }
 
     /**Takes a {@link TabData} in parameter. It auto-determines if the `id` of 
-	the provided tabData matches one of the current tab for the Tab container.
+    the provided tabData matches one of the current tab for the Tab container.
 	
-	If not, fails silently (for now, maybe I'll add an error management later)  */
+    If not, fails silently (for now, maybe I'll add an error management later)  */
     set panelContent(tabData: TabData) {
         this.#userTabs.populatePanels(tabData);
     }
