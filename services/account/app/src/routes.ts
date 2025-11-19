@@ -1,6 +1,5 @@
 import type { FastifyInstance } from 'fastify';
 import { checkUsernameUnique } from './account.service.js'
-import * as bcrypt from 'bcrypt';
 
 interface AccountSettingsRow {
 	defaultLang: string;
@@ -47,14 +46,14 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const { password } = request.body as { password: string };
 
 			const query = `
-				SELECT userID, hashedPassword FROM account WHERE username = ?
-			`
+                SELECT userID, hashedPassword FROM account WHERE username = ?
+            `
 			const user = await serv.dbAccount.get(query, [username]);
 			if (!user)
 				return (reply.code(404).send({ message: '[ACCOUNT] Account not found.' }));
 			//const passwordMatches = await bcrypt.compare(password, user.hashedPassword);
 
-			if (user.hashedPassword !== password)
+			if (user.hashedPassword != password)
 				return (reply.code(401).send({ message: '[ACCOUNT] Invalid credentials.' }));
 
 			return (reply.code(200).send({

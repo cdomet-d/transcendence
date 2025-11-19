@@ -3,7 +3,7 @@ import { usernamePattern, passwordPattern } from '../default-values.js';
 
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
 export const userSettingsForm: FormDetails = {
-    action: '/account/settings/CrimeGoose',
+    action: 'https://localhost:8443/api/account/settings/',
     heading: 'Settings',
     ariaLabel: 'User settings',
     id: 'user-settings',
@@ -46,7 +46,7 @@ export const userSettingsForm: FormDetails = {
 };
 
 export const registrationForm: FormDetails = {
-    action: '/account',
+    action: 'https://localhost:8443/api/auth/register/',
     heading: 'Register',
     ariaLabel: 'Create an account',
     id: 'account-create',
@@ -72,8 +72,36 @@ export const registrationForm: FormDetails = {
     button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
 };
 
+export const loginForm: FormDetails = {
+    action: 'https://localhost:8443/api/auth/login/',
+    heading: 'Login',
+    ariaLabel: 'Log into an account',
+    id: 'account-login',
+    method: 'post',
+    fields: [
+        {
+            id: 'username',
+            labelContent: 'Username',
+            pattern: usernamePattern,
+            placeholder: 'Enter your username!',
+            type: 'text',
+            required: true,
+        },
+        {
+            id: 'password',
+            labelContent: 'Password',
+            pattern: passwordPattern,
+            placeholder: 'Enter your password!',
+            type: 'password',
+            required: false,
+        },
+    ],
+    button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+};
+
+
 export const search: FormDetails = {
-    action: '/search',
+    action: 'https://localhost:8443/api/users?name=',
     heading: '',
     ariaLabel: 'Search for a user',
     id: 'searchform',
@@ -92,7 +120,7 @@ export const search: FormDetails = {
 };
 
 export const localPong: FormDetails = {
-    action: '/gameManager',
+    action: 'https://localhost:8443/api/game/lobby/',
     heading: 'Local Pong',
     ariaLabel: 'Pong settings',
     id: 'local-pong-settings',
@@ -144,7 +172,7 @@ export const localPong: FormDetails = {
 };
 
 export const remotePong: FormDetails = {
-    action: '/gameManager',
+    action: 'https://localhost:8443/api/game/lobby/',
     heading: 'Remote Pong',
     ariaLabel: 'Remote Pong settings',
     id: 'remote-pong-settings',
@@ -188,11 +216,18 @@ export const remotePong: FormDetails = {
 };
 
 export const deleteAccount: FormDetails = {
-    action: '/account/delete',
+    action: 'https://localhost:8443/api/account/',
     heading: '',
     ariaLabel: 'Account deletion request',
     id: 'account-deletion-request',
-    method: 'post',
+    method: 'delete',
     fields: [],
-    button: { id: 'submit', type: 'submit', content: 'Delete account', img: null, ariaLabel: '', style: 'red' },
+    button: {
+        id: 'submit',
+        type: 'submit',
+        content: 'Delete account',
+        img: null,
+        ariaLabel: '',
+        style: 'red',
+    },
 };

@@ -1,9 +1,9 @@
 import { Game, HEIGHT, WIDTH } from "./classes/game.class.js";
 
 export function renderGame(game: Game) {
-	drawMiddleLine(game);
-	drawPaddle(game);
-	drawBall(game);
+    drawMiddleLine(game);
+    drawPaddle(game);
+    drawBall(game);
 }
 
 function drawPaddle(game: Game) {

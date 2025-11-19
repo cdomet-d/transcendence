@@ -23,28 +23,47 @@ const emptyForm: FormDetails = {
  */
 export class BaseForm extends HTMLFormElement {
     #formData: FormDetails;
-    #submitHandler: (ev: SubmitEvent) => void;
+    submitHandler: (ev: SubmitEvent) => void;
+    validationHandler: () => void;
 
-	// TODO: actually make it a map ?
-    /** A map-like object to store the individual elements of a form to allow repositionning and easy manipulation.
+    /** A map storing the individual elements of a form to allow easy manipulation.
      * It's basically a cache.
      */
-    #formContent: { [key: string]: HTMLElement };
+    #formContent: Map<string, HTMLElement>;
 
     constructor() {
         super();
         this.#formData = emptyForm;
-        this.#submitHandler = this.submitHandler.bind(this);
+        this.submitHandler = this.submitHandlerImplementation.bind(this);
+        this.validationHandler = this.#validate.bind(this);
+        this.#formContent = new Map<string, HTMLElement>();
         this.className =
-            'w-full h-full grid grid-auto-rows-auto gap-m place-items-center justify-center box-border pad-m';
-        this.#formContent = {};
+            'w-full h-full grid grid-auto-rows-auto form-gap place-items-center justify-center box-border pad-m';
     }
 
-	/**
-	 * Sets the details of the form - expects a {@link FormDetails} object.
-	 * Can also be `got`.
-	 */
-	set details(form: FormDetails) {
+    /** Called when the element is inserted into the DOM.
+     * Sets form attributes, attaches the submit event handler, and renders the form.
+     */
+    connectedCallback() {
+        this.action = this.#formData.action;
+        this.ariaLabel = this.#formData.ariaLabel;
+        this.id = this.#formData.id;
+        this.method = this.#formData.method;
+        this.addEventListener('submit', this.submitHandler);
+        this.addEventListener('input', this.validationHandler);
+        this.render();
+    }
+
+    disconnectedCallback() {
+        this.removeEventListener('submit', this.submitHandler);
+        this.removeEventListener('input', this.validationHandler);
+    }
+
+    /**
+     * Sets the details of the form - expects a {@link FormDetails} object.
+     * Can also be `got`.
+     */
+    set details(form: FormDetails) {
         this.#formData = form;
     }
 
@@ -58,15 +77,55 @@ export class BaseForm extends HTMLFormElement {
         return this.#formContent;
     }
 
+    async sendForm(url: string, req: RequestInit): Promise<Response> {
+        try {
+            const response = await fetch(url, req);
+            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+            console.log('Fetch successful', response);
+            return response;
+        } catch (error) {
+            console.error('Fetch failed', error);
+            throw error;
+        }
+    }
+
+    createReqBody(form: FormData): string {
+        const fObject = Object.fromEntries(form.entries());
+        const jsonBody = JSON.stringify(fObject);
+        console.log(jsonBody);
+        return jsonBody;
+    }
+
+    initReq(): RequestInit {
+        const req: RequestInit = {
+            method: this.#formData.method,
+            headers: { 'Content-Type': 'application/json' },
+        };
+        return req;
+    }
+
     /** Handles the default submit event for the form.
      * Prevents default submission and log form data.
      * Can be overridden in subclasses for custom behavior.
      * @param ev - The submit event.
      */
-    submitHandler(ev: SubmitEvent) {
+    async submitHandlerImplementation(ev: SubmitEvent) {
         ev.preventDefault();
-        const formResults = new FormData(this);
-        console.log(formResults);
+        const form = new FormData(this);
+        const req = this.initReq();
+        if (req.method === 'post') {
+            req.body = this.createReqBody(form);
+        }
+        console.log(this.#formData.action, req.method, req.body);
+        await this.sendForm(this.#formData.action, req);
+    }
+
+    #validate() {
+        if (!this.checkValidity()) {
+            this.#formContent.get('submit')?.setAttribute('disabled', '');
+        } else {
+            this.#formContent.get('submit')?.removeAttribute('disabled');
+        }
     }
 
     /** Renders the form title if a heading is provided in form details.
@@ -75,7 +134,7 @@ export class BaseForm extends HTMLFormElement {
     renderTitle() {
         if (this.#formData.heading) {
             const title = createHeading('1', this.#formData.heading);
-            this.#formContent['title'] = title;
+            this.#formContent.set('title', title);
             this.append(title);
         }
     }
@@ -88,14 +147,14 @@ export class BaseForm extends HTMLFormElement {
             let el: HTMLElement;
             if (field.type !== 'textarea') {
                 el = createInputGroup(field) as InputGroup;
-                this.#formContent[field.id] = el;
+                this.#formContent.set(field.id, el);
             } else {
                 el = createTextAreaGroup(field) as TextAreaGroup;
-                this.#formContent[field.id] = el;
+                this.#formContent.set(field.id, el);
             }
             this.append(el);
             el.classList.remove('w-full');
-            el.classList.add('w-5/6');
+            el.classList.add('w-5/6', 'z-2');
             if (field.type === 'textarea') el.classList.add('row-span-3', 'h-full');
         });
     }
@@ -105,28 +164,12 @@ export class BaseForm extends HTMLFormElement {
      */
     renderButtons() {
         const submit = createBtn(this.#formData.button);
-        this.#formContent['submit'] = submit;
+        this.#formContent.set('submit', submit);
         this.append(submit);
         if (!submit.classList.contains('bg-red')) {
             submit.classList.remove('w-full');
             submit.classList.add('w-5/6');
         }
-    }
-
-    /** Called when the element is inserted into the DOM.
-     * Sets form attributes, attaches the submit event handler, and renders the form.
-     */
-    connectedCallback() {
-        this.action = this.#formData.action;
-        this.ariaLabel = this.#formData.ariaLabel;
-        this.id = this.#formData.id;
-        this.method = this.#formData.method;
-        this.addEventListener('submit', (ev) => this.#submitHandler(ev));
-        this.render();
-    }
-
-    disconnectedCallback() {
-        this.removeEventListener('submit', (ev) => this.#submitHandler(ev));
     }
 
     /** Renders the form by calling the title, fields, and button renderers.
@@ -135,6 +178,7 @@ export class BaseForm extends HTMLFormElement {
         this.renderTitle();
         this.renderFields();
         this.renderButtons();
+        this.#validate();
     }
 }
 

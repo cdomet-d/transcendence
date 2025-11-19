@@ -1,4 +1,6 @@
-.docker-log/
+
+_logs/
+*.log
 .env
 .notes/
 .secrets/
@@ -12,3 +14,7 @@ jest.results.txt
 node_modules/
 notes
 package-lock.json
+*.db
+*.log*
+services/pong/app/dist/
+services/pong/app/static/style-dist.css

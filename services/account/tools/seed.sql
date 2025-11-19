@@ -1,4 +1,4 @@
-INSERT INTO account (hashedPassword, username, userRole, registerDate, defaultLang) VALUES ('passhash', 'user1', 1, '2025-09-04', 'English');
+INSERT INTO account (hashedPassword, username, userRole, registerDate, defaultLang) VALUES ('MDPmdp111!!!', 'user1', 1, '2025-09-04', 'English');
 INSERT INTO account (hashedPassword, username, userRole, registerDate, defaultLang) VALUES ('passhash', 'user2', 1, '2025-09-04', 'English');
 INSERT INTO account (hashedPassword, username, userRole, registerDate, defaultLang) VALUES ('passhash', 'user3', 1, '2025-09-04', 'English');
 INSERT INTO account (hashedPassword, username, userRole, registerDate, defaultLang) VALUES ('passhash', 'user4', 1, '2025-09-04', 'English');

@@ -3,6 +3,8 @@ import { BaseForm } from './baseform.js';
 import { RemotePongSettings, LocalPongSettings } from './pong-settings.js';
 import { Searchbar } from './search.js';
 import { UserSettingsForm } from './user-settings.js';
+import { RegistrationForm } from './registration-form.js';
+import { LoginForm } from './login-form.js';
 
 /**
  * Merges with the existing HTMLElementTag map.
@@ -12,10 +14,12 @@ import { UserSettingsForm } from './user-settings.js';
  */
 interface HTMLElementTagMap {
     'default-form': BaseForm;
-    'settings-form': UserSettingsForm;
-    'search-form': Searchbar;
-    'remote-pong-settings': RemotePongSettings;
     'local-pong-settings': LocalPongSettings;
+    'registration-form': RegistrationForm;
+    'login-form': LoginForm;
+    'remote-pong-settings': RemotePongSettings;
+    'search-form': Searchbar;
+    'settings-form': UserSettingsForm;
 }
 
 /**
@@ -33,10 +37,14 @@ export function createForm<K extends keyof HTMLElementTagMap>(
     form?: FormDetails,
     user?: UserData,
 ): HTMLElementTagMap[K] {
-    const el = document.createElement('form', { is: tag }) as HTMLElementTagMap[K];
-    if (form) el.details = form;
-    if (tag === 'settings-form') el.user = user;
-    return el;
+    if (tag === 'settings-form' && !user) {
+        throw new Error('Missing user for user setting form.');
+    } else {
+        const el = document.createElement('form', { is: tag }) as HTMLElementTagMap[K];
+        if (form) el.details = form;
+        if (tag === 'settings-form') el.user = user;
+        return el;
+    }
 }
 
 /**

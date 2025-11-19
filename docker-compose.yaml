@@ -55,6 +55,9 @@ services:
     restart: unless-stopped
     environment:
       - NGINXIP=nginx
+      - PORT=3939
+      - JWT_SECRET=${JWT_SECRET}
+      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
@@ -171,8 +174,6 @@ services:
       - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
     networks:
       - transcendence
-    ports:
-      - "4222:4222"
     restart: unless-stopped
   nginx:
     build:

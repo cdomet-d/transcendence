@@ -270,7 +270,7 @@ export async function fetchRelationship(log: any, userID: number, username: stri
 	if (targetUserID === userID)
 		return 'self';
 
-	const friendsUrl = `http://friends-service:1616/internal/relationship?userA=${userID}&userB=${targetUserID}`;
+	const friendsUrl = `https://friends-service:1616/internal/relationship?userA=${userID}&userB=${targetUserID}`;
 	let friendsResponse: Response;
 
 	try {

@@ -91,7 +91,7 @@ export async function updatePassword(log: any, userID: number, hashedPassword: s
 }
 
 export async function deleteAccount(log: any, userID: number): Promise<void> {
-	const url = `https://account:1414/internal/account`;
+	const url = `http://account:1414/internal/account`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -142,7 +142,7 @@ export async function deleteUser(log: any, userID: number): Promise<void> {
 }
 
 export async function updateDefaultLang(log: any, userID: number, defaultLang: string): Promise<void> {
-	const url = `https://users:2626/internal/account/${userID}`;
+	const url = `http://users:2626/internal/account/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
