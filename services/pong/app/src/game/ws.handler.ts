@@ -28,6 +28,7 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 			this.gameRegistry.deleteGame(game.gameID);
 			natsSubscription(this); //TODO: only for testing
 		}
+		//TODO: call fillGameInfo
 	});
 }
 
