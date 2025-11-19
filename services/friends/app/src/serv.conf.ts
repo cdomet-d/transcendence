@@ -1,8 +1,8 @@
 import dns from 'dns';
 import fs from 'fs';
 
-function getNginxIP(): string | null {
-  const ip: string | undefined = process.env.NGINXIP;
+function getBffIP(): string | null {
+  const ip: string | undefined = process.env.BFFIP;
   if (ip === undefined)
     throw new Error('NGINXIP is undefined');
   dns.lookup(ip, (err, address) => {
@@ -14,8 +14,8 @@ function getNginxIP(): string | null {
 }
 
 function checkProxy(address: string, hop: number): boolean {
-  const nginxIP = getNginxIP();
-  if (address === nginxIP && hop === 1)
+  const BFFIP = getBffIP();
+  if (address === BFFIP && hop === 1)
     return true;
   return false;
 }
