@@ -39,7 +39,7 @@ function upperAndBottomWallCollision(game: Game, nextY: number): number {
 }
 
 function sideWallCollision(game: Game, player1: Player, player2: Player, nextX: number): boolean {
-	if (nextX - game.ball.r >= WIDTH + 100 || nextX + game.ball.r <= -100) {
+	if (nextX - game.ball.r >= WIDTH + 50 || nextX + game.ball.r <= -50) {
 		updateScore(game, player1, player2, nextX)
 		game.ball.x = WIDTH / 2;
 		game.ball.y = HEIGHT / 2;
@@ -49,7 +49,7 @@ function sideWallCollision(game: Game, player1: Player, player2: Player, nextX: 
 			game.ball.dx = 0.3 * game.ballDir;
 			game.ball.dy = 0.03;
 			game.ballDir *= -1;
-		}, 1000));
+		}, 1500));
 		return true;
 	}
 	return false;

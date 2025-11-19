@@ -29,7 +29,7 @@ export function updateBallPos(game: Game, nextX: number, nextY: number) {
 }
 
 function sideWallCollision(game: Game, nextX: number): boolean {
-    if (nextX - game.ball.r >= WIDTH + 100 || nextX + game.ball.r <= -100) {
+    if (nextX - game.ball.r >= WIDTH + 50 || nextX + game.ball.r <= -50) {
         game.ball.x = WIDTH / 2;
         game.ball.y = HEIGHT / 2;
         game.ball.dx = 0;
