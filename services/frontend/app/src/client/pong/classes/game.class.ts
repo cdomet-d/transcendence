@@ -36,7 +36,7 @@ export class Game {
             dy: 0.03, //custom
             r: 13,
         };
-        this.#_paddleSpec = { speed: 0.4, w: 20, h: HEIGHT / 5, halfW: 20 / 2, halfH: HEIGHT / 10 }; //custom
+        this.#_paddleSpec = { speed: 0.45, w: 20, h: HEIGHT / 5, halfW: 20 / 2, halfH: HEIGHT / 10 }; //custom
         this.#_leftPaddle = { x: 25, y: HEIGHT / 2 - this.#_paddleSpec.halfH };
         this.#_rightPaddle = {
             x: WIDTH - (this.#_paddleSpec.w + 25),
