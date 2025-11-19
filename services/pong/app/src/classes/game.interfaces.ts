@@ -11,7 +11,8 @@ export interface gameInfo {
     users: [user, user],
     score: [number, number],
     winnerID: number,
-    loserID: number
+    loserID: number,
+    duration: number
 }
 
 /******************************** GAME OBJ ***********************************/

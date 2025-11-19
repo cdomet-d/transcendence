@@ -2,7 +2,7 @@ import type { Game } from '../classes/game.class.js';
 import type { Player } from '../classes/player.class.js';
 import { validRequest } from './mess.validation.js';
 import type { reqObj } from '../classes/game.interfaces.js';
-import { gameLoop } from './game.loop.js';
+import { endGame, gameLoop } from './game.loop.js';
  
 const START_DELAY = 500;
 const SERVER_TICK: number = 1000 / 50;
@@ -23,6 +23,8 @@ export async function setUpGame(game: Game) {
 
 	// start game
 	await new Promise(res => game.addTimoutID(setTimeout(res, START_DELAY)));
+	game.addTimoutID(setTimeout(endGame, 300000, player1, player2, game));
+	game.startTimestamp = performance.now();
 	game.addTimoutID(setTimeout(gameLoop, SERVER_TICK, game, player1, player2));
 }
 

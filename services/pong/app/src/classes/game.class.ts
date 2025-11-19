@@ -20,6 +20,7 @@ export class Game {
 	#_reqHistory: reqTab;
 	#_lastTick: number;
 	#_timeoutIDs: Array< NodeJS.Timeout >;
+	#_startTimestamp: number;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo, nc: NatsConnection) {
@@ -34,7 +35,7 @@ export class Game {
 			r: 15
 		};
 		this.#_paddleSpec = {
-			speed: 0.4,
+			speed: 0.45,
 			w: 20, 
 			h: HEIGHT / 5, 
 			halfW: 20 / 2, 
@@ -44,6 +45,7 @@ export class Game {
 		this.#_reqHistory = new Array();
 		this.#_lastTick = 0;
 		this.#_timeoutIDs = new Array();
+		this.#_startTimestamp = 0;
 	}
 
 	/*                              GETTERS                                  */
@@ -93,6 +95,10 @@ export class Game {
 		return this.#_ballDir;
 	}
 
+	get startTimestamp(): number {
+		return this.#_startTimestamp;
+	}
+
 	/*                              SETTERS                                  */
 	set reqHistory(reqTab: reqTab) {
 		this.#_reqHistory = reqTab;
@@ -104,6 +110,10 @@ export class Game {
 
 	set ballDir(direction: number) {
 		this.#_ballDir = direction;
+	}
+
+	set startTimestamp(timestamp: number) {
+		this.#_startTimestamp = timestamp;
 	}
 
 	/*                              METHODS                                  */
@@ -138,6 +148,7 @@ export class Game {
 	}
 
 	public fillGameInfos() {
+		this.#_gameInfo.duration = (performance.now() - this.#_startTimestamp) / 1000;
 		const user1: number = this.#_gameInfo.users[0].userID;
 		const user2: number = this.#_gameInfo.users[1].userID;
 		let score1: number = 0;

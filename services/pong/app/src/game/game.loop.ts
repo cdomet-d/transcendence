@@ -8,8 +8,8 @@ const SERVER_TICK: number = 1000 / 50;
 const TIME_STEP: number = 1000 / 60;
 
 export async function gameLoop(game: Game, player1: Player, player2: Player) {
-	const start = performance.now();
-	const tickStart = game.lastTick === 0 ? start : game.lastTick;
+	const startLoop: number = performance.now();
+	const tickStart = game.lastTick === 0 ? game.startTimestamp : game.lastTick;
 	const tickEnd = tickStart + SERVER_TICK;
 	game.lastTick = tickEnd;
 
@@ -36,7 +36,7 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 	game.reqHistory = futureReqs;
 
 	// new loop
-	const delay: number = SERVER_TICK - (performance.now() - start);
+	const delay: number = SERVER_TICK - (performance.now() - startLoop);
 	game.addTimoutID(setTimeout(gameLoop, Math.max(0, delay), game, player1, player2));
 }
 
@@ -51,7 +51,7 @@ function moveBall(game: Game, simulatedTime: number, end: number, i: number): nu
 	return simulatedTime;
 }
 
-function endGame(player1: Player, player2: Player, game: Game) {
+export function endGame(player1: Player, player2: Player, game: Game) {
 	sendToPlayers(game, player1, player2);
 	game.fillGameInfos();
 	const sc = StringCodec();

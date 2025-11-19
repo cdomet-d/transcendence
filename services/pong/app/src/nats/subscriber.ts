@@ -59,4 +59,5 @@ const gameobj: gameInfo = {
 	score: [0, 0],
 	winnerID: 0,
 	loserID: 0,
+	duration: 0
 }
