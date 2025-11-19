@@ -1,7 +1,7 @@
 import { createHeading, createNoResult } from '../web-elements/typography/helpers.js';
 import { createLeaderboard } from '../web-elements/matches/leaderboard.js';
 import { createMenu } from '../web-elements/navigation/menu-helpers.js';
-import { main } from '../web-elements/navigation/default-menus.js';
+import { main, lobbyMenu } from '../web-elements/navigation/default-menus.js';
 import { Layout } from '../web-elements/layouts/layout.js';
 import { ProfileWithTabs } from '../web-elements/users/user-profile-containers.js';
 import { type Match } from 'path-to-regexp';
@@ -25,8 +25,9 @@ const layoutPerPage: { [key: string]: string } = {
     home: 'full-screen',
     leaderboard: 'page-w-header',
     lobby: 'page-w-header',
+    lobbyMenu: 'page-w-header',
     profile: 'page-w-header',
-    regitration: 'full-screen',
+    registration: 'full-screen',
     userSettings: 'page-w-header',
 };
 
@@ -74,7 +75,7 @@ export function renderHome() {
 }
 
 export function renderAuth() {
-    prepareLayout(document.body.layoutInstance, 'home');
+    prepareLayout(document.body.layoutInstance, 'registration');
     const authOptions: TabData[] = [
         {
             id: 'login-tab',
@@ -134,6 +135,16 @@ export function renderSettings() {
         createForm('settings-form', userSettingsForm, user),
     );
     updatePageTitle('Settings');
+}
+
+export function renderPreLobby() {
+    console.log('renderPreLobby');
+    prepareLayout(document.body.layoutInstance, 'lobbyMenu');
+    document.body.layoutInstance!.appendAndCache(
+        createHeading('0', 'Choose Lobby'),
+        createMenu(lobbyMenu, 'vertical', true),
+    );
+    updatePageTitle('Choose Lobby');
 }
 
 export function renderLobby() {

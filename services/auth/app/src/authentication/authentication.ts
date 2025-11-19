@@ -1,44 +1,51 @@
 import type { FastifyInstance } from 'fastify';
-
 import * as bcrypt from 'bcrypt';
-
 import { createAccount, deleteAccount, createUserProfile, validateCredentials } from './auth.service.js';
 
-export async function authenticationRoutes(serv: FastifyInstance) {
+const authSchema = {
+	body: {
+		type: 'object',
+		required: ['username', 'password'],
+		properties: {
+			username: { type: 'string' },
+			password: { type: 'string' }
+		}
+	}
+};
 
-	serv.post('/login/', async (request, reply) => {
+export async function authenticationRoutes(serv: FastifyInstance) {
+	serv.post('/login/', { schema: authSchema }, async (request, reply) => {
 		try {
-			const { username, password } = request.body as { username: string, password: string };
+			const { username, password } = request.body as { username: string; password: string };
 
 			const validationResponse = await validateCredentials(serv.log, username, password);
 
-			if (!validationResponse)
+			if (!validationResponse) {
 				return reply.code(401).send({ message: 'Invalid credentials.' });
+			}
 
 			const tokenPayload = { userID: validationResponse.userID, username: username };
 			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
-            reply.setCookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', path: '/' });
+			reply.setCookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', path: '/' });
 
 			return reply.code(200).send({ token: token });
 		} catch (error) {
 			serv.log.error(`[BFF] An unexpected error occurred while login: ${error}`);
-			throw (error);
+			throw error;
 		}
 	});
 
-	serv.post('/register/', async (request, reply) => {
+	serv.post('/register/', { schema: authSchema }, async (request, reply) => {
 		let newAccountId: number | null = null;
 		try {
-			const { username, password } = request.body as { username: string, password: string };
+			const { username, password } = request.body as { username: string; password: string };
 
-			if (!username || !password)
-				return (reply.code(400).send({ message: '[BFF] Missing username or password.' }));
-
-			const hashedPassword = await bcrypt.hash(password, 10);
+			const hashedPassword = await bcrypt.hash(password, 12);
 
 			const accountResponse = createAccount(serv.log, username, hashedPassword);
-			if (!accountResponse)
-				return (reply.code(409).send({ message: '[BFF] Username taken' }));
+			if (!accountResponse) {
+				return reply.code(409).send({ message: '[BFF] Username taken' });
+			}
 
 			const newAccount = await accountResponse as { userID: number };
 			newAccountId = newAccount.userID;
@@ -47,7 +54,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 
 			const tokenPayload = { userID: newAccountId, username: username };
 			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
-            reply.setCookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', path: '/' });
+			reply.setCookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', path: '/' });
 
 			switch ((await profileResponse).errorCode) {
 				case 'success':
@@ -57,16 +64,16 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 				case 'user_not_found':
 					throw new Error(`[BFF] User service could not find newly created userID: ${newAccountId}`);
 			}
-
 		} catch (error) {
 			serv.log.error(`[BFF] Error during registration: ${error}`);
 			if (newAccountId) {
 				serv.log.warn(`[BFF] Rolling back account creation for userID: ${newAccountId}`);
 				const response = deleteAccount(serv.log, newAccountId);
-				if (!response)
-					return (reply.code(404).send({ message: '[BFF] User not created and matching account not deleted' }));
+				if (!response) {
+					return reply.code(404).send({ message: '[BFF] User not created and matching account not deleted' });
+				}
 			}
-			throw (error);
+			throw error;
 		}
 	});
 }
