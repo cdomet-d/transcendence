@@ -10,9 +10,11 @@ import { deleteFriendship } from './bffFriends.service.js'
 export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	//get's profile + stats + game + friendslist
-	serv.get('/profile', async (request, reply) => {
+	// userID -> userID of requested profile
+	serv.get('/profile/:userID', async (request, reply) => {
 		try {
 
+			//TODO: userB ID is in the cookies so setup fastify JWT plugin and get userID this way
 			const query = request.query as {
 				userA?: number,
 				userB?: number,
@@ -56,6 +58,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	serv.patch('/settings', async (request, reply) => {
 		try {
+
+			//TODO: userID is in the cookies so setup fastify JWT plugin and get userID this way
 			const { userID } = request.user;
 			const body = request.body as any;
 
@@ -98,20 +102,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/friendslist', async (request, reply) => {
-		try {
-			const friendsList = await fetchFriendList(serv.log, request.user.userID);
-
-			serv.log.error(`zebi`);
-			return (reply.code(200).send(friendsList));
-
-		} catch (error) {
-			serv.log.error(`[BFF] Error fetching friends list: ${error}`);
-			throw (error);
-		}
-	});
-
-	serv.get('/users/card/:username', async (request, reply) => {
+	serv.get('/tiny-profile/:username', async (request, reply) => {
 		try {
 			const { username: targetUsername } = request.params as { username: string };
 			const { userID: viewerUserID } = request.user as { userID: number };
@@ -137,7 +128,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				avatar: ProfileData.avatar,
 				biography: ProfileData.biography,
 				profileColor: ProfileData.profileColor,
-				language: AccountData.defaultLang,
 				since: AccountData.registerDate,
 				status: ProfileData.userStatus,
 				winstreak: ProfileData.winstreak,

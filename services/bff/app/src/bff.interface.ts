@@ -10,7 +10,6 @@ export interface userData {
 	avatar: string,
 	biography: string,
 	userID: string,
-	language: string,
 	profileColor: string,
 	relation: ProfileView,
 	status: boolean,

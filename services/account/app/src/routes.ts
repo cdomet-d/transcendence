@@ -10,7 +10,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 
 	//usersStatus is always a hardcoded 1 for now, not even sure to keep it honestly
 	//TESTED
-	serv.post('/api/account/register', async (request, reply) => {
+	serv.post('/register', async (request, reply) => {
 		try {
 			const { username } = request.body as { username: string };
 			const { hashedPassword } = request.body as { hashedPassword: string };
@@ -19,7 +19,6 @@ export async function accountRoutes(serv: FastifyInstance) {
 			//if (usernameTaken)
 			//	return (reply.code(409).send({ message: 'Username taken' }));
 
-			serv.log.error(`TAGRANDMERE ${hashedPassword}`);
 			const query = `
 				INSERT INTO account (hashedPassword, username, userRole, registerDate, defaultLang)
 				VALUES (?, ?, 1, ?, ?)
@@ -42,7 +41,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 	});
 
 	//TESTED
-	serv.post('/api/account/login', async (request, reply) => {
+	serv.post('/login', async (request, reply) => {
 		try {
 			const { username } = request.body as { username: string };
 			const { password } = request.body as { password: string };
@@ -71,7 +70,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 	});
 
 	//TESTED
-	serv.patch('/internal/account/:userID', async (request, reply) => {
+	serv.patch('/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 			const body = request.body as { [key: string]: any };
@@ -122,9 +121,9 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.delete('/api/account', async (request, reply) => {
+	serv.delete('/:userID', async (request, reply) => {
 		try {
-			const { userID } = request.body as { userID: string };
+			const { userID } = request.params as { userID: string };
 
 			const query = `DELETE FROM account WHERE userID = ?`;
 
@@ -138,77 +137,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/api/account/:userID', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: string };
-
-			const query = `
-				SELECT
-					username,
-					userRole,
-					registerDate,
-					defaultLang
-				FROM
-					account
-				WHERE
-					userID = ?
-			`;
-
-			const userData = await serv.dbAccount.get(query, [userID]);
-			if (!userData) {
-				return (reply.code(404).send({
-					success: false,
-					message: '[ACCOUNT] Account data not found.'
-				}));
-			}
-
-			return (reply.code(200).send({ success: true, userData }));
-		} catch (error) {
-			serv.log.error(`[ACCOUNT] Error fetching account settings: ${error}`);
-			throw (error);
-		}
-	});
-
-	serv.post('/internal/account/accountBatch', async (request, reply) => {
-		try {
-			const { userIDs } = request.body as { userIDs: number[] };
-
-			if (!userIDs || userIDs.length === 0)
-				return (reply.code(200).send({ success: true, accountsData: [], failedIDs: [] }));
-
-			const placeholders = userIDs.map(() => '?').join(',');
-
-			const query = `
-				SELECT
-					p.userID, 
-					p.username,
-					p.userRole,
-					p.registerDate,
-					p.defaultLang,
-					p.registerDate
-				FROM
-					account p
-				WHERE
-					p.userID IN (${placeholders})
-			`;
-			const accountsData = await serv.dbAccount.all(query, userIDs);
-
-			const foundIDs = new Set(accountsData.map(user => user.userID));
-			const failedIDs = userIDs.filter(id => !foundIDs.has(id));
-
-			return (reply.code(200).send({
-				success: true,
-				accountsData: accountsData,
-				failedIDs: failedIDs
-			}));
-
-		} catch (error) {
-			serv.log.error(`[ACCOUNT] Error fetching account data batch: ${error} `);
-			throw (error);
-		}
-	});
-
-	serv.get('/internal/account/:userID/accountData', async (request, reply) => {
+	serv.get('/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 

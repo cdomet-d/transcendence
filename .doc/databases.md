@@ -740,3 +740,14 @@ WHERE userID = 101;
 * accepter demande d'ami ✅
 * supprimer ami          ✅
 * servir traduction      ✅
+
+
+TODO : is username needed in users service
+
+TODO: register and login straight to account
+The account service is going away, we create a db in auth instead with a username/password/userID
+Everything else is going to user.
+Auth takes to bff 
+Update bff accordingly
+
+front -> nginx -> auth -> bff -> users -> bff -> auth -> nginx -> front
