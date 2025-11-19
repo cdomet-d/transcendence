@@ -19,12 +19,12 @@ INSERT INTO translations (word, language_code, translation) VALUES
   ('Account Settings', ' Spanish', 'Configuraciones de la cuenta'),
   ('Edit Profile', ' Spanish', 'Editar perfil'),
   
-  ('Play', 'Francais', 'Jouer'),
-  ('Central', 'Francais', 'central'),
-  ('Tournament', 'Francais', 'Tournoi'),
-  ('Profile', 'Francais', 'Profil'),
-  ('Quick Match', 'Francais', 'Partie Rapide'),
-  ('Game', 'Francais', 'Jeu'),
-  ('Leaderboard', 'Francais', 'Board des leaders'),
-  ('Account Settings', 'Francais', 'Parametres du compte'),
-  ('Edit Profile', 'Francais', 'Modifier le profil');
+  ('Play', 'French', 'Jouer'),
+  ('Central', 'French', 'central'),
+  ('Tournament', 'French', 'Tournoi'),
+  ('Profile', 'French', 'Profil'),
+  ('Quick Match', 'French', 'Partie Rapide'),
+  ('Game', 'French', 'Jeu'),
+  ('Leaderboard', 'French', 'Board des leaders'),
+  ('Account Settings', 'French', 'Parametres du compte'),
+  ('Edit Profile', 'French', 'Modifier le profil');
