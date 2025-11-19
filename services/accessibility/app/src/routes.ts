@@ -1,9 +1,10 @@
 import type { FastifyInstance } from 'fastify';
 
 export async function languageRoutes(serv: FastifyInstance) {
-    //get a translation from the word you want to translation + the targeted language
-    serv.get('/api/accessibility/translation', async (request, reply) => {
-        const { word, langCode } = request.query as { word: string; langCode: string };
+
+	//get a translation from the word you want to translation + the targeted language
+	serv.get('/translation', async (request, reply) => {
+		const { word, langCode } = request.query as { word: string, langCode: string };
 
         if (!word || !langCode)
             return reply

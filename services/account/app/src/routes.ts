@@ -12,11 +12,14 @@ export async function accountRoutes(serv: FastifyInstance) {
 	//TESTED
 	serv.post('/api/account/register', async (request, reply) => {
 		try {
-			const { username, hashedPassword } = request.body as { username: string, hashedPassword: string };
-			const usernameTaken = await checkUsernameUnique(serv.dbAccount, username);
-			if (usernameTaken)
-				return (reply.code(409).send({ message: 'Username taken' }));
+			const { username } = request.body as { username: string };
+			const { hashedPassword } = request.body as { hashedPassword: string };
 
+			//const usernameTaken = await checkUsernameUnique(serv.dbAccount, username);
+			//if (usernameTaken)
+			//	return (reply.code(409).send({ message: 'Username taken' }));
+
+			serv.log.error(`TAGRANDMERE ${hashedPassword}`);
 			const query = `
 				INSERT INTO account (hashedPassword, username, userRole, registerDate, defaultLang)
 				VALUES (?, ?, 1, ?, ?)
@@ -50,14 +53,15 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const user = await serv.dbAccount.get(query, [username]);
 			if (!user)
 				return (reply.code(404).send({ message: '[ACCOUNT] Account not found.' }));
-			const passwordMatches = await bcrypt.compare(password, user.hashedPassword);
+			//const passwordMatches = await bcrypt.compare(password, user.hashedPassword);
 
-			if (!passwordMatches)
+			if (user.hashedPassword !== password)
 				return (reply.code(401).send({ message: '[ACCOUNT] Invalid credentials.' }));
 
 			return (reply.code(200).send({
 				success: true,
 				message: '[ACCOUNT] Login successful!',
+				userID: user.userID
 			}));
 
 		} catch (error) {
@@ -66,8 +70,8 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TESTED but 
-	serv.patch('/api/account/:userID', async (request, reply) => {
+	//TESTED
+	serv.patch('/internal/account/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 			const body = request.body as { [key: string]: any };
@@ -154,23 +158,23 @@ export async function accountRoutes(serv: FastifyInstance) {
 			if (!userData) {
 				return (reply.code(404).send({
 					success: false,
-					message: 'User data not found.'
+					message: '[ACCOUNT] Account data not found.'
 				}));
 			}
 
 			return (reply.code(200).send({ success: true, userData }));
 		} catch (error) {
-			serv.log.error(`[ACCOUNT] Error fetching account data: ${error}`);
+			serv.log.error(`[ACCOUNT] Error fetching account settings: ${error}`);
 			throw (error);
 		}
 	});
 
-	serv.post('/api/account/userDataBatch', async (request, reply) => {
+	serv.post('/internal/account/accountBatch', async (request, reply) => {
 		try {
 			const { userIDs } = request.body as { userIDs: number[] };
 
 			if (!userIDs || userIDs.length === 0)
-				return (reply.code(200).send({ success: true, usersData: [], failedIDs: [] }));
+				return (reply.code(200).send({ success: true, accountsData: [], failedIDs: [] }));
 
 			const placeholders = userIDs.map(() => '?').join(',');
 
@@ -187,14 +191,14 @@ export async function accountRoutes(serv: FastifyInstance) {
 				WHERE
 					p.userID IN (${placeholders})
 			`;
-			const usersData = await serv.dbAccount.all(query, userIDs);
+			const accountsData = await serv.dbAccount.all(query, userIDs);
 
-			const foundIDs = new Set(usersData.map(user => user.userID));
+			const foundIDs = new Set(accountsData.map(user => user.userID));
 			const failedIDs = userIDs.filter(id => !foundIDs.has(id));
 
 			return (reply.code(200).send({
 				success: true,
-				usersData: usersData,
+				accountsData: accountsData,
 				failedIDs: failedIDs
 			}));
 
@@ -204,7 +208,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/api/account/:userID/userDataBatch', async (request, reply) => {
+	serv.get('/internal/account/:userID/accountData', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 
@@ -233,7 +237,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 			}));
 
 		} catch (error) {
-			serv.log.error(`[ACCOUNT] Error fetching account data batch: ${error} `);
+			serv.log.error(`[ACCOUNT] Error fetching account data : ${error} `);
 			throw (error);
 		}
 	});

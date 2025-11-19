@@ -24,7 +24,7 @@ export async function findUserByUsername(log: any, username: string): Promise<Us
 }
 
 export async function createFriendRequest(log: any, senderID: number, friendID: number): Promise<void> {
-	const url = 'http://friends:1616/internal/friends/sendrequest';
+	const url = 'http://friends:1616/internal/friends/friendship';
 	let response: Response;
 
 	try {
@@ -123,4 +123,21 @@ export async function deleteFriendRequest(log: any, removerID: number, friendID:
 	}
 
 	return;
+}
+
+export async function deleteFriendship(log: any, userID: number): Promise<Response | null> {
+	const url = `http://friends:1616/internal/friends/${userID}/friendships`;
+	let response: Response;
+	try {
+		response = await fetch(url, { method: 'DELETE' });
+	} catch (error) {
+		log.error(`[BFF] Friends service is unreachable: ${error}`);
+		throw new Error('Friends service is unreachable.');
+	}
+
+	if (!response.ok) {
+		log.warn(`[BFF] Internal server error`);
+		throw new Error(`Friebnds service failed with status ${response.status}`);
+	}
+	return (response.json() as Promise<Response>);
 }

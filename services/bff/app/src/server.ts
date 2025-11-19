@@ -1,6 +1,4 @@
 import { bffAccessibilityRoutes } from './routeAccessibility.js';
-import { bffAccountRoutes } from './routeAccount.js';
-import { bffFriendRoutes } from './routeFriends.js';
 import { bffUsersRoutes } from './routeUserProfile.js';
 import { options } from './serv.conf.js';
 import cors from '@fastify/cors';
@@ -16,7 +14,6 @@ serv.register(cors, {
 
 serv.register(bffFriendRoutes);
 serv.register(bffAccessibilityRoutes);
-serv.register(bffAccountRoutes);
 serv.register(bffUsersRoutes);
 
 const start = async () => {

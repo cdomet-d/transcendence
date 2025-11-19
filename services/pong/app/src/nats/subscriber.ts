@@ -1,7 +1,8 @@
 import { connect, StringCodec, type NatsConnection } from 'nats';
 import { natsPublish } from './publisher.js'
-import { Game, type gameInfo } from '../classes/game.class.js';
+import { Game } from '../classes/game.class.js';
 import type { FastifyInstance } from 'fastify';
+import type { gameInfo } from '../classes/game.interfaces.js';
 
 export async function initNatsConnection(): Promise<NatsConnection> {
 	let token: string | undefined = process.env.NATS_SERVER_TOKEN;
@@ -14,55 +15,48 @@ export async function initNatsConnection(): Promise<NatsConnection> {
 export async function natsSubscription(serv: FastifyInstance) {
 	const sc = StringCodec();
 
-	const nc = serv.nc;
-	const sub = nc.subscribe('game.request');
+	const sub = serv.nc.subscribe('game.request');
 	// console.log(`Listening for messages on "game.request"...`);
 
 	(async () => {
 		for await (const msg of sub) {
 
 			const _gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
-			serv.gameRegistry.addGame(new Game(_gameInfo));
-			// console.log(`Received message: ${JSON.stringify(_gameInfo)}`);
+			// serv.log.info(`Received message: ${JSON.stringify(_gameInfo)}`);
+			serv.gameRegistry.addGame(new Game(_gameInfo, serv.nc));
 
 			// Approval given HERE from PONG if game is ok to start
 			if (msg.reply) {
-				const gameReply = {
-					event: "approved",
-					game: _gameInfo
+				const game = {
+					gameID: _gameInfo.gameID,
+					users: _gameInfo.users,
+					remote: _gameInfo.remote
 				}
-				natsPublish(msg.reply, JSON.stringify(gameReply));
-			} else { // Real question is: What could go wrong? Honestly? I'd like to know, I'm being serious
-				// const gameReply = {
-				// 	event: "declined",
-				// 	game: _gameInfo
-				// }
-				// natsPublish("game.reply", JSON.stringify(gameReply));
-				console.log(`Error: No reply subject provided in "game.request"`);
-				return;
+				natsPublish(msg.reply, JSON.stringify(game));
 			}
 		}
 	})();
 
-	// serv.gameRegistry.addGame(new Game(gameobj)); //TODO: for testing
+	// serv.gameRegistry.addGame(new Game(gameobj, serv.nc)); //TODO: for testing
 };
 
-import type { user } from '../classes/game.class.js';
+import type { user } from '../classes/game.interfaces.js';
 const player1: user = {
-	_username: "cha",
-	_userID: 1
+	userID: 1,
+	username: "cha",
 }
 
 const player2: user = {
-	_username: "sweet",
-	_userID: 2
+	userID: 2,
+	username: "sweet",
 }
 
 const gameobj: gameInfo = {
-	_gameID: 1,
-	_score: [],
-	_local: true,
-	_users: [player1, player2],
-	_winner: "",
-	_loser: ""
+	gameID: 1,
+	tournamentID: 99,
+	remote: false,
+	users: [player1, player2],
+	score: [0, 0],
+	winnerID: 0,
+	loserID: 0,
 }

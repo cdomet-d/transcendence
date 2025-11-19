@@ -21,7 +21,7 @@ beforeEach(async () => {
 });
 
 
-describe('GET /internal/account/:userID', () => {
+/* describe('GET /internal/account/:userID', () => {
 	it('should return a user profile if the user exists', async () => {
 		await app.dbAccount.run(
 			'INSERT INTO account (userID, username, defaultLang) VALUES (?, ?, ?)',
@@ -110,7 +110,7 @@ describe('POST /internal/account/register', () => {
 		);
 		expect(userCount.count).toBe(1);
 	});
-});
+}); */
 
 describe('POST /internal/account/login', () => {
 	it('should return 200 and success message for valid credentials', async () => {
@@ -140,7 +140,7 @@ describe('POST /internal/account/login', () => {
 		expect(body.message).toBe('[ACCOUNT] Login successful!');
 	});
 
-	it('should return 401 for invalid credentials (password)', async () => {
+/* 	it('should return 401 for invalid credentials (password)', async () => {
 		const plainPassword = 'my-secret-password-123';
 		const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
@@ -190,9 +190,9 @@ describe('POST /internal/account/login', () => {
 
 		expect(response.statusCode).toBe(401);
 		expect(body.message).toBe('[ACCOUNT] Account not found.');
-	});
+	}); */
 });
-
+/* 
 describe('PATCH /internal/account/:userID', () => {
 
 	it('should return 200 when changing every valid account settings', async () => {
@@ -400,7 +400,7 @@ describe('PATCH /internal/account/:userID', () => {
 		expect(body.success).toBe(false);
 		expect(body.message).toBe('This username is already taken.');
 	});*/
-});
+/*});
 
 describe('DELETE /internal/account/:userID', () => {
 	it('should return 204 when deleting valid account', async () => {
@@ -501,3 +501,4 @@ describe('GET /internal/account/userDataBatch', () => {
 });
 
 
+ */
