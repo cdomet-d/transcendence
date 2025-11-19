@@ -19,7 +19,7 @@ serv.register(bffUsersRoutes);
 const start = async () => {
     try {
         await serv.listen({ port: 1818, host: '0.0.0.0' });
-        serv.log.info(serv.printRoutes());
+         ;
     } catch (err) {
         serv.log.error(err);
         process.exit(1);

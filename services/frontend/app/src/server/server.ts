@@ -20,7 +20,7 @@ try {
     await addPlugins(serv);
     await serv.ready();
     await serv.listen({ port: 1212, host: '0.0.0.0' });
-    serv.log.info(serv.printRoutes());
+     ;
 } catch (err) {
     serv.log.error(err);
     process.exit(1);

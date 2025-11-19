@@ -7,7 +7,7 @@ const start = async () => {
     try {
         serv = await buildServer();
         await serv.listen({ port: 1616, host: '0.0.0.0' });
-        serv.log.info(serv.printRoutes());
+         ;
     } catch (err) {
         if (serv) {
             serv.log.error(err, 'Server failed to start');
