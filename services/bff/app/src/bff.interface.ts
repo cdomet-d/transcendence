@@ -6,7 +6,7 @@ export interface userData {
 	userID: string,
 	lang: string,
 	profileColor: string,
-	relation: ProfileView,
+	//relation: ProfileView,
 	status: boolean,
 	username: string,
 	winstreak: string, 

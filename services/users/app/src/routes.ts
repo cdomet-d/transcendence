@@ -2,14 +2,14 @@ import type { FastifyInstance } from 'fastify';
 import { request } from 'http';
 
 interface UserProfile {
-	userID: number;
-	username: string;
 	avatar: string;
 	biography: string;
-	profileColor: string;
-	winstreak: number;
+	userID: number;
 	lang: string;
+	profileColor: string;
+	username: string;
 	status: boolean;
+	winstreak: number;
 	since: string;
 }
 
@@ -81,6 +81,38 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profiles by IDs: ${error}`);
+			throw (error);
+		}
+	});
+
+	//GET ?username=<username>
+	serv.get('/userID/:username', async (request, reply) => {
+		try {
+			const query = request.params as { username: string };
+
+			if (query.username) {
+				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
+				const user = await serv.dbUsers.get(sql, [query.username]);
+
+				if (!user) {
+					return (reply.code(404).send({
+						success: false,
+						message: 'User not found'
+					}));
+				}
+				return (reply.code(200).send({
+					success: true,
+					message: "user found!",
+					user
+				}));
+			}
+
+			return (reply.code(400).send({
+				success: false,
+				message: 'A query parameter (e.g., ?username=...) is required.'
+			}));
+		} catch (error) {
+			serv.log.error(`Error fetching user profile: ${error}`);
 			throw (error);
 		}
 	});
@@ -359,37 +391,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	// ROUTE NOT USED BUT KEEPING JUST IN CASE MIGHT BE DELETED LATER
 	/*
 
-	//GET ?username=<username>
-	serv.get('/userID/:username', async (request, reply) => {
-		try {
-			const query = request.query as { username?: string };
 
-			if (query.username) {
-				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
-				const user = await serv.dbUsers.get<UserRow>(sql, [query.username]);
-
-				if (!user) {
-					return (reply.code(404).send({
-						success: false,
-						message: 'User not found'
-					}));
-				}
-				return (reply.code(200).send({
-					success: true,
-					message: "user found!",
-					user
-				}));
-			}
-
-			return (reply.code(400).send({
-				success: false,
-				message: 'A query parameter (e.g., ?username=...) is required.'
-			}));
-		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
-			throw (error);
-		}
-	});
 
 	//get username by userID
 	serv.get('/:userID/username', async (request, reply) => {
