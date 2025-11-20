@@ -42,7 +42,7 @@ export async function createUserProfile(log: any, userID: number, username: stri
 
 	const data = await response.json();
 	return { errorCode: 'success', data: data };
-} 
+}
 
 export async function checkUsernameUnique(db: Database, username: string): Promise<boolean> {
 	try {
@@ -54,37 +54,22 @@ export async function checkUsernameUnique(db: Database, username: string): Promi
 		//true == username taken, false == username available
 		return (response.length > 0);
 	} catch (error) {
-		console.log(4);
-
 		console.log(`[AUTH] Error fetching username availability for  ${username}: `, error)
 		throw (error);
 	}
 };
 
-export async function deleteAccount(log: any, userID: number): Promise<void> {
-	const url = `http://account:1414/internal/account`;
-	let response: Response;
+export async function deleteAccount(db: Database, log: any, userID: number): Promise<boolean> {
+
 	try {
-		response = await fetch(url, {
-			method: 'DELETE',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ userID: userID })
-		});
+		const query = `DELETE FROM account WHERE userID = ?`;
+
+		const result = await db.run(query, [userID]);
+		if (!result.changes)
+			return (false)
+		return (true);
 	} catch (error) {
-		log.error(`[AUTH] Account service is unreachable: ${error}`);
-		throw new Error('Account service is unreachable.');
+		log.error(`[AUTH] Error deleting account: ${error}`);
+		return (false);
 	}
-
-	if (response.status === 404) {
-		log.warn(`[AUTH] Account not found account deletion: ${userID}`);
-		const errorBody = await response.json() as { message: string };
-		throw { code: 404, message: errorBody.message || 'Account not found.' };
-	}
-
-	if (!response.ok) {
-		log.error(`[AUTH] Account service failed with status ${response.status}`);
-		throw new Error('Account service failed.');
-	}
-
-	return;
-}
+};

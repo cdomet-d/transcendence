@@ -91,7 +91,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			serv.log.error(`[AUTH] Error during registration: ${error}`);
 			if (newAccountId) {
 				serv.log.warn(`[AUTH] Rolling back account creation for userID: ${newAccountId}`);
-				const response = deleteAccount(serv.log, newAccountId);
+				const response = deleteAccount(serv.dbAuth, serv.log, newAccountId);
 				if (!response)
 					return (reply.code(404).send({ message: '[AUTH] User not created and matching account not deleted' }));
 			}
