@@ -197,7 +197,7 @@ This table has the following column :
 * totalWins &rarr; integer
 * winStreak &rarr; integer
 * averageMatchDuration &rarr; integer
-* highestScore &rarr; integer
+* longuestPass &rarr; integer
 
 We don't have totalLosses because it can easily be computed by totalMatch and totalWin so we remove so useless SQL queries by not storing totalLosses.
 
@@ -312,6 +312,76 @@ averageMatchDuration will be in seconds.
     |   404    | profile not found |
     |   204    | profile deleted  |
 
+### Usage and associated functions
+
+* userStats
+    * ~~get user stats by userID~~
+        
+        ```curl http://localhost:2626/users/userStats/<userID>```
+    * ~~update all game stats~~
+    * ~~update longest match~~
+    * ~~update shorest match~~
+    * ~~update total match~~
+    * ~~update total wins~~
+    * ~~update win streak~~ 
+    * ~~update average match duration~~
+    * ~~update highest score~~
+
+* userProfile
+    * ~~get activity status by userID~~
+        
+        ``` curl http://localhost:2626/users/activity/<userID> ```
+    * ~~get profile info (username. avatar, biography, profile color, lastConnexion) by userID~~
+        
+        ``` curl http://localhost:2626/internal/users/profile/<userID> ```
+    * ~~get lastConnexion by userID~~
+        
+        ```curl http://localhost:2626/users/lastConnection/<userID> ```
+    * ~~update avatar~~
+            
+            curl -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"newAvatar": "<new avatar>"}' \
+            http://localhost:2626/users/updateAvatar/<userID>
+    * updata biography
+        
+        ```
+        curl -X POST \
+        -H "Content-Type: application/json" \
+        -d '{"newbiography": "<biography>>"}' \
+        http://localhost:2626/users/updatebiography/<userID>
+    * update profileColor
+
+        ```
+        curl -X POST \  -H "Content-Type: application/json" \
+        -d '{"newProfileC": "<new color>"}' \    
+        http://localhost:2626/users/updateProfileColor/<userID> 
+    * update activity status
+
+        ```
+        //newStatus must be a number, between quotes works too :
+        curl -X POST \
+        -H "Content-Type: application/json" \
+        -d '{"newStatus": "<newStatus>"}' \
+        http://localhost:2626/users/updateActivityStatus/<userID>
+        
+        curl -X POST \
+        -H "Content-Type: application/json" \
+        -d '{"newStatus": <newStatus>}' \  
+        http://localhost:2626/users/updateActivityStatus/<userID>
+    * update lastConnexion
+        
+        ```
+        curl -X POST \  -H "Content-Type: application/json" \
+        -d '{"newConnection": "<DATETIME format YYYY-MM-DD HH:MM:SS>"}' \
+        http://localhost:2626/users/updateLastConnection/<userID>
+    * update username
+        
+        ```
+        curl -X POST \  -H "Content-Type: application/json" \
+        -d '{"newUsername": "<username>"}' \
+        http://localhost:2626/users/updateUsername/<userID>
+
 ## Account
 
 ### General overview
@@ -369,7 +439,7 @@ The userRole column stored the role of the user (admin, user). I don't know yet 
     |   401    | password or username invalid |
     |   200    | logged in  |
 
-* POST fetch multiple accounts : `/internal/account/accountDataBatch`
+* POST fetch multiple accounts : `/internal/account/accountBatch`
 
     userIDs sent as `request.body` (as a json ? TODO check)
 
@@ -646,3 +716,28 @@ WHERE userID = 101;
 ```
 
 [WIP] DOC NOT UP TO DATE YET (nginx conf not done yet)
+
+
+
+
+* servir le profile 
+* servir la leaderboard
+* servir les users pour search bar
+* envoyer les settings
+* servir userCard
+* supprimer le compte    ✅
+* envouyer demande d'ami ✅
+* accepter demande d'ami ✅
+* supprimer ami          ✅
+* servir traduction      ✅
+
+
+TODO : is username needed in users service
+
+TODO: register and login straight to account
+The account service is going away, we create a db in auth instead with a username/password/userID
+Everything else is going to user.
+Auth takes to bff 
+Update bff accordingly
+
+front -> nginx -> auth -> bff -> users -> bff -> auth -> nginx -> front

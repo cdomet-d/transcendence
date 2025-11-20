@@ -1,6 +1,6 @@
 import { renderNotFound } from './render-pages.js';
 import { match, type Match } from 'path-to-regexp';
-import * as page from './render-pages.js';
+import * as page from '../pages/render-pages.js';
 
 export interface routeInterface {
     path: string;
@@ -69,8 +69,5 @@ export class Router {
         }
 
         matchedRoute.callback(res ? res : undefined);
-
-        // if (matchedRoute.path === '/lobby')
-        //     lobby();
     }
 }

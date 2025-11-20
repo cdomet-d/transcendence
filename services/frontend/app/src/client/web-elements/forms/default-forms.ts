@@ -46,7 +46,7 @@ export const userSettingsForm: FormDetails = {
 };
 
 export const registrationForm: FormDetails = {
-    action: 'https://localhost:8443/api/auth/browser/',
+    action: 'https://localhost:8443/api/auth/register/',
     heading: 'Register',
     ariaLabel: 'Create an account',
     id: 'account-create',
@@ -71,6 +71,34 @@ export const registrationForm: FormDetails = {
     ],
     button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
 };
+
+export const loginForm: FormDetails = {
+    action: 'https://localhost:8443/api/auth/login/',
+    heading: 'Login',
+    ariaLabel: 'Log into an account',
+    id: 'account-login',
+    method: 'post',
+    fields: [
+        {
+            id: 'username',
+            labelContent: 'Username',
+            pattern: usernamePattern,
+            placeholder: 'Enter your username!',
+            type: 'text',
+            required: true,
+        },
+        {
+            id: 'password',
+            labelContent: 'Password',
+            pattern: passwordPattern,
+            placeholder: 'Enter your password!',
+            type: 'password',
+            required: false,
+        },
+    ],
+    button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+};
+
 
 export const search: FormDetails = {
     action: 'https://localhost:8443/api/users?name=',

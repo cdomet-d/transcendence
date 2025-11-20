@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon -q",
+    "dev": "nodemon",
     "start": "tsc && node dist/server.js"
   },
   "author": "",
@@ -16,7 +16,13 @@
     "typescript": "^5.9.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10",
-    "pino-pretty": "^13.1.2"
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/jwt": "^10.0.0",
+    "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
+    "nats": "^2.29.3",
+    "nodemon": "^3.1.10"
   }
 }

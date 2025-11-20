@@ -461,13 +461,13 @@ describe('PATCH /internal/users/:userID/stats', () => {
 
 	it('should return 200 if stats were updated', async () => {
 		await app.dbUsers.run(
-			'INSERT INTO userStats (userID, totalWins, highestScore) VALUES (?, ?, ?)',
+			'INSERT INTO userStats (userID, totalWins, longuestPass) VALUES (?, ?, ?)',
 			[123, 5, 100]
 		);
 
 		const actions = [
 			{ action: 'increment', field: 'totalWins', value: 1 },
-			{ action: 'setIfGreater', field: 'highestScore', value: 200 }
+			{ action: 'setIfGreater', field: 'longuestPass', value: 200 }
 		];
 
 		const response = await app.inject({
@@ -483,7 +483,7 @@ describe('PATCH /internal/users/:userID/stats', () => {
 
 		const statsInDb = await app.dbUsers.get('SELECT * FROM userStats WHERE userID = 123');
 		expect(statsInDb.totalWins).toBe(6);
-		expect(statsInDb.highestScore).toBe(200);
+		expect(statsInDb.longuestPass).toBe(200);
 	});
 });
 

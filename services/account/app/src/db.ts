@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 // IMPORT FOR Jest TESTS BUT MAKE PROD DB CONNECTION IMPOSSIBLE
-// import * as sqlite3 from 'sqlite3';
+//  import * as sqlite3 from 'sqlite3';
 // IMPORT FOR PROD BUT MAKES Jest AUTOMATED TESTING CRASH 
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';

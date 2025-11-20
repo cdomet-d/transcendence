@@ -11,6 +11,7 @@ import { createForm } from './web-elements/forms/helpers.js';
 import {
     localPong,
     registrationForm,
+    loginForm,
     remotePong,
     userSettingsForm,
 } from './web-elements/forms/default-forms.js';
@@ -77,10 +78,25 @@ export function renderHome() {
 }
 
 export function renderAuth() {
-    console.log('renderAuth');
     prepareLayout(document.body.layoutInstance, 'home');
-    document.body.layoutInstance!.appendAndCache(createForm('default-form', registrationForm));
-    updatePageTitle('Register or Login');
+    const authOptions: TabData[] = [
+        {
+            id: 'login-tab',
+            content: 'Login',
+            default: false,
+            panelContent: createForm('login-form', loginForm),
+        },
+        {
+            id: 'registration-tab',
+            content: 'Register',
+            default: true,
+            panelContent: createForm('registration-form', registrationForm),
+        },
+    ];
+    const wrapper = createWrapper('authsettings');
+    wrapper.append(createTabs(authOptions));
+    document.body.layoutInstance!.appendAndCache(wrapper);
+    updatePageTitle('Login/Register');
 }
 
 export function renderLeaderboard() {
@@ -93,15 +109,20 @@ export function renderLeaderboard() {
     updatePageTitle('Leaderboard');
 }
 
-export function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
+export async function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
     console.log('renderProfile');
     if (param) {
-        //TODO: API call with login here to fetch user data
         const login = param.params.login;
+        const req: RequestInit = { method: 'get' };
+
+        //TODO: API call with login here to fetch user data
+        await fetch(`https://localhost:8443/api/bff/users/${login}/profile`, req); // 404 (NGINX or BFF does not recognise route)
         prepareLayout(document.body.layoutInstance, 'profile');
         document.body.layoutInstance?.appendAndCache(
             document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
         );
+        const profile = document.body.layoutInstance?.components.get('user-profile') as ProfileWithTabs;
+        profile.profile = user;
         updatePageTitle('User ' + login);
     } else {
         console.log('No parameter, which should not happen');

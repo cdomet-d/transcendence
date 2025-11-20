@@ -1,13 +1,13 @@
 import type { FastifyInstance } from 'fastify';
 
 async function fetchTranslation(word: string, langCode: string): Promise<Response> {
-	const url = `http://accessibility:1313/internal/translations?word=${encodeURIComponent(word)}&langCode=${encodeURIComponent(langCode)}`;
+	const url = `https://localhost:8443/internal/translations?word=${encodeURIComponent(word)}&langCode=${encodeURIComponent(langCode)}`;
 	return (fetch(url));
 }
 
 export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 
-	serv.get('/api/translations', async (request, reply) => {
+	serv.get('/translations', async (request, reply) => {
 		try {
 			const { word, lang } = request.query as { word: string, lang: string };
 

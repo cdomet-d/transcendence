@@ -31,7 +31,7 @@ function runServ(serv: FastifyInstance): void {
 
     serv.listen({ port: port, host: '0.0.0.0' })
         .then(() => {
-            serv.log.info(serv.printRoutes());
+             ;
         })
         .catch((err) => {
             throw err;
