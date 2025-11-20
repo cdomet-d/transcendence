@@ -37,7 +37,7 @@ export class PongCourt extends HTMLDivElement {
 
     render() {
         this.#canva.className = 'w-full h-full z-50';
-        this.className = 'pong-court brdr z-25';
+        this.className = 'pc-w pc-h brdr justify-self-center z-25';
         this.ctx
             ? (this.ctx.fillStyle = this.#theme.color)
             : console.error('Canva context not supported');

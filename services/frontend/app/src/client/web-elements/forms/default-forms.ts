@@ -99,7 +99,6 @@ export const loginForm: FormDetails = {
     button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
 };
 
-
 export const search: FormDetails = {
     action: 'https://localhost:8443/api/users?name=',
     heading: '',

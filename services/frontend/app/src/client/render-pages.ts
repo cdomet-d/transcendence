@@ -19,6 +19,7 @@ import { tournament } from './web-elements/default-values.js';
 import { farm, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
 import { pong } from './pong/pong.js';
 import { TournamentBrackets } from './web-elements/game/tournament.js';
+import { PongUI } from './web-elements/game/game-ui.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -121,7 +122,9 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
         document.body.layoutInstance?.appendAndCache(
             document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
         );
-        const profile = document.body.layoutInstance?.components.get('user-profile') as ProfileWithTabs;
+        const profile = document.body.layoutInstance?.components.get(
+            'user-profile',
+        ) as ProfileWithTabs;
         profile.profile = user;
         updatePageTitle('User ' + login);
     } else {
@@ -168,19 +171,25 @@ export function renderGame() {
     // HERE logic will be needed from the game manager so that we know what theme the player picked.
     // TODO: recover gameSetting object from game manager, but how ?
     const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
-    const layout = document.body.layoutInstance;
-    court.theme = defaultTheme;
-    if (layout) layout.theme = [];
-    document.body.layoutInstance?.appendAndCache(court);
+    const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
 
-    pong({ userID: 1, gameID: 1, remote: false }, court.ctx);
+    ui.player1.innerText = 'CrimeGoose';
+    ui.player2.innerText = 'WinnerWolf';
+    const layout = document.body.layoutInstance;
+    court.theme = farm;
+    if (layout) layout.theme = farmAssets;
+    document.body.layoutInstance?.appendAndCache(ui, court);
+
+    pong({ userID: 1, gameID: 1, remote: false }, court.ctx, ui);
 }
 
 export function renderBracket() {
     console.log('renderBracket');
     prepareLayout(document.body.layoutInstance, 'bracket');
 
-    const bracket = document.createElement('div', { is: 'tournament-bracket' }) as TournamentBrackets;
+    const bracket = document.createElement('div', {
+        is: 'tournament-bracket',
+    }) as TournamentBrackets;
     if (bracket) bracket.players = tournament;
     document.body.layoutInstance?.appendAndCache(bracket);
 }

@@ -107,8 +107,8 @@ export class UserProfile extends HTMLDivElement {
      */
     set username(name: string) {
         // if (this.#username.name !== name) {
-            console.log('userName');
-            this.#username.name = name;
+        console.log('userName');
+        this.#username.name = name;
         // }
     }
 
@@ -137,7 +137,7 @@ export class UserProfile extends HTMLDivElement {
         this.status = user.status;
         this.username = user.username;
         this.winstreak = user.winstreak;
-		this.render();
+        this.render();
     }
 
     get getAvatar() {
@@ -241,7 +241,14 @@ export class UserInline extends UserProfile {
     override render() {
         this.append(super.getAvatar, super.getUsername, super.getWinstreak);
         super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
-        this.classList.add('cursor-pointer', 'gap-s', 'flex', 'flex-initial', 'pad-xs', `${super.getColor}`);
+        this.classList.add(
+            'cursor-pointer',
+            'gap-s',
+            'flex',
+            'flex-initial',
+            'pad-xs',
+            `${super.getColor}`,
+        );
     }
 }
 
