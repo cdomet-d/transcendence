@@ -1,5 +1,5 @@
 import { createIcon } from '../typography/helpers.js';
-import type { buttonData } from '../types-interfaces.js';
+import type { ButtonData } from '../types-interfaces.js';
 
 //TODO: Migrate to inheritance ?
 
@@ -9,12 +9,12 @@ import type { buttonData } from '../types-interfaces.js';
  *
  * Observed attribute: "disabled"
  *
- * @property {buttonData} btn - Button configuration data.
+ * @property {ButtonData} btn - Button configuration data.
  * @property {boolean} animation - Controls animated text rendering.
  */
 
 export class CustomButton extends HTMLButtonElement {
-    #btn: buttonData;
+    #btn: ButtonData;
     #animated: boolean;
 
     static get observedAttributes(): string[] {
@@ -29,9 +29,9 @@ export class CustomButton extends HTMLButtonElement {
 
     /**
      * Sets button metadata.
-     * @param {buttonData} src - The new button configuration.
+     * @param {ButtonData} src - The new button configuration.
      */
-    set btn(src: buttonData) {
+    set btn(src: ButtonData) {
         this.#btn = src;
     }
 

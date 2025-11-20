@@ -1,5 +1,5 @@
-import { createBtn, createLink } from './buttons-helpers.js';
-import type { buttonData, MenuData, MenuStyle } from '../types-interfaces.js';
+import { createButton, createLink } from './buttons-helpers.js';
+import type { ButtonData, MenuData, MenuStyle } from '../types-interfaces.js';
 import type { CustomButton } from './buttons.js';
 import type { NavigationLinks } from './links.js';
 
@@ -9,7 +9,7 @@ import type { NavigationLinks } from './links.js';
  * @remarks
  * The menu supports two styles: 'horizontal' and 'vertical', which control the grid layout direction.
  * It supports both icon and textual navigation elements, which can both be links or action buttons.
- * Menu elements are configured using {@link buttonData} and created via {@link createBtn}.
+ * Menu elements are configured using {@link ButtonData} and created via {@link createButton}.
  */
 export class Menu extends HTMLElement {
     #style: MenuStyle;
@@ -32,7 +32,7 @@ export class Menu extends HTMLElement {
     /**
      * Sets the menu's button elements.
      *
-     * @param {buttonData[] | navigationLinksData[]} list - Array of objects containing the data for the menus items
+     * @param {ButtonData[] | navigationLinksData[]} list - Array of objects containing the data for the menus items
      */
     set menuContent(list: MenuData) {
         this.#linkInfo = list;
@@ -80,7 +80,7 @@ export class Menu extends HTMLElement {
     renderBtns() {
         if (!this.#linkInfo || !this.#linkInfo.buttons) throw new Error('Undefined data');
         this.#linkInfo.buttons.forEach((button) => {
-            const el = createBtn(button, this.#animated);
+            const el = createButton(button, this.#animated);
             el.role = 'menuitem';
             el.id = button.id;
             this.#menuLinks.append(el);
@@ -102,7 +102,7 @@ export class Menu extends HTMLElement {
      *
      * @remarks
      * Uses CSS grid classes according to style and size settings.
-     * Button elements are created using the {@link createBtn} helper with animation option.
+     * Button elements are created using the {@link createButton} helper with animation option.
      */
     render() {
         this.#menuLinks.className = `w-full grid gap-r justify-items-center \

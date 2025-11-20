@@ -24,7 +24,7 @@ export class UserProfile extends HTMLDivElement {
      */
     constructor() {
         super();
-        this.#actionButtons = createSocialMenu(social, 'horizontal', 'stranger');
+        this.#actionButtons = createSocialMenu(social, 'horizontal');
         this.#avatar = document.createElement('div', { is: 'user-avatar' }) as Avatar;
         this.#biography = document.createElement('p', { is: 'user-bio' }) as Biography;
         this.#joinedSince = document.createElement('span') as HTMLSpanElement;
@@ -66,7 +66,6 @@ export class UserProfile extends HTMLDivElement {
      */
     set biography(bio: string) {
         if (bio !== this.#biography.content) {
-            // console.log('bio');
             this.#biography.content = bio;
             this.#biography.classList.add('row-span-2');
         }
@@ -86,8 +85,8 @@ export class UserProfile extends HTMLDivElement {
      * Sets the profile view type for the action menu.
      */
     set profileView(v: ProfileView) {
+        console.log('In profile, profile view:', v);
         if (this.#actionButtons.view !== v) {
-            // console.log('actionButtonView');
             this.#actionButtons.view = v;
         }
     }
@@ -98,7 +97,6 @@ export class UserProfile extends HTMLDivElement {
     set profileAge(val: string) {
         if (this.#joinedSince.textContent !== `Joined ${val} days ago`) {
             this.#joinedSince.textContent = `Joined ${val} days ago`;
-            // console.log('profileAge');
         }
     }
 
@@ -106,10 +104,9 @@ export class UserProfile extends HTMLDivElement {
      * Sets the user's username.
      */
     set username(name: string) {
-        // if (this.#username.name !== name) {
-        console.log('userName');
-        this.#username.name = name;
-        // }
+        if (this.#username.name !== name) {
+            this.#username.name = name;
+        }
     }
 
     /**
@@ -137,7 +134,6 @@ export class UserProfile extends HTMLDivElement {
         this.status = user.status;
         this.username = user.username;
         this.winstreak = user.winstreak;
-        this.render();
     }
 
     get getAvatar() {

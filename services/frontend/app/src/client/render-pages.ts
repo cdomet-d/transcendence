@@ -26,7 +26,7 @@ const layoutPerPage: { [key: string]: string } = {
     bracket: 'full-screen',
     central: 'page-w-header',
     error: 'full-screen',
-    game: 'full-screen',
+    game: 'page-w-header',
     home: 'full-screen',
     leaderboard: 'page-w-header',
     lobby: 'page-w-header',
@@ -122,10 +122,10 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
         document.body.layoutInstance?.appendAndCache(
             document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
         );
-        const profile = document.body.layoutInstance?.components.get(
+        const pInstance = document.body.layoutInstance?.components.get(
             'user-profile',
         ) as ProfileWithTabs;
-        profile.profile = user;
+        pInstance.profile = user;
         updatePageTitle('User ' + login);
     } else {
         console.log('No parameter, which should not happen');
@@ -168,14 +168,15 @@ export function renderGame() {
     console.log('renderGame');
     prepareLayout(document.body.layoutInstance, 'game');
 
-    // HERE logic will be needed from the game manager so that we know what theme the player picked.
-    // TODO: recover gameSetting object from game manager, but how ?
     const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
     const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
 
+	//TODO: set playerNames from game-manager object
     ui.player1.innerText = 'CrimeGoose';
     ui.player2.innerText = 'WinnerWolf';
+
     const layout = document.body.layoutInstance;
+	// TODO: set pong-court theme from game-manager object
     court.theme = farm;
     if (layout) layout.theme = farmAssets;
     document.body.layoutInstance?.appendAndCache(ui, court);

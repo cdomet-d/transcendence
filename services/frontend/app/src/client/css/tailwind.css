@@ -61,7 +61,7 @@
 
 		--transparent-blue: #64e6e834;
 
-		--border: #773d16;
+		--border: #59260B;
 		--highlight: #FFE6A4;
 		--shadow: #966c00;
 
@@ -610,9 +610,9 @@
 	}
 
 	.header {
-		padding-left: var(--xs);
-		padding-right: var(--xs);
-		grid-template-columns: 5% 25% 35% 10% 5%;
+		padding-left: var(--s);
+		padding-right: var(--s);
+		grid-template-columns: 65px 1fr 1fr 65px 150px 55px;
 		grid-template-rows: var(--ml);
 		place-items: center;
 	}

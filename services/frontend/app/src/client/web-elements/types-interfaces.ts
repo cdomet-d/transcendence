@@ -74,7 +74,7 @@ export interface TabData {
 }
 
 export interface MenuData {
-    buttons?: buttonData[];
+    buttons?: ButtonData[];
     links?: navigationLinksData[];
 }
 
@@ -132,7 +132,7 @@ export type BtnStyles = 'green' | 'red';
  * @property {string} ariaLabel - Accessibility label for screen readers.
  * @property {BtnStyles} [style] - Optional style modifier for button appearance - see {@link BtnStyles}.
  */
-export interface buttonData {
+export interface ButtonData {
     type: BtnType;
     id: string;
     content: string | null;
@@ -195,7 +195,7 @@ export type GameType = '1 vs 1' | 'tournament';
 /** Form metadata describing action, fields, and buttons.
  * @property {string} action - Form submission URL.
  * @property {string} ariaLabel - Accessibility label for form.
- * @property {buttonData} button - Form button metadata.
+ * @property {ButtonData} button - Form button metadata.
  * @property {InputFieldsData[]} fields - Array of input field metadata - see {@link InputFieldsData}
  * @property {string} heading - Form heading text.
  * @property {string} id - Unique form identifier.
@@ -204,7 +204,7 @@ export type GameType = '1 vs 1' | 'tournament';
 export interface FormDetails {
     action: string;
     ariaLabel: string;
-    button: buttonData;
+    button: ButtonData;
     fields: InputFieldsData[];
     heading: string;
     id: string;

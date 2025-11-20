@@ -2,7 +2,7 @@ import type { InputGroup, TextAreaGroup } from '../inputs/fields.js';
 import type { FormDetails } from '../types-interfaces.js';
 import { createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
 import { createHeading } from '../typography/helpers.js';
-import { createBtn } from '../navigation/buttons-helpers.js';
+import { createButton } from '../navigation/buttons-helpers.js';
 
 const emptyForm: FormDetails = {
     action: '',
@@ -194,7 +194,7 @@ export class BaseForm extends HTMLFormElement {
      * Appends the button to the form and caches it in `formContent`.
      */
     renderButtons() {
-        const submit = createBtn(this.#formData.button);
+        const submit = createButton(this.#formData.button);
         this.#formContent.set('submit', submit);
         this.append(submit);
         if (!submit.classList.contains('bg-red')) {
