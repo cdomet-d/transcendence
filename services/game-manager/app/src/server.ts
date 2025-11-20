@@ -1,5 +1,6 @@
 'use strict';
 import Fastify from 'fastify';
+import type { FastifyRequest, FastifyReply } from 'fastify';
 import websocket from '@fastify/websocket';
 import type { FastifyInstance } from 'fastify';
 
@@ -19,7 +20,19 @@ try {
 }
 
 function addPlugins(serv: FastifyInstance) {
-    serv.register(websocket);
+    serv.register(websocket, {
+        errorHandler: function (
+            error,
+            socket: WebSocket,
+            req: FastifyRequest,
+            reply: FastifyReply
+        ) {
+            //TODO: send html error page ?
+            serv.log.error(error);
+            socket.close();
+        },
+        options: {},
+    });
     serv.register(wsRoute);
 }
 
@@ -30,9 +43,7 @@ function runServ(serv: FastifyInstance): void {
     }
 
     serv.listen({ port: port, host: '0.0.0.0' })
-        .then(() => {
-             ;
-        })
+        .then(() => {})
         .catch((err) => {
             throw err;
         });
