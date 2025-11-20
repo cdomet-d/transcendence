@@ -58,11 +58,11 @@ function sideWallCollision(game: Game, player1: Player, player2: Player, nextX: 
 function updateScore(game: Game, player1: Player, player2: Player, nextX: number) {
 	if (nextX - game.ball.r >= WIDTH) {
 		player1.incScore();
-		// console.log("PLAYER:", player1.score, "ID:", player1.userID);
+		console.log("PLAYER",  player1.userID, "SCORE:", player1.score);
 	}
 	if (nextX + game.ball.r <= 0) {
 		player2.incScore();
-		// console.log("OPPONENT:", player2.score, "ID:", player2.userID);
+		console.log("OPPONENT", player2.userID, "SCORE:", player2.score);
 	}
 }
 

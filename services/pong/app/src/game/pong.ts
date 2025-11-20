@@ -28,13 +28,16 @@ export async function setUpGame(game: Game) {
 	game.addTimoutID(setTimeout(gameLoop, SERVER_TICK, game, player1, player2));
 }
 
+export let messageHandler: (payload: string) => void;
+
 function setMessEvent(player: Player, playerNbr: number, game: Game) {
-	player.socket.on("message", (payload: string) => {
+	messageHandler = (payload: string) => {
 		let req: reqObj;
 		try { req = JSON.parse(payload); }
 		catch (err) { return; };
 		// if (!validRequest(req)) //TODO: keep or not ? more secure but maybe slows down game
 		// 	return;
 		game.addReq(req, playerNbr);
-	})
+	}
+	player.socket.on("message", messageHandler)
 }

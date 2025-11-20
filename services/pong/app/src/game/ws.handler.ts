@@ -23,6 +23,7 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 
 	socket.on('close', () => {
 		if (game) {
+			// console.log("score:", game.players[0]!.score, ",", game.players[1]!.score);
 			game.cleanTimeoutIDs();
 			game.deletePlayers();
 			this.gameRegistry.deleteGame(game.gameID);
