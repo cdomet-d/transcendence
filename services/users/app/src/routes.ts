@@ -23,15 +23,15 @@ interface UserStats {
 	totalWins: number;
 	winStreak: number;
 	averageMatchDuration: number;
-	highestScore: number;
+	longuestPass: number;
 	[key: string]: number;
 }
 
 export async function userRoutes(serv: FastifyInstance) {
-	//USER PROFILE/internal/users/${userID}/profile
+	//USER PROFILE/${userID}/profile
 
-	//GET /internal/users/<userID>
-	serv.get('/internal/users/:userID', async (request, reply) => {
+	//GET /<userID>
+	serv.get('/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 
@@ -58,40 +58,9 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//GET /internal/users?username=<username>
-	serv.get('/internal/users', async (request, reply) => {
-		try {
-			const query = request.query as { username?: string };
-
-			if (query.username) {
-				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
-				const user = await serv.dbUsers.get<UserRow>(sql, [query.username]);
-
-				if (!user) {
-					return (reply.code(404).send({
-						success: false,
-						message: 'User not found'
-					}));
-				}
-				return (reply.code(200).send({
-					success: true,
-					message: "user found!",
-					user
-				}));
-			}
-
-			return (reply.code(400).send({
-				success: false,
-				message: 'A query parameter (e.g., ?username=...) is required.'
-			}));
-		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
-			throw (error);
-		}
-	});
-
-	//POST user profile
-	serv.post('/internal/users/profile', async (request, reply) => {
+	//fetch users profiles
+	//TODO: Endpoint for search bar 
+	serv.post('/profiles', async (request, reply) => {
 		try {
 			const { userIDs } = request.body as { userIDs: number[] };
 
@@ -119,7 +88,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//create profile and stats
-	serv.post('/internal/users/:userID/profile', async (request, reply) => {
+	serv.post('/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 			const { username } = request.body as { username: string };
@@ -141,7 +110,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const queryStats = `
 				INSERT INTO userStats (userID, longestMatch, shorestMatch, totalMatch, totalWins,
-				winStreak, averageMatchDuration, highestScore)
+				winStreak, averageMatchDuration, longuestPass)
 				VALUES (?, 0, 0, 0, 0, 0, 0, 0)
 			`;
 
@@ -164,7 +133,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user profile
-	serv.patch('/internal/users/:userID', async (request, reply) => {
+	serv.patch('/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 			const body = request.body as { [key: string]: any };
@@ -214,7 +183,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//delete profile and stats
-	serv.delete('/internal/users/:userID', async (request, reply) => {
+	serv.delete('/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
 
@@ -235,7 +204,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//USER STATS
 	//get all user's stats with userID
-	serv.get('/internal/users/:userID/stats', async (request, reply) => {
+	serv.get('/stats/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 
@@ -255,7 +224,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update all stats of a user
-	serv.patch('/internal/users/:userID/stats', async (request, reply) => {
+	serv.patch('/stats/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 			const actions = request.body as { action: string, field: string, value: number }[];
@@ -265,7 +234,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				return reply.code(404).send({ success: false, message: 'User not found.' });
 
 			const updates: { [key: string]: number } = {};
-			const validFields = ['totalMatch', 'totalWins', 'longestMatch', 'shortestMatch', 'highestScore'];
+			const validFields = ['totalMatch', 'totalWins', 'longestMatch', 'shortestMatch', 'longuestPass'];
 
 			for (const action of actions) {
 				if (!validFields.includes(action.field))
@@ -312,7 +281,9 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/internal/users/:userID/userData', async (request, reply) => {
+
+	// TODO : Repeting route, check usage in BFF and switch it up with correct route
+/* 	serv.get('/:userID/userData', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 
@@ -346,7 +317,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/internal/users/userDataBatch', async (request, reply) => {
+	serv.post('/userDataBatch', async (request, reply) => {
 		try {
 			const { userIDs } = request.body as { userIDs: number[] };
 
@@ -378,11 +349,48 @@ export async function userRoutes(serv: FastifyInstance) {
 			serv.log.error(`[USERS] Error fetching user data batch: ${error}`);
 			throw (error);
 		}
+	}); */
+
+
+
+
+	// ROUTE NOT USED BUT KEEPING JUST IN CASE MIGHT BE DELETED LATER
+	/*
+
+	//GET ?username=<username>
+	serv.get('/userID/:username', async (request, reply) => {
+		try {
+			const query = request.query as { username?: string };
+
+			if (query.username) {
+				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
+				const user = await serv.dbUsers.get<UserRow>(sql, [query.username]);
+
+				if (!user) {
+					return (reply.code(404).send({
+						success: false,
+						message: 'User not found'
+					}));
+				}
+				return (reply.code(200).send({
+					success: true,
+					message: "user found!",
+					user
+				}));
+			}
+
+			return (reply.code(400).send({
+				success: false,
+				message: 'A query parameter (e.g., ?username=...) is required.'
+			}));
+		} catch (error) {
+			serv.log.error(`Error fetching user profile: ${error}`);
+			throw (error);
+		}
 	});
 
-	/*
 	//get username by userID
-	serv.get('/internal/users/:userID/username', async (request, reply) => {
+	serv.get('/:userID/username', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: number };
 			const query = `SELECT username FROM userProfile WHERE userID = ?`;
@@ -419,7 +427,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				{ action: 'increment', field: 'totalWins', value: 1 },
 				{ action: 'setIfGreater', field: 'longestMatch', value: duration },
 				{ action: 'setIfLess', field: 'shortestMatch', value: duration },
-				{ action: 'setIfGreater', field: 'highestScore', value: winnerScore }
+				{ action: 'setIfGreater', field: 'longuestPass', value: winnerScore }
 			];
 
 			const loserActions = [

@@ -14,7 +14,6 @@ try {
 	// await serv.vite.ready();
 	await serv.ready();
 	await serv.listen({ port: 1212, host: '0.0.0.0' })
-	serv.log.info("serv run");
 }
 catch (err) {
 	console.error('server error:', err);

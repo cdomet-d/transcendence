@@ -16,19 +16,17 @@ function notFound(request: FastifyRequest, reply: FastifyReply) {
 const serv: FastifyInstance = Fastify(options);
 
 try {
-    console.log('JUST A TEST');
     serv.setNotFoundHandler(notFound);
     await addPlugins(serv);
     await serv.ready();
     await serv.listen({ port: 1212, host: '0.0.0.0' });
-    console.log('EVERYTHING IS FINE');
+     ;
 } catch (err) {
     serv.log.error(err);
     process.exit(1);
 }
 
 async function addPlugins(serv: FastifyInstance) {
-    console.log('ADDING PLUGINS');
     await serv
         .register(fastifyStatic, {
             root: '/app/dist/client/',

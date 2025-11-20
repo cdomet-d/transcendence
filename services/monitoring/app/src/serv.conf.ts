@@ -22,7 +22,13 @@ function checkProxy(address: string, hop: number): boolean {
 
 const options = {
   logger: {
-    file: '/usr/app/server.log'
+    transport: {
+      target: 'pino-pretty',
+      options: {
+        colorize: true,
+        translateTime: 'yyyy-mm-dd HH:MM:ss' // local date and time with timezone offset
+      }
+	}
   },
   trustProxy: checkProxy,
   https: {

@@ -1,33 +1,6 @@
-import type { ProfileCreationResult, AccountData, AccountDataResponse, AccountDataBatchResponse } from "./bff.interface.js";
+import type { AccountData, AccountDataResponse, accountBatchResponse } from "./bff.interface.js";
 //THIS FILE IS DOOOOONE 
 // GO FOCUS ON OTHER THINGS PLEASE
-
-export async function validateCredentials(log: any, username: string, password: string): Promise<boolean> {
-	let response: Response;
-	const url = 'http://account:1414/internal/account/login';
-	try {
-		response = await fetch(url, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ username, password }),
-		});
-	} catch (error) {
-		log.error(`[BFF] Account service (login) is unreachable: ${error}`);
-		throw new Error('Account service is unreachable.');
-	}
-
-	if (response.status === 401) {
-		log.warn(`[BFF] Failed login attempt for user: ${username}`);
-		return (false);
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] Account service (login) failed with status ${response.status}`);
-		throw new Error('Account service failed.');
-	}
-
-	return (true);
-}
 
 async function updateAccountUsername(userID: string, newUsername: string): Promise<Response> {
 	const url = `http://account:1414/internal/account/${userID}`;
@@ -168,85 +141,6 @@ export async function deleteUser(log: any, userID: number): Promise<void> {
 	return;
 }
 
-export async function deleteFriendship(log: any, userID: number): Promise<Response | null> {
-	const url = `http://friends:1616/internal/friends/${userID}/friendships`;
-	let response: Response;
-	try {
-		response = await fetch(url, { method: 'DELETE' });
-	} catch (error) {
-		log.error(`[BFF] Friends service is unreachable: ${error}`);
-		throw new Error('Friends service is unreachable.');
-	}
-
-	if (!response.ok) {
-		log.warn(`[BFF] Internal server error`);
-		throw new Error(`Friebnds service failed with status ${response.status}`);
-	}
-	return (response.json() as Promise<Response>);
-}
-
-export async function updateBio(log: any, userID: number, biography: string): Promise<void> {
-	const url = `http://account:1414/internal/users/${userID}`;
-	let response: Response;
-	try {
-		response = await fetch(url, {
-			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ biography: biography })
-		});
-	} catch (error) {
-		log.error(`[BFF] User service is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
-	}
-
-	if (response.status === 400) {
-		log.warn(`[BFF] User service reported a validation error for user ${userID}`);
-		throw new Error('User validation failed.');
-	}
-
-	if (response.status === 404) {
-		log.warn(`[BFF] User not found for biography update: ${userID}`);
-		throw new Error('User not found in profile service.');
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] User service failed with status ${response.status}`);
-		throw new Error('User service failed.');
-	}
-	return;
-}
-
-export async function updateProfileColor(log: any, userID: number, profileColor: string): Promise<void> {
-	const url = `http://account:1414/internal/users/${userID}/profileColor`;
-	let response: Response;
-	try {
-		response = await fetch(url, {
-			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ profileColor: profileColor })
-		});
-	} catch (error) {
-		log.error(`[BFF] User service is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
-	}
-
-	if (response.status === 400) {
-		log.warn(`[BFF] User service reported a validation error for user ${userID}`);
-		throw new Error('User validation failed.');
-	}
-
-	if (response.status === 404) {
-		log.warn(`[BFF] User not found for profileColor update: ${userID}`);
-		throw new Error('User not found in profile service.');
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] User service failed with status ${response.status}`);
-		throw new Error('User service failed.');
-	}
-	return;
-}
-
 export async function updateDefaultLang(log: any, userID: number, defaultLang: string): Promise<void> {
 	const url = `http://users:2626/internal/account/${userID}`;
 	let response: Response;
@@ -268,37 +162,6 @@ export async function updateDefaultLang(log: any, userID: number, defaultLang: s
 
 	if (response.status === 404) {
 		log.warn(`[BFF] User not found for defaultLang update: ${userID}`);
-		throw new Error('User not found in profile service.');
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] User service failed with status ${response.status}`);
-		throw new Error('User service failed.');
-	}
-	return;
-}
-
-export async function updateAvatar(log: any, userID: number, avatar: string): Promise<void> {
-	const url = `http://users:2626/internal/users/${userID}`;
-	let response: Response;
-	try {
-		response = await fetch(url, {
-			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json' },	
-			body: JSON.stringify({ avatar: avatar })
-		});
-	} catch (error) {
-		log.error(`[BFF] User service is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
-	}
-
-	if (response.status === 400) {
-		log.warn(`[BFF] User service reported a validation error for user ${userID}`);
-		throw new Error('User validation failed.');
-	}
-
-	if (response.status === 404) {
-		log.warn(`[BFF] User not found for avatar update: ${userID}`);
 		throw new Error('User not found in profile service.');
 	}
 
@@ -363,7 +226,7 @@ export async function fetchUserDataBatch(log: any, userIDs: number[]): Promise<A
 		throw new Error('Account service (batch) failed.');
 	}
 
-	const body = (await response.json()) as AccountDataBatchResponse;
+	const body = (await response.json()) as accountBatchResponse;
 
 	if (!body.success || !body.accountData) {
 		log.error(`[BFF] Account service (userDataBatch) returned 200 OK but with a failure body.`);

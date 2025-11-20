@@ -1,13 +1,13 @@
 networks:
-  transcendence:
-    driver: bridge
-    name: transcendence
+    transcendence:
+        driver: bridge
+        name: transcendence
 
 secrets:
-  ssl-cert.pem:
-    file: ${TSECRETS}/ssl-cert.pem
-  ssl-key.pem:
-    file: ${TSECRETS}/ssl-key.pem
+    ssl-cert.pem:
+        file: ${TSECRETS}/ssl-cert.pem
+    ssl-key.pem:
+        file: ${TSECRETS}/ssl-key.pem
 
 services:
   accessibility:
@@ -132,7 +132,7 @@ services:
     # user: "${T_UID}:${T_GID}"
   gamemanager:
     build:
-      context: ./services/GameManager
+      context: ./services/game-manager
       dockerfile: Dockerfile
     container_name: gamemanager
     image: gamemanager:0.0.1
@@ -147,7 +147,7 @@ services:
       - ssl-key.pem
       - ssl-cert.pem
     volumes:
-      - ./services/GameManager/app:/usr/app
+      - ./services/game-manager/app:/usr/app
   monitoring:
     build:
       context: ./services/monitoring
@@ -230,33 +230,33 @@ services:
       - ./services/users/data:/usr/data
 
 volumes:
-  friendsDB:
-    driver: local
-    driver_opts:
-      device: services/friends/data
-      o: bind
-      type: none
-  accessibilityDB:
-    driver: local
-    driver_opts:
-      device: services/accessibility/data
-      o: bind
-      type: none
-  accountDB:
-    driver: local
-    driver_opts:
-      device: services/account/data
-      o: bind
-      type: none
-  usersDB:
-    driver: local
-    driver_opts:
-      device: services/users/data
-      o: bind
-      type: none
-  statsDB:
-    driver: local
-    driver_opts:
-      device: services/dashboards/data
-      o: bind
-      type: none
+    friendsDB:
+        driver: local
+        driver_opts:
+            device: services/friends/data
+            o: bind
+            type: none
+    accessibilityDB:
+        driver: local
+        driver_opts:
+            device: services/accessibility/data
+            o: bind
+            type: none
+    accountDB:
+        driver: local
+        driver_opts:
+            device: services/account/data
+            o: bind
+            type: none
+    usersDB:
+        driver: local
+        driver_opts:
+            device: services/users/data
+            o: bind
+            type: none
+    statsDB:
+        driver: local
+        driver_opts:
+            device: services/dashboards/data
+            o: bind
+            type: none
