@@ -43,6 +43,7 @@
 		"globals": "^16.4.0",
 		"nodemon": "^3.1.10",
 		"path-to-regexp": "^8.3.0",
+		"pino-pretty": "^13.1.2",
 		"postcss": "^8.5.6",
 		"postcss-cli": "^11.0.1",
 		"tailwindcss": "^4.1.13",

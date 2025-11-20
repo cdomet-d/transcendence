@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "nodemon -q",
     "start": "tsc && node dist/server.js"
   },
   "keywords": [],
@@ -15,11 +15,12 @@
     "@fastify/websocket": "^11.2.0",
     "@types/node": "^24.3.1",
     "dotenv": "^17.2.3",
-    "fastify": "^5.5.0",
+    "fastify": "^5.6.2",
     "nats": "^2.29.3",
     "typescript": "^5.9.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "pino-pretty": "^13.1.2"
   }
 }

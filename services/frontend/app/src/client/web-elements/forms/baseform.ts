@@ -105,7 +105,7 @@ export class BaseForm extends HTMLFormElement {
     }
 
     /** Handles the default submit event for the form.
-     * Prevents default submission and logs form data.
+     * Prevents default submission and log form data.
      * Can be overridden in subclasses for custom behavior.
      * @param ev - The submit event.
      */

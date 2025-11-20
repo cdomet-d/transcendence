@@ -10,7 +10,6 @@ export interface userData {
 	avatar: string,
 	biography: string,
 	userID: string,
-	language: string,
 	profileColor: string,
 	relation: ProfileView,
 	status: boolean,
@@ -39,7 +38,7 @@ export interface UserStats {
 	totalWins: number;
 	winStreak: number;
 	averageMatchDuration: number;
-	highestScore: number;
+	longuestPass: number;
 	[key: string]: number;
 }
 
@@ -81,7 +80,7 @@ export interface ProfileDataBatchResponse {
 }
 
 
-export interface AccountDataBatchResponse {
+export interface accountBatchResponse {
 	success: boolean;
 	accountData: AccountData[];
 	message?: string;

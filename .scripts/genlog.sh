@@ -1,7 +1,7 @@
 #!/bin/sh
 #genlog.sh
 
-mkdir -p ./_logs
+mkdir -p ./_log
 
-docker compose logs nginx >./_logs/nginx.log
-docker compose logs frontend >./_logs/frontend.log
+docker compose log nginx >./_log/nginx.log
+docker compose log frontend >./_log/frontend.log

@@ -16,5 +16,5 @@ CREATE TABLE userStats (
   totalWins INTEGER,
   winStreak INTEGER,
   averageMatchDuration INTEGER, --time in secondes
-  highestScore INTEGER
+  longuestPass INTEGER --time in secondes
 );

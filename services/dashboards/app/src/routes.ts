@@ -1,6 +1,5 @@
 import type { FastifyInstance } from 'fastify';
 import { getGameHistory } from './dashboard.service.js';
-import { getTournamentHistory } from './dashboard.service.js';
 
 export interface Match {
 	gameID: number;
@@ -25,7 +24,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	/* -------------------------------------------------------------------------- */
 
 	//post a game
-	serv.post('/internal/dashboard/games', async (request, reply) => {
+	serv.post('/game', async (request, reply) => {
 		try {
 			const { local } = request.body as { local: boolean };
 			const { tournamentID } = request.body as { tournamentID: number };
@@ -59,7 +58,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//patch game stats
-	serv.patch('/internal/dashboard/games/:gameID', async (request, reply) => {
+	serv.patch('/game/:gameID', async (request, reply) => {
 		try {
 			const { gameID } = request.params as { gameID: string };
 			const body = request.body as { [key: string]: any };
@@ -95,9 +94,9 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//get all game of a player
-	serv.get('/internal/dashboard/games', async (request, reply) => {
+	serv.get('/games/:userID', async (request, reply) => {
 		try {
-			const { userID } = request.query as { userID?: string };
+			const { userID } = request.params as { userID: string };
 			if (!userID)
 				return (reply.code(400).send({ message: '[DASHBOARD] userID query parameter is required.' }));
 
@@ -111,7 +110,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//delete a game
-	serv.delete('/internal/dashboard/games/:gameID', async (request, reply) => {
+	serv.delete('/game/:gameID', async (request, reply) => {
 		try {
 			const { gameID } = request.params as { gameID: string };
 
@@ -142,7 +141,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	/* -------------------------------------------------------------------------- */
 
 	//post a tournament
-	serv.post('/internal/dashboard/tournaments', async (request, reply) => {
+	serv.post('/tournament', async (request, reply) => {
 		try {
 			const { playerIDs } = request.body as { playerIDs: number[] };
 
@@ -174,7 +173,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//patch a tournament stats
-	serv.patch('/internal/dashboard/tournaments/:tournamentID', async (request, reply) => {
+	serv.patch('/tournament/:tournamentID', async (request, reply) => {
 		try {
 			const { tournamentID } = request.params as { tournamentID: string };
 			const { winnerID } = request.body as { winnerID: number };
@@ -198,7 +197,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//delete a tournamement
-	serv.delete('/internal/dashboard/tournaments/:tournamentID', async (request, reply) => {
+	serv.delete('/tournament/:tournamentID', async (request, reply) => {
 		try {
 			const { tournamentID } = request.params as { tournamentID: number };
 

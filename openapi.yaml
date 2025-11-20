@@ -1,18 +1,18 @@
-  components:
-    headers:
-      Set-Cookie:
-        description: |
-          Cookie containing the access token and the refresh token. <br>
-          Security attributes include: HTTP Only, Secure, Same-Site
-        examples:
-          accessToken:
-            value: jwt=abc123; Path=/; HttpOnly; Secure; SameSite=Strict
-          refreshToken:
-            value: jwt=abc123; Path=/; HttpOnly; Secure; SameSite=Strict
-        schema:
-          format: plaintext
-          maxLength: 128
-          type: string
+components:
+  headers:
+    Set-Cookie:
+      description: |
+        Cookie containing the access token and the refresh token. <br>
+        Security attributes include: HTTP Only, Secure, Same-Site
+      examples:
+        accessToken:
+          value: jwt=abc123; Path=/; HttpOnly; Secure; SameSite=Strict
+        refreshToken:
+          value: jwt=abc123; Path=/; HttpOnly; Secure; SameSite=Strict
+      schema:
+        format: plaintext
+        maxLength: 128
+        type: string
 
   responses:
     BadRequest:
@@ -61,327 +61,106 @@
             $ref: "#/components/schemas/response"
       description: Signals the operation was successful
 
-      Unauthorized:
-        content:
-          application/json:
-            example:
-              code: 401
-              message: You are not authorized to access this ressource.
-            schema:
-              $ref: "#/components/schemas/response"
-        description: Unauthorized (should redirect on login screen)
-    schemas:
-      aud:
-        description: the services this token grants access to
-        example: bigteam-api
-        format: plaintext
-        maxLength: 64
-        type: string
+    Unauthorized:
+      content:
+        application/json:
+          example:
+            code: 401
+            message: You are not authorized to access this ressource.
+          schema:
+            $ref: "#/components/schemas/response"
+      description: Unauthorized (should redirect on login screen)
 
-      avatar:
-        description: a binary representation of the user's avatar
-        example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
-        format: binary
-        maxLength: 128
-        type: string
+  schemas:
+    aud:
+      description: the services this token grants access to
+      example: bigteam-api
+      format: plaintext
+      maxLength: 64
+      type: string
 
-      biographygraphy:
-        description: the user's chosen biographygraphy
-        example: '¯\_(ツ)_/¯'
-        format: plaintext
-        maxLength: 180
-        type: string
+    avatar:
+      description: a binary representation of the user's avatar
+      example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+      format: binary
+      maxLength: 128
+      type: string
 
-      credentials:
-        description: the registering user informations to validate.
-        properties:
-          password:
-            $ref: "#/components/schemas/password"
-          username:
-            $ref: "#/components/schemas/username"
-        type: object
-      duration:
-        description: start and end times of a match in ISO 8601 format
-        properties:
-          beginAt:
-            $ref: "#/components/schemas/timestamp"
-            description: ISO 8601 date at which the game started
-          endAt:
-            $ref: "#/components/schemas/timestamp"
-            description: ISO 8601 date at which the game ended
-          secDuration:
-            description: a match duration in seconds
-            example: 25
-            format: integer
-            type: number
-        required:
-          - beginAt
-          - endAt
-          - secDuration
-        type: object
-      email:
-        description: the user's email
-        example: ja.pankraz@oxenfurt.re.edu
-        format: email
-        maxLength: 128
-        type: string
-      expIn:
-        description: time until expiration of the current session in seconds
-        example: 21600
-        format: integer
-        type: number
+    biographygraphy:
+      description: the user's chosen biographygraphy
+      example: '¯\_(ツ)_/¯'
+      format: plaintext
+      maxLength: 180
+      type: string
 
-      friendManager:
-        description: an object holding informations regarding the friendship status of the user in relation with the requesting user.
-        properties:
-          friendsSince:
-            $ref: "#/components/schemas/timestamp"
-          isBlocked:
-            description: |
-              Indicates whether the requested user has blocked the requested user. <br>
-              Values are true, false, and null (if the requesting user is the requested user).
-            example: false
-            type: boolean
-          isFriend:
-            description: |
-              Indicates whether the requested user is friends with the requesting user. <br>
-              Values are true, false, and null (for pending requests).
-              example: true
-            type: boolean
-        required:
-          - friendsSince
-          - isBlocked
-          - isFriend
-        type: object
+    credentials:
+      description: the registering user informations to validate.
+      properties:
+        password:
+          $ref: "#/components/schemas/password"
+        username:
+          $ref: "#/components/schemas/username"
+      type: object
+    duration:
+      description: start and end times of a match in ISO 8601 format
+      properties:
+        beginAt:
+          $ref: "#/components/schemas/timestamp"
+          description: ISO 8601 date at which the game started
+        endAt:
+          $ref: "#/components/schemas/timestamp"
+          description: ISO 8601 date at which the game ended
+        secDuration:
+          description: a match duration in seconds
+          example: 25
+          format: integer
+          type: number
+      required:
+        - beginAt
+        - endAt
+        - secDuration
+      type: object
+    email:
+      description: the user's email
+      example: ja.pankraz@oxenfurt.re.edu
+      format: email
+      maxLength: 128
+      type: string
+    expIn:
+      description: time until expiration of the current session in seconds
+      example: 21600
+      format: integer
+      type: number
 
-      gameHistory:
-        description: an array of the user's matches
-        example:
-          - duration:
-              beginAt: "2025-08-19T15:58:46.000Z"
-              endAt: "2025-08-19T16:00:46.000Z"
-              secDuration: 120
-            loser: loserLoon
-            gameID: 569741
-            score:
-              loserLoon: 2
-              winningWolf: 5
-            winner: winningWolf
+    friendManager:
+      description: an object holding informations regarding the friendship status of the user in relation with the requesting user.
+      properties:
+        friendsSince:
+          $ref: "#/components/schemas/timestamp"
+        isBlocked:
+          description: |
+            Indicates whether the requested user has blocked the requested user. <br>
+            Values are true, false, and null (if the requesting user is the requested user).
+          example: false
+          type: boolean
+        isFriend:
+          description: |
+            Indicates whether the requested user is friends with the requesting user. <br>
+            Values are true, false, and null (for pending requests).
+            example: true
+          type: boolean
+      required:
+        - friendsSince
+        - isBlocked
+        - isFriend
+      type: object
 
-          - matches:
-              - duration:
-                  beginAt: "2025-08-19T15:58:46.000Z"
-                  endAt: "2025-08-19T15:59:15.000Z"
-                  secDuration: 29
-                loser: loserLion
-                gameID: 569741
-                score:
-                  loserLion: 1
-                  winningWeasel: 3
-                winner: winningWeasel
-              - duration:
-                  beginAt: "2025-08-19T15:59:30.000Z"
-                  endAt: "2025-08-19T16:01:30.000Z"
-                  secDuration: 120
-                loser: loserLoon
-                gameID: 569741
-                score:
-                  loserLoon: 2
-                  winningWolf: 7
-                winner: winningWolf
-              - duration:
-                  beginAt: "2025-08-19T16:02:00.000Z"
-                  endAt: "2025-08-19T16:07:00.000Z"
-                  secDuration: 300
-                loser: winningWeasel
-                gameID: 784512
-                score:
-                  winningWeasel: 1
-                  winningWolf: 4
-                winner: winningWolf
-            tournamentId: 156578
-            tournamentWinner: winningWolf
-
-          - duration:
-              beginAt: "2025-08-19T17:15:00.000Z"
-              endAt: "2025-08-19T17:20:30.000Z"
-              secDuration: 330
-            loser: speedySnake
-            gameID: 991287
-            score:
-              cleverCrow: 6
-              speedySnake: 3
-            winner: cleverCrow
-        items:
-          oneOf:
-            - $ref: "#/components/schemas/match"
-            - $ref: "#/components/schemas/tournament"
-        maxItems: 2048
-        type: array
-
-      gameStats:
-        description: precomputed stats about the user's game history
-        properties:
-          longestMatch:
-            $ref: "#/components/schemas/duration"
-          longestPass:
-            description: longest exchange without dropping the ball or scoring a goal
-            example: 25
-            format: integer
-            type: number
-          nemesis:
-            $ref: "#/components/schemas/user"
-          shortestMatch:
-            $ref: "#/components/schemas/duration"
-          totalGames:
-            description: the total number of matches the user ever played
-            example: 32
-            format: integer
-            type: number
-          totalLoss:
-            description: the total number of matches the user ever lost
-            example: 12
-            format: integer
-            type: number
-          totalWin:
-            description: the total number of matches the user ever won
-            example: 20
-            format: integer
-            type: number
-          winstreak:
-            description: most matches won in a row
-            example: 10
-            format: integer
-            type: number
-        required:
-          - totalGames
-          - totalWin
-          - totalLoss
-          - longestPass
-          - winstreak
-          - longestMatch
-          - shortestMatch
-          - nemesis
-        type: object
-      id:
-        description: the Id of a ressource (a match, a user, a tournament...)
-        example: 852741
-        format: int
-        type: number
-      iss:
-        description: the URI describing the issuer of the token
-        example: https://localhost:8443
-        format: plaintext
-        maxLength: 64
-        type: string
-
-      jti:
-        description: unique identifier for the current token.
-        format: UUID
-        maxLength: 64
-        type: string
-
-      jwtAccessPayload:
-        description: the body of the application's JWT. Conforms to RFC8725 (hopefully ?)
-        properties:
-          aud:
-            $ref: "#/components/schemas/aud"
-          expAt:
-            $ref: "#/components/schemas/timestamp"
-            description: absolute time at which the access token will become obsolete
-          expIn:
-            $ref: "#/components/schemas/expIn"
-          iat:
-            $ref: "#/components/schemas/timestamp"
-            description: timestamp at which the access token was issued.
-          iss:
-            $ref: "#/components/schemas/iss"
-          jti:
-            $ref: "#/components/schemas/jti"
-          role:
-            description: |
-              Describes the token's owner role within the application. <br>
-              Roles can be: admin, user, guest.
-            enum:
-              - admin
-              - user
-              - guest
-            type: string
-          scope:
-            description: The token holder's permissions on the application data, as determined by their role
-            items:
-              enum:
-                - write:any
-                - delete:any
-                - write:own
-                - delete:own
-              type: string
-            maxItems: 2
-            type: array
-          sub:
-            description: the subject of the JWT; here, the user's ID (pseudo-randomly generated)
-            example: 425785
-            format: integer
-            type: number
-        required:
-          - aud
-          - expAt
-          - expIn
-          - iat
-          - iss
-          - jti
-          - role
-          - scope
-          - sub
-        type: object
-
-      jwtCliBundle:
-        description: |
-          Bundle containing the access and refresh tokens for CLI users.
-        properties:
-          accessToken:
-            description: the signed access JWT
-            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0...
-            format: plaintext
-            maxLength: 128
-            type: string
-          refreshToken:
-            description: the signed refresh JWT
-            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0...
-            format: plaintext
-            maxLength: 128
-        type: object
-      jwtRefresh:
-        description: a refresh token, conform with RFC8725. <br> It expires and requires the user to resend credentials every 6 hours.
-        properties:
-          aud:
-            $ref: "#/components/schemas/aud"
-          expAt:
-            $ref: "#/components/schemas/timestamp"
-            description: absolute time at which the refresh token will become obsolete
-          expIn:
-            $ref: "#/components/schemas/expIn"
-          iat:
-            $ref: "#/components/schemas/timestamp"
-            description: timestamp at which the refresh token was issued.
-          iss:
-            $ref: "#/components/schemas/iss"
-          jti:
-            $ref: "#/components/schemas/jti"
-        type: object
-
-      loser:
-        description: loser for the specified match
-        example: "loserLoon"
-        format: plaintext
-        maxLength: 64
-        type: string
-      match:
-        description: a single match
-        example:
-          duration:
+    gameHistory:
+      description: an array of the user's matches
+      example:
+        - duration:
             beginAt: "2025-08-19T15:58:46.000Z"
-            endAt: "2025-08-19T15:58:46.000Z"
+            endAt: "2025-08-19T16:00:46.000Z"
             secDuration: 120
           loser: loserLoon
           gameID: 569741
@@ -389,24 +168,246 @@
             loserLoon: 2
             winningWolf: 5
           winner: winningWolf
-        properties:
-          duration:
-            $ref: "#/components/schemas/duration"
-          loser:
-            $ref: "#/components/schemas/loser"
-          gameID:
-            $ref: "#/components/schemas/id"
+
+        - matches:
+            - duration:
+                beginAt: "2025-08-19T15:58:46.000Z"
+                endAt: "2025-08-19T15:59:15.000Z"
+                secDuration: 29
+              loser: loserLion
+              gameID: 569741
+              score:
+                loserLion: 1
+                winningWeasel: 3
+              winner: winningWeasel
+            - duration:
+                beginAt: "2025-08-19T15:59:30.000Z"
+                endAt: "2025-08-19T16:01:30.000Z"
+                secDuration: 120
+              loser: loserLoon
+              gameID: 569741
+              score:
+                loserLoon: 2
+                winningWolf: 7
+              winner: winningWolf
+            - duration:
+                beginAt: "2025-08-19T16:02:00.000Z"
+                endAt: "2025-08-19T16:07:00.000Z"
+                secDuration: 300
+              loser: winningWeasel
+              gameID: 784512
+              score:
+                winningWeasel: 1
+                winningWolf: 4
+              winner: winningWolf
+          tournamentId: 156578
+          tournamentWinner: winningWolf
+
+        - duration:
+            beginAt: "2025-08-19T17:15:00.000Z"
+            endAt: "2025-08-19T17:20:30.000Z"
+            secDuration: 330
+          loser: speedySnake
+          gameID: 991287
           score:
-            $ref: "#/components/schemas/score"
-          winner:
-            $ref: "#/components/schemas/winner"
-        required:
-          - gameID
-          - winner
-          - loser
-          - duration
-          - score
-        type: object
+            cleverCrow: 6
+            speedySnake: 3
+          winner: cleverCrow
+      items:
+        oneOf:
+          - $ref: "#/components/schemas/match"
+          - $ref: "#/components/schemas/tournament"
+      maxItems: 2048
+      type: array
+
+    gameStats:
+      description: precomputed stats about the user's game history
+      properties:
+        longestMatch:
+          $ref: "#/components/schemas/duration"
+        longestPass:
+          description: longest exchange without dropping the ball or scoring a goal
+          example: 25
+          format: integer
+          type: number
+        nemesis:
+          $ref: "#/components/schemas/user"
+        shortestMatch:
+          $ref: "#/components/schemas/duration"
+        totalGames:
+          description: the total number of matches the user ever played
+          example: 32
+          format: integer
+          type: number
+        totalLoss:
+          description: the total number of matches the user ever lost
+          example: 12
+          format: integer
+          type: number
+        totalWin:
+          description: the total number of matches the user ever won
+          example: 20
+          format: integer
+          type: number
+        winstreak:
+          description: most matches won in a row
+          example: 10
+          format: integer
+          type: number
+      required:
+        - totalGames
+        - totalWin
+        - totalLoss
+        - longestPass
+        - winstreak
+        - longestMatch
+        - shortestMatch
+        - nemesis
+      type: object
+    id:
+      description: the Id of a ressource (a match, a user, a tournament...)
+      example: 852741
+      format: int
+      type: number
+    iss:
+      description: the URI describing the issuer of the token
+      example: https://localhost:8443
+      format: plaintext
+      maxLength: 64
+      type: string
+
+    jti:
+      description: unique identifier for the current token.
+      format: UUID
+      maxLength: 64
+      type: string
+
+    jwtAccessPayload:
+      description: the body of the application's JWT. Conforms to RFC8725 (hopefully ?)
+      properties:
+        aud:
+          $ref: "#/components/schemas/aud"
+        expAt:
+          $ref: "#/components/schemas/timestamp"
+          description: absolute time at which the access token will become obsolete
+        expIn:
+          $ref: "#/components/schemas/expIn"
+        iat:
+          $ref: "#/components/schemas/timestamp"
+          description: timestamp at which the access token was issued.
+        iss:
+          $ref: "#/components/schemas/iss"
+        jti:
+          $ref: "#/components/schemas/jti"
+        role:
+          description: |
+            Describes the token's owner role within the application. <br>
+            Roles can be: admin, user, guest.
+          enum:
+            - admin
+            - user
+            - guest
+          type: string
+        scope:
+          description: The token holder's permissions on the application data, as determined by their role
+          items:
+            enum:
+              - write:any
+              - delete:any
+              - write:own
+              - delete:own
+            type: string
+          maxItems: 2
+          type: array
+        sub:
+          description: the subject of the JWT; here, the user's ID (pseudo-randomly generated)
+          example: 425785
+          format: integer
+          type: number
+      required:
+        - aud
+        - expAt
+        - expIn
+        - iat
+        - iss
+        - jti
+        - role
+        - scope
+        - sub
+      type: object
+
+    jwtCliBundle:
+      description: |
+        Bundle containing the access and refresh tokens for CLI users.
+      properties:
+        accessToken:
+          description: the signed access JWT
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0...
+          format: plaintext
+          maxLength: 128
+          type: string
+        refreshToken:
+          description: the signed refresh JWT
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0...
+          format: plaintext
+          maxLength: 128
+      type: object
+    jwtRefresh:
+      description: a refresh token, conform with RFC8725. <br> It expires and requires the user to resend credentials every 6 hours.
+      properties:
+        aud:
+          $ref: "#/components/schemas/aud"
+        expAt:
+          $ref: "#/components/schemas/timestamp"
+          description: absolute time at which the refresh token will become obsolete
+        expIn:
+          $ref: "#/components/schemas/expIn"
+        iat:
+          $ref: "#/components/schemas/timestamp"
+          description: timestamp at which the refresh token was issued.
+        iss:
+          $ref: "#/components/schemas/iss"
+        jti:
+          $ref: "#/components/schemas/jti"
+      type: object
+
+    loser:
+      description: loser for the specified match
+      example: "loserLoon"
+      format: plaintext
+      maxLength: 64
+      type: string
+    match:
+      description: a single match
+      example:
+        duration:
+          beginAt: "2025-08-19T15:58:46.000Z"
+          endAt: "2025-08-19T15:58:46.000Z"
+          secDuration: 120
+        loser: loserLoon
+        gameID: 569741
+        score:
+          loserLoon: 2
+          winningWolf: 5
+        winner: winningWolf
+      properties:
+        duration:
+          $ref: "#/components/schemas/duration"
+        loser:
+          $ref: "#/components/schemas/loser"
+        gameID:
+          $ref: "#/components/schemas/id"
+        score:
+          $ref: "#/components/schemas/score"
+        winner:
+          $ref: "#/components/schemas/winner"
+      required:
+        - gameID
+        - winner
+        - loser
+        - duration
+        - score
+      type: object
 
     password:
       description: |
@@ -422,704 +423,703 @@
       pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{12,256}$
       type: string
 
-      profile:
-        description: a user's profile
-        properties:
-          gameHistory:
-            $ref: "#/components/schemas/gameHistory"
-          gameStats:
-            $ref: "#/components/schemas/gameStats"
-          user:
-            $ref: "#/components/schemas/user"
-        required:
-          - user
-          - gameHistory
-          - gameStats
-        type: object
-
-      profileColor:
-        description: the user's profile main color scheme
-        example: ff69b4
-        format: hexcode
-        maxLength: 64
-        type: string
-      response:
-        description: an object describing an HTTP response, to be referenced in responses schemas.
-        properties:
-          code:
-            description: the value of the response code
-            example: 418
-            format: integer
-            type: number
-          details:
-            description: more information on the response
-            example: I'm a teapot !
-            format: plaintext
-            maxLength: 256
-            type: string
-          message:
-            description: a human-readable message describing the response
-            example: I cannot make coffee.
-            format: plaintext
-            maxLength: 256
-            type: string
-        required:
-          - code
-          - message
-        type: object
-
-      score:
-        additionalProperties:
-          description: the mapped user's score in numeric value
-          type: number
-        description: a map of player names to their scores.
-        example:
-          loserLoon: 2
-          winningWolf: 5
-        maxProperties: 2
-        type: object
-
-      settings:
-        description: the user's personnal informations
-        properties:
-          avatar:
-            $ref: "#/components/schemas/avatar"
-          biographygraphy:
-            $ref: "#/components/schemas/biographygraphy"
-          email:
-            $ref: "#/components/schemas/email"
-          profileColor:
-            $ref: "#/components/schemas/profileColor"
-          username:
-            $ref: "#/components/schemas/username"
-        required:
-          - username
-          - avatar
-          - email
-        type: object
-
-      settingsPatch:
-        description: the user's personnal informations for PATCH /user/settings
-        properties:
-          avatar:
-            $ref: "#/components/schemas/avatar"
-          biographygraphy:
-            $ref: "#/components/schemas/biographygraphy"
-          email:
-            $ref: "#/components/schemas/email"
-          password:
-            $ref: "#/components/schemas/password"
-          profileColor:
-            $ref: "#/components/schemas/profileColor"
-          username:
-            $ref: "#/components/schemas/username"
-        type: object
-
-      status:
-        description: |
-          indicates whether the user is currently online. <br>
-          Values are true (online) and false (offline).
-        example: true
-        type: boolean
-
-      timestamp:
-        description: A timestamp.
-        example: 2025-08-19T15:58:46.000Z
-        format: date-time
-        maxLength: 32
-        type: string
-
-      tournament:
-        description: a tournament object with associated matches and outcomes
-        example:
-          matches:
-            - duration:
-                beginAt: "2025-08-19T15:58:46.000Z"
-                endAt: "2025-08-19T15:58:46.000Z"
-                secDuration: 89
-              loser: loserLion
-              gameID: 569741
-              score:
-                loserLion: 1
-                winningWeasel: 3
-              winner: winningWeasel
-            - duration:
-                beginAt: "2025-08-19T15:58:46.000Z"
-                endAt: 2025-08-19T15:58:46.000Z"
-                secDuration: 120
-              loser: loserLoon
-              gameID: 569741
-              score:
-                loserLoon: 2
-                winningWolf: 7
-              winner: winningWolf
-            - duration:
-                beginAt: 2025-08-19T15:58:46.000Z"
-                endAt: 2025-08-19T15:58:46.000Z"
-                secDuration: 295
-              loser: winningWeasel
-              gameID: 784512
-              score:
-                winningWeasel: 1
-                winningWolf: 4
-              winner: winningWolf
-          tournamentId: 156578
-          tournamentWinner: winningWolf
-        properties:
-          matches:
-            description: an array containing the tournament's matches
-            items:
-              $ref: "#/components/schemas/match"
-            maxItems: 2048
-            type: array
-          tournamentId:
-            $ref: "#/components/schemas/id"
-          tournamentWinner:
-            $ref: "#/components/schemas/winner"
-        required:
-          - matches
-          - tournamentWinner
-          - tournamentId
-        type: object
-
-      user:
-        description: a succint user's profile card
-        properties:
-          avatar:
-            $ref: "#/components/schemas/avatar"
-          biographygraphy:
-            $ref: "#/components/schemas/biographygraphy"
-          friendship:
-            $ref: "#/components/schemas/friendManager"
-          joinedOn:
-            $ref: "#/components/schemas/timestamp"
-          profileColor:
-            $ref: "#/components/schemas/profileColor"
-          rank:
-            description: the user's rank in competitive pong games
-            example: Gold
-            format: plaintext
-            maxLength: 32
-            type: string
-          status:
-            $ref: "#/components/schemas/status"
-          userId:
-            $ref: "#/components/schemas/id"
-          username:
-            $ref: "#/components/schemas/username"
-        required:
-          - avatar
-          - username
-          - profileColor
-          - rank
-          - status
-          - joinedOn
-        type: object
-
-      userArray:
-        description: an array of a user's friends.
-        example:
-          - avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
-            biographygraphy: ¯\_(ツ)_/¯
-            friendship:
-              friendsSince: "2025-08-19T15:58:46.000Z"
-              isBlocked: false
-              isFriend: true
-            joinedOn: "2025-08-19T15:58:46.000Z"
-            profileColor: ff69b4
-            rank: Gold
-            status: true
-            username: Dandelion
-          - avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEREffq..."
-            biographygraphy: Mh.
-            friendship:
-              friendsSince: "2025-08-19T15:58:46.000Z"
-              isBlocked: false
-              isFriend: true
-            joinedOn: "2025-04-07T13:00:00Z"
-            profileColor: ffd700
-            rank: Platinum
-            status: true
-            username: winningWolf
-        items:
+    profile:
+      description: a user's profile
+      properties:
+        gameHistory:
+          $ref: "#/components/schemas/gameHistory"
+        gameStats:
+          $ref: "#/components/schemas/gameStats"
+        user:
           $ref: "#/components/schemas/user"
-        maxItems: 2048
-        type: array
+      required:
+        - user
+        - gameHistory
+        - gameStats
+      type: object
 
-      username:
-        description: |
-          the user's chosen username, used as an identifier within the system. <br>
-          It is an alphanumeric string comprised between 4 and 18 characters.
-        example: "Dandelion"
-        format: plaintext
-        maxLength: 18
-        minLength: 4
-        pattern: "^[a-zA-Z0-9]{4,18}$"
-        type: string
+    profileColor:
+      description: the user's profile main color scheme
+      example: ff69b4
+      format: hexcode
+      maxLength: 64
+      type: string
+    response:
+      description: an object describing an HTTP response, to be referenced in responses schemas.
+      properties:
+        code:
+          description: the value of the response code
+          example: 418
+          format: integer
+          type: number
+        details:
+          description: more information on the response
+          example: I'm a teapot !
+          format: plaintext
+          maxLength: 256
+          type: string
+        message:
+          description: a human-readable message describing the response
+          example: I cannot make coffee.
+          format: plaintext
+          maxLength: 256
+          type: string
+      required:
+        - code
+        - message
+      type: object
 
-      winner:
-        description: winner for the specified match
-        example: "winningWolf"
-        format: plaintext
-        maxLength: 64
-        type: string
+    score:
+      additionalProperties:
+        description: the mapped user's score in numeric value
+        type: number
+      description: a map of player names to their scores.
+      example:
+        loserLoon: 2
+        winningWolf: 5
+      maxProperties: 2
+      type: object
 
-    securitySchemes:
-      bearerAuth:
-        bearerFormat: JWT
-        description: the authentication informations used by CLI users. Conforms with RFC8725.
-        scheme: bearer
-        type: http
-      cookieAuth:
-        description: the authentication informations used by browser users.
-        in: cookie
-        name: jwt
-        type: apiKey
+    settings:
+      description: the user's personnal informations
+      properties:
+        avatar:
+          $ref: "#/components/schemas/avatar"
+        biographygraphy:
+          $ref: "#/components/schemas/biographygraphy"
+        email:
+          $ref: "#/components/schemas/email"
+        profileColor:
+          $ref: "#/components/schemas/profileColor"
+        username:
+          $ref: "#/components/schemas/username"
+      required:
+        - username
+        - avatar
+        - email
+      type: object
 
-  info:
-    contact:
-      email: cdomet-d@student.42lyon.French
-      name: cdomet-d
-      url: https://localhost:8443/support
-    description: Documentation for the RESTful section the BigTeam's Transcendance project
-    license:
-      name: MIT
-      url: https://mit-license.org/
-    title: BigTeam API
-    version: 1.0.0
-  openapi: 3.1.0
+    settingsPatch:
+      description: the user's personnal informations for PATCH /user/settings
+      properties:
+        avatar:
+          $ref: "#/components/schemas/avatar"
+        biographygraphy:
+          $ref: "#/components/schemas/biographygraphy"
+        email:
+          $ref: "#/components/schemas/email"
+        password:
+          $ref: "#/components/schemas/password"
+        profileColor:
+          $ref: "#/components/schemas/profileColor"
+        username:
+          $ref: "#/components/schemas/username"
+      type: object
 
-  paths:
-    /api/account:
-      delete:
-        description: |
-          Deletes an user account and all associated information. <br>
-          The user will be prompted to send their credentials to validate their identity before deletion can happen.
-        operationId: deleteAccount
-        responses:
-          "200":
-            $ref: "#/components/responses/Success"
-          "400":
-            $ref: "#/components/responses/BadRequest"
-          "401":
-            $ref: "#/components/responses/Unauthorized"
-          "403":
-            $ref: "#/components/responses/Forbidden"
-          "404":
-            $ref: "#/components/responses/NotFound"
-        security:
-          - cookieAuth: []
-          - bearerAuth: []
-        summary: deletes an authenticated user account
-        tags:
-          - account management
-      post:
-        description: |
-          Creates a new persistent or temporary user
-        operationId: createAccount
-        requestBody:
+    status:
+      description: |
+        indicates whether the user is currently online. <br>
+        Values are true (online) and false (offline).
+      example: true
+      type: boolean
+
+    timestamp:
+      description: A timestamp.
+      example: 2025-08-19T15:58:46.000Z
+      format: date-time
+      maxLength: 32
+      type: string
+
+    tournament:
+      description: a tournament object with associated matches and outcomes
+      example:
+        matches:
+          - duration:
+              beginAt: "2025-08-19T15:58:46.000Z"
+              endAt: "2025-08-19T15:58:46.000Z"
+              secDuration: 89
+            loser: loserLion
+            gameID: 569741
+            score:
+              loserLion: 1
+              winningWeasel: 3
+            winner: winningWeasel
+          - duration:
+              beginAt: "2025-08-19T15:58:46.000Z"
+              endAt: 2025-08-19T15:58:46.000Z"
+              secDuration: 120
+            loser: loserLoon
+            gameID: 569741
+            score:
+              loserLoon: 2
+              winningWolf: 7
+            winner: winningWolf
+          - duration:
+              beginAt: 2025-08-19T15:58:46.000Z"
+              endAt: 2025-08-19T15:58:46.000Z"
+              secDuration: 295
+            loser: winningWeasel
+            gameID: 784512
+            score:
+              winningWeasel: 1
+              winningWolf: 4
+            winner: winningWolf
+        tournamentId: 156578
+        tournamentWinner: winningWolf
+      properties:
+        matches:
+          description: an array containing the tournament's matches
+          items:
+            $ref: "#/components/schemas/match"
+          maxItems: 2048
+          type: array
+        tournamentId:
+          $ref: "#/components/schemas/id"
+        tournamentWinner:
+          $ref: "#/components/schemas/winner"
+      required:
+        - matches
+        - tournamentWinner
+        - tournamentId
+      type: object
+
+    user:
+      description: a succint user's profile card
+      properties:
+        avatar:
+          $ref: "#/components/schemas/avatar"
+        biographygraphy:
+          $ref: "#/components/schemas/biographygraphy"
+        friendship:
+          $ref: "#/components/schemas/friendManager"
+        joinedOn:
+          $ref: "#/components/schemas/timestamp"
+        profileColor:
+          $ref: "#/components/schemas/profileColor"
+        rank:
+          description: the user's rank in competitive pong games
+          example: Gold
+          format: plaintext
+          maxLength: 32
+          type: string
+        status:
+          $ref: "#/components/schemas/status"
+        userId:
+          $ref: "#/components/schemas/id"
+        username:
+          $ref: "#/components/schemas/username"
+      required:
+        - avatar
+        - username
+        - profileColor
+        - rank
+        - status
+        - joinedOn
+      type: object
+
+    userArray:
+      description: an array of a user's friends.
+      example:
+        - avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+          biographygraphy: ¯\_(ツ)_/¯
+          friendship:
+            friendsSince: "2025-08-19T15:58:46.000Z"
+            isBlocked: false
+            isFriend: true
+          joinedOn: "2025-08-19T15:58:46.000Z"
+          profileColor: ff69b4
+          rank: Gold
+          status: true
+          username: Dandelion
+        - avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEREffq..."
+          biographygraphy: Mh.
+          friendship:
+            friendsSince: "2025-08-19T15:58:46.000Z"
+            isBlocked: false
+            isFriend: true
+          joinedOn: "2025-04-07T13:00:00Z"
+          profileColor: ffd700
+          rank: Platinum
+          status: true
+          username: winningWolf
+      items:
+        $ref: "#/components/schemas/user"
+      maxItems: 2048
+      type: array
+
+    username:
+      description: |
+        the user's chosen username, used as an identifier within the system. <br>
+        It is an alphanumeric string comprised between 4 and 18 characters.
+      example: "Dandelion"
+      format: plaintext
+      maxLength: 18
+      minLength: 4
+      pattern: "^[a-zA-Z0-9]{4,18}$"
+      type: string
+    winner:
+      description: winner for the specified match
+      example: "winningWolf"
+      format: plaintext
+      maxLength: 64
+      type: string
+
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: JWT
+      description: the authentication informations used by CLI users. Conforms with RFC8725.
+      scheme: bearer
+      type: http
+    cookieAuth:
+      description: the authentication informations used by browser users.
+      in: cookie
+      name: jwt
+      type: apiKey
+
+info:
+  contact:
+    email: cdomet-d@student.42lyon.French
+    name: cdomet-d
+    url: https://localhost:8443/support
+  description: Documentation for the RESTful section the BigTeam's Transcendance project
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  title: BigTeam API
+  version: 1.0.0
+openapi: 3.1.0
+
+paths:
+  /api/account:
+    delete:
+      description: |
+        Deletes an user account and all associated information. <br>
+        The user will be prompted to send their credentials to validate their identity before deletion can happen.
+      operationId: deleteAccount
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      summary: deletes an authenticated user account
+      tags:
+        - account management
+    post:
+      description: |
+        Creates a new persistent or temporary user
+      operationId: createAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/credentials"
+        description: the user's username and password, used to create the account.
+        required: true
+      responses:
+        "201":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      summary: registers a new user
+      tags:
+        - account management
+
+  /api/account/settings:
+    get:
+      description: |
+        Returns the settings for the user, as identified by their token.
+        A user will only be able to access their own setting, never that of another user.
+      operationId: getUserSettings
+      responses:
+        "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/credentials"
-          description: the user's username and password, used to create the account.
-          required: true
-        responses:
-          "201":
-            $ref: "#/components/responses/Success"
-          "400":
-            $ref: "#/components/responses/BadRequest"
-          "401":
-            $ref: "#/components/responses/Unauthorized"
-          "403":
-            $ref: "#/components/responses/Forbidden"
-          "404":
-            $ref: "#/components/responses/NotFound"
-        summary: registers a new user
-        tags:
-          - account management
+                $ref: "#/components/schemas/settings"
+          description: Returns a user's profile (profile card, match history, gameStats)
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      summary: get user's settings by ID
+      tags:
+        - users
+    patch:
+      description: |
+        Sends a request to the user database to update given informations. <br>
+        Informations can be modified individually or in batches.
+      operationId: updateUserSettings
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: "#/components/schemas/settingsPatch"
+        description: |
+          A json patch document listing changes to apply to the user's settings.
+        required: true
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+          description: returns confirmation of the updated informations
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+      security:
+        - bearerAuth: []
+      summary: update user's personnal information by ID
+      tags:
+        - users
 
-    /api/account/settings:
-      get:
+  /api/auth/browser:
+    post:
+      description: |
+        Allows browser based users to authenticate using JWT<br>
+        It is stored in a HTTPOnly, Secure, Same-Site cookie.
+      operationId: browserAuthentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/credentials"
         description: |
-          Returns the settings for the user, as identified by their token.
-          A user will only be able to access their own setting, never that of another user.
-        operationId: getUserSettings
-        responses:
-          "200":
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/settings"
-            description: Returns a user's profile (profile card, match history, gameStats)
-          "400":
-            $ref: "#/components/responses/BadRequest"
-          "401":
-            $ref: "#/components/responses/Unauthorized"
-          "403":
-            $ref: "#/components/responses/Forbidden"
-          "404":
-            $ref: "#/components/responses/NotFound"
-          "405":
-            $ref: "#/components/responses/MethodNotAllowed"
-        security:
-          - bearerAuth: []
-          - cookieAuth: []
-        summary: get user's settings by ID
-        tags:
-          - users
-      patch:
-        description: |
-          Sends a request to the user database to update given informations. <br>
-          Informations can be modified individually or in batches.
-        operationId: updateUserSettings
-        requestBody:
-          content:
-            application/json-patch+json:
-              schema:
-                $ref: "#/components/schemas/settingsPatch"
+          The browser user's credentials to validate for authentication.
+        required: true
+      responses:
+        "204":
           description: |
-            A json patch document listing changes to apply to the user's settings.
-          required: true
-        responses:
-          "200":
-            $ref: "#/components/responses/Success"
-            description: returns confirmation of the updated informations
-          "400":
-            $ref: "#/components/responses/BadRequest"
-          "401":
-            $ref: "#/components/responses/Unauthorized"
-          "403":
-            $ref: "#/components/responses/Forbidden"
-          "404":
-            $ref: "#/components/responses/NotFound"
-          "405":
-            $ref: "#/components/responses/MethodNotAllowed"
-        security:
-          - bearerAuth: []
-        summary: update user's personnal information by ID
-        tags:
-          - users
+            Upon success, server sends a JWT to the client. <br>
+            It is stored automatically in a secure cookie (HTTP Only, Secure, Same-Site)
+          headers:
+            Set-Cookie:
+              $ref: "#/components/headers/Set-Cookie"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      summary: generates an authentication token for browser users
+      tags:
+        - authentication
 
-    /api/auth/browser:
-      post:
-        description: |
-          Allows browser based users to authenticate using JWT<br>
-          It is stored in a HTTPOnly, Secure, Same-Site cookie.
-        operationId: browserAuthentication
-        requestBody:
+  /api/auth/cli:
+    post:
+      description: |
+        Allows CLI based users to authenticate using a JWT. <br>
+        The JWT is handled by the CLI logic and stored in memory.
+      operationId: CLIAuthentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/credentials"
+        description: the user's credentials to be validated in the server
+        required: true
+      responses:
+        "200":
+          content:
+            application/jwt:
+              schema:
+                $ref: "#/components/schemas/jwtCliBundle"
+          description: the encoded tokens to be decoded by the CLI.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      summary: generates an authentication token for CLI users
+      tags:
+        - authentication
+
+  /api/auth/logout:
+    delete:
+      operationId: userLogout
+      responses:
+        "204":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      summary: removes the user cookie containing the JWT, allowing them to logout.
+      tags:
+        - authentication
+
+  /api/auth/refresh:
+    post:
+      description: |
+        Uses the user's refresh token to reissue a valid access token. <br>
+        The refresh token is embedded in the request's header and must be resolved from it.
+      operationId: refreshToken
+      responses:
+        "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/credentials"
+                $ref: "#/components/schemas/jwtCliBundle"
           description: |
-            The browser user's credentials to validate for authentication.
-          required: true
-        responses:
-          "204":
-            description: |
-              Upon success, server sends a JWT to the client. <br>
-              It is stored automatically in a secure cookie (HTTP Only, Secure, Same-Site)
-            headers:
-              Set-Cookie:
-                $ref: "#/components/headers/Set-Cookie"
-          "400":
-            $ref: "#/components/responses/BadRequest"
-          "401":
-            $ref: "#/components/responses/Unauthorized"
-        summary: generates an authentication token for browser users
-        tags:
-          - authentication
+            returns fresh access & refresh tokens if the user's refresh token was found to be valid. <br>
+            Handled manually by the CLI logic, as in POST /auth/cli.
+        "204":
+          description: |
+            returns fresh access & refresh tokens if the user's refresh token was found to be valid. <br>
+            They are set as cookies for a browser-facing user. <br>
+            The security specs are identical to the ones issues in POST /auth/browser
+          headers:
+            Set-Cookie:
+              $ref: "#/components/headers/Set-Cookie"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      summary: refreshes the user's session using the JWT refresh token.
+      tags:
+        - authentication
 
-    /api/auth/cli:
-      post:
-        description: |
-          Allows CLI based users to authenticate using a JWT. <br>
-          The JWT is handled by the CLI logic and stored in memory.
-        operationId: CLIAuthentication
-        requestBody:
+  /api/user/friend-requests:
+    get:
+      description: |
+        Return an object containing the pending friend requests of the user, identified by their token.
+      operationId: getPendingRequests
+      responses:
+        "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/credentials"
-          description: the user's credentials to be validated in the server
+                $ref: "#/components/schemas/userArray"
+          description: On success, returns an array of the profile cards of the user's pending friend requests
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      summary: returns a user's pending friend requests
+      tags:
+        - friends
+
+  /api/user/friend-requests/{requestId}:
+    patch:
+      description: |
+        Patches the existing friend request by updating the request status. <br>
+        It allows the user to both accept or deline the friendship request.
+      operationId: handleFriendRequest
+      parameters:
+        - description: the friendship request issued.
+          in: path
+          name: requestId
           required: true
-        responses:
-          "200":
-            content:
-              application/jwt:
-                schema:
-                  $ref: "#/components/schemas/jwtCliBundle"
-            description: the encoded tokens to be decoded by the CLI.
-          "400":
-            $ref: "#/components/responses/BadRequest"
-          "401":
-            $ref: "#/components/responses/Unauthorized"
-        summary: generates an authentication token for CLI users
-        tags:
-          - authentication
-
-    /api/auth/logout:
-      delete:
-        operationId: userLogout
-        responses:
-          "204":
-            $ref: "#/components/responses/Success"
-          "400":
-            $ref: "#/components/responses/BadRequest"
-          "401":
-            $ref: "#/components/responses/Unauthorized"
-        security:
-          - bearerAuth: []
-          - cookieAuth: []
-        summary: removes the user cookie containing the JWT, allowing them to logout.
-        tags:
-          - authentication
-
-    /api/auth/refresh:
-      post:
-        description: |
-          Uses the user's refresh token to reissue a valid access token. <br>
-          The refresh token is embedded in the request's header and must be resolved from it.
-        operationId: refreshToken
-        responses:
-          "200":
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/jwtCliBundle"
-            description: |
-              returns fresh access & refresh tokens if the user's refresh token was found to be valid. <br>
-              Handled manually by the CLI logic, as in POST /auth/cli.
-          "204":
-            description: |
-              returns fresh access & refresh tokens if the user's refresh token was found to be valid. <br>
-              They are set as cookies for a browser-facing user. <br>
-              The security specs are identical to the ones issues in POST /auth/browser
-            headers:
-              Set-Cookie:
-                $ref: "#/components/headers/Set-Cookie"
-          "400":
-            $ref: "#/components/responses/BadRequest"
-          "401":
-            $ref: "#/components/responses/Unauthorized"
-        security:
-          - bearerAuth: []
-          - cookieAuth: []
-        summary: refreshes the user's session using the JWT refresh token.
-        tags:
-          - authentication
-
-    /api/user/friend-requests:
-      get:
-        description: |
-          Return an object containing the pending friend requests of the user, identified by their token.
-        operationId: getPendingRequests
-        responses:
-          "200":
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/userArray"
-            description: On success, returns an array of the profile cards of the user's pending friend requests
-          "400":
-            $ref: "#/components/responses/BadRequest"
-          "401":
-            $ref: "#/components/responses/Unauthorized"
-          "403":
-            $ref: "#/components/responses/Forbidden"
-          "404":
-            $ref: "#/components/responses/NotFound"
-        security:
-          - bearerAuth: []
-          - cookieAuth: []
-        summary: returns a user's pending friend requests
-        tags:
-          - friends
-
-    /api/user/friend-requests/{requestId}:
-      patch:
-        description: |
-          Patches the existing friend request by updating the request status. <br>
-          It allows the user to both accept or deline the friendship request.
-        operationId: handleFriendRequest
-        parameters:
-          - description: the friendship request issued.
-            in: path
-            name: requestId
-            required: true
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json-patch+json:
             schema:
-              type: number
-        requestBody:
+              $ref: "#/components/schemas/user"
+        description: |
+          a json-patch file updating the status of the friend request to either true or false.
+          description: the json patch document instructing how to update to request (isFriend == true || isFriend == false)
+      responses:
+        "201":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      summary: accepts a friend request
+      tags:
+        - friends
+
+  /api/user/friends:
+    get:
+      description: |
+        Returns the settings for the user, as identified by their token.
+        A user will only be able to access their own settings, never that of another user.
+      operationId: getUserSettings
+      responses:
+        "200":
           content:
-            application/json-patch+json:
+            application/json:
               schema:
-                $ref: "#/components/schemas/user"
+                $ref: "#/components/schemas/userArray"
+          description: On success, returns an array of the profile cards of all the user's friends.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      summary: returns a user's friend list
+      tags:
+        - friends
+
+  /api/user/friends-requests/{username}:
+    post:
+      description: |
+        Creates a new friend request by posting a new, unvalidated entry to another user friend's list. <br>
+        The request waits in the other user's friend list with an unvalidated status until confirmed or deleted by the target user.
+      operationId: requestFriendship
+      parameters:
+        - description: the username of the target of the friend request
+          in: path
+          name: username
+          required: true
+          schema:
+            maxLength: 18
+            pattern: "^[a-zA-Z0-9]{4,18}$"
+            type: string
+      responses:
+        "202":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      summary: sends a friend request to {username}.
+      tags:
+        - friends
+
+  /api/user/friends/{username}:
+    delete:
+      description: |
+        Remove friend identified by {username} from the authenticated user's friend list.
+      operationId: removeFriend
+      parameters:
+        - description: the username of the friend to remove
+          in: path
+          name: username
+          required: true
+          schema:
+            maxLength: 18
+            pattern: "^[a-zA-Z0-9]{4,18}$"
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      summary: removes {username} as a friend
+      tags:
+        - friends
+
+  /api/users/{username}:
+    get:
+      description: |
+        Returns the public profile informations for the user specified by username.
+
+        All users may access other users public profiles.
+      operationId: getUserProfile
+      parameters:
+        - description: |
+            the sought user's username. <br> It is an alphanumeric string of 4 to 18 characters.
+          example: angryGoose
+          in: path
+          name: username
+          required: true
+          schema:
+            maxLength: 18
+            pattern: "^[a-zA-Z0-9]{4,18}$"
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/profile"
           description: |
-            a json-patch file updating the status of the friend request to either true or false.
-            description: the json patch document instructing how to update to request (isFriend == true || isFriend == false)
-        responses:
-          "201":
-            $ref: "#/components/responses/Success"
-          "400":
-            $ref: "#/components/responses/BadRequest"
-          "401":
-            $ref: "#/components/responses/Unauthorized"
-          "403":
-            $ref: "#/components/responses/Forbidden"
-          "404":
-            $ref: "#/components/responses/NotFound"
-        security:
-          - bearerAuth: []
-          - cookieAuth: []
-        summary: accepts a friend request
-        tags:
-          - friends
+            Returns a user's profile (profile card, match history, gameStats) to be rendered for the UI
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+      summary: get user's profile by username.
+      tags:
+        - users
 
-    /api/user/friends:
-      get:
-        description: |
-          Returns the settings for the user, as identified by their token.
-          A user will only be able to access their own settings, never that of another user.
-        operationId: getUserSettings
-        responses:
-          "200":
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/userArray"
-            description: On success, returns an array of the profile cards of all the user's friends.
-          "400":
-            $ref: "#/components/responses/BadRequest"
-          "401":
-            $ref: "#/components/responses/Unauthorized"
-          "403":
-            $ref: "#/components/responses/Forbidden"
-          "404":
-            $ref: "#/components/responses/NotFound"
-        security:
-          - bearerAuth: []
-          - cookieAuth: []
-        summary: returns a user's friend list
-        tags:
-          - friends
-
-    /api/user/friends-requests/{username}:
-      post:
-        description: |
-          Creates a new friend request by posting a new, unvalidated entry to another user friend's list. <br>
-          The request waits in the other user's friend list with an unvalidated status until confirmed or deleted by the target user.
-        operationId: requestFriendship
-        parameters:
-          - description: the username of the target of the friend request
-            in: path
-            name: username
-            required: true
-            schema:
-              maxLength: 18
-              pattern: "^[a-zA-Z0-9]{4,18}$"
-              type: string
-        responses:
-          "202":
-            $ref: "#/components/responses/Success"
-          "400":
-            $ref: "#/components/responses/BadRequest"
-          "401":
-            $ref: "#/components/responses/Unauthorized"
-          "403":
-            $ref: "#/components/responses/Forbidden"
-          "404":
-            $ref: "#/components/responses/NotFound"
-        security:
-          - bearerAuth: []
-          - cookieAuth: []
-        summary: sends a friend request to {username}.
-        tags:
-          - friends
-
-    /api/user/friends/{username}:
-      delete:
-        description: |
-          Remove friend identified by {username} from the authenticated user's friend list.
-        operationId: removeFriend
-        parameters:
-          - description: the username of the friend to remove
-            in: path
-            name: username
-            required: true
-            schema:
-              maxLength: 18
-              pattern: "^[a-zA-Z0-9]{4,18}$"
-              type: string
-        responses:
-          "200":
-            $ref: "#/components/responses/Success"
-          "400":
-            $ref: "#/components/responses/BadRequest"
-          "401":
-            $ref: "#/components/responses/Unauthorized"
-          "403":
-            $ref: "#/components/responses/Forbidden"
-          "404":
-            $ref: "#/components/responses/NotFound"
-          "405":
-            $ref: "#/components/responses/MethodNotAllowed"
-        security:
-          - bearerAuth: []
-          - cookieAuth: []
-        summary: removes {username} as a friend
-        tags:
-          - friends
-
-    /api/users/{username}:
-      get:
-        description: |
-          Returns the public profile informations for the user specified by username.
-
-          All users may access other users public profiles.
-        operationId: getUserProfile
-        parameters:
-          - description: |
-              the sought user's username. <br> It is an alphanumeric string of 4 to 18 characters.
-            example: angryGoose
-            in: path
-            name: username
-            required: true
-            schema:
-              maxLength: 18
-              pattern: "^[a-zA-Z0-9]{4,18}$"
-              type: string
-        responses:
-          "200":
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/profile"
-            description: |
-              Returns a user's profile (profile card, match history, gameStats) to be rendered for the UI
-          "400":
-            $ref: "#/components/responses/BadRequest"
-          "401":
-            $ref: "#/components/responses/Unauthorized"
-          "403":
-            $ref: "#/components/responses/Forbidden"
-          "404":
-            $ref: "#/components/responses/NotFound"
-          "405":
-            $ref: "#/components/responses/MethodNotAllowed"
-        summary: get user's profile by username.
-        tags:
-          - users
-
-  servers:
-    - description: Our lone server, we don't really need a production one
-      url: https://localhost:8443
-  tags:
-    - description: endpoints relative to user authentication.
-      name: authentication
-    - description: endpoints relative to account management.
-      name: account management
-    - description: endpoints relative to friend management.
-      name: friends
-    - description: endpoints relative to user profile and settings management and user UI.
-      name: users
+servers:
+  - description: Our lone server, we don't really need a production one
+    url: https://localhost:8443
+tags:
+  - description: endpoints relative to user authentication.
+    name: authentication
+  - description: endpoints relative to account management.
+    name: account management
+  - description: endpoints relative to friend management.
+    name: friends
+  - description: endpoints relative to user profile and settings management and user UI.
+    name: users

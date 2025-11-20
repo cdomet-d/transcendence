@@ -1,7 +1,7 @@
 CREATE TABLE account (
 	userID INTEGER PRIMARY KEY AUTOINCREMENT,
-	hashedPassword TEXT,
 	username TEXT UNIQUE,
+	hashedPassword TEXT,
 	userRole INTEGER,
 	registerDate TEXT,
 	defaultLang TEXT
