@@ -14,7 +14,7 @@ clean: stop
 
 cleandb:
 	@rm services/accessibility/data/*.db
-	@rm services/account/data/*.db
+	@rm services/auth/data/*.db
 	@rm services/dashboards/data/*.db
 	@rm services/friends/data/*.db
 	@rm services/users/data/*.db

@@ -27,23 +27,23 @@ services:
     volumes:
       - ./services/accessibility/app:/usr/app
       - ./services/accessibility/data:/usr/data
-  account:
-    build:
-      context: ./services/account
-      dockerfile: Dockerfile
-    container_name: account
-    image: account:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/account/app:/usr/app
-      - ./services/account/data:/usr/data
+#  account:
+#    build:
+#      context: ./services/account
+#      dockerfile: Dockerfile
+#    container_name: account
+#    image: account:0.0.1
+#    networks:
+#      - transcendence
+#    restart: unless-stopped
+#    environment:
+#      - NGINXIP=nginx
+#    secrets:
+#      - ssl-key.pem
+#      - ssl-cert.pem
+#    volumes:
+#      - ./services/account/app:/usr/app
+#      - ./services/account/data:/usr/data
   auth:
     build:
       context: ./services/auth
@@ -61,8 +61,12 @@ services:
     secrets:
       - ssl-key.pem
       - ssl-cert.pem
+      #    volumes:
+#      - ./services/account/app:/usr/app
+#      - ./services/account/data:/usr/data
     volumes:
       - ./services/auth/app:/usr/app
+      - ./services/auth/data:/usr/data
   dashboard:
     build:
       context: ./services/dashboards
