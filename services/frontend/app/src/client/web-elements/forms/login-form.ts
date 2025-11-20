@@ -9,8 +9,8 @@ export class LoginForm extends BaseForm {
     override async sendForm(url: string, req: RequestInit): Promise<Response> {
         try {
             const response = await fetch(url, req);
-            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-            console.log('Fetch successful', response);
+            if (!response.ok)
+                throw new Error(`HTTP Error: ${response.status}: duplicate ressource`);
             if (typeof req.body === 'string') {
                 const payload = JSON.parse(req.body);
 
@@ -19,12 +19,9 @@ export class LoginForm extends BaseForm {
                     path: `/user/:${payload.username}`,
                     params: { login: payload.username },
                 });
-            } else {
-                console.log('Error: Could not parse request.body (`body` is not `String` type');
             }
             return response;
         } catch (error) {
-            console.error('Fetch failed', error);
             throw error;
         }
     }

@@ -97,7 +97,7 @@ export function renderAuth() {
     const wrapper = createWrapper('authsettings');
     wrapper.append(createTabs(authOptions));
     document.body.layoutInstance!.appendAndCache(wrapper);
-    updatePageTitle('Login/Register');
+    updatePageTitle('Login | Register');
 }
 
 export function renderLeaderboard() {
@@ -114,10 +114,10 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
     console.log('renderProfile');
     if (param) {
         const login = param.params.login;
-        const req: RequestInit = { method: 'get' };
+        // const req: RequestInit = { method: 'get' };
 
         //TODO: API call with login here to fetch user data
-        await fetch(`https://localhost:8443/api/bff/users/${login}/profile`, req); // 404 (NGINX or BFF does not recognise route)
+        // await fetch(`https://localhost:8443/api/bff/users/${login}/profile`, req); 
         prepareLayout(document.body.layoutInstance, 'profile');
         document.body.layoutInstance?.appendAndCache(
             document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,

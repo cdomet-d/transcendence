@@ -46,7 +46,7 @@ export const userSettingsForm: FormDetails = {
 };
 
 export const registrationForm: FormDetails = {
-    action: 'https://localhost:8443/api/auth/register/',
+    action: 'https://localhost:8443/api/auth/register',
     heading: 'Register',
     ariaLabel: 'Create an account',
     id: 'account-create',
@@ -73,7 +73,7 @@ export const registrationForm: FormDetails = {
 };
 
 export const loginForm: FormDetails = {
-    action: 'https://localhost:8443/api/auth/login/',
+    action: 'https://localhost:8443/api/auth/login',
     heading: 'Login',
     ariaLabel: 'Log into an account',
     id: 'account-login',

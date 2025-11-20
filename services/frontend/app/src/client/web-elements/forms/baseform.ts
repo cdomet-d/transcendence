@@ -3,6 +3,7 @@ import type { FormDetails } from '../types-interfaces.js';
 import { createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
 import { createHeading } from '../typography/helpers.js';
 import { createButton } from '../navigation/buttons-helpers.js';
+import { BadRequest } from '../event-elements/error';
 
 const emptyForm: FormDetails = {
     action: '',
@@ -125,7 +126,6 @@ export class BaseForm extends HTMLFormElement {
             console.log('Fetch successful', response);
             return response;
         } catch (error) {
-            console.error('Fetch failed', error);
             throw error;
         }
     }
@@ -143,7 +143,18 @@ export class BaseForm extends HTMLFormElement {
             req.body = this.createReqBody(form);
         }
         console.log(this.#formData.action, req.method, req.body);
-        await this.sendForm(this.#formData.action, req);
+        try {
+            await this.sendForm(this.#formData.action, req);
+        } catch (error) {
+			let mess = 'Something when wrong'
+			const err = document.createElement('span', {is: 'bad-request'}) as BadRequest;
+
+			if (error instanceof Error) {
+				mess = error.message;
+			}
+			err.content = mess;
+			document.body.layoutInstance?.append(err);
+		}
     }
 
     #validate() {

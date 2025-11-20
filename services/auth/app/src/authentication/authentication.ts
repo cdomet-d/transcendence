@@ -45,7 +45,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/register/', { schema: authSchema }, async (request, reply) => {
+	serv.post('/register', { schema: authSchema }, async (request, reply) => {
 		let newAccountId: number | null = null;
 		try {
 			const { username, password } = request.body as { username: string, password: string };
