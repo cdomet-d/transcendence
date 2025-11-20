@@ -60,11 +60,11 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 				return (reply.code(409).send({ message: 'Username taken' }));
 
 			const query = `
-				INSERT INTO account (hashedPassword, username, userRole, registerDate, defaultLang)
-				VALUES (?, ?, 1, ?, ?)
+				INSERT INTO account (hashedPassword, username)
+				VALUES (?, ?)
 			`;
 
-			const params = [hashedPassword, username, new Date().toISOString(), 'English'];
+			const params = [hashedPassword, username];
 			const account = await serv.dbAuth.run(query, params);
 
 			if (account.changes === 0 || !account.lastID)

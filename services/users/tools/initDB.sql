@@ -7,8 +7,8 @@ CREATE TABLE userProfile (
   activityStatus INTEGER,
   lastConnection DATETIME,
   userRole INTEGER,
-  registerDate TEXT,
-  defaultLang TEXT
+  since TEXT,
+  lang TEXT
 );
 
 CREATE TABLE userStats (

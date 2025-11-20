@@ -8,11 +8,9 @@ interface UserProfile {
 	biography: string;
 	profileColor: string;
 	winstreak: number;
-}
-
-interface UserRow {
-	userID: number;
-	username: string;
+	lang: string;
+	status: boolean;
+	since: string;
 }
 
 interface UserStats {
@@ -95,12 +93,13 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const queryProfile = `
 				INSERT INTO userProfile
-				(userID, username, activityStatus, lastConnection)
-				VALUES (?, ?, 1, ?)
+				(userID, username, activityStatus, lastConnection, profileColor, userRole, since, lang)
+				VALUES (?, ?, 1, ?, "bg-BE5103", 1, ?, "en")
 			`;
 			const paramsProfile = [
 				userID,
 				username,
+				new Date().toISOString(),
 				new Date().toISOString()
 			];
 
@@ -143,6 +142,9 @@ export async function userRoutes(serv: FastifyInstance) {
 				'avatar',
 				'biography',
 				'profileColor',
+				'lastConnection',
+				'activityStatus',
+				'lang'
 			];
 
 			const keysToUpdate = Object.keys(body).filter(key => validStatKeys.includes(key));
