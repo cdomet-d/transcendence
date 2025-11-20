@@ -9,7 +9,7 @@ export const main: MenuData = {
             href: '/leaderboard',
             img: null,
         },
-        { id: 'lobby', title: 'Play', datalink: '/preLobby', href: '/preLobby', img: null },
+        { id: 'lobby', title: 'Play', datalink: '/lobbyMenu', href: '/lobbyMenu', img: null },
         { id: 'profile', title: 'Profile', datalink: 'profile', href: '/user/default', img: null },
     ],
 };

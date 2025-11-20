@@ -137,11 +137,11 @@ export function renderSettings() {
     updatePageTitle('Settings');
 }
 
-export function renderPreLobby() {
-    console.log('renderPreLobby');
+export function renderLobbyMenu() {
+    console.log('renderLobbyMenu');
     prepareLayout(document.body.layoutInstance, 'lobbyMenu');
     document.body.layoutInstance!.appendAndCache(
-        createHeading('0', 'Choose Lobby'),
+        createHeading('1', 'Choose Lobby'),
         createMenu(lobbyMenu, 'vertical', true),
     );
     updatePageTitle('Choose Lobby');
