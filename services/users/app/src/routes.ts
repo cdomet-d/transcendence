@@ -144,7 +144,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				'profileColor',
 				'lastConnection',
 				'activityStatus',
-				'lang'
+				'lang',
 			];
 
 			const keysToUpdate = Object.keys(body).filter(key => validStatKeys.includes(key));

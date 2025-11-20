@@ -52,7 +52,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 
 			if (!username || !password)
 				return (reply.code(400).send({ message: '[AUTH] Missing username or password.' }));
-			
+
 			const hashedPassword = await bcrypt.hash(password, 12);
 
 			const usernameTaken = await checkUsernameUnique(serv.dbAuth, username);
@@ -111,6 +111,56 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			return (reply.code(204).send());
 		} catch (error) {
 			serv.log.error(`[AUTH] Error deleting account: ${error}`);
+			throw (error);
+		}
+	});
+
+	serv.patch('/:userID', async (request, reply) => {
+		try {
+			const { userID } = request.params as { userID: string };
+			const body = request.body as { [key: string]: any };
+
+			const validKeys = [
+				'hashedPassword',
+				'username',
+			];
+
+			const keysToUpdate = Object.keys(body).filter(key =>
+				validKeys.includes(key) && body[key] !== ''
+			);
+
+			if (keysToUpdate.length === 0) {
+				return (reply.code(400).send({
+					success: false,
+					message: '[AUTH] No valid fields provided for update.'
+				}));
+			}
+
+			const setClauses = keysToUpdate.map(key => `${key} = ?`).join(', ');
+			const params = keysToUpdate.map(key => body[key]);
+			params.push(userID);
+
+			const query = `
+				UPDATE account SET ${setClauses} WHERE userID = ?
+			`;
+
+			const response = await serv.dbAuth.run(query, params);
+			if (response.changes === 0) {
+				return (reply.code(404).send({
+					success: false,
+					message: '[AUTH] Account not found'
+				}));
+			}
+
+			return (reply.code(200).send({
+				success: true,
+				message: '[AUTH] Account updated successfully!'
+			}));
+
+		} catch (error) {
+			if (error && typeof error === 'object' && 'code' in error && (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE')
+				return (reply.code(409).send({ success: false, message: '[AUTH] This username is already taken.' }));
+			serv.log.error(`[AUTH] Error updating account: ${error}`);
 			throw (error);
 		}
 	});
