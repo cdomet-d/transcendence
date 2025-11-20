@@ -1,0 +1,5 @@
+CREATE TABLE account (
+	INTEGER PRIMARY KEY AUTOINCREMENT,
+	username TEXT UNIQUE,
+	hashedPassword TEXT
+);
