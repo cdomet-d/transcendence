@@ -77,7 +77,7 @@ export const social: MenuData = {
         },
     ],
 
-    links: [	
+    links: [
         {
             //TODO: autofill pongsettings form and lauch a 2 persons match
             datalink: '/lobby',

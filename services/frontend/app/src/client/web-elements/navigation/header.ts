@@ -19,7 +19,7 @@ export class PageHeader extends HTMLElement {
     #searchbar: Searchbar;
     #mainNav: Menu;
     #logout: CustomButton;
-	#login: CustomButton;
+    #login: CustomButton;
     #notif: NotifBox;
     #language: DropdownMenu;
 
@@ -35,7 +35,14 @@ export class PageHeader extends HTMLElement {
     }
 
     connectedCallback() {
-        this.append(this.#home, this.#searchbar, this.#mainNav, this.#notif, this.#language, this.#login);
+        this.append(
+            this.#home,
+            this.#searchbar,
+            this.#mainNav,
+            this.#notif,
+            this.#language,
+            this.#login,
+        );
         this.render();
     }
 
@@ -54,8 +61,8 @@ export class PageHeader extends HTMLElement {
             'z-1',
         );
 
-		//TODO: dynamic login/logout button depending on user connection status
-		
+        //TODO: dynamic login/logout button depending on user connection status
+
         this.#mainNav.classList.add('place-self-stretch');
         this.#logout.classList.add('h-m', 'w-l', 'hidden');
         this.#login.classList.add('h-m', 'w-l');

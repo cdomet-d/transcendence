@@ -171,12 +171,12 @@ export function renderGame() {
     const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
     const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
 
-	//TODO: set playerNames from game-manager object
+    //TODO: set playerNames from game-manager object
     ui.player1.innerText = 'CrimeGoose';
     ui.player2.innerText = 'WinnerWolf';
 
     const layout = document.body.layoutInstance;
-	// TODO: set pong-court theme from game-manager object
+    // TODO: set pong-court theme from game-manager object
     court.theme = farm;
     if (layout) layout.theme = farmAssets;
     document.body.layoutInstance?.appendAndCache(ui, court);

@@ -32,7 +32,7 @@ export class SocialMenu extends Menu {
      */
     set view(v: ProfileView) {
         this.#view = v;
-		this.render();
+        this.render();
     }
 
     /** Called when element connects to DOM; calls base and updates view. */
@@ -70,9 +70,9 @@ export class SocialMenu extends Menu {
         else if (this.#view === 'self') this.self();
     }
 
-	override render() {
-		this.updateView();
-	}
+    override render() {
+        this.updateView();
+    }
 }
 
 if (!customElements.get('social-menu')) {
@@ -107,7 +107,13 @@ export class DropdownMenu extends HTMLDivElement {
         this.#optionListData = [];
         this.#listboxOptions = [];
         this.#listbox = document.createElement('ul');
-        this.#toggle = createButton({ id: '', type: 'button', content: '', img: null, ariaLabel: '' });
+        this.#toggle = createButton({
+            id: '',
+            type: 'button',
+            content: '',
+            img: null,
+            ariaLabel: '',
+        });
         this.#currentFocus = -1;
         this.#keynavHandler = this.keyboardNavHandler.bind(this);
         this.#mouseNavHandler = this.mouseNavHandler.bind(this);
