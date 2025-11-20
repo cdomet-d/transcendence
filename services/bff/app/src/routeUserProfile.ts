@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import type { UserProfileView, userData } from './bff.interface.js';
 import * as bcrypt from 'bcrypt';
-import { fetchProfileData, buildFullUserData, fetchUserID, processMatches, fetchFriendList, fetchUserStats, fetchRelationship, updateBio, updateProfileColor, updateAvatar } from './bffUserProfile.service.js';
+import { fetchUserData, /*buildFullUserData*/, fetchUserID, processMatches, fetchFriendList, fetchUserStats, fetchProfileView, updateBio, updateProfileColor, updateAvatar } from './bffUserProfile.service.js';
 import { updatePassword, fetchUserDataAccount, updateUsername,  updateDefaultLang, deleteAccount, deleteUser  } from './bffAccount.service.js';
 import { deleteFriendship } from './bffFriends.service.js'
 
@@ -113,24 +113,23 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const targetUserID = await fetchUserID(serv.log, targetUsername);
 
 			const [
-				AccountData,
-				ProfileData,
+				userData,
 				relation
 			] = await Promise.all([
-				fetchUserDataAccount(serv.log, Number(targetUserID)),
-				fetchProfileData(serv.log, Number(targetUserID)),
-				fetchRelationship(serv.log, viewerUserID, targetUsername),
+				fetchUserData(serv.log, Number(targetUserID)),
+				fetchProfileView(serv.log, viewerUserID, targetUsername),
 			]);
 
 			const combinedUserData: userData = {
 				userID: String(targetUserID),
-				username: AccountData.username,
-				avatar: ProfileData.avatar,
-				biography: ProfileData.biography,
-				profileColor: ProfileData.profileColor,
-				since: AccountData.registerDate,
-				status: ProfileData.userStatus,
-				winstreak: ProfileData.winstreak,
+				username: userData.username,
+				avatar: userData.avatar,
+				biography: userData.biography,
+				profileColor: userData.profileColor,
+				since: userData.since,
+				status: userData.status,
+				winstreak: userData.winstreak,
+				lang: userData.lang,
 				relation: relation,
 			};
 

@@ -1,8 +1,106 @@
 import type {
-	ProfileDataBatch, ProfileDataBatchResponse, ProfileView,
-	ProfileData, UserStats, StatsResponse, Matches, RawMatches, Friends,
-	userData, AccountData
-} from "./bff.interface.js";
+	ProfileDataBatch, ProfileDataBatchResponse, ProfileView, UserStats, StatsResponse, Matches, RawMatches, Friends,
+	userData } from "./bff.interface.js";
+
+import { Agent } from 'undici';
+
+const sslAgent = new Agent({
+	connect: {
+		rejectUnauthorized: false
+	}
+});
+
+export async function fetchUserData(log: any, userID: number): Promise<userData> {
+	const url = `https://nginx/api/users/${userID}`;
+	let response: Response;
+
+	try {
+		response = await fetch(url, {
+			method: 'GET',
+			dispatcher: sslAgent
+		} as unknown as RequestInit);
+	} catch (error) {
+		log.error(`[BFF] User service (userData) is unreachable: ${error}`);
+		throw new Error('User service is unreachable.');
+	}
+
+	if (response.status === 404) {
+		log.warn(`[BFF] User data not found for user ${userID}`);
+		throw new Error('User data not found.');
+	}
+
+	if (!response.ok) {
+		log.error(`[BFF] User service (userData) failed with status ${response.status}`);
+		throw new Error('User service failed.');
+	}
+
+	const body = (await response.json()) as { success: boolean, userData: userData };
+
+	if (!body.success || !body.userData) {
+		log.error(`[BFF] User service (userData) returned 200 OK but with a failure body.`);
+		throw new Error('User service returned invalid data.');
+	}
+
+	return (body.userData);
+}
+
+export async function fetchProfileView(log: any, userID: number, username: string): Promise<ProfileView> {
+	const url = `https://nginx/api/users/userID/${username}`;
+
+	let response: Response;
+
+	try {
+		response = await fetch(url);
+	} catch (error) {
+		log.error(`[BFF] Account service is unreachable: ${error}`);
+		return ('stranger');
+	}
+
+	if (response.status === 404) {
+		log.warn(`[BFF] User data not found for user ${userID}`);
+		return ('stranger');
+	}
+
+	if (!response.ok) {
+		log.error(`[BFF] User service (userData) failed with status ${response.status}`);
+		return ('stranger');
+	}
+	const userData = await response.json() as {
+		success: boolean;
+		message: string;
+		user: { userID: number; username: string; }
+	};
+
+	const targetUserID = userData.user.userID;
+	if (targetUserID === userID)
+		return ('self');
+
+	const friendsUrl = `https://nginx/api/friends/friendship?userA=${userID}&userB=${targetUserID}`;
+	let friendsResponse: Response;
+
+	try {
+		friendsResponse = await fetch(friendsUrl);
+	} catch (error) {
+		log.error(`[BFF] Friends service is unreachable: ${error}`);
+		return ('stranger');
+	}
+
+	if (!friendsResponse.ok) {
+		log.error(`[BFF] Friends service failed with status ${friendsResponse.status}`);
+		return ('stranger');
+	}
+
+	const friendshipData = await friendsResponse.json() as { status: ProfileView };
+	return (friendshipData.status);
+}
+
+
+
+
+
+
+/*----------  WIP  ----------*/
+
 
  export async function fetchUserProfile(log: any, userID: number): Promise<userData | null> {
 	const url = `http://users:2626/internal/users/${userID}/profile`;
@@ -98,37 +196,6 @@ export async function fetchFriendList(log: any, userID: number): Promise<Friends
 	}
 
 	return (response.json() as Promise<Friends[]>);
-}
-
-export async function fetchProfileData(log: any, userID: number): Promise<ProfileData> {
-	const url = `http://users:2626/internal/users/${userID}/userData`;
-	let response: Response;
-
-	try {
-		response = await fetch(url);
-	} catch (error) {
-		log.error(`[BFF] User service (userData) is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
-	}
-
-	if (response.status === 404) {
-		log.warn(`[BFF] User data not found for user ${userID}`);
-		throw new Error('User data not found.');
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] User service (userData) failed with status ${response.status}`);
-		throw new Error('User service failed.');
-	}
-
-	const body = (await response.json()) as { success: boolean, userData: ProfileData };
-
-	if (!body.success || !body.userData) {
-		log.error(`[BFF] User service (userData) returned 200 OK but with a failure body.`);
-		throw new Error('User service returned invalid data.');
-	}
-
-	return body.userData;
 }
 
 export async function fetchProfileDataBatch(log: any, userIDs: number[]): Promise<ProfileDataBatch[]> {
@@ -239,86 +306,7 @@ export async function processMatches(log: any, userID: number): Promise<Matches[
 	return (processedMatches);
 }
 
-export async function fetchRelationship(log: any, userID: number, username: string): Promise<ProfileView> {
-	const url = `http://users:2626/internal/users/${username}/userID`;
 
-	let response: Response;
-
-	try {
-		response = await fetch(url);
-	} catch (error) {
-		log.error(`[BFF] Account service is unreachable: ${error}`);
-		return 'stranger';
-	}
-
-	if (response.status === 404) {
-		log.warn(`[BFF] User data not found for user ${userID}`);
-		return 'stranger';
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] User service (userData) failed with status ${response.status}`);
-		return 'stranger';
-	}
-	const userData = await response.json() as {
-		success: boolean;
-		message: string;
-		user: { userID: number; username: string; }
-	};
-
-	const targetUserID = userData.user.userID;
-	if (targetUserID === userID)
-		return 'self';
-
-	const friendsUrl = `https://friends-service:1616/internal/relationship?userA=${userID}&userB=${targetUserID}`;
-	let friendsResponse: Response;
-
-	try {
-		friendsResponse = await fetch(friendsUrl);
-	} catch (error) {
-		log.error(`[BFF] Friends service is unreachable: ${error}`);
-		return 'stranger';
-	}
-
-	if (!friendsResponse.ok) {
-		log.error(`[BFF] Friends service failed with status ${friendsResponse.status}`);
-		return 'stranger';
-	}
-
-	const friendshipData = await friendsResponse.json() as { status: ProfileView };
-	return (friendshipData.status);
-}
-
-export async function fetchUserDataAccount(log: any, userID: number): Promise<AccountData> {
-	const url = `http://account:1414/internal/account/${userID}`;
-	let response: Response;
-
-	try {
-		response = await fetch(url);
-	} catch (error) {
-		log.error(`[BFF] Account service is unreachable: ${error}`);
-		throw new Error('Account service is unreachable.');
-	}
-
-	if (response.status === 404) {
-		log.warn(`[BFF] Account data not found for user ${userID}`);
-		throw new Error('User data not found.');
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] Account service failed with status ${response.status}`);
-		throw new Error('User service failed.');
-	}
-
-	const body = (await response.json()) as { success: boolean, userData: AccountData };
-
-	if (!body.success || !body.userData) {
-		log.error(`[BFF] Account service (userData) returned 200 OK but with a failure body.`);
-		throw new Error('Account service returned invalid data.');
-	}
-
-	return body.userData;
-}
 
 export async function fetchView(log: any, viewerID: number, targetID: number): Promise<ProfileView> {
 	if (viewerID === targetID) {
@@ -345,7 +333,7 @@ export async function fetchView(log: any, viewerID: number, targetID: number): P
 }
 
 
-export async function buildFullUserData(log: any, viewerUserID: number, targetUserID: number): Promise<userData> {
+/* export async function buildFullUserData(log: any, viewerUserID: number, targetUserID: number): Promise<userData> {
 	const [
 		accountData,
 		profileData
@@ -372,7 +360,7 @@ export async function buildFullUserData(log: any, viewerUserID: number, targetUs
 	};
 
 	return (combinedData);
-}
+} */
 
 export async function updateAvatar(log: any, userID: number, avatar: string): Promise<void> {
 	const url = `https://users:2626/internal/users/${userID}`;
