@@ -61,23 +61,46 @@ function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
 	if (!result)
         return;
 	let [t, n] = result;
-	if (game.ball.y - game.ball.r <= 0 && n.y === -1) {
-		paddle.y = game.ball.x + game.ball.r + 1;
-		return;
-	}
+	// if (game.ball.y - game.ball.r <= 0 && n.y === -1) {
+	// 	paddle.y = game.ball.x + game.ball.r + 1;
+	// 	return;
+	// }
 	updateVelocity(game, paddle, n.x);
     nextX = game.ball.x + (game.ball.dx * TIME_STEP);
 	nextY = game.ball.y + (game.ball.dy * TIME_STEP);
-	if (nextY - game.ball.r <= 0) {
-		game.ball.y = game.ball.r + 1;
-		game.ball.dy *= -1;
-		paddle.y = game.ball.x + game.ball.r + 1;
-		return;
-	} //TODO: do the same for bottom wall and test this by decreasing ball speed and placing it on top
+	// if (nextY - game.ball.r <= 0) {
+	// 	game.ball.y = game.ball.r + 1;
+	// 	game.ball.dy *= -1;
+	// 	paddle.y = game.ball.x + game.ball.r + 1;
+	// 	return;
+	// } //TODO: do the same for bottom wall and test this by decreasing ball speed and placing it on top
     result = raycast(game, paddle, nextX, nextY);
     if (!result)
         return;
     [t, n] = result;
     game.ball.x += game.ball.dx * TIME_STEP * t + 1 * n.x;
 	game.ball.y += game.ball.dy * TIME_STEP * t + 1 * n.y;
+
+
+
+	// const nextX: number = game.ball.x - step.x;
+	// const nextY: number = game.ball.y - step.y;
+	// const result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);
+	// if (!result) {
+	// 	paddle.x += step.x;
+	// 	paddle.y += step.y;
+	// 	return;
+	// }
+	// const [t, n] = result;
+	// let len = Math.hypot(step.x, step.y);
+	// const contactDist = len * t - game.ball.r - 1;
+	// if (contactDist <= 0) {
+	// 	updateVelocity(game, paddle, n.x);
+	// 	return;
+	// }
+	// const nx = step.x / len;
+	// const ny = step.y / len;
+	// paddle.x += nx * contactDist;
+	// paddle.y += ny * contactDist;
+	// updateVelocity(game, paddle, n.x);
 }
