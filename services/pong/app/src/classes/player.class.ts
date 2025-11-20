@@ -9,6 +9,7 @@ export class Player {
 	#_serverSide: string;
 	#_clientSide: string;
 	#_paddle: coordinates;
+	#_padStep: coordinates;
 	#_score: number;
 	#_reply: repObj;
 
@@ -46,6 +47,7 @@ export class Player {
 				x: 25, 
 				y: HEIGHT / 2 - padSpec.halfH
 			};
+		this.#_padStep = { x: 0, y: 0};
 		this.#_clientSide = clientSide;
 		this.#_score = 0;
 	}
@@ -57,6 +59,10 @@ export class Player {
 
 	get paddle(): coordinates {
 		return this.#_paddle;
+	}
+
+	get padStep(): coordinates {
+		return this.#_padStep;
 	}
 
 	get reply(): repObj {
