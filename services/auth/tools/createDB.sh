@@ -1,7 +1,7 @@
 #!/bin/sh
 
 DB_DIR="/usr/data"
-DB_FILE="$DB_DIR/account.db"
+DB_FILE="$DB_DIR/auth.db"
 SEED_FILE="/usr/local/bin/seed.sql"
 
 # Create data directory if it doesn't exist

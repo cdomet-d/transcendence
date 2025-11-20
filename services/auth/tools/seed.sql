@@ -1,0 +1,5 @@
+INSERT INTO account (hashedPassword, username) VALUES ('MDPmdp111!!!', 'user1');
+INSERT INTO account (hashedPassword, username) VALUES ('passhash', 'user2');
+INSERT INTO account (hashedPassword, username) VALUES ('passhash', 'user3');
+INSERT INTO account (hashedPassword, username) VALUES ('passhash', 'user4');
+INSERT INTO account (hashedPassword, username) VALUES ('passhash', 'user5');

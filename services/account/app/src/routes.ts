@@ -46,8 +46,8 @@ export async function accountRoutes(serv: FastifyInstance) {
 			const { password } = request.body as { password: string };
 
 			const query = `
-                SELECT userID, hashedPassword FROM account WHERE username = ?
-            `
+				SELECT userID, hashedPassword FROM account WHERE username = ?
+			`
 			const user = await serv.dbAccount.get(query, [username]);
 			if (!user)
 				return (reply.code(404).send({ message: '[ACCOUNT] Account not found.' }));
@@ -120,21 +120,7 @@ export async function accountRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.delete('/:userID', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: string };
 
-			const query = `DELETE FROM account WHERE userID = ?`;
-
-			const result = await serv.dbAccount.run(query, [userID]);
-			if (!result.changes)
-				return (reply.code(404).send({ message: '[ACCOUNT] Account not found' }))
-			return (reply.code(204).send());
-		} catch (error) {
-			serv.log.error(`[ACCOUNT] Error deleting account: ${error}`);
-			throw (error);
-		}
-	});
 
 	serv.get('/:userID', async (request, reply) => {
 		try {
