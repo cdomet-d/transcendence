@@ -1,5 +1,5 @@
 CREATE TABLE account (
-	userID INTEGER PRIMARY KEY AUTOINCREMENT,
+	INTEGER PRIMARY KEY AUTOINCREMENT,
 	username TEXT UNIQUE,
-	hashedPassword TEXT,
+	hashedPassword TEXT
 );
