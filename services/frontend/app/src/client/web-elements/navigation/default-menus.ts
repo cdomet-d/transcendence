@@ -154,7 +154,7 @@ export const profileTabs: TabData[] = [
 
 export const lobbyMenu: MenuData = {
     links: [
-        { id: 'quickmatch', title: '1vs1', datalink: '/lobby', href: '/lobby', img: null },
-        { id: 'tournament', title: 'Tournament', datalink: '/lobby', href: '/lobby', img: null },
+        { id: 'quickmatch', title: '1vs1', datalink: '/quickLobby', href: '/quickLobby', img: null },
+        { id: 'tournament', title: 'Tournament', datalink: '/tournamentLobby', href: '/tournamentLobby', img: null },
     ],
 };

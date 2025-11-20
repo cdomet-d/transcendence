@@ -14,8 +14,9 @@ export const routes: routeInterface[] = [
     { path: '/leaderboard', callback: page.renderLeaderboard },
     { path: '/user/:login', callback: page.renderProfile },
     { path: '/user/settings', callback: page.renderSettings },
-    { path: '/lobby', callback: page.renderLobby },
     { path: '/lobbyMenu', callback: page.renderLobbyMenu },
+    { path: '/quickLobby', callback: page.renderQuickLobby },
+    { path: '/tournamentLobby', callback: page.renderTournamentLobby },
     // { path: '/game/match', callback: page.renderGame},
 ];
 

@@ -18,6 +18,7 @@ interface HTMLElementTagMap {
     'registration-form': RegistrationForm;
     'login-form': LoginForm;
     'remote-pong-settings': RemotePongSettings;
+    'pong-tournament-settings': RemotePongSettings;
     'search-form': Searchbar;
     'settings-form': UserSettingsForm;
 }

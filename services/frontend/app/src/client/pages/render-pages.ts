@@ -14,6 +14,7 @@ import {
     loginForm,
     remotePong,
     userSettingsForm,
+    pongTournament,
 } from '../web-elements/forms/default-forms.js';
 import { user } from '../web-elements/default-values.js';
 
@@ -24,7 +25,8 @@ const layoutPerPage: { [key: string]: string } = {
     game: 'full-screen',
     home: 'full-screen',
     leaderboard: 'page-w-header',
-    lobby: 'page-w-header',
+    quickLobby: 'page-w-header',
+    tournamentLobby: 'page-w-header',
     lobbyMenu: 'page-w-header',
     profile: 'page-w-header',
     registration: 'full-screen',
@@ -142,13 +144,14 @@ export function renderLobbyMenu() {
     prepareLayout(document.body.layoutInstance, 'lobbyMenu');
     document.body.layoutInstance!.appendAndCache(
         createHeading('1', 'Choose Lobby'),
-        createMenu(lobbyMenu, 'vertical', true),
+        createMenu(lobbyMenu, 'horizontal', true),
+        // createMenu(lobbyMenu, 'vertical', true),
     );
     updatePageTitle('Choose Lobby');
 }
 
-export function renderLobby() {
-    prepareLayout(document.body.layoutInstance, 'lobby');
+export function renderQuickLobby() {
+    prepareLayout(document.body.layoutInstance, 'quickLobby');
     const pongOptions: TabData[] = [
         {
             id: 'pong-local',
@@ -161,6 +164,21 @@ export function renderLobby() {
             content: 'Play remote',
             default: true,
             panelContent: createForm('remote-pong-settings', remotePong),
+        },
+    ];
+    const wrapper = createWrapper('pongsettings');
+    wrapper.append(createTabs(pongOptions));
+    document.body.layoutInstance?.appendAndCache(wrapper);
+}
+
+export function renderTournamentLobby() {
+    prepareLayout(document.body.layoutInstance, 'tournamentLobby');
+    const pongOptions: TabData[] = [
+        {
+            id: 'pong-remote',
+            content: '',
+            default: true,
+            panelContent: createForm('pong-tournament-settings', pongTournament),
         },
     ];
     const wrapper = createWrapper('pongsettings');
