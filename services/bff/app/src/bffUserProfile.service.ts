@@ -9,6 +9,35 @@ const sslAgent = new Agent({
 	connect: { rejectUnauthorized: false }
 });
 
+export async function searchBar(log: any, username: string): Promise<userData[]> {
+	const url = `https://users:2626/search?name=${username}`;
+	let response: Response;
+
+	try {
+		response = await fetch(url, {
+			method: 'GET',
+			dispatcher: sslAgent
+		});
+	} catch (error) {
+		log.error(`[BFF] User service (search) is unreachable: ${error}`);
+		throw new Error('User service is unreachable.');
+	}
+
+	if (!response.ok) {
+		log.error(`[BFF] User service (search) failed with status ${response.status}`);
+		throw new Error('User service failed.');
+	}
+
+	const body = (await response.json()) as { success: boolean, profiles: userData[] };
+
+	if (!body.success || !body.profiles) {
+		log.error(`[BFF] User service (search) returned 200 OK but with a failure body.`);
+		throw new Error('User service returned invalid data.');
+	}
+
+	return (body.profiles);
+}
+
 export async function fetchUserData(log: any, userID: number): Promise<userData | null> {
 	const url = `https://users:2626/${userID}`;
 	let response: Response;

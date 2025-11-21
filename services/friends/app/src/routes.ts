@@ -19,7 +19,6 @@ export async function routeFriend(serv: FastifyInstance) {
 
 			//get relationship between two user
 			if (query.userA && query.userB) {
-			serv.log.error(`${query.userA} and ${query.userB}`)
 
 				const sql = `
 					SELECT statusFrienship FROM friendship 
