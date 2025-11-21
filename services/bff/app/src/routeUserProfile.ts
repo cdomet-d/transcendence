@@ -11,7 +11,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	//get's profile + stats + game + friendslist
 	// userID -> userID of requested profile
-	serv.get('/profile/:userID', async (request, reply) => {
+	serv.get('/profile/:username', async (request, reply) => {
 		try {
 
 			//TODO: userB ID is in the cookies so setup fastify JWT plugin and get userID this way

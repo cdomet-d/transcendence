@@ -138,10 +138,7 @@ export abstract class BaseForm extends HTMLFormElement {
         } catch (error) {
             let mess = 'Something when wrong';
             const err = document.createElement('span', { is: 'ui-feedback' }) as UIFeedback;
-
-            if (error instanceof Error) {
-                mess = error.message;
-            }
+            if (error instanceof Error) mess = error.message;
             document.body.layoutInstance?.append(err);
             err.content = mess;
             err.type = 'error';

@@ -12,8 +12,7 @@ export class RegistrationForm extends BaseForm {
             const response = await fetch(url, req);
             if (!response.ok) throw await responseErrorMessage(response);
             if (typeof req.body === 'string') {
-                const payload = JSON.parse(req.body);
-                router.loadRoute(`/user/${payload.username}`);
+	            router.loadRoute('/me');
             }
         } catch (error) {
             throw error;
@@ -24,3 +23,4 @@ export class RegistrationForm extends BaseForm {
 if (!customElements.get('registration-form')) {
     customElements.define('registration-form', RegistrationForm, { extends: 'form' });
 }
+	

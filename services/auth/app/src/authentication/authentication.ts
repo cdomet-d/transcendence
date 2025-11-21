@@ -3,6 +3,14 @@ import type { FastifyInstance } from 'fastify';
 import * as bcrypt from 'bcrypt';
 
 import { deleteAccount, createUserProfile, checkUsernameUnique } from './auth.service.js';
+import type { VerifyPayloadType } from '@fastify/jwt';
+
+interface JwtPayload {
+    userID: number;
+    username: string;
+    iat: number;
+    exp: number;
+}
 
 const authSchema = {
     body: {
@@ -23,12 +31,13 @@ export async function authenticationRoutes(serv: FastifyInstance) {
         const token = request.cookies.token;
         if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
         if (token) {
-			try {
-            	serv.jwt.verify(token);
-            	return reply.code(200).send();
-			} catch (error) {
-				throw (error);
-			}
+            try {
+                const user = serv.jwt.verify(token) as JwtPayload;
+                if (typeof user !== 'object') throw new Error('Invalid token detected');
+                return reply.code(200).send({ username: user.username, userID: user.userID });
+            } catch (error) {
+                throw error;
+            }
         }
     });
 

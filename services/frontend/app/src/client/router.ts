@@ -12,6 +12,7 @@ export const routes: routeInterface[] = [
     { path: '/404', callback: page.renderNotFound },
     { path: '/auth', callback: page.renderAuth },
     { path: '/leaderboard', callback: page.renderLeaderboard },
+    { path: '/me', callback: page.renderSelf },
     { path: '/user/:login', callback: page.renderProfile },
     { path: '/user/settings', callback: page.renderSettings },
     { path: '/lobby', callback: page.renderLobby },
@@ -66,12 +67,11 @@ export class Router {
                 }
             }
         }
+        this.updateURL(path);
         if (!matchedRoute) {
             renderNotFound();
             return;
         }
-
-        this.updateURL(path);
         matchedRoute.callback(res ? res : undefined);
     }
 }

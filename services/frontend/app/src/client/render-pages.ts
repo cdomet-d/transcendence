@@ -20,6 +20,8 @@ import { farm, defaultTheme, PongCourt } from './web-elements/game/pong-court.js
 import { pong } from './pong/pong.js';
 import { TournamentBrackets } from './web-elements/game/tournament.js';
 import { PongUI } from './web-elements/game/game-ui.js';
+import { userStatus } from './main.js';
+import { router } from './main.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -85,13 +87,13 @@ export function renderAuth() {
         {
             id: 'login-tab',
             content: 'Login',
-            default: false,
+            default: true,
             panelContent: createForm('login-form', loginForm),
         },
         {
             id: 'registration-tab',
             content: 'Register',
-            default: true,
+            default: false,
             panelContent: createForm('registration-form', registrationForm),
         },
     ];
@@ -111,6 +113,35 @@ export function renderLeaderboard() {
     updatePageTitle('Leaderboard');
 }
 
+export async function renderSelf() {
+    console.log('renderSelf');
+
+    const status = await userStatus();
+    console.log(status.auth, status.userID, status.username);
+    if (!status.auth) {
+        router.loadRoute('/auth');
+        return;
+    }
+	const url = `https://localhost:8443/api/bff/profile/${status.username}`
+
+	try {
+		const reply = await fetch(url)
+		const profile = reply.json();
+		console.log(profile);
+		prepareLayout(document.body.layoutInstance, 'profile');
+		document.body.layoutInstance?.appendAndCache(
+			document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
+		);
+		const pInstance = document.body.layoutInstance?.components.get(
+			'user-profile',
+		) as ProfileWithTabs;
+		pInstance.profile = user;
+   		updatePageTitle(status.username!);
+	} catch (error) {
+		console.error(error)
+	}
+}
+
 export async function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
     console.log('renderProfile');
     if (param) {
@@ -118,7 +149,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
         // const req: RequestInit = { method: 'get' };
 
         //TODO: API call with login here to fetch user data
-        // await fetch(`https://localhost:8443/api/bff/users/${login}/profile`, req);
+        // await fetch(`https://localhost:8443/api/bff/profile/${login}/profile`, req);
         prepareLayout(document.body.layoutInstance, 'profile');
         document.body.layoutInstance?.appendAndCache(
             document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
@@ -128,10 +159,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
         ) as ProfileWithTabs;
         pInstance.profile = user;
         updatePageTitle('User ' + login);
-    } else {
-        console.log('No parameter, which should not happen');
-        renderNotFound();
-    }
+    } else renderNotFound();
 }
 
 export function renderSettings() {

@@ -66,7 +66,7 @@ export class PageHeader extends HTMLElement {
     async getLogState() {
         const log = await userStatus();
 
-        if (log) {
+        if (log.auth) {
             this.#login.remove();
             this.append(this.#logout);
             this.#logout.classList.add('h-m', 'w-l');
