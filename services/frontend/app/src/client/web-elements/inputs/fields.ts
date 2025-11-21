@@ -264,7 +264,7 @@ export class InputGroup extends HTMLDivElement {
             try {
                 this.#isRange();
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         }
 

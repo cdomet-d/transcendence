@@ -56,12 +56,8 @@ export async function userRoutes(serv: FastifyInstance) {
     });
 
     //fetch users profiles
-    //TODO: Endpoint for search bar
-    //TODO: Proposed URL: /search?name='
     serv.post('/profiles', async (request, reply) => {
         try {
-            // TODO: get request from URL
-            // const { name } = request.query;
             const { userIDs } = request.body as { userIDs: number[] };
 
             if (!Array.isArray(userIDs) || userIDs.length === 0)
@@ -88,6 +84,12 @@ export async function userRoutes(serv: FastifyInstance) {
         }
     });
 
+    //TODO: Endpoint for search bar
+    serv.get('/search?name=', async (request, reply) => {
+        // TODO: get request from URL
+        // const { name } = request.query;
+    });
+	
     //create profile and stats
     serv.post('/:userID', async (request, reply) => {
         try {

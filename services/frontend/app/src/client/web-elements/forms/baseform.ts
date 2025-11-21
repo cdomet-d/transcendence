@@ -3,7 +3,7 @@ import type { FormDetails } from '../types-interfaces.js';
 import { createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
 import { createHeading } from '../typography/helpers.js';
 import { createButton } from '../navigation/buttons-helpers.js';
-import { BadRequest } from '../event-elements/error';
+import { UIFeedback } from '../event-elements/error';
 
 const emptyForm: FormDetails = {
     action: '',
@@ -133,18 +133,18 @@ export abstract class BaseForm extends HTMLFormElement {
         if (req.method === 'post') {
             req.body = this.createReqBody(form);
         }
-        console.log(this.#formData.action, req.method, req.body);
         try {
             await this.fetchAndRedirect(this.#formData.action, req);
         } catch (error) {
             let mess = 'Something when wrong';
-            const err = document.createElement('span', { is: 'bad-request' }) as BadRequest;
+            const err = document.createElement('span', { is: 'ui-feedback' }) as UIFeedback;
 
             if (error instanceof Error) {
                 mess = error.message;
             }
-            err.content = mess;
             document.body.layoutInstance?.append(err);
+            err.content = mess;
+            err.type = 'error';
         }
     }
 

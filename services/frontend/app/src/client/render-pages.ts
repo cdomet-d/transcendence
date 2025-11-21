@@ -52,6 +52,7 @@ function prepareLayout(curLayout: Layout | undefined, page: string) {
         throw new Error("Something is wrong with the document's layout - page cannot be charged");
 
     curLayout.clearAll();
+    document.body.header?.getLogState();
     if (layoutPerPage[page] === 'full-screen') {
         document.body.header?.classList.add('hidden');
         document.body.header?.setAttribute('hidden', '');
@@ -117,7 +118,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
         // const req: RequestInit = { method: 'get' };
 
         //TODO: API call with login here to fetch user data
-        // await fetch(`https://localhost:8443/api/bff/users/${login}/profile`, req); 
+        // await fetch(`https://localhost:8443/api/bff/users/${login}/profile`, req);
         prepareLayout(document.body.layoutInstance, 'profile');
         document.body.layoutInstance?.appendAndCache(
             document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,

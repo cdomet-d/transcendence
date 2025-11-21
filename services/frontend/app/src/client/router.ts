@@ -45,6 +45,10 @@ export class Router {
         return path.replace(/\/+$/, '');
     }
 
+    updateURL(newURL: string) {
+        window.history.pushState({}, '', newURL);
+    }
+
     /** Parses the defined route array to check if the current URL is defined as a route.
      * Calls `renderNotFount()` if the route was not found, and the route's callback otherwise.
      */
@@ -62,12 +66,12 @@ export class Router {
                 }
             }
         }
-
         if (!matchedRoute) {
             renderNotFound();
             return;
         }
 
+        this.updateURL(path);
         matchedRoute.callback(res ? res : undefined);
     }
 }

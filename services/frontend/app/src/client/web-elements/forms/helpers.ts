@@ -21,7 +21,7 @@ interface HTMLElementTagMap {
     'remote-pong-settings': RemotePongSettings;
     'search-form': Searchbar;
     'settings-form': UserSettingsForm;
-	'delete-account-form': DeleteAccountForm;
+    'delete-account-form': DeleteAccountForm;
 }
 
 /**

@@ -151,7 +151,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	serv.delete('/account', async (request, reply) => {
 		try {
 			const userID = request.user.userID;
-			console.log(userID);
 			//UNCOMMENT FOR PASSWORD CHECK FOR ACCOUNT DELETION
 
 			//const username = request.user.username;

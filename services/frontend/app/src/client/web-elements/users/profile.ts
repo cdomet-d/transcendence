@@ -85,7 +85,6 @@ export class UserProfile extends HTMLDivElement {
      * Sets the profile view type for the action menu.
      */
     set profileView(v: ProfileView) {
-        console.log('In profile, profile view:', v);
         if (this.#actionButtons.view !== v) {
             this.#actionButtons.view = v;
         }

@@ -159,7 +159,6 @@ export class RemotePongSettings extends LocalPongSettings {
     // #inviteHandlerImplementation(ev: SubmitEvent) {
     // 	ev.preventDefault();
     // 	const form = new FormData(this.#searchbar);
-    // 	console.log(form);
     // }
 
     /* -------------------------------------------------------------------------- */

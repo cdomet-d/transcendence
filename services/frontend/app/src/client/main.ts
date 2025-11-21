@@ -20,6 +20,13 @@ if (window) {
     window.addEventListener('popstate', loadHistoryLocation);
 }
 
+export async function userStatus(): Promise<boolean> {
+    const isLogged: Response = await fetch('/api/auth/status');
+
+    if (isLogged.ok) return true;
+    else return false;
+}
+
 document.body.layoutInstance = document.createElement('div', { is: 'custom-layout' }) as Layout;
 document.body.header = document.createElement('header', { is: 'page-header' }) as PageHeader;
 if (!document.body.layoutInstance || !document.body.header) {

@@ -1,7 +1,6 @@
 import { BaseForm } from './baseform';
-import { renderProfile } from '../../render-pages';
 import { responseErrorMessage } from '../event-elements/error';
-import { updateURL } from '../navigation/links';
+import { router } from '../../main';
 
 export class LoginForm extends BaseForm {
     constructor() {
@@ -15,11 +14,7 @@ export class LoginForm extends BaseForm {
 
             if (typeof req.body === 'string') {
                 const payload = JSON.parse(req.body);
-                updateURL(`/user/${payload.username}`);
-                renderProfile({
-                    path: `/user/:${payload.username}`,
-                    params: { login: payload.username },
-                });
+                router.loadRoute(`/user/${payload.username}`);
             }
         } catch (error) {
             throw error;

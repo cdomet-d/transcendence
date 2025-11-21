@@ -4,9 +4,6 @@ import { router } from '../../main.js';
 
 const emptyLink: navigationLinksData = { id: '', datalink: '', href: '', title: '', img: null };
 
-export function updateURL(newURL: string) {
-	window.history.pushState({}, '', newURL);
-}
 export class NavigationLinks extends HTMLAnchorElement {
     #info: navigationLinksData;
     #animated: boolean;
@@ -37,15 +34,12 @@ export class NavigationLinks extends HTMLAnchorElement {
     }
 
     #loadNewPage(ev: Event) {
-        console.log('Page load');
         const link = (ev.target as HTMLElement).closest('[data-link]');
         if (link) {
             ev.preventDefault();
             const path = link.getAttribute('href');
             if (path) {
-                updateURL(path);
-                const cleanPath = router.sanitisePath(path);
-                router.loadRoute(cleanPath);
+                router.loadRoute(path);
             }
         }
     }

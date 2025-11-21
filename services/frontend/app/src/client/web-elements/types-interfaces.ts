@@ -110,6 +110,8 @@ export type FontWeight = 'f-bold';
  */
 export type ColorTheme = 'dark' | 'light';
 
+export type Feedback = 'error' | 'success';
+
 /* -------------------------------------------------------------------------- */
 /*                                   Buttons                                  */
 /* -------------------------------------------------------------------------- */
