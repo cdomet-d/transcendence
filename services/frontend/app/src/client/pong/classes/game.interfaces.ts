@@ -40,6 +40,7 @@ export interface repObj {
     _rightPad: coordinates;
     _ball: ballObj;
     _score: [number, number];
+    _end: boolean
 }
 
 export interface reqObj {

@@ -4,8 +4,8 @@ import type { repObj } from './classes/game.interfaces.js';
 import { updatePaddlePos } from './paddle.js';
 import { deadReckoning } from './ball.js';
 
-const TIME_STEP: number = 1000 / 60; // 60FPS
-const MAX_SCORE: number = 5;
+const SERVER_TICK: number = 1000 / 50;
+const TIME_STEP: number = 1000 / 60;
 const MAX_UPDATES_PER_FRAME = 8;
 
 export async function startGame(game: Game, ws: WebSocket) {
@@ -14,9 +14,11 @@ export async function startGame(game: Game, ws: WebSocket) {
 }
 
 function FrameRequestCallback(game: Game, ws: WebSocket) {
-    return async function gameLoop(timestamp: number) {
+    return function gameLoop(timestamp: number) {
         const latestReply: repObj | undefined = game.replyHistory[game.replyHistory.length - 1];
-        if (latestReply !== undefined) if (await handleScore(game, latestReply)) return;
+        if (latestReply !== undefined)
+            if (handleScore(ws, game, latestReply)) 
+                return;
         if (latestReply !== undefined && game.reqHistory.has(latestReply._ID))
             reconciliation(game, latestReply);
 
@@ -48,7 +50,7 @@ function sendRequest(game: Game, ws: WebSocket) {
 }
 
 function interpolation(game: Game) {
-    const renderTime: number = performance.now() - 20; //TODO: put in a var
+    const renderTime: number = performance.now() - SERVER_TICK;
     const updates: [repObj, repObj] | null = game.getReplies(renderTime);
 
     if (updates) {
@@ -85,15 +87,17 @@ function reconciliation(game: Game, latestReply: repObj) {
     }
 }
 
-async function handleScore(game: Game, latestReply: repObj): Promise<boolean> {
+export function handleScore(ws: WebSocket, game: Game, latestReply: repObj): boolean {
     if (latestReply._score[0] != game.score[0] || latestReply._score[1] != game.score[1]) {
         //TODO update score UI
-
         game.score[0] = latestReply._score[0];
         game.score[1] = latestReply._score[1];
         game.ball = { ...latestReply._ball };
         game.deleteReplies(game.replyHistory.length);
-        if (game.score[0] === MAX_SCORE || game.score[1] === MAX_SCORE) return true;
+        if (latestReply._end === true) {
+            ws.send("0");
+            return true;
+        } 
         return false;
     }
     return false;

@@ -20,33 +20,17 @@ export class Player {
 		this.#_reply = {
 			_ID: 0, 
 			_timestamp: 0, 
-			_leftPad: {
-				x: 25, 
-				y: HEIGHT / 2 - padSpec.halfH
-			},
-			_rightPad: {
-				x: WIDTH - (padSpec.w + 25), 
-				y: HEIGHT / 2 - padSpec.halfH
-			},
-			_ball: {
-				x: WIDTH / 2, 
-				y: HEIGHT / 2, 
-				dx: 0.3,
-				dy: 0.03, 
-				r: 15}, 
-			_score: [0, 0]
+			_leftPad: {x: 25, y: HEIGHT / 2 - padSpec.halfH},
+			_rightPad: {x: WIDTH - (padSpec.w + 25), y: HEIGHT / 2 - padSpec.halfH},
+			_ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.03, r: 15}, 
+			_score: [0, 0],
+			_end: false
 		};
 		this.#_serverSide = serverSide;
 		if (serverSide === "right")
-			this.#_paddle = {
-				x: WIDTH - (padSpec.w + 25), 
-				y: HEIGHT / 2 - padSpec.halfH
-			};
+			this.#_paddle = {x: WIDTH - (padSpec.w + 25), y: HEIGHT / 2 - padSpec.halfH};
 		else
-			this.#_paddle = {
-				x: 25, 
-				y: HEIGHT / 2 - padSpec.halfH
-			};
+			this.#_paddle = {x: 25, y: HEIGHT / 2 - padSpec.halfH};
 		this.#_padStep = { x: 0, y: 0};
 		this.#_clientSide = clientSide;
 		this.#_score = 0;

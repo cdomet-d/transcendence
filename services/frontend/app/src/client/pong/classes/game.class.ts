@@ -121,13 +121,13 @@ export class Game {
     }
 
     /*                              SETTERS                                  */
-    set leftPad(newPos: number) {
-        this.#_leftPaddle.y = newPos;
-    }
+    // set leftPad(newPos: number) {
+    //     this.#_leftPaddle.y = newPos;
+    // }
 
-    set rightPad(newPos: number) {
-        this.#_rightPaddle.y = newPos;
-    }
+    // set rightPad(newPos: number) {
+    //     this.#_rightPaddle.y = newPos;
+    // }//TODO: fix
 
     set ball(ball: coordinates) {
         this.#_ball.x = ball.x;
@@ -172,6 +172,7 @@ export class Game {
             _rightPad: { ...reply._rightPad },
             _ball: { ...reply._ball },
             _score: { ...reply._score },
+            _end: reply._end
         };
         this.#_replyHistory.push(newReply);
     }

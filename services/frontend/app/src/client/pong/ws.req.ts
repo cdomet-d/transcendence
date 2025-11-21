@@ -25,7 +25,7 @@ export function wsRequest(game: Game, ids: { gameID: number; userID: number }) {
     };
 
     ws.onclose = () => {
-        // console.log("SCORE IN CLOSE:", JSON.stringify(game.score));
+        console.log("SCORE IN CLOSE:", JSON.stringify(game.score));
         renderGame(game);
         window.cancelAnimationFrame(game.frameId);
     };
