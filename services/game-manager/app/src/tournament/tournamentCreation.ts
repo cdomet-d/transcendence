@@ -1,7 +1,7 @@
 import type { game, lobbyInfo, tournament, userInfo } from '../manager.interface.js';
 
 export function createTournament(payload: lobbyInfo): tournament | undefined {
-	const tournamentID = 99;
+	const tournamentID = 99; // TODO DB ID toussa toussa
 
 	const games: game[] | undefined = createBracket(payload, tournamentID);
 	if (games === undefined) {

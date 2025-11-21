@@ -44,7 +44,7 @@ function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
         userList: new Map<number, userInfo>([
             [hostID, { userID: hostID }] //  get username from token 
         ]),
-		remote: true, // TODO: TBD
+		remote: true,
 		format: format,
 		nbPlayers: format === "quick" ? 2 : 4
 	}

@@ -10,7 +10,7 @@ function openWsConnection() {
     if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
         return wsInstance;
     }
-    wsInstance = new WebSocket('wss://localhost:8443/api/game/lobby');
+    wsInstance = new WebSocket('wss://localhost:8443/api/lobby');
     return wsInstance;
 }
 
@@ -57,7 +57,7 @@ function wsConnect() {
     };
 
     ws.onclose = () => {
-        console.log('WebSocket connection closed!');
+        console.log('Lobby WebSocket connection closed!');
         // TODO: Check wether deconnection was expected or not
     };
 }
