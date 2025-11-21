@@ -3,8 +3,8 @@ import type { WebSocket } from '@fastify/websocket';
 import { NatsConnection } from 'nats';
 import type { reqObj, playerReq, gameInfo, ballObj, paddleSpec } from './game.interfaces.js';
 
-export const HEIGHT = 500;
-export const WIDTH = 700;
+export const HEIGHT = 558.9;
+export const WIDTH = 1000;
 
 export type playerTab = Array< Player >;
 type reqTab = Array< playerReq >;
@@ -35,10 +35,10 @@ export class Game {
 		};
 		this.#_paddleSpec = {
 			speed: 0.4,
-			w: 18, 
-			h: HEIGHT / 6, 
-			halfW: 18 / 2, 
-			halfH: HEIGHT / 12
+			w: 20, 
+			h: HEIGHT / 5, 
+			halfW: 20 / 2, 
+			halfH: HEIGHT / 10
 		}; //custom
 		this.#_ballDir = -1;
 		this.#_reqHistory = new Array();

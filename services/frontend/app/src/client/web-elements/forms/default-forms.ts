@@ -3,7 +3,7 @@ import { usernamePattern, passwordPattern } from '../default-values.js';
 
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
 export const userSettingsForm: FormDetails = {
-    action: 'https://localhost:8443/api/account/settings/',
+    action: 'https://localhost:8443/api/bff/settings/',
     heading: 'Settings',
     ariaLabel: 'User settings',
     id: 'user-settings',
@@ -46,7 +46,7 @@ export const userSettingsForm: FormDetails = {
 };
 
 export const registrationForm: FormDetails = {
-    action: 'https://localhost:8443/api/auth/register/',
+    action: 'https://localhost:8443/api/auth/register',
     heading: 'Register',
     ariaLabel: 'Create an account',
     id: 'account-create',
@@ -73,7 +73,7 @@ export const registrationForm: FormDetails = {
 };
 
 export const loginForm: FormDetails = {
-    action: 'https://localhost:8443/api/auth/login/',
+    action: 'https://localhost:8443/api/auth/login',
     heading: 'Login',
     ariaLabel: 'Log into an account',
     id: 'account-login',
@@ -98,7 +98,6 @@ export const loginForm: FormDetails = {
     ],
     button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
 };
-
 
 export const search: FormDetails = {
     action: 'https://localhost:8443/api/users?name=',
@@ -216,7 +215,7 @@ export const remotePong: FormDetails = {
 };
 
 export const deleteAccount: FormDetails = {
-    action: 'https://localhost:8443/api/account/',
+    action: 'https://localhost:8443/api/bff/account',
     heading: '',
     ariaLabel: 'Account deletion request',
     id: 'account-deletion-request',

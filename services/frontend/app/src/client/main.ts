@@ -1,7 +1,7 @@
-import { loadHistoryLocation } from './scripts/event-listeners.js';
+import { loadHistoryLocation } from './event-listeners.js';
 import { Layout } from './web-elements/layouts/layout.js';
 import { PageHeader } from './web-elements/navigation/header.js';
-import { Router, routes } from './scripts/router.js';
+import { Router, routes } from './router.js';
 
 // import { pong } from './game/pong.js';
 // import { addLanguageEvents } from './language/languageEvents.js';
@@ -18,6 +18,13 @@ declare global {
 
 if (window) {
     window.addEventListener('popstate', loadHistoryLocation);
+}
+
+export async function userStatus(): Promise<boolean> {
+    const isLogged: Response = await fetch('/api/auth/status');
+
+    if (isLogged.ok) return true;
+    else return false;
 }
 
 document.body.layoutInstance = document.createElement('div', { is: 'custom-layout' }) as Layout;

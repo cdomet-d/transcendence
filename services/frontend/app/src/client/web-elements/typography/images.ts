@@ -1,4 +1,4 @@
-import type { ImgData, Size, Theme } from '../types-interfaces.js';
+import type { ImgData, Size, ColorTheme } from '../types-interfaces.js';
 import { createIcon } from './helpers.js';
 
 /**
@@ -84,7 +84,7 @@ if (!customElements.get('user-avatar')) {
 
 export class NoResults extends HTMLDivElement {
     #noResultsImg: ImgData;
-    #theme: Theme;
+    #theme: ColorTheme;
 
     constructor() {
         super();
@@ -102,7 +102,7 @@ export class NoResults extends HTMLDivElement {
         this.#noResultsImg.size = size;
     }
 
-    set theme(theme: Theme) {
+    set theme(theme: ColorTheme) {
         this.#theme = theme;
     }
 

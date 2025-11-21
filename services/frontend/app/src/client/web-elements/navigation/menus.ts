@@ -1,5 +1,5 @@
-import { createBtn } from './buttons-helpers.js';
-import type { buttonData, ProfileView, DropdownBg } from '../types-interfaces.js';
+import { createButton } from './buttons-helpers.js';
+import type { ButtonData, ProfileView, DropdownBg } from '../types-interfaces.js';
 import type { CustomButton } from './buttons.js';
 import { Menu } from './basemenu.js';
 
@@ -32,17 +32,16 @@ export class SocialMenu extends Menu {
      */
     set view(v: ProfileView) {
         this.#view = v;
-        this.updateView();
+        this.render();
     }
 
     /** Called when element connects to DOM; calls base and updates view. */
     override connectedCallback(): void {
-        super.connectedCallback();
-        this.updateView();
+        super.render();
+        super.cache.get('challenge')?.styleButton();
     }
 
     clearView() {
-        console.log('clearView');
         super.cache.forEach((el) => {
             el.classList.add('hidden');
         });
@@ -65,13 +64,14 @@ export class SocialMenu extends Menu {
 
     /** Updates the menu appearance based on the current {@link ProfileView}. */
     updateView() {
-        // console.log(super.cache);
-        // console.log(this.#view);
-        super.cache.get('challenge')?.styleButton();
         this.clearView();
         if (this.#view === 'friend') this.friend();
         else if (this.#view === 'stranger') this.stranger();
         else if (this.#view === 'self') this.self();
+    }
+
+    override render() {
+        this.updateView();
     }
 }
 
@@ -80,8 +80,8 @@ if (!customElements.get('social-menu')) {
 }
 
 export class DropdownMenu extends HTMLDivElement {
-    /** Array of {@link buttonData} used to fill the dropdown's option list*/
-    #optionListData: buttonData[];
+    /** Array of {@link ButtonData} used to fill the dropdown's option list*/
+    #optionListData: ButtonData[];
 
     /** Array of {@link HTMLUListElement}, cached to manipulation the menu's option without querying the DOM everytime*/
     #listboxOptions: HTMLLIElement[];
@@ -107,7 +107,13 @@ export class DropdownMenu extends HTMLDivElement {
         this.#optionListData = [];
         this.#listboxOptions = [];
         this.#listbox = document.createElement('ul');
-        this.#toggle = createBtn({ id: '', type: 'button', content: '', img: null, ariaLabel: '' });
+        this.#toggle = createButton({
+            id: '',
+            type: 'button',
+            content: '',
+            img: null,
+            ariaLabel: '',
+        });
         this.#currentFocus = -1;
         this.#keynavHandler = this.keyboardNavHandler.bind(this);
         this.#mouseNavHandler = this.mouseNavHandler.bind(this);
@@ -117,7 +123,7 @@ export class DropdownMenu extends HTMLDivElement {
     /**
      * Sets inner property `#optionListData`
      */
-    set setOptions(data: buttonData[]) {
+    set setOptions(data: ButtonData[]) {
         this.#optionListData = data;
     }
 

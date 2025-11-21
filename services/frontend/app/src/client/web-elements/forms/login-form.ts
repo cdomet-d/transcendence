@@ -1,27 +1,22 @@
-import { renderProfile } from '../../pages/render-pages';
 import { BaseForm } from './baseform';
+import { responseErrorMessage } from '../event-elements/error';
+import { router } from '../../main';
 
 export class LoginForm extends BaseForm {
     constructor() {
         super();
     }
 
-    override async sendForm(url: string, req: RequestInit): Promise<Response> {
+    override async fetchAndRedirect(url: string, req: RequestInit) {
         try {
             const response = await fetch(url, req);
-            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-            console.log('Fetch successful', response);
-            if (typeof req.body === "string") {
+            if (!response.ok) throw await responseErrorMessage(response);
+
+            if (typeof req.body === 'string') {
                 const payload = JSON.parse(req.body);
-                
-                window.history.pushState({}, '', `/user/${payload.username}`);
-                renderProfile({ path: `/user/:${payload.username}`, params: { login: payload.username } });
-            } else {
-                console.log("Error: Could not parse request.body (`body` is not `String` type");
+                router.loadRoute(`/user/${payload.username}`);
             }
-            return response;
         } catch (error) {
-            console.error('Fetch failed', error);
             throw error;
         }
     }

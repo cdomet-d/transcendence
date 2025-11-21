@@ -1,4 +1,4 @@
-import type { buttonData, MenuData, TabData } from '../types-interfaces.js';
+import type { ButtonData, MenuData, TabData } from '../types-interfaces.js';
 
 export const main: MenuData = {
     links: [
@@ -29,6 +29,24 @@ export const homeLink: MenuData = {
             },
         },
     ],
+};
+
+export const logOut: ButtonData = {
+    type: 'button',
+    id: 'logout',
+    content: 'Log out',
+    img: null,
+    ariaLabel: 'The logout button',
+    style: 'red',
+};
+
+export const logIn: ButtonData = {
+    type: 'button',
+    id: 'login',
+    content: 'Log in',
+    img: null,
+    ariaLabel: 'The login button',
+    style: 'green',
 };
 
 export const social: MenuData = {
@@ -83,13 +101,13 @@ export const social: MenuData = {
     ],
 };
 
-export const languageMenu: buttonData[] = [
+export const languageMenu: ButtonData[] = [
     { id: 'English', ariaLabel: 'English', content: 'English', img: null, type: 'button' },
     { id: 'Spanish', ariaLabel: 'Spanish', content: 'Spanish', img: null, type: 'button' },
     { id: 'French', ariaLabel: 'French', content: 'French', img: null, type: 'button' },
 ];
 
-export const backgroundMenu: buttonData[] = [
+export const backgroundMenu: ButtonData[] = [
     { id: 'farm', ariaLabel: 'farm', content: 'Adorable Farm', img: null, type: 'button' },
     { id: 'forest', ariaLabel: 'forest', content: 'Enchanted Forest', img: null, type: 'button' },
     {
@@ -101,7 +119,7 @@ export const backgroundMenu: buttonData[] = [
     },
 ];
 
-export const userColorsMenu: buttonData[] = [
+export const userColorsMenu: ButtonData[] = [
     {
         id: '',
         ariaLabel: 'Hexcode selection for azure background.',

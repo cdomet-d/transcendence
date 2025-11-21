@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./animations.css";
+@import "./pong-farm-bg.css";
 @import "./background.css";
 
 @font-face {
@@ -22,6 +23,7 @@
 		--image-size: 2.43rem;
 		--image-cont-size: 3.43rem;
 
+		--user-status-div: 1rem;
 		/* Font sizing */
 		--xs: 0.5rem;
 		--regular: 1rem;
@@ -59,7 +61,7 @@
 
 		--transparent-blue: #64e6e834;
 
-		--border: #773d16;
+		--border: #59260B;
 		--highlight: #FFE6A4;
 		--shadow: #966c00;
 
@@ -102,7 +104,7 @@
 		--border: #6b1d00;
 		--highlight: #f9865c;
 		--shadow: #9a3e1c;
-		color: var(--red);
+		color: var(--white);
 	}
 
 	.disabled {
@@ -463,6 +465,10 @@
 		color: var(--border);
 	}
 
+	.f-white {
+		color: var(--white);
+	}
+
 	.f-bold {
 		font-family: PixelOperatorBold;
 	}
@@ -503,7 +509,8 @@
 		width: var(--xl);
 	}
 
-	.w-xl {
+	.w-xxl {
+		min-width: var(--xxl);
 		width: var(--xxl);
 	}
 
@@ -584,6 +591,18 @@
 		padding: var(--sm);
 	}
 
+	.pc-w {
+		min-width: 1000px;
+		max-width: 1000px;
+		width: 1000px;
+	}
+
+	.pc-h {
+		height: 558.9px;
+		min-height: 558.9px;
+		max-height: 558.9px;
+	}
+
 	.outline-focus:focus,
 	.outline-focus:focus-visible {
 		outline: 2px solid var(--yellow);
@@ -595,9 +614,9 @@
 	}
 
 	.header {
-		padding-left: var(--xs);
-		padding-right: var(--xs);
-		grid-template-columns: 5% 25% 35% 10% 5%;
+		padding-left: var(--s);
+		padding-right: var(--s);
+		grid-template-columns: 65px 1fr 1fr 65px 150px 55px;
 		grid-template-rows: var(--ml);
 		place-items: center;
 	}
@@ -638,8 +657,8 @@
 	}
 
 	.user-status {
-		height: var(--s);
-		width: var(--s);
+		height: var(--user-status-div);
+		width: var(--user-status-div);
 		background-color: var(--user-status);
 		border-radius: 30px;
 		line-height: 110%;
