@@ -3,25 +3,21 @@ import type {
 	userData, UserIDResponse
 } from "./bff.interface.js";
 
-import { Agent } from 'undici';
-
-
+import { fetch, Agent } from 'undici';
 
 const sslAgent = new Agent({
-	connect: {
-		rejectUnauthorized: false
-	}
+	connect: { rejectUnauthorized: false }
 });
 
 export async function fetchUserData(log: any, userID: number): Promise<userData | null> {
-	const url = `https://nginx/api/users/${userID}`;
+	const url = `https://users:2626/${userID}`;
 	let response: Response;
 
 	try {
 		response = await fetch(url, {
 			method: 'GET',
 			dispatcher: sslAgent
-		} as unknown as RequestInit);
+		});
 	} catch (error) {
 		log.error(`[BFF] User service (userData) is unreachable: ${error}`);
 		throw new Error('User service is unreachable.');
@@ -50,18 +46,18 @@ export async function fetchUserData(log: any, userID: number): Promise<userData 
 export async function fetchProfileView(log: any, userID: number, username: string): Promise<ProfileView> {
 
 	const vieweeID = await fetchUserID(log, username);
+	let friendsResponse: Response;
 
 	if (vieweeID === userID)
 		return ('self');
 
-	const friendsUrl = `https://nginx/api/friends/friendship?userA=${userID}&userB=${vieweeID}`;
-	let friendsResponse: Response;
+	const friendsUrl = `https://friends:1616/friendship?userA=${userID}&userB=${vieweeID}`;
 
 	try {
 		friendsResponse = await fetch(friendsUrl, {
 			method: 'GET',
 			dispatcher: sslAgent
-		} as unknown as RequestInit);
+		});
 	} catch (error) {
 		log.error(`[BFF] Friends service is unreachable: ${error}`);
 		return ('stranger');
@@ -77,7 +73,7 @@ export async function fetchProfileView(log: any, userID: number, username: strin
 }
 
 export async function fetchUserID(log: any, username: string): Promise<number | null> {
-	const url = `https://nginx/api/users/userID/${username}`;
+	const url = `https://users:2626/userID/${username}`;
 
 	let response: Response;
 
@@ -85,13 +81,12 @@ export async function fetchUserID(log: any, username: string): Promise<number | 
 		response = await fetch(url, {
 			method: 'GET',
 			dispatcher: sslAgent
-		} as unknown as RequestInit);
+		});
 	} catch (error) {
 		log.error(`[BFF] User service (userID) is unreachable: ${error}`);
 		throw new Error('User service is unreachable.');
 	}
 
-	//TODO 404 no throw please
 	if (response.status === 404) {
 		log.warn(`[BFF] User data not found for user`);
 		return (null);

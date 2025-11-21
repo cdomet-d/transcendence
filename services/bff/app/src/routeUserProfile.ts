@@ -104,14 +104,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	serv.get('/tiny-profile/:username', async (request, reply) => {
 		try {
-			// for testing
-			if (!request.user && request.headers['x-test-userid']) {
-				(request as any).user = {
-					userID: Number(request.headers['x-test-userid']),
-					username: 'Hugues'
-				};
-			}
-			// end of for testing
+			
 			const { username: targetUsername } = request.params as { username: string };
 			const { userID: viewerUserID } = request.user as { userID: number };
 
@@ -124,10 +117,10 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 			const [
 				userData,
-				//relation
+				relation
 			] = await Promise.all([
 				fetchUserData(serv.log, Number(targetUserID)),
-				//fetchProfileView(serv.log, viewerUserID, targetUsername),
+				fetchProfileView(serv.log, viewerUserID, targetUsername),
 			]);
 
 			if (!userData)
@@ -143,7 +136,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				status: userData.status,
 				winstreak: userData.winstreak,
 				lang: userData.lang,
-				//relation: relation,
+				relation: relation,
 			};
 
 			return (reply.code(200).send(combinedUserData));
