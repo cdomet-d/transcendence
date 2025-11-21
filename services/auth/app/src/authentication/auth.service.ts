@@ -7,7 +7,7 @@ const sslAgent = new Agent({
 });
 
 export async function createUserProfile(log: any, userID: number, username: string): Promise<ProfileCreationResult> {
-	const url = `https://users:2626/${userID}`;
+	const url = `https://nginx/api/users/${userID}`;
 
 	let response: Response;
 	try {
