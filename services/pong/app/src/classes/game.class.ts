@@ -21,6 +21,7 @@ export class Game {
 	#_lastTick: number;
 	#_timeoutIDs: Array< NodeJS.Timeout >;
 	#_startTimestamp: number;
+	#_endSent: boolean;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo, nc: NatsConnection) {
@@ -46,6 +47,7 @@ export class Game {
 		this.#_lastTick = 0;
 		this.#_timeoutIDs = new Array();
 		this.#_startTimestamp = 0;
+		this.#_endSent = false;
 	}
 
 	/*                              GETTERS                                  */
@@ -99,6 +101,10 @@ export class Game {
 		return this.#_startTimestamp;
 	}
 
+	get endSent(): boolean {
+		return this.#_endSent;
+	}
+
 	/*                              SETTERS                                  */
 	set reqHistory(reqTab: reqTab) {
 		this.#_reqHistory = reqTab;
@@ -114,6 +120,10 @@ export class Game {
 
 	set startTimestamp(timestamp: number) {
 		this.#_startTimestamp = timestamp;
+	}
+
+	set endSent(state: boolean) {
+		this.#_endSent = state;
 	}
 
 	/*                              METHODS                                  */

@@ -3,7 +3,6 @@ import { Game } from "../classes/game.class.js";
 import { updateBallPos } from './ball.js';
 import { updatePaddlePos } from './paddle.js';
 import { Player } from "../classes/player.class.js";
-import { StringCodec } from 'nats';
 import { messageHandler } from './pong.js';
 
 const SERVER_TICK: number = 1000 / 50;
@@ -53,34 +52,27 @@ function moveBall(game: Game, simulatedTime: number, end: number, i: number): nu
 	return simulatedTime;
 }
 
-export async function endGame(player1: Player, player2: Player, game: Game) {
-	sendToPlayers(game, player1, player2);
-	game.fillGameInfos();
-	const sc = StringCodec();
-	game.nc.publish("game.over", sc.encode(JSON.stringify(game.infos)));
+export function endGame(player1: Player, player2: Player, game: Game) {
 	player1.socket.removeListener("message", messageHandler);
-	await waitForEnd(player1.socket);
-	if (!game.local) {
-		player2.socket.removeListener("message", messageHandler);
-		await waitForEnd(player2.socket);
-	}
-	player1.socket.close();
 	if (!game.local)
-		player2.socket.close();
+		player2.socket.removeListener("message", messageHandler);
+	waitForEnd(player1.socket);
+	if (!game.local)
+		waitForEnd(player2.socket);
+	player1.reply._end = true;
+	player2.reply._end = true;
+	sendToPlayers(game, player1, player2);
 }
 
-function waitForEnd(socket: WebSocket): Promise<boolean> {
-	return new Promise((resolve, reject) => {
-		socket.once('message', (payload: string) => {
-			try {
-				const signal = JSON.parse(payload);
-				if (signal !== "0")
-					reject(new Error("Invalid end signal"));
-				resolve(true);
-			} catch (err) {
-				reject(err);
-			}
-		});
+function waitForEnd(socket: WebSocket) {
+	socket.on('message', (payload: string) => {
+		try {
+			const signal = JSON.parse(payload);
+			if (signal == "0")
+				socket.close();
+		} catch (err) {
+			throw err; //TODO: handle error
+		}
 	});
 }
 

@@ -5,6 +5,7 @@ import { setUpGame } from './pong.js';
 import { validIds } from './mess.validation.js';
 import type { idsObj } from '../classes/game.interfaces.js';
 import { natsSubscription } from '../nats/subscriber.js';
+import { StringCodec } from 'nats';
 
 export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): Promise< void > {
 	this.log.info('PONG webSocket connection established');
@@ -23,13 +24,17 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 
 	socket.on('close', () => {
 		if (game) {
-			// console.log("score:", game.players[0]!.score, ",", game.players[1]!.score);
 			game.cleanTimeoutIDs();
+			if (game.endSent === false) {
+				game.fillGameInfos();
+				const sc = StringCodec();
+				game.nc.publish("game.over", sc.encode(JSON.stringify(game.infos)));
+				game.endSent = true;
+			}
 			game.deletePlayers();
 			this.gameRegistry.deleteGame(game.gameID);
 			natsSubscription(this); //TODO: only for testing
 		}
-		//TODO: call fillGameInfo
 	});
 }
 
