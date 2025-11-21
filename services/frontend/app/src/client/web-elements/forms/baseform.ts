@@ -22,7 +22,7 @@ const emptyForm: FormDetails = {
  * @remarks customElement name is `'default-form'`
  * @extends {HTMLFormElement}
  */
-export class BaseForm extends HTMLFormElement {
+export abstract class BaseForm extends HTMLFormElement {
     #formData: FormDetails;
     submitHandler: (ev: SubmitEvent) => void;
     validationHandler: () => void;
@@ -72,6 +72,8 @@ export class BaseForm extends HTMLFormElement {
         this.#validate();
     }
 
+    abstract fetchAndRedirect(url: string, req: RequestInit): Promise<void>;
+
     /* -------------------------------------------------------------------------- */
     /*                                   Setters                                  */
     /* -------------------------------------------------------------------------- */
@@ -119,17 +121,6 @@ export class BaseForm extends HTMLFormElement {
         return req;
     }
 
-    async sendForm(url: string, req: RequestInit): Promise<Response> {
-        try {
-            const response = await fetch(url, req);
-            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-            console.log('Fetch successful', response);
-            return response;
-        } catch (error) {
-            throw error;
-        }
-    }
-
     /** Handles the default submit event for the form.
      * Prevents default submission and log form data.
      * Can be overridden in subclasses for custom behavior.
@@ -144,17 +135,17 @@ export class BaseForm extends HTMLFormElement {
         }
         console.log(this.#formData.action, req.method, req.body);
         try {
-            await this.sendForm(this.#formData.action, req);
+            await this.fetchAndRedirect(this.#formData.action, req);
         } catch (error) {
-			let mess = 'Something when wrong'
-			const err = document.createElement('span', {is: 'bad-request'}) as BadRequest;
+            let mess = 'Something when wrong';
+            const err = document.createElement('span', { is: 'bad-request' }) as BadRequest;
 
-			if (error instanceof Error) {
-				mess = error.message;
-			}
-			err.content = mess;
-			document.body.layoutInstance?.append(err);
-		}
+            if (error instanceof Error) {
+                mess = error.message;
+            }
+            err.content = mess;
+            document.body.layoutInstance?.append(err);
+        }
     }
 
     #validate() {
@@ -213,8 +204,4 @@ export class BaseForm extends HTMLFormElement {
             submit.classList.add('w-5/6');
         }
     }
-}
-
-if (!customElements.get('default-form')) {
-    customElements.define('default-form', BaseForm, { extends: 'form' });
 }

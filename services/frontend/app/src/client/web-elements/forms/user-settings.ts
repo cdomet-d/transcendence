@@ -151,7 +151,7 @@ export class UserSettingsForm extends BaseForm {
         f.delete('upload');
         const req = this.initReq();
         req.body = this.createReqBody(f);
-        await this.sendForm(this.details.action, req);
+        await this.fetchAndRedirect(this.details.action, req);
     }
 
     /**

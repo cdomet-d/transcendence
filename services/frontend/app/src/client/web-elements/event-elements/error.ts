@@ -1,3 +1,8 @@
+export async function responseErrorMessage(response: Response): Promise<Error> {
+    const errorData = await response.json();
+    return new Error(`Error: ${response.status}: ${errorData.message}`);
+}
+
 export class BadRequest extends HTMLSpanElement {
     constructor() {
         super();
@@ -5,7 +10,7 @@ export class BadRequest extends HTMLSpanElement {
 
     set content(str: string) {
         this.innerText = str;
-		this.render();
+        this.render();
     }
 
     connectedCallback() {
@@ -17,5 +22,5 @@ export class BadRequest extends HTMLSpanElement {
 }
 
 if (!customElements.get('bad-request')) {
-	customElements.define('bad-request', BadRequest, { extends: 'span' });
+    customElements.define('bad-request', BadRequest, { extends: 'span' });
 }

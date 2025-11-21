@@ -95,7 +95,7 @@ export class Searchbar extends BaseForm {
         this.#createQueryURL(form);
         this.initReq;
         try {
-            const response = await this.sendForm(super.details.action, this.initReq());
+            const response = await this.fetchAndRedirect(super.details.action, this.initReq());
             const searchResults = await response.json();
             this.displayResults(searchResults as UserData[]);
         } catch (error) {
