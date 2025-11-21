@@ -7,7 +7,7 @@ export async function findUserByUsername(log: any, username: string): Promise<Us
 	try {
 		response = await fetch(url);
 	} catch (error) {
-		log.error(`theeeeeeeere [BFF] User service is unreachable: ${error}`);
+		log.error(`[BFF] User service is unreachable: ${error}`);
 		throw new Error('User service is unreachable.');
 	}
 
