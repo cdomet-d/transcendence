@@ -14,7 +14,7 @@ export class BadRequest extends HTMLSpanElement {
     }
 
     connectedCallback() {
-        this.className = 'absolute top-0 bg-red w-full h-m pad-xs';
+        this.className = 'absolute bottom-0 bg-red w-full h-m pad-xs';
         this.render();
     }
 

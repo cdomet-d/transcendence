@@ -148,10 +148,10 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.delete('/delete-account', async (request, reply) => {
+	serv.delete('/account', async (request, reply) => {
 		try {
 			const userID = request.user.userID;
-
+			console.log(userID);
 			//UNCOMMENT FOR PASSWORD CHECK FOR ACCOUNT DELETION
 
 			//const username = request.user.username;

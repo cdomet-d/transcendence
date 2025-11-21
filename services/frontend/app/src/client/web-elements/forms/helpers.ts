@@ -5,6 +5,7 @@ import { Searchbar } from './search.js';
 import { UserSettingsForm } from './user-settings.js';
 import { RegistrationForm } from './registration-form.js';
 import { LoginForm } from './login-form.js';
+import type { DeleteAccountForm } from './account-deletion-form.js';
 
 /**
  * Merges with the existing HTMLElementTag map.
@@ -20,6 +21,7 @@ interface HTMLElementTagMap {
     'remote-pong-settings': RemotePongSettings;
     'search-form': Searchbar;
     'settings-form': UserSettingsForm;
+	'delete-account-form': DeleteAccountForm;
 }
 
 /**

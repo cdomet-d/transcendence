@@ -3,6 +3,7 @@ import { createAvatar } from '../typography/helpers.js';
 import { createDropdown } from '../navigation/menu-helpers.js';
 import { createForm } from './helpers.js';
 import { deleteAccount } from './default-forms.js';
+import { DeleteAccountForm } from './account-deletion-form.js';
 import { user } from '../default-values.js';
 import { userColorsMenu, languageMenu } from '../navigation/default-menus.js';
 import type { Avatar } from '../typography/images.js';
@@ -16,7 +17,7 @@ import type { UserData } from '../types-interfaces.js';
  */
 export class UserSettingsForm extends BaseForm {
     #user: UserData;
-    #accountDelete: BaseForm;
+    #accountDelete: DeleteAccountForm;
     #colors: DropdownMenu;
     #languages: DropdownMenu;
     #avatar: Avatar;
@@ -35,7 +36,7 @@ export class UserSettingsForm extends BaseForm {
         this.#user = user;
         this.submitHandler = this.submitHandlerImplementation.bind(this);
         this.#previewAvatar = this.#previewAvatarImplementation.bind(this);
-        this.#accountDelete = createForm('default-form', deleteAccount);
+        this.#accountDelete = createForm('delete-account-form', deleteAccount);
         this.#avatar = createAvatar(this.#user.avatar);
         this.#colors = createDropdown(userColorsMenu, 'Pick color', 'dynamic');
         this.#languages = createDropdown(languageMenu, 'Pick language', 'static');
@@ -49,6 +50,10 @@ export class UserSettingsForm extends BaseForm {
     override disconnectedCallback(): void {
         super.disconnectedCallback();
         this.contentMap.get('upload')?.removeEventListener('input', this.#previewAvatar);
+    }
+
+    override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
+        console.log(url);
     }
 
     /* -------------------------------------------------------------------------- */

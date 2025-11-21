@@ -215,7 +215,7 @@ export const remotePong: FormDetails = {
 };
 
 export const deleteAccount: FormDetails = {
-    action: 'https://localhost:8443/api/account/',
+    action: 'https://localhost:8443/api/bff/account',
     heading: '',
     ariaLabel: 'Account deletion request',
     id: 'account-deletion-request',
