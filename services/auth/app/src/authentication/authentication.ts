@@ -17,7 +17,7 @@ const authSchema = {
 
 export async function authenticationRoutes(serv: FastifyInstance) {
 
-	serv.post('/login', { schema: authSchema }, async (request, reply) => {
+	serv.post('/login/', { schema: authSchema }, async (request, reply) => {
 		try {
 			const { username, password } = request.body as { username: string, password: string };
 

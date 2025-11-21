@@ -1,15 +1,13 @@
 import type { ProfileCreationResult, UserAuth } from "./auth.interfaces.js";
 import { Database } from "sqlite";
-import { Agent } from 'undici';
+import { fetch, Agent } from 'undici';
 
 const sslAgent = new Agent({
-	connect: {
-		rejectUnauthorized: false
-	}
+	connect: { rejectUnauthorized: false }
 });
 
 export async function createUserProfile(log: any, userID: number, username: string): Promise<ProfileCreationResult> {
-	const url = `https://nginx/api/users/${userID}`;
+	const url = `https:///users:2626/${userID}`;
 
 	let response: Response;
 	try {
@@ -18,7 +16,7 @@ export async function createUserProfile(log: any, userID: number, username: stri
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ username: username }),
 			dispatcher: sslAgent
-		} as unknown as RequestInit);
+		});
 	} catch (error) {
 		log.error(`[AUTH] User service (via NGINX) is unreachable: ${error}`);
 		throw new Error('User service is unreachable.');
