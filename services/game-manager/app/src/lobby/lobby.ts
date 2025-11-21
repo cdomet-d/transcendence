@@ -1,44 +1,35 @@
-
-interface userInfo {
-	userID?: number,
-	username?: string,
-	userSocket?: WebSocket
-}
-
-export interface lobbyInfo {
-	lobbyID?: number,
-	whitelist?: whitelist,
-	joinable?: boolean,
-	userList: userInfo[],
-	remote: boolean,
-	format: "quick" | "tournament" | string,
-	nbPlayers: number
-	// gameSettings?: string
-}
-
-interface whitelist {
-	lobbyId: number,
-	hostID: number,
-	userIDs: number[]
-}
-
+import type { userInfo, lobbyInfo } from "../manager.interface.js";
+export const wsClientsMap: Map<number, WebSocket> = new Map();
 export const lobbyMap: Map<number | undefined, lobbyInfo> = new Map();
 
 export function createLobby(hostID: number, format: string) {
 	const lobby: lobbyInfo = makeLobbyInfo(hostID, format);
 	lobbyMap.set(lobby.lobbyID, lobby);
+	return lobby;
 }
 
-export function addUserToLobby(uid: number, lobbyID: number) {
-	const lobby/* : lobbyInfo | undefined */ = lobbyMap.get(lobbyID);
-	if (!lobby) {
-		console.log("Error: lobbyID not found in GM lobbyMap!");
-		return;
-	}
-	lobby?.userList.push({ userID: uid });
-	console.log(`User #${uid} has been added to lobby`);
+export function addUserToLobby(userID: number, socket: WebSocket, lobbyID: number) {
+    const lobby = lobbyMap.get(lobbyID);
+    if (!lobby) return;
+
+    if (!lobby.userList.has(userID)) {
+        lobby.userList.set(userID, { userID });
+    }
+
+    if (!wsClientsMap.has(userID)) {
+        wsClientsMap.set(userID, socket);
+    }
 }
 
+export function removeUserFromLobby(userID: number, lobbyID: number) {
+    const lobby = lobbyMap.get(lobbyID);
+	if (!lobby) return;
+
+	lobby.userList.delete(userID);
+    wsClientsMap.delete(userID);
+}
+
+// add INVITEE in parameter and get all userInfo (invitee) from JWT payload
 function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 	const lobbyID: number = getUniqueLobbyID();
 
@@ -50,9 +41,9 @@ function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 			userIDs: [hostID] // 1. put invitee ID here on invite
 		},
 		joinable: true,
-		userList: [
-			{ userID: hostID } // 2. add invitees there when they join
-		],
+        userList: new Map<number, userInfo>([
+            [hostID, { userID: hostID }] //  get username from token 
+        ]),
 		remote: true, // TODO: TBD
 		format: format,
 		nbPlayers: format === "quick" ? 2 : 4

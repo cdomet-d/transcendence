@@ -1,59 +1,46 @@
+import type { lobbyInfo } from "../manager.interface.js";
 import { processGameRequest } from '../manager.js';
-import { addUserToLobby, createLobby, printPlayersInLobby } from './lobby.js';
 import type { FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
-
-export const wsClientsMap: Map<number, WebSocket> = new Map();
+import { wsClientsMap, lobbyMap, addUserToLobby, createLobby } from './lobby.js';
 
 export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
-	req.server.log.info('WebSocket connection established');
+	let userID: number | null = null;
 
-	socket.on('message', (message: any) => {
-		req.server.log.info(`server received: ${message}`);
+	socket.on('message', (message: string) => {
+		try {
+			const data = JSON.parse(message);
+			const { event, payload } = data;
 
-		const data = JSON.parse(message);
-		if (!data) {
-			console.log("Error: Message received by GM is empty or corrupted!")
-		}
+			if (event === "LOBBY_REQUEST") {
+				userID = getUniqueUserID(); // use JWT payload
+				
+				if (!wsClientsMap.has(userID)) {
+					wsClientsMap.set(userID, socket);
+				}
 
-		const event = data.event;
-		if (!event || event && (event !== "GAME_REQUEST" && event !== "LOBBY_REQUEST")) {
-			console.log("Error: Wrong or empty request received in GM!");
-			return;
-		}
-
-		const payload = data.payload;
-		if (!payload) {
-			console.log("Error: payload received by GM is corrupt or empty!");
-			return;
-		}
-
-		// PROCESS EVENT
-		if (event === "GAME_REQUEST") {
-			processGameRequest(payload);
-		} else if (event === "LOBBY_REQUEST") {
-			const userID = getUniqueUserID(); // TODO: DB??
-			const action: string = payload.action;
-			if (!action) {
-				console.log("Error: GM received data but not data.action!");
-				return;
+				if (payload.action === "create") {
+					const newLobby: lobbyInfo = createLobby(userID, payload.format);
+					socket.send(JSON.stringify({ lobby: "created", lobbyID: newLobby.lobbyID }));
+				} else if (payload.action === "join") {
+					addUserToLobby(userID, socket, payload.lobbyID);
+					socket.send(JSON.stringify({ lobby: "joined", lobbyID: payload.lobbyID }));
+				}
+			} else if (event === "GAME_REQUEST") {
+				processGameRequest(payload);
 			}
-			// console.log(`GM received: ${action}`);
-			wsClientsMap.set(userID, socket);
-			req.server.log.info("User #" + userID + " added to clientMap");
-			
-			if (action === "create") {
-				createLobby(userID, payload.format);
-				wsSend(socket, JSON.stringify({ lobby: "created" }));
-			} else if (action === "join") {
-				addUserToLobby(userID, 99); // TODO: replace 99 (lobbyID) with one given in invitation
-				wsSend(socket, JSON.stringify({ lobby: "joined" }));
-			}
+		} catch (error) {
+			req.server.log.error(`Malformed WS message: ${error}`);
+		}
+	});
 
-			printPlayersInLobby(1);
+	socket.on('close', () => {
+		if (userID !== null) {
+			wsClientsMap.delete(userID);
 		}
 	});
 }
+
 
 export function wsSend(ws: WebSocket, message: string): void {
 	if (ws && ws.readyState === ws.OPEN) {

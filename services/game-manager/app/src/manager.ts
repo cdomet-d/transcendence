@@ -1,37 +1,7 @@
 import { createTournament } from "./tournament/tournamentCreation.js";
 import { startGame, startTournament } from "./tournament/tournamentStart.js";
-import type { lobbyInfo } from './lobby/lobby.js'
 import { createGameObj } from "./quickmatch/createGame.js";
-
-interface userInfo {
-	userID?: number,
-	username?: string
-}
-
-interface game {
-	lobbyID: number,
-	gameID: number,
-	tournamentID?: number,
-	remote: boolean,
-	userList: userInfo[] | undefined | null,
-	score: string,
-	winnerID: number,
-	loserID: number,
-}
-
-interface tournament {
-	tournamentID: number,
-	winnerID: number | undefined | null,
-	bracket: game[]
-}
-
-interface gameRequest {
-	userID: number,
-	gameID: number,
-	remote: boolean
-}
-
-export type { userInfo, game, tournament, gameRequest }
+import type { game, tournament, lobbyInfo } from "./manager.interface.js";
 
 export function processGameRequest(lobbyInfo: lobbyInfo) {
 	if (lobbyInfo.format === "tournament") {

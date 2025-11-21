@@ -1,9 +1,9 @@
 import { StringCodec } from 'nats';
 import { wsSend } from '../lobby/wsHandler.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
-import { wsClientsMap } from '../lobby/wsHandler.js';
 import { natsConnect } from './publisher.js';
-import type { gameRequest } from '../manager.js';
+import type { gameRequest } from '../manager.interface.js';
+import { wsClientsMap } from '../lobby/lobby.js';
 
 interface user {
 	userID: number,
