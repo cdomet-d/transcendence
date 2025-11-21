@@ -1,5 +1,5 @@
+import type { game, tournament } from "../manager.interface.js";
 import { natsPublish } from "../nats/publisher.js";
-import type { game, tournament } from '../manager.js'
 
 // Temporary solution: store tournaments in memory
 export const tournamentMap: Map<number, tournament> = new Map();

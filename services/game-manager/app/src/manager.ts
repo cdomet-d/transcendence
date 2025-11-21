@@ -13,8 +13,8 @@ export function processGameRequest(lobbyInfo: lobbyInfo) {
 		lobbyInfo.joinable = false; // TODO: turn back to true when tournament over
 		startTournament(tournament);
 	} else if (lobbyInfo.format === "quick") {
-		const quickmatch: game | boolean = createGameObj(lobbyInfo);
-		if (quickmatch === false) {
+		const quickmatch: game | undefined = createGameObj(lobbyInfo);
+		if (quickmatch === undefined) {
 			console.log("Error: Something went wrong!");
 			return;
 		}

@@ -1,7 +1,6 @@
 import { tournamentMap } from "./tournamentStart.js";
 import { startGame } from "./tournamentStart.js";
-import type { game, tournament } from '../manager.js'
-import type { userInfo } from "../manager.js";
+import type { game, tournament, userInfo } from "../manager.interface.js";
 
 const nextPlayersMap: Map<number, { player1?: userInfo, player2?: userInfo }> = new Map();
 
