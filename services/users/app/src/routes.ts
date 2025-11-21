@@ -1,16 +1,16 @@
 import type { FastifyInstance } from 'fastify';
 import { request } from 'http';
 
-interface UserProfile {
-	avatar: string;
-	biography: string;
-	userID: number;
-	lang: string;
-	profileColor: string;
-	username: string;
-	status: boolean;
-	winstreak: number;
-	since: string;
+export interface userData {
+	avatar: string,
+	biography: string,
+	userID: string,
+	lang: string,
+	profileColor: string,
+	status: boolean,
+	username: string,
+	winstreak: string, 
+	since: string
 }
 
 interface UserStats {
@@ -37,7 +37,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				SELECT * FROM userProfile WHERE userID = ?
 			`;
 
-			const userProfile = await serv.dbUsers.get<UserProfile>(query, [userID]);
+			const userProfile = await serv.dbUsers.get<userData>(query, [userID]);
 			if (!userProfile) {
 				return (reply.code(404).send({
 					success: false,
@@ -47,7 +47,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			return (reply.code(200).send({
 				success: true,
-				profile: userProfile
+				userData: userProfile
 			}));
 
 		} catch (error) {
@@ -71,7 +71,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			SELECT * FROM userProfile WHERE userID IN (${placeholders})
 		`;
 
-			const profiles = await serv.dbUsers.all<UserProfile[]>(query, userIDs);
+			const profiles = await serv.dbUsers.all<userData[]>(query, userIDs);
 
 			return (reply.code(200).send({
 				success: true,
@@ -92,18 +92,19 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			if (query.username) {
 				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
-				const user = await serv.dbUsers.get(sql, [query.username]);
+				const response = await serv.dbUsers.get(sql, [query.username]);
 
-				if (!user) {
+				if (!response) {
 					return (reply.code(404).send({
 						success: false,
 						message: 'User not found'
 					}));
 				}
+
 				return (reply.code(200).send({
 					success: true,
 					message: "user found!",
-					user
+					response
 				}));
 			}
 

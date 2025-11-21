@@ -13,8 +13,14 @@ export interface userData {
 	since: string
 }
 
-
-
+export interface UserIDResponse {
+	success: boolean;
+	message: string;
+	response: {
+		userID: number;
+		username: string;
+	};
+}
 
 
 

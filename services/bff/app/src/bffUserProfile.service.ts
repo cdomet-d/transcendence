@@ -1,9 +1,11 @@
 import type {
 	ProfileDataBatch, ProfileDataBatchResponse, ProfileView, UserStats, StatsResponse, Matches, RawMatches, Friends,
-	userData
+	userData, UserIDResponse
 } from "./bff.interface.js";
 
 import { Agent } from 'undici';
+
+
 
 const sslAgent = new Agent({
 	connect: {
@@ -11,7 +13,7 @@ const sslAgent = new Agent({
 	}
 });
 
-export async function fetchUserData(log: any, userID: number): Promise<userData> {
+export async function fetchUserData(log: any, userID: number): Promise<userData | null> {
 	const url = `https://nginx/api/users/${userID}`;
 	let response: Response;
 
@@ -21,14 +23,13 @@ export async function fetchUserData(log: any, userID: number): Promise<userData>
 			dispatcher: sslAgent
 		} as unknown as RequestInit);
 	} catch (error) {
-		log.error(`heyyyyyyy [BFF] User service (userData) is unreachable: ${error}`);
-		throw new Error('heyyyyyyy User service is unreachable.');
+		log.error(`[BFF] User service (userData) is unreachable: ${error}`);
+		throw new Error('User service is unreachable.');
 	}
 
-	//TODO 404 no throw please
 	if (response.status === 404) {
 		log.warn(`[BFF] User data not found for user ${userID}`);
-		throw new Error('User data not found.');
+		return null;
 	}
 
 	if (!response.ok) {
@@ -75,7 +76,7 @@ export async function fetchProfileView(log: any, userID: number, username: strin
 	return (friendshipData.status);
 }
 
-export async function fetchUserID(log: any, username: string): Promise<number> {
+export async function fetchUserID(log: any, username: string): Promise<number | null> {
 	const url = `https://nginx/api/users/userID/${username}`;
 
 	let response: Response;
@@ -86,14 +87,14 @@ export async function fetchUserID(log: any, username: string): Promise<number> {
 			dispatcher: sslAgent
 		} as unknown as RequestInit);
 	} catch (error) {
-		log.error(`yooooooo [BFF] User service (userID) is unreachable: ${error}`);
-		throw new Error('yooooooo User service is unreachable.');
+		log.error(`[BFF] User service (userID) is unreachable: ${error}`);
+		throw new Error('User service is unreachable.');
 	}
 
 	//TODO 404 no throw please
 	if (response.status === 404) {
 		log.warn(`[BFF] User data not found for user`);
-		throw new Error('User service is unreachable.');
+		return (null);
 	}
 
 	if (!response.ok) {
@@ -101,8 +102,12 @@ export async function fetchUserID(log: any, username: string): Promise<number> {
 		throw new Error('User service is unreachable.');
 	}
 
-	const data = await response.json() as number;
-	return (data);
+	const body = await response.json() as UserIDResponse;
+
+	if (!body.response || !body.response.userID)
+		throw new Error('Invalid response structure from user service');
+
+	return body.response.userID;
 }
 
 
@@ -113,7 +118,7 @@ export async function fetchUserID(log: any, username: string): Promise<number> {
 
 export async function fetchUserProfile(log: any, userID: number): Promise<userData | null> {
 	const url = `http://users:2626/internal/users/${userID}/profile`;
-	
+
 	let response: Response;
 
 	try {

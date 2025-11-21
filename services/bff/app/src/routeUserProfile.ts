@@ -119,6 +119,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				return (reply.code(401).send({ message: 'Unauthorized.' }));
 
 			const targetUserID = await fetchUserID(serv.log, targetUsername);
+			if (!targetUserID)
+				return (reply.code(404).send({ message: 'User profile data not found.' }));
 
 			const [
 				userData,
@@ -127,6 +129,9 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				fetchUserData(serv.log, Number(targetUserID)),
 				//fetchProfileView(serv.log, viewerUserID, targetUsername),
 			]);
+
+			if (!userData)
+				return reply.code(404).send({ message: 'User profile data not found.' });
 
 			const combinedUserData: userData = {
 				userID: String(targetUserID),
