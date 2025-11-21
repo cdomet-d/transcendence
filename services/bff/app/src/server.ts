@@ -12,7 +12,7 @@ serv.register(cors, {
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 });
 
-serv.register(bffFriendRoutes);
+//serv.register(bffFriendRoutes);
 serv.register(bffAccessibilityRoutes);
 serv.register(bffUsersRoutes);
 

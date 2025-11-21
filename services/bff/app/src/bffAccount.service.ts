@@ -1,4 +1,4 @@
-import type { AccountData, AccountDataResponse, accountBatchResponse } from "./bff.interface.js";
+/* import type { AccountData, AccountDataResponse, accountBatchResponse } from "./bff.interface.js";
 //THIS FILE IS DOOOOONE 
 // GO FOCUS ON OTHER THINGS PLEASE
 
@@ -235,3 +235,4 @@ export async function fetchUserDataBatch(log: any, userIDs: number[]): Promise<A
 
 	return (body.accountData);
 }
+ */
