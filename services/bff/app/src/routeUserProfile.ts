@@ -12,51 +12,84 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	//get's profile + stats + game + friendslist
 	// userID -> userID of requested profile
-	//  get big profile with username
-	/* 	serv.get('/profile/:username', async (request, reply) => {
-			try {
-	
-				//TODO: userB ID is in the cookies so setup fastify JWT plugin and get userID this way
-				const query = request.query as {
-					userA?: number,
-					userB?: number,
-				};
-	
-				if (query.userA === undefined || query.userB === undefined) {
-					return reply.code(400).send({
-						message: '[BFF] Missing required query parameters: userA and userB are required.'
-					});
-				}
-	
-				const [
-					userData,
-					stats,
-					friends,
-					recentMatches
-				] = await Promise.all([
-					buildFullUserData(serv.log, query.userA, query.userB),
-					fetchUserStats(serv.log, query.userA),
-					fetchFriendList(serv.log, query.userA),
-					processMatches(serv.log, query.userA)
-				]);
-	
-				if (!userData || !stats)
-					return reply.code(404).send({ message: '[BFF] Failed to retrieve essential user data.' });
-	
-				const responseData: UserProfileView = {
-					userData: userData,
-					stats: stats,
-					friends: friends || [],
-					recentMatches: recentMatches || []
-				};
-	
-				return reply.code(200).send(responseData);
-	
-			} catch (error) {
-				serv.log.error(`[BFF] Error building user profile view: ${error}`);
-				throw (error);
+	// get big profile with username
+	serv.get('/profile/:username', async (request, reply) => {
+		try {
+
+			//TODO: userB ID is in the cookies so setup fastify JWT plugin and get userID this way
+			const { username } = request.params as { username: string };
+			const query = request.query as {
+				userB?: number,
+			};
+
+			if (query.userB === undefined) {
+				serv.log.error("[BFF] Parameter missing")
+				return reply.code(400).send({
+					message: '[BFF] Missing required query parameters: userA and userB are required.'
+				});
 			}
-		}); */
+
+			const userA = await fetchUserID(serv.log, username);
+			if (!userA) {
+				serv.log.error("[BFF] User not found")
+				return (reply.code(404).send({ message: 'User profile data not found.' }));
+			}
+
+			const [
+				userDatatemp,
+				relation
+			] = await Promise.all([
+				fetchUserData(serv.log, Number(userA)),
+				fetchProfileView(serv.log, query.userB, userA),
+			]);
+
+			if (!userDatatemp) {
+				serv.log.error("[BFF] User not found")
+				return reply.code(404).send({ message: 'User profile data not found.' });
+			}
+
+			const combinedUserData: userData = {
+				userID: String(userA),
+				username: userDatatemp.username,
+				avatar: userDatatemp.avatar,
+				biography: userDatatemp.biography,
+				profileColor: userDatatemp.profileColor,
+				since: userDatatemp.since,
+				status: userDatatemp.status,
+				winstreak: userDatatemp.winstreak,
+				lang: userDatatemp.lang,
+				relation: relation,
+			};
+
+			const [
+				userData,
+				stats,
+				//friends,
+				//recentMatches
+			] = await Promise.all([
+				combinedUserData,
+				fetchUserStats(serv.log, userA),
+				//fetchFriendList(serv.log, userA),
+				//processMatches(serv.log, userA)
+			]);
+
+			if (!userData || !stats)
+				return reply.code(404).send({ message: '[BFF] Failed to retrieve essential user data.' });
+
+			const responseData: UserProfileView = {
+				userData: userData,
+				stats: stats,
+				//friends: friends || [],
+				//recentMatches: recentMatches || []
+			};
+
+			return reply.code(200).send(responseData);
+
+		} catch (error) {
+			serv.log.error(`[BFF] Error building user profile view: ${error}`);
+			throw (error);
+		}
+	});
 
 	/* 	serv.patch('/settings', async (request, reply) => {
 			try {
@@ -102,7 +135,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				serv.log.error(`[BFF] Failed to update settings: ${error}`);
 				throw error;
 			}
-		}); */
+		});*/
 
 	serv.get('/tiny-profile/:username', async (request, reply) => {
 		try {
@@ -122,7 +155,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				relation
 			] = await Promise.all([
 				fetchUserData(serv.log, Number(targetUserID)),
-				fetchProfileView(serv.log, viewerUserID, targetUsername),
+				fetchProfileView(serv.log, viewerUserID, targetUserID),
 			]);
 
 			if (!userData)

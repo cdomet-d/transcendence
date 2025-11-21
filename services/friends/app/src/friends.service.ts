@@ -38,12 +38,11 @@ export async function getFriendship(db: Database, userID: number): Promise<Frien
 			statusFrienship
 		FROM
 			friendship
-		WHERE
-			friendID = ?
-			AND statusFrienship = true;
+		WHERE (userID = ?) 
+			OR (friendID = ?)
 	`;
 
-	const params = [userID, userID, userID];
+	const params = [userID, userID];
 	const requests = await db.all<Friendship[]>(query, params);
 
 	return (requests);

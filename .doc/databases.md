@@ -724,7 +724,7 @@ WHERE userID = 101;
 * servir la leaderboard
 * servir les users pour search bar
 * envoyer les settings
-* servir userCard
+* servir userCard        ✅
 * supprimer le compte    ✅
 * envouyer demande d'ami ✅
 * accepter demande d'ami ✅

@@ -22,30 +22,6 @@ export interface UserIDResponse {
 	};
 }
 
-
-
-
-/*----------  WIP  ----------*/
-
-export type userStatus = 'offline' | 'online' | 'in-game';
-
-export interface ProfileResponse {
-	success: boolean;
-	profile: UserProfile;
-}
-
-export interface Friends {
-	friendID: string,
-	statusFrienship: boolean,
-	since: string,
-	userData: userData,
-}
-
-export interface StatsResponse {
-	success: boolean;
-	stats: UserStats;
-}
-
 export interface UserStats {
 	userID: number;
 	longestMatch: number;
@@ -58,12 +34,12 @@ export interface UserStats {
 	[key: string]: number;
 }
 
-export interface RawUserActivity { activityStatus: userStatus; }
-export interface FriendshipStatus { status: ProfileView; }
-
-export interface UserAuth {
-	userID: number,
-	username: string
+export interface Friends {
+	userID: string,
+	friendID: string,
+	statusFrienship: boolean,
+	since: string,
+	userData: userData,
 }
 
 export interface ProfileDataBatch {
@@ -81,6 +57,29 @@ export interface ProfileDataBatchResponse {
 	message?: string;
 }
 
+
+
+/*----------  WIP  ----------*/
+
+export type userStatus = 'offline' | 'online' | 'in-game';
+
+export interface ProfileResponse {
+	success: boolean;
+	profile: UserProfile;
+}
+
+export interface StatsResponse {
+	success: boolean;
+	stats: UserStats;
+}
+
+export interface RawUserActivity { activityStatus: userStatus; }
+export interface FriendshipStatus { status: ProfileView; }
+
+export interface UserAuth {
+	userID: number,
+	username: string
+}
 
 export interface UserProfile {
 	userID: number;
@@ -115,8 +114,8 @@ export interface Matches {
 export interface UserProfileView {
 	userData: userData
 	stats: UserStats;
-	friends: Friends[];
-	recentMatches: Matches[];
+	//friends: Friends[];
+	//recentMatches: Matches[];
 }
 
 export interface settings {
