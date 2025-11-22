@@ -53,7 +53,7 @@ export class Router {
     /** Parses the defined route array to check if the current URL is defined as a route.
      * Calls `renderNotFount()` if the route was not found, and the route's callback otherwise.
      */
-    loadRoute(path: string) {
+    loadRoute(path: string, updateHistory: boolean) {
         let matchedRoute = this.#getRouteFromPath(path);
         let res: Match<Partial<Record<string, string | string[]>>> = false;
 
@@ -67,7 +67,7 @@ export class Router {
                 }
             }
         }
-        this.updateURL(path);
+		if (updateHistory) this.updateURL(path);
         if (!matchedRoute) {
             renderNotFound();
             return;

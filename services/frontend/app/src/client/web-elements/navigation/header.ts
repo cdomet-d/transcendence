@@ -43,12 +43,12 @@ export class PageHeader extends HTMLElement {
     }
 
     async #loginImplementation() {
-        router.loadRoute('/auth');
+        router.loadRoute('/auth', true);
     }
 
     async #logoutImplementation() {
         await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
-        router.loadRoute('/');
+        router.loadRoute('/', true);
     }
 
     connectedCallback() {

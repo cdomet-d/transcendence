@@ -53,7 +53,7 @@ if (!document.body.layoutInstance || !document.body.header) {
 }
 
 document.body.append(document.body.header, document.body.layoutInstance);
-router.loadRoute(router.currentPath);
+router.loadRoute(router.currentPath, true);
 
 // initLanguageCSR();
 // addLanguageEvents();

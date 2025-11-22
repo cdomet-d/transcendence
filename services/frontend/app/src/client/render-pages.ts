@@ -119,15 +119,15 @@ export async function renderSelf() {
     const status = await userStatus();
     console.log(status.auth, status.userID, status.username);
     if (!status.auth) {
-        router.loadRoute('/auth');
+        router.loadRoute('/auth', true);
         return;
     }
-	const url = `https://localhost:8443/api/bff/profile/${status.username}`
+	// const url = `https://localhost:8443/api/bff/profile/${status.username}`
 
 	try {
-		const reply = await fetch(url)
-		const profile = reply.json();
-		console.log(profile);
+		// const reply = await fetch(url)
+		// const profile = reply.json();
+		// console.log(profile);
 		prepareLayout(document.body.layoutInstance, 'profile');
 		document.body.layoutInstance?.appendAndCache(
 			document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,

@@ -3,7 +3,6 @@ import type { FastifyInstance } from 'fastify';
 import * as bcrypt from 'bcrypt';
 
 import { deleteAccount, createUserProfile, checkUsernameUnique } from './auth.service.js';
-import type { VerifyPayloadType } from '@fastify/jwt';
 
 interface JwtPayload {
     userID: number;
