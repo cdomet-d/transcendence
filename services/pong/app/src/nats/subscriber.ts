@@ -52,6 +52,7 @@ const player2: user = {
 }
 
 const gameobj: gameInfo = {
+	lobbyID: 1,
 	gameID: 1,
 	tournamentID: 99,
 	remote: false,

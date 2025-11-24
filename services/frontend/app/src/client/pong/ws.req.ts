@@ -3,8 +3,10 @@ import { Game } from './classes/game.class.js';
 import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from './game.events.js';
 import { renderGame } from './game.render.utils.js';
 
+const START_DELAY = 500;
+
 export function wsRequest(game: Game, ids: { gameID: number; userID: number }) {
-    const ws = new WebSocket('wss://localhost:8443/api/game/'); //?gameID=1');
+    const ws = new WebSocket('wss://localhost:8443/api/game/');
 
     ws.onerror = (err) => {
         console.log('error:', err);
@@ -37,6 +39,6 @@ async function setUpGame(game: Game, ws: WebSocket, ballDir: number) {
     window.addEventListener('keydown', createKeyDownEvent(game.req._keys, game.horizontal));
     window.addEventListener('keyup', createKeyUpEvent(game.req._keys));
 
-    await new Promise((res) => setTimeout(res, 500));
+    await new Promise((res) => setTimeout(res, START_DELAY));
     startGame(game, ws);
 }

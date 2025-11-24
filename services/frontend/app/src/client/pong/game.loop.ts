@@ -37,7 +37,8 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 			game.delta -= TIME_STEP;
 			updates++;
 		}
-		if (updates === MAX_UPDATES_PER_FRAME) game.delta = 0;
+		if (updates === MAX_UPDATES_PER_FRAME) 
+			game.delta = 0;
 
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
 		renderGame(game);
