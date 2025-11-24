@@ -9,8 +9,9 @@ const sslAgent = new Agent({
 });
 
 export async function createUserProfile(log: any, userID: number, username: string): Promise<ProfileCreationResult> {
-	const url = `https://nginx/api/users/${userID}`;
+	const url = `https://nginx/api/users/${userID}/`;
 
+	console.log('USER ID:', url);
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -31,7 +32,6 @@ export async function createUserProfile(log: any, userID: number, username: stri
 			const errorBody = (await response.json()) as { message: string };
 			if (errorBody.message) message = errorBody.message;
 		} catch (error) { }
-
 		return { errorCode: 'conflict' };
 	}
 

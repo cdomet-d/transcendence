@@ -22,6 +22,7 @@ import { TournamentBrackets } from './web-elements/game/tournament.js';
 import { PongUI } from './web-elements/game/game-ui.js';
 import { userStatus } from './main.js';
 import { router } from './main.js';
+import { createErrorFeedback } from './web-elements/event-elements/error.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -120,6 +121,7 @@ export async function renderSelf() {
     console.log(status.auth, status.userID, status.username);
     if (!status.auth) {
         router.loadRoute('/auth', true);
+		createErrorFeedback('You must register or login to see your profile')
         return;
     }
 	// const url = `https://localhost:8443/api/bff/profile/${status.username}`
