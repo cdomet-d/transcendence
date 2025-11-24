@@ -7,6 +7,7 @@ _logs/
 *.pem
 *.txt
 *.log
+*.logs
 dist/
 node_modules/
 package-lock.json
