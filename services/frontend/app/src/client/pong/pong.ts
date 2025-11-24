@@ -17,7 +17,7 @@ export function pong(gameReq: gameRequest, ctx: CanvasRenderingContext2D | null)
         router.loadRoute('/404');
         return;
     }
-    const game: Game = new Game(ctx, gameReq.remote, false);
+    const game: Game = new Game(ctx, gameReq.remote, true);
     renderGame(game); //TODO: before rendering need to receive players names
     //TODO: window.addEventListener("load", (event) => {
     wsRequest(game, { gameID: gameReq.gameID, userID: gameReq.userID });

@@ -6,21 +6,24 @@ import type { coordinates, keysObj, paddleSpec } from '../classes/game.interface
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function updatePaddlePos(player: Player, keys: keysObj, game: Game) {
+    const step: coordinates = { x: 0, y: 0 };
 	if ((player.left && keys._w)
 		|| (player.right && (keys._ArrowUp|| !game.local && keys._w)))
-		up(player.paddle, game.padSpec.speed, player.padStep);
+		up(player.paddle, game.padSpec.speed, step/*player.padStep*/);
 	if ((player.left && keys._s)
 		|| (player.right && (keys._ArrowDown || !game.local && keys._s)))
-		down(player.paddle, game.padSpec, player.padStep);
+		down(player.paddle, game.padSpec, step/*player.padStep*/);
 	if ((player.left && keys._a))
-		left(player.paddle, game, 0, player.padStep);
+		left(player.paddle, game, 0, step/*player.padStep*/);
 	if ((player.left && keys._d))
-		right(player.paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, player.padStep);
+		right(player.paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, step/*player.padStep*/);
 	if (player.right && (keys._ArrowLeft || !game.local && keys._d))
-		left(player.paddle, game, WIDTH / 2 + game.ball.r + 1, player.padStep);
+		left(player.paddle, game, WIDTH / 2 + game.ball.r + 1, step/*player.padStep*/);
 	if (player.right && (keys._ArrowRight || !game.local && keys._a))
-		right(player.paddle, game, WIDTH - game.padSpec.w, player.padStep);
-	movePaddle(game, player.paddle, player.padStep); //TODO: clean by only giving obj player
+		right(player.paddle, game, WIDTH - game.padSpec.w, step/*player.padStep*/);
+	player.paddle.x += step.x;
+	player.paddle.y += step.y;
+	// movePaddle(game, player.paddle, player.padStep); //TODO: clean by only giving obj player
 }
 
 function up(pad: coordinates, padSpeed: number, step: coordinates) {
@@ -52,36 +55,6 @@ function right(pad: coordinates, game: Game, limit: number, step: coordinates) {
 }
 
 function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
-	// let nextX: number = game.ball.x - step.x;
-    // let nextY: number = game.ball.y - step.y;
-    // let result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);
-	// paddle.x += step.x;
-    // paddle.y += step.y;
-	// if (!result)
-    //     return;
-	// let [t, n] = result;
-	// // if (game.ball.y - game.ball.r <= 0 && n.y === -1) {
-	// // 	paddle.y = game.ball.x + game.ball.r + 1;
-	// // 	return;
-	// // }
-	// updateVelocity(game, paddle, n.x);
-    // nextX = game.ball.x + (game.ball.dx * TIME_STEP);
-	// nextY = game.ball.y + (game.ball.dy * TIME_STEP);
-	// // if (nextY - game.ball.r <= 0) {
-	// // 	game.ball.y = game.ball.r + 1;
-	// // 	game.ball.dy *= -1;
-	// // 	paddle.y = game.ball.x + game.ball.r + 1;
-	// // 	return;
-	// // } //TODO: do the same for bottom wall and test this by decreasing ball speed and placing it on top
-    // result = raycast(game, paddle, nextX, nextY);
-    // if (!result)
-    //     return;
-    // [t, n] = result;
-    // game.ball.x += game.ball.dx * TIME_STEP * t + 1 * n.x;
-	// game.ball.y += game.ball.dy * TIME_STEP * t + 1 * n.y;
-
-
-
 	const nextX: number = game.ball.x - step.x;
 	const nextY: number = game.ball.y - step.y;
 	const result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);

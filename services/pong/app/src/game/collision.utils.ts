@@ -69,10 +69,10 @@ export function updateVelocity(game: Game, paddle: coordinates, nx: number) {
 }
 //TODO: take into account paddle speed and direction ?
 
-// export function distBallPad(p: coordinates, b: coordinates): number {
-//     const d: coordinates = {x: Math.abs(p.x) - b.x, y: Math.abs(p.y) - b.y};
-// 	d.x = Math.max(d.x, 0.0);
-// 	d.y = Math.max(d.y, 0.0);
-// 	const length: number = Math.sqrt(d.x * d.x + d.y * d.y);
-//     return length + Math.min(Math.max(d.x, d.y), 0.0);
-// }
+export function distBallPad(p: coordinates, b: coordinates): number {
+    const d: coordinates = {x: Math.abs(p.x) - b.x, y: Math.abs(p.y) - b.y};
+	d.x = Math.max(d.x, 0.0);
+	d.y = Math.max(d.y, 0.0);
+	const length: number = Math.sqrt(d.x * d.x + d.y * d.y);
+    return length + Math.min(Math.max(d.x, d.y), 0.0);
+}

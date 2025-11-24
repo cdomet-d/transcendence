@@ -6,14 +6,21 @@ const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function updatePaddlePos(paddle: coordinates, leftSide: boolean, game: Game, keys: keysObj) {
     const step: coordinates = { x: 0, y: 0 };
-    if ((leftSide && keys._w) || (!leftSide && keys._ArrowUp)) up(paddle, game.padSpec.speed, step);
-    if ((leftSide && keys._s) || (!leftSide && keys._ArrowDown)) down(paddle, game.padSpec, step);
-    if (leftSide && keys._a) left(paddle, game, 0, step);
+    if ((leftSide && keys._w) || (!leftSide && keys._ArrowUp)) 
+        up(paddle, game.padSpec.speed, step);
+    if ((leftSide && keys._s) || (!leftSide && keys._ArrowDown)) 
+        down(paddle, game.padSpec, step);
+    if (leftSide && keys._a) 
+        left(paddle, game, 0, step);
     if (leftSide && keys._d)
         right(paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, step);
-    if (!leftSide && keys._ArrowLeft) left(paddle, game, WIDTH / 2 + game.ball.r + 1, step);
-    if (!leftSide && keys._ArrowRight) right(paddle, game, WIDTH - game.padSpec.w, step);
-    movePaddle(game, paddle, step);
+    if (!leftSide && keys._ArrowLeft) 
+        left(paddle, game, WIDTH / 2 + game.ball.r + 1, step);
+    if (!leftSide && keys._ArrowRight) 
+        right(paddle, game, WIDTH - game.padSpec.w, step);
+    paddle.x += step.x;
+    paddle.y += step.y;
+    // movePaddle(game, paddle, step);
 }
 
 function up(pad: coordinates, padSpeed: number, step: coordinates) {
@@ -37,43 +44,32 @@ function right(pad: coordinates, game: Game, limit: number, step: coordinates) {
 }
 
 function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
-    let nextX: number = game.ball.x - step.x;
-    let nextY: number = game.ball.y - step.y;
-    let result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);
-    paddle.x += step.x;
-    paddle.y += step.y;
-	if (!result)
+    const nextX: number = game.ball.x - step.x;
+    const nextY: number = game.ball.y - step.y;
+    const result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);
+    if (!result) {
+        paddle.x += step.x;
+        paddle.y += step.y;
+        step.x = 0;
+        step.y = 0;
         return;
-    let [t, n] = result;
+    }
+    const [t, n] = result;
+    let len = Math.hypot(step.x, step.y);
+    const contactDist = len * t - game.ball.r - 1;
+    if (contactDist <= 0) {
+        updateVelocity(game, paddle, n.x);
+        return;
+    }
+    const nx = step.x / len;
+    const ny = step.y / len;
+    const x: number = nx * contactDist;
+    const y: number = ny * contactDist;
+    paddle.x += x;
+    paddle.y += y;
+    step.x -= x;
+    step.y -= y;
     updateVelocity(game, paddle, n.x);
-    nextX = game.ball.x + (game.ball.dx * TIME_STEP);
-	nextY = game.ball.y + (game.ball.dy * TIME_STEP);
-    result = raycast(game, paddle, nextX, nextY);
-    if (!result)
-        return;
-    [t, n] = result;
-    game.ball.x += game.ball.dx * TIME_STEP * t + 1 * n.x;
-	game.ball.y += game.ball.dy * TIME_STEP * t + 1 * n.y;
+    //TODO: test ball between paddle and wall
 
-
-    // const nextX: number = game.ball.x - step.x;
-    // const nextY: number = game.ball.y - step.y;
-    // const result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);
-    // if (!result) {
-    //     paddle.x += step.x;
-    //     paddle.y += step.y;
-    //     return;
-    // }
-    // const [t, n] = result;
-    // let len = Math.hypot(step.x, step.y);
-    // const contactDist = len * t - game.ball.r - 1;
-    // if (contactDist <= 0) {
-    //     updateVelocity(game, paddle, n.x);
-    //     return;
-    // }
-    // const nx = step.x / len;
-    // const ny = step.y / len;
-    // paddle.x += nx * contactDist;
-    // paddle.y += ny * contactDist;
-    // updateVelocity(game, paddle, n.x);
 }
