@@ -1,8 +1,8 @@
-// import { renderLobby } from '../../pages/html.pages.js';
 import { router } from '../../main.js';
 import { pong } from '../game/pong.js';
 import { createGameRequestForm, createLobbyRequestForm, attachGameListener } from './lobby.js';
 import type { gameRequest } from '../game/pong.js';
+import { createLobbyRequest } from './lobby_new.js';
 
 let wsInstance: WebSocket | null = null;
 
@@ -10,17 +10,29 @@ function openWsConnection() {
     if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
         return wsInstance;
     }
-    wsInstance = new WebSocket('wss://localhost:8443/api/lobby');
+    wsInstance = new WebSocket('wss://localhost:8443/api/lobby/');
     return wsInstance;
 }
 
-function wsConnect() {
+function wsConnect(action: string, format: string) {
     const ws: WebSocket = openWsConnection();
 
-	ws.onopen = () => {
-		console.log("Lobby WebSocket connection established!")
-		// enable buttons in html?
-	}
+    ws.onopen = () => {
+        console.log("Lobby WebSocket connection established!")
+        // lobbyCreation or lobbyJoining
+        if (action === 'create') {
+            if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+                wsInstance.send(createLobbyRequest(action, format));
+            } else {
+                console.log(`Error: WebSocket is not open for ${action}`);
+            }
+        } else if (action === 'join') {
+
+        }
+        // createLobbyInfo based off which button was clicked
+
+
+    }
 
     ws.onmessage = (message: MessageEvent) => {
         try {
@@ -40,16 +52,16 @@ function wsConnect() {
                 return;
             }
 
-			// GameRequest
-			const gameRequest: gameRequest = data;
-			window.history.pushState({}, '', '/game/match');
-			router.loadRoute('/game/match');
-			console.log("Client ready to connect game: #" + gameRequest.gameID);
-			pong(gameRequest); // ws connect to "/game/match" and send userID + gameID
-		} catch (error) {
-			console.error("Error: Failed to parse WS message", error);
-		}
-	}
+            // GameRequest
+            const gameRequest: gameRequest = data;
+            window.history.pushState({}, '', '/game/match');
+            router.loadRoute('/game/match');
+            console.log("Client ready to connect game: #" + gameRequest.gameID);
+            pong(gameRequest); // ws connect to "/game/match" and send userID + gameID
+        } catch (error) {
+            console.error("Error: Failed to parse WS message", error);
+        }
+    }
 
     ws.onerror = (err: any) => {
         console.log('Error:', err);

@@ -17,6 +17,7 @@ import {
     pongTournament,
 } from '../web-elements/forms/default-forms.js';
 import { user } from '../web-elements/default-values.js';
+import { wsConnect } from '../scripts/lobby/wsConnect.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -169,21 +170,30 @@ export function renderQuickLobby() {
     const wrapper = createWrapper('pongsettings');
     wrapper.append(createTabs(pongOptions));
     document.body.layoutInstance?.appendAndCache(wrapper);
+    wsConnect('create', 'quickmatch');
+
+    // const quickmatch = document.body.layoutInstance?.components.get('local-quickmatch');
+    const quickmatch = document.body.layoutInstance?.components.get('pongsettings');
+    console.log(quickmatch);
 }
 
 export function renderTournamentLobby() {
     prepareLayout(document.body.layoutInstance, 'tournamentLobby');
     const pongOptions: TabData[] = [
         {
-            id: 'pong-remote',
+            id: 'pong-tournament',
             content: '',
             default: true,
-            panelContent: createForm('pong-tournament-settings', pongTournament),
+            panelContent: createForm('remote-pong-settings', pongTournament),
         },
     ];
     const wrapper = createWrapper('pongsettings');
     wrapper.append(createTabs(pongOptions));
     document.body.layoutInstance?.appendAndCache(wrapper);
+    wsConnect('create', 'tournament');
+
+    const tournament = document.body.layoutInstance?.components.get('pongsettings');
+    console.log(tournament?.innerHTML.includes("tournament"));
 }
 
 export function renderGame(): string {

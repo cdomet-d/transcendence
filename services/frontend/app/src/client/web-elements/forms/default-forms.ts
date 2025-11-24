@@ -122,6 +122,7 @@ export const search: FormDetails = {
 export const localPong: FormDetails = {
     action: 'https://localhost:8443/api/game/quickLobby/',
     heading: 'Local Pong',
+    gameFormat: 'local-quickmatch',
     ariaLabel: 'Pong settings',
     id: 'local-pong-settings',
     method: 'post',
@@ -174,6 +175,7 @@ export const localPong: FormDetails = {
 export const remotePong: FormDetails = {
     action: 'https://localhost:8443/api/game/quickLobby/',
     heading: 'Remote Pong',
+    gameFormat: 'remote-quickmatch',
     ariaLabel: 'Remote Pong settings',
     id: 'remote-pong-settings',
     method: 'post',
@@ -218,6 +220,7 @@ export const remotePong: FormDetails = {
 export const pongTournament: FormDetails = {
     action: 'https://localhost:8443/api/game/tournamentLobby/',
     heading: 'Pong Tournament',
+    gameFormat: 'tournament',
     ariaLabel: 'Pong tournament settings',
     id: 'pong-tournament-settings',
     method: 'post',

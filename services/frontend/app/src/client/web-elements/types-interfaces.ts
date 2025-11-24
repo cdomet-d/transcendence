@@ -198,6 +198,7 @@ export interface FormDetails {
     action: string;
     ariaLabel: string;
     button: buttonData;
+    gameFormat?: 'remote-quickmatch' | 'local-quickmatch' | 'tournament' | undefined;
     fields: InputFieldsData[];
     heading: string;
     id: string;

@@ -1,4 +1,3 @@
-// import { renderLobbyMenu } from "../../pages/html.pages.js";
 import { handleGameStart, handleLobbyRequest } from './wsConnect.js';
 
 interface lobbyInfo {
@@ -65,7 +64,7 @@ interface gameRequestForm {
     payload: lobbyInfo;
 }
 
-function createGameRequestForm(format: string): string {
+function createGameRequest(format: string): string {
     const gameRequestForm: gameRequestForm = {
         event: 'GAME_REQUEST',
         payload: {
@@ -84,32 +83,35 @@ function createGameRequestForm(format: string): string {
     return JSON.stringify(gameRequestForm);
 }
 
-interface lobbyCreationForm {
-    event: 'LOBBY_REQUEST';
+interface lobbyRequestForm {
+    event: string,
     payload: {
-        action: 'create' | 'join' | string; // '| string' is for type compatibility
-        format: 'quick' | 'tournament' | string;
-        lobbyID?: number;
-        userID?: number;
-    };
+        action: string,
+        format: string,
+        userID: number,
+        lobbyID?: string
+    }
 }
 
-function createLobbyRequestForm(action: string, format: string): string {
-    const lobbyCreationForm: lobbyCreationForm = {
+function createLobbyRequest(action: string, format: string): string {
+    const createLobbyForm: lobbyRequestForm = {
         event: 'LOBBY_REQUEST',
         payload: {
             action: action,
             format: format,
-            lobbyID: 99, // TODO: invitation would contain lobbyID
-            // userID: , // TODO: get uid from JWT
+            userID: 99, // TODO: get uid from JWT
         },
     };
-    return JSON.stringify(lobbyCreationForm);
+    return JSON.stringify(createLobbyForm);
 }
 
+// function joinLobbyRequest(action: string, format: string) {
+//     ;
+// }
+
 export {
-    createGameRequestForm,
-    createLobbyRequestForm,
+    createGameRequest,
+    createLobbyRequest,
     lobby,
     handleGameStart,
     attachGameListener,

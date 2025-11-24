@@ -1,6 +1,5 @@
 import type { userInfo, lobbyInfo } from "../manager.interface.js";
 export const wsClientsMap: Map<number, WebSocket> = new Map();
-// export const lobbyMap: Map<number | undefined, lobbyInfo> = new Map();
 export const lobbyMap: Map<string | undefined, lobbyInfo> = new Map();
 
 export function createLobby(hostID: number, format: string) {
@@ -39,13 +38,13 @@ function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 		whitelist: {
 			lobbyId: lobbyID,
 			hostID: hostID,
-			userIDs: [hostID] // 1. put invitee ID here on invite
+			userIDs: [hostID] // TODO Make this a map // 1. put invitee ID here on invite
 		},
 		joinable: true,
         userList: new Map<number, userInfo>([
             [hostID, { userID: hostID }] //  get username from token 
         ]),
-		remote: true,
+		remote: true, // TODO set remote or local HERE just before START event
 		format: format,
 		nbPlayers: format === "quick" ? 2 : 4
 	}

@@ -1,8 +1,8 @@
-import type { lobbyInfo } from "../manager.interface.js";
+import type { lobbyInfo } from '../manager.interface.js';
 import { processGameRequest } from '../manager.js';
+import { wsClientsMap, addUserToLobby, createLobby } from './lobby.js';
 import type { FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
-import { wsClientsMap, lobbyMap, addUserToLobby, createLobby } from './lobby.js';
 
 export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 	let userID: number | null = null;
@@ -13,17 +13,18 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 			const { event, payload } = data;
 
 			if (event === "LOBBY_REQUEST") {
-				userID = getUniqueUserID(); // use JWT payload
+				userID = payload.userID;
+				// userID = getUniqueUserID(); // use JWT payload
 				
-				if (!wsClientsMap.has(userID)) {
-					wsClientsMap.set(userID, socket);
+				if (!wsClientsMap.has(userID!)) {
+					wsClientsMap.set(userID!, socket);
 				}
 
 				if (payload.action === "create") {
-					const newLobby: lobbyInfo = createLobby(userID, payload.format);
+					const newLobby: lobbyInfo = createLobby(userID!, payload.format);
 					socket.send(JSON.stringify({ lobby: "created", lobbyID: newLobby.lobbyID }));
 				} else if (payload.action === "join") {
-					addUserToLobby(userID, socket, payload.lobbyID);
+					addUserToLobby(userID!, socket, payload.lobbyID);
 					socket.send(JSON.stringify({ lobby: "joined", lobbyID: payload.lobbyID }));
 				}
 			} else if (event === "GAME_REQUEST") {
@@ -42,7 +43,6 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 	});
 }
 
-
 export function wsSend(ws: WebSocket, message: string): void {
 	if (ws && ws.readyState === ws.OPEN) {
 		ws.send(message);
@@ -53,7 +53,7 @@ export function wsSend(ws: WebSocket, message: string): void {
 	}
 }
 
-// Need mutex or DB for safety
+// TODO get userID from JWT payload
 let idIndex: number = 1;
 
 function getUniqueUserID(): number {
