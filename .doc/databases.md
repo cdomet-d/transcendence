@@ -496,8 +496,7 @@ This database has only one table. The table has the following column :
 * friendshipID &rarr; integer (__primary key__)
 * userID &rarr; integer
 * friendID &rarr; integer
-* startTimeFriendship &rarr; datetime
-* statusFrienship &rarr; boolean
+* statusFriendship &rarr; boolean
 
 In the same way as the language database, we have the friendshipID as a surrogate key.
 The actual way to determine the uniqueness of the friendship is the combination of the userID and the friendID.

@@ -1,11 +1,8 @@
 import type { FastifyInstance } from 'fastify';
-import type { UserProfileView, userData } from './bff.interface.js';
-import * as bcrypt from 'bcrypt';
-import { fetchUserData, searchBar, buildTinyProfile, /*buildFullUserData*/ fetchUserID, processMatches, fetchFriendList, fetchUserStats, fetchProfileView, updateBio, updateProfileColor, updateAvatar } from './bffUserProfile.service.js';
+import type { UserProfileView } from './bff.interface.js';
+import { searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches } from './bffUserProfile.service.js';
 //import { updatePassword, fetchUserDataAccount, updateUsername,  updateDefaultLang, deleteAccount, deleteUser  } from './bffAccount.service.js';
-import { deleteFriendship } from './bffFriends.service.js'
-import { request } from 'http';
-
+//import { deleteFriendship } from './bffFriends.service.js'
 
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
@@ -36,16 +33,16 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const [
 				userData,
 				userStats,
-				//friends,
-				//recentMatches
+				friends,
+				pending,
+				recentMatches
 			] = await Promise.all([
 				combinedUserData,
 				fetchUserStats(serv.log, Number(combinedUserData.userID)),
-				//fetchFriendList(serv.log, Number(combinedUserData.userID)),
-				//processMatches(serv.log, userA)
+				fetchFriendships(serv.log, Number(combinedUserData.userID), 'friend'),
+				fetchFriendships(serv.log, Number(combinedUserData.userID), 'pending'),
+				processMatches(serv.log, Number(combinedUserData.userID))
 			]);
-
-			serv.log.error(`${userStats}`);
 
 			if (!userData || !userStats)
 				return reply.code(404).send({ message: '[BFF] Failed to retrieve essential user data.' });
@@ -53,8 +50,9 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const responseData: UserProfileView = {
 				userData: userData,
 				userStats: userStats,
-				//friends: friends || [],
-				//recentMatches: recentMatches || []
+				friends: friends || [],
+				pending: pending || [],
+				matches: recentMatches || []
 			};
 
 			return reply.code(200).send(responseData);
@@ -90,6 +88,21 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			serv.log.error(`[BFF] Error building tiny profile: ${error}`);
 			throw error;
+		}
+	});
+
+	serv.get('/search', async (request, reply) => {
+		try {
+			const query = request.query as { name?: string };
+
+			if (!query.name || query.name.trim() === '')
+				return reply.code(200).send([]);
+
+			const profiles = await searchBar(serv.log, query.name);
+			return (reply.code(200).send(profiles));
+		} catch (error) {
+			serv.log.error(`[BFF] Error searching users: ${error}`);
+			throw (error);
 		}
 	});
 
@@ -189,21 +202,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				throw (error);
 			}
 		}); */
-
-	serv.get('/search', async (request, reply) => {
-		try {
-			const query = request.query as { name?: string };
-
-			if (!query.name || query.name.trim() === '')
-				return reply.code(200).send([]);
-
-			const profiles = await searchBar(serv.log, query.name);
-			return (reply.code(200).send(profiles));
-		} catch (error) {
-			serv.log.error(`[BFF] Error searching users: ${error}`);
-			throw (error);
-		}
-	});
 
 	/* 	serv.delete('/delete-account', async (request, reply) => {
 			try {

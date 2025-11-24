@@ -1,4 +1,6 @@
 export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
+export type FriendshipStatus = 'friend' | 'pending';
+
 
 export interface userData {
 	avatar: string,
@@ -9,7 +11,7 @@ export interface userData {
 	relation: ProfileView,
 	status: boolean,
 	username: string,
-	winstreak: string, 
+	winstreak: string,
 	since: string
 }
 
@@ -56,10 +58,44 @@ export interface ProfileDataBatchResponse {
 export interface UserProfileView {
 	userData: userData
 	userStats: userStats;
-	//friends: userData[];
-	//recentMatches: Matches[];
+	friends: userData[];
+	pending: userData[];
+	matches: Matches[];
 }
 
+export interface Friendship {
+	friendshipID: number;
+	userID: number;
+	friendID: number;
+	startTime: string;
+	statusFriendship: boolean; // true = accepted, false = pending
+}
+
+export interface UsernameResponse {
+	success: boolean;
+	usersNames: { userID: number, username: string }[];
+}
+
+export interface RawMatches {
+	gameID: number;
+	duration: number;
+	startTime: string;
+	player1: number;
+	player2: number;
+	player1Score: number;
+	player2Score: number;
+	opponentID: number;
+	tournamentID: number
+}
+
+export interface Matches {
+	date: string;
+	opponent: string;
+	outcome: string;
+	score: string;
+	duration: string;
+	tournament: boolean;
+}
 
 /*----------  WIP  ----------*/
 
@@ -70,10 +106,7 @@ export interface ProfileResponse {
 	profile: UserProfile;
 }
 
-
-
 export interface RawUserActivity { activityStatus: userStatus; }
-export interface FriendshipStatus { status: ProfileView; }
 
 export interface UserAuth {
 	userID: number,
@@ -89,26 +122,7 @@ export interface UserProfile {
 	profileColor: string;
 }
 
-export interface RawMatches {
-	gameID: number;
-	duration: number;
-	startTime: string;
-	winnerID: number;
-	loserID: number;
-	scoreWinner: number;
-	scoreLoser: number;
-	opponentID: number;
-	tournament: number
-}
 
-export interface Matches {
-	date: string;
-	opponent: string;
-	outcome: string;
-	score: string;
-	duration: string;
-	tournament: boolean;
-}
 
 export interface settings {
 	defaultLang: string;

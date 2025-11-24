@@ -5,27 +5,7 @@ interface Friendship {
 	userID: number,
 	friendID: number,
 	startTime: string,
-	statusFrienship: boolean
-}
-
-export async function getPendingFriendRequests(db: Database, userID: number): Promise<Friendship[]> {
-	const query = `
-		SELECT
-			friendshipID,
-			userID,
-			friendID,
-			startTimeFriendship AS startTime,
-			statusFrienship
-		FROM
-			friendship
-		WHERE
-			friendID = ?
-			AND statusFrienship = false;
-	`;
-
-	const requests = await db.all<Friendship[]>(query, [userID]);
-
-	return (requests);
+	statusFriendship: boolean
 }
 
 export async function getFriendship(db: Database, userID: number): Promise<Friendship[]> {
@@ -34,8 +14,7 @@ export async function getFriendship(db: Database, userID: number): Promise<Frien
 			friendshipID,
 			userID,
 			friendID,
-			startTimeFriendship AS startTime,
-			statusFrienship
+			statusFriendship
 		FROM
 			friendship
 		WHERE (userID = ?) 

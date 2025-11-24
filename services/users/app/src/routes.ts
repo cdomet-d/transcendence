@@ -1,5 +1,4 @@
 import type { FastifyInstance } from 'fastify';
-import { request } from 'http';
 
 export interface userData {
 	avatar: string,
@@ -146,6 +145,36 @@ export async function userRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
 			throw (error);
+		}
+	});
+
+	serv.post('/usernames', async (request, reply) => {
+		try {
+			const { userIDs } = request.body as { userIDs: number[] };
+
+			if (!userIDs || userIDs.length === 0)
+				return (reply.code(200).send({ success: true, usersNames: [] }));
+
+			const placeholders = userIDs.map(() => '?').join(',');
+
+			const query = `
+				SELECT userID, username 
+				FROM userProfile p 
+				WHERE p.userID IN (${placeholders})
+			`;
+
+			const usersNames = await serv.dbUsers.all<{ userID: number, username: string }[]>(query, userIDs);
+
+			serv.log.error(`${usersNames}`);
+
+			return (reply.code(200).send({ success: true, usersNames }));
+
+		} catch (error) {
+			serv.log.error(error);
+			return (reply.code(500).send({
+				success: false,
+				message: 'Internal server error'
+			}));
 		}
 	});
 
@@ -454,37 +483,6 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	// ROUTE NOT USED BUT KEEPING JUST IN CASE MIGHT BE DELETED LATER
 	/*
-
-
-
-	//get username by userID
-	serv.get('/:userID/username', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: number };
-			const query = `SELECT username FROM userProfile WHERE userID = ?`;
-
-			const user = await serv.dbUsers.get<UserRow>(query, [userID]);
-			if (!user) {
-				return (reply.code(404).send({
-					success: false,
-					message: 'User not found'
-				}));
-			}
-
-			return (reply.code(200).send({
-				success: true,
-				message: "Username found!",
-				user
-			}));
-
-		} catch (error) {
-			serv.log.error(error);
-			return (reply.code(500).send({
-				success: false,
-				message: 'Internal server error'
-			}));
-		}
-	});
 	
 	serv.post('/api/games/responses', async (request, reply) => {
 		try {

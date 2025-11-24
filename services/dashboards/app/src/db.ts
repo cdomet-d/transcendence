@@ -6,7 +6,7 @@ import fp from 'fastify-plugin';
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 
-const DEFAULT_DB_PATH = '/usr/data/account.db';
+const DEFAULT_DB_PATH = '/usr/data/stats.db';
 
 const dbpath = process.env.DATABASE_PATH || DEFAULT_DB_PATH;
 

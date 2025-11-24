@@ -1,4 +1,4 @@
-CREATE TABLE gameMatchInfo (
+CREATE TABLE games (
   gameID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   duration INTEGER,
   startTime DATETIME,
