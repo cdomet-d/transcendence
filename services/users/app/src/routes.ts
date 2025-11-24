@@ -37,7 +37,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				SELECT * FROM userProfile WHERE userID = ?
 			`;
 
-            const userProfile = await serv.dbUsers.get<UserProfile>(query, [userID]);
+            const userProfile = await serv.dbUsers.get<userData>(query, [userID]);
             if (!userProfile) {
                 return reply.code(404).send({
                     success: false,
@@ -100,7 +100,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			SELECT * FROM userProfile WHERE userID IN (${placeholders})
 		`;
 
-            const profiles = await serv.dbUsers.all<UserProfile[]>(query, userIDs);
+            const profiles = await serv.dbUsers.all<userData[]>(query, userIDs);
 
             return reply.code(200).send({
                 success: true,

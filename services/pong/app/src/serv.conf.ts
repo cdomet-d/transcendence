@@ -32,8 +32,8 @@ const options = {
   },
 	trustProxy: checkProxy,
 	https: {
-		key: fs.readFileSync('/run/secrets/ssl-key.pem'),
-		cert: fs.readFileSync('/run/secrets/ssl-cert.pem'),
+		key: fs.readFileSync('/run/secrets/pong.key'),
+		cert: fs.readFileSync('/run/secrets/pong.crt'),
 	}
 	//connectionTimeout
 	//forceCloseConnections

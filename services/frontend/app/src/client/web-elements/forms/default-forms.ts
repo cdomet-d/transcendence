@@ -100,7 +100,7 @@ export const loginForm: FormDetails = {
 };
 
 export const search: FormDetails = {
-    action: 'https://localhost:8443/api/users?name=',
+    action: 'https://localhost:8443/api/bff/search?name=',
     heading: '',
     ariaLabel: 'Search for a user',
     id: 'searchform',
