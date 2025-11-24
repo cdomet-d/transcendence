@@ -6,24 +6,22 @@ import type { coordinates, keysObj, paddleSpec } from '../classes/game.interface
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function updatePaddlePos(player: Player, keys: keysObj, game: Game) {
-    const step: coordinates = { x: 0, y: 0 };
+    // const step: coordinates = { x: 0, y: 0 };
 	if ((player.left && keys._w)
 		|| (player.right && (keys._ArrowUp|| !game.local && keys._w)))
-		up(player.paddle, game.padSpec.speed, step/*player.padStep*/);
+		up(player.paddle, game.padSpec.speed, player.padStep);
 	if ((player.left && keys._s)
 		|| (player.right && (keys._ArrowDown || !game.local && keys._s)))
-		down(player.paddle, game.padSpec, step/*player.padStep*/);
+		down(player.paddle, game.padSpec, player.padStep);
 	if ((player.left && keys._a))
-		left(player.paddle, game, 0, step/*player.padStep*/);
+		left(player.paddle, game, 0, player.padStep);
 	if ((player.left && keys._d))
-		right(player.paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, step/*player.padStep*/);
+		right(player.paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, player.padStep);
 	if (player.right && (keys._ArrowLeft || !game.local && keys._d))
-		left(player.paddle, game, WIDTH / 2 + game.ball.r + 1, step/*player.padStep*/);
+		left(player.paddle, game, WIDTH / 2 + game.ball.r + 1, player.padStep);
 	if (player.right && (keys._ArrowRight || !game.local && keys._a))
-		right(player.paddle, game, WIDTH - game.padSpec.w, step/*player.padStep*/);
-	player.paddle.x += step.x;
-	player.paddle.y += step.y;
-	// movePaddle(game, player.paddle, player.padStep); //TODO: clean by only giving obj player
+		right(player.paddle, game, WIDTH - game.padSpec.w, player.padStep);
+	movePaddle(game, player.paddle, player.padStep); //TODO: clean by only giving obj player
 }
 
 function up(pad: coordinates, padSpeed: number, step: coordinates) {
@@ -54,7 +52,7 @@ function right(pad: coordinates, game: Game, limit: number, step: coordinates) {
 		step.x += limit - pad.x;
 }
 
-function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
+export function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
 	const nextX: number = game.ball.x - step.x;
 	const nextY: number = game.ball.y - step.y;
 	const result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);
@@ -79,6 +77,6 @@ function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
     paddle.x += x;
     paddle.y += y;
     step.x -= x;
-    step.y -= y;
+    step.y -= y; //TODO: call back move paddle after ball update if step is not 0 ?
 	updateVelocity(game, paddle, n.x);
 }
