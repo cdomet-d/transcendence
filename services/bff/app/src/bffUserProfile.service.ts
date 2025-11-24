@@ -74,7 +74,7 @@ export async function fetchUserData(log: any, userID: number): Promise<userData 
 
 export async function fetchProfileView(log: any, userID: number, targetUserID: number): Promise<ProfileView> {
 
-	if (targetUserID === userID)
+	if (Number(targetUserID) === Number(userID))
 		return ('self');
 
 	let friendsResponse: Response;

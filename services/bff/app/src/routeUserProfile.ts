@@ -35,50 +35,52 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				return (reply.code(404).send({ message: 'User profile data not found.' }));
 			}
 
+			//const [
+			//	userDatatemp,
+			////	relation
+			//] = await Promise.all([
+			////	fetchUserData(serv.log, Number(userA)),
+			//	fetchProfileView(serv.log, query.userB, userA),
+			//]);
+//
+			//if (!userDatatemp) {
+			//	serv.log.error("[BFF] User not found")
+			//	return reply.code(404).send({ message: 'User profile data not found.' });
+			//}
+
+			//const combinedUserData: userData = {
+			//	userID: String(userA),
+			//	username: userDatatemp.username,
+			//	avatar: userDatatemp.avatar,
+			//	biography: userDatatemp.biography,
+			//	profileColor: userDatatemp.profileColor,
+			//	since: userDatatemp.since,
+			//	status: userDatatemp.status,
+			//	winstreak: userDatatemp.winstreak,
+			//	lang: userDatatemp.lang,
+			//	relation: relation,
+			//};
+
 			const [
-				userDatatemp,
-				relation
-			] = await Promise.all([
-				fetchUserData(serv.log, Number(userA)),
-				fetchProfileView(serv.log, query.userB, userA),
-			]);
-
-			if (!userDatatemp) {
-				serv.log.error("[BFF] User not found")
-				return reply.code(404).send({ message: 'User profile data not found.' });
-			}
-
-			const combinedUserData: userData = {
-				userID: String(userA),
-				username: userDatatemp.username,
-				avatar: userDatatemp.avatar,
-				biography: userDatatemp.biography,
-				profileColor: userDatatemp.profileColor,
-				since: userDatatemp.since,
-				status: userDatatemp.status,
-				winstreak: userDatatemp.winstreak,
-				lang: userDatatemp.lang,
-				relation: relation,
-			};
-
-			const [
-				userData,
-				stats,
+			//	userData,
+				userStats,
 				//friends,
 				//recentMatches
 			] = await Promise.all([
-				combinedUserData,
+				//combinedUserData,
 				fetchUserStats(serv.log, userA),
 				//fetchFriendList(serv.log, userA),
 				//processMatches(serv.log, userA)
 			]);
 
-			if (!userData || !stats)
+			serv.log.error(`${userStats}`);
+
+			if (/*!userData ||*/ !userStats)
 				return reply.code(404).send({ message: '[BFF] Failed to retrieve essential user data.' });
 
 			const responseData: UserProfileView = {
-				userData: userData,
-				stats: stats,
+			//	userData: userData,
+				userStats: userStats,
 				//friends: friends || [],
 				//recentMatches: recentMatches || []
 			};

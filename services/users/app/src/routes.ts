@@ -295,11 +295,12 @@ export async function userRoutes(serv: FastifyInstance) {
 				SELECT * FROM userStats WHERE userID = ?
 			`;
 
-			const userProfile = await serv.dbUsers.get<UserStats>(query, [userID]);
-			if (!userProfile)
+			const userStats = await serv.dbUsers.get<UserStats>(query, [userID]);
+			if (!userStats)
 				return reply.code(404).send({ success: false, message: 'User profile not found' });
 
-			return reply.code(200).send({ success: true, userProfile });
+
+			return reply.code(200).send({ success: true, userStats });
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
 			throw error;

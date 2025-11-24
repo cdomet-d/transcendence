@@ -112,8 +112,8 @@ export interface Matches {
 }
 
 export interface UserProfileView {
-	userData: userData
-	stats: UserStats;
+	//userData: userData
+	userStats: UserStats;
 	//friends: Friends[];
 	//recentMatches: Matches[];
 }
