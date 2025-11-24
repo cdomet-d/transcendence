@@ -9,7 +9,7 @@ export interface userData {
 	profileColor: string,
 	status: boolean,
 	username: string,
-	winstreak: string, 
+	winstreak: string,
 	since: string
 }
 
@@ -52,6 +52,36 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
+			throw (error);
+		}
+	});
+
+	serv.get('/search', async (request, reply) => {
+		try {
+			const query = request.query as { name?: string };
+
+			if (!query.name || query.name.length === 0)
+				return reply.code(200).send([]);
+
+			//ASC is the way sqlite3 sorts result 
+			const sql = `
+				SELECT * 
+				FROM userProfile 
+				WHERE username LIKE ? 
+				ORDER BY length(username) ASC, username ASC 
+				LIMIT 5
+			`;
+
+			const searchParam = `${query.name}%`;
+
+			const profiles = await serv.dbUsers.all<userData[]>(sql, [searchParam]);
+
+			return reply.code(200).send({
+				success: true,
+				profiles
+			});
+		} catch (error) {
+			serv.log.error(`Error searching users: ${error}`);
 			throw (error);
 		}
 	});
@@ -318,73 +348,73 @@ export async function userRoutes(serv: FastifyInstance) {
 
 
 	// TODO : Repeting route, check usage in BFF and switch it up with correct route
-/* 	serv.get('/:userID/userData', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: string };
-
-			const query = `
-				SELECT
-					p.avatar,
-					p.biography,
-					p.profileColor,
-					p.activityStatus,
-					s.winStreak
-				FROM
-					userProfile p
-				JOIN
-					userStats s ON p.userID = s.userID
-				WHERE
-					p.userID = ?
-			`;
-
-			const userData = await serv.dbUsers.get(query, [userID]);
-			if (!userData) {
-				return (reply.code(404).send({
-					success: false,
-					message: 'User data not found.'
-				}));
+	/* 	serv.get('/:userID/userData', async (request, reply) => {
+			try {
+				const { userID } = request.params as { userID: string };
+	
+				const query = `
+					SELECT
+						p.avatar,
+						p.biography,
+						p.profileColor,
+						p.activityStatus,
+						s.winStreak
+					FROM
+						userProfile p
+					JOIN
+						userStats s ON p.userID = s.userID
+					WHERE
+						p.userID = ?
+				`;
+	
+				const userData = await serv.dbUsers.get(query, [userID]);
+				if (!userData) {
+					return (reply.code(404).send({
+						success: false,
+						message: 'User data not found.'
+					}));
+				}
+	
+				return (reply.code(200).send({ success: true, userData }));
+			} catch (error) {
+				serv.log.error(`[USERS] Error fetching user data win streak: ${error}`);
+				throw (error);
 			}
-
-			return (reply.code(200).send({ success: true, userData }));
-		} catch (error) {
-			serv.log.error(`[USERS] Error fetching user data win streak: ${error}`);
-			throw (error);
-		}
-	});
-
-	serv.post('/userDataBatch', async (request, reply) => {
-		try {
-			const { userIDs } = request.body as { userIDs: number[] };
-
-			if (!userIDs || userIDs.length === 0)
-				return (reply.code(200).send([]));
-
-			const placeholders = userIDs.map(() => '?').join(',');
-
-			const query = `
-				SELECT
-					p.userID,
-					p.username,
-					p.avatar,
-					p.biography,
-					p.profileColor,
-					s.winStreak
-				FROM
-					userProfile p
-				JOIN
-					userStats s ON p.userID = s.userID
-				WHERE
-					p.userID IN (${placeholders})
-			`;
-
-			const usersData = await serv.dbUsers.all(query, userIDs);
-			return (reply.code(200).send({ success: true, usersData }));
-
-		} catch (error) {
-			serv.log.error(`[USERS] Error fetching user data batch: ${error}`);
-			throw (error);
-		}
-	}); */
+		});
+	
+		serv.post('/userDataBatch', async (request, reply) => {
+			try {
+				const { userIDs } = request.body as { userIDs: number[] };
+	
+				if (!userIDs || userIDs.length === 0)
+					return (reply.code(200).send([]));
+	
+				const placeholders = userIDs.map(() => '?').join(',');
+	
+				const query = `
+					SELECT
+						p.userID,
+						p.username,
+						p.avatar,
+						p.biography,
+						p.profileColor,
+						s.winStreak
+					FROM
+						userProfile p
+					JOIN
+						userStats s ON p.userID = s.userID
+					WHERE
+						p.userID IN (${placeholders})
+				`;
+	
+				const usersData = await serv.dbUsers.all(query, userIDs);
+				return (reply.code(200).send({ success: true, usersData }));
+	
+			} catch (error) {
+				serv.log.error(`[USERS] Error fetching user data batch: ${error}`);
+				throw (error);
+			}
+		}); */
 
 
 
