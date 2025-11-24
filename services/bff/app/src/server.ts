@@ -1,5 +1,6 @@
 import { bffAccessibilityRoutes } from './routeAccessibility.js';
 import { bffUsersRoutes } from './routeUserProfile.js';
+import { bffFriendRoutes } from './routeFriends.js';
 import { options } from './serv.conf.js';
 import cors from '@fastify/cors';
 import Fastify from 'fastify';

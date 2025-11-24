@@ -167,7 +167,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			throw (error);
 		}
 	});
-
 	/* 	serv.delete('/delete-account', async (request, reply) => {
 			try {
 				const userID = request.user.userID;

@@ -2,69 +2,67 @@ import type { FastifyInstance } from 'fastify';
 import { request } from 'http';
 
 export interface userData {
-	avatar: string,
-	biography: string,
-	userID: string,
-	lang: string,
-	profileColor: string,
-	status: boolean,
-	username: string,
-	winstreak: string,
-	since: string
+    avatar: string;
+    biography: string;
+    userID: string;
+    lang: string;
+    profileColor: string;
+    status: boolean;
+    username: string;
+    winstreak: string;
+    since: string;
 }
 
 interface UserStats {
-	userID: number;
-	longestMatch: number;
-	shortestMatch: number;
-	totalMatch: number;
-	totalWins: number;
-	winStreak: number;
-	averageMatchDuration: number;
-	longuestPass: number;
-	[key: string]: number;
+    userID: number;
+    longestMatch: number;
+    shortestMatch: number;
+    totalMatch: number;
+    totalWins: number;
+    winStreak: number;
+    averageMatchDuration: number;
+    longuestPass: number;
+    [key: string]: number;
 }
 
 export async function userRoutes(serv: FastifyInstance) {
-	//USER PROFILE/${userID}/profile
+    //USER PROFILE/${userID}/profile
 
-	//GET /<userID>
-	serv.get('/:userID', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: string };
+    //GET /<userID>
+    serv.get('/:userID', async (request, reply) => {
+        try {
+            const { userID } = request.params as { userID: string };
 
-			const query = `
+            const query = `
 				SELECT * FROM userProfile WHERE userID = ?
 			`;
 
-			const userProfile = await serv.dbUsers.get<userData>(query, [userID]);
-			if (!userProfile) {
-				return (reply.code(404).send({
-					success: false,
-					message: 'User profile not found'
-				}));
-			}
+            const userProfile = await serv.dbUsers.get<UserProfile>(query, [userID]);
+            if (!userProfile) {
+                return reply.code(404).send({
+                    success: false,
+                    message: 'User profile not found',
+                });
+            }
 
-			return (reply.code(200).send({
-				success: true,
-				userData: userProfile
-			}));
+            return reply.code(200).send({
+                success: true,
+                userData: userProfile,
+            });
+        } catch (error) {
+            serv.log.error(`Error fetching user profile: ${error}`);
+            throw error;
+        }
+    });
 
-		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
-			throw (error);
-		}
-	});
+    serv.get('/search', async (request, reply) => {
+        try {
+            const query = request.query as { name?: string };
 
-	serv.get('/search', async (request, reply) => {
-		try {
-			const query = request.query as { name?: string };
+            if (!query.name || query.name.length === 0) return reply.code(200).send([]);
 
-			if (!query.name || query.name.length === 0)
-				return reply.code(200).send([]);
-
-			//ASC is the way sqlite3 sorts result 
-			const sql = `
+            //ASC is the way sqlite3 sorts result
+            const sql = `
 				SELECT * 
 				FROM userProfile 
 				WHERE username LIKE ? 
@@ -72,283 +70,287 @@ export async function userRoutes(serv: FastifyInstance) {
 				LIMIT 5
 			`;
 
-			const searchParam = `${query.name}%`;
+            const searchParam = `${query.name}%`;
 
-			const profiles = await serv.dbUsers.all<userData[]>(sql, [searchParam]);
+            const profiles = await serv.dbUsers.all<userData[]>(sql, [searchParam]);
 
-			return reply.code(200).send({
-				success: true,
-				profiles
-			});
-		} catch (error) {
-			serv.log.error(`Error searching users: ${error}`);
-			throw (error);
-		}
-	});
+            return reply.code(200).send({
+                success: true,
+                profiles,
+            });
+        } catch (error) {
+            serv.log.error(`Error searching users: ${error}`);
+            throw error;
+        }
+    });
 
-	//fetch users profiles
-	//TODO: Endpoint for search bar 
-	serv.post('/profiles', async (request, reply) => {
-		try {
-			const { userIDs } = request.body as { userIDs: number[] };
+    //fetch users profiles
+    serv.post('/profiles', async (request, reply) => {
+        try {
+            const { userIDs } = request.body as { userIDs: number[] };
 
-			if (!Array.isArray(userIDs) || userIDs.length === 0)
-				return (reply.code(400).send({ success: false, message: 'userIDs must be a non-empty array.' }));
+            if (!Array.isArray(userIDs) || userIDs.length === 0)
+                return reply
+                    .code(400)
+                    .send({ success: false, message: 'userIDs must be a non-empty array.' });
 
-			const placeholders = userIDs.map(() => '?').join(',');
+            const placeholders = userIDs.map(() => '?').join(',');
 
-			const query = `
+            const query = `
 			SELECT * FROM userProfile WHERE userID IN (${placeholders})
 		`;
 
-			const profiles = await serv.dbUsers.all<userData[]>(query, userIDs);
+            const profiles = await serv.dbUsers.all<UserProfile[]>(query, userIDs);
 
-			return (reply.code(200).send({
-				success: true,
-				message: "Profiles found!",
-				profiles
-			}));
+            return reply.code(200).send({
+                success: true,
+                message: 'Profiles found!',
+                profiles,
+            });
+        } catch (error) {
+            serv.log.error(`Error fetching user profiles by IDs: ${error}`);
+            throw error;
+        }
+    });
 
-		} catch (error) {
-			serv.log.error(`Error fetching user profiles by IDs: ${error}`);
-			throw (error);
-		}
-	});
+    //TODO: Endpoint for search bar
+    serv.get('/search?name=', async (request, reply) => {
+        // TODO: get request from URL
+        // const { name } = request.query;
+    });
 
-	//GET ?username=<username>
-	serv.get('/userID/:username', async (request, reply) => {
-		try {
-			const query = request.params as { username: string };
+    //create profile and stats
+    serv.post('/:userID', async (request, reply) => {
+        try {
+            const { userID } = request.params as { userID: string };
+            const { username } = request.body as { username: string };
 
-			if (query.username) {
-				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
-				const response = await serv.dbUsers.get(sql, [query.username]);
-
-				if (!response) {
-					return (reply.code(404).send({
-						success: false,
-						message: 'User not found'
-					}));
-				}
-
-				return (reply.code(200).send({
-					success: true,
-					message: "user found!",
-					response
-				}));
-			}
-
-			return (reply.code(400).send({
-				success: false,
-				message: 'A query parameter (e.g., ?username=...) is required.'
-			}));
-		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
-			throw (error);
-		}
-	});
-
-	//create profile and stats
-	serv.post('/:userID', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: string };
-			const { username } = request.body as { username: string };
-
-			const queryProfile = `
+            const queryProfile = `
 				INSERT INTO userProfile
 				(userID, username, activityStatus, lastConnection, profileColor, userRole, since, lang)
 				VALUES (?, ?, 1, ?, "bg-BE5103", 1, ?, "en")
 			`;
-			const paramsProfile = [
-				userID,
-				username,
-				new Date().toISOString(),
-				new Date().toISOString()
-			];
+            const paramsProfile = [
+                userID,
+                username,
+                new Date().toISOString(),
+                new Date().toISOString(),
+            ];
 
-			const createProfile = await serv.dbUsers.run(queryProfile, paramsProfile);
-			if (createProfile.changes === 0)
-				throw new Error('Database Error: Profile INSERT failed (0 changes).');
+            const createProfile = await serv.dbUsers.run(queryProfile, paramsProfile);
+            if (createProfile.changes === 0)
+                throw new Error('Database Error: Profile INSERT failed (0 changes).');
 
-			const queryStats = `
+            const queryStats = `
 				INSERT INTO userStats (userID, longestMatch, shorestMatch, totalMatch, totalWins,
 				winStreak, averageMatchDuration, longuestPass)
 				VALUES (?, 0, 0, 0, 0, 0, 0, 0)
 			`;
 
-			const createStats = await serv.dbUsers.run(queryStats, [userID]);
-			if (createStats.changes === 0)
-				throw new Error('Database Error: Stats INSERT failed (0 changes).');
+            const createStats = await serv.dbUsers.run(queryStats, [userID]);
+            if (createStats.changes === 0)
+                throw new Error('Database Error: Stats INSERT failed (0 changes).');
 
-			return (reply.code(201).send({ success: true, message: 'Profile created successfully!' }));
+            return reply
+                .code(201)
+                .send({ success: true, message: 'Profile created successfully!' });
+        } catch (error) {
+            if (
+                error &&
+                typeof error === 'object' &&
+                'code' in error &&
+                error.code === 'SQLITE_CONSTRAINT_UNIQUE'
+            ) {
+                return reply.code(409).send({
+                    success: false,
+                    message: 'A profile for this user already exists.',
+                });
+            }
+            serv.log.error(`Error creating user profile: ${error}`);
+            throw error;
+        }
+    });
 
-		} catch (error) {
-			if (error && typeof error === 'object' && 'code' in error && error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-				return (reply.code(409).send({
-					success: false,
-					message: 'A profile for this user already exists.'
-				}));
-			}
-			serv.log.error(`Error creating user profile: ${error}`);
-			throw (error);
-		}
-	});
+    //update user profile
+    serv.patch('/:userID', async (request, reply) => {
+        try {
+            const { userID } = request.params as { userID: string };
+            const body = request.body as { [key: string]: any };
 
-	//update user profile
-	serv.patch('/:userID', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: string };
-			const body = request.body as { [key: string]: any };
+            const validStatKeys = [
+                'username',
+                'avatar',
+                'biography',
+                'profileColor',
+                'lastConnection',
+                'activityStatus',
+                'lang',
+            ];
 
-			const validStatKeys = [
-				'username',
-				'avatar',
-				'biography',
-				'profileColor',
-				'lastConnection',
-				'activityStatus',
-				'lang',
-			];
+            const keysToUpdate = Object.keys(body).filter((key) => validStatKeys.includes(key));
 
-			const keysToUpdate = Object.keys(body).filter(key => validStatKeys.includes(key));
+            if (keysToUpdate.length === 0) {
+                return reply.code(400).send({
+                    success: false,
+                    message: 'No valid stat fields provided for update.',
+                });
+            }
 
-			if (keysToUpdate.length === 0) {
-				return (reply.code(400).send({
-					success: false,
-					message: 'No valid stat fields provided for update.'
-				}));
-			}
+            const setClauses = keysToUpdate.map((key) => `${key} = ?`).join(', ');
+            const params = keysToUpdate.map((key) => body[key]);
+            params.push(userID);
 
-			const setClauses = keysToUpdate.map(key => `${key} = ?`).join(', ');
-			const params = keysToUpdate.map(key => body[key]);
-			params.push(userID);
-
-			const query = `
+            const query = `
 				UPDATE userProfile SET ${setClauses} WHERE userID = ?
 			`;
 
-			const response = await serv.dbUsers.run(query, params);
-			if (response.changes === 0) {
-				return (reply.code(404).send({
-					success: false,
-					message: 'User not found'
-				}));
-			}
+            const response = await serv.dbUsers.run(query, params);
+            if (response.changes === 0) {
+                return reply.code(404).send({
+                    success: false,
+                    message: 'User not found',
+                });
+            }
 
-			return (reply.code(200).send({
-				success: true,
-				message: 'User profile updated successfully!'
-			}));
-		} catch (error) {
-			if (error && typeof error === 'object' && 'code' in error && (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE')
-				return (reply.code(409).send({ success: false, message: 'This username is already taken.' }));
-			serv.log.error(`Error fetching user profile: ${error}`);
-			throw (error);
-		}
-	});
+            return reply.code(200).send({
+                success: true,
+                message: 'User profile updated successfully!',
+            });
+        } catch (error) {
+            if (
+                error &&
+                typeof error === 'object' &&
+                'code' in error &&
+                (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE'
+            )
+                return reply
+                    .code(409)
+                    .send({ success: false, message: 'This username is already taken.' });
+            serv.log.error(`Error fetching user profile: ${error}`);
+            throw error;
+        }
+    });
 
-	//delete profile and stats
-	serv.delete('/:userID', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: number };
+    //delete profile and stats
+    serv.delete('/:userID', async (request, reply) => {
+        try {
+            const { userID } = request.params as { userID: number };
 
-			const query = `
+            const query = `
 				DELETE FROM userProfile WHERE userID = ?;
 				DELETE FROM userStats WHERE userID = ?;
-			`
+			`;
 
-			const response = await serv.dbUsers.run(query, [userID, userID]);
-			if (!response.changes)
-				return (reply.code(404).send({ success: false, message: 'User profile/stats not found.' }));
-			return (reply.code(204).send({ success: true, message: 'User profile and stats deleted !' }))
-		} catch (error) {
-			serv.log.error(`Error deleting user profile: ${error}`);
-			throw (error);
-		}
-	})
+            const response = await serv.dbUsers.run(query, [userID, userID]);
+            if (!response.changes)
+                return reply
+                    .code(404)
+                    .send({ success: false, message: 'User profile/stats not found.' });
+            return reply
+                .code(204)
+                .send({ success: true, message: 'User profile and stats deleted !' });
+        } catch (error) {
+            serv.log.error(`Error deleting user profile: ${error}`);
+            throw error;
+        }
+    });
 
-	//USER STATS
-	//get all user's stats with userID
-	serv.get('/stats/:userID', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: string };
+    //USER STATS
+    //get all user's stats with userID
+    serv.get('/stats/:userID', async (request, reply) => {
+        try {
+            const { userID } = request.params as { userID: string };
 
-			const query = `
+            const query = `
 				SELECT * FROM userStats WHERE userID = ?
 			`;
 
-			const userProfile = await serv.dbUsers.get<UserStats>(query, [userID]);
-			if (!userProfile)
-				return (reply.code(404).send({ success: false, message: 'User profile not found' }));
+            const userProfile = await serv.dbUsers.get<UserStats>(query, [userID]);
+            if (!userProfile)
+                return reply.code(404).send({ success: false, message: 'User profile not found' });
 
-			return (reply.code(200).send({ success: true, userProfile }));
-		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
-			throw (error);
-		}
-	});
+            return reply.code(200).send({ success: true, userProfile });
+        } catch (error) {
+            serv.log.error(`Error fetching user profile: ${error}`);
+            throw error;
+        }
+    });
 
-	//update all stats of a user
-	serv.patch('/stats/:userID', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: string };
-			const actions = request.body as { action: string, field: string, value: number }[];
+    //update all stats of a user
+    serv.patch('/stats/:userID', async (request, reply) => {
+        try {
+            const { userID } = request.params as { userID: string };
+            const actions = request.body as { action: string; field: string; value: number }[];
 
-			const currentStats = await serv.dbUsers.get<UserStats>('SELECT * FROM userStats WHERE userID = ?', [userID]);
-			if (!currentStats)
-				return reply.code(404).send({ success: false, message: 'User not found.' });
+            const currentStats = await serv.dbUsers.get<UserStats>(
+                'SELECT * FROM userStats WHERE userID = ?',
+                [userID]
+            );
+            if (!currentStats)
+                return reply.code(404).send({ success: false, message: 'User not found.' });
 
-			const updates: { [key: string]: number } = {};
-			const validFields = ['totalMatch', 'totalWins', 'longestMatch', 'shortestMatch', 'longuestPass'];
+            const updates: { [key: string]: number } = {};
+            const validFields = [
+                'totalMatch',
+                'totalWins',
+                'longestMatch',
+                'shortestMatch',
+                'longuestPass',
+            ];
 
-			for (const action of actions) {
-				if (!validFields.includes(action.field))
-					continue;
+            for (const action of actions) {
+                if (!validFields.includes(action.field)) continue;
 
-				switch (action.action) {
-					case 'increment': {
-						updates[action.field] = (currentStats[action.field] || 0) + action.value;
-						break;
-					}
-					case 'setIfGreater': {
-						if (action.value > (currentStats[action.field] || 0))
-							updates[action.field] = action.value;
-						break;
-					}
-					case 'setIfLess': {
-						const currentValue = currentStats[action.field];
-						if (currentValue === undefined || currentValue === 0 || action.value < currentValue)
-							updates[action.field] = action.value;
-						break;
-					}
-				}
-			}
+                switch (action.action) {
+                    case 'increment': {
+                        updates[action.field] = (currentStats[action.field] || 0) + action.value;
+                        break;
+                    }
+                    case 'setIfGreater': {
+                        if (action.value > (currentStats[action.field] || 0))
+                            updates[action.field] = action.value;
+                        break;
+                    }
+                    case 'setIfLess': {
+                        const currentValue = currentStats[action.field];
+                        if (
+                            currentValue === undefined ||
+                            currentValue === 0 ||
+                            action.value < currentValue
+                        )
+                            updates[action.field] = action.value;
+                        break;
+                    }
+                }
+            }
 
-			if (Object.keys(updates).length === 0)
-				return reply.code(200).send({ success: true, message: 'No stats were updated.' });
+            if (Object.keys(updates).length === 0)
+                return reply.code(200).send({ success: true, message: 'No stats were updated.' });
 
-			const setClauses = Object.keys(updates).map(key => `${key} = ?`).join(', ');
-			const params = [...Object.values(updates), userID];
-			const query = `UPDATE userStats SET ${setClauses} WHERE userID = ?`;
+            const setClauses = Object.keys(updates)
+                .map((key) => `${key} = ?`)
+                .join(', ');
+            const params = [...Object.values(updates), userID];
+            const query = `UPDATE userStats SET ${setClauses} WHERE userID = ?`;
 
-			const response = await serv.dbUsers.run(query, params);
-			if (!response.changes)
-				return (reply.code(404).send({
-					success: false,
-					message: 'User not found'
-				}));
+            const response = await serv.dbUsers.run(query, params);
+            if (!response.changes)
+                return reply.code(404).send({
+                    success: false,
+                    message: 'User not found',
+                });
 
-			return reply.code(200).send({ success: true, message: 'User stats updated successfully.' });
+            return reply
+                .code(200)
+                .send({ success: true, message: 'User stats updated successfully.' });
+        } catch (error) {
+            serv.log.error(`Error updating user stats: ${error}`);
+            throw error;
+        }
+    });
 
-		} catch (error) {
-			serv.log.error(`Error updating user stats: ${error}`);
-			throw (error);
-		}
-	});
-
-
-	// TODO : Repeting route, check usage in BFF and switch it up with correct route
-	/* 	serv.get('/:userID/userData', async (request, reply) => {
+    // TODO : Repeting route, check usage in BFF and switch it up with correct route
+    /* 	serv.get('/:userID/userData', async (request, reply) => {
 			try {
 				const { userID } = request.params as { userID: string };
 	
@@ -416,11 +418,8 @@ export async function userRoutes(serv: FastifyInstance) {
 			}
 		}); */
 
-
-
-
-	// ROUTE NOT USED BUT KEEPING JUST IN CASE MIGHT BE DELETED LATER
-	/*
+    // ROUTE NOT USED BUT KEEPING JUST IN CASE MIGHT BE DELETED LATER
+    /*
 
 
 
