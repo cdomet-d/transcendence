@@ -5,7 +5,11 @@ import type { keysObj, paddleSpec, coordinates } from './classes/game.interfaces
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function updatePaddlePos(paddle: coordinates, leftSide: boolean, game: Game, keys: keysObj) {
-    const step: coordinates = { x: 0, y: 0 };
+    let step: coordinates = { x: 0, y: 0 };
+    if (leftSide)
+        step = game.leftStep;
+    else
+        step = game.rightStep;
     if ((leftSide && keys._w) || (!leftSide && keys._ArrowUp)) 
         up(paddle, game.padSpec.speed, step);
     if ((leftSide && keys._s) || (!leftSide && keys._ArrowDown)) 
@@ -41,7 +45,7 @@ function right(pad: coordinates, game: Game, limit: number, step: coordinates) {
     else step.x += limit - pad.x;
 }
 
-function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
+export function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
     const nextX: number = game.ball.x - step.x;
     const nextY: number = game.ball.y - step.y;
     const result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);

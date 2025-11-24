@@ -6,189 +6,201 @@ type requestMap = Map<number, reqObj>;
 type replyTab = Array<repObj>;
 
 export class Game {
-    /*                             PROPERTIES                                */
-    #_ctx: CanvasRenderingContext2D;
-    #_local: boolean;
-    #_horizontal: boolean;
-    #_score: [number, number];
-    #_leftPaddle: coordinates;
-    #_rightPaddle: coordinates;
-    #_paddleSpec: paddleSpec;
-    #_ball: ballObj;
-    #_frameId: number;
-    #_delta: number;
-    #_lastFrameTime: number;
-    #_req: reqObj;
-    #_reqHistory: requestMap;
-    #_replyHistory: replyTab;
+	/*                             PROPERTIES                                */
+	#_ctx: CanvasRenderingContext2D;
+	#_local: boolean;
+	#_horizontal: boolean;
+	#_score: [number, number];
+	#_leftPaddle: coordinates;
+	#_leftStep: coordinates;
+	#_rightPaddle: coordinates;
+	#_rightStep: coordinates;
+	#_paddleSpec: paddleSpec;
+	#_ball: ballObj;
+	#_frameId: number;
+	#_delta: number;
+	#_lastFrameTime: number;
+	#_req: reqObj;
+	#_reqHistory: requestMap;
+	#_replyHistory: replyTab;
 
-    /*                            CONSTRUCTORS                               */
-    constructor(ctx: CanvasRenderingContext2D, remote: boolean, horizontal: boolean) {
-        this.#_ctx = ctx;
-        if (remote) this.#_local = false;
-        else this.#_local = true;
-        this.#_horizontal = horizontal;
-        this.#_score = [0, 0];
-        this.#_ball = {
-            x: WIDTH / 2,
-            y: HEIGHT / 2,
-            dx: 0.3, //custom
-            dy: 0.03, //custom
-            r: 13,
-        };
-        this.#_paddleSpec = { speed: 0.45, w: 20, h: HEIGHT / 5, halfW: 20 / 2, halfH: HEIGHT / 10 }; //custom
-        this.#_leftPaddle = { x: 25, y: HEIGHT / 2 - this.#_paddleSpec.halfH };
-        this.#_rightPaddle = {
-            x: WIDTH - (this.#_paddleSpec.w + 25),
-            y: HEIGHT / 2 - this.#_paddleSpec.halfH,
-        };
-        this.#_frameId = 0;
-        this.#_delta = 0;
-        this.#_lastFrameTime = 0;
-        this.#_req = {
-            _ID: 0,
-            _keys: {
-                _w: false,
-                _s: false,
-                _a: false,
-                _d: false,
-                _ArrowUp: false,
-                _ArrowDown: false,
-                _ArrowLeft: false,
-                _ArrowRight: false,
-            },
-            _timeStamp: 0,
-        };
-        this.#_reqHistory = new Map();
-        this.#_replyHistory = new Array();
-    }
+	/*                            CONSTRUCTORS                               */
+	constructor(ctx: CanvasRenderingContext2D, remote: boolean, horizontal: boolean) {
+		this.#_ctx = ctx;
+		if (remote) this.#_local = false;
+		else this.#_local = true;
+		this.#_horizontal = horizontal;
+		this.#_score = [0, 0];
+		this.#_ball = {
+			x: WIDTH / 2,
+			y: HEIGHT / 2,
+			dx: 0.3, //custom
+			dy: 0.03, //custom
+			r: 13,
+		};
+		this.#_paddleSpec = { speed: 0.45, w: 20, h: HEIGHT / 5, halfW: 20 / 2, halfH: HEIGHT / 10 }; //custom
+		this.#_leftPaddle = { x: 25, y: HEIGHT / 2 - this.#_paddleSpec.halfH };
+		this.#_rightPaddle = {
+			x: WIDTH - (this.#_paddleSpec.w + 25),
+			y: HEIGHT / 2 - this.#_paddleSpec.halfH,
+		};
+		this.#_frameId = 0;
+		this.#_delta = 0;
+		this.#_lastFrameTime = 0;
+		this.#_req = {
+			_ID: 0,
+			_keys: {
+				_w: false,
+				_s: false,
+				_a: false,
+				_d: false,
+				_ArrowUp: false,
+				_ArrowDown: false,
+				_ArrowLeft: false,
+				_ArrowRight: false,
+			},
+			_timeStamp: 0,
+		};
+		this.#_reqHistory = new Map();
+		this.#_replyHistory = new Array();
+		this.#_leftStep = {x: 0, y: 0};
+		this.#_rightStep = {x: 0, y: 0};
+	}
 
-    /*                              GETTERS                                  */
-    get ball(): ballObj {
-        return this.#_ball;
-    }
+	/*                              GETTERS                                  */
+	get ball(): ballObj {
+		return this.#_ball;
+	}
 
-    get leftPad(): coordinates {
-        return this.#_leftPaddle;
-    }
+	get leftPad(): coordinates {
+		return this.#_leftPaddle;
+	}
 
-    get rightPad(): coordinates {
-        return this.#_rightPaddle;
-    }
+	get leftStep(): coordinates {
+		return this.#_leftStep;
+	}
 
-    get padSpec(): paddleSpec {
-        return this.#_paddleSpec;
-    }
+	get rightPad(): coordinates {
+		return this.#_rightPaddle;
+	}
 
-    get req(): reqObj {
-        return this.#_req;
-    }
+	get rightStep(): coordinates {
+		return this.#_rightStep;
+	}
 
-    get ctx(): CanvasRenderingContext2D {
-        return this.#_ctx;
-    }
+	get padSpec(): paddleSpec {
+		return this.#_paddleSpec;
+	}
 
-    get frameId(): number {
-        return this.#_frameId;
-    }
+	get req(): reqObj {
+		return this.#_req;
+	}
 
-    get delta(): number {
-        return this.#_delta;
-    }
+	get ctx(): CanvasRenderingContext2D {
+		return this.#_ctx;
+	}
 
-    get lastFrameTime(): number {
-        return this.#_lastFrameTime;
-    }
+	get frameId(): number {
+		return this.#_frameId;
+	}
 
-    get local(): boolean {
-        return this.#_local;
-    }
+	get delta(): number {
+		return this.#_delta;
+	}
 
-    get horizontal(): boolean {
-        return this.#_horizontal;
-    }
+	get lastFrameTime(): number {
+		return this.#_lastFrameTime;
+	}
 
-    get reqHistory(): requestMap {
-        return this.#_reqHistory;
-    }
+	get local(): boolean {
+		return this.#_local;
+	}
 
-    get replyHistory(): replyTab {
-        return this.#_replyHistory;
-    }
+	get horizontal(): boolean {
+		return this.#_horizontal;
+	}
 
-    get score(): [number, number] {
-        return this.#_score;
-    }
+	get reqHistory(): requestMap {
+		return this.#_reqHistory;
+	}
 
-    /*                              SETTERS                                  */
-    // set leftPad(newPos: number) {
-    //     this.#_leftPaddle.y = newPos;
-    // }
+	get replyHistory(): replyTab {
+		return this.#_replyHistory;
+	}
 
-    // set rightPad(newPos: number) {
-    //     this.#_rightPaddle.y = newPos;
-    // }//TODO: fix
+	get score(): [number, number] {
+		return this.#_score;
+	}
 
-    set ball(ball: coordinates) {
-        this.#_ball.x = ball.x;
-        this.#_ball.y = ball.y;
-    }
+	/*                              SETTERS                                  */
+	// set leftPad(newPos: number) {
+	//     this.#_leftPaddle.y = newPos;
+	// }
 
-    set frameId(id: number) {
-        this.#_frameId = id;
-    }
+	// set rightPad(newPos: number) {
+	//     this.#_rightPaddle.y = newPos;
+	// }//TODO: fix
 
-    set delta(val: number) {
-        this.#_delta = val;
-    }
+	set ball(ball: coordinates) {
+		this.#_ball.x = ball.x;
+		this.#_ball.y = ball.y;
+	}
 
-    set lastFrameTime(val: number) {
-        this.#_lastFrameTime = val;
-    }
+	set frameId(id: number) {
+		this.#_frameId = id;
+	}
 
-    /*                              METHODS                                  */
-    public addReq(req: reqObj) {
-        const newReq: reqObj = {
-            _ID: req._ID,
-            _keys: { ...req._keys },
-            _timeStamp: req._timeStamp,
-        };
-        this.#_reqHistory.set(req._ID, newReq);
-    }
+	set delta(val: number) {
+		this.#_delta = val;
+	}
 
-    public deleteReq(id: number) {
-        for (const key of this.#_reqHistory.keys()) {
-            if (key <= id) {
-                this.#_reqHistory.delete(key);
-            }
-        }
-    }
+	set lastFrameTime(val: number) {
+		this.#_lastFrameTime = val;
+	}
 
-    public addReply(reply: repObj) {
-        const newReply: repObj = {
-            _ID: reply._ID,
-            _timestamp: reply._timestamp,
-            _leftPad: { ...reply._leftPad },
-            _rightPad: { ...reply._rightPad },
-            _ball: { ...reply._ball },
-            _score: { ...reply._score },
-            _end: reply._end
-        };
-        this.#_replyHistory.push(newReply);
-    }
+	/*                              METHODS                                  */
+	public addReq(req: reqObj) {
+		const newReq: reqObj = {
+			_ID: req._ID,
+			_keys: { ...req._keys },
+			_timeStamp: req._timeStamp,
+		};
+		this.#_reqHistory.set(req._ID, newReq);
+	}
 
-    public deleteReplies(length: number) {
-        this.#_replyHistory.splice(0, length);
-    }
+	public deleteReq(id: number) {
+		for (const key of this.#_reqHistory.keys()) {
+			if (key <= id) {
+				this.#_reqHistory.delete(key);
+			}
+		}
+	}
 
-    public getReplies(renderTime: number): [repObj, repObj] | null {
-        for (let i = 0; i < this.#_replyHistory.length - 1; i++) {
-            if (
-                this.#_replyHistory[i]!._timestamp <= renderTime &&
-                this.#_replyHistory[i + 1]!._timestamp >= renderTime
-            )
-                return [this.#_replyHistory[i]!, this.#_replyHistory[i + 1]!];
-        } //TODO: fix !
-        return null;
-    }
+	public addReply(reply: repObj) {
+		const newReply: repObj = {
+			_ID: reply._ID,
+			_timestamp: reply._timestamp,
+			_leftPad: { ...reply._leftPad },
+			_rightPad: { ...reply._rightPad },
+			_ball: { ...reply._ball },
+			_score: { ...reply._score },
+			_end: reply._end
+		};
+		this.#_replyHistory.push(newReply);
+	}
+
+	public deleteReplies(length: number) {
+		this.#_replyHistory.splice(0, length);
+	}
+
+	public getReplies(renderTime: number): [repObj, repObj] | null {
+		for (let i = 0; i < this.#_replyHistory.length - 1; i++) {
+			if (
+				this.#_replyHistory[i]!._timestamp <= renderTime &&
+				this.#_replyHistory[i + 1]!._timestamp >= renderTime
+			)
+				return [this.#_replyHistory[i]!, this.#_replyHistory[i + 1]!];
+		} //TODO: fix !
+		return null;
+	}
 }
