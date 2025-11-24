@@ -1,16 +1,16 @@
 import type { FastifyInstance } from 'fastify';
 import { request } from 'http';
 
-interface UserProfile {
-	userID: number;
-	username: string;
-	avatar: string;
-	biography: string;
-	profileColor: string;
-	winstreak: number;
-	lang: string;
-	status: boolean;
-	since: string;
+export interface userData {
+	avatar: string,
+	biography: string,
+	userID: string,
+	lang: string,
+	profileColor: string,
+	status: boolean,
+	username: string,
+	winstreak: string, 
+	since: string
 }
 
 interface UserStats {
@@ -37,7 +37,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				SELECT * FROM userProfile WHERE userID = ?
 			`;
 
-			const userProfile = await serv.dbUsers.get<UserProfile>(query, [userID]);
+			const userProfile = await serv.dbUsers.get<userData>(query, [userID]);
 			if (!userProfile) {
 				return (reply.code(404).send({
 					success: false,
@@ -47,7 +47,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			return (reply.code(200).send({
 				success: true,
-				profile: userProfile
+				userData: userProfile
 			}));
 
 		} catch (error) {
@@ -71,7 +71,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			SELECT * FROM userProfile WHERE userID IN (${placeholders})
 		`;
 
-			const profiles = await serv.dbUsers.all<UserProfile[]>(query, userIDs);
+			const profiles = await serv.dbUsers.all<userData[]>(query, userIDs);
 
 			return (reply.code(200).send({
 				success: true,
@@ -81,6 +81,39 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`Error fetching user profiles by IDs: ${error}`);
+			throw (error);
+		}
+	});
+
+	//GET ?username=<username>
+	serv.get('/userID/:username', async (request, reply) => {
+		try {
+			const query = request.params as { username: string };
+
+			if (query.username) {
+				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
+				const response = await serv.dbUsers.get(sql, [query.username]);
+
+				if (!response) {
+					return (reply.code(404).send({
+						success: false,
+						message: 'User not found'
+					}));
+				}
+
+				return (reply.code(200).send({
+					success: true,
+					message: "user found!",
+					response
+				}));
+			}
+
+			return (reply.code(400).send({
+				success: false,
+				message: 'A query parameter (e.g., ?username=...) is required.'
+			}));
+		} catch (error) {
+			serv.log.error(`Error fetching user profile: ${error}`);
 			throw (error);
 		}
 	});
@@ -359,37 +392,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	// ROUTE NOT USED BUT KEEPING JUST IN CASE MIGHT BE DELETED LATER
 	/*
 
-	//GET ?username=<username>
-	serv.get('/userID/:username', async (request, reply) => {
-		try {
-			const query = request.query as { username?: string };
 
-			if (query.username) {
-				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
-				const user = await serv.dbUsers.get<UserRow>(sql, [query.username]);
-
-				if (!user) {
-					return (reply.code(404).send({
-						success: false,
-						message: 'User not found'
-					}));
-				}
-				return (reply.code(200).send({
-					success: true,
-					message: "user found!",
-					user
-				}));
-			}
-
-			return (reply.code(400).send({
-				success: false,
-				message: 'A query parameter (e.g., ?username=...) is required.'
-			}));
-		} catch (error) {
-			serv.log.error(`Error fetching user profile: ${error}`);
-			throw (error);
-		}
-	});
 
 	//get username by userID
 	serv.get('/:userID/username', async (request, reply) => {
