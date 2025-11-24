@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import type { UserProfileView, userData } from './bff.interface.js';
 import * as bcrypt from 'bcrypt';
-import { fetchUserData, /*buildFullUserData*/ fetchUserID, processMatches, fetchFriendList, fetchUserStats, fetchProfileView, updateBio, updateProfileColor, updateAvatar } from './bffUserProfile.service.js';
+import { fetchUserData, searchBar, /*buildFullUserData*/ fetchUserID, processMatches, fetchFriendList, fetchUserStats, fetchProfileView, updateBio, updateProfileColor, updateAvatar } from './bffUserProfile.service.js';
 //import { updatePassword, fetchUserDataAccount, updateUsername,  updateDefaultLang, deleteAccount, deleteUser  } from './bffAccount.service.js';
 import { deleteFriendship } from './bffFriends.service.js'
 
@@ -104,7 +104,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	serv.get('/tiny-profile/:username', async (request, reply) => {
 		try {
-			
+
 			const { username: targetUsername } = request.params as { username: string };
 			const { userID: viewerUserID } = request.user as { userID: number };
 
@@ -149,6 +149,21 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				serv.log.error(`[BFF] Failed to build user profile: ${error.message}`);
 			else
 				serv.log.error(`[BFF] Failed to build user profile: An unknown error occurred.`);
+			throw (error);
+		}
+	});
+
+	serv.get('/search', async (request, reply) => {
+		try {
+			const query = request.query as { name?: string };
+
+			if (!query.name || query.name.trim() === '')
+				return reply.code(200).send([]);
+
+			const profiles = await searchBar(serv.log, query.name);
+			return (reply.code(200).send(profiles));
+		} catch (error) {
+			serv.log.error(`[BFF] Error searching users: ${error}`);
 			throw (error);
 		}
 	});
