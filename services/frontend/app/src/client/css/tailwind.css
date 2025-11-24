@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "./animations.css";
-@import "./pong-farm-bg.css";
+@import "./pong-farm.css";
+@import "./pong-ocean.css";
 @import "./background.css";
 
 @font-face {

@@ -47,6 +47,7 @@ export class Router {
     }
 
     updateURL(newURL: string) {
+		console.log('updating URL')
         window.history.pushState({}, '', newURL);
     }
 
@@ -54,6 +55,9 @@ export class Router {
      * Calls `renderNotFount()` if the route was not found, and the route's callback otherwise.
      */
     loadRoute(path: string, updateHistory: boolean) {
+		this.sanitisePath(path);
+
+		console.log(path, window.location.pathname)
         let matchedRoute = this.#getRouteFromPath(path);
         let res: Match<Partial<Record<string, string | string[]>>> = false;
 
@@ -67,7 +71,7 @@ export class Router {
                 }
             }
         }
-		if (updateHistory) this.updateURL(path);
+		if (updateHistory && path !== window.location.pathname) this.updateURL(path);
         if (!matchedRoute) {
             renderNotFound();
             return;

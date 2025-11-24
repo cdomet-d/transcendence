@@ -2,7 +2,7 @@ import { createHeading, createNoResult } from './web-elements/typography/helpers
 import { createLeaderboard } from './web-elements/statistics/leaderboard.js';
 import { createMenu } from './web-elements/navigation/menu-helpers.js';
 import { main } from './web-elements/navigation/default-menus.js';
-import { farmAssets, Layout } from './web-elements/layouts/layout.js';
+import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
 import { ProfileWithTabs, user } from './web-elements/users/user-profile-containers.js';
 import { type Match } from 'path-to-regexp';
 import { createTabs } from './web-elements/navigation/tabs-helpers.js';
@@ -16,7 +16,7 @@ import {
     userSettingsForm,
 } from './web-elements/forms/default-forms.js';
 import { tournament } from './web-elements/default-values.js';
-import { farm, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
+import { farm, ocean, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
 import { pong } from './pong/pong.js';
 import { TournamentBrackets } from './web-elements/game/tournament.js';
 import { PongUI } from './web-elements/game/game-ui.js';
@@ -206,8 +206,8 @@ export function renderGame() {
 
     const layout = document.body.layoutInstance;
     // TODO: set pong-court theme from game-manager object
-    court.theme = farm;
-    if (layout) layout.theme = farmAssets;
+    court.theme = ocean;
+    if (layout) layout.theme = oceanAssets;
     document.body.layoutInstance?.appendAndCache(ui, court);
 
     pong({ userID: 1, gameID: 1, remote: false }, court.ctx, ui);
