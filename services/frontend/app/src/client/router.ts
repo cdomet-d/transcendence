@@ -12,6 +12,7 @@ export const routes: routeInterface[] = [
     { path: '/404', callback: page.renderNotFound },
     { path: '/auth', callback: page.renderAuth },
     { path: '/leaderboard', callback: page.renderLeaderboard },
+    { path: '/me', callback: page.renderSelf },
     { path: '/user/:login', callback: page.renderProfile },
     { path: '/user/settings', callback: page.renderSettings },
     { path: '/lobby', callback: page.renderLobby },
@@ -46,13 +47,16 @@ export class Router {
     }
 
     updateURL(newURL: string) {
+        console.log('updating URL');
         window.history.pushState({}, '', newURL);
     }
 
     /** Parses the defined route array to check if the current URL is defined as a route.
      * Calls `renderNotFount()` if the route was not found, and the route's callback otherwise.
      */
-    loadRoute(path: string) {
+    loadRoute(path: string, updateHistory: boolean) {
+        this.sanitisePath(path);
+
         let matchedRoute = this.#getRouteFromPath(path);
         let res: Match<Partial<Record<string, string | string[]>>> = false;
 
@@ -66,12 +70,11 @@ export class Router {
                 }
             }
         }
+        if (updateHistory && path !== window.location.pathname) this.updateURL(path);
         if (!matchedRoute) {
             renderNotFound();
             return;
         }
-
-        this.updateURL(path);
         matchedRoute.callback(res ? res : undefined);
     }
 }

@@ -11,11 +11,7 @@ export class LoginForm extends BaseForm {
         try {
             const response = await fetch(url, req);
             if (!response.ok) throw await responseErrorMessage(response);
-
-            if (typeof req.body === 'string') {
-                const payload = JSON.parse(req.body);
-                router.loadRoute(`/user/${payload.username}`);
-            }
+            router.loadRoute('/me', true);
         } catch (error) {
             throw error;
         }

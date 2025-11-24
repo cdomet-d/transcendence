@@ -2,7 +2,7 @@ import { createHeading, createNoResult } from './web-elements/typography/helpers
 import { createLeaderboard } from './web-elements/statistics/leaderboard.js';
 import { createMenu } from './web-elements/navigation/menu-helpers.js';
 import { main } from './web-elements/navigation/default-menus.js';
-import { farmAssets, Layout } from './web-elements/layouts/layout.js';
+import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
 import { ProfileWithTabs, user } from './web-elements/users/user-profile-containers.js';
 import { type Match } from 'path-to-regexp';
 import { createTabs } from './web-elements/navigation/tabs-helpers.js';
@@ -16,10 +16,13 @@ import {
     userSettingsForm,
 } from './web-elements/forms/default-forms.js';
 import { tournament } from './web-elements/default-values.js';
-import { farm, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
+import { farm, ocean, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
 import { pong } from './pong/pong.js';
 import { TournamentBrackets } from './web-elements/game/tournament.js';
 import { PongUI } from './web-elements/game/game-ui.js';
+import { userStatus } from './main.js';
+import { router } from './main.js';
+import { createErrorFeedback } from './web-elements/event-elements/error.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -85,13 +88,13 @@ export function renderAuth() {
         {
             id: 'login-tab',
             content: 'Login',
-            default: false,
+            default: true,
             panelContent: createForm('login-form', loginForm),
         },
         {
             id: 'registration-tab',
             content: 'Register',
-            default: true,
+            default: false,
             panelContent: createForm('registration-form', registrationForm),
         },
     ];
@@ -111,6 +114,36 @@ export function renderLeaderboard() {
     updatePageTitle('Leaderboard');
 }
 
+export async function renderSelf() {
+    console.log('renderSelf');
+
+    const status = await userStatus();
+    console.log(status.auth, status.userID, status.username);
+    if (!status.auth) {
+        router.loadRoute('/auth', true);
+		createErrorFeedback('You must register or login to see your profile')
+        return;
+    }
+	// const url = `https://localhost:8443/api/bff/profile/${status.username}`
+
+	try {
+		// const reply = await fetch(url)
+		// const profile = reply.json();
+		// console.log(profile);
+		prepareLayout(document.body.layoutInstance, 'profile');
+		document.body.layoutInstance?.appendAndCache(
+			document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
+		);
+		const pInstance = document.body.layoutInstance?.components.get(
+			'user-profile',
+		) as ProfileWithTabs;
+		pInstance.profile = user;
+   		updatePageTitle(status.username!);
+	} catch (error) {
+		console.error(error)
+	}
+}
+
 export async function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
     console.log('renderProfile');
     if (param) {
@@ -118,7 +151,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
         // const req: RequestInit = { method: 'get' };
 
         //TODO: API call with login here to fetch user data
-        // await fetch(`https://localhost:8443/api/bff/users/${login}/profile`, req);
+        // await fetch(`https://localhost:8443/api/bff/profile/${login}/profile`, req);
         prepareLayout(document.body.layoutInstance, 'profile');
         document.body.layoutInstance?.appendAndCache(
             document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
@@ -128,10 +161,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
         ) as ProfileWithTabs;
         pInstance.profile = user;
         updatePageTitle('User ' + login);
-    } else {
-        console.log('No parameter, which should not happen');
-        renderNotFound();
-    }
+    } else renderNotFound();
 }
 
 export function renderSettings() {
@@ -178,8 +208,8 @@ export function renderGame() {
 
     const layout = document.body.layoutInstance;
     // TODO: set pong-court theme from game-manager object
-    court.theme = farm;
-    if (layout) layout.theme = farmAssets;
+    court.theme = ocean;
+    if (layout) layout.theme = oceanAssets;
     document.body.layoutInstance?.appendAndCache(ui, court);
 
     pong({ userID: 1, gameID: 1, remote: false }, court.ctx, ui);

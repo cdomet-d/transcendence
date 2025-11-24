@@ -5,6 +5,13 @@ export async function responseErrorMessage(response: Response): Promise<Error> {
     return new Error(`Error: ${response.status}: ${errorData.message}`);
 }
 
+export function createErrorFeedback(message: string) {
+    const err = document.createElement('span', { is: 'ui-feedback' }) as UIFeedback;
+    document.body.layoutInstance?.append(err);
+    err.content = message;
+    err.type = 'error';
+}
+
 export class UIFeedback extends HTMLSpanElement {
     constructor() {
         super();

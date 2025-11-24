@@ -39,7 +39,7 @@ export class NavigationLinks extends HTMLAnchorElement {
             ev.preventDefault();
             const path = link.getAttribute('href');
             if (path) {
-                router.loadRoute(path);
+                router.loadRoute(path, true);
             }
         }
     }

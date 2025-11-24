@@ -2,7 +2,7 @@ import type { pongTheme } from '../types-interfaces';
 import { HEIGHT, WIDTH } from '../../pong/classes/game.class';
 
 export const farm: pongTheme = { color: '#773d16', theme: 'farm' };
-
+export const ocean: pongTheme = { color: '#171cb0ff', theme: 'ocean' };
 export const defaultTheme: pongTheme = { color: '#2267A3', theme: 'default' };
 
 export class PongCourt extends HTMLDivElement {

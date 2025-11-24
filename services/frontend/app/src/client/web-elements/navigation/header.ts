@@ -43,12 +43,12 @@ export class PageHeader extends HTMLElement {
     }
 
     async #loginImplementation() {
-        router.loadRoute('/auth');
+        router.loadRoute('/auth', true);
     }
 
     async #logoutImplementation() {
         await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
-        router.loadRoute('/');
+        router.loadRoute('/', true);
     }
 
     connectedCallback() {
@@ -66,7 +66,7 @@ export class PageHeader extends HTMLElement {
     async getLogState() {
         const log = await userStatus();
 
-        if (log) {
+        if (log.auth) {
             this.#login.remove();
             this.append(this.#logout);
             this.#logout.classList.add('h-m', 'w-l');
