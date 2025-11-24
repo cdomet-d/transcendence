@@ -1,6 +1,7 @@
 import type { userInfo, lobbyInfo } from "../manager.interface.js";
 export const wsClientsMap: Map<number, WebSocket> = new Map();
-export const lobbyMap: Map<number | undefined, lobbyInfo> = new Map();
+// export const lobbyMap: Map<number | undefined, lobbyInfo> = new Map();
+export const lobbyMap: Map<string | undefined, lobbyInfo> = new Map();
 
 export function createLobby(hostID: number, format: string) {
 	const lobby: lobbyInfo = makeLobbyInfo(hostID, format);
@@ -8,7 +9,7 @@ export function createLobby(hostID: number, format: string) {
 	return lobby;
 }
 
-export function addUserToLobby(userID: number, socket: WebSocket, lobbyID: number) {
+export function addUserToLobby(userID: number, socket: WebSocket, lobbyID: string) {
     const lobby = lobbyMap.get(lobbyID);
     if (!lobby) return;
 
@@ -21,7 +22,7 @@ export function addUserToLobby(userID: number, socket: WebSocket, lobbyID: numbe
     }
 }
 
-export function removeUserFromLobby(userID: number, lobbyID: number) {
+export function removeUserFromLobby(userID: number, lobbyID: string) {
     const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) return;
 
@@ -31,7 +32,7 @@ export function removeUserFromLobby(userID: number, lobbyID: number) {
 
 // add INVITEE in parameter and get all userInfo (invitee) from JWT payload
 function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
-	const lobbyID: number = getUniqueLobbyID();
+	const lobbyID = crypto.randomUUID().toString();
 
 	const lobby: lobbyInfo = {
 		lobbyID: lobbyID,
@@ -52,15 +53,7 @@ function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 	return lobby;
 }
 
-// TODO: same as getUniqueUserID(), need DB for lobby IDs ?
-let idIndex: number = 1;
-
-function getUniqueLobbyID(): number {
-	const uniqueID = idIndex++;
-	return uniqueID;
-}
-
-export function printPlayersInLobby(lobbyID: number) {
+export function printPlayersInLobby(lobbyID: string) {
 	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) {
 		console.log("AAAH PAS DE LOBBY");

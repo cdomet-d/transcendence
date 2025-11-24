@@ -2,7 +2,8 @@ import { tournamentMap } from "./tournamentStart.js";
 import { startGame } from "./tournamentStart.js";
 import type { game, tournament, userInfo } from "../manager.interface.js";
 
-const nextPlayersMap: Map<number, { player1?: userInfo, player2?: userInfo }> = new Map();
+// const nextPlayersMap: Map<number, { player1?: userInfo, player2?: userInfo }> = new Map();
+const nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }> = new Map();
 
 export async function tournamentState(payload: string) {
 	const game: game = JSON.parse(payload);

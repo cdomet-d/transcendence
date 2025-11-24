@@ -1,7 +1,8 @@
 import type { game, lobbyInfo, tournament, userInfo } from '../manager.interface.js';
 
 export function createTournament(payload: lobbyInfo): tournament | undefined {
-	const tournamentID = 99; // TODO DB ID toussa toussa
+	// const tournamentID = 99; // TODO DB ID toussa toussa
+	const tournamentID = crypto.randomUUID().toString();
 
 	const games: game[] | undefined = createBracket(payload, tournamentID);
 	if (games === undefined) {
@@ -13,7 +14,7 @@ export function createTournament(payload: lobbyInfo): tournament | undefined {
 	return tournamentObj;
 }
 
-export function createBracket(lobbyInfo: lobbyInfo, tournamentID: number): game[] | undefined {
+export function createBracket(lobbyInfo: lobbyInfo, tournamentID: string): game[] | undefined {
 	// const nBgames = lobbyInfo.userList.size; // if 8 players tournament
 
     const usersArray: userInfo[] = Array.from(lobbyInfo.userList.values());
@@ -32,9 +33,9 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: number): game[
 
 	// TODO: need DB for unique gameIDs
 	const games: game[] = [
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: 1, tournamentID: tournamentID, remote: true, userList: opponents[0], score: "", winnerID: 0, loserID: 0 },
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: 2, tournamentID: tournamentID, remote: true, userList: opponents[1], score: "", winnerID: 0, loserID: 0 },
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: 3, tournamentID: tournamentID, remote: true, userList: null, score: "", winnerID: 0, loserID: 0 },
+		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), tournamentID: tournamentID, remote: true, userList: opponents[0], score: "", winnerID: 0, loserID: 0 },
+		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), tournamentID: tournamentID, remote: true, userList: opponents[1], score: "", winnerID: 0, loserID: 0 },
+		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), tournamentID: tournamentID, remote: true, userList: null, score: "", winnerID: 0, loserID: 0 },
 	];
 
 	return games;
@@ -50,7 +51,7 @@ function fisherYatesShuffle(usersArray: any) {
 }
 
 
-export function makeTournamentObj(tournamentID: number, games: game[]): tournament {
+export function makeTournamentObj(tournamentID: string, games: game[]): tournament {
 	const tournament: tournament = {
 		tournamentID: tournamentID,
 		winnerID: null,

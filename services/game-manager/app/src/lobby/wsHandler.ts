@@ -37,6 +37,7 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 	socket.on('close', () => {
 		if (userID !== null) {
 			wsClientsMap.delete(userID);
+			// TODO: remove user from lobby too no?
 		}
 	});
 }

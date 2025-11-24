@@ -17,7 +17,8 @@ export async function natsSubscribe() {
 	(async () => {
 		for await (const msg of pregame) {
 			const sc = StringCodec();
-			const game: {gameID: number, users: user[], remote: boolean} = JSON.parse(sc.decode(msg.data));
+			// const game: {gameID: number, users: user[], remote: boolean} = JSON.parse(sc.decode(msg.data));
+			const game: {gameID: string, users: user[], remote: boolean} = JSON.parse(sc.decode(msg.data));
 			// console.log(`GM received in "game.reply" : `, payload);
 
 			if (game.users === null || game.users === undefined) return;

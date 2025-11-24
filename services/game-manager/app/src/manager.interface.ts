@@ -5,7 +5,7 @@ interface userInfo {
 }
 
 interface lobbyInfo {
-	lobbyID?: number,
+	lobbyID?: string,
 	whitelist?: whitelist,
 	joinable?: boolean,
     userList: Map<number, userInfo>,
@@ -16,15 +16,15 @@ interface lobbyInfo {
 }
 
 interface whitelist {
-	lobbyId: number,
+	lobbyId: string,
 	hostID: number,
 	userIDs: number[]
 }
 
 interface game {
-	lobbyID: number,
-	gameID: number,
-	tournamentID?: number,
+	lobbyID: string,
+	gameID: string,
+	tournamentID?: string,
 	remote: boolean,
 	userList: userInfo[] | undefined | null,
 	score: string,
@@ -33,14 +33,14 @@ interface game {
 }
 
 interface tournament {
-	tournamentID: number,
+	tournamentID: string,
 	winnerID: number | undefined | null,
 	bracket: game[]
 }
 
 interface gameRequest {
 	userID: number,
-	gameID: number,
+	gameID: string,
 	remote: boolean
 }
 

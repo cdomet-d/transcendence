@@ -10,7 +10,7 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 
 	const game: game = {
 		lobbyID: lobbyInfo.lobbyID!,
-		gameID: 99,
+		gameID: crypto.randomUUID().toString(), // TODO get gameID from DB?
 		remote: true,
 		userList: usersArray,
 		score: "",

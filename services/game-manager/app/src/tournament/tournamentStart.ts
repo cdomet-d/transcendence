@@ -2,7 +2,8 @@ import type { game, tournament } from "../manager.interface.js";
 import { natsPublish } from "../nats/publisher.js";
 
 // Temporary solution: store tournaments in memory
-export const tournamentMap: Map<number, tournament> = new Map();
+// export const tournamentMap: Map<number, tournament> = new Map();
+export const tournamentMap: Map<string, tournament> = new Map();
 
 export function startTournament(tournamentObj: tournament) {
 	tournamentMap.set(tournamentObj.tournamentID, tournamentObj)
