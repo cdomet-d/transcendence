@@ -37,8 +37,8 @@ function setMessEvent(player: Player, playerNbr: number, game: Game) {
 		let req: reqObj;
 		try { req = JSON.parse(payload); }
 		catch (err) { return; };
-		// if (!validRequest(req)) //TODO: keep or not ? more secure but maybe slows down game
-		// 	return;
+		if (!validRequest(req))
+			return;
 		game.addReq(req, playerNbr);
 	}
 	player.socket.on("message", messageHandler)
