@@ -1,5 +1,6 @@
 import { bffAccessibilityRoutes } from './routeAccessibility.js';
 import { bffUsersRoutes } from './routeUserProfile.js';
+import { bffFriendRoutes } from './routeFriends.js';
 import { options } from './serv.conf.js';
 import cors from '@fastify/cors';
 import Fastify from 'fastify';
@@ -12,7 +13,7 @@ serv.register(cors, {
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 });
 
-serv.register(bffFriendRoutes);
+//serv.register(bffFriendRoutes);
 serv.register(bffAccessibilityRoutes);
 serv.register(bffUsersRoutes);
 

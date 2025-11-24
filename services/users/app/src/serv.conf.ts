@@ -41,7 +41,7 @@ function checkProxy(address: string, hop: number): boolean {
   const nginxIP = getNginxIP();
   const bffIP = getBffIP();
   const authIP = getAuthIP();
-  if ((address === nginxIP  || address === bffIP || address === authIP) && hop === 2)
+  if ((address === nginxIP  || address === bffIP || address === authIP) && hop === 3)
     return true;
   return false;
 }

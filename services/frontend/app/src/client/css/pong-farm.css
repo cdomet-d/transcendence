@@ -1,0 +1,74 @@
+@keyframes slide-right {
+	0% {
+		transform: translateX(-5vw);
+	}
+	100% {
+		transform: translateX(115vw);
+	}
+}
+
+@keyframes slide-left {
+	0% {
+		transform: translateX(20vw);
+	}
+	100% {
+		transform: translateX(-115vw);
+	}
+}
+
+.cow {
+	width: 14.1%;
+	position: absolute;
+	left: 80.3%;
+	bottom: 0px;
+	z-index: 3;
+}
+
+.fence {
+	width: 100vw;
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	z-index: 2;
+}
+
+.fgrass {
+	width: 100vw;
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	z-index: 6;
+}
+
+.cloud_r {
+	width: 25.8%;
+	height: auto;
+	position: absolute;
+	left: -10.5%;
+	top: 7.4%;
+	z-index: 7;
+	animation: slide-right 45s linear infinite;
+}
+
+.cloud_l {
+	width: 25.8%;
+	height: auto;
+	position: absolute;
+	left: 83.4%;
+	top: 41.9%;
+	z-index: 8;
+	animation: slide-left 45s linear infinite;
+}
+
+.sky {
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 1;
+}
+
+.farm-court-bg {
+	background-image: url('/public/assets/images/farm-scene/bg.png');
+}

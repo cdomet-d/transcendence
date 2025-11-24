@@ -1,16 +1,15 @@
 import type { ProfileCreationResult, UserAuth } from "./auth.interfaces.js";
 import { Database } from "sqlite";
-import { Agent } from 'undici';
+import { fetch, Agent } from 'undici';
 
 const sslAgent = new Agent({
-	connect: {
-		rejectUnauthorized: false
-	}
+	connect: { rejectUnauthorized: false }
 });
 
 export async function createUserProfile(log: any, userID: number, username: string): Promise<ProfileCreationResult> {
-	const url = `https://nginx/api/users/${userID}`;
+	const url = `https://nginx/api/users/${userID}/`;
 
+	console.log('USER ID:', url);
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -18,7 +17,7 @@ export async function createUserProfile(log: any, userID: number, username: stri
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ username: username }),
 			dispatcher: sslAgent
-		} as unknown as RequestInit);
+		});
 	} catch (error) {
 		log.error(`[AUTH] User service (via NGINX) is unreachable: ${error}`);
 		throw new Error('User service is unreachable.');
@@ -31,7 +30,6 @@ export async function createUserProfile(log: any, userID: number, username: stri
 			const errorBody = (await response.json()) as { message: string };
 			if (errorBody.message) message = errorBody.message;
 		} catch (error) { }
-
 		return { errorCode: 'conflict' };
 	}
 

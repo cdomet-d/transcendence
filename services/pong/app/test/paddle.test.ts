@@ -2,8 +2,8 @@ import {describe, expect, test, afterAll, beforeAll} from '@jest/globals';
 import { updatePaddlePos } from "../src/game/paddle";
 import type { Player } from '../src/classes/player.class';
 import type { keysObj } from '../src/game/mess.validation';
-const WIDTH = 700;
-const HEIGHT = 500;
+const WIDTH = 1117.8;
+const HEIGHT = 558.9;
 
 describe("paddle update", () => {
 	const leftPlayer = {

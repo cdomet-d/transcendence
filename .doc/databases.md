@@ -1,24 +1,22 @@
 # Databases
 
 There's is a total of 5 databases across the project which are the following :
-
-| Container     |  Name of DB  |
-| ------------- | :----------: |
+| Container  | Name of DB |
+| ------------- |:-------------:|
 | Accessibility | languages.db |
-| Users         |   users.db   |
-| Account       |  account.db  |
-| Friends       |  friends.db  |
-| Dashboard     |   stats.db   |
+| Users | users.db |
+| Account | account.db |
+| Friends | friends.db |
+| Dashboard | stats.db |
 
-Each database and linked log has it's own isolated volume and is stored in the data/ directory of each sources files's container locally and in /usr/data inside of each container.
+Each database and linked logs has it's own isolated volume and is stored in the data/ directory of each sources files's container locally and in /usr/data inside of each container.
 The sources files for database building are in /tools of each container's source directory. That where you will find the tables definition and tests but they will also be presented and explained here for better  readability.
 
 ![database.png](assets/database.png "This is a sample image.")
 
 The correct methods for avoiding SQL injections is to NOT USE variable export for the query.
 Bad SQL query (dangerous) :
-
-```js
+```
 	const word;
 	const langCode;
 
@@ -31,8 +29,7 @@ Bad SQL query (dangerous) :
 
 Instead a good practice is to set variables in the query direcly when sending the query, not when building it.
 It will look like this :
-
-```js
+```
 	const word;
 	const langCode;
 
@@ -123,26 +120,23 @@ Depending on the format of the expected parameters for a request, a route will a
 
 ### General overview
 
-The accessibily container holds the translation for each supported langangues (en, French and Spanish).
+The accessibily container holds the translation for each supported langangues (en, French and Spanish). 
 There is only one table in this database : translations
 
 The table has 4 column :
-
 * ID &rarr; integer (__primary key__)
 * word &rarr; text
-* language_code &rarr; text
+* language_code &rarr; text 
 * translation &rarr; text
 
 The word column is meant to hold the key or phrase identifier. The language_code column holds the language code (dah), like "en" or "French". And lastly the translation will hold the translation of the word in it's targeted language code.
 So for example we could have :
-
 * word == "hello"
 * language_code == "French"
 * translation == "bonjour"
 
 A SQL query to find the translation of a word would look like this :
-
-```js
+```
 SELECT translation FROM translations WHERE word = 'hello' AND language_code = 'French';
 
 -- will return "bonjour"
@@ -156,7 +150,7 @@ Lasty, even is the table will remain pretty small, being able to make shorter, s
 
 ### Usage and associated functions
 
-This databases won't have a function to update the data via the code.
+This databases won't have a function to update the data via the code. 
 To add translation I think the best course of action will be to directly modify the seed.sql which adds data to the database at launch.
 
 ## Users
@@ -169,36 +163,33 @@ The goal here is not to hold account info (like password), those informations wi
 The tables in this database are pretty straight forward. I will elaborate on a couple column that need explanation in my opinion
 
 We have two tables here :
-
 * userProfile
 * userStat
 
 #### userProfile
 
 This table has the following column :
-
 * userID &rarr; integer (__primary key__)
 * username &rarr; text
 * avatar &rarr; text
 * biography &rarr; text
 * profileColor &rarr; text
-* activityStatus &rarr; integer
+* activityStatus &rarr; integer 
 * lastConnexion &rarr; datetime
 
 userID will match between different table and database and if a general ID for a user.
 
 activityStatus will be used to keep track of whether the user if offline, online or playing. The following value and meaning will be :
 
-| Value | Meaning |
-| ----- | :-----: |
-| 0     | offline |
-| 1     | online  |
-| 2     | playing |
+| Value  | Meaning |
+| ------ |:-------:|
+|   0    | offline |
+|   1    | online  |
+|   2    | playing |
 
 #### userStats
 
 This table has the following column :
-
 * userID &rarr; integer (__primary key__)
 * longestMatch &rarr; integer
 * shorestMatch &rarr; integer
@@ -216,110 +207,110 @@ averageMatchDuration will be in seconds.
 
 #### GET
 
-* __GET fetch userProfile with userID__ : `/internal/users/:userID`
+* **GET fetch userProfile with userID** : `/internal/users/:userID`
 
     userID send as `request.params`
 
-    | Reply |      Meaning      |
-    | ----- | :---------------: |
-    | 404   | profile not found |
-    | 200   |   profile found   |
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | profile not found |
+    |   200    | profile found  |
 
-* __GET fetch userProfile with username__ :  `/internal/users`
+* **GET fetch userProfile with username** :  `/internal/users`
 
     userID send as `request.query`
 
-    | Reply |           Meaning            |
-    | ----- | :--------------------------: |
-    | 404   |      profile not found       |
-    | 400   | username not sent with query |
-    | 200   |        profile found         |
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | profile not found |
+    |   400    | username not sent with query |
+    |   200    | profile found  |
 
-* __GET userStats with userID__ : `/internal/users/:userID/stats`
-
-    userID sent as `request.params`
-
-    | Reply |      Meaning      |
-    | ----- | :---------------: |
-    | 404   | profile not found |
-    | 200   |    stats found    |
-
-* __GET userData with userID__ : `/internal/users/:userID/userData`
+* **GET userStats with userID** : `/internal/users/:userID/stats`
 
     userID sent as `request.params`
 
-    | Reply |      Meaning      |
-    | ----- | :---------------: |
-    | 404   | profile not found |
-    | 200   |    stats found    |
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | profile not found |
+    |   200    | stats found  |
 
-#### POST
+* **GET userData with userID** : `/internal/users/:userID/userData`
 
-* __POST fetch multiple userProfile with userIDs__ : `/internal/users/profile`
+    userID sent as `request.params`
+
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | profile not found |
+    |   200    | stats found  |
+
+#### POST 
+
+* **POST fetch multiple userProfile with userIDs** : `/internal/users/profile`
 
     userIDs sent as `request.body`
 
-    | Reply |         Meaning          |
-    | ----- | :----------------------: |
-    | 400   | userIDs not sent in body |
-    | 200   |      profile found       |
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   400    | userIDs not sent in body |
+    |   200    | profile found  |
 
     _Note_ : We are not sending 404 in this query because we want to fetch a list of profile even if one of the userID doesn't have a linked profile in the database.
 
-* __POST post a userProfile and userStats__ : `/internal/users/:userID/profile`
+* **POST post a userProfile and userStats** : `/internal/users/:userID/profile`
 
     userID sent as `request.params`
     username sent as `request.body`
 
-    | Reply |          Meaning          |
-    | ----- | :-----------------------: |
-    | 409   |      username taken       |
-    | 201   | profile and stats created |
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   409    | username taken |
+    |   201    | profile and stats created  |
 
-* __POST fetch userDatas with userIDs (batch query)__ : `/internal/users/userDataBatch`
+* **POST fetch userDatas with userIDs (batch query)** : `/internal/users/userDataBatch`
 
     userIDs sent as `request.body`
 
-    | Reply |    Meaning    |
-    | ----- | :-----------: |
-    | 200   | profile found |
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   200    | profile found  |
 
     _Note :_ if there is no profile to be found (no userID sent) or none of the provided userID has a profile linked with it, we will sent a empty json
 
-#### PATCH
+#### PATCH 
 
-* __PATCH patch userProfile (profile settings) with userID__ : `/internal/users/:userID`
+* **PATCH patch userProfile (profile settings) with userID** : `/internal/users/:userID`
 
     userID sent as `request.params`
     settings sent as `request.body`
 
-    | Reply |        Meaning         |
-    | ----- | :--------------------: |
-    | 400   | no paramater to update |
-    | 404   |   profile not found    |
-    | 409   |     username taken     |
-    | 200   |    profile updated     |
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   400    | no paramater to update  |
+    |   404    | profile not found |
+    |   409    | username taken |
+    |   200    | profile updated  |
 
-* __PATCH patch userStats with userID__ : `/internal/users/:userID/stats`
+* **PATCH patch userStats with userID** : `/internal/users/:userID/stats`
 
     userID sent as `request.params`
     stats sent as `request.body`
 
-    | Reply |               Meaning                |
-    | ----- | :----------------------------------: |
-    | 404   |          profile not found           |
-    | 200   | stats updated or not stats to update |
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | profile not found |
+    |   200    | stats updated or not stats to update  |
 
 #### DELETE
 
-* __DELETE usersProfile and userStats with userID__ : `/internal/users/:userID`
+* **DELETE usersProfile and userStats with userID** : `/internal/users/:userID`
 
     userID sent as `request.params`
 
-    | Reply |      Meaning      |
-    | ----- | :---------------: |
-    | 404   | profile not found |
-    | 204   |  profile deleted  |
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | profile not found |
+    |   204    | profile deleted  |
 
 ### Usage and associated functions
 
@@ -395,8 +386,7 @@ averageMatchDuration will be in seconds.
 
 ### General overview
 
-The table has the following column :
-
+The table has the following column : 
 * userID &rarr; integer (__primary key__)
 * hashedPassword &rarr; text
 * username &rarr; text (__unique__)
@@ -434,10 +424,10 @@ The userRole column stored the role of the user (admin, user). I don't know yet 
 
     username and password sent as `request.body`
 
-    | Reply |     Meaning     |
-    | ----- | :-------------: |
-    | 409   | username taken  |
-    | 201   | account created |
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   409    | username taken |
+    |   201    | account created  |
 
 * POST login with an account : `/internal/account/login`
 
@@ -468,12 +458,13 @@ We sent the accountsData of the found accounts and an array of the IDs we didn't
     userID sent as `request.params`
     settings sent as `request.body`
 
-    | Reply |        Meaning        |
-    | ----- | :-------------------: |
-    | 400   | no settings to update |
-    | 404   |   account not found   |
-    | 409   |    username taken     |
-    | 200   |   settings updated    |
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   400    | no settings to update |
+    |   404    | account not found |
+    |   409    | username taken |
+    |   200    | settings updated  |
+
 
 #### DELETE
 
@@ -481,15 +472,15 @@ We sent the accountsData of the found accounts and an array of the IDs we didn't
 
     userID sent as `request.body`
 
-    | Reply |      Meaning      |
-    | ----- | :---------------: |
-    | 404   | account not found |
-    | 204   |  account deleted  |
+    | Reply  | Meaning |
+    | ------ |:-------:|
+    |   404    | account not found |
+    |   204    | account deleted  |
+
 
 ### Usage and associated functions
 
 TODO :
-
 * register a user
 * verify password match for connection to the account
 * update password
@@ -502,7 +493,6 @@ TODO :
 ### General overview
 
 This database has only one table. The table has the following column :
-
 * friendshipID &rarr; integer (__primary key__)
 * userID &rarr; integer
 * friendID &rarr; integer
@@ -515,10 +505,10 @@ The userID references the user who initated the friend request, and the friendID
 
 For the statusFriendship :
 
-| Value | Meaning  |
-| ----- | :------: |
-| 0     | pending  |
-| 1     | accepted |
+| Value  | Meaning  |
+| ------ |:--------:|
+| 0      | pending  |
+| 1      | accepted |
 
 ### Routes
 
@@ -601,7 +591,7 @@ This database has the following tables which has the following column :
 * duration &rarr; integer
 * startTime &rarr; datetime
 * gameStatus &rarr; integer
-* winnerID &rarr; integer
+* winnerID &rarr; integer 
 * loserID &rarr; integer
 * tournamentID &rarr; integer
 * localGame &rarr; boolean
@@ -610,22 +600,22 @@ This database has the following tables which has the following column :
 
 The gameStatus column might not make the final cut, depending on when we plan on updating the database (throughout the game or only at the end). If we do keep it, the values will have the following meaning :
 
-| Value |     Meaning      |
-| ----- | :--------------: |
-| 0     | still in "lobby" |
-| 1     |     started      |
-| 2     |      ended       |
+| Value  |      Meaning     |
+| ------ |:----------------:|
+|   0    | still in "lobby" |
+|   1    |      started     |
+|   2    |      ended       |
 
 The tournamentID will allow use the get all the games played in a tournament without having to duplicate data in the tournament table. It can be nulled if a game is not part of a tournament.
 
-localGame's value and meaning are :
+localGame's value and meaning are : 
 
-| Value | Meaning |
-| ----- | :-----: |
-| 0     | remote  |
-| 1     |  local  |
+| Value  | Meaning |
+| ------ |:-------:|
+|   0    | remote  |
+|   1    | local   |
 
-There is the question of the local game. If a game is local, the "invited" user is not register as a user, which means not userID. How do we planned on going about it ? We might set the loser/winnerID to null and set a "Invited player" a the game dashboard front wise. TODO : figure that out
+There is the question of the local game. If a game is local, the "invited" user is not register as a user, which means not userID. How do we planned on going about it ? We might set the loser/winnerID to null and set a "Invited player" a the game dashboard front wise. TODO : figure that out 
 
 #### tournamentInfo
 
@@ -717,9 +707,9 @@ The playersIDs is currently thought of has a JSON array storing the userID of al
 
 ### Information
 
-The UPDATE method can allow use the perfom addition to a column of a row without having to pull the data from the table first. Like so
+The UPDATE method can allow use the perfom addition to a column of a row without having to pull the data from the table first. Like so 
 
-```js
+```
 UPDATE userStats 
 SET totalPlayedGame = totalPlayedGame + 1 
 WHERE userID = 101;
