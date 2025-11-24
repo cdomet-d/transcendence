@@ -18,9 +18,7 @@ export function updatePaddlePos(paddle: coordinates, leftSide: boolean, game: Ga
         left(paddle, game, WIDTH / 2 + game.ball.r + 1, step);
     if (!leftSide && keys._ArrowRight) 
         right(paddle, game, WIDTH - game.padSpec.w, step);
-    paddle.x += step.x;
-    paddle.y += step.y;
-    // movePaddle(game, paddle, step);
+    movePaddle(game, paddle, step);
 }
 
 function up(pad: coordinates, padSpeed: number, step: coordinates) {
@@ -70,6 +68,4 @@ function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
     step.x -= x;
     step.y -= y;
     updateVelocity(game, paddle, n.x);
-    //TODO: test ball between paddle and wall
-
 }
