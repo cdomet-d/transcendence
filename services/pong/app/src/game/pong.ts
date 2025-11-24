@@ -6,6 +6,7 @@ import { endGame, gameLoop } from './game.loop.js';
  
 const START_DELAY = 500;
 const SERVER_TICK: number = 1000 / 50;
+const MAX_TIME: number = 90000; // 1min30
 
 export async function setUpGame(game: Game) {
 	if (!game.players[0] || !game.players[1])
@@ -23,8 +24,9 @@ export async function setUpGame(game: Game) {
 
 	// start game
 	await new Promise(res => game.addTimoutID(setTimeout(res, START_DELAY)));
-	game.addTimoutID(setTimeout(endGame, 300000, player1, player2, game));
+	game.addTimoutID(setTimeout(endGame, MAX_TIME, player1, player2, game));
 	game.startTimestamp = performance.now();
+	game.passStart = performance.now();
 	game.addTimoutID(setTimeout(gameLoop, SERVER_TICK, game, player1, player2));
 }
 

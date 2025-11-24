@@ -39,7 +39,7 @@ function upperAndBottomWallCollision(game: Game, nextY: number): number {
 }
 
 function sideWallCollision(game: Game, player1: Player, player2: Player, nextX: number): boolean {
-	if (nextX - game.ball.r >= WIDTH + 50 || nextX + game.ball.r <= -50) {
+	if (nextX - game.ball.r >= WIDTH + 20 || nextX + game.ball.r <= -20) {
 		updateScore(game, player1, player2, nextX)
 		game.ball.x = WIDTH / 2;
 		game.ball.y = HEIGHT / 2;
@@ -49,6 +49,7 @@ function sideWallCollision(game: Game, player1: Player, player2: Player, nextX: 
 			game.ball.dx = 0.3 * game.ballDir;
 			game.ball.dy = 0.03;
 			game.ballDir *= -1;
+			game.passStart = performance.now();
 		}, 1500));
 		return true;
 	}
@@ -58,10 +59,16 @@ function sideWallCollision(game: Game, player1: Player, player2: Player, nextX: 
 function updateScore(game: Game, player1: Player, player2: Player, nextX: number) {
 	if (nextX - game.ball.r >= WIDTH) {
 		player1.incScore();
+		const pass: number = (performance.now() - game.passStart) / 1000;
+		if (pass > game.infos.longuestPass)
+			game.infos.longuestPass = pass;
 		console.log("PLAYER",  player1.userID, "SCORE:", player1.score);
 	}
 	if (nextX + game.ball.r <= 0) {
 		player2.incScore();
+		const pass: number = (performance.now() - game.passStart) / 1000;
+		if (pass > game.infos.longuestPass)
+			game.infos.longuestPass = pass;
 		console.log("OPPONENT", player2.userID, "SCORE:", player2.score);
 	}
 }

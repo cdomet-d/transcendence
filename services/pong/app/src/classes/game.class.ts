@@ -21,6 +21,7 @@ export class Game {
 	#_lastTick: number;
 	#_timeoutIDs: Array< NodeJS.Timeout >;
 	#_startTimestamp: number;
+	#_passStart: number;
 	#_endSent: boolean;
 
 	/*                            CONSTRUCTORS                               */
@@ -47,6 +48,7 @@ export class Game {
 		this.#_lastTick = 0;
 		this.#_timeoutIDs = new Array();
 		this.#_startTimestamp = 0;
+		this.#_passStart = 0;
 		this.#_endSent = false;
 	}
 
@@ -101,6 +103,10 @@ export class Game {
 		return this.#_startTimestamp;
 	}
 
+	get passStart(): number {
+		return this.#_passStart;
+	}
+
 	get endSent(): boolean {
 		return this.#_endSent;
 	}
@@ -120,6 +126,10 @@ export class Game {
 
 	set startTimestamp(timestamp: number) {
 		this.#_startTimestamp = timestamp;
+	}
+
+	set passStart(timestamp: number) {
+		this.#_passStart = timestamp;
 	}
 
 	set endSent(state: boolean) {
