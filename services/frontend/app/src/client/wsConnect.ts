@@ -1,8 +1,7 @@
-import { router } from '../../main.js';
-import { pong } from '../game/pong.js';
 import { createGameRequestForm, createLobbyRequestForm, attachGameListener } from './lobby.js';
-import type { gameRequest } from '../game/pong.js';
-import { createLobbyRequest } from '../../lobby_new.js';
+import { createLobbyRequest } from './lobby_new.js';
+import { router } from './main.js';
+import { type gameRequest } from './pong/pong.js';
 
 let wsInstance: WebSocket | null = null;
 
@@ -55,9 +54,9 @@ function wsConnect(action: string, format: string) {
             // GameRequest
             const gameRequest: gameRequest = data;
             window.history.pushState({}, '', '/game/match');
-            router.loadRoute('/game/match');
+            router.loadRoute('/game/match', true);
             console.log("Client ready to connect game: #" + gameRequest.gameID);
-            pong(gameRequest); // ws connect to "/game/match" and send userID + gameID
+            // pong(gameRequest); // ws connect to "/game/match" and send userID + gameID
         } catch (error) {
             console.error("Error: Failed to parse WS message", error);
         }

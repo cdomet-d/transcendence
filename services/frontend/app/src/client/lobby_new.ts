@@ -1,4 +1,5 @@
-import { handleGameStart, handleLobbyRequest } from './scripts/lobby/wsConnect.js';
+import { handleGameStart } from "./lobby";
+import { handleLobbyRequest } from "./wsConnect";
 
 interface lobbyInfo {
     userList: userInfo[];
