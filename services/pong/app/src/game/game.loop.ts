@@ -9,7 +9,7 @@ const SERVER_TICK: number = 1000 / 50;
 const TIME_STEP: number = 1000 / 60;
 
 export async function gameLoop(game: Game, player1: Player, player2: Player) { //TODO: make player1 and player2 getters
-	const startLoop: number = performance.now();
+	game.startLoop = performance.now();
 	const tickStart = game.lastTick === 0 ? game.startTimestamp : game.lastTick;
 	const tickEnd = tickStart + SERVER_TICK;
 	game.lastTick = tickEnd;
@@ -37,7 +37,8 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) { /
 	game.reqHistory = futureReqs;
 
 	// new loop
-	const delay: number = SERVER_TICK - (performance.now() - startLoop);
+	const delay: number = SERVER_TICK - (performance.now() - game.startLoop);
+	game.startLoop = 0;
 	game.addTimoutID(setTimeout(gameLoop, Math.max(0, delay), game, player1, player2));
 }
 
@@ -60,7 +61,18 @@ function moveBall(game: Game, simulatedTime: number, end: number, i: number): nu
 	return simulatedTime;
 }
 
-export function endGame(player1: Player, player2: Player, game: Game) {
+export async function endGame(player1: Player, player2: Player, game: Game) {
+	// if (player1.score === player2.score) {
+	// 	console.log("IN SAME SCORE")
+	// 	sendToPlayers(game, player1, player2);
+	// 	game.lastBall = true;
+	// 	await new Promise(res => game.addTimoutID(setTimeout(res, 5000)));
+	// 	if (game.startLoop === 0)
+	// 		game.startLoop = performance.now();
+	// 	const delay: number = SERVER_TICK - (performance.now() - game.startLoop);
+	// 	game.addTimoutID(setTimeout(gameLoop, Math.max(0, delay), game, player1, player2));
+	// 	return;
+	// }
 	player1.socket.removeListener("message", messageHandler);
 	if (!game.local)
 		player2.socket.removeListener("message", messageHandler);

@@ -23,6 +23,8 @@ export class Game {
 	#_startTimestamp: number;
 	#_passStart: number;
 	#_endSent: boolean;
+	#_lastBall: boolean;
+	#_startLoop: number;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo, nc: NatsConnection) {
@@ -50,6 +52,8 @@ export class Game {
 		this.#_startTimestamp = 0;
 		this.#_passStart = 0;
 		this.#_endSent = false;
+		this.#_lastBall = false;
+		this.#_startLoop = 0;
 	}
 
 	/*                              GETTERS                                  */
@@ -111,6 +115,14 @@ export class Game {
 		return this.#_endSent;
 	}
 
+	get lastBall(): boolean {
+		return this.#_lastBall;
+	}
+
+	get startLoop(): number {
+		return this.#_startLoop;
+	}
+
 	/*                              SETTERS                                  */
 	set reqHistory(reqTab: reqTab) {
 		this.#_reqHistory = reqTab;
@@ -134,6 +146,14 @@ export class Game {
 
 	set endSent(state: boolean) {
 		this.#_endSent = state;
+	}
+
+	set lastBall(state: boolean) {
+		this.#_lastBall = state;
+	}
+
+	set startLoop(timestamp: number) {
+		this.#_startLoop = timestamp;
 	}
 
 	/*                              METHODS                                  */
