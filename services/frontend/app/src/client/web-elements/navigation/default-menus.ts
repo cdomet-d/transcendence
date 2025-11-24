@@ -10,7 +10,7 @@ export const main: MenuData = {
             img: null,
         },
         { id: 'lobby', title: 'Play', datalink: '/lobby', href: '/lobby', img: null },
-        { id: 'profile', title: 'Profile', datalink: 'profile', href: '/user/default', img: null },
+        { id: 'profile', title: 'Profile', datalink: 'profile', href: '/me', img: null },
     ],
 };
 

@@ -15,7 +15,7 @@ export function pong(gameReq: gameRequest, ctx: CanvasRenderingContext2D | null,
 
     if (!ctx) {
         console.log('error: context not supported');
-        router.loadRoute('/404');
+        router.loadRoute('/404', true);
         return;
     }
     const game: Game = new Game(ctx, gameReq.remote, false, ui);

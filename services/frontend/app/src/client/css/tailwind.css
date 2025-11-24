@@ -104,7 +104,7 @@
 		--border: #6b1d00;
 		--highlight: #f9865c;
 		--shadow: #9a3e1c;
-		color: var(--red);
+		color: var(--white);
 	}
 
 	.disabled {
@@ -463,6 +463,10 @@
 
 	.f-brown {
 		color: var(--border);
+	}
+
+	.f-white {
+		color: var(--white);
 	}
 
 	.f-bold {

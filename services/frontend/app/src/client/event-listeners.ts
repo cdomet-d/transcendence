@@ -18,5 +18,5 @@ export function computeViewportSize() {
 
 export function loadHistoryLocation() {
     const cleanPath = router.sanitisePath(window.location.pathname);
-    router.loadRoute(cleanPath);
+    router.loadRoute(cleanPath, false);
 }

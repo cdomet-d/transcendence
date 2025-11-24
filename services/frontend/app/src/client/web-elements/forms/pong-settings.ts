@@ -63,7 +63,7 @@ export class LocalPongSettings extends BaseForm {
         if (background) f.append('background', background.id);
         const req = this.initReq();
         req.body = this.createReqBody(f);
-        await this.sendForm(this.details.action, req);
+        await this.fetchAndRedirect(this.details.action, req);
     }
 
     /* -------------------------------------------------------------------------- */
@@ -159,7 +159,6 @@ export class RemotePongSettings extends LocalPongSettings {
     // #inviteHandlerImplementation(ev: SubmitEvent) {
     // 	ev.preventDefault();
     // 	const form = new FormData(this.#searchbar);
-    // 	console.log(form);
     // }
 
     /* -------------------------------------------------------------------------- */

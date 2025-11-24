@@ -11,50 +11,50 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	//get's profile + stats + game + friendslist
 	// userID -> userID of requested profile
-	/* 	serv.get('/profile/:userID', async (request, reply) => {
-			try {
-	
-				//TODO: userB ID is in the cookies so setup fastify JWT plugin and get userID this way
-				const query = request.query as {
-					userA?: number,
-					userB?: number,
-				};
-	
-				if (query.userA === undefined || query.userB === undefined) {
-					return reply.code(400).send({
-						message: '[BFF] Missing required query parameters: userA and userB are required.'
-					});
-				}
-	
-				const [
-					userData,
-					stats,
-					friends,
-					recentMatches
-				] = await Promise.all([
-					buildFullUserData(serv.log, query.userA, query.userB),
-					fetchUserStats(serv.log, query.userA),
-					fetchFriendList(serv.log, query.userA),
-					processMatches(serv.log, query.userA)
-				]);
-	
-				if (!userData || !stats)
-					return reply.code(404).send({ message: '[BFF] Failed to retrieve essential user data.' });
-	
-				const responseData: UserProfileView = {
-					userData: userData,
-					stats: stats,
-					friends: friends || [],
-					recentMatches: recentMatches || []
-				};
-	
-				return reply.code(200).send(responseData);
-	
-			} catch (error) {
-				serv.log.error(`[BFF] Error building user profile view: ${error}`);
-				throw (error);
+	serv.get('/profile/:username', async (request, reply) => {
+		try {
+
+			//TODO: userB ID is in the cookies so setup fastify JWT plugin and get userID this way
+			const query = request.query as {
+				userA?: number,
+				userB?: number,
+			};
+
+			if (query.userA === undefined || query.userB === undefined) {
+				return reply.code(400).send({
+					message: '[BFF] Missing required query parameters: userA and userB are required.'
+				});
 			}
-		}); */
+
+			const [
+				userData,
+				stats,
+				friends,
+				recentMatches
+			] = await Promise.all([
+				buildFullUserData(serv.log, query.userA, query.userB),
+				fetchUserStats(serv.log, query.userA),
+				fetchFriendList(serv.log, query.userA),
+				processMatches(serv.log, query.userA)
+			]);
+
+			if (!userData || !stats)
+				return reply.code(404).send({ message: '[BFF] Failed to retrieve essential user data.' });
+
+			const responseData: UserProfileView = {
+				userData: userData,
+				stats: stats,
+				friends: friends || [],
+				recentMatches: recentMatches || []
+			};
+
+			return reply.code(200).send(responseData);
+
+		} catch (error) {
+			serv.log.error(`[BFF] Error building user profile view: ${error}`);
+			throw (error);
+		}
+	});
 
 	/* 	serv.patch('/settings', async (request, reply) => {
 			try {
@@ -153,41 +153,40 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	/* 	serv.delete('/delete-account', async (request, reply) => {
-			try {
-				const userID = request.user.userID;
-	
-				//UNCOMMENT FOR PASSWORD CHECK FOR ACCOUNT DELETION
-	
-				//const username = request.user.username;
-				//const { password } = request.body as { password: string };
-				//if (!password) {
-				//	return (reply.code(400).send({ message: '[BFF] Password is required.' }));
-				//const validationResponse = await validateCredentials(username, password);
-				//if (!validationResponse)
-				//	return (reply.code(401).send({ message: '[BFF] Invalid credentials.' }));
-	
-				const deletionResults = await Promise.allSettled([
-					deleteFriendship(serv.log, userID),
-					deleteUser(serv.log, userID),
-					deleteAccount(serv.log, userID)
-				]);
-	
-				const failures = deletionResults.filter(response => response.status === 'rejected');
-	
-				if (failures.length > 0) {
-					serv.log.error({
-						msg: `[CRITICAL][BFF] Partial deletion for userID: ${userID}.`,
-						failures: failures.map(f => (f as PromiseRejectedResult).reason?.message || f.reason)
-					});
-					throw new Error('[BFF] Failed to completely delete account. Please contact support.') ;
-				}
-	
-				return (reply.code(204).send());
-	
-			} catch (error) {
-				serv.log.error(`[BFF] Error during account deletion: ${error}`);
-				throw (error);
+	serv.delete('/account', async (request, reply) => {
+		try {
+			const userID = request.user.userID;
+			//UNCOMMENT FOR PASSWORD CHECK FOR ACCOUNT DELETION
+
+			//const username = request.user.username;
+			//const { password } = request.body as { password: string };
+			//if (!password) {
+			//	return (reply.code(400).send({ message: '[BFF] Password is required.' }));
+			//const validationResponse = await validateCredentials(username, password);
+			//if (!validationResponse)
+			//	return (reply.code(401).send({ message: '[BFF] Invalid credentials.' }));
+
+			const deletionResults = await Promise.allSettled([
+				deleteFriendship(serv.log, userID),
+				deleteUser(serv.log, userID),
+				deleteAccount(serv.log, userID)
+			]);
+
+			const failures = deletionResults.filter(response => response.status === 'rejected');
+
+			if (failures.length > 0) {
+				serv.log.error({
+					msg: `[CRITICAL][BFF] Partial deletion for userID: ${userID}.`,
+					failures: failures.map(f => (f as PromiseRejectedResult).reason?.message || f.reason)
+				});
+				throw new Error('[BFF] Failed to completely delete account. Please contact support.') ;
 			}
-		}); */
+
+			return (reply.code(204).send());
+
+		} catch (error) {
+			serv.log.error(`[BFF] Error during account deletion: ${error}`);
+			throw (error);
+		}
+	});
 }
