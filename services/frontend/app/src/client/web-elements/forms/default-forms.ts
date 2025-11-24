@@ -119,7 +119,7 @@ export const search: FormDetails = {
 };
 
 export const localPong: FormDetails = {
-    action: 'https://localhost:8443/api/game/quickLobby/',
+    action: 'https://localhost:8443/api/game/quick-lobby/',
     heading: 'Local Pong',
     gameFormat: 'local-quickmatch',
     ariaLabel: 'Pong settings',
@@ -172,7 +172,7 @@ export const localPong: FormDetails = {
 };
 
 export const remotePong: FormDetails = {
-    action: 'https://localhost:8443/api/game/quickLobby/',
+    action: 'https://localhost:8443/api/game/quick-lobby/',
     heading: 'Remote Pong',
     gameFormat: 'remote-quickmatch',
     ariaLabel: 'Remote Pong settings',
@@ -217,7 +217,7 @@ export const remotePong: FormDetails = {
 };
 
 export const pongTournament: FormDetails = {
-    action: 'https://localhost:8443/api/game/tournamentLobby/',
+    action: 'https://localhost:8443/api/game/tournament-lobby/',
     heading: 'Pong Tournament',
     gameFormat: 'tournament',
     ariaLabel: 'Pong tournament settings',

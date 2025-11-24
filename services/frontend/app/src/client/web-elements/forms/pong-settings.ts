@@ -41,6 +41,10 @@ export class LocalPongSettings extends BaseForm {
         this.classList.add('sidebar-left');
     }
 
+    override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
+        ;
+    }
+
     /* -------------------------------------------------------------------------- */
     /*                                   Getters                                  */
     /* -------------------------------------------------------------------------- */
@@ -153,13 +157,17 @@ export class RemotePongSettings extends LocalPongSettings {
         this.#displayGuests();
     }
 
+    
     /* -------------------------------------------------------------------------- */
     /*                               Event listeners                              */
     /* -------------------------------------------------------------------------- */
     // #inviteHandlerImplementation(ev: SubmitEvent) {
-    // 	ev.preventDefault();
-    // 	const form = new FormData(this.#searchbar);
-    // }
+        // 	ev.preventDefault();
+        // 	const form = new FormData(this.#searchbar);
+        // }
+    override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
+        ;
+    }
 
     /* -------------------------------------------------------------------------- */
     /*                              Guest Management                              */

@@ -9,7 +9,7 @@ export const main: MenuData = {
             href: '/leaderboard',
             img: null,
         },
-        { id: 'lobby', title: 'Play', datalink: '/lobbyMenu', href: '/lobbyMenu', img: null },
+        { id: 'lobby', title: 'Play', datalink: '/lobby-menu', href: '/lobby-menu', img: null },
         { id: 'profile', title: 'Profile', datalink: 'profile', href: '/user/default', img: null },
     ],
 };
@@ -172,7 +172,7 @@ export const profileTabs: TabData[] = [
 
 export const lobbyMenu: MenuData = {
     links: [
-        { id: 'quickmatch', title: '1vs1', datalink: '/quickLobby', href: '/quickLobby', img: null },
-        { id: 'tournament', title: 'Tournament', datalink: '/tournamentLobby', href: '/tournamentLobby', img: null },
+        { id: 'quickmatch', title: '1vs1', datalink: '/quick-lobby', href: '/quick-lobby', img: null },
+        { id: 'tournament', title: 'Tournament', datalink: '/tournament-lobby', href: '/tournament-lobby', img: null },
     ],
 };

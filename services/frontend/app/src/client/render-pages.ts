@@ -24,7 +24,7 @@ import { PongUI } from './web-elements/game/game-ui.js';
 import { userStatus } from './main.js';
 import { router } from './main.js';
 import { createErrorFeedback } from './web-elements/event-elements/error.js';
-import { wsConnect } from './wsConnect.js';
+import { wsConnect } from './lobby/wsConnect.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -184,7 +184,6 @@ export function renderLobbyMenu() {
     document.body.layoutInstance!.appendAndCache(
         createHeading('1', 'Choose Lobby'),
         createMenu(lobbyMenu, 'horizontal', true),
-        // createMenu(lobbyMenu, 'vertical', true),
     );
     updatePageTitle('Choose Lobby');
 }
@@ -210,9 +209,8 @@ export function renderQuickLobby() {
     document.body.layoutInstance?.appendAndCache(wrapper);
     wsConnect('create', 'quickmatch');
 
-    // const quickmatch = document.body.layoutInstance?.components.get('local-quickmatch');
     const quickmatch = document.body.layoutInstance?.components.get('pongsettings');
-    console.log(quickmatch);
+    console.log(quickmatch?.innerHTML.includes("pong-local"));
 }
 
 export function renderTournamentLobby() {
