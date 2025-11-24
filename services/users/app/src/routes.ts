@@ -300,7 +300,10 @@ export async function userRoutes(serv: FastifyInstance) {
 				return reply.code(404).send({ success: false, message: 'User profile not found' });
 
 
-			return reply.code(200).send({ success: true, userStats });
+			return reply.code(200).send({
+				success: true,
+				stats: userStats
+			});
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
 			throw error;
