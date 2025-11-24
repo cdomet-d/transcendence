@@ -17,6 +17,7 @@ interface gameRequestForm {
     payload: lobbyInfo;
 }
 
+// NO
 function createGameRequest(format: string): string {
     const gameRequestForm: gameRequestForm = {
         event: 'GAME_REQUEST',
@@ -36,6 +37,8 @@ function createGameRequest(format: string): string {
     return JSON.stringify(gameRequestForm);
 }
 
+
+// YES
 interface lobbyRequestForm {
     event: string,
     payload: {
@@ -46,6 +49,7 @@ interface lobbyRequestForm {
     }
 }
 
+// YES
 function createLobbyRequest(action: string, format: string): string {
     const createLobbyForm: lobbyRequestForm = {
         event: 'LOBBY_REQUEST',
@@ -58,11 +62,9 @@ function createLobbyRequest(action: string, format: string): string {
     return JSON.stringify(createLobbyForm);
 }
 
+// YES
 // function joinLobbyRequest(action: string, format: string) {
 //     ;
 // }
 
-export {
-    createGameRequest,
-    createLobbyRequest
-};
+export { createGameRequest, createLobbyRequest };
