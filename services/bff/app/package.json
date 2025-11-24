@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-        "dev": "nodemon -q",
+    "dev": "nodemon -q",
     "start": "tsc && node dist/server.js"
   },
   "author": "",
@@ -19,7 +19,8 @@
     "jsonwebtoken": "^9.0.2",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "undici": "^7.16.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

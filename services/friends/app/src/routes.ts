@@ -19,6 +19,8 @@ export async function routeFriend(serv: FastifyInstance) {
 
 			//get relationship between two user
 			if (query.userA && query.userB) {
+			serv.log.error(`${query.userA} and ${query.userB}`)
+
 				const sql = `
 					SELECT statusFrienship FROM friendship 
 					WHERE (userID = ? AND friendID = ?) OR (userID = ? AND friendID = ?)
@@ -28,8 +30,8 @@ export async function routeFriend(serv: FastifyInstance) {
 				const response = await serv.dbFriends.get<{ statusFrienship: boolean }>(sql, params);
 
 				let status: ProfileView = 'stranger';
-				if (!response)
-					return (reply.code(404).send({ success: false, message: '[FRIENDS] Friendship not found' }));
+				if (!response?.statusFrienship)
+					return (reply.code(404).send({ success: false, message: 'YOOOOO [FRIENDS] Friendship not found' }));
 				if (response)
 					status = response.statusFrienship ? 'friend' : 'pending';
 				return (reply.code(200).send({ status: status }));
@@ -159,7 +161,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			serv.log.error(`[FRIENDS] Error deleting friendship: ${error}`);
 			throw (error);
 		}
-	});	
+	});
 
 	//delete all friendship a user is a part of
 
