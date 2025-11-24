@@ -2,7 +2,7 @@ import { renderGame } from './game.render.utils.js';
 import { Game, HEIGHT, WIDTH } from './classes/game.class.js';
 import type { repObj } from './classes/game.interfaces.js';
 import { movePaddle, updatePaddlePos } from './paddle.js';
-import { deadReckoning, updateBallPos } from './ball.js';
+import { deadReckoning } from './ball.js';
 
 const SERVER_TICK: number = 1000 / 50;
 const TIME_STEP: number = 1000 / 60;
@@ -26,10 +26,6 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		game.lastFrameTime = timestamp;
 		let updates: number = 0;
 		while (game.delta >= TIME_STEP && updates < MAX_UPDATES_PER_FRAME) {
-			game.rightStep.x = 0;
-			game.rightStep.y = 0;
-			game.leftStep.x = 0;
-			game.leftStep.y = 0;
 			sendRequest(game, ws);
 			updatePaddlePos(game.leftPad, true, game, game.req._keys);
 			if (game.local) 
@@ -37,13 +33,7 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 			else 
 				interpolation(game);
 			deadReckoning(game, latestReply);
-			// updateBallPos(game);
-
-			if (game.leftStep.x != 0 || game.leftStep.y != 0)
-				movePaddle(game, game.leftPad, game.leftStep);
-			if (game.rightStep.x != 0 || game.rightStep.y != 0)
-				movePaddle(game, game.rightPad, game.rightStep);
-
+			finishSteps(game);
 			game.delta -= TIME_STEP;
 			updates++;
 		}
@@ -84,28 +74,17 @@ function reconciliation(game: Game, latestReply: repObj) {
 	const id: number = latestReply._ID;
 	game.deleteReq(id);
 
-	game.leftPad.y = latestReply._leftPad.y;
-	game.leftPad.x = latestReply._leftPad.x;
-	if (game.local) {
-		game.rightPad.x = latestReply._rightPad.x;
-		game.rightPad.y = latestReply._rightPad.y;
-	}
+	game.leftPad = latestReply._leftPad;
+	if (game.local)
+		game.rightPad = latestReply._rightPad;
 	game.ball = { ...latestReply._ball };
 
 	for (let i = id + 1; game.reqHistory.has(i); i++) {
-		game.rightStep.x = 0;
-		game.rightStep.y = 0;
-		game.leftStep.x = 0;
-		game.leftStep.y = 0;
 		updatePaddlePos(game.leftPad, true, game, game.reqHistory.get(i)!._keys);
 		if (game.local) 
 			updatePaddlePos(game.rightPad, false, game, game.reqHistory.get(i)!._keys);
-		//TODO: do second paddle also when remote ?
 		deadReckoning(game, latestReply);
-		if (game.leftStep.x != 0 || game.leftStep.y != 0)
-			movePaddle(game, game.leftPad, game.leftStep);
-		if (game.rightStep.x != 0 || game.rightStep.y != 0)
-			movePaddle(game, game.rightPad, game.rightStep);
+		finishSteps(game);
 	}
 }
 
@@ -123,4 +102,17 @@ export function handleScore(ws: WebSocket, game: Game, latestReply: repObj): boo
 		return false;
 	}
 	return false;
+}
+
+function finishSteps(game: Game) {
+	if (game.leftStep.x != 0 || game.leftStep.y != 0) {
+		movePaddle(game, game.leftPad, game.leftStep);
+		game.setLeftStep();
+	}
+	if (game.local) {
+		if (game.rightStep.x != 0 || game.rightStep.y != 0) {
+			movePaddle(game, game.rightPad, game.rightStep);
+			game.setRightStep();
+		}
+	}
 }

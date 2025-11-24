@@ -8,7 +8,7 @@ import { messageHandler } from './pong.js';
 const SERVER_TICK: number = 1000 / 50;
 const TIME_STEP: number = 1000 / 60;
 
-export async function gameLoop(game: Game, player1: Player, player2: Player) {
+export async function gameLoop(game: Game, player1: Player, player2: Player) { //TODO: make player1 and player2 getters
 	const startLoop: number = performance.now();
 	const tickStart = game.lastTick === 0 ? game.startTimestamp : game.lastTick;
 	const tickEnd = tickStart + SERVER_TICK;
@@ -22,10 +22,6 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 	// update game
 	let simulatedTime = 0;
 	for (const playerReq of reqsToProcess) {
-		player1.padStep.x = 0;
-		player1.padStep.y = 0;
-		player2.padStep.x = 0;
-		player2.padStep.y = 0;
 		const player: Player = playerReq._id === 1 ? player1 : player2;
 		simulatedTime = moveBall(game, simulatedTime, playerReq._req._timeStamp - tickStart, TIME_STEP);
 		if (simulatedTime === -1)
@@ -39,7 +35,7 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) {
 
 	// clean
 	game.reqHistory = futureReqs;
-	
+
 	// new loop
 	const delay: number = SERVER_TICK - (performance.now() - startLoop);
 	game.addTimoutID(setTimeout(gameLoop, Math.max(0, delay), game, player1, player2));
@@ -51,10 +47,14 @@ function moveBall(game: Game, simulatedTime: number, end: number, i: number): nu
 			endGame(game.players[0]!, game.players[1]!, game);
 			return -1;
 		}
-		if (game.players[0]!.padStep.x != 0 || game.players[0]!.padStep.y != 0)
+		if (game.players[0]!.padStep.x != 0 || game.players[0]!.padStep.y != 0) {
 			movePaddle(game, game.players[0]!.paddle, game.players[0]!.padStep);
-		if (game.players[1]!.padStep.x != 0 || game.players[1]!.padStep.y != 0)
+			game.players[0]!.setPadStep();
+		}
+		if (game.players[1]!.padStep.x != 0 || game.players[1]!.padStep.y != 0) {
 			movePaddle(game, game.players[1]!.paddle, game.players[1]!.padStep);
+			game.players[1]!.setPadStep();
+		}
 		simulatedTime += TIME_STEP;
 	}
 	return simulatedTime;

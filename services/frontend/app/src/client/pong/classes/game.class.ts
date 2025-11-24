@@ -133,13 +133,13 @@ export class Game {
 	}
 
 	/*                              SETTERS                                  */
-	// set leftPad(newPos: number) {
-	//     this.#_leftPaddle.y = newPos;
-	// }
+	set leftPad(newPos: coordinates) {
+	    this.#_leftPaddle = { ...newPos };
+	}
 
-	// set rightPad(newPos: number) {
-	//     this.#_rightPaddle.y = newPos;
-	// }//TODO: fix
+	set rightPad(newPos: coordinates) {
+	    this.#_rightPaddle = { ...newPos };
+	}
 
 	set ball(ball: coordinates) {
 		this.#_ball.x = ball.x;
@@ -159,6 +159,14 @@ export class Game {
 	}
 
 	/*                              METHODS                                  */
+	public setLeftStep() {
+	    this.#_leftStep = { x: 0, y: 0 };
+	}
+
+	public setRightStep() {
+	    this.#_rightStep = { x: 0, y: 0 };
+	}
+	
 	public addReq(req: reqObj) {
 		const newReq: reqObj = {
 			_ID: req._ID,

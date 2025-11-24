@@ -77,6 +77,6 @@ export function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
     paddle.x += x;
     paddle.y += y;
     step.x -= x;
-    step.y -= y; //TODO: call back move paddle after ball update if step is not 0 ?
+    step.y -= y;
 	updateVelocity(game, paddle, n.x);
 }

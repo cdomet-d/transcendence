@@ -73,7 +73,12 @@ export class Player {
 		return this.#_userID;
 	}
 
+	
 	/*                              METHODS                                  */
+	public setPadStep() {
+		this.#_padStep = { x: 0, y: 0 };
+	}
+	
 	public sendReply(ball: ballObj, opponent: Player, padWidth: number) {
 		// paddles and ball
 		this.#_reply._leftPad.y = this.#_paddle.y;
