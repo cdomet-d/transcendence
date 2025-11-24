@@ -1,5 +1,5 @@
 import type {
-	ProfileDataBatch, ProfileDataBatchResponse, ProfileView, UserStats, StatsResponse, Matches, RawMatches, Friends,
+	ProfileDataBatch, ProfileDataBatchResponse, ProfileView, userStats, StatsResponse, Matches, RawMatches,
 	userData, UserIDResponse
 } from "./bff.interface.js";
 
@@ -8,6 +8,39 @@ import { fetch, Agent } from 'undici';
 const sslAgent = new Agent({
 	connect: { rejectUnauthorized: false }
 });
+
+export async function buildTinyProfile(log: any, viewerUserID: number, targetUsername: string ): Promise<userData | null> {
+
+	const targetUserID = await fetchUserID(log, targetUsername);
+
+	if (!targetUserID) {
+		log.warn(`[BFF] buildTinyProfile: UserID not found for ${targetUsername}`);
+		return (null);
+	}
+
+	const [data, relation] = await Promise.all([
+		fetchUserData(log, targetUserID),
+		fetchProfileView(log, viewerUserID, targetUserID)
+	]);
+
+	if (!data) {
+		log.warn(`[BFF] buildTinyProfile: Data not found for userID ${targetUserID}`);
+		return (null);
+	}
+
+	return {
+		userID: String(targetUserID),
+		username: data.username,
+		avatar: data.avatar,
+		biography: data.biography,
+		profileColor: data.profileColor,
+		since: data.since,
+		status: data.status,
+		winstreak: data.winstreak,
+		lang: data.lang,
+		relation: relation
+	};
+}
 
 export async function searchBar(log: any, username: string): Promise<userData[]> {
 	const url = `https://users:2626/search?name=${username}`;
@@ -132,7 +165,7 @@ export async function fetchUserID(log: any, username: string): Promise<number | 
 	return body.response.userID;
 }
 
-export async function fetchUserStats(log: any, userID: number): Promise<UserStats | null> {
+export async function fetchUserStats(log: any, userID: number): Promise<userStats | null> {
 	const url = `https://users:2626/stats/${userID}`;
 	let response: Response;
 
@@ -159,7 +192,7 @@ export async function fetchUserStats(log: any, userID: number): Promise<UserStat
 }
 
 //TODO fetch userData in friendlist.............................................
-export async function fetchFriendList(log: any, userID: number): Promise<Friends[]> {
+export async function fetchFriendList(log: any, userID: number): Promise<userData[]> {
 	const url = `https://friends:1616/friendship?userID=${userID}`;
 	let response: Response;
 
@@ -183,7 +216,7 @@ export async function fetchFriendList(log: any, userID: number): Promise<Friends
 		throw new Error('Friends service failed.');
 	}
 
-	return (response.json() as Promise<Friends[]>);
+	return (response.json() as Promise<userData[]>);
 }
 
 async function fetchMatches(log: any, userID: number): Promise<RawMatches[]> {

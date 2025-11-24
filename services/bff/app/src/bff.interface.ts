@@ -22,7 +22,7 @@ export interface UserIDResponse {
 	};
 }
 
-export interface UserStats {
+export interface userStats {
 	userID: number;
 	longestMatch: number;
 	shortestMatch: number;
@@ -33,13 +33,9 @@ export interface UserStats {
 	longuestPass: number;
 	[key: string]: number;
 }
-
-export interface Friends {
-	userID: string,
-	friendID: string,
-	statusFrienship: boolean,
-	since: string,
-	userData: userData,
+export interface StatsResponse {
+	success: boolean;
+	stats: userStats;
 }
 
 export interface ProfileDataBatch {
@@ -57,6 +53,12 @@ export interface ProfileDataBatchResponse {
 	message?: string;
 }
 
+export interface UserProfileView {
+	userData: userData
+	userStats: userStats;
+	//friends: userData[];
+	//recentMatches: Matches[];
+}
 
 
 /*----------  WIP  ----------*/
@@ -68,10 +70,7 @@ export interface ProfileResponse {
 	profile: UserProfile;
 }
 
-export interface StatsResponse {
-	success: boolean;
-	stats: UserStats;
-}
+
 
 export interface RawUserActivity { activityStatus: userStatus; }
 export interface FriendshipStatus { status: ProfileView; }
@@ -109,13 +108,6 @@ export interface Matches {
 	score: string;
 	duration: string;
 	tournament: boolean;
-}
-
-export interface UserProfileView {
-	//userData: userData
-	userStats: UserStats;
-	//friends: Friends[];
-	//recentMatches: Matches[];
 }
 
 export interface settings {
