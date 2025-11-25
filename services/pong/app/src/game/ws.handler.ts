@@ -18,7 +18,7 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 
 	const game: Game | undefined = this.gameRegistry.findGame(ids.gameID);
 	if (!game)
-		throw new Error("game " + ids.gameID + " not found"); //TODO: send nats message ?
+		throw new Error("game " + ids.gameID + " not found"); //TODO: check if its properly catched
 	if (game.players.length === 2)
 		throw new Error("not allowed");
 
