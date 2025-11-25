@@ -1,5 +1,5 @@
 import type { WebSocket } from '@fastify/websocket';
-import { Game } from "../classes/game.class.js";
+import { Game, HEIGHT, WIDTH } from "../classes/game.class.js";
 import { updateBallPos } from './ball.js';
 import { movePaddle, updatePaddlePos } from './paddle.js';
 import { Player } from "../classes/player.class.js";
@@ -63,21 +63,13 @@ function finishSteps(game: Game) {
 	}
 }
 
-export async function endGame(player1: Player, player2: Player, game: Game) {
-	// if (player1.score === player2.score) {
-	// 	console.log("IN SAME SCORE")
-	// 	sendToPlayers(game, player1, player2);
-	// 	game.lastBall = true;
-	// 	await new Promise(res => game.addTimoutID(setTimeout(res, 5000)));
-	// 	if (game.startLoop === 0)
-	// 		game.startLoop = performance.now();
-	// 	const delay: number = SERVER_TICK - (performance.now() - game.startLoop);
-	// 	game.addTimoutID(setTimeout(gameLoop, Math.max(0, delay), game, player1, player2));
-	// 	return;
-	// }
+export function endGame(player1: Player, player2: Player, game: Game) {
+	if (player1.score === player2.score) {
+		evenScore(game, player1, player2);
+		return;
+	}
 	player1.socket.removeListener("message", messageHandler);
-	if (!game.local)
-		player2.socket.removeListener("message", messageHandler);
+	player2.socket.removeListener("message", messageHandler);
 	waitForEnd(player1.socket);
 	if (!game.local)
 		waitForEnd(player2.socket);
@@ -102,4 +94,20 @@ function sendToPlayers(game: Game, player1: Player, player2: Player) {
 	player1.sendReply(game.ball, player2, game.padSpec.w);
 	if (!game.local)
 		player2.sendReply(game.ball, player1, game.padSpec.w);
+}
+
+async function evenScore(game: Game, player1: Player, player2: Player) {
+	game.ball.x = WIDTH / 2;
+	game.ball.y = HEIGHT / 2;
+	game.ball.dx = 0;
+	game.ball.dy = 0;
+	sendToPlayers(game, player1, player2);
+	game.lastBall = true;
+	await new Promise(res => game.addTimoutID(setTimeout(res, 3000)));
+	game.ball.dx = 0.3 * game.ballDir;
+	game.ball.dy = 0.03;
+	game.ballDir *= -1;
+	game.passStart = performance.now();
+	sendToPlayers(game, player1, player2);
+	game.addTimoutID(setTimeout(gameLoop, SERVER_TICK, game, player1, player2));
 }

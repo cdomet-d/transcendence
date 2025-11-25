@@ -75,6 +75,10 @@ export class Player {
 		return this.#_userID;
 	}
 
+	/*                              SETTERS                                  */
+	set score(score: number) {
+		this.#_score = score;
+	}
 	
 	/*                              METHODS                                  */
 	public setPadStep() {

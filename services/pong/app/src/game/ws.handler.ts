@@ -6,6 +6,10 @@ import { validIds } from './mess.validation.js';
 import type { idsObj } from '../classes/game.interfaces.js';
 import { natsSubscription } from '../nats/subscriber.js';
 import { StringCodec } from 'nats';
+import { Player } from '../classes/player.class.js';
+
+const MAX_TIME: number = /*3500;/*/ 90000; // 1min30
+const MAX_SCORE: number = 5;
 
 export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): Promise< void > {
 	this.log.info('PONG webSocket connection established');
@@ -25,7 +29,9 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 	socket.on('close', () => {
 		if (game) {
 			game.cleanTimeoutIDs();
+			cheater(game, socket);
 			if (game.endSent === false) {
+				console.log("IN SENT")
 				game.fillGameInfos();
 				const sc = StringCodec();
 				game.nc.publish("game.over", sc.encode(JSON.stringify(game.infos)));
@@ -36,6 +42,32 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 			natsSubscription(this); //TODO: only for testing
 		}
 	});
+}
+
+function cheater(game: Game, socket: WebSocket) {
+	if (!game.players[0] || !game.players[1])
+		return;
+	if (performance.now() - game.startTimestamp >= MAX_TIME
+		|| game.players[0].score >= MAX_SCORE || game.players[1].score >= MAX_SCORE)
+		return;
+	console.log("IN CHEATER");
+	if (game.local) {
+		game.players[0].score = -1;
+		game.players[1].score = -1;
+		return;
+	}
+	let cheater: Player;
+	let innocent: Player;
+	if (game.players[0].socket === socket) {
+		cheater = game.players[0];
+		innocent = game.players[1];
+	}
+	else {
+		cheater = game.players[1];
+		innocent = game.players[0];
+	}
+	if (cheater.score >= innocent.score)
+		cheater.score = -1;
 }
 
 export function waitForMessage(socket: WebSocket): Promise<idsObj> {

@@ -11,8 +11,8 @@ export function updateBallPos(game: Game, player1: Player, player2: Player): boo
 	let nextY: number = game.ball.y + (game.ball.dy * TIME_STEP);
 
 	if (sideWallCollision(game, player1, player2, nextX)) {
-		if (player1.score === MAX_SCORE || player2.score === MAX_SCORE)
-			// || game.lastBall === true)
+		if (player1.score === MAX_SCORE || player2.score === MAX_SCORE
+			|| game.lastBall === true)
 			return true;
 		return false;
 	}
