@@ -4,7 +4,6 @@ import Fastify from 'fastify';
 import websocket from '@fastify/websocket';
 import type { WebSocket } from '@fastify/websocket';
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-// import cookie from '@fastify/cookie';
 // Local modules
 import { wsRoute } from './ws.route.js';
 import { options } from './serv.conf.js';
@@ -66,7 +65,6 @@ function addPlugins(serv: FastifyInstance) {
         options: {},
     });
     serv.register(wsRoute);
-    // serv.register(cookie);
 }
 
 //run server

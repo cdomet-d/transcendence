@@ -74,4 +74,4 @@ export function updateVelocity(game: Game, paddle: coordinates, nx: number) {
 		game.ball.dy *= factor;
 	}
 }
-//TODO: take into account paddle speed and direction ?
+

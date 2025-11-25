@@ -13,7 +13,7 @@ export class Game {
 	/*                             PROPERTIES                                */
 	#_gameInfo: gameInfo;
 	#_nc: NatsConnection;
-	#_players: playerTab; //TODO: replace tab with 2 player objects ?
+	#_players: playerTab;
 	#_ball: ballObj;
 	#_ballDir: number;
 	#_paddleSpec: paddleSpec;

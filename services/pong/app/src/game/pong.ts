@@ -6,7 +6,7 @@ import { endGame, gameLoop } from './game.loop.js';
  
 const START_DELAY = 500;
 const SERVER_TICK: number = 1000 / 50;
-const MAX_TIME: number = /*3500;/*/ 90000; // 1min30
+const MAX_TIME: number = 3500;// 90000; // 1min30
 
 export async function setUpGame(game: Game) {
 	if (!game.players[0] || !game.players[1])
