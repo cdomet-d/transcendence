@@ -16,11 +16,15 @@ export async function startGame(game: Game, ws: WebSocket) {
 function FrameRequestCallback(game: Game, ws: WebSocket) {
 	return function gameLoop(timestamp: number) {
 		const latestReply: repObj | undefined = game.replyHistory[game.replyHistory.length - 1];
-		if (latestReply !== undefined)
-		    if (handleScore(ws, game, latestReply)) 
-		        return;
-		if (latestReply !== undefined && game.reqHistory.has(latestReply._ID))
-		    reconciliation(game, latestReply);
+		if (latestReply !== undefined) {
+		    updateScore(game, latestReply);
+			if (game.reqHistory.has(latestReply._ID))
+				reconciliation(game, latestReply);
+			if (latestReply._end === true) {
+				ws.send("0");
+				return;
+			}
+		}
 
 		game.delta += timestamp - game.lastFrameTime;
 		game.lastFrameTime = timestamp;
@@ -107,18 +111,12 @@ function finishSteps(game: Game) {
 	}
 }
 
-export function handleScore(ws: WebSocket, game: Game, latestReply: repObj): boolean {
+export function updateScore(game: Game, latestReply: repObj){
 	if (latestReply._score[0] != game.score[0] || latestReply._score[1] != game.score[1]) {
 		//TODO update score UI
 		game.score[0] = latestReply._score[0];
 		game.score[1] = latestReply._score[1];
 		game.ball = { ...latestReply._ball };
 		game.deleteReplies(game.replyHistory.length);
-		if (latestReply._end === true) {
-			ws.send("0");
-			return true;
-		} 
-		return false;
 	}
-	return false;
 }

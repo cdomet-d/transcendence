@@ -64,6 +64,12 @@ function finishSteps(game: Game) {
 }
 
 export function endGame(player1: Player, player2: Player, game: Game) {
+	game.ball.x = WIDTH / 2;
+	game.ball.y = HEIGHT / 2;
+	game.ball.dx = 0;
+	game.ball.dy = 0;
+	game.deleteReq();
+	sendToPlayers(game, player1, player2);
 	if (player1.score === player2.score) {
 		evenScore(game, player1, player2);
 		return;
@@ -97,11 +103,6 @@ function sendToPlayers(game: Game, player1: Player, player2: Player) {
 }
 
 async function evenScore(game: Game, player1: Player, player2: Player) {
-	game.ball.x = WIDTH / 2;
-	game.ball.y = HEIGHT / 2;
-	game.ball.dx = 0;
-	game.ball.dy = 0;
-	sendToPlayers(game, player1, player2);
 	game.lastBall = true;
 	await new Promise(res => game.addTimoutID(setTimeout(res, 3000)));
 	game.ball.dx = 0.3 * game.ballDir;

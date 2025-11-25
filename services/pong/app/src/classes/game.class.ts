@@ -179,6 +179,10 @@ export class Game {
 		this.#_reqHistory.push(newReq);
 	}
 
+	public deleteReq() {
+		this.#_reqHistory.splice(this.#_reqHistory.length);
+	}
+
 	public addTimoutID(ID: NodeJS.Timeout) {
 		this.#_timeoutIDs.push(ID);
 	}

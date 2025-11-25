@@ -46,6 +46,7 @@ function sideWallCollision(game: Game, player1: Player, player2: Player, nextX: 
 		game.ball.y = HEIGHT / 2;
 		game.ball.dx = 0;
 		game.ball.dy = 0;
+		game.deleteReq();
 		game.addTimoutID(setTimeout(() => {
 			game.ball.dx = 0.3 * game.ballDir;
 			game.ball.dy = 0.03;

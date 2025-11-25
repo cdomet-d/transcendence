@@ -1,5 +1,5 @@
 import { startGame } from './game.loop.js';
-import { Game } from './classes/game.class.js';
+import { Game, WIDTH, HEIGHT } from './classes/game.class.js';
 import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from './game.events.js';
 import { renderGame } from './game.render.utils.js';
 
@@ -28,6 +28,7 @@ export function wsRequest(game: Game, ids: { gameID: number; userID: number }) {
 
     ws.onclose = () => {
         console.log("SCORE IN CLOSE:", JSON.stringify(game.score));
+        game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
         renderGame(game);
         window.cancelAnimationFrame(game.frameId);
     };
