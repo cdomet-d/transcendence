@@ -55,6 +55,37 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	serv.get('/leaderboard', async (request, reply) => {
+		try {
+			const query = `
+				SELECT 
+					p.userID,
+					p.username,
+					p.avatar,
+					p.profileColor,
+					s.winStreak
+				FROM 
+					userProfile p
+				JOIN 
+					userStats s ON p.userID = s.userID
+				ORDER BY 
+					s.winStreak DESC
+				LIMIT 50;
+			`;
+
+			const leaderboard = await serv.dbUsers.all<userData[]>(query);
+
+			return reply.code(200).send({
+				success: true,
+				leaderboard: leaderboard
+			});
+
+		} catch (error) {
+			serv.log.error(`[USERS] Error fetching leaderboard: ${error}`);
+			throw (error);
+		}
+	});
+
 	serv.get('/search', async (request, reply) => {
 		try {
 			const query = request.query as { name?: string };

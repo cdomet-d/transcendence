@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import type { UserProfileView } from './bff.interface.js';
-import { searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches } from './bffUserProfile.service.js';
+import { fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches } from './bffUserProfile.service.js';
 //import { updatePassword, fetchUserDataAccount, updateUsername,  updateDefaultLang, deleteAccount, deleteUser  } from './bffAccount.service.js';
 //import { deleteFriendship } from './bffFriends.service.js'
 
@@ -103,6 +103,17 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			serv.log.error(`[BFF] Error searching users: ${error}`);
 			throw (error);
+		}
+	});
+
+	serv.get('/leaderboard', async (request, reply) => {
+		try {
+			const leaderboard = await fetchLeaderboard(log);
+			
+		} catch (error) {
+			serv.log.error(`[BFF] Error searching users: ${error}`);
+			throw (error);
+
 		}
 	});
 
