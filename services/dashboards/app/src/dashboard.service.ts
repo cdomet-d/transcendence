@@ -16,10 +16,9 @@ export async function getGameHistory(db: Database, userID: number): Promise<Matc
 				ELSE player1
 			END AS opponentID
 		FROM
-			games
+			game
 		WHERE
 			(player1 = ? OR player2 = ?)
-			AND gameStatus = 2;
 	`;
 
 	const matches = await db.all<Match[]>(query, [userID, userID, userID]);
@@ -32,7 +31,7 @@ export async function getTournamentHistory(db: Database, userID: number): Promis
 			t.tournamentID,
 			t.winnerID
 		FROM
-			tournaments t
+			tournament t
 		WHERE
 			t.tournamentID IN (
 				SELECT DISTINCT
