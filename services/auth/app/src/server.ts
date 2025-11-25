@@ -1,12 +1,56 @@
-import Fastify from 'fastify';
+'use strict'
+// Third-party modules 
+import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify';
-import { options } from './serv.conf.js';
+import cookie from '@fastify/cookie';
+import fastifyJwt from '@fastify/jwt';
+// Local modules
+import { options } from './serv.conf.js'
+import { authenticationRoutes } from './authentication/authentication.js';
+import dbConnector from './db.js';
 
-try {
-    const serv: FastifyInstance = Fastify(options);
-    serv.listen({ port: 3939, host: '0.0.0.0' });
-    serv.log.info(serv.printRoutes());
-} catch (err) {
-    console.error('server error:', err);
-    process.exit(1);
+
+(async () => {
+	try {
+		const serv = await init();
+		await runServ(serv);
+	} catch (err) {
+		console.error('server', err);
+		process.exit(1);
+	}
+})();
+
+//init server
+export async function init(): Promise<FastifyInstance> {
+	const serv: FastifyInstance = Fastify(options);
+
+	//plugins
+	addPlugins(serv);
+	await serv.ready();
+
+	return (serv);
 }
+
+//add plugins
+function addPlugins(serv: FastifyInstance) {
+	serv.register(dbConnector);
+	serv.register(fastifyJwt, {secret: process.env.JWT_SECRET!});
+	serv.register(cookie);
+	serv.register(authenticationRoutes);
+}
+
+//run server
+async function runServ(serv: FastifyInstance): Promise<void> {
+	const port: number = getPort();
+	const address: string = await serv.listen({ port: port, host: '0.0.0.0' });
+	serv.log.info(`Auth Microservice listening on ${port} at ${address}`);
+}
+
+function getPort(): number {
+	const port: number = Number(process.env.PORT);
+	if (Number.isNaN(port)) {
+		throw new Error("Invalid port");
+	}
+	return port;
+}
+

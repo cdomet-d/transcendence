@@ -3,7 +3,7 @@ import { usernamePattern, passwordPattern } from '../default-values.js';
 
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
 export const userSettingsForm: FormDetails = {
-    action: 'https://localhost:8443/api/account/settings/',
+    action: 'https://localhost:8443/api/bff/settings/',
     heading: 'Settings',
     ariaLabel: 'User settings',
     id: 'user-settings',
@@ -46,10 +46,37 @@ export const userSettingsForm: FormDetails = {
 };
 
 export const registrationForm: FormDetails = {
-    action: 'https://localhost:8443/api/auth/browser/',
+    action: 'https://localhost:8443/api/auth/register',
     heading: 'Register',
     ariaLabel: 'Create an account',
     id: 'account-create',
+    method: 'post',
+    fields: [
+        {
+            id: 'username',
+            labelContent: 'Username',
+            pattern: usernamePattern,
+            placeholder: 'Enter your username!',
+            type: 'text',
+            required: true,
+        },
+        {
+            id: 'password',
+            labelContent: 'Password',
+            pattern: passwordPattern,
+            placeholder: 'Enter your password!',
+            type: 'password',
+            required: false,
+        },
+    ],
+    button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+};
+
+export const loginForm: FormDetails = {
+    action: 'https://localhost:8443/api/auth/login',
+    heading: 'Login',
+    ariaLabel: 'Log into an account',
+    id: 'account-login',
     method: 'post',
     fields: [
         {
@@ -188,7 +215,7 @@ export const remotePong: FormDetails = {
 };
 
 export const deleteAccount: FormDetails = {
-    action: 'https://localhost:8443/api/account/',
+    action: 'https://localhost:8443/api/bff/account',
     heading: '',
     ariaLabel: 'Account deletion request',
     id: 'account-deletion-request',

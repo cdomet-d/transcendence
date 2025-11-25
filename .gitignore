@@ -1,14 +1,13 @@
-.docker-log/
+_logs/
 .env
 .notes/
 .secrets/
 .vscode/
 *.db
+*.pem
+*.txt
 *.log
 *.logs
-*.pem
 dist/
-jest.results.txt
 node_modules/
-notes
 package-lock.json

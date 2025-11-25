@@ -44,7 +44,7 @@ export class Match extends HTMLDivElement {
     }
     render() {
         this.append(this.#player1, this.#player2);
-        this.className = 'grid gap-s h-[112px]';
+        this.className = 'grid brdr';
     }
 }
 
@@ -175,7 +175,7 @@ export class TournamentBrackets extends HTMLDivElement {
         this.#computeTotalRounds();
         this.className = `grid grid-rows-${this.#players.length} grid-col-${
             this.#totalRounds
-        } pad-xs v-gap-l place-items-center`;
+        } pad-xs gap-l place-items-center`;
         this.id = 'tournament-brackets';
         this.populateBrackets(this.#players);
     }

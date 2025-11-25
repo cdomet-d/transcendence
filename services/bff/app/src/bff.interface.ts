@@ -1,22 +1,37 @@
 export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
-export type userStatus = 'offline' | 'online' | 'in-game';
-
-export interface ProfileResponse {
-	success: boolean;
-	profile: UserProfile;
-}
 
 export interface userData {
 	avatar: string,
 	biography: string,
 	userID: string,
-	language: string,
+	lang: string,
 	profileColor: string,
 	relation: ProfileView,
 	status: boolean,
 	username: string,
 	winstreak: string, 
 	since: string
+}
+
+export interface UserIDResponse {
+	success: boolean;
+	message: string;
+	response: {
+		userID: number;
+		username: string;
+	};
+}
+
+
+
+
+/*----------  WIP  ----------*/
+
+export type userStatus = 'offline' | 'online' | 'in-game';
+
+export interface ProfileResponse {
+	success: boolean;
+	profile: UserProfile;
 }
 
 export interface Friends {
@@ -39,7 +54,7 @@ export interface UserStats {
 	totalWins: number;
 	winStreak: number;
 	averageMatchDuration: number;
-	highestScore: number;
+	longuestPass: number;
 	[key: string]: number;
 }
 
@@ -49,20 +64,6 @@ export interface FriendshipStatus { status: ProfileView; }
 export interface UserAuth {
 	userID: number,
 	username: string
-}
-
-export interface ProfileData {
-	avatar: string,
-	biography: string,
-	profileColor: string,
-	winstreak: string,
-	userStatus: boolean
-}
-
-export interface ProfileDataResponse {
-	success: boolean;
-	profileData: ProfileData;
-	message?: string;
 }
 
 export interface ProfileDataBatch {
@@ -80,25 +81,6 @@ export interface ProfileDataBatchResponse {
 	message?: string;
 }
 
-
-export interface AccountDataBatchResponse {
-	success: boolean;
-	accountData: AccountData[];
-	message?: string;
-}
-
-export interface AccountDataResponse {
-	success: boolean;
-	accountData: AccountData;
-	message?: string;
-}
-
-export interface AccountData {
-	username: string,
-	registerDate: string,
-	userID: string,
-	defaultLang: string
-}
 
 export interface UserProfile {
 	userID: number;

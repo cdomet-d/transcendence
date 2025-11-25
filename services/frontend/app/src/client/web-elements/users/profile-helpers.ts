@@ -24,7 +24,7 @@ export function setUserProfileCommonValues(
 /**
  * Creates a user card element with avatar, username, and social menu.
  *
- * @param socialBtns - Array of social button metadata. ({@link buttonData})
+ * @param socialBtns - Array of social button metadata. ({@link ButtonData})
  * @param user - The user data object ({@link UserData}).
  * @returns A `UserCardSocial` element populated with user info and social buttons.
  */

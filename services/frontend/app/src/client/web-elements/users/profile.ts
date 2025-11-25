@@ -24,7 +24,7 @@ export class UserProfile extends HTMLDivElement {
      */
     constructor() {
         super();
-        this.#actionButtons = createSocialMenu(social, 'horizontal', 'stranger');
+        this.#actionButtons = createSocialMenu(social, 'horizontal');
         this.#avatar = document.createElement('div', { is: 'user-avatar' }) as Avatar;
         this.#biography = document.createElement('p', { is: 'user-bio' }) as Biography;
         this.#joinedSince = document.createElement('span') as HTMLSpanElement;
@@ -66,7 +66,6 @@ export class UserProfile extends HTMLDivElement {
      */
     set biography(bio: string) {
         if (bio !== this.#biography.content) {
-            // console.log('bio');
             this.#biography.content = bio;
             this.#biography.classList.add('row-span-2');
         }
@@ -87,7 +86,6 @@ export class UserProfile extends HTMLDivElement {
      */
     set profileView(v: ProfileView) {
         if (this.#actionButtons.view !== v) {
-            // console.log('actionButtonView');
             this.#actionButtons.view = v;
         }
     }
@@ -98,7 +96,6 @@ export class UserProfile extends HTMLDivElement {
     set profileAge(val: string) {
         if (this.#joinedSince.textContent !== `Joined ${val} days ago`) {
             this.#joinedSince.textContent = `Joined ${val} days ago`;
-            // console.log('profileAge');
         }
     }
 
@@ -107,7 +104,6 @@ export class UserProfile extends HTMLDivElement {
      */
     set username(name: string) {
         if (this.#username.name !== name) {
-            // console.log('userName');
             this.#username.name = name;
         }
     }
@@ -168,6 +164,10 @@ export class UserProfile extends HTMLDivElement {
     }
 
     connectedCallback() {
+        this.render();
+    }
+
+    render() {
         this.append(
             this.#avatar,
             this.#username,
@@ -176,10 +176,6 @@ export class UserProfile extends HTMLDivElement {
             this.#actionButtons,
             this.#winstreak,
         );
-        this.render();
-    }
-
-    render() {
         this.className = `pad-s box-border brdr ${this.#color}`;
         this.#username.customizeStyle('f-yellow', 'f-m', 'f-bold', false);
         this.#joinedSince.classList.add('place-self-center', 'dark');
@@ -228,42 +224,26 @@ if (!customElements.get('user-card-social')) {
  * @remark You should use {@link createUserInline} which encapsulates creation logic.
  */
 export class UserInline extends UserProfile {
-    #clickHandler: (ev: MouseEvent) => void;
-
     constructor() {
         super();
-        this.#clickHandler = this.attachClick.bind(this);
     }
 
-    /**
-     * Handles click events on the element.
-     * Navigates to the user's profile page.
-     * @param ev - The mouse event.
-     */
-    attachClick(ev: MouseEvent) {
-        const clickedEl = ev.target as Element | null;
-        if (!clickedEl) return;
-        const link = clickedEl.closest('a') || this.querySelector('a');
-        if (!link) return;
-        ev.preventDefault();
-        // TODO: SPA routing logic goes there
-        // This is a placehold in the meantime
-        window.location.href = link.href;
-    }
     override connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('click', this.#clickHandler);
         this.render();
-    }
-
-    disconnectedCallback() {
-        this.removeEventListener('click', this.#clickHandler);
     }
 
     override render() {
         this.append(super.getAvatar, super.getUsername, super.getWinstreak);
         super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
-        this.classList.add('cursor-pointer', 'gap-s', 'flex', 'flex-initial', `${super.getColor}`);
+        this.classList.add(
+            'cursor-pointer',
+            'gap-s',
+            'flex',
+            'flex-initial',
+            'pad-xs',
+            `${super.getColor}`,
+        );
     }
 }
 

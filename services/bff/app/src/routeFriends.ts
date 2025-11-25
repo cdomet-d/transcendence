@@ -5,7 +5,7 @@ import { createFriendRequest, deleteFriendRequest, acceptFriendRequest } from '.
 
 export async function bffFriendRoutes(serv: FastifyInstance) {
 
-	serv.post('/friends/sendrequest', async (request, reply) => {
+	serv.post('/relation', async (request, reply) => {
 		try {
 			const senderID = request.user.userID;
 			const senderUsername = request.user.username;
@@ -33,7 +33,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.patch('/friends/acceptrequest', async (request, reply) => {
+	serv.patch('/relation', async (request, reply) => {
 		try {
 			const receiverID = request.user.userID;
 			const receiverUsername = request.user.username;
@@ -61,7 +61,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.delete('/friends/deletefriendship', async (request, reply) => {
+	serv.delete('/relation', async (request, reply) => {
 		try {
 			const removerID = request.user.userID;
 			const removerUsername = request.user.username;

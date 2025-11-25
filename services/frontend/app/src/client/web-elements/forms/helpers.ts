@@ -3,6 +3,9 @@ import { BaseForm } from './baseform.js';
 import { RemotePongSettings, LocalPongSettings } from './pong-settings.js';
 import { Searchbar } from './search.js';
 import { UserSettingsForm } from './user-settings.js';
+import { RegistrationForm } from './registration-form.js';
+import { LoginForm } from './login-form.js';
+import type { DeleteAccountForm } from './account-deletion-form.js';
 
 /**
  * Merges with the existing HTMLElementTag map.
@@ -12,10 +15,13 @@ import { UserSettingsForm } from './user-settings.js';
  */
 interface HTMLElementTagMap {
     'default-form': BaseForm;
-    'settings-form': UserSettingsForm;
-    'search-form': Searchbar;
-    'remote-pong-settings': RemotePongSettings;
     'local-pong-settings': LocalPongSettings;
+    'registration-form': RegistrationForm;
+    'login-form': LoginForm;
+    'remote-pong-settings': RemotePongSettings;
+    'search-form': Searchbar;
+    'settings-form': UserSettingsForm;
+    'delete-account-form': DeleteAccountForm;
 }
 
 /**

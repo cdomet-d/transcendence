@@ -2,8 +2,8 @@ import { createHeading, createNoResult } from './web-elements/typography/helpers
 import { createLeaderboard } from './web-elements/statistics/leaderboard.js';
 import { createMenu } from './web-elements/navigation/menu-helpers.js';
 import { main } from './web-elements/navigation/default-menus.js';
-import { farmAssets, Layout } from './web-elements/layouts/layout.js';
-import { ProfileWithTabs } from './web-elements/users/user-profile-containers.js';
+import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
+import { ProfileWithTabs, user } from './web-elements/users/user-profile-containers.js';
 import { type Match } from 'path-to-regexp';
 import { createTabs } from './web-elements/navigation/tabs-helpers.js';
 import { type TabData } from './web-elements/types-interfaces.js';
@@ -11,18 +11,25 @@ import { createForm } from './web-elements/forms/helpers.js';
 import {
     localPong,
     registrationForm,
+    loginForm,
     remotePong,
     userSettingsForm,
 } from './web-elements/forms/default-forms.js';
-import { user } from './web-elements/default-values.js';
-import { farm, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
+import { tournament } from './web-elements/default-values.js';
+import { farm, ocean, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
 import { pong } from './pong/pong.js';
+import { TournamentBrackets } from './web-elements/game/tournament.js';
+import { PongUI } from './web-elements/game/game-ui.js';
+import { userStatus } from './main.js';
+import { router } from './main.js';
+import { createErrorFeedback } from './web-elements/event-elements/error.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
+    bracket: 'full-screen',
     central: 'page-w-header',
     error: 'full-screen',
-    game: 'full-screen',
+    game: 'page-w-header',
     home: 'full-screen',
     leaderboard: 'page-w-header',
     lobby: 'page-w-header',
@@ -48,6 +55,7 @@ function prepareLayout(curLayout: Layout | undefined, page: string) {
         throw new Error("Something is wrong with the document's layout - page cannot be charged");
 
     curLayout.clearAll();
+    document.body.header?.getLogState();
     if (layoutPerPage[page] === 'full-screen') {
         document.body.header?.classList.add('hidden');
         document.body.header?.setAttribute('hidden', '');
@@ -75,10 +83,25 @@ export function renderHome() {
 }
 
 export function renderAuth() {
-    console.log('renderAuth');
     prepareLayout(document.body.layoutInstance, 'home');
-    document.body.layoutInstance!.appendAndCache(createForm('default-form', registrationForm));
-    updatePageTitle('Register or Login');
+    const authOptions: TabData[] = [
+        {
+            id: 'login-tab',
+            content: 'Login',
+            default: true,
+            panelContent: createForm('login-form', loginForm),
+        },
+        {
+            id: 'registration-tab',
+            content: 'Register',
+            default: false,
+            panelContent: createForm('registration-form', registrationForm),
+        },
+    ];
+    const wrapper = createWrapper('authsettings');
+    wrapper.append(createTabs(authOptions));
+    document.body.layoutInstance!.appendAndCache(wrapper);
+    updatePageTitle('Login | Register');
 }
 
 export function renderLeaderboard() {
@@ -91,20 +114,54 @@ export function renderLeaderboard() {
     updatePageTitle('Leaderboard');
 }
 
-export function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
+export async function renderSelf() {
+    console.log('renderSelf');
+
+    const status = await userStatus();
+    console.log(status.auth, status.userID, status.username);
+    if (!status.auth) {
+        router.loadRoute('/auth', true);
+		createErrorFeedback('You must register or login to see your profile')
+        return;
+    }
+	// const url = `https://localhost:8443/api/bff/profile/${status.username}`
+
+	try {
+		// const reply = await fetch(url)
+		// const profile = reply.json();
+		// console.log(profile);
+		prepareLayout(document.body.layoutInstance, 'profile');
+		document.body.layoutInstance?.appendAndCache(
+			document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
+		);
+		const pInstance = document.body.layoutInstance?.components.get(
+			'user-profile',
+		) as ProfileWithTabs;
+		pInstance.profile = user;
+   		updatePageTitle(status.username!);
+	} catch (error) {
+		console.error(error)
+	}
+}
+
+export async function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
     console.log('renderProfile');
     if (param) {
-        //TODO: API call with login here to fetch user data
         const login = param.params.login;
+        // const req: RequestInit = { method: 'get' };
+
+        //TODO: API call with login here to fetch user data
+        // await fetch(`https://localhost:8443/api/bff/profile/${login}/profile`, req);
         prepareLayout(document.body.layoutInstance, 'profile');
         document.body.layoutInstance?.appendAndCache(
             document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
         );
+        const pInstance = document.body.layoutInstance?.components.get(
+            'user-profile',
+        ) as ProfileWithTabs;
+        pInstance.profile = user;
         updatePageTitle('User ' + login);
-    } else {
-        console.log('No parameter, which should not happen');
-        renderNotFound();
-    }
+    } else renderNotFound();
 }
 
 export function renderSettings() {
@@ -142,13 +199,29 @@ export function renderGame() {
     console.log('renderGame');
     prepareLayout(document.body.layoutInstance, 'game');
 
-    // HERE logic will be needed from the game manager so that we know what theme the player picked.
-    // TODO: recover gameSetting object from game manager, but how ?
     const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
-    const layout = document.body.layoutInstance;
-    court.theme = defaultTheme;
-    if (layout) layout.theme = [];
-    document.body.layoutInstance?.appendAndCache(court);
+    const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
 
-    pong({ userID: 1, gameID: 1, remote: false }, court.ctx);
+    //TODO: set playerNames from game-manager object
+    ui.player1.innerText = 'CrimeGoose';
+    ui.player2.innerText = 'WinnerWolf';
+
+    const layout = document.body.layoutInstance;
+    // TODO: set pong-court theme from game-manager object
+    court.theme = ocean;
+    if (layout) layout.theme = oceanAssets;
+    document.body.layoutInstance?.appendAndCache(ui, court);
+
+    pong({ userID: 1, gameID: 1, remote: false }, court.ctx, ui);
+}
+
+export function renderBracket() {
+    console.log('renderBracket');
+    prepareLayout(document.body.layoutInstance, 'bracket');
+
+    const bracket = document.createElement('div', {
+        is: 'tournament-bracket',
+    }) as TournamentBrackets;
+    if (bracket) bracket.players = tournament;
+    document.body.layoutInstance?.appendAndCache(bracket);
 }

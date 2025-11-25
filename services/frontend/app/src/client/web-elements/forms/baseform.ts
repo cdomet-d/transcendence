@@ -2,7 +2,8 @@ import type { InputGroup, TextAreaGroup } from '../inputs/fields.js';
 import type { FormDetails } from '../types-interfaces.js';
 import { createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
 import { createHeading } from '../typography/helpers.js';
-import { createBtn } from '../navigation/buttons-helpers.js';
+import { createButton } from '../navigation/buttons-helpers.js';
+import { UIFeedback } from '../event-elements/error';
 
 const emptyForm: FormDetails = {
     action: '',
@@ -21,7 +22,7 @@ const emptyForm: FormDetails = {
  * @remarks customElement name is `'default-form'`
  * @extends {HTMLFormElement}
  */
-export class BaseForm extends HTMLFormElement {
+export abstract class BaseForm extends HTMLFormElement {
     #formData: FormDetails;
     submitHandler: (ev: SubmitEvent) => void;
     validationHandler: () => void;
@@ -71,6 +72,8 @@ export class BaseForm extends HTMLFormElement {
         this.#validate();
     }
 
+    abstract fetchAndRedirect(url: string, req: RequestInit): Promise<void>;
+
     /* -------------------------------------------------------------------------- */
     /*                                   Setters                                  */
     /* -------------------------------------------------------------------------- */
@@ -118,18 +121,6 @@ export class BaseForm extends HTMLFormElement {
         return req;
     }
 
-    async sendForm(url: string, req: RequestInit): Promise<Response> {
-        try {
-            const response = await fetch(url, req);
-            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-            console.log('Fetch successful', response);
-            return response;
-        } catch (error) {
-            console.error('Fetch failed', error);
-            throw error;
-        }
-    }
-
     /** Handles the default submit event for the form.
      * Prevents default submission and log form data.
      * Can be overridden in subclasses for custom behavior.
@@ -142,8 +133,16 @@ export class BaseForm extends HTMLFormElement {
         if (req.method === 'post') {
             req.body = this.createReqBody(form);
         }
-        console.log(this.#formData.action, req.method, req.body);
-        await this.sendForm(this.#formData.action, req);
+        try {
+            await this.fetchAndRedirect(this.#formData.action, req);
+        } catch (error) {
+            let mess = 'Something when wrong';
+            const err = document.createElement('span', { is: 'ui-feedback' }) as UIFeedback;
+            if (error instanceof Error) mess = error.message;
+            document.body.layoutInstance?.append(err);
+            err.content = mess;
+            err.type = 'error';
+        }
     }
 
     #validate() {
@@ -194,7 +193,7 @@ export class BaseForm extends HTMLFormElement {
      * Appends the button to the form and caches it in `formContent`.
      */
     renderButtons() {
-        const submit = createBtn(this.#formData.button);
+        const submit = createButton(this.#formData.button);
         this.#formContent.set('submit', submit);
         this.append(submit);
         if (!submit.classList.contains('bg-red')) {
@@ -202,8 +201,4 @@ export class BaseForm extends HTMLFormElement {
             submit.classList.add('w-5/6');
         }
     }
-}
-
-if (!customElements.get('default-form')) {
-    customElements.define('default-form', BaseForm, { extends: 'form' });
 }

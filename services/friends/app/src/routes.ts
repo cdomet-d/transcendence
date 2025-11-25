@@ -4,8 +4,10 @@ type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
 
 export async function routeFriend(serv: FastifyInstance) {
 
-	//GET /internal/friendships?userA=1&userB=2
-	serv.get('/internal/friends/friendship', async (request, reply) => {
+	//GET hips?userA=1&userB=2
+	//TODO : separate route in two 1. get relation betweem two users // "/" ---> to test 
+	//							   2. get frienlist					 //	"/friend-list"
+	serv.get('/friendship', async (request, reply) => {
 		try {
 
 			const query = request.query as {
@@ -17,6 +19,8 @@ export async function routeFriend(serv: FastifyInstance) {
 
 			//get relationship between two user
 			if (query.userA && query.userB) {
+			serv.log.error(`${query.userA} and ${query.userB}`)
+
 				const sql = `
 					SELECT statusFrienship FROM friendship 
 					WHERE (userID = ? AND friendID = ?) OR (userID = ? AND friendID = ?)
@@ -26,8 +30,8 @@ export async function routeFriend(serv: FastifyInstance) {
 				const response = await serv.dbFriends.get<{ statusFrienship: boolean }>(sql, params);
 
 				let status: ProfileView = 'stranger';
-				if (!response)
-					return (reply.code(404).send({ success: false, message: '[FRIENDS] Friendship not found' }));
+				if (!response?.statusFrienship)
+					return (reply.code(404).send({ success: false, message: 'YOOOOO [FRIENDS] Friendship not found' }));
 				if (response)
 					status = response.statusFrienship ? 'friend' : 'pending';
 				return (reply.code(200).send({ status: status }));
@@ -54,7 +58,7 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//create a pending friend request
-	serv.post('/internal/friends/friendship', async (request, reply) => {
+	serv.post('/relation', async (request, reply) => {
 		try {
 			const { senderID: senderID } = request.body as { senderID: number };
 			const { friendID: friendID } = request.body as { friendID: number };
@@ -94,7 +98,7 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//accept a friend request
-	serv.patch('/internal/friendships/:userID', async (request, reply) => {
+	serv.patch('/relation', async (request, reply) => {
 		try {
 			const { receiverID: receiverID } = request.body as { receiverID: number };
 			const { friendID: friendID } = request.body as { friendID: number };
@@ -134,11 +138,11 @@ export async function routeFriend(serv: FastifyInstance) {
 		}
 	});
 
-	//DELETE /internal/friendships?userA=1&userB=2
-	//Delete a friendship between users
-	serv.delete('/internal/friendship', async (request, reply) => {
+	//Delete a relation between users
+	serv.delete('/relation', async (request, reply) => {
 		try {
-			const { userA, userB } = request.query as { userA: number, userB: number };
+			const { userA: userA } = request.body as { userA: number };
+			const { userB: userB } = request.body as { userB: number };
 
 			const query = `
 				DELETE FROM friendship 
@@ -157,11 +161,14 @@ export async function routeFriend(serv: FastifyInstance) {
 			serv.log.error(`[FRIENDS] Error deleting friendship: ${error}`);
 			throw (error);
 		}
-	});	
+	});
 
 	//delete all friendship a user is a part of
-	serv.delete('/internal/friends/:userID/friendships', async (request, reply) => {
+
+	serv.delete('/', async (request, reply) => {
 		try {
+			//TODO: get JWT from cookies when JWT plugins is register in fastify request.cookies.token as {userID: string}
+			// Conversion might be needed to use the userID before using (probably in the plugin already)
 			const { userID } = request.params as { userID: string };
 
 			const query = `
@@ -178,4 +185,4 @@ export async function routeFriend(serv: FastifyInstance) {
 			throw (error);
 		}
 	});
-}
+};

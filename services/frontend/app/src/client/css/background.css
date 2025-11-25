@@ -74,6 +74,20 @@
 			#e3a300 0 100%);
 }
 
+.bg-wood {
+	background: linear-gradient(180deg,
+			#744C21 0 10%,
+			#915F29 0 20%,
+			#9F682D 0 30%,
+			#744C21 0 40%,
+			#915F29 0 50%,
+			#9F682D 0 60%,
+			#744C21 0 70%,
+			#915F29 0 80%,
+			#9F682D 0 90%,
+			#744C21 0 100%);
+}
+
 .bg-red {
 	background: linear-gradient(180deg,
 			#ce633b 0 10%,

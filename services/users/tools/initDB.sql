@@ -1,11 +1,14 @@
 CREATE TABLE userProfile (
   userID INTEGER PRIMARY KEY NOT NULL,
-  username TEXT UNIQUE,
+  username TEXT,
   avatar TEXT,
   biography TEXT,
   profileColor TEXT,
   activityStatus INTEGER,
-  lastConnection DATETIME
+  lastConnection DATETIME,
+  userRole INTEGER,
+  since TEXT,
+  lang TEXT
 );
 
 CREATE TABLE userStats (
@@ -16,5 +19,5 @@ CREATE TABLE userStats (
   totalWins INTEGER,
   winStreak INTEGER,
   averageMatchDuration INTEGER, --time in secondes
-  highestScore INTEGER
+  longuestPass INTEGER --time in secondes
 );

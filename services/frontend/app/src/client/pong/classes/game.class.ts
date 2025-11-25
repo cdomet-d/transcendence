@@ -1,32 +1,35 @@
 export const HEIGHT = 558.9;
 export const WIDTH = 1000;
+import type { PongUI } from '../../web-elements/game/game-ui.js';
 import type { reqObj, ballObj, paddleSpec, coordinates, repObj, paddleObj } from './game.interfaces.js';
 
 type requestMap = Map<number, reqObj>;
 type replyTab = Array<repObj>;
 
 export class Game {
-	/*                             PROPERTIES                                */
-	#_ctx: CanvasRenderingContext2D;
-	#_local: boolean;
-	#_horizontal: boolean;
-	#_score: [number, number];
-	#_leftPaddle: coordinates;
+    /*                             PROPERTIES                                */
+    #_ball: ballObj;
+    #_ctx: CanvasRenderingContext2D;
+    #_ui: PongUI;
+    #_delta: number;
+    #_frameId: number;
+    #_horizontal: boolean;
+    #_lastFrameTime: number;
+    #_leftPaddle: coordinates;
 	#_leftStep: coordinates;
-	#_rightPaddle: coordinates;
+    #_local: boolean;
+    #_paddleSpec: paddleSpec;
+    #_replyHistory: replyTab;
+    #_req: reqObj;
+    #_reqHistory: requestMap;
+    #_rightPaddle: coordinates;
 	#_rightStep: coordinates;
-	#_paddleSpec: paddleSpec;
-	#_ball: ballObj;
-	#_frameId: number;
-	#_delta: number;
-	#_lastFrameTime: number;
-	#_req: reqObj;
-	#_reqHistory: requestMap;
-	#_replyHistory: replyTab;
+    #_score: [number, number];
 
 	/*                            CONSTRUCTORS                               */
-	constructor(ctx: CanvasRenderingContext2D, remote: boolean, horizontal: boolean) {
+	constructor(ctx: CanvasRenderingContext2D, remote: boolean, horizontal: boolean, ui: PongUI) {
 		this.#_ctx = ctx;
+		this.#_ui = ui;
 		if (remote) this.#_local = false;
 		else this.#_local = true;
 		this.#_horizontal = horizontal;
@@ -149,9 +152,14 @@ export class Game {
 		this.#_delta = val;
 	}
 
-	set lastFrameTime(val: number) {
-		this.#_lastFrameTime = val;
-	}
+    set lastFrameTime(val: number) {
+        this.#_lastFrameTime = val;
+    }
+
+    updateScore() {
+        this.#_ui.scoreboard.player1Score = this.#_score[0];
+        this.#_ui.scoreboard.player2Score = this.#_score[1];
+    }
 
 	/*                              METHODS                                  */
 	public setLeftStep() {
