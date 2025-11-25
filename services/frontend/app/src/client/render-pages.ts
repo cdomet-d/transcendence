@@ -18,7 +18,7 @@ import {
 } from './web-elements/forms/default-forms.js';
 import { tournament } from './web-elements/default-values.js';
 import { farm, ocean, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
-import { pong } from './pong/pong.js';
+import { pong, type gameRequest } from './pong/pong.js';
 import { TournamentBrackets } from './web-elements/game/tournament.js';
 import { PongUI } from './web-elements/game/game-ui.js';
 import { userStatus } from './main.js';
@@ -232,7 +232,7 @@ export function renderTournamentLobby() {
     console.log(tournament?.innerHTML.includes("tournament"));
 }
 
-export function renderGame() {
+export function renderGame(gameRequest: gameRequest) {
     console.log('renderGame');
     prepareLayout(document.body.layoutInstance, 'game');
 
@@ -249,7 +249,8 @@ export function renderGame() {
     if (layout) layout.theme = oceanAssets;
     document.body.layoutInstance?.appendAndCache(ui, court);
 
-    pong({ userID: 1, gameID: 1, remote: false }, court.ctx, ui);
+    // pong({ userID: 1, gameID: 1, remote: false }, court.ctx, ui);
+    pong(gameRequest, court.ctx, ui);
 }
 
 export function renderBracket() {

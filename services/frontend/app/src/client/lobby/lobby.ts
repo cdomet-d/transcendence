@@ -63,8 +63,17 @@ function createLobbyRequest(action: string, format: string): string {
 }
 
 // YES
-// function joinLobbyRequest(action: string, format: string) {
-//     ;
-// }
+function joinLobbyRequest(action: string, format: string, lobbyID: string) {
+    const joinLobbyForm: lobbyRequestForm = {
+        event: 'LOBBY_REQUEST',
+        payload: {
+            action: action,
+            format: format,
+            userID: 99, // TODO: get uid from JWT
+            lobbyID: lobbyID,
+        },
+    };
+    return JSON.stringify(joinLobbyForm);
+}
 
-export { createGameRequest, createLobbyRequest };
+export { createGameRequest, createLobbyRequest, joinLobbyRequest };

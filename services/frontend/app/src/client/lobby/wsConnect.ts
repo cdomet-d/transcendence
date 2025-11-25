@@ -1,6 +1,7 @@
-import { createLobbyRequest } from './lobby.js';
+import { createLobbyRequest, joinLobbyRequest } from './lobby.js';
 import { router } from '../main.js';
 import { type gameRequest } from '../pong/pong.js';
+import { renderGame } from '../render-pages.js';
 
 let wsInstance: WebSocket | null = null;
 
@@ -25,7 +26,11 @@ function wsConnect(action: string, format: string) {
                 console.log(`Error: WebSocket is not open for ${action}`);
             }
         } else if (action === 'join') {
-
+            if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+                // wsInstance.send(joinLobbyRequest(action, format, lobbyID)); // TODO How do I get lobbyID
+            } else {
+                console.log(`Error: WebSocket is not open for ${action}`);
+            }
         }
     }
 
@@ -41,10 +46,8 @@ function wsConnect(action: string, format: string) {
             // GameRequest
             // TODO handle this with Coralie
             const gameRequest: gameRequest = data;
-            window.history.pushState({}, '', '/game/match');
-            router.loadRoute('/game/match', true);
-            console.log("Client ready to connect game: #" + gameRequest.gameID);
-            // pong(gameRequest); // ws connect to "/game/match" and send userID + gameID
+
+            renderGame(gameRequest);
         } catch (error) {
             console.error("Error: Failed to parse WS message", error);
         }

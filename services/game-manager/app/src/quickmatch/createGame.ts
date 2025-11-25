@@ -13,7 +13,7 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 		lobbyID: lobbyInfo.lobbyID!,
 		tournamentID: "-1",
 		gameID: crypto.randomUUID().toString(),
-		remote: true, // TODO this value can change just before click on start game
+		remote: true, // TODO this value will change just before click on start local game 
 		userList: usersArray,
 		score: "",
 		winnerID: 0,
@@ -26,4 +26,3 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 export function startGame(game: game) {
 	natsPublish("game.request", JSON.stringify(game), "game.reply");
 }
-
