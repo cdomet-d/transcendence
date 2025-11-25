@@ -30,7 +30,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const { tournamentID } = request.body as { tournamentID: number };
 
 			const query = `
-				INSERT INTO gameMatchInfo (gameStatus, tournamentID, localGame)
+				INSERT INTO games (gameStatus, tournamentID, localGame)
 				VALUES (0, ?, ?)
 			`;
 
@@ -79,7 +79,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const params = keysToUpdate.map(key => body[key]);
 			params.push(gameID);
 
-			const query = `UPDATE gameMatchInfo SET ${setClauses} WHERE gameID = ?`;
+			const query = `UPDATE games SET ${setClauses} WHERE gameID = ?`;
 
 			const response = await serv.dbStats.run(query, params);
 			if (response.changes === 0)
@@ -118,7 +118,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				return (reply.code(400).send({ message: '[DASHBOARD] gameID query parameter is required.' }));
 
 			const query = `
-				DELETE FROM gameMatchInfo WHERE gameID = ?
+				DELETE FROM games WHERE gameID = ?
 			`;
 
 			const response = await serv.dbStats.run(query, [gameID]);
