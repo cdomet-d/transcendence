@@ -11,6 +11,7 @@ const sslAgent = new Agent({
 
 export async function searchBar(log: any, username: string): Promise<userData[]> {
 	const url = `https://users:2626/search?name=${username}`;
+
 	let response: Response;
 
 	try {

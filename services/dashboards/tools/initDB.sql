@@ -1,9 +1,8 @@
-CREATE TABLE gameMatchInfo (
+CREATE TABLE game (
   ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  gameID INTEGER,
+  gameID INTEGER UNIQUE,
   duration INTEGER,
   startTime DATETIME,
-  gameStatus INTEGER, --game is still in lobby == 0, game started == 1, game ended == 2
   player1 INTEGER,
   player2 INTEGER,
   tournamentID INTEGER, --zero == no tournament
@@ -12,11 +11,11 @@ CREATE TABLE gameMatchInfo (
   player2Score INTEGER
 );
 
-CREATE TABLE tournaments (
+CREATE TABLE tournament (
     ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    tournamentID INTEGER,
+    tournamentID INTEGER UNIQUE,
     nbPlayers INTEGER NOT NULL CHECK(nbPlayers = 4 OR nbPlayers = 8), -- Enforces 4 or 8 players
     tournamentStatus INTEGER NOT NULL DEFAULT 0, -- 0: Pending, 1: In Progress, 2: Completed
     winnerID INTEGER, -- The ID of the winning player, NULL until completed
-    creationTime DATETIME NOT NULL DEFAULT
+    creationTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
