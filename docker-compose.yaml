@@ -4,10 +4,10 @@ networks:
         name: transcendence
 
 secrets:
-    nginx.crt:
-        file: ${TSECRETS}/nginx.crt
-    nginx.key:
-        file: ${TSECRETS}/nginx.key
+    key.pem:
+        file: ${TSECRETS}/key.pem
+    cert.pem:
+        file: ${TSECRETS}/cert.pem
 
 services:
     accessibility:
@@ -153,8 +153,8 @@ services:
             - '8443:443'
         restart: unless-stopped
         secrets:
-            - nginx.key
-            - nginx.crt
+            - cert.pem
+            - key.pem
     pong:
         build:
             context: ./services/pong
