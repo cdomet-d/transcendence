@@ -156,12 +156,14 @@ export class Game {
         this.#_lastFrameTime = val;
     }
 
-    updateScore() {
+	
+	/*                              METHODS                                  */
+    public updateScore(latestReply: repObj) {
+		this.#_score = { ...latestReply._score };
         this.#_ui.scoreboard.player1Score = this.#_score[0];
         this.#_ui.scoreboard.player2Score = this.#_score[1];
     }
 
-	/*                              METHODS                                  */
 	public setLeftStep() {
 	    this.#_leftStep = { x: 0, y: 0 };
 	}

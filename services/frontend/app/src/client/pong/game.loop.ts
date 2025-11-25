@@ -16,15 +16,9 @@ export async function startGame(game: Game, ws: WebSocket) {
 function FrameRequestCallback(game: Game, ws: WebSocket) {
 	return function gameLoop(timestamp: number) {
 		const latestReply: repObj | undefined = game.replyHistory[game.replyHistory.length - 1];
-		if (latestReply !== undefined) {
-			updateScore(game, latestReply);
-			if (game.reqHistory.has(latestReply._ID))
-				reconciliation(game, latestReply);
-			if (latestReply._end === true) {
-				ws.send("0");
+		if (latestReply !== undefined && game.reqHistory.has(latestReply._ID))
+			if (reconciliation(game, latestReply, ws))
 				return;
-			}
-		}
 
 		game.delta += timestamp - game.lastFrameTime;
 		game.lastFrameTime = timestamp;
@@ -75,10 +69,13 @@ function lerp(start: number, end: number, t: number): number {
 	return start + (end - start) * Math.min(Math.max(t, 0), 1);
 }
 
-function reconciliation(game: Game, latestReply: repObj) {
+function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean {
 	let id: number = latestReply._ID;
 	game.deleteReq(id);
 
+	if (latestReply._score[0] != game.score[0] 
+		|| latestReply._score[1] != game.score[1])
+		game.updateScore(latestReply);
 	game.leftPad = latestReply._leftPad;
 	if (game.local)
 		game.rightPad = latestReply._rightPad;
@@ -96,6 +93,11 @@ function reconciliation(game: Game, latestReply: repObj) {
 		deadReckoning(game, latestReply);
 		finishSteps(game);
 	}
+	if (latestReply._end === true) {
+		ws.send("0");
+		return true;
+	}
+	return false;
 }
 
 function finishSteps(game: Game) {
@@ -111,10 +113,3 @@ function finishSteps(game: Game) {
 	}
 }
 
-export function updateScore(game: Game, latestReply: repObj){
-	if (latestReply._score[0] != game.score[0] || latestReply._score[1] != game.score[1]) {
-		//TODO update score UI
-		game.score[0] = latestReply._score[0];
-		game.score[1] = latestReply._score[1];
-	}
-}
