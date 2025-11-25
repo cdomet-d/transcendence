@@ -17,7 +17,7 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 	return function gameLoop(timestamp: number) {
 		const latestReply: repObj | undefined = game.replyHistory[game.replyHistory.length - 1];
 		if (latestReply !== undefined) {
-		    updateScore(game, latestReply);
+			updateScore(game, latestReply);
 			if (game.reqHistory.has(latestReply._ID))
 				reconciliation(game, latestReply);
 			if (latestReply._end === true) {
@@ -82,7 +82,7 @@ function reconciliation(game: Game, latestReply: repObj) {
 	game.leftPad = latestReply._leftPad;
 	if (game.local)
 		game.rightPad = latestReply._rightPad;
-	game.ball = { ...latestReply._ball };
+	game.ball = latestReply._ball;
 
 	if (game.leftStep.x != 0 || game.leftStep.y != 0
 		|| game.rightStep.x != 0 || game.rightStep.y != 0) {
@@ -116,7 +116,5 @@ export function updateScore(game: Game, latestReply: repObj){
 		//TODO update score UI
 		game.score[0] = latestReply._score[0];
 		game.score[1] = latestReply._score[1];
-		game.ball = { ...latestReply._ball };
-		game.deleteReplies(game.replyHistory.length);
 	}
 }

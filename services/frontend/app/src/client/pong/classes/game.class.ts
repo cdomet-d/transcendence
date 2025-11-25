@@ -137,9 +137,8 @@ export class Game {
 	    this.#_rightStep = { ...newPos.step };
 	}
 
-	set ball(ball: coordinates) {
-		this.#_ball.x = ball.x;
-		this.#_ball.y = ball.y;
+	set ball(ball: ballObj) {
+		this.#_ball = { ...ball };
 	}
 
 	set frameId(id: number) {
