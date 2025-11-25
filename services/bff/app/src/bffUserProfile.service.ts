@@ -1,15 +1,46 @@
 import type {
-    ProfileDataBatch,
-    ProfileDataBatchResponse,
-    ProfileView,
-    UserStats,
-    StatsResponse,
-    Matches,
-    RawMatches,
-    Friends,
-    userData,
-    UserIDResponse,
-} from './bff.interface.js';
+	UsernameResponse, FriendshipStatus, Friendship, ProfileDataBatch, ProfileDataBatchResponse, ProfileView, userStats, StatsResponse, Matches, RawMatches,
+	userData, UserIDResponse
+} from "./bff.interface.js";
+
+import { fetch, Agent } from 'undici';
+
+const sslAgent = new Agent({
+	connect: { rejectUnauthorized: false }
+});
+
+export async function buildTinyProfile(log: any, viewerUserID: number, targetUsername: string): Promise<userData | null> {
+
+	const targetUserID = await fetchUserID(log, targetUsername);
+
+	if (!targetUserID) {
+		log.warn(`[BFF] buildTinyProfile: UserID not found for ${targetUsername}`);
+		return (null);
+	}
+
+	const [data, relation] = await Promise.all([
+		fetchUserData(log, targetUserID),
+		fetchProfileView(log, viewerUserID, targetUserID)
+	]);
+
+	if (!data) {
+		log.warn(`[BFF] buildTinyProfile: Data not found for userID ${targetUserID}`);
+		return (null);
+	}
+
+	return {
+		userID: String(targetUserID),
+		username: data.username,
+		avatar: data.avatar,
+		biography: data.biography,
+		profileColor: data.profileColor,
+		since: data.since,
+		status: data.status,
+		winstreak: data.winstreak,
+		lang: data.lang,
+		relation: relation
+	};
+}
 
 export async function searchBar(log: any, username: string): Promise<userData[]> {
     const url = `http://users:2626/search?name=${username}`;
@@ -72,17 +103,13 @@ export async function fetchUserData(log: any, userID: number): Promise<userData 
     return body.userData;
 }
 
-export async function fetchProfileView(
-    log: any,
-    userID: number,
-    username: string
-): Promise<ProfileView> {
-    const vieweeID = await fetchUserID(log, username);
-    let friendsResponse: Response;
+export async function fetchProfileView(log: any, userID: number, targetUserID: number): Promise<ProfileView> {
 
-    if (vieweeID === userID) return 'self';
+	if (Number(targetUserID) === Number(userID))
+		return ('self');
 
-    const friendsUrl = `http://friends:1616/friendship?userA=${userID}&userB=${vieweeID}`;
+	let friendsResponse: Response;
+	const friendsUrl = `https://friends:1616/friendship?userA=${userID}&userB=${targetUserID}`;
 
     try {
         friendsResponse = await fetch(friendsUrl, {
@@ -134,47 +161,23 @@ export async function fetchUserID(log: any, username: string): Promise<number | 
     return body.response.userID;
 }
 
-/*----------  WIP  ----------*/
+export async function fetchUserStats(log: any, userID: number): Promise<userStats | null> {
+	const url = `https://users:2626/stats/${userID}`;
+	let response: Response;
 
-export async function fetchUserProfile(log: any, userID: number): Promise<userData | null> {
-    const url = `http://users:2626/internal/users/${userID}/profile`;
-
-    let response: Response;
-
-    try {
-        response = await fetch(url);
-    } catch (error) {
-        log.error(`[BFF] User service is unreachable: ${error}`);
-        throw new Error('User service is unreachable.');
-    }
-    if (response.status === 404) {
-        log.warn(`[BFF] User data not found for user ${userID}`);
-        throw new Error('User data not found.');
-    }
-
-    if (!response.ok) {
-        log.error(`[BFF] User service failed with status ${response.status}`);
-        throw new Error('User service failed.');
-    }
-
-    const data = (await response.json()) as userData;
-    return data;
-}
-
-export async function fetchUserStats(log: any, userID: number): Promise<UserStats | null> {
-    const url = `http://users:2626/internal/users/${userID}/stats`;
-    let response: Response;
-
-    try {
-        response = await fetch(url);
-    } catch (error) {
-        log.error(`[BFF] User service is unreachable: ${error}`);
-        throw new Error('User service is unreachable.');
-    }
-    if (response.status === 404) {
-        log.warn(`[BFF] User stats not found for user ${userID}`);
-        throw new Error('User stats not found.');
-    }
+	try {
+		response = await fetch(url, {
+			method: 'GET',
+			dispatcher: sslAgent
+		});
+	} catch (error) {
+		log.error(`[BFF] User service is unreachable: ${error}`);
+		throw new Error('User service is unreachable.');
+	}
+	if (response.status === 404) {
+		log.warn(`[BFF] User stats not found for user ${userID}`);
+		throw new Error('User stats not found.');
+	}
 
     if (!response.ok) {
         log.error(`[BFF] User service failed with status ${response.status}`);
@@ -184,30 +187,184 @@ export async function fetchUserStats(log: any, userID: number): Promise<UserStat
     return data.stats;
 }
 
-//TODO fetch userData in friendlist.............................................
-export async function fetchFriendList(log: any, userID: number): Promise<Friends[]> {
-    const url = `http://friends:1616/internal/friends/friendships?userID=${userID}&status=friend`;
-    let response: Response;
+//The 'since' in the friendlist will store the friendship creation data, not the creation of the profile of the friend
+// Make a issue on github if you'd rather it to be the creation of the friend's profile 
+export async function fetchFriendships(log: any, userID: number, status: FriendshipStatus): Promise<userData[]> {
+	const url = `https://friends:1616/friendship?userID=${userID}`;
+	let response: Response;
 
-    try {
-        response = await fetch(url);
-    } catch (error) {
-        log.error(`[BFF] User service is unreachable: ${error}`);
-        throw new Error('User service is unreachable.');
-    }
+	try {
+		response = await fetch(url, {
+			method: 'GET',
+			dispatcher: sslAgent
+		});
+	} catch (error) {
+		log.error(`[BFF] Friends service is unreachable: ${error}`);
+		throw new Error('Friends service is unreachable.');
+	}
 
-    if (response.status === 400) {
-        log.error('[BFF] Bad request to friends service (friendlist).');
-        throw new Error('Bad request to friends service.');
-    }
+	if (response.status === 404)
+		return [];
 
-    if (!response.ok) {
-        log.error(`[BFF] Friends service (friendlist) failed with status ${response.status}`);
-        throw new Error('Friends service failed.');
-    }
+	if (!response.ok) {
+		log.error(`[BFF] Friends service failed with status ${response.status}`);
+		throw new Error('Friends service failed.');
+	}
 
-    return response.json() as Promise<Friends[]>;
+	const friendships = await response.json() as Friendship[];
+
+	const targetIsAccepted = (status === 'friend');
+
+	const filteredList = friendships.filter(f => {
+		const isAccepted = String(f.statusFriendship) === 'true' || String(f.statusFriendship) === '1';
+
+		return (isAccepted === targetIsAccepted);
+	});
+
+	const profilePromises = filteredList.map(async (friendship) => {
+		try {
+			const otherID = (friendship.userID === userID) ? friendship.friendID : friendship.userID;
+
+			const profile = await fetchUserData(log, otherID);
+
+			if (profile) {
+				(profile as any).relation = status;
+				profile.since = friendship.startTime;
+			}
+			return (profile);
+		} catch (err) {
+			log.warn(`[BFF] Could not fetch profile for user ${friendship.friendID}`);
+			return null;
+		}
+	});
+
+	const profiles = await Promise.all(profilePromises);
+
+	return profiles.filter((p): p is userData => p !== null);
 }
+
+async function fetchMatches(log: any, userID: number): Promise<RawMatches[]> {
+	const url = `https://dashboard:1515/games/${userID}`;
+	let response: Response;
+	try {
+		response = await fetch(url, {
+			method: 'GET',
+			dispatcher: sslAgent
+		});
+	} catch (error) {
+		log.error(`[BFF] User service is unreachable: ${error}`);
+		throw new Error('User service is unreachable.');
+	}
+
+	if (response.status === 404) {
+		log.warn(`[BFF] User data not found for user ${userID}`);
+		throw new Error('User data not found.');
+	}
+
+	if (!response.ok) {
+		log.error(`[BFF] User service failed with status ${response.status}`);
+		throw new Error('User service failed.');
+	}
+	return (response.json() as Promise<RawMatches[]>);
+}
+
+async function fetchUsernames(log: any, userIDs: number[]): Promise<Map<number, string>> {
+	if (userIDs.length === 0) return new Map();
+
+	const url = `https://users:2626/usernames`;
+	let response: Response;
+
+	try {
+		response = await fetch(url, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ userIDs: userIDs }),
+			dispatcher: sslAgent
+		});
+	} catch (error) {
+		log.error(`[BFF] User service is unreachable: ${error}`);
+		throw new Error('User service is unreachable.');
+	}
+
+	if (!response.ok) {
+		log.error(`[BFF] User service failed with status ${response.status}`);
+		throw new Error('User service error.');
+	}
+
+	const body = await response.json() as UsernameResponse;
+
+	const usernameMap = new Map<number, string>();
+
+	if (body.usersNames) {
+		for (const user of body.usersNames)
+			usernameMap.set(user.userID, user.username);
+	}
+
+	return (usernameMap);
+}
+
+export async function processMatches(log: any, userID: number): Promise<Matches[]> {
+	const rawMatches = await fetchMatches(log, userID);
+
+	if (!rawMatches || rawMatches.length === 0) {
+		return [];
+	}
+
+	const opponentIDs = new Set<number>();
+	rawMatches.forEach(match => {
+		const opponentID = (match.player1 === userID) ? match.player2 : match.player1;
+		opponentIDs.add(opponentID);
+	});
+
+	const opponentMap = await fetchUsernames(log, Array.from(opponentIDs));
+
+	const processedMatches = rawMatches.map(rawMatch => {
+		const isPlayer1 = rawMatch.player1 === userID;
+
+		const opponentID = isPlayer1 ? rawMatch.player2 : rawMatch.player1;
+		const myScore = isPlayer1 ? rawMatch.player1Score : rawMatch.player2Score;
+		const opponentScore = isPlayer1 ? rawMatch.player2Score : rawMatch.player1Score;
+
+		let outcome = 'Draw';
+		if (myScore > opponentScore) outcome = 'Win';
+		if (myScore < opponentScore) outcome = 'Loss';
+
+		const scoreWinner = Math.max(myScore, opponentScore);
+		const scoreLoser = Math.min(myScore, opponentScore);
+		const scoreString = `${scoreWinner} - ${scoreLoser}`;
+
+		const opponentName = opponentMap.get(opponentID) || "Unknown User";
+
+		const isTournament = rawMatch.tournamentID > 0;
+
+		const match: Matches = {
+			date: new Date(rawMatch.startTime).toLocaleDateString(),
+			opponent: opponentName,
+			outcome: outcome,
+			score: scoreString,
+			duration: formatDuration(rawMatch.duration),
+			tournament: isTournament
+		};
+
+		return match;
+	});
+
+	return processedMatches;
+}
+
+function formatDuration(seconds: number): string {
+	const mins = Math.floor(seconds / 60);
+	const secs = seconds % 60;
+	return (`${mins}m ${secs}s`);
+}
+
+
+
+
+
+
+
+/*----------  WIP  ----------*/
 
 export async function fetchProfileDataBatch(
     log: any,
@@ -215,19 +372,20 @@ export async function fetchProfileDataBatch(
 ): Promise<ProfileDataBatch[]> {
     if (!userIDs || userIDs.length === 0) return [];
 
-    const url = 'http://users:2626/internal/users/userDataBatch';
-    let response: Response;
+	const url = 'https://users:2626/profiles';
+	let response: Response;
 
-    try {
-        response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userIDs: userIDs }),
-        });
-    } catch (error) {
-        log.error(`[BFF] User service (userDataBatch) is unreachable: ${error}`);
-        throw new Error('User service is unreachable.');
-    }
+	try {
+		response = await fetch(url, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ userIDs: userIDs }),
+			dispatcher: sslAgent
+		});
+	} catch (error) {
+		log.error(`[BFF] User service (userDataBatch) is unreachable: ${error}`);
+		throw new Error('User service is unreachable.');
+	}
 
     if (!response.ok) {
         log.error(`[BFF] User service (userDataBatch) failed with status ${response.status}`);
@@ -244,78 +402,29 @@ export async function fetchProfileDataBatch(
     return body.profileData;
 }
 
-function formatDuration(seconds: number): string {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}m ${secs}s`;
-}
+export async function fetchUserProfile(log: any, userID: number): Promise<userData | null> {
+	const url = `http://users:2626/internal/users/${userID}/profile`;
 
-async function fetchMatches(log: any, userID: number): Promise<RawMatches[]> {
-    const url = `http://users:2626/internal/dashboard/${userID}/gameHistory`;
-    let response: Response;
-    try {
-        response = await fetch(url);
-    } catch (error) {
-        log.error(`[BFF] User service is unreachable: ${error}`);
-        throw new Error('User service is unreachable.');
-    }
+	let response: Response;
 
-    if (response.status === 404) {
-        log.warn(`[BFF] User data not found for user ${userID}`);
-        throw new Error('User data not found.');
-    }
+	try {
+		response = await fetch(url)
+	} catch (error) {
+		log.error(`[BFF] User service is unreachable: ${error}`);
+		throw new Error('User service is unreachable.');
+	}
+	if (response.status === 404) {
+		log.warn(`[BFF] User data not found for user ${userID}`);
+		throw new Error('User data not found.');
+	}
 
-    if (!response.ok) {
-        log.error(`[BFF] User service failed with status ${response.status}`);
-        throw new Error('User service failed.');
-    }
-    return response.json() as Promise<RawMatches[]>;
-}
+	if (!response.ok) {
+		log.error(`[BFF] User service failed with status ${response.status}`);
+		throw new Error('User service failed.');
+	}
 
-async function fetchUsernamesForMatches(
-    log: any,
-    matches: RawMatches[]
-): Promise<Map<number, string>> {
-    const opponentIDs = [...new Set(matches.map((match) => match.opponentID))];
-
-    if (opponentIDs.length === 0) {
-        return new Map();
-    }
-
-    const usersData = await fetchProfileDataBatch(log, opponentIDs);
-
-    const usernameMap = new Map<number, string>();
-    for (const user of usersData) usernameMap.set(user.userID, user.username);
-
-    return usernameMap;
-}
-
-export async function processMatches(log: any, userID: number): Promise<Matches[]> {
-    const rawMatches = await fetchMatches(log, userID);
-
-    if (rawMatches.length === 0) return [];
-
-    const opponentMap = await fetchUsernamesForMatches(log, rawMatches);
-
-    const processedMatches = rawMatches.map((rawMatch) => {
-        const outcome = rawMatch.winnerID === userID ? 'Win' : 'Loss';
-        const score = `${rawMatch.scoreWinner} - ${rawMatch.scoreLoser}`;
-        const opponentName = opponentMap.get(rawMatch.opponentID) || 'Unknown User';
-        const isTournament = 'tournamentID' in rawMatch && (rawMatch as any).tournamentID > 0;
-
-        const match: Matches = {
-            date: new Date(rawMatch.startTime).toLocaleDateString(),
-            opponent: opponentName,
-            outcome: outcome,
-            score: score,
-            duration: formatDuration(rawMatch.duration),
-            tournament: isTournament,
-        };
-
-        return match;
-    });
-
-    return processedMatches;
+	const data = await response.json() as userData;
+	return (data);
 }
 
 export async function fetchView(

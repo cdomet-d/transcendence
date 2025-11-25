@@ -1,60 +1,110 @@
 import type { FastifyInstance } from 'fastify';
-import type { UserProfileView, userData } from './bff.interface.js';
-import * as bcrypt from 'bcrypt';
-import { fetchUserData, searchBar, /*buildFullUserData*/ fetchUserID, processMatches, fetchFriendList, fetchUserStats, fetchProfileView, updateBio, updateProfileColor, updateAvatar } from './bffUserProfile.service.js';
+import type { UserProfileView } from './bff.interface.js';
+import { searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches } from './bffUserProfile.service.js';
 //import { updatePassword, fetchUserDataAccount, updateUsername,  updateDefaultLang, deleteAccount, deleteUser  } from './bffAccount.service.js';
-import { deleteFriendship } from './bffFriends.service.js'
-
+//import { deleteFriendship } from './bffFriends.service.js'
 
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	//get's profile + stats + game + friendslist
 	// userID -> userID of requested profile
-	/* 	serv.get('/profile/:userID', async (request, reply) => {
-			try {
-	
-				//TODO: userB ID is in the cookies so setup fastify JWT plugin and get userID this way
-				const query = request.query as {
-					userA?: number,
-					userB?: number,
-				};
-	
-				if (query.userA === undefined || query.userB === undefined) {
-					return reply.code(400).send({
-						message: '[BFF] Missing required query parameters: userA and userB are required.'
-					});
-				}
-	
-				const [
-					userData,
-					stats,
-					friends,
-					recentMatches
-				] = await Promise.all([
-					buildFullUserData(serv.log, query.userA, query.userB),
-					fetchUserStats(serv.log, query.userA),
-					fetchFriendList(serv.log, query.userA),
-					processMatches(serv.log, query.userA)
-				]);
-	
-				if (!userData || !stats)
-					return reply.code(404).send({ message: '[BFF] Failed to retrieve essential user data.' });
-	
-				const responseData: UserProfileView = {
-					userData: userData,
-					stats: stats,
-					friends: friends || [],
-					recentMatches: recentMatches || []
-				};
-	
-				return reply.code(200).send(responseData);
-	
-			} catch (error) {
-				serv.log.error(`[BFF] Error building user profile view: ${error}`);
-				throw (error);
+	// get big profile with username
+	serv.get('/profile/:username', async (request, reply) => {
+		try {
+
+			//TODO: userB ID is in the cookies so setup fastify JWT plugin and get userID this way
+			const { username } = request.params as { username: string };
+			const query = request.query as {
+				userB?: number,
+			};
+
+			if (query.userB === undefined) {
+				serv.log.error("[BFF] Parameter missing")
+				return reply.code(400).send({
+					message: '[BFF] Missing required query parameters: userA and userB are required.'
+				});
 			}
-		}); */
+			const combinedUserData = await buildTinyProfile(serv.log, query.userB, username);
+
+			if (!combinedUserData)
+				return (reply.code(404).send({ message: 'User profile data not found.' }));
+
+			const [
+				userData,
+				userStats,
+				friends,
+				pending,
+				recentMatches
+			] = await Promise.all([
+				combinedUserData,
+				fetchUserStats(serv.log, Number(combinedUserData.userID)),
+				fetchFriendships(serv.log, Number(combinedUserData.userID), 'friend'),
+				fetchFriendships(serv.log, Number(combinedUserData.userID), 'pending'),
+				processMatches(serv.log, Number(combinedUserData.userID))
+			]);
+
+			if (!userData || !userStats)
+				return reply.code(404).send({ message: '[BFF] Failed to retrieve essential user data.' });
+
+			const responseData: UserProfileView = {
+				userData: userData,
+				userStats: userStats,
+				friends: friends || [],
+				pending: pending || [],
+				matches: recentMatches || []
+			};
+
+			return reply.code(200).send(responseData);
+
+		} catch (error) {
+			serv.log.error(`[BFF] Error building user profile view: ${error}`);
+			throw (error);
+		}
+	});
+
+	serv.get('/tiny-profile/:username', async (request, reply) => {
+		try {
+			//FOR TESTING PURPOSES
+			/* 			if (!request.user && request.headers['x-test-userid']) {
+							(request as any).user = {
+								userID: Number(request.headers['x-test-userid']),
+								username: 'test_viewer'
+							};
+						} */
+			const { username: targetUsername } = request.params as { username: string };
+			const { userID: viewerUserID } = request.user as { userID: number };
+
+			if (!viewerUserID)
+				return (reply.code(401).send({ message: 'Unauthorized.' }));
+
+			const tinyProfile = await buildTinyProfile(serv.log, viewerUserID, targetUsername);
+
+			if (!tinyProfile)
+				return (reply.code(404).send({ message: 'User profile data not found.' }));
+
+			return (reply.code(200).send(tinyProfile));
+
+		} catch (error) {
+			serv.log.error(`[BFF] Error building tiny profile: ${error}`);
+			throw error;
+		}
+	});
+
+	serv.get('/search', async (request, reply) => {
+		try {
+			const query = request.query as { name?: string };
+
+			if (!query.name || query.name.trim() === '')
+				return reply.code(200).send([]);
+
+			const profiles = await searchBar(serv.log, query.name);
+			return (reply.code(200).send(profiles));
+		} catch (error) {
+			serv.log.error(`[BFF] Error searching users: ${error}`);
+			throw (error);
+		}
+	});
 
 	/* 	serv.patch('/settings', async (request, reply) => {
 			try {
@@ -100,73 +150,59 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				serv.log.error(`[BFF] Failed to update settings: ${error}`);
 				throw error;
 			}
+		});*/
+
+	/* 	serv.get('/tiny-profile/:username', async (request, reply) => {
+			try {
+	
+				const { username: targetUsername } = request.params as { username: string };
+				const { userID: viewerUserID } = request.user as { userID: number };
+	
+				if (!viewerUserID)
+					return (reply.code(401).send({ message: 'Unauthorized.' }));
+	
+				const targetUserID = await fetchUserID(serv.log, targetUsername);
+				if (!targetUserID)
+					return (reply.code(404).send({ message: 'User profile data not found.' }));
+	
+				const [
+					userData,
+					relation
+				] = await Promise.all([
+					fetchUserData(serv.log, Number(targetUserID)),
+					fetchProfileView(serv.log, viewerUserID, targetUserID),
+				]);
+	
+				if (!userData)
+					return reply.code(404).send({ message: 'User profile data not found.' });
+	
+				const combinedUserData: userData = {
+					userID: String(targetUserID),
+					username: userData.username,
+					avatar: userData.avatar,
+					biography: userData.biography,
+					profileColor: userData.profileColor,
+					since: userData.since,
+					status: userData.status,
+					winstreak: userData.winstreak,
+					lang: userData.lang,
+					relation: relation,
+				};
+	
+				return (reply.code(200).send(combinedUserData));
+	
+			} catch (error) {
+				if (typeof error === 'object' && error !== null && 'message' in error &&
+					(error as { message: string }).message.includes('User data not found'))
+					return (reply.code(404).send({ message: 'User not found.' }));
+				if (error instanceof Error)
+					serv.log.error(`[BFF] Failed to build user profile: ${error.message}`);
+				else
+					serv.log.error(`[BFF] Failed to build user profile: An unknown error occurred.`);
+				throw (error);
+			}
 		}); */
 
-	serv.get('/tiny-profile/:username', async (request, reply) => {
-		try {
-
-			const { username: targetUsername } = request.params as { username: string };
-			const { userID: viewerUserID } = request.user as { userID: number };
-
-			if (!viewerUserID)
-				return (reply.code(401).send({ message: 'Unauthorized.' }));
-
-			const targetUserID = await fetchUserID(serv.log, targetUsername);
-			if (!targetUserID)
-				return (reply.code(404).send({ message: 'User profile data not found.' }));
-
-			const [
-				userData,
-				relation
-			] = await Promise.all([
-				fetchUserData(serv.log, Number(targetUserID)),
-				fetchProfileView(serv.log, viewerUserID, targetUsername),
-			]);
-
-			if (!userData)
-				return reply.code(404).send({ message: 'User profile data not found.' });
-
-			const combinedUserData: userData = {
-				userID: String(targetUserID),
-				username: userData.username,
-				avatar: userData.avatar,
-				biography: userData.biography,
-				profileColor: userData.profileColor,
-				since: userData.since,
-				status: userData.status,
-				winstreak: userData.winstreak,
-				lang: userData.lang,
-				relation: relation,
-			};
-
-			return (reply.code(200).send(combinedUserData));
-
-		} catch (error) {
-			if (typeof error === 'object' && error !== null && 'message' in error &&
-				(error as { message: string }).message.includes('User data not found'))
-				return (reply.code(404).send({ message: 'User not found.' }));
-			if (error instanceof Error)
-				serv.log.error(`[BFF] Failed to build user profile: ${error.message}`);
-			else
-				serv.log.error(`[BFF] Failed to build user profile: An unknown error occurred.`);
-			throw (error);
-		}
-	});
-
-	serv.get('/search', async (request, reply) => {
-		try {
-			const query = request.query as { name?: string };
-
-			if (!query.name || query.name.trim() === '')
-				return reply.code(200).send([]);
-
-			const profiles = await searchBar(serv.log, query.name);
-			return (reply.code(200).send(profiles));
-		} catch (error) {
-			serv.log.error(`[BFF] Error searching users: ${error}`);
-			throw (error);
-		}
-	});
 	/* 	serv.delete('/delete-account', async (request, reply) => {
 			try {
 				const userID = request.user.userID;
