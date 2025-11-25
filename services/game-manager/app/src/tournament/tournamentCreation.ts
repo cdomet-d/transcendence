@@ -33,9 +33,9 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: number): game[
 
 	// TODO: need DB for unique gameIDs
 	let games: game[] = [
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: 1, tournamentID: tournamentID, remote: true, userList: opponents[0], score: "", winnerID: 0, loserID: 0 },
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: 2, tournamentID: tournamentID, remote: true, userList: opponents[1], score: "", winnerID: 0, loserID: 0 },
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: 3, tournamentID: tournamentID, remote: true, userList: null, score: "", winnerID: 0, loserID: 0 },
+		{ lobbyID: lobbyInfo.lobbyID!, gameID: 1, tournamentID: tournamentID, remote: true, userList: opponents[0], score: "", winnerID: 0, loserID: 0, duration: 0, longuestPass: 0 },
+		{ lobbyID: lobbyInfo.lobbyID!, gameID: 2, tournamentID: tournamentID, remote: true, userList: opponents[1], score: "", winnerID: 0, loserID: 0, duration: 0, longuestPass: 0 },
+		{ lobbyID: lobbyInfo.lobbyID!, gameID: 3, tournamentID: tournamentID, remote: true, userList: null, score: "", winnerID: 0, loserID: 0, duration: 0, longuestPass: 0 },
 	];
 
 	return games;
