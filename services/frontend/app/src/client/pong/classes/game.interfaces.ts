@@ -1,13 +1,13 @@
 /******************************** GAME OBJ ***********************************/
 export interface keysObj {
-    _w: boolean;
-    _s: boolean;
-    _a: boolean;
-    _d: boolean;
-    _ArrowUp: boolean;
-    _ArrowDown: boolean;
-    _ArrowLeft: boolean;
-    _ArrowRight: boolean;
+    w: boolean;
+    s: boolean;
+    a: boolean;
+    d: boolean;
+    ArrowUp: boolean;
+    ArrowDown: boolean;
+    ArrowLeft: boolean;
+    ArrowRight: boolean;
 }
 
 export interface ballObj {
@@ -33,11 +33,16 @@ export interface coordinates {
 }
 
 /**************************** WS DATA OBJ ********************************/
+export interface paddleObj {
+    coord: coordinates,
+    step: coordinates
+}
+
 export interface repObj {
     _ID: number;
     _timestamp: number;
-    _leftPad: coordinates;
-    _rightPad: coordinates;
+    _leftPad: paddleObj;
+    _rightPad: paddleObj;
     _ball: ballObj;
     _score: [number, number];
     _end: boolean

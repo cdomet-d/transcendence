@@ -60,9 +60,9 @@ function interpolation(game: Game) {
 	if (updates) {
 		const t =
 			(renderTime - updates[0]._timestamp) / (updates[1]._timestamp - updates[0]._timestamp);
-		game.rightPad.y = lerp(updates[0]._rightPad.y, updates[1]._rightPad.y, t);
+		game.rightPad.y = lerp(updates[0]._rightPad.coord.y, updates[1]._rightPad.coord.y, t);
 		if (game.horizontal)
-			game.rightPad.x = lerp(updates[0]._rightPad.x, updates[1]._rightPad.x, t);
+			game.rightPad.x = lerp(updates[0]._rightPad.coord.x, updates[1]._rightPad.coord.x, t);
 		game.deleteReplies(game.replyHistory.indexOf(updates[0]) - 1);
 	}
 }
@@ -72,7 +72,7 @@ function lerp(start: number, end: number, t: number): number {
 }
 
 function reconciliation(game: Game, latestReply: repObj) {
-	const id: number = latestReply._ID;
+	let id: number = latestReply._ID;
 	game.deleteReq(id);
 
 	game.leftPad = latestReply._leftPad;
@@ -80,6 +80,11 @@ function reconciliation(game: Game, latestReply: repObj) {
 		game.rightPad = latestReply._rightPad;
 	game.ball = { ...latestReply._ball };
 
+	if (game.leftStep.x != 0 || game.leftStep.y != 0
+		|| game.rightStep.x != 0 || game.rightStep.y != 0) {
+		deadReckoning(game, undefined);
+		finishSteps(game);
+	}
 	for (let i = id + 1; game.reqHistory.has(i); i++) {
 		updatePaddlePos(game.leftPad, true, game, game.reqHistory.get(i)!._keys);
 		if (game.local) 

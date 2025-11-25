@@ -10,17 +10,17 @@ export function updatePaddlePos(paddle: coordinates, leftSide: boolean, game: Ga
         step = game.leftStep;
     else
         step = game.rightStep;
-    if ((leftSide && keys._w) || (!leftSide && keys._ArrowUp)) 
+    if ((leftSide && keys.w) || (!leftSide && keys.ArrowUp)) 
         up(paddle, game.padSpec.speed, step);
-    if ((leftSide && keys._s) || (!leftSide && keys._ArrowDown)) 
+    if ((leftSide && keys.s) || (!leftSide && keys.ArrowDown)) 
         down(paddle, game.padSpec, step);
-    if (leftSide && keys._a) 
+    if (leftSide && keys.a) 
         left(paddle, game, 0, step);
-    if (leftSide && keys._d)
+    if (leftSide && keys.d)
         right(paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, step);
-    if (!leftSide && keys._ArrowLeft) 
+    if (!leftSide && keys.ArrowLeft) 
         left(paddle, game, WIDTH / 2 + game.ball.r + 1, step);
-    if (!leftSide && keys._ArrowRight) 
+    if (!leftSide && keys.ArrowRight) 
         right(paddle, game, WIDTH - game.padSpec.w, step);
     movePaddle(game, paddle, step);
 }

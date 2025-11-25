@@ -18,16 +18,16 @@ const reqObjSchema = {
         _keys: {
             type: 'object',
             additionalProperties: { type: 'boolean' },
-            required: ['_w', '_s', '_a', '_d', '_ArrowUp', '_ArrowDown', '_ArrowLeft', '_ArrowRight'],
+            required: ['w', 's', 'a', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'],
             properties: {
-                _w: { type: 'boolean' },
-                _s: { type: 'boolean' },
-                _a: { type: 'boolean' },
-                _d: { type: 'boolean' },
-                _ArrowUp: { type: 'boolean' },
-                _ArrowDown: { type: 'boolean' },
-                _ArrowLeft: { type: 'boolean' },
-                _ArrowRight: { type: 'boolean' },
+                w: { type: 'boolean' },
+                s: { type: 'boolean' },
+                a: { type: 'boolean' },
+                d: { type: 'boolean' },
+                ArrowUp: { type: 'boolean' },
+                ArrowDown: { type: 'boolean' },
+                ArrowLeft: { type: 'boolean' },
+                ArrowRight: { type: 'boolean' },
             }
         }
     }

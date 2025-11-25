@@ -1,6 +1,6 @@
 export const HEIGHT = 558.9;
 export const WIDTH = 1000;
-import type { reqObj, ballObj, paddleSpec, coordinates, repObj } from './game.interfaces.js';
+import type { reqObj, ballObj, paddleSpec, coordinates, repObj, paddleObj } from './game.interfaces.js';
 
 type requestMap = Map<number, reqObj>;
 type replyTab = Array<repObj>;
@@ -50,14 +50,8 @@ export class Game {
 		this.#_req = {
 			_ID: 0,
 			_keys: {
-				_w: false,
-				_s: false,
-				_a: false,
-				_d: false,
-				_ArrowUp: false,
-				_ArrowDown: false,
-				_ArrowLeft: false,
-				_ArrowRight: false,
+				w: false, s: false,	a: false, d: false,
+				ArrowUp: false,	ArrowDown: false, ArrowLeft: false,	ArrowRight: false,
 			},
 			_timeStamp: 0,
 		};
@@ -133,12 +127,14 @@ export class Game {
 	}
 
 	/*                              SETTERS                                  */
-	set leftPad(newPos: coordinates) {
-	    this.#_leftPaddle = { ...newPos };
+	set leftPad(newPos: paddleObj) {
+	    this.#_leftPaddle = { ...newPos.coord };
+		this.#_leftStep = { ...newPos.step }
 	}
 
-	set rightPad(newPos: coordinates) {
-	    this.#_rightPaddle = { ...newPos };
+	set rightPad(newPos: paddleObj) {
+	    this.#_rightPaddle = { ...newPos.coord };
+	    this.#_rightStep = { ...newPos.step };
 	}
 
 	set ball(ball: coordinates) {

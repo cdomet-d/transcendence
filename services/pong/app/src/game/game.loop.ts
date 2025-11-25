@@ -48,17 +48,19 @@ function moveBall(game: Game, simulatedTime: number, end: number, i: number): nu
 			endGame(game.players[0]!, game.players[1]!, game);
 			return -1;
 		}
-		if (game.players[0]!.padStep.x != 0 || game.players[0]!.padStep.y != 0) {
-			movePaddle(game, game.players[0]!.paddle, game.players[0]!.padStep);
-			game.players[0]!.setPadStep();
-		}
-		if (game.players[1]!.padStep.x != 0 || game.players[1]!.padStep.y != 0) {
-			movePaddle(game, game.players[1]!.paddle, game.players[1]!.padStep);
-			game.players[1]!.setPadStep();
-		}
+		finishSteps(game);
 		simulatedTime += TIME_STEP;
 	}
 	return simulatedTime;
+}
+
+function finishSteps(game: Game) {
+	for (const player of game.players) {
+		if (player.padStep.x != 0 || player.padStep.y != 0) {
+			movePaddle(game, player.paddle, player.padStep);
+			player.setPadStep();
+		}
+	}
 }
 
 export async function endGame(player1: Player, player2: Player, game: Game) {

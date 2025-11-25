@@ -7,19 +7,19 @@ const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function updatePaddlePos(player: Player, keys: keysObj, game: Game) {
     // const step: coordinates = { x: 0, y: 0 };
-	if ((player.left && keys._w)
-		|| (player.right && (keys._ArrowUp|| !game.local && keys._w)))
+	if ((player.left && keys.w)
+		|| (player.right && (keys.ArrowUp|| !game.local && keys.w)))
 		up(player.paddle, game.padSpec.speed, player.padStep);
-	if ((player.left && keys._s)
-		|| (player.right && (keys._ArrowDown || !game.local && keys._s)))
+	if ((player.left && keys.s)
+		|| (player.right && (keys.ArrowDown || !game.local && keys.s)))
 		down(player.paddle, game.padSpec, player.padStep);
-	if ((player.left && keys._a))
+	if ((player.left && keys.a))
 		left(player.paddle, game, 0, player.padStep);
-	if ((player.left && keys._d))
+	if ((player.left && keys.d))
 		right(player.paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, player.padStep);
-	if (player.right && (keys._ArrowLeft || !game.local && keys._d))
+	if (player.right && (keys.ArrowLeft || !game.local && keys.d))
 		left(player.paddle, game, WIDTH / 2 + game.ball.r + 1, player.padStep);
-	if (player.right && (keys._ArrowRight || !game.local && keys._a))
+	if (player.right && (keys.ArrowRight || !game.local && keys.a))
 		right(player.paddle, game, WIDTH - game.padSpec.w, player.padStep);
 	movePaddle(game, player.paddle, player.padStep); //TODO: clean by only giving obj player
 }
