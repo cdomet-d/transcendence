@@ -28,7 +28,7 @@ describe('GET /internal/friends/friendship', () => {
 	it('should return 200 and "friend" status for an accepted friendship', async () => {
 
 		await app.dbFriends.run(
-			'INSERT INTO friendship (userID, friendID, statusFrienship) VALUES (?, ?, ?)',
+			'INSERT INTO friendship (userID, friendID, statusFriendship) VALUES (?, ?, ?)',
 			[1, 2, true]
 		);
 
@@ -45,7 +45,7 @@ describe('GET /internal/friends/friendship', () => {
 	it('should return 200 and "pending" status for a pending friendship', async () => {
 
 		await app.dbFriends.run(
-			'INSERT INTO friendship (userID, friendID, statusFrienship) VALUES (?, ?, ?)',
+			'INSERT INTO friendship (userID, friendID, statusFriendship) VALUES (?, ?, ?)',
 			[1, 2, false]
 		);
 
@@ -73,9 +73,9 @@ describe('GET /internal/friends/friendship', () => {
 
 	it('should return 200 if the friendlist if found for a user', async () => {
 
-		await app.dbFriends.run('INSERT INTO friendship (userID, friendID, statusFrienship) VALUES (1, 2, true)');
-		await app.dbFriends.run('INSERT INTO friendship (userID, friendID, statusFrienship) VALUES (3, 1, true)');
-		await app.dbFriends.run('INSERT INTO friendship (userID, friendID, statusFrienship) VALUES (1, 4, false)'); // Pending, should be ignored
+		await app.dbFriends.run('INSERT INTO friendship (userID, friendID, statusFriendship) VALUES (1, 2, true)');
+		await app.dbFriends.run('INSERT INTO friendship (userID, friendID, statusFriendship) VALUES (3, 1, true)');
+		await app.dbFriends.run('INSERT INTO friendship (userID, friendID, statusFriendship) VALUES (1, 4, false)'); // Pending, should be ignored
 
 		const response = await app.inject({
 			method: 'GET',
@@ -102,8 +102,8 @@ describe('GET /internal/friends/friendship', () => {
 
 	it('should return 200 and a pending request list', async () => {
 
-		await app.dbFriends.run('INSERT INTO friendship (userID, friendID, statusFrienship) VALUES (2, 1, false)'); // User 2 sent to 1
-		await app.dbFriends.run('INSERT INTO friendship (userID, friendID, statusFrienship) VALUES (1, 3, false)'); // User 1 sent to 3 (ignored)
+		await app.dbFriends.run('INSERT INTO friendship (userID, friendID, statusFriendship) VALUES (2, 1, false)'); // User 2 sent to 1
+		await app.dbFriends.run('INSERT INTO friendship (userID, friendID, statusFriendship) VALUES (1, 3, false)'); // User 1 sent to 3 (ignored)
 
 		const response = await app.inject({
 			method: 'GET',
@@ -134,7 +134,7 @@ describe('POST /internal/friends/frienship', () => {
 	it('should return 409 if the friendship between two users already exists', async () => {
 
 		await app.dbFriends.run(
-			'INSERT INTO friendship (userID, friendID, statusFrienship) VALUES (?, ?, ?)',
+			'INSERT INTO friendship (userID, friendID, statusFriendship) VALUES (?, ?, ?)',
 			[1, 2, false]
 		);
 
@@ -198,7 +198,7 @@ describe('POST /internal/friends/frienship', () => {
 			[1, 2]
 		);
 		expect(dbEntry).toBeDefined();
-		expect(dbEntry.statusFrienship).toBe(0);
+		expect(dbEntry.statusFriendship).toBe(0);
 	});
 
 });
@@ -224,7 +224,7 @@ describe('PATCH /internal/friendships/:id', () => {
 
 	it('should return 400 if the friendship could not be accepted', async () => {
 		const insertResult = await app.dbFriends.run(
-			'INSERT INTO friendship (userID, friendID, statusFrienship) VALUES (?, ?, ?)',
+			'INSERT INTO friendship (userID, friendID, statusFriendship) VALUES (?, ?, ?)',
 			[1, 2, false]
 		);
 		const friendshipID = insertResult.lastID;
@@ -246,7 +246,7 @@ describe('PATCH /internal/friendships/:id', () => {
 
 	it('should return 200 if the friendship was accepted', async () => {
 		const insertResult = await app.dbFriends.run(
-			'INSERT INTO friendship (userID, friendID, statusFrienship) VALUES (?, ?, ?)',
+			'INSERT INTO friendship (userID, friendID, statusFriendship) VALUES (?, ?, ?)',
 			[1, 2, false]
 		);
 		const friendshipID = insertResult.lastID;
@@ -269,7 +269,7 @@ describe('PATCH /internal/friendships/:id', () => {
 			'SELECT * FROM friendship WHERE friendshipID = ?',
 			[friendshipID]
 		);
-		expect(dbEntry.statusFrienship).toBe(1);
+		expect(dbEntry.statusFriendship).toBe(1);
 	});
 });
 
@@ -290,7 +290,7 @@ describe('DELETE /internal/friendships', () => {
 	it('should return 204 if the friendship was deleted', async () => {
 
 		await app.dbFriends.run(
-			'INSERT INTO friendship (userID, friendID, statusFrienship) VALUES (?, ?, ?)',
+			'INSERT INTO friendship (userID, friendID, statusFriendship) VALUES (?, ?, ?)',
 			[1, 2, true]
 		);
 

@@ -19,7 +19,7 @@ afterAll(async () => {
 
 // 'beforeEach' runs before EACH 'it' test block
 beforeEach(async () => {
-	await app.dbStats.exec('DELETE FROM gameMatchInfo');
+	await app.dbStats.exec('DELETE FROM games');
 	await app.dbStats.run('INSERT INTO tournamentInfo (tournamentID) VALUES (123)');
 });
 
@@ -51,7 +51,7 @@ describe('POST /internal/dashboard/games', () => {
 		expect(body.gameID).toBe(1);
 
 		const gameInDb = await app.dbStats.get(
-			'SELECT * FROM gameMatchInfo WHERE gameID = ?',
+			'SELECT * FROM games WHERE gameID = ?',
 			[body.gameID]
 		);
 		expect(gameInDb.tournamentID).toBe(123);
@@ -103,7 +103,7 @@ describe('PATCH /internal/dashboard/games/:gameID', () => {
 
 	it('should return 200 if stats are patches properly', async() => {
 		const insertResponse = await app.dbStats.run(
-			'INSERT INTO gameMatchInfo (gameStatus, tournamentID, localGame) VALUES (0, 123, 1)'
+			'INSERT INTO games (gameStatus, tournamentID, localGame) VALUES (0, 123, 1)'
 		);
 		const gameID = insertResponse.lastID;
 
@@ -125,7 +125,7 @@ describe('PATCH /internal/dashboard/games/:gameID', () => {
 		expect(body.message).toBe('Game updated!');
 
 		const gameInDb = await app.dbStats.get(
-			'SELECT * FROM gameMatchInfo WHERE gameID = ?',
+			'SELECT * FROM games WHERE gameID = ?',
 			[gameID]
 		);
 		expect(gameInDb.gameStatus).toBe(2);
@@ -134,7 +134,7 @@ describe('PATCH /internal/dashboard/games/:gameID', () => {
 
 	it('should return 400 if no field are provided for update', async() => {
 		const insertResponse = await app.dbStats.run(
-			'INSERT INTO gameMatchInfo (gameStatus, tournamentID, localGame) VALUES (0, 123, 1)'
+			'INSERT INTO games (gameStatus, tournamentID, localGame) VALUES (0, 123, 1)'
 		);
 		const gameID = insertResponse.lastID;
 
@@ -177,7 +177,7 @@ describe('GET /internal/dashboard/games', () => {
 	
 	it('should return 200 and empty array if user did not play', async() => {
 		const insertResponse = await app.dbStats.run(
-			'INSERT INTO gameMatchInfo (gameStatus, tournamentID, localGame) VALUES (0, 123, 1)'
+			'INSERT INTO games (gameStatus, tournamentID, localGame) VALUES (0, 123, 1)'
 		);
 		const gameID = insertResponse.lastID;
 
@@ -199,7 +199,7 @@ describe('GET /internal/dashboard/games', () => {
 		expect(body.message).toBe('Game updated!');
 
 		const gameInDb = await app.dbStats.get(
-			'SELECT * FROM gameMatchInfo WHERE gameID = ?',
+			'SELECT * FROM games WHERE gameID = ?',
 			[gameID]
 		);
 		expect(gameInDb.gameStatus).toBe(2);
@@ -208,7 +208,7 @@ describe('GET /internal/dashboard/games', () => {
 
 	it('should return 400 if no userID provided', async() => {
 		const insertResponse = await app.dbStats.run(
-			'INSERT INTO gameMatchInfo (gameStatus, tournamentID, localGame) VALUES (0, 123, 1)'
+			'INSERT INTO games (gameStatus, tournamentID, localGame) VALUES (0, 123, 1)'
 		);
 		const gameID = insertResponse.lastID;
 
@@ -252,11 +252,11 @@ describe('DELETE /internal/dashboard/games/:gameID', () => {
 
 	it('should return 204 if game deleted properly', async() => {
 		const insertResponse = await app.dbStats.run(
-			'INSERT INTO gameMatchInfo (gameStatus, tournamentID, localGame) VALUES (0, 123, 1)'
+			'INSERT INTO games (gameStatus, tournamentID, localGame) VALUES (0, 123, 1)'
 		);
 		const gameID = insertResponse.lastID;
 
-		let gameInDb = await app.dbStats.get('SELECT * FROM gameMatchInfo WHERE gameID = ?', [gameID]);
+		let gameInDb = await app.dbStats.get('SELECT * FROM games WHERE gameID = ?', [gameID]);
 		expect(gameInDb).toBeDefined();
 
 		const response = await app.inject({
@@ -267,7 +267,7 @@ describe('DELETE /internal/dashboard/games/:gameID', () => {
 		expect(response.statusCode).toBe(204);
 		expect(response.body).toBeFalsy();
 
-		gameInDb = await app.dbStats.get('SELECT * FROM gameMatchInfo WHERE gameID = ?', [gameID]);
+		gameInDb = await app.dbStats.get('SELECT * FROM games WHERE gameID = ?', [gameID]);
 		expect(gameInDb).toBeUndefined();
 	});
 

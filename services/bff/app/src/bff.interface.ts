@@ -1,4 +1,6 @@
 export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
+export type FriendshipStatus = 'friend' | 'pending';
+
 
 export interface userData {
 	avatar: string,
@@ -9,7 +11,7 @@ export interface userData {
 	relation: ProfileView,
 	status: boolean,
 	username: string,
-	winstreak: string, 
+	winstreak: string,
 	since: string
 }
 
@@ -22,31 +24,7 @@ export interface UserIDResponse {
 	};
 }
 
-
-
-
-/*----------  WIP  ----------*/
-
-export type userStatus = 'offline' | 'online' | 'in-game';
-
-export interface ProfileResponse {
-	success: boolean;
-	profile: UserProfile;
-}
-
-export interface Friends {
-	friendID: string,
-	statusFrienship: boolean,
-	since: string,
-	userData: userData,
-}
-
-export interface StatsResponse {
-	success: boolean;
-	stats: UserStats;
-}
-
-export interface UserStats {
+export interface userStats {
 	userID: number;
 	longestMatch: number;
 	shortestMatch: number;
@@ -57,13 +35,9 @@ export interface UserStats {
 	longuestPass: number;
 	[key: string]: number;
 }
-
-export interface RawUserActivity { activityStatus: userStatus; }
-export interface FriendshipStatus { status: ProfileView; }
-
-export interface UserAuth {
-	userID: number,
-	username: string
+export interface StatsResponse {
+	success: boolean;
+	stats: userStats;
 }
 
 export interface ProfileDataBatch {
@@ -81,26 +55,37 @@ export interface ProfileDataBatchResponse {
 	message?: string;
 }
 
+export interface UserProfileView {
+	userData: userData
+	userStats: userStats;
+	friends: userData[];
+	pending: userData[];
+	matches: Matches[];
+}
 
-export interface UserProfile {
+export interface Friendship {
+	friendshipID: number;
 	userID: number;
-	username: string;
-	avatar: string;
-	biography: string;
-	status: string
-	profileColor: string;
+	friendID: number;
+	startTime: string;
+	statusFriendship: boolean; // true = accepted, false = pending
+}
+
+export interface UsernameResponse {
+	success: boolean;
+	usersNames: { userID: number, username: string }[];
 }
 
 export interface RawMatches {
 	gameID: number;
 	duration: number;
 	startTime: string;
-	winnerID: number;
-	loserID: number;
-	scoreWinner: number;
-	scoreLoser: number;
+	player1: number;
+	player2: number;
+	player1Score: number;
+	player2Score: number;
 	opponentID: number;
-	tournament: number
+	tournamentID: number
 }
 
 export interface Matches {
@@ -112,12 +97,32 @@ export interface Matches {
 	tournament: boolean;
 }
 
-export interface UserProfileView {
-	userData: userData
-	stats: UserStats;
-	friends: Friends[];
-	recentMatches: Matches[];
+/*----------  WIP  ----------*/
+
+export type userStatus = 'offline' | 'online' | 'in-game';
+
+export interface ProfileResponse {
+	success: boolean;
+	profile: UserProfile;
 }
+
+export interface RawUserActivity { activityStatus: userStatus; }
+
+export interface UserAuth {
+	userID: number,
+	username: string
+}
+
+export interface UserProfile {
+	userID: number;
+	username: string;
+	avatar: string;
+	biography: string;
+	status: string
+	profileColor: string;
+}
+
+
 
 export interface settings {
 	defaultLang: string;
