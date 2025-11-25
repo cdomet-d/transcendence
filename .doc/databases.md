@@ -719,17 +719,17 @@ WHERE userID = 101;
 
 
 
-* servir le profile 
-* servir la leaderboard
-* servir les users pour search bar
+* servir traduction      
 * envoyer les settings
-* servir userCard        ✅
+* supprimer ami          
+* servir la leaderboard
 * supprimer le compte    ✅
 * envouyer demande d'ami ✅
 * accepter demande d'ami ✅
-* supprimer ami          ✅
-* servir traduction      ✅
 
+* servir les users pour search bar ✅
+* servir le profile                ✅
+* servir userCard                  ✅
 
 TODO : is username needed in users service
 
