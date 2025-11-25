@@ -31,7 +31,6 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 			game.cleanTimeoutIDs();
 			cheater(game, socket);
 			if (game.endSent === false) {
-				console.log("IN SENT")
 				game.fillGameInfos();
 				const sc = StringCodec();
 				game.nc.publish("game.over", sc.encode(JSON.stringify(game.infos)));
@@ -42,32 +41,6 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 			natsSubscription(this); //TODO: only for testing
 		}
 	});
-}
-
-function cheater(game: Game, socket: WebSocket) {
-	if (!game.players[0] || !game.players[1])
-		return;
-	if (performance.now() - game.startTimestamp >= MAX_TIME
-		|| game.players[0].score >= MAX_SCORE || game.players[1].score >= MAX_SCORE)
-		return;
-	console.log("IN CHEATER");
-	if (game.local) {
-		game.players[0].score = -1;
-		game.players[1].score = -1;
-		return;
-	}
-	let cheater: Player;
-	let innocent: Player;
-	if (game.players[0].socket === socket) {
-		cheater = game.players[0];
-		innocent = game.players[1];
-	}
-	else {
-		cheater = game.players[1];
-		innocent = game.players[0];
-	}
-	if (cheater.score >= innocent.score)
-		cheater.score = -1;
 }
 
 export function waitForMessage(socket: WebSocket): Promise<idsObj> {
@@ -91,4 +64,29 @@ function getPlayerInGame(game: Game, userID: number, socket: WebSocket) {
 		game.addPlayer(game.randUserID, socket, "right");
 	if (game.players.length === 2)
 		setUpGame(game);
+}
+
+function cheater(game: Game, socket: WebSocket) {
+	if (!game.players[0] || !game.players[1])
+		return;
+	if (performance.now() - game.startTimestamp >= MAX_TIME
+		|| game.players[0].score >= MAX_SCORE || game.players[1].score >= MAX_SCORE)
+		return;
+	if (game.local) {
+		game.players[0].score = -1;
+		game.players[1].score = -1;
+		return;
+	}
+	let cheater: Player;
+	let innocent: Player;
+	if (game.players[0].socket === socket) {
+		cheater = game.players[0];
+		innocent = game.players[1];
+	}
+	else {
+		cheater = game.players[1];
+		innocent = game.players[0];
+	}
+	if (cheater.score >= innocent.score)
+		cheater.score = -1;
 }

@@ -67,7 +67,6 @@ export function updateVelocity(game: Game, paddle: coordinates, nx: number) {
 		game.ball.dy *= factor;
 	}
 }
-//TODO: take into account paddle speed and direction ?
 
 export function distBallPad(p: coordinates, b: coordinates): number {
     const d: coordinates = {x: Math.abs(p.x) - b.x, y: Math.abs(p.y) - b.y};

@@ -87,10 +87,10 @@ export class Player {
 	
 	public sendReply(ball: ballObj, opponent: Player, padWidth: number) {
 		// paddles and ball
+		this.#_reply._ball = { ...ball };
 		this.#_reply._leftPad.coord.y = this.#_paddle.y;
 		this.#_reply._rightPad.coord.y = opponent.paddle.y;
 		this.#_reply._leftPad.step.y = this.#_padStep.y;
-		this.#_reply._ball = { ...ball };
 		if (this.#_serverSide === "right" && this.#_clientSide === "left") {
 			this.#_reply._ball.x = WIDTH - ball.x;
 			this.#_reply._ball.dx *= -1;
