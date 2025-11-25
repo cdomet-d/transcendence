@@ -1,26 +1,23 @@
 import type { ProfileCreationResult, UserAuth } from "./auth.interfaces.js";
 import { Database } from "sqlite";
-import { fetch, Agent } from 'undici';
-
-const sslAgent = new Agent({
-	connect: { rejectUnauthorized: false }
-});
 
 export async function createUserProfile(log: any, userID: number, username: string): Promise<ProfileCreationResult> {
-	const url = `https://nginx/api/users/${userID}/`;
+	const url = `http://nginx:80/api/users/${userID}`;
 
 	console.log('USER ID:', url);
+	const body = JSON.stringify({ username: username });
+	console.log(body);
 	let response: Response;
 	try {
 		response = await fetch(url, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ username: username }),
-			dispatcher: sslAgent
 		});
 	} catch (error) {
 		log.error(`[AUTH] User service (via NGINX) is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
+		throw new Error(`Profile service failed with status`);
+;
 	}
 
 	if (response.status === 409) {

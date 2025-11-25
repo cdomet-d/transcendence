@@ -3,7 +3,7 @@ import { usernamePattern, passwordPattern } from '../default-values.js';
 
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
 export const userSettingsForm: FormDetails = {
-    action: 'https://localhost:8443/api/bff/settings/',
+    action: 'http://localhost:8443/api/bff/settings/',
     heading: 'Settings',
     ariaLabel: 'User settings',
     id: 'user-settings',
@@ -100,7 +100,7 @@ export const loginForm: FormDetails = {
 };
 
 export const search: FormDetails = {
-    action: 'https://localhost:8443/api/users?name=',
+    action: 'https://localhost:8443/api/bff/search?name=',
     heading: '',
     ariaLabel: 'Search for a user',
     id: 'searchform',
