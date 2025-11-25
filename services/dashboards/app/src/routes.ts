@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { getGameHistory } from './dashboard.service.js';
+import { start } from 'repl';
 
 export interface Match {
 	gameID: number;
@@ -23,20 +24,33 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	/*                                    GAME                                    */
 	/* -------------------------------------------------------------------------- */
 
+	//TODO: make it work like the patch to get the info from the body
+	//TODO: do we want to keep the start time ??
+	//TODO: Should we remove gameStatus since we post only finished games ?
 	//post a game
 	serv.post('/game', async (request, reply) => {
 		try {
 			const { local } = request.body as { local: boolean };
 			const { tournamentID } = request.body as { tournamentID: number };
+			const { gameID } = request.body as { gameID: number };
+			const { gameStatus } = request.body as { gameStatus: number };
+			const { startTime } = request.body as { startTime: number };
+			const { player1 } = request.body as { player1: number };
+			const { player2 } = request.body as { player2: number };
 
 			const query = `
-				INSERT INTO gameMatchInfo (gameStatus, tournamentID, localGame)
-				VALUES (0, ?, ?)
+				INSERT INTO gameMatchInfo (gameID, gameStatus, tournamentID, localGame, startTime, player1, player2)
+				VALUES (?, ?, ?, ?, ?, ?, ?)
 			`;
 
 			const params = [
+				gameID,
+				gameStatus,
 				tournamentID,
-				local
+				local,
+				startTime,
+				player1,
+				player2
 			];
 
 			const response = await serv.dbStats.run(query, params);
@@ -47,7 +61,6 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 
 			return (reply.code(201).send({
 				success: true,
-				gameID: response.lastID,
 				message: 'Game created!'
 			}));
 
@@ -140,21 +153,30 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	/*                                 TOURNAMENT                                 */
 	/* -------------------------------------------------------------------------- */
 
+	//TODO: Should we remove tournamentStatus since we post only finished tournament ?
 	//post a tournament
 	serv.post('/tournament', async (request, reply) => {
 		try {
-			const { playerIDs } = request.body as { playerIDs: number[] };
-
-			if (!Array.isArray(playerIDs) || playerIDs.length === 0 || !playerIDs.every(id => typeof id === 'number'))
-				return reply.code(400).send({ message: '[DASHBOARD] Validation error: playerIDs must be a non-empty array of numbers.' });
-
-			const playerIDsString = JSON.stringify(playerIDs);
+			const { tournamentID } = request.body as { tournamentID: number };
+			const { nbPlayers } = request.body as { nbPlayers: number };
+			const { tournamentStatus } = request.body as { tournamentStatus: number };
+			const { winnerID } = request.body as { winnerID: number };
+			const { creationTime } = request.body as { creationTime: number };
 
 			const query = `
-				INSERT INTO tournamentInfo (playersIDs) VALUES (?)
+				INSERT INTO tournamentInfo (tournamentID, nbPlayers, tournamentStatus, winnerID, creationTime)
+				VALUES (?, ?, ?, ?, ?)
 			`;
 
-			const response = await serv.dbStats.run(query, [playerIDsString]);
+			const params = [
+				tournamentID,
+				nbPlayers,
+				tournamentStatus,
+				winnerID,
+				creationTime
+			]
+
+			const response = await serv.dbStats.run(query, params);
 			if (!response.changes) {
 				serv.log.error('[DASHBOARD] Tournament creation query succeeded but did not insert a row.');
 				throw (new Error('[DASHBOARD] Internal server error during game creation'));
@@ -162,7 +184,6 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 
 			return (reply.code(201).send({
 				success: true,
-				tournamentID: response.lastID,
 				message: '[DASHBOARD] Tournament created!'
 			}));
 
