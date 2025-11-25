@@ -16,7 +16,7 @@ export async function getGameHistory(db: Database, userID: number): Promise<Matc
 				ELSE player1
 			END AS opponentID
 		FROM
-			gameMatchInfo
+			games
 		WHERE
 			(player1 = ? OR player2 = ?)
 			AND gameStatus = 2;
@@ -38,7 +38,7 @@ export async function getTournamentHistory(db: Database, userID: number): Promis
 				SELECT DISTINCT
 					gm.tournamentID
 				FROM
-					gameMatchInfo gm
+					games gm
 				WHERE
 					gm.player1 = ? OR gm.player2 = ?
 		)

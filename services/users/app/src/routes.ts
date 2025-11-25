@@ -1,16 +1,15 @@
 import type { FastifyInstance } from 'fastify';
-import { request } from 'http';
 
 export interface userData {
-	avatar: string;
-	biography: string;
-	userID: string;
-	lang: string;
-	profileColor: string;
-	status: boolean;
-	username: string;
-	winstreak: string;
-	since: string;
+	avatar: string,
+	biography: string,
+	userID: string,
+	lang: string,
+	profileColor: string,
+	status: boolean,
+	username: string,
+	winstreak: string,
+	since: string
 }
 
 interface UserStats {
@@ -37,21 +36,22 @@ export async function userRoutes(serv: FastifyInstance) {
 				SELECT * FROM userProfile WHERE userID = ?
 			`;
 
-			const userProfile = await serv.dbUsers.get<UserProfile>(query, [userID]);
+			const userProfile = await serv.dbUsers.get<userData>(query, [userID]);
 			if (!userProfile) {
-				return reply.code(404).send({
+				return (reply.code(404).send({
 					success: false,
-					message: 'User profile not found',
-				});
+					message: 'User profile not found'
+				}));
 			}
 
-			return reply.code(200).send({
+			return (reply.code(200).send({
 				success: true,
-				userData: userProfile,
-			});
+				userData: userProfile
+			}));
+
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
-			throw error;
+			throw (error);
 		}
 	});
 
@@ -59,9 +59,10 @@ export async function userRoutes(serv: FastifyInstance) {
 		try {
 			const query = request.query as { name?: string };
 
-			if (!query.name || query.name.length === 0) return reply.code(200).send([]);
+			if (!query.name || query.name.length === 0)
+				return reply.code(200).send([]);
 
-			//ASC is the way sqlite3 sorts result
+			//ASC is the way sqlite3 sorts result 
 			const sql = `
 				SELECT * 
 				FROM userProfile 
@@ -76,11 +77,11 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			return reply.code(200).send({
 				success: true,
-				profiles,
+				profiles
 			});
 		} catch (error) {
 			serv.log.error(`Error searching users: ${error}`);
-			throw error;
+			throw (error);
 		}
 	});
 
@@ -100,16 +101,80 @@ export async function userRoutes(serv: FastifyInstance) {
 			SELECT * FROM userProfile WHERE userID IN (${placeholders})
 		`;
 
-			const profiles = await serv.dbUsers.all<UserProfile[]>(query, userIDs);
+			const profiles = await serv.dbUsers.all<userData[]>(query, userIDs);
 
-			return reply.code(200).send({
+			return (reply.code(200).send({
 				success: true,
-				message: 'Profiles found!',
-				profiles,
-			});
+				message: "Profiles found!",
+				profiles
+			}));
+
 		} catch (error) {
 			serv.log.error(`Error fetching user profiles by IDs: ${error}`);
-			throw error;
+			throw (error);
+		}
+	});
+
+	//GET ?username=<username>
+	serv.get('/userID/:username', async (request, reply) => {
+		try {
+			const query = request.params as { username: string };
+
+			if (query.username) {
+				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
+				const response = await serv.dbUsers.get(sql, [query.username]);
+
+				if (!response) {
+					return (reply.code(404).send({
+						success: false,
+						message: 'User not found'
+					}));
+				}
+
+				return (reply.code(200).send({
+					success: true,
+					message: "user found!",
+					response
+				}));
+			}
+
+			return (reply.code(400).send({
+				success: false,
+				message: 'A query parameter (e.g., ?username=...) is required.'
+			}));
+		} catch (error) {
+			serv.log.error(`Error fetching user profile: ${error}`);
+			throw (error);
+		}
+	});
+
+	serv.post('/usernames', async (request, reply) => {
+		try {
+			const { userIDs } = request.body as { userIDs: number[] };
+
+			if (!userIDs || userIDs.length === 0)
+				return (reply.code(200).send({ success: true, usersNames: [] }));
+
+			const placeholders = userIDs.map(() => '?').join(',');
+
+			const query = `
+				SELECT userID, username 
+				FROM userProfile p 
+				WHERE p.userID IN (${placeholders})
+			`;
+
+			const usersNames = await serv.dbUsers.all<{ userID: number, username: string }[]>(query, userIDs);
+
+			serv.log.error(`${usersNames}`);
+
+			return (reply.code(200).send({ success: true, usersNames }));
+
+		} catch (error) {
+			serv.log.error(error);
+			return (reply.code(500).send({
+				success: false,
+				message: 'Internal server error'
+			}));
 		}
 	});
 
@@ -259,11 +324,15 @@ export async function userRoutes(serv: FastifyInstance) {
 				SELECT * FROM userStats WHERE userID = ?
 			`;
 
-			const userProfile = await serv.dbUsers.get<UserStats>(query, [userID]);
-			if (!userProfile)
+			const userStats = await serv.dbUsers.get<UserStats>(query, [userID]);
+			if (!userStats)
 				return reply.code(404).send({ success: false, message: 'User profile not found' });
 
-			return reply.code(200).send({ success: true, userProfile });
+
+			return reply.code(200).send({
+				success: true,
+				stats: userStats
+			});
 		} catch (error) {
 			serv.log.error(`Error fetching user profile: ${error}`);
 			throw error;
@@ -345,106 +414,75 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	// TODO : Repeting route, check usage in BFF and switch it up with correct route
 	/* 	serv.get('/:userID/userData', async (request, reply) => {
-			try {
-				const { userID } = request.params as { userID: string };
-	
-				const query = `
-					SELECT
-						p.avatar,
-						p.biography,
-						p.profileColor,
-						p.activityStatus,
-						s.winStreak
-					FROM
-						userProfile p
-					JOIN
-						userStats s ON p.userID = s.userID
-					WHERE
-						p.userID = ?
-				`;
-	
-				const userData = await serv.dbUsers.get(query, [userID]);
-				if (!userData) {
-					return (reply.code(404).send({
-						success: false,
-						message: 'User data not found.'
-					}));
-				}
-	
-				return (reply.code(200).send({ success: true, userData }));
-			} catch (error) {
-				serv.log.error(`[USERS] Error fetching user data win streak: ${error}`);
-				throw (error);
-			}
-		});
-	
-		serv.post('/userDataBatch', async (request, reply) => {
-			try {
-				const { userIDs } = request.body as { userIDs: number[] };
-	
-				if (!userIDs || userIDs.length === 0)
-					return (reply.code(200).send([]));
-	
-				const placeholders = userIDs.map(() => '?').join(',');
-	
-				const query = `
-					SELECT
-						p.userID,
-						p.username,
-						p.avatar,
-						p.biography,
-						p.profileColor,
-						s.winStreak
-					FROM
-						userProfile p
-					JOIN
-						userStats s ON p.userID = s.userID
-					WHERE
-						p.userID IN (${placeholders})
-				`;
-	
-				const usersData = await serv.dbUsers.all(query, userIDs);
-				return (reply.code(200).send({ success: true, usersData }));
-	
-			} catch (error) {
-				serv.log.error(`[USERS] Error fetching user data batch: ${error}`);
-				throw (error);
-			}
-		}); */
-
-	// ROUTE NOT USED BUT KEEPING JUST IN CASE MIGHT BE DELETED LATER
-	/*
-
-
-
-	//get username by userID
-	serv.get('/:userID/username', async (request, reply) => {
 		try {
-			const { userID } = request.params as { userID: number };
-			const query = `SELECT username FROM userProfile WHERE userID = ?`;
+			const { userID } = request.params as { userID: string };
 
-			const user = await serv.dbUsers.get<UserRow>(query, [userID]);
-			if (!user) {
+			const query = `
+				SELECT
+					p.avatar,
+					p.biography,
+					p.profileColor,
+					p.activityStatus,
+					s.winStreak
+				FROM
+					userProfile p
+				JOIN
+					userStats s ON p.userID = s.userID
+				WHERE
+					p.userID = ?
+			`;
+
+			const userData = await serv.dbUsers.get(query, [userID]);
+			if (!userData) {
 				return (reply.code(404).send({
 					success: false,
-					message: 'User not found'
+					message: 'User data not found.'
 				}));
 			}
 
-			return (reply.code(200).send({
-				success: true,
-				message: "Username found!",
-				user
-			}));
-
+			return (reply.code(200).send({ success: true, userData }));
 		} catch (error) {
-			serv.log.error(error);
-			return (reply.code(500).send({
-				success: false,
-				message: 'Internal server error'
-			}));
+			serv.log.error(`[USERS] Error fetching user data win streak: ${error}`);
+			throw (error);
 		}
 	});
+
+	serv.post('/userDataBatch', async (request, reply) => {
+		try {
+			const { userIDs } = request.body as { userIDs: number[] };
+
+			if (!userIDs || userIDs.length === 0)
+				return (reply.code(200).send([]));
+
+			const placeholders = userIDs.map(() => '?').join(',');
+
+			const query = `
+				SELECT
+					p.userID,
+					p.username,
+					p.avatar,
+					p.biography,
+					p.profileColor,
+					s.winStreak
+				FROM
+					userProfile p
+				JOIN
+					userStats s ON p.userID = s.userID
+				WHERE
+					p.userID IN (${placeholders})
+			`;
+
+			const usersData = await serv.dbUsers.all(query, userIDs);
+			return (reply.code(200).send({ success: true, usersData }));
+
+		} catch (error) {
+			serv.log.error(`[USERS] Error fetching user data batch: ${error}`);
+			throw (error);
+		}
+	}); */
+
+	// ROUTE NOT USED BUT KEEPING JUST IN CASE MIGHT BE DELETED LATER
+	/*
 	
 	serv.post('/api/games/responses', async (request, reply) => {
 		try {
