@@ -3,12 +3,6 @@ import type {
 	userData, UserIDResponse
 } from "./bff.interface.js";
 
-import { fetch, Agent } from 'undici';
-
-const sslAgent = new Agent({
-	connect: { rejectUnauthorized: false }
-});
-
 export async function buildTinyProfile(log: any, viewerUserID: number, targetUsername: string): Promise<userData | null> {
 
 	const targetUserID = await fetchUserID(log, targetUsername);
@@ -43,14 +37,13 @@ export async function buildTinyProfile(log: any, viewerUserID: number, targetUse
 }
 
 export async function searchBar(log: any, username: string): Promise<userData[]> {
-	const url = `https://users:2626/search?name=${username}`;
+	const url = `http://users:2626/search?name=${username}`;
 
 	let response: Response;
 
 	try {
 		response = await fetch(url, {
 			method: 'GET',
-			dispatcher: sslAgent
 		});
 	} catch (error) {
 		log.error(`[BFF] User service (search) is unreachable: ${error}`);
@@ -73,13 +66,12 @@ export async function searchBar(log: any, username: string): Promise<userData[]>
 }
 
 export async function fetchUserData(log: any, userID: number): Promise<userData | null> {
-	const url = `https://users:2626/${userID}`;
+	const url = `http://users:2626/${userID}`;
 	let response: Response;
 
 	try {
 		response = await fetch(url, {
 			method: 'GET',
-			dispatcher: sslAgent
 		});
 	} catch (error) {
 		log.error(`[BFF] User service (userData) is unreachable: ${error}`);
@@ -112,12 +104,11 @@ export async function fetchProfileView(log: any, userID: number, targetUserID: n
 		return ('self');
 
 	let friendsResponse: Response;
-	const friendsUrl = `https://friends:1616/friendship?userA=${userID}&userB=${targetUserID}`;
+	const friendsUrl = `http://friends:1616/friendship?userA=${userID}&userB=${targetUserID}`;
 
 	try {
 		friendsResponse = await fetch(friendsUrl, {
 			method: 'GET',
-			dispatcher: sslAgent
 		});
 	} catch (error) {
 		log.error(`[BFF] Friends service is unreachable: ${error}`);
@@ -134,14 +125,13 @@ export async function fetchProfileView(log: any, userID: number, targetUserID: n
 }
 
 export async function fetchUserID(log: any, username: string): Promise<number | null> {
-	const url = `https://users:2626/userID/${username}`;
+	const url = `http://users:2626/userID/${username}`;
 
 	let response: Response;
 
 	try {
 		response = await fetch(url, {
 			method: 'GET',
-			dispatcher: sslAgent
 		});
 	} catch (error) {
 		log.error(`[BFF] User service (userID) is unreachable: ${error}`);
@@ -167,13 +157,12 @@ export async function fetchUserID(log: any, username: string): Promise<number | 
 }
 
 export async function fetchUserStats(log: any, userID: number): Promise<userStats | null> {
-	const url = `https://users:2626/stats/${userID}`;
+	const url = `http://users:2626/stats/${userID}`;
 	let response: Response;
 
 	try {
 		response = await fetch(url, {
 			method: 'GET',
-			dispatcher: sslAgent
 		});
 	} catch (error) {
 		log.error(`[BFF] User service is unreachable: ${error}`);
@@ -195,13 +184,12 @@ export async function fetchUserStats(log: any, userID: number): Promise<userStat
 //The 'since' in the friendlist will store the friendship creation data, not the creation of the profile of the friend
 // Make a issue on github if you'd rather it to be the creation of the friend's profile 
 export async function fetchFriendships(log: any, userID: number, status: FriendshipStatus): Promise<userData[]> {
-	const url = `https://friends:1616/friendship?userID=${userID}`;
+	const url = `http://friends:1616/friendship?userID=${userID}`;
 	let response: Response;
 
 	try {
 		response = await fetch(url, {
 			method: 'GET',
-			dispatcher: sslAgent
 		});
 	} catch (error) {
 		log.error(`[BFF] Friends service is unreachable: ${error}`);
@@ -249,12 +237,11 @@ export async function fetchFriendships(log: any, userID: number, status: Friends
 }
 
 async function fetchMatches(log: any, userID: number): Promise<RawMatches[]> {
-	const url = `https://dashboard:1515/games/${userID}`;
+	const url = `http://dashboard:1515/games/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
 			method: 'GET',
-			dispatcher: sslAgent
 		});
 	} catch (error) {
 		log.error(`[BFF] User service is unreachable: ${error}`);
@@ -276,7 +263,7 @@ async function fetchMatches(log: any, userID: number): Promise<RawMatches[]> {
 async function fetchUsernames(log: any, userIDs: number[]): Promise<Map<number, string>> {
 	if (userIDs.length === 0) return new Map();
 
-	const url = `https://users:2626/usernames`;
+	const url = `http://users:2626/usernames`;
 	let response: Response;
 
 	try {
@@ -284,7 +271,6 @@ async function fetchUsernames(log: any, userIDs: number[]): Promise<Map<number, 
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ userIDs: userIDs }),
-			dispatcher: sslAgent
 		});
 	} catch (error) {
 		log.error(`[BFF] User service is unreachable: ${error}`);
@@ -375,7 +361,7 @@ export async function fetchProfileDataBatch(log: any, userIDs: number[]): Promis
 	if (!userIDs || userIDs.length === 0)
 		return [];
 
-	const url = 'https://users:2626/profiles';
+	const url = 'http://users:2626/profiles';
 	let response: Response;
 
 	try {
@@ -383,7 +369,6 @@ export async function fetchProfileDataBatch(log: any, userIDs: number[]): Promis
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ userIDs: userIDs }),
-			dispatcher: sslAgent
 		});
 	} catch (error) {
 		log.error(`[BFF] User service (userDataBatch) is unreachable: ${error}`);
@@ -485,7 +470,7 @@ export async function fetchView(log: any, viewerID: number, targetID: number): P
 } */
 
 export async function updateAvatar(log: any, userID: number, avatar: string): Promise<void> {
-	const url = `https://users:2626/internal/users/${userID}`;
+	const url = `http://users:2626/internal/users/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
