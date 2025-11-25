@@ -94,6 +94,19 @@ function reconciliation(game: Game, latestReply: repObj) {
 	}
 }
 
+function finishSteps(game: Game) {
+	if (game.leftStep.x != 0 || game.leftStep.y != 0) {
+		movePaddle(game, game.leftPad, game.leftStep);
+		game.setLeftStep();
+	}
+	if (game.local) {
+		if (game.rightStep.x != 0 || game.rightStep.y != 0) {
+			movePaddle(game, game.rightPad, game.rightStep);
+			game.setRightStep();
+		}
+	}
+}
+
 export function handleScore(ws: WebSocket, game: Game, latestReply: repObj): boolean {
 	if (latestReply._score[0] != game.score[0] || latestReply._score[1] != game.score[1]) {
 		//TODO update score UI
@@ -108,17 +121,4 @@ export function handleScore(ws: WebSocket, game: Game, latestReply: repObj): boo
 		return false;
 	}
 	return false;
-}
-
-function finishSteps(game: Game) {
-	if (game.leftStep.x != 0 || game.leftStep.y != 0) {
-		movePaddle(game, game.leftPad, game.leftStep);
-		game.setLeftStep();
-	}
-	if (game.local) {
-		if (game.rightStep.x != 0 || game.rightStep.y != 0) {
-			movePaddle(game, game.rightPad, game.rightStep);
-			game.setRightStep();
-		}
-	}
 }
