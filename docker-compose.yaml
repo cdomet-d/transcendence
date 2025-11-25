@@ -4,52 +4,10 @@ networks:
         name: transcendence
 
 secrets:
-    root.crt:
-        file: ${TSECRETS}/root.crt
-    accessibility.crt:
-        file: ${TSECRETS}/accessibility.crt
-    accessibility.key:
-        file: ${TSECRETS}/accessibility.key
-    auth.crt:
-        file: ${TSECRETS}/auth.crt
-    auth.key:
-        file: ${TSECRETS}/auth.key
-    bff.crt:
-        file: ${TSECRETS}/bff.crt
-    bff.key:
-        file: ${TSECRETS}/bff.key
-    dashboards.crt:
-        file: ${TSECRETS}/dashboards.crt
-    dashboards.key:
-        file: ${TSECRETS}/dashboards.key
-    friends.crt:
-        file: ${TSECRETS}/friends.crt
-    friends.key:
-        file: ${TSECRETS}/friends.key
-    frontend.crt:
-        file: ${TSECRETS}/frontend.crt
-    frontend.key:
-        file: ${TSECRETS}/frontend.key
-    game-manager.crt:
-        file: ${TSECRETS}/game-manager.crt
-    game-manager.key:
-        file: ${TSECRETS}/game-manager.key
-    monitoring.crt:
-        file: ${TSECRETS}/monitoring.crt
-    monitoring.key:
-        file: ${TSECRETS}/monitoring.key
     nginx.crt:
         file: ${TSECRETS}/nginx.crt
     nginx.key:
         file: ${TSECRETS}/nginx.key
-    pong.crt:
-        file: ${TSECRETS}/pong.crt
-    pong.key:
-        file: ${TSECRETS}/pong.key
-    users.crt:
-        file: ${TSECRETS}/users.crt
-    users.key:
-        file: ${TSECRETS}/users.key
 
 services:
     accessibility:
@@ -63,10 +21,6 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
-        secrets:
-            - accessibility.key
-            - accessibility.crt
-            - root.crt
         volumes:
             - ./services/accessibility/app:/usr/app
             - ./services/accessibility/data:/usr/data
@@ -84,10 +38,6 @@ services:
             - PORT=3939
             - JWT_SECRET=${JWT_SECRET}
             - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-        secrets:
-            - auth.key
-            - auth.crt
-            - root.crt
             #    volumes:
         #      - ./services/account/app:/usr/app
         #      - ./services/account/data:/usr/data
@@ -105,10 +55,6 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
-        secrets:
-            - dashboards.key
-            - dashboards.crt
-            - root.crt
         volumes:
             - ./services/dashboards/app:/usr/app
             - ./services/dashboards/data:/usr/data
@@ -123,10 +69,6 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
-        secrets:
-            - friends.key
-            - friends.crt
-            - root.crt
         volumes:
             - ./services/friends/app:/usr/app
             - ./services/friends/data:/usr/data
@@ -141,10 +83,6 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
-        secrets:
-            - frontend.key
-            - frontend.crt
-            - root.crt
         volumes:
             - ./services/frontend/app:/app
     bff:
@@ -158,10 +96,6 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
-        secrets:
-            - bff.key
-            - bff.crt
-            - root.crt
         volumes:
             - ./services/bff/app:/usr/app
         # user: "${T_UID}:${T_GID}"
@@ -178,10 +112,6 @@ services:
         networks:
             - transcendence
         restart: unless-stopped
-        secrets:
-            - game-manager.key
-            - game-manager.crt
-            - root.crt
         volumes:
             - ./services/game-manager/app:/usr/app
     monitoring:
@@ -195,10 +125,6 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
-        secrets:
-            - monitoring.key
-            - monitoring.crt
-            - root.crt
         volumes:
             - ./services/monitoring/app:/usr/app
     nats-server:
@@ -229,7 +155,6 @@ services:
         secrets:
             - nginx.key
             - nginx.crt
-            - root.crt
     pong:
         build:
             context: ./services/pong
@@ -243,10 +168,6 @@ services:
         networks:
             - transcendence
         restart: unless-stopped
-        secrets:
-            - pong.key
-            - pong.crt
-            - root.crt
         volumes:
             - ./services/pong/app:/usr/app
         # user: "${T_UID}:${T_GID}"
@@ -261,10 +182,6 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
-        secrets:
-            - users.key
-            - users.crt
-            - root.crt
         volumes:
             - ./services/users/app:/usr/app
             - ./services/users/data:/usr/data

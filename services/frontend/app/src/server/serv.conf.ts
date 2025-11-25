@@ -28,10 +28,6 @@ const options = {
         },
     },
     trustProxy: checkProxy,
-    https: {
-        key: fs.readFileSync('/run/secrets/frontend.key'),
-        cert: fs.readFileSync('/run/secrets/frontend.crt'),
-    },
     //connectionTimeout
     //forceCloseConnections
     //pluginTimeout

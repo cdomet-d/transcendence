@@ -44,10 +44,6 @@ const options = {
 	}
   },
   trustProxy: checkProxy,
-  https: {
-    key: fs.readFileSync('/run/secrets/dashboards.key'),
-    cert: fs.readFileSync('/run/secrets/dashboards.crt'),
-  }
   //connectionTimeout
   //forceCloseConnections
   //pluginTimeout

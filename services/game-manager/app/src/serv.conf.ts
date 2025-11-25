@@ -31,10 +31,6 @@ const options = {
 	}
   },
 	trustProxy: checkProxy,
-	https: {
-		key: fs.readFileSync('/run/secrets/game-manager.key'),
-		cert: fs.readFileSync('/run/secrets/game-manager.crt'),
-	}
 	//connectionTimeout
 	//forceCloseConnections
 	//pluginTimeout

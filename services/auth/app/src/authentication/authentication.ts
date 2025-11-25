@@ -119,7 +119,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
             newAccountId = account.lastID;
 
             const usersResponse = createUserProfile(serv.log, newAccountId, username);
-
+			console.log('I SHOULD NOT BE THERE')
             const tokenPayload = { userID: newAccountId, username: username };
             const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
             reply.setCookie('token', token, {

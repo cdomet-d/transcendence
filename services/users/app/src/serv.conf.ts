@@ -57,10 +57,6 @@ const options = {
 	}
   },
   trustProxy: checkProxy,
-  https: {
-    key: fs.readFileSync('/run/secrets/users.key'),
-    cert: fs.readFileSync('/run/secrets/users.crt'),
-     }
   //connectionTimeout
   //forceCloseConnections
   //pluginTimeout

@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 
 async function fetchTranslation(word: string, langCode: string): Promise<Response> {
-	const url = `https://localhost:8443/internal/translations?word=${encodeURIComponent(word)}&langCode=${encodeURIComponent(langCode)}`;
+	const url = `https://nginx:443/internal/translations?word=${encodeURIComponent(word)}&langCode=${encodeURIComponent(langCode)}`;
 	return (fetch(url));
 }
 

@@ -31,10 +31,6 @@ const options = {
 	}
   },
 	trustProxy: checkProxy,
-	https: {
-		key: fs.readFileSync('/run/secrets/pong.key'),
-		cert: fs.readFileSync('/run/secrets/pong.crt'),
-	}
 	//connectionTimeout
 	//forceCloseConnections
 	//pluginTimeout
