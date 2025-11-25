@@ -1,4 +1,5 @@
 import type { game, lobbyInfo, userInfo } from "../manager.interface.js";
+import { natsPublish } from "../nats/publisher.js";
 
 export function createGameObj(lobbyInfo: lobbyInfo) {
 	if (!lobbyInfo) {
@@ -10,7 +11,7 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 
 	const game: game = {
 		lobbyID: lobbyInfo.lobbyID!,
-		gameID: crypto.randomUUID().toString(), // TODO get gameID from DB?
+		gameID: crypto.randomUUID().toString(),
 		remote: true,
 		userList: usersArray,
 		score: "",
@@ -20,3 +21,8 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 
 	return game;
 }
+
+export function startGame(game: game) {
+	natsPublish("game.request", JSON.stringify(game), "game.reply");
+}
+

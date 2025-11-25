@@ -2,8 +2,9 @@ import { StringCodec } from 'nats';
 import { wsSend } from '../lobby/wsHandler.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
 import { natsConnect } from './publisher.js';
-import type { gameRequest } from '../manager.interface.js';
+import type { game, gameRequest } from '../manager.interface.js';
 import { wsClientsMap } from '../lobby/lobby.js';
+import { gameOver } from '../quickmatch/gameOver.js';
 
 interface user {
 	userID: number,
@@ -43,7 +44,34 @@ export async function natsSubscribe() {
 			const payload = sc.decode(msg.data);
 			console.log(`GM received following in "game.over" :\n`, JSON.stringify(payload));
 
-			tournamentState(payload);
+			// if (tournamentID ==! -1)
+				tournamentState(payload);
+			// else {
+				gameOver(payload);
+			// }
 		}
 	})();
 }
+
+/* SAM */
+// interface game {
+// 	lobbyID: string,
+// 	gameID: string,
+// 	tournamentID?: string,
+// 	remote: boolean,
+// 	userList: userInfo[] | undefined | null,
+// 	score: string,
+// 	winnerID: number,
+// 	loserID: number,
+// }
+
+/* CHARLOTTE */
+// export interface gameInfo {
+//     gameID: number,
+//     tournamentID: number,
+//     remote: boolean,
+//     users: [user, user],
+//     score: [number, number],
+//     winnerID: number,
+//     loserID: number
+// }

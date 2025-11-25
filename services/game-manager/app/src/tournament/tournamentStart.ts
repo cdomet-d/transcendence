@@ -1,5 +1,5 @@
-import type { game, tournament } from "../manager.interface.js";
-import { natsPublish } from "../nats/publisher.js";
+import type { tournament } from "../manager.interface.js";
+import { startGame } from "../quickmatch/createGame.js";
 
 // Temporary solution: store tournaments in memory
 // export const tournamentMap: Map<number, tournament> = new Map();
@@ -19,8 +19,4 @@ function startFirstRound(tournament: tournament) {
 			}
 		}
 	}
-}
-
-export function startGame(game: game) {
-	natsPublish("game.request", JSON.stringify(game), "game.reply");
 }
