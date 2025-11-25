@@ -1,6 +1,8 @@
 import { tournamentMap } from "./tournamentStart.js";
 import type { game, tournament, userInfo } from "../manager.interface.js";
 import { startGame } from "../quickmatch/createGame.js";
+import { gameOver } from "../quickmatch/gameOver.js";
+import { tournamentOver } from "./tournamentOver.js";
 
 // const nextPlayersMap: Map<number, { player1?: userInfo, player2?: userInfo }> = new Map();
 const nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }> = new Map();
@@ -20,12 +22,12 @@ export async function tournamentState(payload: string) {
 		return;
 	}
 
-	// TODO: send full GameObj to DB??
-	//gameOver();
+	gameOver(game.gameID);
 
 	const nextGame = getNextGameInBracket(tournamentObj);
 	if (nextGame === undefined) { // tournament is over
 		// handle end of tournament
+		tournamentOver(tournamentObj);
 		return;
 	}
 

@@ -30,7 +30,6 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: string): game[
         [shuffledUsers[2]!, shuffledUsers[3]!],
     ];
 
-	// TODO: need DB for unique gameIDs
 	const games: game[] = [
 		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), tournamentID: tournamentID, remote: true, userList: opponents[0], score: "", winnerID: 0, loserID: 0 },
 		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), tournamentID: tournamentID, remote: true, userList: opponents[1], score: "", winnerID: 0, loserID: 0 },

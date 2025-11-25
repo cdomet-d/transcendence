@@ -46,7 +46,7 @@ function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
         ]),
 		remote: true, // TODO set remote or local HERE just before START event
 		format: format,
-		nbPlayers: format === "quick" ? 2 : 4
+		nbPlayers: format === "quickmatch" ? 2 : 4
 	}
 
 	return lobby;

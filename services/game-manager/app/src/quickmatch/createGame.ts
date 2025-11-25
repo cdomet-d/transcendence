@@ -11,8 +11,9 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 
 	const game: game = {
 		lobbyID: lobbyInfo.lobbyID!,
+		tournamentID: "-1",
 		gameID: crypto.randomUUID().toString(),
-		remote: true,
+		remote: true, // TODO this value can change just before click on start game
 		userList: usersArray,
 		score: "",
 		winnerID: 0,

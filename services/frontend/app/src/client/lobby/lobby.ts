@@ -1,7 +1,7 @@
 interface lobbyInfo {
     userList: userInfo[];
     remote: boolean;
-    format: 'quick' | 'tournament' | string;
+    format: 'quickmatch' | 'tournament' | string;
     nbPlayers: number;
     // gameSettings: gameSettingsObj
 }
@@ -24,7 +24,7 @@ function createGameRequest(format: string): string {
         payload: {
             format: format,
             remote: true,
-            nbPlayers: format === 'quick' ? 2 : 4,
+            nbPlayers: format === 'quickmatch' ? 2 : 4,
             userList: [ // this a Map now
                 { userID: 1, username: 'sam' },
                 { userID: 2, username: 'alex' },

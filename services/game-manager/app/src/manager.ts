@@ -1,6 +1,6 @@
 import { createTournament } from "./tournament/tournamentCreation.js";
-import { startGame, startTournament } from "./tournament/tournamentStart.js";
-import { createGameObj } from "./quickmatch/createGame.js";
+import { startTournament } from "./tournament/tournamentStart.js";
+import { createGameObj, startGame } from "./quickmatch/createGame.js";
 import type { game, tournament, lobbyInfo } from "./manager.interface.js";
 
 export function processGameRequest(lobbyInfo: lobbyInfo) {
@@ -12,7 +12,7 @@ export function processGameRequest(lobbyInfo: lobbyInfo) {
 		}
 		lobbyInfo.joinable = false; // TODO: turn back to true when tournament over
 		startTournament(tournament);
-	} else if (lobbyInfo.format === "quick") {
+	} else if (lobbyInfo.format === "quickmatch") {
 		const quickmatch: game | undefined = createGameObj(lobbyInfo);
 		if (quickmatch === undefined) {
 			console.log("Error: Something went wrong!");
