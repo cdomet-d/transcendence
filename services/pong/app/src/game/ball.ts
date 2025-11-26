@@ -51,6 +51,7 @@ function sideWallCollision(game: Game, player1: Player, player2: Player, nextX: 
 			game.ball.dx = 0.3 * game.ballDir;
 			game.ball.dy = 0.03;
 			game.ballDir *= -1;
+			game.lastTick = performance.now();
 			game.passStart = performance.now();
 		}, 1500));
 		return true;

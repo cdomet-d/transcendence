@@ -103,12 +103,14 @@ function sendToPlayers(game: Game, player1: Player, player2: Player) {
 }
 
 async function evenScore(game: Game, player1: Player, player2: Player) {
+	game.cleanTimeoutIDs();
 	game.lastBall = true;
 	await new Promise(res => game.addTimoutID(setTimeout(res, 1500)));
 	game.ball.dx = 0.3 * game.ballDir;
 	game.ball.dy = 0.03;
 	game.ballDir *= -1;
 	game.passStart = performance.now();
+	game.lastTick = performance.now();
 	sendToPlayers(game, player1, player2);
 	game.addTimoutID(setTimeout(gameLoop, SERVER_TICK, game, player1, player2));
 }
