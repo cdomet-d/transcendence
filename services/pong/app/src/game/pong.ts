@@ -10,7 +10,7 @@ const MAX_TIME: number = 90000; // 1min30
 
 export async function setUpGame(game: Game) {
 	if (!game.players[0] || !game.players[1])
-		return; //TODO: deal with that
+		return; //TODO: deal with that  // make player1 and player2 getters
 	const player1: Player = game.players[0];
 	const player2: Player = game.players[1];
 

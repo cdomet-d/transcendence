@@ -20,7 +20,7 @@ export function updatePaddlePos(player: Player, keys: keysObj, game: Game) {
 		left(player.paddle, game, WIDTH / 2 + game.ball.r + 1, player.padStep);
 	if (player.right && (keys.ArrowRight || !game.local && keys.a))
 		right(player.paddle, game, WIDTH - game.padSpec.w, player.padStep);
-	movePaddle(game, player.paddle, player.padStep); //TODO: clean by only giving obj player
+	movePaddle(game, player.paddle, player.padStep);
 }
 
 function up(pad: coordinates, padSpeed: number, step: coordinates) {
