@@ -95,15 +95,21 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			//ASC is the way sqlite3 sorts result 
 			const sql = `
-				SELECT * 
-				FROM userProfile 
-				WHERE username LIKE ? 
-				ORDER BY length(username) ASC, username ASC 
+				SELECT 
+					p.*,
+					s.winStreak as winstreak
+				FROM 
+					userProfile p
+				LEFT JOIN 
+					userStats s ON p.userID = s.userID
+				WHERE 
+					p.username LIKE ? 
+				ORDER BY 
+					length(p.username) ASC, p.username ASC 
 				LIMIT 5
 			`;
 
 			const searchParam = `${query.name}%`;
-
 			const profiles = await serv.dbUsers.all<userData[]>(sql, [searchParam]);
 
 			return reply.code(200).send({

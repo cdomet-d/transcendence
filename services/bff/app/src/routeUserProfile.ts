@@ -106,16 +106,16 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/leaderboard', async (request, reply) => {
-		try {
-			const leaderboard = await fetchLeaderboard(log);
-			
-		} catch (error) {
-			serv.log.error(`[BFF] Error searching users: ${error}`);
-			throw (error);
-
-		}
-	});
+	//serv.get('/leaderboard', async (request, reply) => {
+	//	try {
+	//		const leaderboard = await fetchLeaderboard(log);
+	//		
+	//	} catch (error) {
+	//		serv.log.error(`[BFF] Error searching users: ${error}`);
+	//		throw (error);
+//
+	//	}
+	//});
 
 	/* 	serv.patch('/settings', async (request, reply) => {
 			try {
