@@ -69,6 +69,8 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
+            - PORT=1616
+            - JWT_SECRET=${JWT_SECRET}
         volumes:
             - ./services/friends/app:/usr/app
             - ./services/friends/data:/usr/data

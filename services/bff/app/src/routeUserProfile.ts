@@ -21,14 +21,14 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		try {
 
 			//FOR CURL TESTING
-			//if (request.headers['x-test-userid']) {
-			//	(request as any).user = {
-			//		userID: Number(request.headers['x-test-userid']),
-			//		username: 'test_user'
-			//	};
-			//	serv.log.warn('[BFF] Using Dev Bypass for Auth');
-			//}
-			//else {
+			if (request.headers['x-test-userid']) {
+				(request as any).user = {
+					userID: Number(request.headers['x-test-userid']),
+					username: 'test_user'
+				};
+				serv.log.warn('[BFF] Using Dev Bypass for Auth');
+			}
+			else {
 
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -51,7 +51,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 					}
 				}
 			}
-			//}
+			}
 			const userB = request.user.userID;
 			const { username } = request.params as { username: string };
 

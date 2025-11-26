@@ -13,7 +13,6 @@ export async function routeFriend(serv: FastifyInstance) {
 				userB?: number,
 			};
 
-			//get relationship between two user
 			if (query.userA && query.userB) {
 
 				const sql = `

@@ -457,7 +457,6 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	// TODO : Repeting route, check usage in BFF and switch it up with correct route
 	/* 	serv.get('/:userID/userData', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
