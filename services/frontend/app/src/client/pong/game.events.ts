@@ -11,10 +11,10 @@ export function addMessEvent(game: Game, ws: WebSocket) {
 
 export function createKeyDownEvent(keys: keysObj, horizontal: boolean) {
     return function keyDownEvent(event: KeyboardEvent): void {
-        if (event.key === 'w') keys.w = true;
-        if (event.key === 's') keys.s = true;
-        if (horizontal && event.key === 'a') keys.a = true;
-        if (horizontal && event.key === 'd') keys.d = true;
+        if (event.key === 'z' || event.key === 'Z') keys.w = true;
+        if (event.key === 's' || event.key === 'S') keys.s = true;
+        if (horizontal && (event.key === 'q' || event.key === 'Q')) keys.a = true;
+        if (horizontal && (event.key === 'd' || event.key === 'D')) keys.d = true;
         if (event.key === 'ArrowUp') {
             event.preventDefault();
             keys.ArrowUp = true;
@@ -31,10 +31,10 @@ export function createKeyDownEvent(keys: keysObj, horizontal: boolean) {
 export function createKeyUpEvent(keys: keysObj) {
     return function keyUpEvent(event: KeyboardEvent): void {
         event.preventDefault();
-        if (event.key === 'w') keys.w = false;
-        if (event.key === 's') keys.s = false;
-        if (event.key === 'a') keys.a = false;
-        if (event.key === 'd') keys.d = false;
+        if (event.key === 'z' || event.key === 'Z') keys.w = false;
+        if (event.key === 's' || event.key === 'S') keys.s = false;
+        if (event.key === 'q' || event.key === 'Q') keys.a = false;
+        if (event.key === 'd' || event.key === 'D') keys.d = false;
         if (event.key === 'ArrowUp') keys.ArrowUp = false;
         if (event.key === 'ArrowDown') keys.ArrowDown = false;
         if (event.key === 'ArrowLeft') keys.ArrowLeft = false;
