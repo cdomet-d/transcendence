@@ -99,6 +99,14 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				return reply.code(200).send([]);
 
 			const profiles = await searchBar(serv.log, query.name);
+
+			//TODO handle null profile picture to set them as undefined
+			//if (profiles.length > 0) {
+			//	for (let i = 0; i++; i <= profiles.length) {
+			//		if (profiles[i]?.avatar ===)
+			//	}
+			//}
+
 			return (reply.code(200).send(profiles));
 		} catch (error) {
 			serv.log.error(`[BFF] Error searching users: ${error}`);
@@ -113,7 +121,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	//	} catch (error) {
 	//		serv.log.error(`[BFF] Error searching users: ${error}`);
 	//		throw (error);
-//
+	//
 	//	}
 	//});
 

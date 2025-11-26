@@ -119,6 +119,9 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			newAccountId = account.lastID;
 
 			const usersResponse = createUserProfile(serv.log, newAccountId, username);
+			if ((await usersResponse).errorCode === `conflict`)
+				return reply.code(409).send({ message: 'UserID taken' });
+
 
 			const tokenPayload = { userID: newAccountId, username: username };
 			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
