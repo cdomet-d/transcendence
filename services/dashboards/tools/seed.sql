@@ -1,12 +1,84 @@
-INSERT INTO games (duration, startTime, gameStatus, player1, player2, tournamentID, localGame, player1Score, player2Score) VALUES (90, '2025-09-04 12:00:00', 2, 1, 2, 1, 0, 4, 2);
-INSERT INTO games (duration, startTime, gameStatus, player1, player2, tournamentID, localGame, player1Score, player2Score) VALUES (90, '2025-09-04 12:00:00', 2, 1, 4, 1, 0, 4, 2);
-INSERT INTO games (duration, startTime, gameStatus, player1, player2, tournamentID, localGame, player1Score, player2Score) VALUES (90, '2025-09-04 12:00:00', 2, 1, 5, 1, 0, 4, 2);
-INSERT INTO games (duration, startTime, gameStatus, player1, player2, tournamentID, localGame, player1Score, player2Score) VALUES (90, '2025-09-04 12:00:00', 2, 2, 4, 1, 0, 4, 2);
-INSERT INTO games (duration, startTime, gameStatus, player1, player2, tournamentID, localGame, player1Score, player2Score) VALUES (90, '2025-09-04 12:00:00', 2, 2, 5, 1, 0, 4, 2);
-INSERT INTO games (duration, startTime, gameStatus, player1, player2, tournamentID, localGame, player1Score, player2Score) VALUES (90, '2025-09-04 12:00:00', 2, 3, 4, 1, 0, 4, 2);
-INSERT INTO games (duration, startTime, gameStatus, player1, player2, tournamentID, localGame, player1Score, player2Score) VALUES (90, '2025-09-04 12:00:00', 2, 3, 5, 1, 0, 4, 2);
-INSERT INTO games (duration, startTime, gameStatus, player1, player2, tournamentID, localGame, player1Score, player2Score) VALUES (90, '2025-09-04 12:00:00', 2, 4, 5, 1, 0, 4, 2);
-INSERT INTO games (duration, startTime, gameStatus, player1, player2, tournamentID, localGame, player1Score, player2Score) VALUES (90, '2025-09-04 12:00:00', 2, 1, 2, 1, 0, 4, 2);
-INSERT INTO games (duration, startTime, gameStatus, player1, player2, tournamentID, localGame, player1Score, player2Score) VALUES (90, '2025-09-04 12:00:00', 2, 1, 2, 1, 0, 4, 2);
-INSERT INTO games (duration, startTime, gameStatus, player1, player2, tournamentID, localGame, player1Score, player2Score) VALUES (90, '2025-09-04 12:00:00', 2, 1, 2, 1, 0, 4, 2);
-INSERT INTO tournaments (winnerID, nbPlayers, tournamentStatus, creationTime) VALUES (1, 4, 2, '2025-09-04 12:00:00');
+INSERT INTO
+	tournament (
+		tournamentID,
+		nbPlayers,
+		tournamentStatus,
+		winnerID
+	)
+VALUES
+	(94151, 4, 2, 1);
+
+INSERT INTO
+	game (
+		gameID,
+		duration,
+		startTime,
+		player1,
+		player2,
+		tournamentID,
+		localGame,
+		player1Score,
+		player2Score
+	)
+VALUES
+	(
+		59625,
+		80,
+		'2025-09-04 12:00:00',
+		1,
+		2,
+		-1,
+		0,
+		4,
+		2
+	);
+
+INSERT INTO
+	game (
+		gameID,
+		duration,
+		startTime,
+		player1,
+		player2,
+		tournamentID,
+		localGame,
+		player1Score,
+		player2Score
+	)
+VALUES
+	(
+		18591256,
+		80,
+		'2025-09-04 12:00:00',
+		3,
+		5,
+		-1,
+		0,
+		4,
+		2
+	);
+
+INSERT INTO
+	game (
+		gameID,
+		duration,
+		startTime,
+		player1,
+		player2,
+		tournamentID,
+		localGame,
+		player1Score,
+		player2Score
+	)
+VALUES
+	(
+		1156567,
+		80,
+		'2025-09-04 12:00:00',
+		5,
+		3,
+		-1,
+		0,
+		4,
+		2
+	);
