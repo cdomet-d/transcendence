@@ -4,28 +4,50 @@ import { fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFri
 //import { updatePassword, fetchUserDataAccount, updateUsername,  updateDefaultLang, deleteAccount, deleteUser  } from './bffAccount.service.js';
 //import { deleteFriendship } from './bffFriends.service.js'
 
+interface JwtPayload {
+	userID: number;
+	username: string;
+	iat: number;
+	exp: number;
+}
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	//get's profile + stats + game + friendslist
 	// userID -> userID of requested profile
 	// get big profile with username
+	// TODO : add tournaments 
 	serv.get('/profile/:username', async (request, reply) => {
 		try {
 
-			//TODO: userB ID is in the cookies so setup fastify JWT plugin and get userID this way
-			const { username } = request.params as { username: string };
-			const query = request.query as {
-				userB?: number,
-			};
+			//FOR CURL TESTING
+			//if (request.headers['x-test-userid']) {
+			//	(request as any).user = {
+			//		userID: Number(request.headers['x-test-userid']),
+			//		username: 'test_user'
+			//	};
+			//	serv.log.warn('[BFF] Using Dev Bypass for Auth');
+			//}
+			//else {
 
-			if (query.userB === undefined) {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			try {
+				await request.jwtVerify();
+			} catch (err) {
+				return reply.code(401).send({ message: 'Invalid Token' });
+			}
+			//}
+			const userB = request.user.userID;
+			const { username } = request.params as { username: string };
+
+			if (userB === undefined) {
 				serv.log.error("[BFF] Parameter missing")
 				return reply.code(400).send({
 					message: '[BFF] Missing required query parameters: userA and userB are required.'
 				});
 			}
-			const combinedUserData = await buildTinyProfile(serv.log, query.userB, username);
+			const combinedUserData = await buildTinyProfile(serv.log, userB, username);
 
 			if (!combinedUserData)
 				return (reply.code(404).send({ message: 'User profile data not found.' }));
@@ -115,7 +137,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			serv.log.error(`[BFF] Error searching users: ${error}`);
 			throw (error);
-	
+
 		}
 	});
 

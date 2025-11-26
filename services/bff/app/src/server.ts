@@ -51,23 +51,3 @@ function getPort(): number {
 	}
 	return port;
 }
-//
-//const serv: FastifyInstance = Fastify(options);
-//
-//serv.register(cors, {
-//	origin: true,
-//	methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//});
-//
-//
-//const start = async () => {
-//	try {
-//		await serv.listen({ port: 1818, host: '0.0.0.0' });
-//		;
-//	} catch (err) {
-//		serv.log.error(err);
-//		process.exit(1);
-//	}
-//};
-//
-//start();

@@ -28,7 +28,6 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 	serv.get('/status', async (request, reply) => {
 		const token = request.cookies.token;
 		if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
-		console.log('');
 		if (token) {
 			try {
 				const user = serv.jwt.verify(token) as JwtPayload;
