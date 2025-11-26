@@ -7,7 +7,7 @@ import { Player } from "../classes/player-class.js";
 const SERVER_TICK: number = 1000 / 50;
 const TIME_STEP: number = 1000 / 60;
 
-export async function gameLoop(game: Game, player1: Player, player2: Player) { //TODO: make player1 and player2 getters
+export async function gameLoop(game: Game, player1: Player, player2: Player) {
 	game.startLoop = performance.now();
 	const tickStart = game.lastTick === 0 ? game.startTimestamp : game.lastTick;
 	const tickEnd = tickStart + SERVER_TICK;
@@ -91,8 +91,8 @@ function waitForEnd(game: Game, socket: WebSocket) {
 				socket.close();
 		} catch (err: any) {
 			game.infos.score = [-1, -1];
-			socket.close();
 			game.log.error(err.message);
+			socket.close(1003, err.message);
 		}
 	});
 }

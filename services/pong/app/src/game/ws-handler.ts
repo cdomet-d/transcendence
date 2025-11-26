@@ -19,18 +19,21 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 	const game: Game | undefined = this.gameRegistry.findGame(ids.gameID);
 	if (!game) {
 		this.log.error("game " + ids.gameID + " not found");
-		socket.close();
+		socket.close(1003, "game " + ids.gameID + " not found");
 		return;
 	}
 	if (game.players.length === 2) {
 		this.log.error("not allowed in game");
-		socket.close();
+		socket.close(1003, "not allowed in game");
 		return;
 	}
 
 	getPlayerInGame(game, ids.userID, socket);
 
-	// socket.onerror = (event) => {}; //TODO
+	socket.onerror = (event) => {
+		this.log.error(event.message);
+		socket.close(1011, event.message);
+	};
 
 	socket.on('close', () => {
 		if (game) {
@@ -58,6 +61,7 @@ export function waitForMessage(serv: FastifyInstance, socket: WebSocket): Promis
 					reject("Invalid ids");
 				resolve(ids);
 			} catch (err: any) {
+				socket.send(err.message);
 				socket.close();
 				serv.log.error(err.message);
 			}
