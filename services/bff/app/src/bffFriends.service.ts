@@ -1,12 +1,13 @@
-export async function createFriendRequest(log: any, senderID: number, friendID: number, token: string): Promise<void> {
+export async function createFriendRequest(log: any, senderID: number, friendID: number/* , token: string */): Promise<void> {
 	const url = 'http://friends:1616/relation';
 	let response: Response;
+		log.error(`${senderID} ANNNNNNNNNND ${friendID}`);
 
 	try {
 		response = await fetch(url, {
 			method: 'POST',
 			headers: {
-				'Cookie': `token=${token}`,
+			//	'Cookie': `token=${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({ senderID, friendID })
@@ -16,16 +17,16 @@ export async function createFriendRequest(log: any, senderID: number, friendID: 
 		throw new Error('Friends service is unreachable.');
 	}
 
-	//TODO return error to handle in route
 	if (response.status === 409) {
 		log.warn(`[BFF] Friend request failed: Friendship already exists between ${senderID} and ${friendID}`);
-		return;
+		const errorBody = await response.json() as { message: string };
+		throw { code: 409, message: errorBody.message || 'Friendship already exists.' };
 	}
 
-	//TODO return error to handle in route
 	if (response.status === 404) {
 		log.error(`[BFF] Friends service (sendrequest) reported 404: Friend request could not be sent.`);
-		throw new Error('Friend request could not be sent, user could not be found');
+		const errorBody = await response.json() as { message: string };
+		throw { code: 404, message: errorBody.message || 'user does not exists.' };
 	}
 
 	//TODO return error to handle in route
@@ -61,10 +62,10 @@ export async function acceptFriendRequest(log: any, senderRequestID: number, fri
 		throw { code: 409, message: errorBody.message || 'Friendship already exists.' };
 	}
 
-	//TODO return error to handle in route
 	if (response.status === 404) {
 		log.error(`[BFF] Friends service (acceptfriend) reported 404: Friend request could not be accepted.`);
-		throw new Error('Friend request could not be accepted due to a server error.');
+		const errorBody = await response.json() as { message: string };
+		throw { code: 404, message: errorBody.message || 'Friendship request does not exists.' };
 	}
 
 	//TODO return error to handle in route
@@ -101,10 +102,10 @@ export async function deleteFriendRequest(log: any, removerID: number, friendID:
 		throw { code: 409, message: errorBody.message || 'Friendship already exists.' };
 	}
 
-	//TODO return error to handle in route
 	if (response.status === 404) {
 		log.error(`[BFF] Friends service (deletefriend) reported 404: Friend request could not be deleted.`);
-		throw new Error('Friend request could not be deleted due to a server error.');
+		const errorBody = await response.json() as { message: string };
+		throw { code: 404, message: errorBody.message || 'Friendship does not exists.' };
 	}
 
 	//TODO return error to handle in route

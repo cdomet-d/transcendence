@@ -716,26 +716,13 @@ WHERE userID = 101;
 [WIP] DOC NOT UP TO DATE YET (nginx conf not done yet)
 
 
-
-
 * servir traduction      
 * envoyer les settings
-* supprimer ami          
-* supprimer le compte    ✅
 
+* supprimer ami                    ✅
 * envoyer demande d'ami            ✅
 * accepter demande d'ami           ✅
 * servir la leaderboard            ✅
 * servir les users pour search bar ✅
 * servir le profile                ✅
 * servir userCard                  ✅
-
-TODO : is username needed in users service
-
-TODO: register and login straight to account
-The account service is going away, we create a db in auth instead with a username/password/userID
-Everything else is going to user.
-Auth takes to bff 
-Update bff accordingly
-
-front -> nginx -> auth -> bff -> users -> bff -> auth -> nginx -> front

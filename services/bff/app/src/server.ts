@@ -4,6 +4,7 @@ import type { FastifyInstance } from 'fastify';
 import cookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
 
+import { bffFriendRoutes } from './routeFriends.js';
 import { bffAccessibilityRoutes } from './routeAccessibility.js';
 import { bffUsersRoutes } from './routeUserProfile.js';
 
@@ -34,6 +35,7 @@ function addPlugins(serv: FastifyInstance) {
 	serv.register(cookie);
 	serv.register(bffAccessibilityRoutes);
 	serv.register(bffUsersRoutes);
+	serv.register(bffFriendRoutes);
 
 }
 

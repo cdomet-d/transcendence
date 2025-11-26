@@ -5,7 +5,7 @@ import type {
 
 export async function buildTinyProfile(log: any, viewerUserID: number, targetUsername: string, token: string): Promise<userData | null> {
 
-	const targetUserID = await fetchUserID(log, targetUsername, token);
+	const targetUserID = await fetchUserID(log, targetUsername/* , token */);
 
 	if (!targetUserID) {
 		log.warn(`[BFF] buildTinyProfile: UserID not found for ${targetUsername}`);
@@ -135,7 +135,7 @@ export async function fetchProfileView(log: any, userID: number, targetUserID: n
 	return friendshipData.status;
 }
 
-export async function fetchUserID(log: any, username: string, token: string): Promise<number | null> {
+export async function fetchUserID(log: any, username: string/* , token: string */): Promise<number | null> {
 	const url = `http://users:2626/userID/${username}`;
 
 	let response: Response;
@@ -143,10 +143,10 @@ export async function fetchUserID(log: any, username: string, token: string): Pr
 	try {
 		response = await fetch(url, {
 			method: 'GET',
-			headers: {
-				'Cookie': `token=${token}`,
-				'Content-Type': 'application/json'
-			}
+			//headers: {
+			//	'Cookie': `token=${token}`,
+			//	'Content-Type': 'application/json'
+			//}
 		});
 	} catch (error) {
 		log.error(`[BFF] User service (userID) is unreachable: ${error}`);

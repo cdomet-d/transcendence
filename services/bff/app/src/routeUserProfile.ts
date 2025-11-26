@@ -1,15 +1,8 @@
 import type { FastifyInstance } from 'fastify';
-import type { UserProfileView } from './bff.interface.js';
+import type { UserProfileView, JwtPayload } from './bff.interface.js';
 import { fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches } from './bffUserProfile.service.js';
 //import { updatePassword, fetchUserDataAccount, updateUsername,  updateDefaultLang, deleteAccount, deleteUser  } from './bffAccount.service.js';
 //import { deleteFriendship } from './bffFriends.service.js'
-
-interface JwtPayload {
-	userID: number;
-	username: string;
-	iat: number;
-	exp: number;
-}
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
 
