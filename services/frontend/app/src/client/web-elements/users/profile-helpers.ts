@@ -3,9 +3,9 @@ import type { ImgData, Size, UserData } from '../types-interfaces.js';
 import { UserProfile, UserCardSocial, UserInline } from './profile.js';
 
 export function setAvatar(
-    av: ImgData | null,
     size: Size,
     el: UserProfile | UserCardSocial | UserInline,
+    av?: ImgData | null,
 ) {
     if (!av) av = defaultAvatar;
     const avatar = { ...av };
@@ -24,7 +24,7 @@ export function setUserProfileCommonValues(
     el.status = user.status;
     el.username = user.username;
     el.winstreak = user.winstreak;
-    setAvatar(user.avatar, size, el);
+    setAvatar(size, el, user.avatar);
 }
 
 /**

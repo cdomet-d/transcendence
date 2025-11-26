@@ -36,7 +36,7 @@ export function createIcon(metadata: ImgData): Icon {
  * @param metadata - an interface of type {@link ImgData}. Optional - defaults to a medium-sized default avatar.
  * @returns The {@link Avatar} element.
  */
-export function createAvatar(metadata?: ImgData): Avatar {
+export function createAvatar(metadata?: ImgData | null): Avatar {
     const el = document.createElement('div', { is: 'user-avatar' }) as Avatar;
     if (metadata) el.metadata = metadata;
 
