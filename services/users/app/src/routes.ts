@@ -251,13 +251,18 @@ export async function userRoutes(serv: FastifyInstance) {
 				.code(201)
 				.send({ success: true, message: 'Profile created successfully!' });
 		} catch (error) {
-			if (error && typeof error === 'object' && 'code' in error && (error.code === 'SQLITE_CONSTRAINT_UNIQUE' || error.code === 'SQLITE_CONSTRAINT')) {
+			if (error && typeof error === 'object' && 'code' in error && error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
 				return (reply.code(409).send({
 					success: false,
 					message: 'A profile for this user already exists.',
 				}));
 			}
-			//SQLITE_CONSTRAINT
+			if (error && typeof error === 'object' && 'code' in error && error.code === 'SQLITE_CONSTRAINT') {
+				return (reply.code(409).send({
+					success: false,
+					message: 'UserID already taken',
+				}));
+			}
 			serv.log.error(`Error creating user profile: ${error}`);
 			throw error;
 		}
