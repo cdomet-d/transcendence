@@ -22,7 +22,7 @@ cleandb:
 fclean: clean
 	@docker system prune -a -f
 
-run: stop all cleandb
+run: stop all
 	@docker compose up -d
 
 stop:
