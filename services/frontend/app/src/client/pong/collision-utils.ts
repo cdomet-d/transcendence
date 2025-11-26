@@ -52,7 +52,7 @@ export function lineIntersection(
     return t;
 }
 
-const maxSpeed = 0.75;
+const maxSpeed = 0.65;
 const maxAngleDeg: number = 40;
 const maxAngle: number = (maxAngleDeg * Math.PI) / 180;
 export function updateVelocity(game: Game, paddle: coordinates, nx: number) {
