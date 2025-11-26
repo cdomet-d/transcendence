@@ -16,7 +16,7 @@ export async function startGame(game: Game, ws: WebSocket) {
 function FrameRequestCallback(game: Game, ws: WebSocket) {
 	return function gameLoop(timestamp: number) {
 		const latestReply: repObj | undefined = game.replyHistory[game.replyHistory.length - 1];
-		if (latestReply !== undefined && game.reqHistory.has(latestReply._ID))
+		if (latestReply !== undefined && game.reqHistory.has(latestReply.ID))
 			if (reconciliation(game, latestReply, ws))
 				return;
 
@@ -25,9 +25,9 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 		let updates: number = 0;
 		while (game.delta >= TIME_STEP && updates < MAX_UPDATES_PER_FRAME) {
 			sendRequest(game, ws);
-			updatePaddlePos(game.leftPad, true, game, game.req._keys);
+			updatePaddlePos(game.leftPad, true, game, game.req.keys);
 			if (game.local) 
-				updatePaddlePos(game.rightPad, false, game, game.req._keys);
+				updatePaddlePos(game.rightPad, false, game, game.req.keys);
 			else 
 				interpolation(game);
 			deadReckoning(game, latestReply);
@@ -45,10 +45,10 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 }
 
 function sendRequest(game: Game, ws: WebSocket) {
-	game.req._timeStamp = performance.now();
+	game.req.timeStamp = performance.now();
 	ws.send(JSON.stringify(game.req));
 	game.addReq(game.req);
-	game.req._ID += 1; //TODO: overflow?
+	game.req.ID += 1; //TODO: overflow?
 }
 
 function interpolation(game: Game) {
@@ -57,10 +57,10 @@ function interpolation(game: Game) {
 
 	if (updates) {
 		const t =
-			(renderTime - updates[0]._timestamp) / (updates[1]._timestamp - updates[0]._timestamp);
-		game.rightPad.y = lerp(updates[0]._rightPad.coord.y, updates[1]._rightPad.coord.y, t);
+			(renderTime - updates[0].timestamp) / (updates[1].timestamp - updates[0].timestamp);
+		game.rightPad.y = lerp(updates[0].rightPad.coord.y, updates[1].rightPad.coord.y, t);
 		if (game.horizontal)
-			game.rightPad.x = lerp(updates[0]._rightPad.coord.x, updates[1]._rightPad.coord.x, t);
+			game.rightPad.x = lerp(updates[0].rightPad.coord.x, updates[1].rightPad.coord.x, t);
 		game.deleteReplies(game.replyHistory.indexOf(updates[0]) - 1);
 	}
 }
@@ -70,16 +70,16 @@ function lerp(start: number, end: number, t: number): number {
 }
 
 function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean {
-	let id: number = latestReply._ID;
+	let id: number = latestReply.ID;
 	game.deleteReq(id);
 
-	if (latestReply._score[0] != game.score[0] 
-		|| latestReply._score[1] != game.score[1])
+	if (latestReply.score[0] != game.score[0] 
+		|| latestReply.score[1] != game.score[1])
 		game.updateScore(latestReply);
-	game.leftPad = latestReply._leftPad;
+	game.leftPad = latestReply.leftPad;
 	if (game.local)
-		game.rightPad = latestReply._rightPad;
-	game.ball = latestReply._ball;
+		game.rightPad = latestReply.rightPad;
+	game.ball = latestReply.ball;
 
 	if (game.leftStep.x != 0 || game.leftStep.y != 0
 		|| game.rightStep.x != 0 || game.rightStep.y != 0) {
@@ -87,13 +87,13 @@ function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean
 		finishSteps(game);
 	}
 	for (let i = id + 1; game.reqHistory.has(i); i++) {
-		updatePaddlePos(game.leftPad, true, game, game.reqHistory.get(i)!._keys);
+		updatePaddlePos(game.leftPad, true, game, game.reqHistory.get(i)!.keys);
 		if (game.local) 
-			updatePaddlePos(game.rightPad, false, game, game.reqHistory.get(i)!._keys);
+			updatePaddlePos(game.rightPad, false, game, game.reqHistory.get(i)!.keys);
 		deadReckoning(game, latestReply);
 		finishSteps(game);
 	}
-	if (latestReply._end === true) {
+	if (latestReply.end === true) {
 		ws.send("0");
 		return true;
 	}

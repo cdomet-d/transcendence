@@ -37,7 +37,7 @@ export async function natsSubscription(serv: FastifyInstance) {
 	// 	}
 	// })();
 
-	serv.gameRegistry.addGame(new Game(gameobj, serv.nc)); //TODO: for testing
+	serv.gameRegistry.addGame(new Game(gameobj, serv.nc, serv.log)); //TODO: for testing
 };
 
 import type { user } from '../classes/game-interfaces.js';

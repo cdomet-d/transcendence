@@ -53,8 +53,8 @@ export interface coordinates {
 }
 
 export interface playerReq {
-    _id: number,
-    _req: reqObj,
+    id: number,
+    req: reqObj,
 }
 
 
@@ -70,17 +70,17 @@ export interface paddleObj {
 }
 
 export interface repObj {
-    _ID: number,
-    _timestamp: number, // only used client side
-    _leftPad: paddleObj,
-    _rightPad: paddleObj,
-    _ball: ballObj,
-    _score: [number, number],
-    _end: boolean
+    ID: number,
+    timestamp: number, // only used client side
+    leftPad: paddleObj,
+    rightPad: paddleObj,
+    ball: ballObj,
+    score: [number, number],
+    end: boolean
 }
 
 export interface reqObj {
-    _ID: number,
-    _keys: keysObj,
-    _timeStamp: number,
+    ID: number,
+    keys: keysObj,
+    timeStamp: number,
 }

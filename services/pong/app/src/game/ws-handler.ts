@@ -14,16 +14,22 @@ const MAX_SCORE: number = 5;
 export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): Promise< void > {
 	this.log.info('PONG webSocket connection established');
 
-	const ids: idsObj = await waitForMessage(socket);
+	const ids: idsObj = await waitForMessage(this, socket);
 
 	const game: Game | undefined = this.gameRegistry.findGame(ids.gameID);
-	if (!game)
-		throw new Error("game " + ids.gameID + " not found"); //TODO: check if its properly catched
-	if (game.players.length === 2)
-		throw new Error("not allowed");
+	if (!game) {
+		this.log.error("game " + ids.gameID + " not found");
+		socket.close();
+		return;
+	}
+	if (game.players.length === 2) {
+		this.log.error("not allowed in game");
+		socket.close();
+		return;
+	}
 
 	getPlayerInGame(game, ids.userID, socket);
-	
+
 	// socket.onerror = (event) => {}; //TODO
 
 	socket.on('close', () => {
@@ -43,16 +49,17 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 	});
 }
 
-export function waitForMessage(socket: WebSocket): Promise<idsObj> {
+export function waitForMessage(serv: FastifyInstance, socket: WebSocket): Promise<idsObj> {
 	return new Promise((resolve, reject) => {
 		socket.once('message', (payload: string) => {
 			try {
-				const ids = JSON.parse(payload);
+				const ids: idsObj = JSON.parse(payload);
 				if (!validIds(ids))
-					reject(new Error("Invalid ids"));
+					reject("Invalid ids");
 				resolve(ids);
-			} catch (err) {
-				reject(err);
+			} catch (err: any) {
+				socket.close();
+				serv.log.error(err.message);
 			}
 		});
 	});

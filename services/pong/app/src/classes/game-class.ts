@@ -2,6 +2,7 @@ import { Player } from './player-class.js';
 import type { WebSocket } from '@fastify/websocket';
 import { NatsConnection } from 'nats';
 import type { reqObj, playerReq, gameInfo, ballObj, paddleSpec } from './game-interfaces.js';
+import { FastifyBaseLogger } from 'fastify';
 
 export const HEIGHT = 558.9;
 export const WIDTH = 1000;
@@ -11,27 +12,29 @@ type reqTab = Array< playerReq >;
 
 export class Game {
 	/*                             PROPERTIES                                */
-	#_gameInfo: gameInfo;
-	#_nc: NatsConnection;
-	#_players: playerTab;
-	#_ball: ballObj;
-	#_ballDir: number;
-	#_paddleSpec: paddleSpec;
-	#_reqHistory: reqTab;
-	#_lastTick: number;
-	#_timeoutIDs: Array< NodeJS.Timeout >;
-	#_startTimestamp: number;
-	#_passStart: number;
-	#_endSent: boolean;
-	#_lastBall: boolean;
-	#_startLoop: number;
+	#gameInfo: gameInfo;
+	#nc: NatsConnection;
+	#players: playerTab;
+	#ball: ballObj;
+	#ballDir: number;
+	#paddleSpec: paddleSpec;
+	#reqHistory: reqTab;
+	#lastTick: number;
+	#timeoutIDs: Array< NodeJS.Timeout >;
+	#startTimestamp: number;
+	#passStart: number;
+	#endSent: boolean;
+	#lastBall: boolean;
+	#startLoop: number;
+	#log: FastifyBaseLogger;
 
 	/*                            CONSTRUCTORS                               */
-	constructor(gameInfo: gameInfo, nc: NatsConnection) {
-		this.#_gameInfo = gameInfo;
-		this.#_nc = nc;
-		this.#_players = new Array();
-		this.#_ball = {
+	constructor(gameInfo: gameInfo, nc: NatsConnection, log: FastifyBaseLogger) {
+		this.#gameInfo = gameInfo;
+		this.#nc = nc;
+		this.#log = log
+		this.#players = new Array();
+		this.#ball = {
 			x: WIDTH / 2, 
 			y: HEIGHT / 2, 
 			dx: 0.3, 
@@ -39,185 +42,188 @@ export class Game {
 			maxSpeed: 0.70,
 			r: 13
 		};
-		this.#_paddleSpec = {
+		this.#paddleSpec = {
 			speed: 0.45,
 			w: 20, 
 			h: HEIGHT / 5, 
 			halfW: 20 / 2, 
 			halfH: HEIGHT / 10
 		}; //custom
-		this.#_ballDir = -1;
-		this.#_reqHistory = new Array();
-		this.#_lastTick = 0;
-		this.#_timeoutIDs = new Array();
-		this.#_startTimestamp = 0;
-		this.#_passStart = 0;
-		this.#_endSent = false;
-		this.#_lastBall = false;
-		this.#_startLoop = 0;
+		this.#ballDir = -1;
+		this.#reqHistory = new Array();
+		this.#lastTick = 0;
+		this.#timeoutIDs = new Array();
+		this.#startTimestamp = 0;
+		this.#passStart = 0;
+		this.#endSent = false;
+		this.#lastBall = false;
+		this.#startLoop = 0;
 	}
 
 	/*                              GETTERS                                  */
 	get nc(): NatsConnection {
-		return this.#_nc;
+		return this.#nc;
+	}
+
+	get log(): FastifyBaseLogger {
+		return this.#log;
 	}
 
 	get infos(): gameInfo {
-		return this.#_gameInfo;
+		return this.#gameInfo;
 	}
 
 	get gameID(): number {
-		return this.#_gameInfo.gameID;
+		return this.#gameInfo.gameID;
 	}
 
 	get players(): playerTab {
-		return this.#_players;
+		return this.#players;
 	}
 
 	get local(): boolean {
-		if (this.#_gameInfo.remote)
+		if (this.#gameInfo.remote)
 			return false
 		return true;
 	}
 
 	get randUserID(): number {
-		return this.#_gameInfo.users[1]!.userID;
+		return this.#gameInfo.users[1]!.userID;
 	}
 		
 	get ball(): ballObj {
-		return this.#_ball;
+		return this.#ball;
 	}
 
 	get padSpec(): paddleSpec {
-		return this.#_paddleSpec;
+		return this.#paddleSpec;
 	}
 
 	get reqHistory(): reqTab {
-		return this.#_reqHistory;
+		return this.#reqHistory;
 	}
 
 	get lastTick(): number {
-		return this.#_lastTick;
+		return this.#lastTick;
 	}
 
 	get ballDir(): number {
-		return this.#_ballDir;
+		return this.#ballDir;
 	}
 
 	get startTimestamp(): number {
-		return this.#_startTimestamp;
+		return this.#startTimestamp;
 	}
 
 	get passStart(): number {
-		return this.#_passStart;
+		return this.#passStart;
 	}
 
 	get endSent(): boolean {
-		return this.#_endSent;
+		return this.#endSent;
 	}
 
 	get lastBall(): boolean {
-		return this.#_lastBall;
+		return this.#lastBall;
 	}
 
 	get startLoop(): number {
-		return this.#_startLoop;
+		return this.#startLoop;
 	}
 
 	/*                              SETTERS                                  */
 	set reqHistory(reqTab: reqTab) {
-		this.#_reqHistory = reqTab;
+		this.#reqHistory = reqTab;
 	}
 
 	set lastTick(time: number) {
-		this.#_lastTick = time;
+		this.#lastTick = time;
 	}
 
 	set ballDir(direction: number) {
-		this.#_ballDir = direction;
+		this.#ballDir = direction;
 	}
 
 	set startTimestamp(timestamp: number) {
-		this.#_startTimestamp = timestamp;
+		this.#startTimestamp = timestamp;
 	}
 
 	set passStart(timestamp: number) {
-		this.#_passStart = timestamp;
+		this.#passStart = timestamp;
 	}
 
 	set endSent(state: boolean) {
-		this.#_endSent = state;
+		this.#endSent = state;
 	}
 
 	set lastBall(state: boolean) {
-		this.#_lastBall = state;
+		this.#lastBall = state;
 	}
 
 	set startLoop(timestamp: number) {
-		this.#_startLoop = timestamp;
+		this.#startLoop = timestamp;
 	}
 
 	/*                              METHODS                                  */
 	public addPlayer(userID: number, socket: WebSocket, clientSide: string) {
 		let serverSide: string = "left";
-		if (this.#_players.length === 1)
+		if (this.#players.length === 1)
 			serverSide = "right";
-		const player: Player = new Player(userID, socket, serverSide, clientSide, this.#_paddleSpec);
-		this.#_players.push(player);
+		const player: Player = new Player(userID, socket, serverSide, clientSide, this.#paddleSpec);
+		this.#players.push(player);
 	}
 
 	public deletePlayers() {
-		this.#_players.forEach((player: Player) => {
+		this.#players.forEach((player: Player) => {
 			if (player.socket.readyState === 1) //TODO: ou 0 ?
 				player.socket.close();
 		})
-		this.#_players.splice(0, this.#_players.length);
-
+		this.#players.splice(0, this.#players.length);
 	}
 
 	public addReq(req: reqObj, id: number) {
-		const newReq: playerReq = { _id: id, _req: structuredClone(req)};
-		this.#_reqHistory.push(newReq);
+		const newReq: playerReq = { id: id, req: structuredClone(req)};
+		this.#reqHistory.push(newReq);
 	}
 
 	public deleteReq() {
-		this.#_reqHistory.splice(this.#_reqHistory.length);
+		this.#reqHistory.splice(this.#reqHistory.length);
 	}
 
 	public addTimoutID(ID: NodeJS.Timeout) {
-		this.#_timeoutIDs.push(ID);
+		this.#timeoutIDs.push(ID);
 	}
 
 	public cleanTimeoutIDs() {
-		this.#_timeoutIDs.forEach((ID) => clearTimeout(ID));
+		this.#timeoutIDs.forEach((ID) => clearTimeout(ID));
 	}
 
 	public fillGameInfos() {
-		this.#_gameInfo.duration = (performance.now() - this.#_startTimestamp) / 1000;
-		const user1: number = this.#_gameInfo.users[0].userID;
-		const user2: number = this.#_gameInfo.users[1].userID;
+		this.#gameInfo.duration = (performance.now() - this.#startTimestamp) / 1000;
+		const user1: number = this.#gameInfo.users[0].userID;
+		const user2: number = this.#gameInfo.users[1].userID;
 		let score1: number = 0;
 		let score2: number = 0;
-		if (this.#_players[0]) {
-			if (this.#_players[0].userID === user1)
-				score1 = this.#_players[0].score;
+		if (this.#players[0]) {
+			if (this.#players[0].userID === user1)
+				score1 = this.#players[0].score;
 			else
-				score2 = this.#_players[0].score;
+				score2 = this.#players[0].score;
 		}
-		if (this.#_players[1]) {
-			if (this.#_players[1].userID === user1)
-				score1 = this.#_players[1].score;
+		if (this.#players[1]) {
+			if (this.#players[1].userID === user1)
+				score1 = this.#players[1].score;
 			else
-				score2 = this.#_players[1].score;
+				score2 = this.#players[1].score;
 		}
-		this.#_gameInfo.score = [score1, score2];
+		this.#gameInfo.score = [score1, score2];
 		if (score1 > score2) {
-			this.#_gameInfo.winnerID = user1;
-			this.#_gameInfo.loserID = user2;
+			this.#gameInfo.winnerID = user1;
+			this.#gameInfo.loserID = user2;
 		}
 		else {
-			this.#_gameInfo.winnerID = user2;
-			this.#_gameInfo.loserID = user1;
+			this.#gameInfo.winnerID = user2;
+			this.#gameInfo.loserID = user1;
 		}
 	}
 }

@@ -8,8 +8,8 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
     let timeSinceUpdate: number = performance.now() - game.lastFrameTime;
     let ball: ballObj = { ...game.ball };
     if (latestReply !== undefined) {
-        timeSinceUpdate = performance.now() - latestReply._timestamp;
-        ball = { ...latestReply._ball };
+        timeSinceUpdate = performance.now() - latestReply.timestamp;
+        ball = { ...latestReply.ball };
     }
     if (timeSinceUpdate > 100)
         timeSinceUpdate = 100;//TODO: add var for 100

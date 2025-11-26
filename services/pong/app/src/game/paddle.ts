@@ -3,10 +3,9 @@ import { Game, HEIGHT, WIDTH } from '../classes/game-class.js'
 import { raycast, updateVelocity } from './collision-utils.js';
 import type { coordinates, keysObj, paddleSpec } from '../classes/game-interfaces.js';
 
-const TIME_STEP: number = 1000 / 60; // 60FPS
+const TIME_STEP: number = 1000 / 60;
 
 export function updatePaddlePos(player: Player, keys: keysObj, game: Game) {
-    // const step: coordinates = { x: 0, y: 0 };
 	if ((player.left && keys.w)
 		|| (player.right && (keys.ArrowUp|| !game.local && keys.w)))
 		up(player.paddle, game.padSpec.speed, player.padStep);

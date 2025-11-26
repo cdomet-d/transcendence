@@ -11,11 +11,11 @@ const idsObjSchema = {
 
 const reqObjSchema = {
     type: 'object',
-    required: ['_ID', '_keys', '_timeStamp'],
+    required: ['ID', 'keys', 'timeStamp'],
     properties: {
-        _ID: { type: 'number' },
-        _timeStamp: { type: 'number' },
-        _keys: {
+        ID: { type: 'number' },
+        timeStamp: { type: 'number' },
+        keys: {
             type: 'object',
             additionalProperties: { type: 'boolean' },
             required: ['w', 's', 'a', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'],

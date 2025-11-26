@@ -4,7 +4,7 @@ import type { keysObj, repObj } from './classes/game-interfaces.js';
 export function addMessEvent(game: Game, ws: WebSocket) {
     ws.onmessage = (event) => {
         const rep: repObj = JSON.parse(event.data);
-        rep._timestamp = performance.now();
+        rep.timestamp = performance.now();
         game.addReply(rep);
     };
 }

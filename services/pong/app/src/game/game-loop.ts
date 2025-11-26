@@ -3,7 +3,6 @@ import { Game, HEIGHT, WIDTH } from "../classes/game-class.js";
 import { updateBallPos } from './ball.js';
 import { movePaddle, updatePaddlePos } from './paddle.js';
 import { Player } from "../classes/player-class.js";
-import { messageHandler } from './pong.js';
 
 const SERVER_TICK: number = 1000 / 50;
 const TIME_STEP: number = 1000 / 60;
@@ -15,19 +14,19 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) { /
 	game.lastTick = tickEnd;
 
 	// get requests
-	const reqsToProcess = game.reqHistory.filter(playerReq => playerReq._req._timeStamp < tickEnd);
-	const futureReqs = game.reqHistory.filter(playerReq => playerReq._req._timeStamp >= tickEnd);
-	reqsToProcess.sort((a, b) => a._req._timeStamp - b._req._timeStamp);
+	const reqsToProcess = game.reqHistory.filter(playerReq => playerReq.req.timeStamp < tickEnd);
+	const futureReqs = game.reqHistory.filter(playerReq => playerReq.req.timeStamp >= tickEnd);
+	reqsToProcess.sort((a, b) => a.req.timeStamp - b.req.timeStamp);
 
 	// update game
 	let simulatedTime = 0;
 	for (const playerReq of reqsToProcess) {
-		const player: Player = playerReq._id === 1 ? player1 : player2;
-		simulatedTime = moveBall(game, simulatedTime, playerReq._req._timeStamp - tickStart, TIME_STEP);
+		const player: Player = playerReq.id === 1 ? player1 : player2;
+		simulatedTime = moveBall(game, simulatedTime, playerReq.req.timeStamp - tickStart, TIME_STEP);
 		if (simulatedTime === -1)
 			return;
-		updatePaddlePos(player, playerReq._req._keys, game);
-		player.reply._ID = playerReq._req._ID;
+		updatePaddlePos(player, playerReq.req.keys, game);
+		player.reply.ID = playerReq.req.ID;
 	}
 	if (moveBall(game, simulatedTime, SERVER_TICK, 0) === -1)
 		return;
@@ -74,24 +73,26 @@ export function endGame(player1: Player, player2: Player, game: Game) {
 		evenScore(game, player1, player2);
 		return;
 	}
-	player1.socket.removeListener("message", messageHandler);
-	player2.socket.removeListener("message", messageHandler);
-	waitForEnd(player1.socket);
+	player1.socket.removeAllListeners("message")
+	player2.socket.removeAllListeners("message")
+	waitForEnd(game, player1.socket);
 	if (!game.local)
-		waitForEnd(player2.socket);
-	player1.reply._end = true;
-	player2.reply._end = true;
+		waitForEnd(game, player2.socket);
+	player1.reply.end = true;
+	player2.reply.end = true;
 	sendToPlayers(game, player1, player2);
 }
 
-function waitForEnd(socket: WebSocket) {
+function waitForEnd(game: Game, socket: WebSocket) {
 	socket.on('message', (payload: string) => {
 		try {
 			const signal = JSON.parse(payload);
 			if (signal == "0")
 				socket.close();
-		} catch (err) {
-			throw err; //TODO: handle error
+		} catch (err: any) {
+			game.infos.score = [-1, -1];
+			socket.close();
+			game.log.error(err.message);
 		}
 	});
 }

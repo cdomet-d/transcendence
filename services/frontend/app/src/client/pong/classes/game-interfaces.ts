@@ -40,17 +40,17 @@ export interface paddleObj {
 }
 
 export interface repObj {
-    _ID: number;
-    _timestamp: number;
-    _leftPad: paddleObj;
-    _rightPad: paddleObj;
-    _ball: ballObj;
-    _score: [number, number];
-    _end: boolean
+    ID: number;
+    timestamp: number;
+    leftPad: paddleObj;
+    rightPad: paddleObj;
+    ball: ballObj;
+    score: [number, number];
+    end: boolean
 }
 
 export interface reqObj {
-    _ID: number;
-    _keys: keysObj;
-    _timeStamp: number;
+    ID: number;
+    keys: keysObj;
+    timeStamp: number;
 }
