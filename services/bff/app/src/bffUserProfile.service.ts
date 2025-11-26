@@ -377,10 +377,6 @@ export async function fetchLeaderboard(log: any): Promise<userData[]> {
 	return (body.profiles);
 }
 
-
-
-
-
 /*----------  WIP  ----------*/
 
 export async function fetchProfileDataBatch(

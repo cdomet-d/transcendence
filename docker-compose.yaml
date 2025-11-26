@@ -96,6 +96,8 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
+            - PORT=1818
+            - JWT_SECRET=${JWT_SECRET}
         volumes:
             - ./services/bff/app:/usr/app
         # user: "${T_UID}:${T_GID}"
