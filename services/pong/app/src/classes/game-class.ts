@@ -16,7 +16,6 @@ export class Game {
 	#_players: playerTab;
 	#_ball: ballObj;
 	#_ballDir: number;
-	#_maxBallSpeed: number;
 	#_paddleSpec: paddleSpec;
 	#_reqHistory: reqTab;
 	#_lastTick: number;
@@ -37,6 +36,7 @@ export class Game {
 			y: HEIGHT / 2, 
 			dx: 0.3, 
 			dy: 0.03,
+			maxSpeed: 0.70,
 			r: 13
 		};
 		this.#_paddleSpec = {
@@ -55,7 +55,6 @@ export class Game {
 		this.#_endSent = false;
 		this.#_lastBall = false;
 		this.#_startLoop = 0;
-		this.#_maxBallSpeed = 0.65;
 	}
 
 	/*                              GETTERS                                  */
@@ -125,10 +124,6 @@ export class Game {
 		return this.#_startLoop;
 	}
 
-	get maxBallSpeed(): number {
-		return this.#_maxBallSpeed;
-	}
-
 	/*                              SETTERS                                  */
 	set reqHistory(reqTab: reqTab) {
 		this.#_reqHistory = reqTab;
@@ -160,10 +155,6 @@ export class Game {
 
 	set startLoop(timestamp: number) {
 		this.#_startLoop = timestamp;
-	}
-
-	set maxBallSpeed(speed: number) {
-		this.#_maxBallSpeed = speed;
 	}
 
 	/*                              METHODS                                  */

@@ -52,7 +52,6 @@ export function lineIntersection(
     return t;
 }
 
-const maxSpeed = 0.65;
 const maxAngleDeg: number = 40;
 const maxAngle: number = (maxAngleDeg * Math.PI) / 180;
 export function updateVelocity(game: Game, paddle: coordinates, nx: number) {
@@ -67,7 +66,7 @@ export function updateVelocity(game: Game, paddle: coordinates, nx: number) {
     else game.ball.dx = speed * Math.cos(angle);
     game.ball.dy = speed * Math.sin(angle);
 
-    const boostedSpeed = Math.min(speed * 1.1, maxSpeed);
+    const boostedSpeed = Math.min(speed * 1.1, game.ball.maxSpeed);
 	if (speed !== 0) {
 		const factor: number = boostedSpeed / speed;
 		game.ball.dx *= factor;

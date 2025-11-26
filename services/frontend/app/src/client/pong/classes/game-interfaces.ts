@@ -15,6 +15,7 @@ export interface ballObj {
     y: number;
     dx: number;
     dy: number;
+    maxSpeed: number;
     r: number;
 }
 

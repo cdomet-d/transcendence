@@ -39,6 +39,7 @@ export class Game {
 			y: HEIGHT / 2,
 			dx: 0.3, //custom
 			dy: 0.03, //custom
+			maxSpeed: 0.70,
 			r: 13,
 		};
 		this.#_paddleSpec = { speed: 0.45, w: 20, h: HEIGHT / 5, halfW: 20 / 2, halfH: HEIGHT / 10 }; //custom
@@ -156,7 +157,6 @@ export class Game {
         this.#_lastFrameTime = val;
     }
 
-	
 	/*                              METHODS                                  */
     public updateScore(latestReply: repObj) {
 		this.#_score = { ...latestReply._score };

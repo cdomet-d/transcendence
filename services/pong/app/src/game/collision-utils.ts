@@ -59,7 +59,7 @@ export function updateVelocity(game: Game, paddle: coordinates, nx: number) {
 		game.ball.dx = speed * Math.cos(angle);
 	game.ball.dy = speed * Math.sin(angle);
 
-	const boostedSpeed = Math.min(speed * 1.1, game.maxBallSpeed);
+	const boostedSpeed = Math.min(speed * 1.1, game.ball.maxSpeed);
 	if (speed !== 0) {
 		const factor: number = boostedSpeed / speed;
 		game.ball.dx *= factor;
