@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { getPendingFriendRequests, getFriendship, friendshipExistsUsersID } from './friends.service.js'
+import { getFriendship, friendshipExistsUsersID } from './friends.service.js'
 type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
 
 export async function routeFriend(serv: FastifyInstance) {
@@ -14,39 +14,34 @@ export async function routeFriend(serv: FastifyInstance) {
 				userA?: number,
 				userB?: number,
 				userID?: number,
-				status?: 'friend' | 'pending'
 			};
 
 			//get relationship between two user
 			if (query.userA && query.userB) {
-			serv.log.error(`${query.userA} and ${query.userB}`)
 
 				const sql = `
-					SELECT statusFrienship FROM friendship 
+					SELECT statusFriendship FROM friendship 
 					WHERE (userID = ? AND friendID = ?) OR (userID = ? AND friendID = ?)
 					LIMIT 1;
 				`;
 				const params = [query.userA, query.userB, query.userB, query.userA];
-				const response = await serv.dbFriends.get<{ statusFrienship: boolean }>(sql, params);
+				const response = await serv.dbFriends.get<{ statusFriendship: string }>(sql, params);
 
-				let status: ProfileView = 'stranger';
-				if (!response?.statusFrienship)
-					return (reply.code(404).send({ success: false, message: 'YOOOOO [FRIENDS] Friendship not found' }));
-				if (response)
-					status = response.statusFrienship ? 'friend' : 'pending';
+				if (!response)
+					return (reply.code(200).send({ status: 'stranger' }));
+
+				const isFriend = String(response.statusFriendship) === 'true' ||
+					String(response.statusFriendship) === '1';
+
+				const status: ProfileView = isFriend ? 'friend' : 'pending';
+
 				return (reply.code(200).send({ status: status }));
 			}
 
 			//get friends list
-			if (query.userID && query.status) {
-				if (query.status === 'friend') {
-					const friends = await getFriendship(serv.dbFriends, query.userID);
-					return (reply.code(200).send(friends));
-				}
-				if (query.status === 'pending') {
-					const requests = await getPendingFriendRequests(serv.dbFriends, query.userID);
-					return (reply.code(200).send(requests));
-				}
+			if (query.userID) {
+				const friends = await getFriendship(serv.dbFriends, query.userID);
+				return (reply.code(200).send(friends));
 			}
 
 			return (reply.code(400).send({ message: '[FRIENDS] Invalid query parameters.' }));
@@ -72,14 +67,13 @@ export async function routeFriend(serv: FastifyInstance) {
 			}
 
 			const query = `
-				INSERT INTO friendship (userID, friendID, startTimeFriendship, statusFrienship)
-				VALUES (?, ?, ?, ?)
+				INSERT INTO friendship (userID, friendID, statusFriendship)
+				VALUES (?, ?, ?)
 			`;
 
 			const params = [
 				senderID,
 				friendID,
-				new Date().toISOString(),
 				false
 			];
 
@@ -112,7 +106,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			}
 
 			const query =
-				`UPDATE friendship SET statusFrienship = true WHERE friendshipID = ? AND friendID = ?
+				`UPDATE friendship SET statusFriendship = true WHERE friendshipID = ? AND friendID = ?
 			`;
 
 			const params =

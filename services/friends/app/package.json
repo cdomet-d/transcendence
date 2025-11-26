@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-        "dev": "nodemon -q",
-    "start": "tsc && node dist/server.js",
+    "dev": "nodemon -q",
+    "start": "tsc && node dist/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +22,6 @@
     "@types/jest": "^30.0.0",
     "jest": "^30.2.0",
     "nodemon": "^3.1.10",
-    "pino-pretty": "^13.1.2",
+    "pino-pretty": "^13.1.2"
   }
 }

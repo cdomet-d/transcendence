@@ -4,234 +4,187 @@ networks:
         name: transcendence
 
 secrets:
-    ssl-cert.pem:
-        file: ${TSECRETS}/ssl-cert.pem
-    ssl-key.pem:
-        file: ${TSECRETS}/ssl-key.pem
+    key.pem:
+        file: ${TSECRETS}/key.pem
+    cert.pem:
+        file: ${TSECRETS}/cert.pem
 
 services:
-  accessibility:
-    build:
-      context: ./services/accessibility
-      dockerfile: Dockerfile
-    container_name: accessibility
-    image: accessibility:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/accessibility/app:/usr/app
-      - ./services/accessibility/data:/usr/data
-#  account:
-#    build:
-#      context: ./services/account
-#      dockerfile: Dockerfile
-#    container_name: account
-#    image: account:0.0.1
-#    networks:
-#      - transcendence
-#    restart: unless-stopped
-#    environment:
-#      - NGINXIP=nginx
-#    secrets:
-#      - ssl-key.pem
-#      - ssl-cert.pem
-#    volumes:
-#      - ./services/account/app:/usr/app
-#      - ./services/account/data:/usr/data
-  auth:
-    build:
-      context: ./services/auth
-      dockerfile: Dockerfile
-    container_name: auth
-    image: auth:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-      - PORT=3939
-      - JWT_SECRET=${JWT_SECRET}
-      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-      #    volumes:
-#      - ./services/account/app:/usr/app
-#      - ./services/account/data:/usr/data
-    volumes:
-      - ./services/auth/app:/usr/app
-      - ./services/auth/data:/usr/data
-  dashboard:
-    build:
-      context: ./services/dashboards
-      dockerfile: Dockerfile
-    container_name: dashboard
-    image: dashboard:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/dashboards/app:/usr/app
-      - ./services/dashboards/data:/usr/data
-  friends:
-    build:
-      context: ./services/friends
-      dockerfile: Dockerfile
-    container_name: friends
-    image: friends:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/friends/app:/usr/app
-      - ./services/friends/data:/usr/data
-  frontend:
-    build:
-      context: ./services/frontend
-      dockerfile: Dockerfile
-    container_name: frontend
-    image: frontend:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/frontend/app:/app
-  bff:
-    build:
-      context: ./services/bff
-      dockerfile: Dockerfile
-    container_name: bff
-    image: bff:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/bff/app:/usr/app
-    # user: "${T_UID}:${T_GID}"
-  gamemanager:
-    build:
-      context: ./services/game-manager
-      dockerfile: Dockerfile
-    container_name: gamemanager
-    image: gamemanager:0.0.1
-    environment:
-      - PORT=2121
-      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-      - NGINXIP=nginx
-    networks:
-      - transcendence
-    restart: unless-stopped
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/game-manager/app:/usr/app
-  monitoring:
-    build:
-      context: ./services/monitoring
-      dockerfile: Dockerfile
-    container_name: monitoring
-    image: monitoring:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/monitoring/app:/usr/app
-  nats-server:
-    build:
-      context: ./services/NATS
-      dockerfile: Dockerfile
-    container_name: nats-server
-    image: nats:0.0.1
-    environment:
-      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-    networks:
-      - transcendence
-    restart: unless-stopped
-  nginx:
-    build:
-      context: ./services/nginx/
-      dockerfile: Dockerfile
-    container_name: nginx
-    environment:
-      - NGINX_HOST=bigt.com
-      - NGINX_PORT=443
-    image: nginx:0.0.1
-    networks:
-      - transcendence
-    ports:
-      - "8443:443"
-    restart: unless-stopped
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-  pong:
-    build:
-      context: ./services/pong
-      dockerfile: Dockerfile
-    container_name: pong
-    environment:
-      - NGINXIP=nginx
-      - PORT=2020
-      - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-    image: pong:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/pong/app:/usr/app
-    # user: "${T_UID}:${T_GID}"
-  users:
-    build:
-      context: ./services/users
-      dockerfile: Dockerfile
-    container_name: users
-    image: users:0.0.1
-    networks:
-      - transcendence
-    restart: unless-stopped
-    environment:
-      - NGINXIP=nginx
-    secrets:
-      - ssl-key.pem
-      - ssl-cert.pem
-    volumes:
-      - ./services/users/app:/usr/app
-      - ./services/users/data:/usr/data
+    accessibility:
+        build:
+            context: ./services/accessibility
+            dockerfile: Dockerfile
+        container_name: accessibility
+        image: accessibility:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - NGINXIP=nginx
+        volumes:
+            - ./services/accessibility/app:/usr/app
+            - ./services/accessibility/data:/usr/data
+    auth:
+        build:
+            context: ./services/auth
+            dockerfile: Dockerfile
+        container_name: auth
+        image: auth:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - NGINXIP=nginx
+            - PORT=3939
+            - JWT_SECRET=${JWT_SECRET}
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+            #    volumes:
+        #      - ./services/account/app:/usr/app
+        #      - ./services/account/data:/usr/data
+        volumes:
+            - ./services/auth/app:/usr/app
+            - ./services/auth/data:/usr/data
+    dashboard:
+        build:
+            context: ./services/dashboards
+            dockerfile: Dockerfile
+        container_name: dashboard
+        image: dashboard:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - NGINXIP=nginx
+        volumes:
+            - ./services/dashboards/app:/usr/app
+            - ./services/dashboards/data:/usr/data
+    friends:
+        build:
+            context: ./services/friends
+            dockerfile: Dockerfile
+        container_name: friends
+        image: friends:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - NGINXIP=nginx
+        volumes:
+            - ./services/friends/app:/usr/app
+            - ./services/friends/data:/usr/data
+    frontend:
+        build:
+            context: ./services/frontend
+            dockerfile: Dockerfile
+        container_name: frontend
+        image: frontend:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - NGINXIP=nginx
+        volumes:
+            - ./services/frontend/app:/app
+    bff:
+        build:
+            context: ./services/bff
+            dockerfile: Dockerfile
+        container_name: bff
+        image: bff:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - NGINXIP=nginx
+        volumes:
+            - ./services/bff/app:/usr/app
+        # user: "${T_UID}:${T_GID}"
+    gamemanager:
+        build:
+            context: ./services/game-manager
+            dockerfile: Dockerfile
+        container_name: gamemanager
+        image: gamemanager:0.0.1
+        environment:
+            - PORT=2121
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+            - NGINXIP=nginx
+        networks:
+            - transcendence
+        restart: unless-stopped
+        volumes:
+            - ./services/game-manager/app:/usr/app
+    monitoring:
+        build:
+            context: ./services/monitoring
+            dockerfile: Dockerfile
+        container_name: monitoring
+        image: monitoring:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - NGINXIP=nginx
+        volumes:
+            - ./services/monitoring/app:/usr/app
+    nats-server:
+        build:
+            context: ./services/NATS
+            dockerfile: Dockerfile
+        container_name: nats-server
+        image: nats:0.0.1
+        environment:
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+        networks:
+            - transcendence
+        restart: unless-stopped
+    nginx:
+        build:
+            context: ./services/nginx/
+            dockerfile: Dockerfile
+        container_name: nginx
+        environment:
+            - NGINX_HOST=bigt.com
+            - NGINX_PORT=443
+        image: nginx:0.0.1
+        networks:
+            - transcendence
+        ports:
+            - '8443:443'
+        restart: unless-stopped
+        secrets:
+            - cert.pem
+            - key.pem
+    pong:
+        build:
+            context: ./services/pong
+            dockerfile: Dockerfile
+        container_name: pong
+        environment:
+            - NGINXIP=nginx
+            - PORT=2020
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+        image: pong:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        volumes:
+            - ./services/pong/app:/usr/app
+        # user: "${T_UID}:${T_GID}"
+    users:
+        build:
+            context: ./services/users
+            dockerfile: Dockerfile
+        container_name: users
+        image: users:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - NGINXIP=nginx
+        volumes:
+            - ./services/users/app:/usr/app
+            - ./services/users/data:/usr/data
 
 volumes:
     friendsDB:

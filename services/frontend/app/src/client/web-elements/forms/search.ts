@@ -6,6 +6,7 @@ import { NoResults } from '../typography/images.js';
 
 import type { UserData } from '../types-interfaces.js';
 import { search } from './default-forms.js';
+import { createErrorFeedback } from '../event-elements/error.js';
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -83,21 +84,32 @@ export class Searchbar extends BaseForm {
     /*                               Event listeners                              */
     /* -------------------------------------------------------------------------- */
 
-    #createQueryURL(form: FormData) {
+    override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
+        console.log(url, req);
+        const response = await fetch(url, req);
+        const data = await response.json();
+        console.log(data);
+    }
+
+    #createQueryURL(form: FormData): string | undefined {
         const target = form.get('searchbar');
-        if (target) super.details.action += target;
-        console.log(super.details.action);
+        if (!target) return undefined;
+        let url = super.details.action;
+        url += target;
+        return url;
     }
 
     override async submitHandlerImplementation(ev: SubmitEvent) {
         ev.preventDefault();
         const form = new FormData(this);
-        this.#createQueryURL(form);
-        this.initReq;
+        const url = this.#createQueryURL(form);
+        console.log(url);
+        if (!url) {
+            createErrorFeedback('Error processing query - try again');
+            return;
+        }
         try {
-            const response = await this.fetchAndRedirect(super.details.action, this.initReq());
-            const searchResults = await response.json();
-            this.displayResults(searchResults as UserData[]);
+            await this.fetchAndRedirect(url, this.initReq());
         } catch (error) {
             console.error(error);
         }
