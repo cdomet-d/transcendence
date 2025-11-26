@@ -92,10 +92,8 @@ export class Searchbar extends BaseForm {
     /* -------------------------------------------------------------------------- */
 
     override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
-        console.log(url, req);
         const response = await fetch(url, req);
         const data = await response.json();
-        console.log(data as UserData[]);
         this.displayResults(data as UserData[]);
     }
 
@@ -111,8 +109,6 @@ export class Searchbar extends BaseForm {
         ev.preventDefault();
         const form = new FormData(this);
         const url = this.#createQueryURL(form);
-		console.log('EVENT LISTENER')
-        console.log(url);
         if (!url) {
             createErrorFeedback('Error processing query - try again');
             return;

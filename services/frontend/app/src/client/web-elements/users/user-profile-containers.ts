@@ -1,4 +1,4 @@
-import { createUserCardSocial, createUserProfile } from './profile-helpers.js';
+import { createUserCardSocial } from './profile-helpers.js';
 import type { TabData, UserData } from '../types-interfaces.js';
 import { UserProfile } from './profile.js';
 import { TabContainer } from '../navigation/tabs.js';
@@ -12,15 +12,15 @@ export const user: UserData = {
         size: 'ilarge',
         src: '/public/assets/images/magenta-avatar.png',
     },
-    biography: '(╯°□°)╯︵ ┻━┻',
-    id: '64',
+    biography: '',
+    id: '',
     relation: 'self',
-    profileColor: 'bg-BE5103',
-    language: 'English',
+    profileColor: '',
+    language: '',
     status: true,
-    username: 'Elaine',
-    winstreak: '7',
-    since: '145',
+    username: '',
+    winstreak: '',
+    since: '',
 };
 
 /**
@@ -62,7 +62,7 @@ export class ProfileWithTabs extends HTMLDivElement {
 
     constructor() {
         super();
-        this.#userProfile = createUserProfile(user);
+        this.#userProfile = document.createElement('div', { is: 'user-profile' }) as UserProfile;
         this.#userTabs = createTabs(profileTabs);
     }
 

@@ -47,7 +47,6 @@ export class Router {
     }
 
     updateURL(newURL: string) {
-        console.log('updating URL');
         window.history.pushState({}, '', newURL);
     }
 

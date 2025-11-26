@@ -31,7 +31,6 @@ export async function userStatus(): Promise<userStatusInfo> {
     try {
         const isLogged: Response = await fetch('/api/auth/status');
         const data = await isLogged.json();
-        console.log(data);
         if (isLogged.ok) return { auth: true, username: data.username, userID: data.userID };
         else return { auth: false };
     } catch (error) {

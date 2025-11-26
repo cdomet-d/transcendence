@@ -23,6 +23,7 @@ import { PongUI } from './web-elements/game/game-ui.js';
 import { userStatus } from './main.js';
 import { router } from './main.js';
 import { createErrorFeedback } from './web-elements/event-elements/error.js';
+import { userDataFromResponse } from './web-elements/users/profile-helpers.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -118,48 +119,49 @@ export async function renderSelf() {
     console.log('renderSelf');
 
     const status = await userStatus();
-    console.log(status.auth, status.userID, status.username);
     if (!status.auth) {
         router.loadRoute('/auth', true);
-		createErrorFeedback('You must register or login to see your profile')
+        createErrorFeedback('You must register or login to see your profile');
         return;
     }
-	// const url = `https://localhost:8443/api/bff/profile/${status.username}`
 
-	try {
-		// const reply = await fetch(url)
-		// const profile = reply.json();
-		// console.log(profile);
-		prepareLayout(document.body.layoutInstance, 'profile');
-		document.body.layoutInstance?.appendAndCache(
-			document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
-		);
-		const pInstance = document.body.layoutInstance?.components.get(
-			'user-profile',
-		) as ProfileWithTabs;
-		pInstance.profile = user;
-   		updatePageTitle(status.username!);
-	} catch (error) {
-		console.error(error)
-	}
+    const url = `https://localhost:8443/api/bff/profile/${status.username}?userB=${status.userID}`;
+
+    try {
+        const reply = await fetch(url);
+        const profile = await reply.json();
+        prepareLayout(document.body.layoutInstance, 'profile');
+        const profileInstance = document.createElement('div', {
+            is: 'profile-page',
+        }) as ProfileWithTabs;
+        document.body.layoutInstance?.appendAndCache(profileInstance);
+        profileInstance.profile = userDataFromResponse(profile.userData);
+        updatePageTitle(status.username!);
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 export async function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
     console.log('renderProfile');
     if (param) {
         const login = param.params.login;
-        // const req: RequestInit = { method: 'get' };
+        const status = await userStatus();
+        if (!status.auth) {
+            router.loadRoute('/auth', true);
+            createErrorFeedback("You must register or login to see another user's profile");
+            return;
+        }
 
-        //TODO: API call with login here to fetch user data
-        // await fetch(`https://localhost:8443/api/bff/profile/${login}/profile`, req);
+        const url = `https://localhost:8443/api/bff/profile/${login}?userB=${status.userID}`;
+        const reply = await fetch(url);
+        const profile = await reply.json();
         prepareLayout(document.body.layoutInstance, 'profile');
-        document.body.layoutInstance?.appendAndCache(
-            document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
-        );
-        const pInstance = document.body.layoutInstance?.components.get(
-            'user-profile',
-        ) as ProfileWithTabs;
-        pInstance.profile = user;
+        const profileInstance = document.createElement('div', {
+            is: 'profile-page',
+        }) as ProfileWithTabs;
+        document.body.layoutInstance?.appendAndCache(profileInstance);
+        profileInstance.profile = userDataFromResponse(profile.UserData);
         updatePageTitle('User ' + login);
     } else renderNotFound();
 }

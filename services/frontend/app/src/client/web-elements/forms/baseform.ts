@@ -109,7 +109,6 @@ export abstract class BaseForm extends HTMLFormElement {
     createReqBody(form: FormData): string {
         const fObject = Object.fromEntries(form.entries());
         const jsonBody = JSON.stringify(fObject);
-        console.log(jsonBody);
         return jsonBody;
     }
 

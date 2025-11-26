@@ -55,7 +55,6 @@ export class UserProfile extends HTMLDivElement {
      */
     set avatar(profilePic: ImgData) {
         if (this.#avatar.metadata !== profilePic) {
-            // console.log('avatar');
             this.#avatar.metadata = profilePic;
             this.#avatar.classList.add('row-span-3', 'place-self-center');
         }
@@ -77,7 +76,6 @@ export class UserProfile extends HTMLDivElement {
     set winstreak(val: string) {
         if (val !== this.#winstreak.winstreakValue) {
             this.#winstreak.winstreakValue = val;
-            // console.log('wstreak');
         }
     }
 
@@ -113,7 +111,6 @@ export class UserProfile extends HTMLDivElement {
      */
     set color(newColor: string) {
         if (this.#color !== newColor) {
-            // console.log('color');
             this.classList.remove(this.#color);
             this.#color = newColor;
             this.classList.add(this.#color);

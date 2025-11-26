@@ -1,6 +1,5 @@
 import type {
     MenuStyle,
-    ProfileView,
     DropdownBg,
     ButtonData,
     MenuData,
@@ -30,6 +29,7 @@ export function createMenu(content: MenuData, style: MenuStyle, animated?: boole
     const el = document.createElement('nav', { is: 'base-menu' }) as Menu;
     el.menuContent = content;
     el.menuStyle = style;
+	console.log(content, animated);
     if (animated) el.animation = animated;
     return el;
 }

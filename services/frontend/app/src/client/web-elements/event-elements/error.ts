@@ -23,7 +23,6 @@ export class UIFeedback extends HTMLSpanElement {
     }
 
     set type(type: Feedback) {
-        console.log('in type');
         type === 'error'
             ? this.classList.add('bg-red', 'invalid')
             : this.classList.add('bg-green', 'valid');

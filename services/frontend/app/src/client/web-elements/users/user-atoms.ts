@@ -1,5 +1,11 @@
 import { NavigationLinks } from '../navigation/links.js';
-import type { FontWeight, FontSize, FontColor, ImgData } from '../types-interfaces.js';
+import type {
+    FontWeight,
+    FontSize,
+    FontColor,
+    ImgData,
+    navigationLinksData,
+} from '../types-interfaces.js';
 import { createIcon } from '../typography/helpers.js';
 import type { Icon } from '../typography/images.js';
 
@@ -29,10 +35,16 @@ export class Username extends HTMLDivElement {
      * Sets the username text.
      */
     set name(val: string) {
-        this.#link.info.title = val;
-        this.#link.info.datalink = val;
-        this.#link.info.href = `/user/${val}`;
-        this.render();
+        const link: navigationLinksData = {
+			styleButton: false,
+            img: null,
+            datalink: val,
+            href: `/user/${val}`,
+            id: 'user',
+            title: val,
+        };
+        this.#link.info = link;
+		this.#link.render();
     }
 
     /**
@@ -67,6 +79,9 @@ export class Username extends HTMLDivElement {
 
     /** Called when element is added to the document. */
     connectedCallback() {
+        this.id = 'username';
+        this.className = 'true false f-yellow grid f-m gap-s username justify-items-center';
+        this.#link.classList.add('flex', 'items-center');
         this.render();
     }
 
@@ -75,9 +90,6 @@ export class Username extends HTMLDivElement {
      * Adds 'true' class if logged in, else 'false'. This toggles the color change.
      */
     render() {
-        this.id = 'username';
-        this.className = 'true false f-yellow grid f-m gap-s username justify-items-center';
-        this.#link.classList.add('flex', 'items-center');
         this.#status.className = 'user-status';
         if (this.#isLogged) {
             this.#status.classList.toggle('true');

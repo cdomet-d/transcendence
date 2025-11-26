@@ -18,7 +18,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const query = request.query as {
 				userB?: number,
 			};
-
+				
 			if (query.userB === undefined) {
 				serv.log.error("[BFF] Parameter missing")
 				return reply.code(400).send({

@@ -53,6 +53,7 @@ export type MenuSize = 's' | 'm' | 'l';
 export type DropdownBg = 'dynamic' | 'static';
 
 export interface navigationLinksData {
+	styleButton: boolean;
     id: string;
     datalink: string;
     href: string;
@@ -169,7 +170,7 @@ export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
  * @property {string} winstreak - Current consecutive wins count.
  */
 export interface UserData {
-    avatar: ImgData | null | undefined;
+    avatar: ImgData;
     biography: string;
     id: string;
     language: string;

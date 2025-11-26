@@ -38,9 +38,6 @@ services:
             - PORT=3939
             - JWT_SECRET=${JWT_SECRET}
             - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-            #    volumes:
-        #      - ./services/account/app:/usr/app
-        #      - ./services/account/data:/usr/data
         volumes:
             - ./services/auth/app:/usr/app
             - ./services/auth/data:/usr/data

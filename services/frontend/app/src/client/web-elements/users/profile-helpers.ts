@@ -1,6 +1,45 @@
 import { defaultAvatar } from '../default-values.js';
-import type { ImgData, Size, UserData } from '../types-interfaces.js';
+import type { ImgData, ProfileView, Size, UserData } from '../types-interfaces.js';
 import { UserProfile, UserCardSocial, UserInline } from './profile.js';
+
+function UTCtoDays(since: string): string {
+    const today = new Date();
+    const date = new Date(since);
+    const sDiff = today.getTime() - date.getTime();
+    const dDiff = sDiff / (1000 * 60 * 60 * 24);
+
+    return dDiff.toString();
+}
+export function userDataFromResponse(response: any): UserData {
+    let uAvatar: ImgData = {
+        src: '',
+        alt: '',
+        id: 'user-profile-picture',
+        size: 'ilarge',
+    };
+
+    if (!response.avatar) uAvatar = defaultAvatar;
+    else uAvatar.src = response.avatar;
+
+    let status: boolean;
+
+    response.status === 1 ? (status = false) : (status = true);
+
+    const user: UserData = {
+        avatar: uAvatar,
+        biography: response.biography,
+        id: response.userID.toString(),
+        language: response.lang.toString(),
+        profileColor: response.profileColor.toString(),
+        relation: response.relation as ProfileView,
+        since: UTCtoDays(response.since),
+        status: status,
+        username: response.username.toString(),
+        // winstreak: response.winstreak.toString(),
+        winstreak: '9',
+    };
+    return user;
+}
 
 export function setAvatar(
     size: Size,
