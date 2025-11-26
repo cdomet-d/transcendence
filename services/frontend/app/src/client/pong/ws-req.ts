@@ -1,7 +1,7 @@
-import { startGame } from './game.loop.js';
-import { Game, WIDTH, HEIGHT } from './classes/game.class.js';
-import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from './game.events.js';
-import { renderGame } from './game.render.utils.js';
+import { startGame } from './game-loop.js';
+import { Game, WIDTH, HEIGHT } from './classes/game-class.js';
+import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from './game-events.js';
+import { renderGame } from './game-render-utils.js';
 
 const START_DELAY = 500;
 

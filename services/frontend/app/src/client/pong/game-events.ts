@@ -1,5 +1,5 @@
-import { Game } from './classes/game.class.js';
-import type { keysObj, repObj } from './classes/game.interfaces.js';
+import { Game } from './classes/game-class.js';
+import type { keysObj, repObj } from './classes/game-interfaces.js';
 
 export function addMessEvent(game: Game, ws: WebSocket) {
     ws.onmessage = (event) => {

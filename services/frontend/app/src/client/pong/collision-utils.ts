@@ -1,5 +1,5 @@
-import { Game } from './classes/game.class.js';
-import { type coordinates } from './classes/game.interfaces.js';
+import { Game } from './classes/game-class.js';
+import { type coordinates } from './classes/game-interfaces.js';
 
 export function raycast(
     game: Game,

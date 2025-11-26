@@ -1,7 +1,7 @@
 export const HEIGHT = 558.9;
 export const WIDTH = 1000;
 import type { PongUI } from '../../web-elements/game/game-ui.js';
-import type { reqObj, ballObj, paddleSpec, coordinates, repObj, paddleObj } from './game.interfaces.js';
+import type { reqObj, ballObj, paddleSpec, coordinates, repObj, paddleObj } from './game-interfaces.js';
 
 type requestMap = Map<number, reqObj>;
 type replyTab = Array<repObj>;

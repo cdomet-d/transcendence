@@ -1,6 +1,6 @@
-import { Game, HEIGHT, WIDTH } from './classes/game.class.js';
-import { raycast, updateVelocity } from './collision.utils.js';
-import type { keysObj, paddleSpec, coordinates } from './classes/game.interfaces.js';
+import { Game, HEIGHT, WIDTH } from './classes/game-class.js';
+import { raycast, updateVelocity } from './collision-utils.js';
+import type { keysObj, paddleSpec, coordinates } from './classes/game-interfaces.js';
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 

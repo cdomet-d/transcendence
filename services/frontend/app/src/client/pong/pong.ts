@@ -1,6 +1,6 @@
-import { renderGame } from './game.render.utils.js';
-import { Game } from './classes/game.class.js';
-import { wsRequest } from './ws.req.js';
+import { renderGame } from './game-render-utils.js';
+import { Game } from './classes/game-class.js';
+import { wsRequest } from './ws-req.js';
 import { router } from '../main.js';
 import type { PongUI } from '../web-elements/game/game-ui.js';
 
