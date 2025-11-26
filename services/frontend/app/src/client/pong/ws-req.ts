@@ -2,46 +2,49 @@ import { startGame } from './game-loop.js';
 import { Game, WIDTH, HEIGHT } from './classes/game-class.js';
 import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from './game-events.js';
 import { renderGame } from './game-render-utils.js';
+import { createErrorFeedback } from '../web-elements/event-elements/error.js';
 
 const START_DELAY = 500;
 
 export function wsRequest(game: Game, ids: { gameID: number; userID: number }) {
-    const ws = new WebSocket('wss://localhost:8443/api/game/');
+	const ws = new WebSocket('wss://localhost:8443/api/game/');
 
-    ws.onerror = (err) => {
-        console.log('error:', err);
-        return; //TODO: handle error properly
-    };
+	ws.onerror = () => {
+		createErrorFeedback("websocket error"); //TODO: fix
+		return;
+	};
 
-    ws.onopen = () => {
-        console.log('PONG webSocket connection established!');
-        ws.addEventListener(
-            'message',
-            (event) => {
-                const signal: number = JSON.parse(event.data);
-                if (signal === 1 || signal === -1) setUpGame(game, ws, signal);
-            },
-            { once: true },
-        );
-        ws.send(JSON.stringify(ids));
-    };
+	ws.onopen = () => {
+		console.log('PONG webSocket connection established!');
+		ws.addEventListener(
+			'message',
+			(event) => {
+				const signal: number = JSON.parse(event.data);
+				if (signal === 1 || signal === -1) setUpGame(game, ws, signal);
+			},
+			{ once: true },
+		);
+		ws.send(JSON.stringify(ids));
+	};
 
-    ws.onclose = (event) => {
-        // console.log("SCORE IN CLOSE:", JSON.stringify(game.score));
-        if (event.code === 1003 || event.code === 1011)
-            throw new Error(event.reason);
-        game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
-        renderGame(game);
-        window.cancelAnimationFrame(game.frameId);
-    };
+	ws.onclose = (event) => {
+		// console.log("SCORE IN CLOSE:", JSON.stringify(game.score));
+		if (event.code === 1003 || event.code === 1011) {
+			createErrorFeedback(event.reason); //TODO: fix
+			return;
+		}
+		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
+		renderGame(game);
+		window.cancelAnimationFrame(game.frameId);
+	};
 }
 
 async function setUpGame(game: Game, ws: WebSocket, ballDir: number) {
-    game.ball.dx *= ballDir;
-    addMessEvent(game, ws);
-    window.addEventListener('keydown', createKeyDownEvent(game.req.keys, game.horizontal));
-    window.addEventListener('keyup', createKeyUpEvent(game.req.keys));
+	game.ball.dx *= ballDir;
+	addMessEvent(game, ws);
+	window.addEventListener('keydown', createKeyDownEvent(game.req.keys, game.horizontal));
+	window.addEventListener('keyup', createKeyUpEvent(game.req.keys));
 
-    await new Promise((res) => setTimeout(res, START_DELAY));
-    startGame(game, ws);
+	await new Promise((res) => setTimeout(res, START_DELAY));
+	startGame(game, ws);
 }
