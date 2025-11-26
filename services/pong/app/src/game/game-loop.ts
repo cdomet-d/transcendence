@@ -1,8 +1,8 @@
 import type { WebSocket } from '@fastify/websocket';
-import { Game, HEIGHT, WIDTH } from "../classes/game.class.js";
+import { Game, HEIGHT, WIDTH } from "../classes/game-class.js";
 import { updateBallPos } from './ball.js';
 import { movePaddle, updatePaddlePos } from './paddle.js';
-import { Player } from "../classes/player.class.js";
+import { Player } from "../classes/player-class.js";
 import { messageHandler } from './pong.js';
 
 const SERVER_TICK: number = 1000 / 50;

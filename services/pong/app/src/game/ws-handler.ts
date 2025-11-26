@@ -1,12 +1,12 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
-import type { Game } from '../classes/game.class.js';
+import type { Game } from '../classes/game-class.js';
 import { setUpGame } from './pong.js';
-import { validIds } from './mess.validation.js';
-import type { idsObj } from '../classes/game.interfaces.js';
+import { validIds } from './mess-validation.js';
+import type { idsObj } from '../classes/game-interfaces.js';
 import { natsSubscription } from '../nats/subscriber.js';
 import { StringCodec } from 'nats';
-import { Player } from '../classes/player.class.js';
+import { Player } from '../classes/player-class.js';
 
 const MAX_TIME: number = 3500;// 90000; // 1min30
 const MAX_SCORE: number = 5;

@@ -1,4 +1,4 @@
-import type { Game } from "./game.class.js";
+import type { Game } from "./game-class.js";
 
 type gameMap = Map<number, Game>;
 

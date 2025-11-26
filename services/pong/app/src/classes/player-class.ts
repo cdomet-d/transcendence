@@ -1,6 +1,6 @@
 import type { WebSocket } from '@fastify/websocket';
-import { HEIGHT, WIDTH } from './game.class.js';
-import type { coordinates, repObj, paddleSpec, ballObj } from './game.interfaces.js';
+import { HEIGHT, WIDTH } from './game-class.js';
+import type { coordinates, repObj, paddleSpec, ballObj } from './game-interfaces.js';
 
 export class Player {
 	/*                             PROPERTIES                                */

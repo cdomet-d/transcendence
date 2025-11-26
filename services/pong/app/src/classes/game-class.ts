@@ -1,7 +1,7 @@
-import { Player } from './player.class.js';
+import { Player } from './player-class.js';
 import type { WebSocket } from '@fastify/websocket';
 import { NatsConnection } from 'nats';
-import type { reqObj, playerReq, gameInfo, ballObj, paddleSpec } from './game.interfaces.js';
+import type { reqObj, playerReq, gameInfo, ballObj, paddleSpec } from './game-interfaces.js';
 
 export const HEIGHT = 558.9;
 export const WIDTH = 1000;

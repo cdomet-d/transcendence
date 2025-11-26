@@ -5,10 +5,10 @@ import websocket from '@fastify/websocket';
 import type { WebSocket } from '@fastify/websocket';
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 // Local modules
-import { wsRoute } from './ws.route.js';
-import { options } from './serv.conf.js';
+import { wsRoute } from './route.js';
+import { options } from './serv-conf.js';
 import { initNatsConnection, natsSubscription } from './nats/subscriber.js';
-import { GameRegistry } from './classes/gameRegistry.class.js';
+import { GameRegistry } from './classes/gameRegistry-class.js';
 import { NatsConnection } from 'nats';
 
 (async () => {
