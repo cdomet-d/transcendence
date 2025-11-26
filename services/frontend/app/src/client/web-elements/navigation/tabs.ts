@@ -224,7 +224,7 @@ export class TabContainer extends HTMLDivElement {
      */
     render() {
         this.className =
-            'w-full h-full overflow-hidden grid items-stretch grid-flow-row grid-cols-1 grid-rows-[var(--s)_1fr]';
+            'w-full h-full overflow-hidden grid items-stretch grid-flow-row grid-cols-1 grid-rows-[var(--m)_1fr]';
         this.append(this.#createTabButtons());
         this.#createPanels();
     }

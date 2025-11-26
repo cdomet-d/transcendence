@@ -390,6 +390,9 @@
 	a:hover,
 	a:focus-visible {
 		transform: scale(1.04);
+		border: none;
+		outline: none;
+		text-decoration: underline;
 	}
 
 	button:hover>span,
@@ -645,7 +648,9 @@
 	}
 
 	.tiny-shadow {
-		text-shadow: -1px -1px var(--orange), -2px -1px var(--orange);
+		text-shadow: -1px -1px var(--orange), -2px -1px var(--orange),
+			2px 2px 15px #000000c9;
+
 	}
 
 	.button-shadow {
@@ -704,7 +709,8 @@
 			-3.4px -1.7px var(--title-shadow),
 			-3.6px -1.8px var(--title-shadow),
 			-3.8px -1.9px var(--title-shadow),
-			-4.0px -2.0px var(--title-shadow);
+			-4.0px -2.0px var(--title-shadow),
+			2px 2px 4px #000000c9;
 	}
 
 	.avatar-wrapper {
@@ -727,7 +733,8 @@
 			var(--inner-border-w) var(--n-inner-border-w) var(--border),
 			var(--inner-border-w) var(--inner-border-w) var(--border),
 			var(--n-border-w) 0 0 0 var(--border), var(--border-w) 0 0 0 var(--border),
-			0 var(--n-border-w) 0 0 var(--border), 0 var(--border-w) 0 0 var(--border);
+			0 var(--n-border-w) 0 0 var(--border), 0 var(--border-w) 0 0 var(--border),
+			4px 4px 10px rgba(0, 0, 0, 0.599);
 	}
 
 	.input-emphasis {

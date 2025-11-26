@@ -169,7 +169,7 @@ export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
  * @property {string} winstreak - Current consecutive wins count.
  */
 export interface UserData {
-    avatar: ImgData;
+    avatar: ImgData | null;
     biography: string;
     id: string;
     language: string;

@@ -3,6 +3,14 @@ import * as types from './types-interfaces.js';
 export const biographyPattern: string = '^[A-Za-z0-9\\s,\\.\\?!:\\)\\(\\/\\-_]{0,256}$';
 export const passwordPattern: string = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{12,64}$';
 export const usernamePattern: string = '^[A-Za-z0-9]{4,18}$';
+export const searchbarPattern: string = '^[A-Za-z0-9]{0,18}$';
+
+export const defaultAvatar: types.ImgData = {
+        alt: 'A pink pixel art little blob',
+        id: 'user-avatar',
+        size: 'ilarge',
+        src: '/public/assets/images/magenta-avatar.png',
+}
 
 export const user: types.UserData = {
     avatar: {

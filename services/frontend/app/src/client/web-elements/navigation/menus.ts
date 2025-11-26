@@ -97,7 +97,7 @@ export class DropdownMenu extends HTMLDivElement {
     /** Event handling */
     #keynavHandler: (ev: KeyboardEvent) => void;
     #mouseNavHandler: (ev: MouseEvent) => void;
-    #focusLossHandler: (ev: FocusEvent) => void;
+    #focusHandler: (ev: FocusEvent) => void;
     /** Index to the currently focused option in the listbox */
     #currentFocus: number;
 
@@ -117,7 +117,7 @@ export class DropdownMenu extends HTMLDivElement {
         this.#currentFocus = -1;
         this.#keynavHandler = this.keyboardNavHandler.bind(this);
         this.#mouseNavHandler = this.mouseNavHandler.bind(this);
-        this.#focusLossHandler = this.#handleFocusOut.bind(this);
+        this.#focusHandler = this.#handleFocusOut.bind(this);
     }
 
     /**
@@ -192,7 +192,7 @@ export class DropdownMenu extends HTMLDivElement {
         });
         this.#listbox.role = 'listbox';
         this.#listbox.setAttribute('hidden', '');
-        this.#listbox.className = 'hidden z-0 w-xxl';
+        this.#listbox.className = 'hidden z-0';
         this.#listboxOptions = Array.from(this.#listbox.children) as HTMLLIElement[];
     }
 
@@ -315,19 +315,19 @@ export class DropdownMenu extends HTMLDivElement {
         this.render();
         this.addEventListener('keydown', this.#keynavHandler);
         this.addEventListener('click', this.#mouseNavHandler);
-        this.addEventListener('focusout', this.#focusLossHandler);
+        this.addEventListener('focusout', this.#focusHandler);
     }
 
     disconnectedCallback() {
         this.removeEventListener('keydown', this.#keynavHandler);
         this.removeEventListener('click', this.#mouseNavHandler);
-        this.removeEventListener('focusout', this.#focusLossHandler);
+        this.removeEventListener('focusout', this.#focusHandler);
     }
 
     render() {
         this.append(this.#toggle);
         this.append(this.#listbox);
-        this.className = 'h-m  w-xxl relative z-1';
+        this.className = 'h-m  relative z-1';
 
         //TODO: add aria-controls on #toggle ?
         this.#toggle.ariaExpanded = 'false';

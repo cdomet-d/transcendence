@@ -44,6 +44,10 @@ export class Username extends HTMLDivElement {
         this.render();
     }
 
+    get link(): NavigationLinks {
+        return this.#link;
+    }
+
     /**
      * Applies custom styles to the username link element.
      *
