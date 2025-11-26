@@ -15,9 +15,9 @@ export async function startGame(game: Game, ws: WebSocket) {
 
 function FrameRequestCallback(game: Game, ws: WebSocket) {
 	return function gameLoop(timestamp: number) {
-		const latestReply: repObj | undefined = game.replyHistory[game.replyHistory.length - 1];
+		const latestReply: repObj | undefined = { ...game.replyHistory[game.replyHistory.length - 1]};
 		if (latestReply !== undefined && game.reqHistory.has(latestReply._ID))
-			if (reconciliation(game, latestReply, ws))
+			if (reconciliation(game, { ...latestReply}, ws))
 				return;
 
 		game.delta += timestamp - game.lastFrameTime;
@@ -31,6 +31,7 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 			else 
 				interpolation(game);
 			deadReckoning(game, latestReply);
+			latestReply._timestamp -= TIME_STEP;
 			finishSteps(game);
 			game.delta -= TIME_STEP;
 			updates++;
@@ -103,8 +104,8 @@ function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean
         
         while (simulatedTime + TIME_STEP <= deltaTime) {
             simulatedTime += TIME_STEP;
-			const nextX: number = game.ball.x + game.ball.dx * TIME_STEP;
-			const nextY: number = game.ball.y + game.ball.dy * TIME_STEP;
+			const nextX: number = game.ball.x + game.ball.dx * simulatedTime//TIME_STEP;
+			const nextY: number = game.ball.y + game.ball.dy * simulatedTime//TIME_STEP;
 			updateBallPos(game, nextX, nextY);
             // deadReckoning(game, latestReply);
             finishSteps(game);
