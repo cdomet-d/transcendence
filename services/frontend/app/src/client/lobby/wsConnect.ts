@@ -1,5 +1,5 @@
 import { createLobbyRequest, joinLobbyRequest } from './lobby.js';
-import { router } from '../main.js';
+// import { router } from '../main.js';
 import { type gameRequest } from '../pong/pong.js';
 import { renderGame } from '../render-pages.js';
 
@@ -13,15 +13,15 @@ function openWsConnection() {
     return wsInstance;
 }
 
-function wsConnect(action: string, format: string) {
+function wsConnect(action: string, format: string, formInstance: string) {
     const ws: WebSocket = openWsConnection();
 
     ws.onopen = () => {
         console.log("Lobby WebSocket connection established!")
-        // lobbyCreation or lobbyJoining
+        // createLobby || joinLobby
         if (action === 'create') {
             if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-                wsInstance.send(createLobbyRequest(action, format));
+                wsInstance.send(createLobbyRequest(action, format, formInstance));
             } else {
                 console.log(`Error: WebSocket is not open for ${action}`);
             }
@@ -39,14 +39,17 @@ function wsConnect(action: string, format: string) {
             // LobbyRequest
             const data = JSON.parse(message.data);
             if (data.lobby && (data.lobby === 'created' || data.lobby === 'joined')) {
-                console.log(data.lobby, 'lobby successfully!');
+                console.log(`${data.lobby} lobby ${data.lobbyID} successfully!`);
+                // send lobbyID to Form
+                console.log(data.formInstance)
+                // updateGameForm(data.formInstance);
                 return;
             }
 
             // GameRequest
             // TODO handle this with Coralie
             const gameRequest: gameRequest = data;
-
+            //
             renderGame(gameRequest);
         } catch (error) {
             console.error("Error: Failed to parse WS message", error);

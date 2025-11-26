@@ -170,9 +170,15 @@ export const profileTabs: TabData[] = [
     { id: 'stats', content: 'Statistics', default: false, panelContent: null },
 ];
 
-export const lobbyMenu: MenuData = {
+export const lobbyQuickmatchMenu: MenuData = {
     links: [
-        { id: 'quickmatch', title: '1vs1', datalink: '/quick-lobby', href: '/quick-lobby', img: null },
+        { id: 'local-quickmatch', title: 'Local Quickmatch', datalink: '/quick-local-lobby', href: '/quick-local-lobby', img: null },
+        { id: 'remote-quickmatch', title: 'Remote Quickmatch', datalink: '/quick-remote-lobby', href: '/quick-remote-lobby', img: null },
+    ],
+};
+
+export const lobbyTournamentMenu: MenuData = {
+    links: [
         { id: 'tournament', title: 'Tournament', datalink: '/tournament-lobby', href: '/tournament-lobby', img: null },
     ],
 };

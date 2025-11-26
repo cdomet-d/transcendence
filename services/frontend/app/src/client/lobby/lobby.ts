@@ -46,11 +46,12 @@ interface lobbyRequestForm {
         format: string,
         userID: number,
         lobbyID?: string
-    }
+    },
+    formInstance?: string
 }
 
 // YES
-function createLobbyRequest(action: string, format: string): string {
+function createLobbyRequest(action: string, format: string, formInstance: string): string {
     const createLobbyForm: lobbyRequestForm = {
         event: 'LOBBY_REQUEST',
         payload: {
@@ -58,6 +59,7 @@ function createLobbyRequest(action: string, format: string): string {
             format: format,
             userID: 99, // TODO: get uid from JWT
         },
+        formInstance: formInstance
     };
     return JSON.stringify(createLobbyForm);
 }
@@ -72,6 +74,7 @@ function joinLobbyRequest(action: string, format: string, lobbyID: string) {
             userID: 99, // TODO: get uid from JWT
             lobbyID: lobbyID,
         },
+        // formInstance: formInstance
     };
     return JSON.stringify(joinLobbyForm);
 }

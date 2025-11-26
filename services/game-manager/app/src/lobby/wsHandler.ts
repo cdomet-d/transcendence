@@ -10,7 +10,7 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 	socket.on('message', (message: string) => {
 		try {
 			const data = JSON.parse(message);
-			const { event, payload } = data;
+			const { event, payload, formInstance } = data;
 
 			if (event === "LOBBY_REQUEST") {
 				userID = payload.userID;
@@ -22,7 +22,7 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 
 				if (payload.action === "create") {
 					const newLobby: lobbyInfo = createLobby(userID!, payload.format);
-					socket.send(JSON.stringify({ lobby: "created", lobbyID: newLobby.lobbyID }));
+					socket.send(JSON.stringify({ lobby: "created", lobbyID: newLobby.lobbyID, formInstance: formInstance }));
 				} else if (payload.action === "join") {
 					addUserToLobby(userID!, socket, payload.lobbyID);
 					socket.send(JSON.stringify({ lobby: "joined", lobbyID: payload.lobbyID }));

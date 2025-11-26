@@ -1,7 +1,7 @@
 import { createHeading, createNoResult } from './web-elements/typography/helpers.js';
 import { createLeaderboard } from './web-elements/statistics/leaderboard.js';
 import { createMenu } from './web-elements/navigation/menu-helpers.js';
-import { lobbyMenu, main } from './web-elements/navigation/default-menus.js';
+import { lobbyQuickmatchMenu, lobbyTournamentMenu, main } from './web-elements/navigation/default-menus.js';
 import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
 import { ProfileWithTabs, user } from './web-elements/users/user-profile-containers.js';
 import { type Match } from 'path-to-regexp';
@@ -183,23 +183,34 @@ export function renderLobbyMenu() {
     prepareLayout(document.body.layoutInstance, 'lobbyMenu');
     document.body.layoutInstance!.appendAndCache(
         createHeading('1', 'Choose Lobby'),
-        createMenu(lobbyMenu, 'horizontal', true),
+        createMenu(lobbyQuickmatchMenu, 'horizontal', true),
+        createMenu(lobbyTournamentMenu, 'vertical', true),
     );
     updatePageTitle('Choose Lobby');
 }
 
-export function renderQuickLobby() {
+export function renderQuickLocalLobby() {
     prepareLayout(document.body.layoutInstance, 'quickLobby');
     const pongOptions: TabData[] = [
         {
             id: 'pong-local',
-            content: 'Play local',
-            default: false,
+            content: '',
+            default: true,
             panelContent: createForm('local-pong-settings', localPong),
         },
+    ];
+    const wrapper = createWrapper('pongsettings');
+    wrapper.append(createTabs(pongOptions));
+    document.body.layoutInstance?.appendAndCache(wrapper);
+    wsConnect('create', 'quickmatch', 'localForm');
+}
+
+export function renderQuickRemoteLobby() {
+    prepareLayout(document.body.layoutInstance, 'quickLobby');
+    const pongOptions: TabData[] = [
         {
             id: 'pong-remote',
-            content: 'Play remote',
+            content: '',
             default: true,
             panelContent: createForm('remote-pong-settings', remotePong),
         },
@@ -207,10 +218,7 @@ export function renderQuickLobby() {
     const wrapper = createWrapper('pongsettings');
     wrapper.append(createTabs(pongOptions));
     document.body.layoutInstance?.appendAndCache(wrapper);
-    wsConnect('create', 'quickmatch');
-
-    const quickmatch = document.body.layoutInstance?.components.get('pongsettings');
-    console.log(quickmatch?.innerHTML.includes("pong-local"));
+    wsConnect('create', 'quickmatch', 'remoteForm');
 }
 
 export function renderTournamentLobby() {
@@ -226,10 +234,7 @@ export function renderTournamentLobby() {
     const wrapper = createWrapper('pongsettings');
     wrapper.append(createTabs(pongOptions));
     document.body.layoutInstance?.appendAndCache(wrapper);
-    wsConnect('create', 'tournament');
-
-    const tournament = document.body.layoutInstance?.components.get('pongsettings');
-    console.log(tournament?.innerHTML.includes("tournament"));
+    wsConnect('create', 'tournament', 'tournamentForm');
 }
 
 export function renderGame(gameRequest: gameRequest) {
