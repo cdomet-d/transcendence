@@ -49,25 +49,25 @@ export async function tournamentState(payload: string) {
 
 	if (nextPlayers.player1 && nextPlayers.player2) {
 		tournamentObj.bracket[index] = game; // update local tournamentObj
-		nextGame.userList = [nextPlayers.player1, nextPlayers.player2];
+		nextGame.users = [nextPlayers.player1, nextPlayers.player2];
 		startGame(nextGame);
 		nextPlayersMap.delete(nextGameID);
 	}
 }
 
 function getUsernameFromID(userID: number, game: game): string {
-	if (game.userList?.length === 2) {
-		if (game.userList[0]?.userID === userID)
-			return game.userList[0]?.username!;
+	if (game.users?.length === 2) {
+		if (game.users[0]?.userID === userID)
+			return game.users[0]?.username!;
 		else
-			return game.userList[1]?.username!;
+			return game.users[1]?.username!;
 	}
 	return "Error: Couldn't find username from userID in gameObj!";
 }
 
 function getNextGameInBracket(tournament: tournament): game | undefined {
 	tournament.bracket.forEach((GameObj) => {
-		if (GameObj.userList === null) {
+		if (GameObj.users === null) {
 			return GameObj;
 		}
 	});

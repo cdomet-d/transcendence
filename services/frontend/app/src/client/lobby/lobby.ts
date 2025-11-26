@@ -18,16 +18,18 @@ interface gameRequestForm {
 }
 
 // NO
-function createGameRequest(format: string): string {
+function createGameRequest(format: string, formInstance: string): string {
+        console.log("3");
+
     const gameRequestForm: gameRequestForm = {
         event: 'GAME_REQUEST',
         payload: {
             format: format,
-            remote: true,
+            remote: formInstance === 'localForm' ? false : true,
             nbPlayers: format === 'quickmatch' ? 2 : 4,
             userList: [ // this a Map now
                 { userID: 1, username: 'sam' },
-                { userID: 2, username: 'alex' },
+                { userID: 2, username: 'alex' }, // TODO differentiate local, remote, tournament
                 // { userID: 3, username: "cha" },
                 // { userID: 4, username: "coco" }
             ],

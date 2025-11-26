@@ -99,11 +99,11 @@ services:
         volumes:
             - ./services/bff/app:/usr/app
         # user: "${T_UID}:${T_GID}"
-    gamemanager:
+    game-manager:
         build:
             context: ./services/game-manager
             dockerfile: Dockerfile
-        container_name: gamemanager
+        container_name: game-manager
         image: gamemanager:0.0.1
         environment:
             - PORT=2121
@@ -129,7 +129,7 @@ services:
             - ./services/monitoring/app:/usr/app
     nats-server:
         build:
-            context: ./services/NATS
+            context: ./services/nats-server
             dockerfile: Dockerfile
         container_name: nats-server
         image: nats:0.0.1

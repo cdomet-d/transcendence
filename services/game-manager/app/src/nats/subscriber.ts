@@ -18,11 +18,13 @@ export async function natsSubscribe() {
 	(async () => {
 		for await (const msg of pregame) {
 			const sc = StringCodec();
-			// const game: {gameID: number, users: user[], remote: boolean} = JSON.parse(sc.decode(msg.data));
-			const game: {gameID: string, users: user[], remote: boolean} = JSON.parse(sc.decode(msg.data));
+			const game: { gameID: string, users: user[], remote: boolean } = JSON.parse(sc.decode(msg.data));
 			// console.log(`GM received in "game.reply" : `, payload);
-
-			if (game.users === null || game.users === undefined) return;
+			console.log("USERS:", game.users);
+			if (game.users === null || game.users === undefined) {
+				console.log("EMPTY USERS");
+				return;
+			}
 			for (let i = 0; i < game.users.length; i++) {
 				const userID = game.users[i]!.userID;
 				const socket = wsClientsMap.get(userID);
@@ -32,6 +34,9 @@ export async function natsSubscribe() {
 					gameID: game.gameID,
 					remote: game.remote
 				}
+
+				console.log("7");
+
 				wsSend(socket, JSON.stringify(gameReq));
 			}
 		}
@@ -45,9 +50,9 @@ export async function natsSubscribe() {
 			console.log(`GM received following in "game.over" :\n`, JSON.stringify(payload));
 
 			// if (tournamentID ==! -1)
-				tournamentState(payload);
+			tournamentState(payload);
 			// else {
-				gameOver(payload);
+			gameOver(payload);
 			// }
 		}
 	})();

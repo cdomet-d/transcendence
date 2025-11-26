@@ -7,6 +7,8 @@ import { DropdownMenu } from '../navigation/menus.js';
 import { NoResults } from '../typography/images.js';
 import type { Searchbar } from './search.js';
 import type { UserData } from '../types-interfaces.js';
+import { createGameRequest } from '../../lobby/lobby.js';
+import { wsConnect } from '../../lobby/wsConnect.js';
 
 /**
  * A form allowing user to create a local pong game.
@@ -67,7 +69,13 @@ export class LocalPongSettings extends BaseForm {
         if (background) f.append('background', background.id);
         const req = this.initReq();
         req.body = this.createReqBody(f);
-        await this.fetchAndRedirect(this.details.action, req);
+        // await this.fetchAndRedirect(this.details.action, req);
+
+        console.log("1");
+        await wsConnect('game', 'quickmatch', '', ''); // TODO give 'f' object as argument to wsConnect (containing gameSettings and oppononent for local pong)
+        console.log("10");
+        // wsConnect.send(createGameRequest);
+
     }
 
     /* -------------------------------------------------------------------------- */

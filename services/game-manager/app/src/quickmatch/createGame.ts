@@ -14,15 +14,18 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 		tournamentID: "-1",
 		gameID: crypto.randomUUID().toString(),
 		remote: true, // TODO this value will change just before click on start local game 
-		userList: usersArray,
+		users: usersArray,
 		score: "",
 		winnerID: 0,
 		loserID: 0
 	};
 
+	console.log("USER ARRAY: ", game.users)
 	return game;
 }
 
 export function startGame(game: game) {
+        console.log("6");
+
 	natsPublish("game.request", JSON.stringify(game), "game.reply");
 }

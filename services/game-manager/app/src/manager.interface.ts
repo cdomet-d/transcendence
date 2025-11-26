@@ -26,7 +26,7 @@ interface game {
 	gameID: string,
 	tournamentID?: string,
 	remote: boolean,
-	userList: userInfo[] | undefined | null,
+	users: userInfo[] | undefined | null,
 	score: string,
 	winnerID: number,
 	loserID: number,

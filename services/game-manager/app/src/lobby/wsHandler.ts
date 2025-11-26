@@ -10,9 +10,10 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 	socket.on('message', (message: string) => {
 		try {
 			const data = JSON.parse(message);
-			const { event, payload, formInstance } = data;
-
-			if (event === "LOBBY_REQUEST") {
+			const { payload, formInstance } = data;
+			
+			if (data.event === "LOBBY_REQUEST") {
+				
 				userID = payload.userID;
 				// userID = getUniqueUserID(); // use JWT payload
 				
@@ -27,7 +28,9 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 					addUserToLobby(userID!, socket, payload.lobbyID);
 					socket.send(JSON.stringify({ lobby: "joined", lobbyID: payload.lobbyID }));
 				}
-			} else if (event === "GAME_REQUEST") {
+			} else if (data.event === "GAME_REQUEST") {
+		        console.log("4");
+
 				processGameRequest(payload);
 			}
 		} catch (error) {
