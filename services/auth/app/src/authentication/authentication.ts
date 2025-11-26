@@ -156,6 +156,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//TODO delete users/friends
 	serv.delete('/:userID', async (request, reply) => {
 		try {
 			const token = request.cookies.token;

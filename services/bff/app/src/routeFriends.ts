@@ -1,12 +1,41 @@
 import type { FastifyInstance } from 'fastify';
-
-import { findUserByUsername } from './bffFriends.service.js';
+import { fetchUserID } from './bffUserProfile.service.js';
 import { createFriendRequest, deleteFriendRequest, acceptFriendRequest } from './bffFriends.service.js';
+
+//TODO put in interface and export
+interface JwtPayload {
+	userID: number;
+	username: string;
+	iat: number;
+	exp: number;
+}
 
 export async function bffFriendRoutes(serv: FastifyInstance) {
 
 	serv.post('/relation', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const senderID = request.user.userID;
 			const senderUsername = request.user.username;
 
@@ -18,14 +47,14 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			if (senderUsername === friendUsername)
 				return reply.code(400).send({ message: '[BFF] You cannot send a friend request to yourself.' });
 
-			const friendUser = await findUserByUsername(serv.log, friendUsername);
-			if (!friendUser)
+			const friendUserID = await fetchUserID(serv.log, friendUsername, token);
+			if (!friendUserID)
 				return reply.code(404).send({ message: `[BFF] User '${friendUsername}' not found.` });
 
-			await createFriendRequest(serv.log, senderID, friendUser.userID);
+			await createFriendRequest(serv.log, senderID, friendUserID, token);
 			return (reply
 				.code(201)
-				.send({message: '[BFF] Friend request sent.'}));
+				.send({ message: '[BFF] Friend request sent.' }));
 
 		} catch (error) {
 			serv.log.error(`[BFF] Error sending friend request: ${error}`);
@@ -35,6 +64,28 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 
 	serv.patch('/relation', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const receiverID = request.user.userID;
 			const receiverUsername = request.user.username;
 
@@ -46,14 +97,14 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			if (senderRequestUsername === receiverUsername)
 				return reply.code(400).send({ message: '[BFF] You cannot accept a friend request to yourself.' });
 
-			const senderRequestUser = await findUserByUsername(serv.log, senderRequestUsername);
-			if (!senderRequestUser)
+			const senderRequestUserID = await fetchUserID(serv.log, senderRequestUsername, token);
+			if (!senderRequestUserID)
 				return reply.code(404).send({ message: `[BFF] User '${senderRequestUsername}' not found.` });
 
-			await acceptFriendRequest(serv.log, receiverID, senderRequestUser.userID);
+			await acceptFriendRequest(serv.log, receiverID, senderRequestUserID, token);
 			return (reply
 				.code(200)
-				.send({message: '[BFF] Friend request accepted.'}));
+				.send({ message: '[BFF] Friend request accepted.' }));
 
 		} catch (error) {
 			serv.log.error(`[BFF] Error accepting friend request: ${error}`);
@@ -63,6 +114,29 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 
 	serv.delete('/relation', async (request, reply) => {
 		try {
+
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const removerID = request.user.userID;
 			const removerUsername = request.user.username;
 
@@ -72,16 +146,16 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 				return reply.code(400).send({ message: '[BFF] Missing friend username in request body.' });
 
 			if (friendUsername === removerUsername)
-				return reply.code(400).send({ message: '[BFF] You cannot accept a friend request to yourself.' });
-
-			const friendUser = await findUserByUsername(serv.log, friendUsername);
-			if (!friendUser)
+				return reply.code(400).send({ message: '[BFF] You cannot dellete a friendship with yourself.' });
+		
+			const friendUserID = await fetchUserID(serv.log, friendUsername, token);
+			if (!friendUserID)
 				return reply.code(404).send({ message: `[BFF] User '${friendUsername}' not found.` });
 
-			await deleteFriendRequest(serv.log, removerID, friendUser.userID);
+			await deleteFriendRequest(serv.log, removerID, friendUserID, token);
 			return (reply
 				.code(200)
-				.send({message: '[BFF] Friendship deleted.'}));
+				.send({ message: '[BFF] Friendship deleted.' }));
 
 		} catch (error) {
 			serv.log.error(`[BFF] Error deleting friend request: ${error}`);

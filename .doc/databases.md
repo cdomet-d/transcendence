@@ -721,11 +721,11 @@ WHERE userID = 101;
 * servir traduction      
 * envoyer les settings
 * supprimer ami          
-* servir la leaderboard
 * supprimer le compte    ✅
-* envouyer demande d'ami ✅
-* accepter demande d'ami ✅
 
+* envoyer demande d'ami            ✅
+* accepter demande d'ami           ✅
+* servir la leaderboard            ✅
 * servir les users pour search bar ✅
 * servir le profile                ✅
 * servir userCard                  ✅
