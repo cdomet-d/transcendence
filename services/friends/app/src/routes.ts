@@ -116,31 +116,30 @@ export async function routeFriend(serv: FastifyInstance) {
 	//create a pending friend request
 	serv.post('/relation', async (request, reply) => {
 		try {
-			//const token = request.cookies.token;
-			//if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
-			//
-			//if (token) {
-			//	try {
-			//		const user = serv.jwt.verify(token) as JwtPayload;
-			//		if (typeof user !== 'object') throw new Error('Invalid token detected');
-			//	} catch (error) {
-			//		if (error instanceof Error && 'code' in error) {
-			//			if (
-			//				error.code === 'FST_JWT_BAD_REQUEST' ||
-			//				error.code === 'ERR_ASSERTION' ||
-			//				error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-			//			)
-			//				return reply.code(400).send({ code: error.code, message: error.message });
-			//			return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-			//		} else {
-			//			return reply.code(401).send({ message: 'Unknown error' });
-			//		}
-			//	}
-			//}
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
 
 			const { senderID: senderID } = request.body as { senderID: number };
 			const { friendID: friendID } = request.body as { friendID: number };
-			serv.log.error(`${senderID} ALSSSSSSSSSSSSSO ${friendID}`);
 
 			const query = `
 				INSERT INTO friendship (userID, friendID, statusFriendship)

@@ -1,7 +1,6 @@
 export async function createFriendRequest(log: any, senderID: number, friendID: number/* , token: string */): Promise<void> {
 	const url = 'http://friends:1616/relation';
 	let response: Response;
-		log.error(`${senderID} ANNNNNNNNNND ${friendID}`);
 
 	try {
 		response = await fetch(url, {
