@@ -4,7 +4,7 @@ CREATE TABLE userProfile (
   avatar TEXT,
   biography TEXT,
   profileColor TEXT,
-  activityStatus INTEGER,
+  activityStatus BOOLEAN,
   lastConnection DATETIME,
   userRole INTEGER,
   since TEXT,

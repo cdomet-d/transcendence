@@ -5,10 +5,10 @@ import * as bcrypt from 'bcrypt';
 import { deleteAccount, createUserProfile, checkUsernameUnique } from './auth.service.js';
 
 interface JwtPayload {
-    userID: number;
-    username: string;
-    iat: number;
-    exp: number;
+	userID: number;
+	username: string;
+	iat: number;
+	exp: number;
 }
 
 const authSchema = {
@@ -24,32 +24,31 @@ const authSchema = {
 };
 
 //TODO update user status on login and logout
-
 export async function authenticationRoutes(serv: FastifyInstance) {
-    serv.get('/status', async (request, reply) => {
-        const token = request.cookies.token;
-        if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
-        console.log('');
-        if (token) {
-            try {
-                const user = serv.jwt.verify(token) as JwtPayload;
-                if (typeof user !== 'object') throw new Error('Invalid token detected');
-                return reply.code(200).send({ username: user.username, userID: user.userID });
-            } catch (error) {
-                if (error instanceof Error && 'code' in error) {
-                    if (
-                        error.code === 'FST_JWT_BAD_REQUEST' ||
-                        error.code === 'ERR_ASSERTION' ||
-                        error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-                    )
-                        return reply.code(400).send({ code: error.code, message: error.message });
-                    return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-                } else {
-                    return reply.code(401).send({ message: 'Unknown error' });
-                }
-            }
-        }
-    });
+	serv.get('/status', async (request, reply) => {
+		const token = request.cookies.token;
+		if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+		console.log('');
+		if (token) {
+			try {
+				const user = serv.jwt.verify(token) as JwtPayload;
+				if (typeof user !== 'object') throw new Error('Invalid token detected');
+				return reply.code(200).send({ username: user.username, userID: user.userID });
+			} catch (error) {
+				if (error instanceof Error && 'code' in error) {
+					if (
+						error.code === 'FST_JWT_BAD_REQUEST' ||
+						error.code === 'ERR_ASSERTION' ||
+						error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+					)
+						return reply.code(400).send({ code: error.code, message: error.message });
+					return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+				} else {
+					return reply.code(401).send({ message: 'Unknown error' });
+				}
+			}
+		}
+	});
 
 	serv.post('/login', { schema: authSchema }, async (request, reply) => {
 		try {

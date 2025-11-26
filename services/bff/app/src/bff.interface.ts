@@ -3,7 +3,7 @@ export type FriendshipStatus = 'friend' | 'pending';
 
 
 export interface userData {
-	avatar: string,
+	avatar: string | null | undefined,
 	biography: string,
 	userID: string,
 	lang: string,

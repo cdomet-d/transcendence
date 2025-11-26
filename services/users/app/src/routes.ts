@@ -1,7 +1,8 @@
+import type { profile } from 'console';
 import type { FastifyInstance } from 'fastify';
 
 export interface userData {
-	avatar: string,
+	avatar: string | null | undefined,
 	biography: string,
 	userID: string,
 	lang: string,
@@ -58,12 +59,18 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.get('/leaderboard', async (request, reply) => {
 		try {
 			const query = `
-				SELECT 
-					p.userID,
-					p.username,
+				SELECT
 					p.avatar,
+					p.biography,
+					p.userID,
+					p.lang,
 					p.profileColor,
-					s.winStreak
+					p.activityStatus,
+					p.lastConnection,
+					p.userRole,
+					p.username,
+					s.winStreak,
+					p.since
 				FROM 
 					userProfile p
 				JOIN 
@@ -77,7 +84,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			return reply.code(200).send({
 				success: true,
-				leaderboard: leaderboard
+				profiles: leaderboard
 			});
 
 		} catch (error) {

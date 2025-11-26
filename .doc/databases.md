@@ -19,7 +19,7 @@ Bad SQL query (dangerous) :
 ```
 	const word;
 	const langCode;
-
+sta
 	const query = `
 		SELECT translation FROM translations WHERE {$word} = ? AND {$language_code} = ?
 	`;
@@ -174,7 +174,7 @@ This table has the following column :
 * avatar &rarr; text
 * biography &rarr; text
 * profileColor &rarr; text
-* activityStatus &rarr; integer 
+* activityStatus &rarr; boolean 
 * lastConnexion &rarr; datetime
 
 userID will match between different table and database and if a general ID for a user.
@@ -185,7 +185,6 @@ activityStatus will be used to keep track of whether the user if offline, online
 | ------ |:-------:|
 |   0    | offline |
 |   1    | online  |
-|   2    | playing |
 
 #### userStats
 

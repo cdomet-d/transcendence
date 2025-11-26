@@ -100,13 +100,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 			const profiles = await searchBar(serv.log, query.name);
 
-			//TODO handle null profile picture to set them as undefined
-			//if (profiles.length > 0) {
-			//	for (let i = 0; i++; i <= profiles.length) {
-			//		if (profiles[i]?.avatar ===)
-			//	}
-			//}
-
 			return (reply.code(200).send(profiles));
 		} catch (error) {
 			serv.log.error(`[BFF] Error searching users: ${error}`);
@@ -114,16 +107,17 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//serv.get('/leaderboard', async (request, reply) => {
-	//	try {
-	//		const leaderboard = await fetchLeaderboard(log);
-	//		
-	//	} catch (error) {
-	//		serv.log.error(`[BFF] Error searching users: ${error}`);
-	//		throw (error);
-	//
-	//	}
-	//});
+	serv.get('/leaderboard', async (request, reply) => {
+		try {
+			const leaderboard = await fetchLeaderboard(serv.log);
+
+			return (reply.code(200).send(leaderboard));
+		} catch (error) {
+			serv.log.error(`[BFF] Error searching users: ${error}`);
+			throw (error);
+	
+		}
+	});
 
 	/* 	serv.patch('/settings', async (request, reply) => {
 			try {
