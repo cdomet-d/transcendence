@@ -183,7 +183,7 @@ export async function fetchUserStats(log: any, userID: number): Promise<userStat
 //The 'since' in the friendlist will store the friendship creation data, not the creation of the profile of the friend
 // Make a issue on github if you'd rather it to be the creation of the friend's profile 
 export async function fetchFriendships(log: any, userID: number, status: FriendshipStatus): Promise<userData[]> {
-	const url = `http://friends:1616/friendship?userID=${userID}`;
+	const url = `http://friends:1616/friendlist?userID=${userID}`;
 	let response: Response;
 
 	try {

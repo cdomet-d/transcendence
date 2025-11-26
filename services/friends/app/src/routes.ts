@@ -4,16 +4,13 @@ type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
 
 export async function routeFriend(serv: FastifyInstance) {
 
-	//GET hips?userA=1&userB=2
-	//TODO : separate route in two 1. get relation betweem two users // "/" ---> to test 
-	//							   2. get frienlist					 //	"/friend-list"
+	//GET friendship?userA=1&userB=2
 	serv.get('/friendship', async (request, reply) => {
 		try {
 
 			const query = request.query as {
 				userA?: number,
 				userB?: number,
-				userID?: number,
 			};
 
 			//get relationship between two user
@@ -38,12 +35,6 @@ export async function routeFriend(serv: FastifyInstance) {
 				return (reply.code(200).send({ status: status }));
 			}
 
-			//get friends list
-			if (query.userID) {
-				const friends = await getFriendship(serv.dbFriends, query.userID);
-				return (reply.code(200).send(friends));
-			}
-
 			return (reply.code(400).send({ message: '[FRIENDS] Invalid query parameters.' }));
 
 		} catch (error) {
@@ -51,6 +42,27 @@ export async function routeFriend(serv: FastifyInstance) {
 			throw (error);
 		}
 	});
+
+	//GET friendlist?userID=1
+	serv.get('/friendlist', async (request, reply) => {
+		try {
+			const query = request.query as {
+				userID?: number,
+			};
+
+			if (query.userID) {
+				const friends = await getFriendship(serv.dbFriends, query.userID);
+				return (reply.code(200).send(friends));
+			}
+
+			return (reply.code(400).send({ message: '[FRIENDS] Invalid query parameters.' }));
+		} catch (error) {
+			serv.log.error(`[FRIENDS] Error checking relationship: ${error}`);
+			throw (error);
+		}
+
+	});
+
 
 	//create a pending friend request
 	serv.post('/relation', async (request, reply) => {
