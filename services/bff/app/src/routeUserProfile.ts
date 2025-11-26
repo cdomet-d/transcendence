@@ -32,10 +32,24 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
-			try {
-				await request.jwtVerify();
-			} catch (err) {
-				return reply.code(401).send({ message: 'Invalid Token' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
 			}
 			//}
 			const userB = request.user.userID;
@@ -85,6 +99,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//TODO : I didn't add the JWT verif here because the front request that (not the user) so no JWT, right ?
+	// should I tho ??
 	serv.get('/tiny-profile/:username', async (request, reply) => {
 		try {
 			//FOR TESTING PURPOSES
@@ -115,6 +131,28 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	serv.get('/search', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const query = request.query as { name?: string };
 
 			if (!query.name || query.name.trim() === '')
@@ -131,9 +169,31 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	serv.get('/leaderboard', async (request, reply) => {
 		try {
-			const leaderboard = await fetchLeaderboard(serv.log);
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const leaderboard = await fetchLeaderboard(serv.log);
 			return (reply.code(200).send(leaderboard));
+
 		} catch (error) {
 			serv.log.error(`[BFF] Error searching users: ${error}`);
 			throw (error);
