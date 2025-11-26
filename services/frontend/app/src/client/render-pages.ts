@@ -154,15 +154,19 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
         }
 
         const url = `https://localhost:8443/api/bff/profile/${login}?userB=${status.userID}`;
-        const reply = await fetch(url);
-        const profile = await reply.json();
-        prepareLayout(document.body.layoutInstance, 'profile');
-        const profileInstance = document.createElement('div', {
-            is: 'profile-page',
-        }) as ProfileWithTabs;
-        document.body.layoutInstance?.appendAndCache(profileInstance);
-        profileInstance.profile = userDataFromResponse(profile.UserData);
-        updatePageTitle('User ' + login);
+        try {
+            const reply = await fetch(url);
+            const profile = await reply.json();
+            prepareLayout(document.body.layoutInstance, 'profile');
+            const profileInstance = document.createElement('div', {
+                is: 'profile-page',
+            }) as ProfileWithTabs;
+            document.body.layoutInstance?.appendAndCache(profileInstance);
+            profileInstance.profile = userDataFromResponse(profile.UserData);
+            updatePageTitle('User ' + login);
+        } catch (error) {
+            console.error(error);
+        }
     } else renderNotFound();
 }
 
