@@ -25,6 +25,7 @@ export class Game {
 	#_endSent: boolean;
 	#_lastBall: boolean;
 	#_startLoop: number;
+	#_remainingTickTime: number;
 
 	/*                            CONSTRUCTORS                               */
 	constructor(gameInfo: gameInfo, nc: NatsConnection) {
@@ -54,6 +55,7 @@ export class Game {
 		this.#_endSent = false;
 		this.#_lastBall = false;
 		this.#_startLoop = 0;
+		this.#_remainingTickTime = 0;
 	}
 
 	/*                              GETTERS                                  */
@@ -123,6 +125,10 @@ export class Game {
 		return this.#_startLoop;
 	}
 
+	get remainingTickTime(): number {
+		return this.#_remainingTickTime;
+	}
+
 	/*                              SETTERS                                  */
 	set reqHistory(reqTab: reqTab) {
 		this.#_reqHistory = reqTab;
@@ -154,6 +160,10 @@ export class Game {
 
 	set startLoop(timestamp: number) {
 		this.#_startLoop = timestamp;
+	}
+
+	set remainingTickTime(time: number) {
+		this.#_remainingTickTime = time;
 	}
 
 	/*                              METHODS                                  */

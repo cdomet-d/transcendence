@@ -2,7 +2,7 @@ import { Game, HEIGHT, WIDTH } from './classes/game.class.js';
 import { raycast, updateVelocity } from './collision.utils.js';
 import type { ballObj, coordinates, repObj } from './classes/game.interfaces.js';
 
-const TIME_STEP: number = 1000 / 60; // 60FPS
+const TIME_STEP: number = 1000 / 60;
 
 export function deadReckoning(game: Game, latestReply: repObj | undefined) {
     let timeSinceUpdate: number = performance.now() - game.lastFrameTime;

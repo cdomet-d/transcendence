@@ -2,7 +2,7 @@ import { renderGame } from './game.render.utils.js';
 import { Game, HEIGHT, WIDTH } from './classes/game.class.js';
 import type { repObj } from './classes/game.interfaces.js';
 import { movePaddle, updatePaddlePos } from './paddle.js';
-import { deadReckoning } from './ball.js';
+import { deadReckoning, updateBallPos } from './ball.js';
 
 const SERVER_TICK: number = 1000 / 50;
 const TIME_STEP: number = 1000 / 60;
@@ -81,18 +81,41 @@ function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean
 		game.rightPad = latestReply._rightPad;
 	game.ball = latestReply._ball;
 
-	if (game.leftStep.x != 0 || game.leftStep.y != 0
-		|| game.rightStep.x != 0 || game.rightStep.y != 0) {
-		deadReckoning(game, undefined);
-		finishSteps(game);
-	}
-	for (let i = id + 1; game.reqHistory.has(i); i++) {
-		updatePaddlePos(game.leftPad, true, game, game.reqHistory.get(i)!._keys);
-		if (game.local) 
-			updatePaddlePos(game.rightPad, false, game, game.reqHistory.get(i)!._keys);
-		deadReckoning(game, latestReply);
-		finishSteps(game);
-	}
+	// if (game.leftStep.x != 0 || game.leftStep.y != 0
+	// 	|| game.rightStep.x != 0 || game.rightStep.y != 0) {
+	// 	deadReckoning(game, undefined);
+	// 	finishSteps(game);
+	// }
+	// for (let i = id + 1; game.reqHistory.has(i); i++) {
+	// 	updatePaddlePos(game.leftPad, true, game, game.reqHistory.get(i)!._keys);
+	// 	if (game.local) 
+	// 		updatePaddlePos(game.rightPad, false, game, game.reqHistory.get(i)!._keys);
+	// 	deadReckoning(game, latestReply);
+	// 	finishSteps(game);
+	// }
+	const sortedRequests = Array.from(game.reqHistory.entries())
+        .filter(req => req[0] > id)    
+    let lastTimestamp = latestReply._timestamp;
+
+    for (const req of sortedRequests) {
+        const deltaTime = req[1]._timeStamp - lastTimestamp;
+        let simulatedTime = 0;
+        
+        while (simulatedTime + TIME_STEP <= deltaTime) {
+            simulatedTime += TIME_STEP;
+			const nextX: number = game.ball.x + game.ball.dx * TIME_STEP;
+			const nextY: number = game.ball.y + game.ball.dy * TIME_STEP;
+			updateBallPos(game, nextX, nextY);
+            // deadReckoning(game, latestReply);
+            finishSteps(game);
+        }
+        
+        updatePaddlePos(game.leftPad, true, game, req[1]._keys);
+        if (game.local) 
+            updatePaddlePos(game.rightPad, false, game, req[1]._keys);
+        
+        lastTimestamp = req[1]._timeStamp;
+    }
 	if (latestReply._end === true) {
 		ws.send("0");
 		return true;

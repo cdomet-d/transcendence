@@ -10,13 +10,14 @@ const TIME_STEP: number = 1000 / 60;
 
 export async function gameLoop(game: Game, player1: Player, player2: Player) { //TODO: make player1 and player2 getters
 	game.startLoop = performance.now();
-	const tickStart = game.lastTick === 0 ? game.startTimestamp : game.lastTick;
+	let tickStart = game.lastTick === 0 ? game.startTimestamp : game.lastTick;
 	const tickEnd = tickStart + SERVER_TICK;
-	game.lastTick = tickEnd;
+	tickStart -= game.remainingTickTime;
+	game.lastTick = tickEnd
 
 	// get requests
 	const reqsToProcess = game.reqHistory.filter(playerReq => playerReq._req._timeStamp < tickEnd);
-	const futureReqs = game.reqHistory.filter(playerReq => playerReq._req._timeStamp >= tickEnd);
+	// const futureReqs = game.reqHistory.filter(playerReq => playerReq._req._timeStamp >= tickEnd);
 	reqsToProcess.sort((a, b) => a._req._timeStamp - b._req._timeStamp);
 
 	// update game
@@ -29,12 +30,14 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) { /
 		updatePaddlePos(player, playerReq._req._keys, game);
 		player.reply._ID = playerReq._req._ID;
 	}
-	if (moveBall(game, simulatedTime, SERVER_TICK, 0) === -1)
+	simulatedTime = moveBall(game, simulatedTime, SERVER_TICK, TIME_STEP)
+	if (simulatedTime === -1)
 		return;
 	sendToPlayers(game, player1, player2);
+	game.remainingTickTime = SERVER_TICK - simulatedTime;
 
 	// clean
-	game.reqHistory = futureReqs;
+	game.reqHistory = game.reqHistory.filter(playerReq => playerReq._req._timeStamp >= tickEnd - game.remainingTickTime);//futureReqs;
 
 	// new loop
 	const delay: number = SERVER_TICK - (performance.now() - game.startLoop);
