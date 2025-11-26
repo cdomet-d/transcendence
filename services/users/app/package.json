@@ -19,6 +19,8 @@
     "typescript": "^5.9.2"
   },
   "devDependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/jwt": "^10.0.0",
     "nodemon": "^3.1.10",
     "pino-pretty": "^13.1.2"
   }

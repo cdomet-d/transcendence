@@ -3,9 +3,9 @@ import type {
 	userData, UserIDResponse
 } from "./bff.interface.js";
 
-export async function buildTinyProfile(log: any, viewerUserID: number, targetUsername: string): Promise<userData | null> {
+export async function buildTinyProfile(log: any, viewerUserID: number, targetUsername: string, token: string): Promise<userData | null> {
 
-	const targetUserID = await fetchUserID(log, targetUsername);
+	const targetUserID = await fetchUserID(log, targetUsername, token);
 
 	if (!targetUserID) {
 		log.warn(`[BFF] buildTinyProfile: UserID not found for ${targetUsername}`);
@@ -13,8 +13,8 @@ export async function buildTinyProfile(log: any, viewerUserID: number, targetUse
 	}
 
 	const [data, relation] = await Promise.all([
-		fetchUserData(log, targetUserID),
-		fetchProfileView(log, viewerUserID, targetUserID)
+		fetchUserData(log, targetUserID, token),
+		fetchProfileView(log, viewerUserID, targetUserID, token)
 	]);
 
 	if (!data) {
@@ -36,13 +36,17 @@ export async function buildTinyProfile(log: any, viewerUserID: number, targetUse
 	};
 }
 
-export async function searchBar(log: any, username: string): Promise<userData[]> {
+export async function searchBar(log: any, username: string, token: string): Promise<userData[]> {
 	const url = `http://users:2626/search?name=${username}`;
 	let response: Response;
 
 	try {
 		response = await fetch(url, {
 			method: 'GET',
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			}
 		});
 	} catch (error) {
 		log.error(`[BFF] User service (search) is unreachable: ${error}`);
@@ -64,13 +68,17 @@ export async function searchBar(log: any, username: string): Promise<userData[]>
 	return body.profiles;
 }
 
-export async function fetchUserData(log: any, userID: number): Promise<userData | null> {
+export async function fetchUserData(log: any, userID: number, token: string): Promise<userData | null> {
 	const url = `http://users:2626/${userID}`;
 	let response: Response;
 
 	try {
 		response = await fetch(url, {
 			method: 'GET',
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			}
 		});
 	} catch (error) {
 		log.error(`[BFF] User service (userData) is unreachable: ${error}`);
@@ -97,7 +105,7 @@ export async function fetchUserData(log: any, userID: number): Promise<userData 
 	return body.userData;
 }
 
-export async function fetchProfileView(log: any, userID: number, targetUserID: number): Promise<ProfileView> {
+export async function fetchProfileView(log: any, userID: number, targetUserID: number, token: string): Promise<ProfileView> {
 
 	if (Number(targetUserID) === Number(userID))
 		return ('self');
@@ -108,6 +116,10 @@ export async function fetchProfileView(log: any, userID: number, targetUserID: n
 	try {
 		friendsResponse = await fetch(friendsUrl, {
 			method: 'GET',
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			}
 		});
 	} catch (error) {
 		log.error(`[BFF] Friends service is unreachable: ${error}`);
@@ -123,7 +135,7 @@ export async function fetchProfileView(log: any, userID: number, targetUserID: n
 	return friendshipData.status;
 }
 
-export async function fetchUserID(log: any, username: string): Promise<number | null> {
+export async function fetchUserID(log: any, username: string, token: string): Promise<number | null> {
 	const url = `http://users:2626/userID/${username}`;
 
 	let response: Response;
@@ -131,6 +143,10 @@ export async function fetchUserID(log: any, username: string): Promise<number | 
 	try {
 		response = await fetch(url, {
 			method: 'GET',
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			}
 		});
 	} catch (error) {
 		log.error(`[BFF] User service (userID) is unreachable: ${error}`);
@@ -155,13 +171,17 @@ export async function fetchUserID(log: any, username: string): Promise<number | 
 	return body.response.userID;
 }
 
-export async function fetchUserStats(log: any, userID: number): Promise<userStats | null> {
+export async function fetchUserStats(log: any, userID: number, token: string): Promise<userStats | null> {
 	const url = `http://users:2626/stats/${userID}`;
 	let response: Response;
 
 	try {
 		response = await fetch(url, {
 			method: 'GET',
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			}
 		});
 	} catch (error) {
 		log.error(`[BFF] User service is unreachable: ${error}`);
@@ -182,13 +202,17 @@ export async function fetchUserStats(log: any, userID: number): Promise<userStat
 
 //The 'since' in the friendlist will store the friendship creation data, not the creation of the profile of the friend
 // Make a issue on github if you'd rather it to be the creation of the friend's profile 
-export async function fetchFriendships(log: any, userID: number, status: FriendshipStatus): Promise<userData[]> {
+export async function fetchFriendships(log: any, userID: number, status: FriendshipStatus, token: string): Promise<userData[]> {
 	const url = `http://friends:1616/friendlist?userID=${userID}`;
 	let response: Response;
 
 	try {
 		response = await fetch(url, {
 			method: 'GET',
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			}
 		});
 	} catch (error) {
 		log.error(`[BFF] Friends service is unreachable: ${error}`);
@@ -217,7 +241,7 @@ export async function fetchFriendships(log: any, userID: number, status: Friends
 		try {
 			const otherID = (friendship.userID === userID) ? friendship.friendID : friendship.userID;
 
-			const profile = await fetchUserData(log, otherID);
+			const profile = await fetchUserData(log, otherID, token);
 
 			if (profile) {
 				(profile as any).relation = status;
@@ -235,12 +259,16 @@ export async function fetchFriendships(log: any, userID: number, status: Friends
 	return profiles.filter((p): p is userData => p !== null);
 }
 
-async function fetchMatches(log: any, userID: number): Promise<RawMatches[]> {
+async function fetchMatches(log: any, userID: number, token: string): Promise<RawMatches[]> {
 	const url = `http://dashboard:1515/games/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
 			method: 'GET',
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			}
 		});
 	} catch (error) {
 		log.error(`[BFF] User service is unreachable: ${error}`);
@@ -259,7 +287,7 @@ async function fetchMatches(log: any, userID: number): Promise<RawMatches[]> {
 	return (response.json() as Promise<RawMatches[]>);
 }
 
-async function fetchUsernames(log: any, userIDs: number[]): Promise<Map<number, string>> {
+async function fetchUsernames(log: any, userIDs: number[], token: string): Promise<Map<number, string>> {
 	if (userIDs.length === 0) return new Map();
 
 	const url = `http://users:2626/usernames`;
@@ -268,7 +296,10 @@ async function fetchUsernames(log: any, userIDs: number[]): Promise<Map<number, 
 	try {
 		response = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			},
 			body: JSON.stringify({ userIDs: userIDs }),
 		});
 	} catch (error) {
@@ -293,8 +324,8 @@ async function fetchUsernames(log: any, userIDs: number[]): Promise<Map<number, 
 	return (usernameMap);
 }
 
-export async function processMatches(log: any, userID: number): Promise<Matches[]> {
-	const rawMatches = await fetchMatches(log, userID);
+export async function processMatches(log: any, userID: number, token: string): Promise<Matches[]> {
+	const rawMatches = await fetchMatches(log, userID, token);
 
 	if (!rawMatches || rawMatches.length === 0) {
 		return [];
@@ -306,7 +337,7 @@ export async function processMatches(log: any, userID: number): Promise<Matches[
 		opponentIDs.add(opponentID);
 	});
 
-	const opponentMap = await fetchUsernames(log, Array.from(opponentIDs));
+	const opponentMap = await fetchUsernames(log, Array.from(opponentIDs), token);
 
 	const processedMatches = rawMatches.map(rawMatch => {
 		const isPlayer1 = rawMatch.player1 === userID;
@@ -348,14 +379,17 @@ function formatDuration(seconds: number): string {
 	return (`${mins}m ${secs}s`);
 }
 
-export async function fetchLeaderboard(log: any): Promise<userData[]> {
+export async function fetchLeaderboard(log: any, token: string): Promise<userData[]> {
 	const url = `http://users:2626/leaderboard`;
 	let response: Response;
 
 	try {
 		response = await fetch(url, {
 			method: 'GET',
-			headers: { 'Content-Type': 'application/json' },
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			}
 		});
 	} catch (error) {
 		log.error(`[BFF] User service is unreachable: ${error}`);
@@ -369,7 +403,7 @@ export async function fetchLeaderboard(log: any): Promise<userData[]> {
 
 	const body = (await response.json()) as { success: boolean, profiles: userData[] };
 
-	if (!body.success  || !body.profiles ) {
+	if (!body.success || !body.profiles) {
 		log.error(`[BFF] User service (search) returned 200 OK but with a failure body.`);
 		throw new Error('User service returned invalid data.');
 	}

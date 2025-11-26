@@ -186,6 +186,8 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
+            - PORT=2626
+            - JWT_SECRET=${JWT_SECRET}
         volumes:
             - ./services/users/app:/usr/app
             - ./services/users/data:/usr/data

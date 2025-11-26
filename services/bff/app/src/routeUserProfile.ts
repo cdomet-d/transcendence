@@ -21,14 +21,14 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		try {
 
 			//FOR CURL TESTING
-			if (request.headers['x-test-userid']) {
-				(request as any).user = {
-					userID: Number(request.headers['x-test-userid']),
-					username: 'test_user'
-				};
-				serv.log.warn('[BFF] Using Dev Bypass for Auth');
-			}
-			else {
+			//if (request.headers['x-test-userid']) {
+			//	(request as any).user = {
+			//		userID: Number(request.headers['x-test-userid']),
+			//		username: 'test_user'
+			//	};
+			//	serv.log.warn('[BFF] Using Dev Bypass for Auth');
+			//}
+			//else {
 
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -51,7 +51,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 					}
 				}
 			}
-			}
+			//}
 			const userB = request.user.userID;
 			const { username } = request.params as { username: string };
 
@@ -61,7 +61,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 					message: '[BFF] Missing required query parameters: userA and userB are required.'
 				});
 			}
-			const combinedUserData = await buildTinyProfile(serv.log, userB, username);
+			const combinedUserData = await buildTinyProfile(serv.log, userB, username, token);
 
 			if (!combinedUserData)
 				return (reply.code(404).send({ message: 'User profile data not found.' }));
@@ -74,10 +74,10 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				recentMatches
 			] = await Promise.all([
 				combinedUserData,
-				fetchUserStats(serv.log, Number(combinedUserData.userID)),
-				fetchFriendships(serv.log, Number(combinedUserData.userID), 'friend'),
-				fetchFriendships(serv.log, Number(combinedUserData.userID), 'pending'),
-				processMatches(serv.log, Number(combinedUserData.userID))
+				fetchUserStats(serv.log, Number(combinedUserData.userID), token),
+				fetchFriendships(serv.log, Number(combinedUserData.userID), 'friend', token),
+				fetchFriendships(serv.log, Number(combinedUserData.userID), 'pending', token),
+				processMatches(serv.log, Number(combinedUserData.userID), token)
 			]);
 
 			if (!userData || !userStats)
@@ -103,20 +103,35 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	// should I tho ??
 	serv.get('/tiny-profile/:username', async (request, reply) => {
 		try {
-			//FOR TESTING PURPOSES
-			/* 			if (!request.user && request.headers['x-test-userid']) {
-							(request as any).user = {
-								userID: Number(request.headers['x-test-userid']),
-								username: 'test_viewer'
-							};
-						} */
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const { username: targetUsername } = request.params as { username: string };
 			const { userID: viewerUserID } = request.user as { userID: number };
 
 			if (!viewerUserID)
 				return (reply.code(401).send({ message: 'Unauthorized.' }));
 
-			const tinyProfile = await buildTinyProfile(serv.log, viewerUserID, targetUsername);
+			const tinyProfile = await buildTinyProfile(serv.log, viewerUserID, targetUsername, token);
 
 			if (!tinyProfile)
 				return (reply.code(404).send({ message: 'User profile data not found.' }));
@@ -158,7 +173,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			if (!query.name || query.name.trim() === '')
 				return reply.code(200).send([]);
 
-			const profiles = await searchBar(serv.log, query.name);
+			const profiles = await searchBar(serv.log, query.name, token);
 
 			return (reply.code(200).send(profiles));
 		} catch (error) {
@@ -191,7 +206,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				}
 			}
 
-			const leaderboard = await fetchLeaderboard(serv.log);
+			const leaderboard = await fetchLeaderboard(serv.log, token);
 			return (reply.code(200).send(leaderboard));
 
 		} catch (error) {

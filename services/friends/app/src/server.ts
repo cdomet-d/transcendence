@@ -1,10 +1,11 @@
 import { options } from './serv.conf.js';
 import Fastify from 'fastify';
 import type { FastifyInstance } from 'fastify';
-import { routeFriend } from './routes.js';
-import dbConnector from "./db.js";
 import cookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
+
+import { routeFriend } from './routes.js';
+import dbConnector from "./db.js";
 
 (async () => {
 	try {
