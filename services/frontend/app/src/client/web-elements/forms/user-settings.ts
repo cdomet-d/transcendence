@@ -112,7 +112,7 @@ export class UserSettingsForm extends BaseForm {
         if (!file) return;
         try {
             const binaryAvatar = await this.#fileToBinary(file[0]);
-            if (binaryAvatar) {
+            if (binaryAvatar && this.#user.avatar) {
                 this.#user.avatar.src = binaryAvatar;
                 this.#avatar.metadata = this.#user.avatar;
             }
