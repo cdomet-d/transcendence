@@ -17,9 +17,9 @@ export function updatePaddlePos(paddle: coordinates, leftSide: boolean, game: Ga
     if (leftSide && keys.a) 
         left(paddle, game, 0, step);
     if (leftSide && keys.d)
-        right(paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, step);
+        right(paddle, game, WIDTH / 2 - game.ball.r - 10 - game.padSpec.w, step);
     if (!leftSide && keys.ArrowLeft) 
-        left(paddle, game, WIDTH / 2 + game.ball.r + 1, step);
+        left(paddle, game, WIDTH / 2 + game.ball.r + 10, step);
     if (!leftSide && keys.ArrowRight) 
         right(paddle, game, WIDTH - game.padSpec.w, step);
     movePaddle(game, paddle, step);
