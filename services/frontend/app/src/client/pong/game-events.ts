@@ -11,9 +11,9 @@ export function addMessEvent(game: Game, ws: WebSocket) {
 
 export function createKeyEvent(keys: keysObj, horizontal: boolean, isKeyDown: boolean) {
     const keyMap = {
-        w: ['z', 'Z'],
+        w: ['w', 'W'],
         s: ['s', 'S'],
-        a: horizontal ? ['q', 'Q'] : [],
+        a: horizontal ? ['a', 'A'] : [],
         d: horizontal ? ['d', 'D'] : [],
         ArrowUp: ['ArrowUp'],
         ArrowDown: ['ArrowDown'],
