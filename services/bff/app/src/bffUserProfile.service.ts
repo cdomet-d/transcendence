@@ -135,7 +135,7 @@ export async function fetchProfileView(log: any, userID: number, targetUserID: n
 	return friendshipData.status;
 }
 
-export async function fetchUserID(log: any, username: string, token: string ): Promise<number | null> {
+export async function fetchUserID(log: any, username: string, token: string): Promise<number | null> {
 	const url = `http://users:2626/userID/${username}`;
 
 	let response: Response;
@@ -412,216 +412,82 @@ export async function fetchLeaderboard(log: any, token: string): Promise<userDat
 
 /*----------  WIP  ----------*/
 
-export async function fetchProfileDataBatch(
-	log: any,
-	userIDs: number[]
-): Promise<ProfileDataBatch[]> {
-	if (!userIDs || userIDs.length === 0) return [];
-
-	const url = 'http://users:2626/profiles';
-	let response: Response;
-
-	try {
-		response = await fetch(url, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ userIDs: userIDs }),
-		});
-	} catch (error) {
-		log.error(`[BFF] User service (userDataBatch) is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] User service (userDataBatch) failed with status ${response.status}`);
-		throw new Error('User service (batch) failed.');
-	}
-
-	const body = (await response.json()) as ProfileDataBatchResponse;
-
-	if (!body.success || !body.profileData) {
-		log.error(`[BFF] User service (userDataBatch) returned 200 OK but with a failure body.`);
-		throw new Error('User service (batch) returned invalid data.');
-	}
-
-	return body.profileData;
+interface UserProfileUpdates {
+	avatar?: string;
+	biography?: string;
+	profileColor?: string;
+	defaultLang?: string;
 }
 
-export async function fetchUserProfile(log: any, userID: number): Promise<userData | null> {
-	const url = `http://users:2626/internal/users/${userID}/profile`;
 
-	let response: Response;
+export async function updateUserProfile(log: any, userID: number, updates: UserProfileUpdates, token: string): Promise<void> {
+	const url = `http://users:2626/${userID}`;
 
-	try {
-		response = await fetch(url)
-	} catch (error) {
-		log.error(`[BFF] User service is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
-	}
-	if (response.status === 404) {
-		log.warn(`[BFF] User data not found for user ${userID}`);
-		throw new Error('User data not found.');
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] User service failed with status ${response.status}`);
-		throw new Error('User service failed.');
-	}
-
-	const data = await response.json() as userData;
-	return (data);
-}
-
-export async function fetchView(
-	log: any,
-	viewerID: number,
-	targetID: number
-): Promise<ProfileView> {
-	if (viewerID === targetID) {
-		return 'self';
-	}
-
-	const url = `http://friends:1616/internal/friendships?userA=${viewerID}&userB=${targetID}`;
-	let response: Response;
-
-	try {
-		response = await fetch(url);
-	} catch (error) {
-		log.error(`[BFF] Friends service (relationship) is unreachable: ${error}`);
-		throw new Error('Friends service is unreachable.');
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] Friends service (relationship) failed: ${response.status}`);
-		throw new Error('Friends service failed.');
-	}
-
-	const body = (await response.json()) as { status: ProfileView };
-	return body.status || 'stranger';
-}
-
-/* export async function buildFullUserData(log: any, viewerUserID: number, targetUserID: number): Promise<userData> {
-	const [
-		accountData,
-		profileData
-	] = await Promise.all([
-		fetchUserDataAccount(log, targetUserID),
-		fetchProfileData(log, targetUserID)
-	]);
-
-	const relationship = await fetchView(log, viewerUserID, targetUserID);
-
-	const combinedData: userData = {
-		userID: accountData.userID,
-		username: accountData.username,
-		since: accountData.registerDate,
-		language: accountData.defaultLang,
-		status: profileData.userStatus,
-
-		avatar: profileData.avatar,
-		biography: profileData.biography,
-		profileColor: profileData.profileColor,
-		winstreak: profileData.winstreak,
-
-		relation: relationship
-	};
-
-	return (combinedData);
-} */
-
-export async function updateAvatar(log: any, userID: number, avatar: string): Promise<void> {
-	const url = `http://users:2626/internal/users/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
 			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ avatar: avatar }),
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(updates)
 		});
 	} catch (error) {
 		log.error(`[BFF] User service is unreachable: ${error}`);
 		throw new Error('User service is unreachable.');
 	}
 
+	//TODO :change throw
 	if (response.status === 400) {
-		log.warn(`[BFF] User service reported a validation error for user ${userID}`);
+		log.warn(`[BFF] User service validation error for user ${userID}`);
 		throw new Error('User validation failed.');
 	}
 
+	//TODO :change throw
 	if (response.status === 404) {
-		log.warn(`[BFF] User not found for avatar update: ${userID}`);
-		throw new Error('User not found in profile service.');
+		log.warn(`[BFF] User not found for update: ${userID}`);
+		throw new Error('User not found.');
 	}
 
 	if (!response.ok) {
 		log.error(`[BFF] User service failed with status ${response.status}`);
 		throw new Error('User service failed.');
 	}
-	return;
 }
 
-export async function updateBio(log: any, userID: number, biography: string): Promise<void> {
-	const url = `http://users:2626/internal/users/${userID}`;
+export async function updateAuthSettings(log: any, userID: number, updates: UserProfileUpdates, token: string): Promise<void> {
+	const url = `http://auth:3939/${userID}`;
+
 	let response: Response;
 	try {
 		response = await fetch(url, {
 			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ biography: biography }),
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(updates)
 		});
 	} catch (error) {
-		log.error(`[BFF] User service is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
+		log.error(`[BFF] Auth service is unreachable: ${error}`);
+		throw new Error('Auth service is unreachable.');
 	}
 
+	//TODO :change throw
 	if (response.status === 400) {
-		log.warn(`[BFF] User service reported a validation error for user ${userID}`);
-		throw new Error('User validation failed.');
+		log.warn(`[BFF] Auth service validation error for user ${userID}`);
+		throw new Error('Auth validation failed.');
 	}
 
+	//TODO :change throw
 	if (response.status === 404) {
-		log.warn(`[BFF] User not found for biography update: ${userID}`);
-		throw new Error('User not found in profile service.');
+		log.warn(`[BFF] Auth not found for update: ${userID}`);
+		throw new Error('Auth not found.');
 	}
 
 	if (!response.ok) {
-		log.error(`[BFF] User service failed with status ${response.status}`);
-		throw new Error('User service failed.');
+		log.error(`[BFF] Auth service failed with status ${response.status}`);
+		throw new Error('Auth service failed.');
 	}
-	return;
-}
-
-export async function updateProfileColor(
-	log: any,
-	userID: number,
-	profileColor: string
-): Promise<void> {
-	const url = `http://users:2626/internal/users/${userID}/profileColor`;
-	let response: Response;
-	try {
-		response = await fetch(url, {
-			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ profileColor: profileColor }),
-		});
-	} catch (error) {
-		log.error(`[BFF] User service is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
-	}
-
-	if (response.status === 400) {
-		log.warn(`[BFF] User service reported a validation error for user ${userID}`);
-		throw new Error('User validation failed.');
-	}
-
-	if (response.status === 404) {
-		log.warn(`[BFF] User not found for profileColor update: ${userID}`);
-		throw new Error('User not found in profile service.');
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] User service failed with status ${response.status}`);
-		throw new Error('User service failed.');
-	}
-	return;
 }

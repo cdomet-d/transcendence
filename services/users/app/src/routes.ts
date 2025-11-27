@@ -436,8 +436,6 @@ export async function userRoutes(serv: FastifyInstance) {
 				'avatar',
 				'biography',
 				'profileColor',
-				'lastConnection',
-				'activityStatus',
 				'lang',
 			];
 

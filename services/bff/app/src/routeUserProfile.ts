@@ -1,8 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import type { UserProfileView, JwtPayload } from './bff.interface.js';
-import { fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches } from './bffUserProfile.service.js';
-//import { updatePassword, fetchUserDataAccount, updateUsername,  updateDefaultLang, deleteAccount, deleteUser  } from './bffAccount.service.js';
-//import { deleteFriendship } from './bffFriends.service.js'
+import { fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, updateAuthSettings, fetchFriendships, processMatches, updateUserProfile } from './bffUserProfile.service.js';
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
 
@@ -207,49 +205,71 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	/* 	serv.patch('/settings', async (request, reply) => {
-			try {
-	
-				//TODO: userID is in the cookies so setup fastify JWT plugin and get userID this way
-				const { userID } = request.user;
-				const body = request.body as any;
-	
-				const updateTasks: Promise<void>[] = [];
-	
-				if (body.username)
-					updateTasks.push(updateUsername(serv.log, userID, body.username));
-				if (body.password) {
-					const hashedPassword = await bcrypt.hash(body.password, 10);
-					updateTasks.push(updatePassword(serv.log, userID, hashedPassword));
-				}
-				if (body.avatar)
-					updateTasks.push(updateAvatar(serv.log, userID, body.avatar));
-				if (body.biography)
-					updateTasks.push(updateBio(serv.log, userID, body.biography));
-				if (body.profileColor)
-					updateTasks.push(updateProfileColor(serv.log, userID, body.profileColor));
-				if (body.defaultLang)
-					updateTasks.push(updateDefaultLang(serv.log, userID, body.defaultLang));
-	
-				if (updateTasks.length === 0)
-					return reply.code(200).send({ message: '[BFF] No settings to update.' });
-	
+	serv.patch('/settings', async (request, reply) => {
+		try {
+
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
 				try {
-					await Promise.all(updateTasks);
-					return reply.code(200).send({ message: '[BFF] Settings updated successfully.' });
-	
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
 				} catch (error) {
-					if (typeof error === 'object' && error !== null && 'code' in error && (error as { code: unknown }).code === 409) {
-						const message = ('message' in error)
-							? (error as { message: string }).message
-							: '[BFF] Username is already taken.';
-						return (reply.code(409).send({ message: message }));
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
 					}
-					throw error;
 				}
+			}
+
+			const userID = request.user.userID;
+			const body = request.body as any;
+
+			const profileUpdates: any = {};
+			const accountUpdates: any = {};
+
+			if (body.avatar) profileUpdates.avatar = body.avatar;
+			if (body.biography) profileUpdates.biography = body.biography;
+			if (body.profileColor) profileUpdates.profileColor = body.profileColor;
+			if (body.defaultLang) profileUpdates.lang = body.defaultLang;
+			if (body.username) profileUpdates.username = body.username;
+
+			if (body.password) accountUpdates.password = body.password;
+			if (body.username) accountUpdates.username = body.username;
+
+			const updateTasks: Promise<void>[] = [];
+
+			if (Object.keys(profileUpdates).length > 0)
+				updateTasks.push(updateUserProfile(serv.log, userID, profileUpdates, token));
+
+			if (Object.keys(accountUpdates).length > 0)
+				updateTasks.push(updateAuthSettings(serv.log, userID, accountUpdates, token));
+
+			if (updateTasks.length === 0) 
+				return reply.code(200).send({ message: '[BFF] No settings to update.' });
+
+			try {
+				await Promise.all(updateTasks);
+				return reply.code(200).send({ message: '[BFF] Settings updated successfully.' });
+
 			} catch (error) {
-				serv.log.error(`[BFF] Failed to update settings: ${error}`);
+				if (typeof error === 'object' && error !== null && 'code' in error && (error as { code: unknown }).code === 409) {
+					const message = ('message' in error) ? (error as { message: string }).message : '[BFF] Conflict error.';
+					return reply.code(409).send({ message: message });
+				}
 				throw error;
 			}
-		});*/
+		} catch (error) {
+			serv.log.error(`[BFF] Failed to update settings: ${error}`);
+			throw error;
+		}
+	});
 }
