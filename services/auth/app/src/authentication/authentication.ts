@@ -197,27 +197,27 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 
 	serv.patch('/:userID', async (request, reply) => {
 		try {
-		//	const token = request.cookies.token;
-		//	if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
-//
-		//	if (token) {
-		//		try {
-		//			const user = serv.jwt.verify(token) as JwtPayload;
-		//			if (typeof user !== 'object') throw new Error('Invalid token detected');
-		//		} catch (error) {
-		//			if (error instanceof Error && 'code' in error) {
-		//				if (
-		//					error.code === 'FST_JWT_BAD_REQUEST' ||
-		//					error.code === 'ERR_ASSERTION' ||
-		//					error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-		//				)
-		//					return reply.code(400).send({ code: error.code, message: error.message });
-		//				return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-		//			} else {
-		//				return reply.code(401).send({ message: 'Unknown error' });
-		//			}
-		//		}
-		//	}
+			//	const token = request.cookies.token;
+			//	if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			//
+			//	if (token) {
+			//		try {
+			//			const user = serv.jwt.verify(token) as JwtPayload;
+			//			if (typeof user !== 'object') throw new Error('Invalid token detected');
+			//		} catch (error) {
+			//			if (error instanceof Error && 'code' in error) {
+			//				if (
+			//					error.code === 'FST_JWT_BAD_REQUEST' ||
+			//					error.code === 'ERR_ASSERTION' ||
+			//					error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+			//				)
+			//					return reply.code(400).send({ code: error.code, message: error.message });
+			//				return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+			//			} else {
+			//				return reply.code(401).send({ message: 'Unknown error' });
+			//			}
+			//		}
+			//	}
 
 			const { userID } = request.params as { userID: string };
 			const body = request.body as { [key: string]: any };
@@ -270,11 +270,15 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 				error &&
 				typeof error === 'object' &&
 				'code' in error &&
-				(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE'
-			)
+				(
+					(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' ||
+					(error as { code: string }).code === 'SQLITE_CONSTRAINT'
+				)
+			) {
 				return reply
 					.code(409)
 					.send({ success: false, message: '[AUTH] This username is already taken.' });
+			}
 			serv.log.error(`[AUTH] Error updating account: ${error}`);
 			throw error;
 		}

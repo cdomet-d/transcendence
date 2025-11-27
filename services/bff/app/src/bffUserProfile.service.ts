@@ -410,8 +410,6 @@ export async function fetchLeaderboard(log: any, token: string): Promise<userDat
 	return (body.profiles);
 }
 
-/*----------  WIP  ----------*/
-
 interface UserProfileUpdates {
 	avatar?: string;
 	biography?: string;
@@ -428,7 +426,7 @@ export async function updateUserProfile(log: any, userID: number, updates: UserP
 		response = await fetch(url, {
 			method: 'PATCH',
 			headers: {
-			//	'Cookie': `token=${token}`,
+				//	'Cookie': `token=${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(updates)
@@ -438,21 +436,26 @@ export async function updateUserProfile(log: any, userID: number, updates: UserP
 		throw new Error('User service is unreachable.');
 	}
 
-	//TODO :change throw
+	if (response.status === 409) {
+		log.warn(`[BFF] Username taken in user service change for user: ${userID}`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 409, message: errorBody.message || '[BFF] Username taken' };
+	}
 	if (response.status === 400) {
 		log.warn(`[BFF] User service validation error for user ${userID}`);
-		throw new Error('User validation failed.');
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not change settings.' };
 	}
 
-	//TODO :change throw
 	if (response.status === 404) {
 		log.warn(`[BFF] User not found for update: ${userID}`);
-		throw new Error('User not found.');
+		const errorBody = await response.json() as { message: string };
+		throw { code: 404, message: errorBody.message || '[BFF] User not found.' };
 	}
 
 	if (!response.ok) {
 		log.error(`[BFF] User service failed with status ${response.status}`);
-		throw new Error('User service failed.');
+		throw new Error('[BFF] User service failed.');
 	}
 }
 
@@ -464,7 +467,7 @@ export async function updateAuthSettings(log: any, userID: number, updates: User
 		response = await fetch(url, {
 			method: 'PATCH',
 			headers: {
-			//	'Cookie': `token=${token}`,
+				//	'Cookie': `token=${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(updates)
@@ -474,16 +477,21 @@ export async function updateAuthSettings(log: any, userID: number, updates: User
 		throw new Error('Auth service is unreachable.');
 	}
 
-	//TODO :change throw
+	if (response.status === 409) {
+		log.warn(`[BFF] Username taken in auth service change for user: ${userID}`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 409, message: errorBody.message || '[BFF] Username taken' };
+	}
 	if (response.status === 400) {
 		log.warn(`[BFF] Auth service validation error for user ${userID}`);
-		throw new Error('Auth validation failed.');
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not change settings.' };
 	}
 
-	//TODO :change throw
 	if (response.status === 404) {
-		log.warn(`[BFF] Auth not found for update: ${userID}`);
-		throw new Error('Auth not found.');
+		log.warn(`[BFF] Account not found for update: ${userID}`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 404, message: errorBody.message || '[BFF] User not found.' };
 	}
 
 	if (!response.ok) {

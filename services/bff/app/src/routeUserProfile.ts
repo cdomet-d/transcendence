@@ -209,7 +209,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		try {
 			//const token = request.cookies.token;
 			//if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
-//
+			//
 			//if (token) {
 			//	try {
 			//		const user = serv.jwt.verify(token) as JwtPayload;
@@ -228,11 +228,11 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			//		}
 			//	}
 			//}
-//
-//			const userID = request.user.userID;
-//			const body = request.body as any;
+			//
+			//			const userID = request.user.userID;
+			//			const body = request.body as any;
 
-			const userID = 1;
+			const userID = 5;
 			const body = request.body as any;
 
 
@@ -256,7 +256,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			if (Object.keys(accountUpdates).length > 0)
 				updateTasks.push(updateAuthSettings(serv.log, userID, accountUpdates/* , token */));
 
-			if (updateTasks.length === 0) 
+			if (updateTasks.length === 0)
 				return reply.code(200).send({ message: '[BFF] No settings to update.' });
 
 			try {
@@ -264,9 +264,17 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				return reply.code(200).send({ message: '[BFF] Settings updated successfully.' });
 
 			} catch (error) {
-				if (typeof error === 'object' && error !== null && 'code' in error && (error as { code: unknown }).code === 409) {
-					const message = ('message' in error) ? (error as { message: string }).message : '[BFF] Conflict error.';
-					return reply.code(409).send({ message: message });
+				if (typeof error === 'object' && error !== null && 'code' in error) {
+					const customError = error as { code: number, message: string };
+
+					if (customError.code === 409)
+						return reply.code(409).send({ message: customError.message || '[BFF] Conflict error. Username taken' });
+				
+					if (customError.code === 404)
+						return reply.code(404).send({ message: customError.message || '[BFF] User/account not found.' });
+
+					if (customError.code === 400)
+						return reply.code(400).send({ message: customError.message || '[BFF] Bad Request.' });
 				}
 				throw error;
 			}
