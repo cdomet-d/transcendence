@@ -1,13 +1,13 @@
 import { BaseForm } from './baseform.js';
+import { createErrorFeedback } from '../event-elements/error.js';
 import { createInputGroup } from '../inputs/helpers.js';
 import { createUserInline } from '../users/profile-helpers.js';
 import { InputGroup } from '../inputs/fields.js';
 import { NoResults } from '../typography/images.js';
-
-import type { UserData } from '../types-interfaces.js';
 import { search } from './default-forms.js';
-import { createErrorFeedback } from '../event-elements/error.js';
 import { UserInline } from '../users/profile.js';
+import type { UserData } from '../types-interfaces.js';
+import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -94,7 +94,8 @@ export class Searchbar extends BaseForm {
     override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
         const response = await fetch(url, req);
         const data = await response.json();
-        this.displayResults(data as UserData[]);
+
+        this.displayResults(userArrayFromAPIRes(data));
     }
 
     #createQueryURL(form: FormData): string | undefined {
@@ -164,7 +165,7 @@ export class Searchbar extends BaseForm {
         } else {
             const newFocus = ev.relatedTarget as HTMLElement | null;
             if (!newFocus || !this.contains(newFocus)) {
-				this.#hideResults();
+                this.#hideResults();
             }
         }
     }

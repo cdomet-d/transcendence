@@ -53,7 +53,6 @@ export class NavigationLinks extends HTMLAnchorElement {
 
     /** Renders simple textual button content. */
     #renderTextLink() {
-		console.log(this.#animated)
         this.textContent = this.#info.title;
     }
 
