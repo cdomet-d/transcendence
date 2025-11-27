@@ -31,6 +31,7 @@ export class UserProfile extends HTMLDivElement {
         this.#username = document.createElement('div', { is: 'username-container' }) as Username;
         this.#winstreak = document.createElement('span', { is: 'winstreak-block' }) as Winstreak;
         this.#color = 'bg-4F9FFF';
+        this.className = `pad-s box-border brdr ${this.#color}`;
     }
 
     /**
@@ -85,6 +86,7 @@ export class UserProfile extends HTMLDivElement {
     set profileView(v: ProfileView) {
         if (this.#actionButtons.view !== v) {
             this.#actionButtons.view = v;
+            console.log('set user view');
         }
     }
 
@@ -173,7 +175,6 @@ export class UserProfile extends HTMLDivElement {
             this.#actionButtons,
             this.#winstreak,
         );
-        this.className = `pad-s box-border brdr ${this.#color}`;
         this.#username.customizeStyle('f-yellow', 'f-m', 'f-bold', false);
         this.#joinedSince.classList.add('place-self-center', 'dark');
         this.#biography.classList.add('row-span-2');
@@ -202,8 +203,9 @@ export class UserCardSocial extends UserProfile {
 
     override render() {
         this.append(super.getAvatar, super.getUsername, super.getActionMenu);
+		super.getActionMenu.updateView();
         super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
-        this.classList.add('grid', 'gap-s', 'min-h-fit', 'min-w-[171px]', `${super.getColor}`);
+        this.classList.add('grid', 'gap-s', 'place-items-center');
     }
 }
 if (!customElements.get('user-card-social')) {

@@ -39,7 +39,8 @@ export class UserMasonery extends HTMLDivElement {
      */
     setUsers(users: UserData[]) {
         users.forEach((el) => {
-            this.append(createUserCardSocial(el));
+			const card = createUserCardSocial(el)
+            this.append(card);
         });
     }
 
@@ -48,7 +49,7 @@ export class UserMasonery extends HTMLDivElement {
     }
 
     render() {
-        this.className = 'w-full masonery gap-xs';
+        this.className = 'w-full h-full masonery gap-s pad-s';
     }
 }
 
@@ -74,7 +75,8 @@ export class ProfileWithTabs extends HTMLDivElement {
     the provided tabData matches one of the current tab for the Tab container.
 	
     If not, fails silently (for now, maybe I'll add an error management later)  */
-    set panelContent(tabData: TabData) {
+    set panelContent(tabData: TabData | null) {
+		if (!tabData) return;
         this.#userTabs.populatePanels(tabData);
     }
 

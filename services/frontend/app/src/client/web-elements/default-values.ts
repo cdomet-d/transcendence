@@ -9,7 +9,7 @@ export const defaultAvatar: types.ImgData = {
         alt: 'A pink pixel art little blob',
         id: 'user-avatar',
         size: 'ilarge',
-        src: '/public/assets/images/magenta-avatar.png',
+        src: '/public/assets/images/purple-avatar.png',
 }
 
 export const user: types.UserData = {

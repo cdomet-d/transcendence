@@ -33,6 +33,7 @@ function setAvatar(a: string): ImgData {
 }
 
 export function userDataFromAPIRes(responseObject: any): UserData {
+	if (!responseObject || typeof responseObject !== 'object') throw new Error ('Malformed API Response');
     const user: UserData = {
         // winstreak: responseObject.winstreak,
         avatar: setAvatar(responseObject.avatar),

@@ -1,8 +1,7 @@
 import { defaultAvatar } from '../default-values.js';
-import type { ImgData, Size, UserData } from '../types-interfaces.js';
+import { createUserMasonery } from '../navigation/tabs-helpers.js';
+import type { ImgData, Size, TabData, UserData } from '../types-interfaces.js';
 import { UserProfile, UserCardSocial, UserInline } from './profile.js';
-
-
 
 export function setAvatar(
     size: Size,
@@ -67,4 +66,15 @@ export function createUserProfile(user: UserData): UserProfile {
     el.biography = user.biography;
     el.profileAge = user.since;
     return el;
+}
+
+export function createFriendsPanel(users: UserData[]): TabData | null{
+	if (users.length < 1) return null;
+    const friends = {
+        id: 'friends',
+        content: 'Friends',
+        default: true,
+        panelContent: createUserMasonery(users)
+    };
+	return friends;
 }

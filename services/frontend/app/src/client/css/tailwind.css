@@ -669,10 +669,9 @@
 	}
 
 	.masonery {
-		height: auto;
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(170px, max-content));
-		justify-content: space-evenly;
+		grid-template-columns: repeat(auto-fit, minmax(100px, max-content));
+		place-items: start;
 	}
 
 	.biography {

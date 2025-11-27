@@ -23,7 +23,8 @@ import { PongUI } from './web-elements/game/game-ui.js';
 import { userStatus } from './main.js';
 import { router } from './main.js';
 import { createErrorFeedback } from './web-elements/event-elements/error.js';
-import { userDataFromAPIRes } from './api-responses/user-responses.js';
+import { userArrayFromAPIRes, userDataFromAPIRes } from './api-responses/user-responses.js';
+import { createFriendsPanel } from './web-elements/users/profile-helpers.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -131,11 +132,12 @@ export async function renderSelf() {
         const reply = await fetch(url);
         const profile = await reply.json();
         prepareLayout(document.body.layoutInstance, 'profile');
-        const profileInstance = document.createElement('div', {
+        const UserProfile = document.createElement('div', {
             is: 'profile-page',
         }) as ProfileWithTabs;
-        document.body.layoutInstance?.appendAndCache(profileInstance);
-        profileInstance.profile = userDataFromAPIRes(profile.userData);
+        console.log(profile);
+        document.body.layoutInstance?.appendAndCache(UserProfile);
+        UserProfile.profile = userDataFromAPIRes(profile.userData);
         updatePageTitle(status.username!);
     } catch (error) {
         console.error(error);
@@ -155,14 +157,17 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
 
         const url = `https://localhost:8443/api/bff/profile/${login}?userB=${status.userID}`;
         try {
-    const reply = await fetch(url);
-    const profile = await reply.json();
+            const reply = await fetch(url);
+            const profile = await reply.json();
             prepareLayout(document.body.layoutInstance, 'profile');
-            const profileInstance = document.createElement('div', {
+            const UserProfile = document.createElement('div', {
                 is: 'profile-page',
             }) as ProfileWithTabs;
-            document.body.layoutInstance?.appendAndCache(profileInstance);
-            profileInstance.profile = userDataFromAPIRes(profile.userData);
+
+            console.log(profile);
+            document.body.layoutInstance?.appendAndCache(UserProfile);
+            UserProfile.profile = userDataFromAPIRes(profile.userData);
+			UserProfile.panelContent = createFriendsPanel(userArrayFromAPIRes(profile.friends));
             updatePageTitle('User ' + login);
         } catch (error) {
             console.error(error);
