@@ -1,10 +1,10 @@
 import type { FastifyInstance } from 'fastify';
 
 export interface GameInput {
-	playerID1: number;
-	playerID2: number;
-	playerScore1: number;
-	playerScore2: number;
+	player1: number;
+	player2: number;
+	player1Score: number;
+	player2Score: number;
 	longuestPass: number;
 	duration: number;
 }

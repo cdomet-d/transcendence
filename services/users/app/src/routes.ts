@@ -403,19 +403,19 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update all stats of a user
-	serv.patch('/stats/:userID', async (request, reply) => {
+	serv.patch('/stats', async (request, reply) => {
 		try {
 			const body = request.body as GameInput;
 
-			if (!body.playerID1 || !body.playerID2)
+			if (!body.player1 || !body.player2)
 				return reply.code(400).send({ message: 'Missing player IDs' });
 
-			const p1IsWinner = body.playerScore1 > body.playerScore2;
-			const p2IsWinner = body.playerScore2 > body.playerScore1;
+			const p1IsWinner = body.player1Score > body.player2Score;
+			const p2IsWinner = body.player2Score > body.player1Score;
 
 			await Promise.all([
-				updateUserStats(serv, body.playerID1, p1IsWinner, body),
-				updateUserStats(serv, body.playerID2, p2IsWinner, body)
+				updateUserStats(serv, body.player1, p1IsWinner, body),
+				updateUserStats(serv, body.player2, p2IsWinner, body)
 			]);
 
 			return reply.code(200).send({
