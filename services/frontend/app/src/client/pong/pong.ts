@@ -21,7 +21,5 @@ export function pong(gameReq: gameRequest, ctx: CanvasRenderingContext2D | null,
     const game: Game = new Game(ctx, gameReq.remote, true, ui);
     // UI has the player names defined + has a default score of 0 for each player
     renderGame(game);
-    //TODO: window.addEventListener("load", (event) => {
     wsRequest(game, { gameID: gameReq.gameID, userID: gameReq.userID });
-    // });
 }

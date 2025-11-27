@@ -27,7 +27,6 @@ export function wsRequest(game: Game, ids: { gameID: number; userID: number }) {
 	};
 
 	ws.onclose = (event) => {
-		// console.log("SCORE IN CLOSE:", JSON.stringify(game.score));
 		if (event.code === 1003 || event.code === 1011) {
 			createErrorFeedback(event.reason); //TODO: fix
 			return;
