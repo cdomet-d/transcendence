@@ -420,7 +420,7 @@ interface UserProfileUpdates {
 }
 
 
-export async function updateUserProfile(log: any, userID: number, updates: UserProfileUpdates, token: string): Promise<void> {
+export async function updateUserProfile(log: any, userID: number, updates: UserProfileUpdates/* , token: string */): Promise<void> {
 	const url = `http://users:2626/${userID}`;
 
 	let response: Response;
@@ -428,7 +428,7 @@ export async function updateUserProfile(log: any, userID: number, updates: UserP
 		response = await fetch(url, {
 			method: 'PATCH',
 			headers: {
-				'Cookie': `token=${token}`,
+			//	'Cookie': `token=${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(updates)
@@ -456,7 +456,7 @@ export async function updateUserProfile(log: any, userID: number, updates: UserP
 	}
 }
 
-export async function updateAuthSettings(log: any, userID: number, updates: UserProfileUpdates, token: string): Promise<void> {
+export async function updateAuthSettings(log: any, userID: number, updates: UserProfileUpdates/* , token: string */): Promise<void> {
 	const url = `http://auth:3939/${userID}`;
 
 	let response: Response;
@@ -464,7 +464,7 @@ export async function updateAuthSettings(log: any, userID: number, updates: User
 		response = await fetch(url, {
 			method: 'PATCH',
 			headers: {
-				'Cookie': `token=${token}`,
+			//	'Cookie': `token=${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(updates)
