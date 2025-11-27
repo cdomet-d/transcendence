@@ -34,6 +34,7 @@ export async function natsSubscribe() {
 					userID: userID,
 					gameID: game.gameID,
 					remote: game.remote
+					// gameSettings
 				}
 
 				console.log("7");

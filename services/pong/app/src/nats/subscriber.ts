@@ -31,6 +31,7 @@ export async function natsSubscription(serv: FastifyInstance) {
 					gameID: _gameInfo.gameID,
 					users: _gameInfo.users,
 					remote: _gameInfo.remote
+					// gameSettings
 				}
 				natsPublish(msg.reply, JSON.stringify(game));
 			}

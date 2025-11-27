@@ -73,9 +73,7 @@ export class LocalPongSettings extends BaseForm {
 
         // console.log("F: ", req.body);
         console.log("1");
-        await wsConnect('game', 'quickmatch', '', '', req.body); // TODO give 'f' object as argument to wsConnect (containing gameSettings and opponent for local pong)
-        console.log("10");
-        // wsConnect.send(createGameRequest);
+        await wsConnect('game', 'quickmatch', '', '', req.body);
 
     }
 

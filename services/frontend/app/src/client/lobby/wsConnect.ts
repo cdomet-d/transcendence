@@ -94,7 +94,6 @@ async function wsConnect(action: string, format: string, formInstance: string, l
     if (action === 'game') {
         console.log("2");
         if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-            console.log("SENDING");
             wsInstance.send(createGameRequest(format, formInstance, gameSettings!));
         } else {
             console.log(`Error: WebSocket is not open for ${action}`);

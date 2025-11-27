@@ -18,6 +18,7 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 		score: "",
 		winnerID: 0,
 		loserID: 0
+		// gameSettings
 	};
 
 	// console.log("USER ARRAY: ", game.users)

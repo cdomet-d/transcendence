@@ -67,5 +67,4 @@ async function postGameToDashboard(game: game) {
 // 	player2: number;
 // 	player1Score: number;
 // 	player2Score: number;
-// 	opponentID: number;
 // }
