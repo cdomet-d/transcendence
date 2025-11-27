@@ -28,8 +28,9 @@ function calculateStats(current: userStats, isWinner: boolean, duration: number,
 	const newWinStreak = isWinner ? (current.winStreak + 1) : 0;
 
 	const newLongestMatch = Math.max(current.longestMatch, duration);
+	console.log(`${current.shortestMatch}`);
 
-	const newShortestMatch = (current.shorestMatch === 0)
+	const newShortestMatch = (current.shortestMatch === 0)
 		? duration
 		: Math.min(current.shortestMatch, duration);
 
@@ -38,6 +39,7 @@ function calculateStats(current: userStats, isWinner: boolean, duration: number,
 
 	const newLongestPass = Math.max(current.longuestPass, matchLongestPass);
 
+	console.log(`${newShortestMatch}`);
 	return {
 		userID: current.userID,
 		longestMatch: newLongestMatch,
@@ -64,7 +66,7 @@ export async function updateUserStats(serv: FastifyInstance, userID: number, isW
 	const query = `
 		UPDATE userStats SET 
 			longestMatch = ?,
-			shorestMatch = ?,
+			shortestMatch = ?,
 			totalMatch = ?,
 			totalWins = ?,
 			winStreak = ?,
@@ -72,10 +74,10 @@ export async function updateUserStats(serv: FastifyInstance, userID: number, isW
 			longuestPass = ?
 		WHERE userID = ?
 	`;
-
+	console.log(`${newStats.shortestMatch}`);
 	const params = [
 		newStats.longestMatch,
-		newStats.shorestMatch,
+		newStats.shortestMatch,
 		newStats.totalMatch,
 		newStats.totalWins,
 		newStats.winStreak,

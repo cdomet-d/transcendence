@@ -263,7 +263,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				throw new Error('Database Error: Profile INSERT failed (0 changes).');
 
 			const queryStats = `
-				INSERT INTO userStats (userID, longestMatch, shorestMatch, totalMatch, totalWins,
+				INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins,
 				winStreak, averageMatchDuration, longuestPass)
 				VALUES (?, 0, 0, 0, 0, 0, 0, 0)
 			`;

@@ -191,7 +191,7 @@ activityStatus will be used to keep track of whether the user if offline, online
 This table has the following column :
 * userID &rarr; integer (__primary key__)
 * longestMatch &rarr; integer
-* shorestMatch &rarr; integer
+* shortestMatch &rarr; integer
 * totalMatch &rarr; integer
 * totalWins &rarr; integer
 * winStreak &rarr; integer

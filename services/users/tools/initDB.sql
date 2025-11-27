@@ -14,7 +14,7 @@ CREATE TABLE userProfile (
 CREATE TABLE userStats (
   userID INTEGER PRIMARY KEY NOT NULL,
   longestMatch INTEGER,
-  shorestMatch INTEGER,
+  shortestMatch INTEGER,
   totalMatch INTEGER,
   totalWins INTEGER,
   winStreak INTEGER,
