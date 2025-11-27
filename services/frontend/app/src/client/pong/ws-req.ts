@@ -10,8 +10,7 @@ export function wsRequest(game: Game, ids: { gameID: number; userID: number }) {
 	const ws = new WebSocket('wss://localhost:8443/api/game/');
 
 	ws.onerror = () => {
-		createErrorFeedback("websocket error"); //TODO: fix
-		return;
+		ws.close(1011, "websocket error")
 	};
 
 	ws.onopen = () => {
