@@ -1,6 +1,6 @@
 import type {
 	UsernameResponse, FriendshipStatus, Friendship, ProfileDataBatch, ProfileDataBatchResponse, ProfileView, userStats, StatsResponse, Matches, RawMatches,
-	userData, UserIDResponse
+	userData, UserIDResponse, UserProfileUpdates
 } from "./bff.interface.js";
 
 export async function buildTinyProfile(log: any, viewerUserID: number, targetUsername: string, token: string): Promise<userData | null> {
@@ -410,15 +410,7 @@ export async function fetchLeaderboard(log: any, token: string): Promise<userDat
 	return (body.profiles);
 }
 
-interface UserProfileUpdates {
-	avatar?: string;
-	biography?: string;
-	profileColor?: string;
-	defaultLang?: string;
-}
-
-
-export async function updateUserProfile(log: any, userID: number, updates: UserProfileUpdates/* , token: string */): Promise<void> {
+export async function updateUserProfile(log: any, userID: number, updates: UserProfileUpdates, token: string): Promise<void> {
 	const url = `http://users:2626/${userID}`;
 
 	let response: Response;
@@ -426,7 +418,7 @@ export async function updateUserProfile(log: any, userID: number, updates: UserP
 		response = await fetch(url, {
 			method: 'PATCH',
 			headers: {
-				//	'Cookie': `token=${token}`,
+				'Cookie': `token=${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(updates)
@@ -459,7 +451,7 @@ export async function updateUserProfile(log: any, userID: number, updates: UserP
 	}
 }
 
-export async function updateAuthSettings(log: any, userID: number, updates: UserProfileUpdates/* , token: string */): Promise<void> {
+export async function updateAuthSettings(log: any, userID: number, updates: UserProfileUpdates, token: string): Promise<void> {
 	const url = `http://auth:3939/${userID}`;
 
 	let response: Response;
@@ -467,7 +459,7 @@ export async function updateAuthSettings(log: any, userID: number, updates: User
 		response = await fetch(url, {
 			method: 'PATCH',
 			headers: {
-				//	'Cookie': `token=${token}`,
+				'Cookie': `token=${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(updates)

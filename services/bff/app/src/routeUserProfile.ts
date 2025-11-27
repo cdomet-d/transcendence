@@ -207,34 +207,30 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	serv.patch('/settings', async (request, reply) => {
 		try {
-			//const token = request.cookies.token;
-			//if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
-			//
-			//if (token) {
-			//	try {
-			//		const user = serv.jwt.verify(token) as JwtPayload;
-			//		if (typeof user !== 'object') throw new Error('Invalid token detected');
-			//	} catch (error) {
-			//		if (error instanceof Error && 'code' in error) {
-			//			if (
-			//				error.code === 'FST_JWT_BAD_REQUEST' ||
-			//				error.code === 'ERR_ASSERTION' ||
-			//				error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-			//			)
-			//				return reply.code(400).send({ code: error.code, message: error.message });
-			//			return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-			//		} else {
-			//			return reply.code(401).send({ message: 'Unknown error' });
-			//		}
-			//	}
-			//}
-			//
-			//			const userID = request.user.userID;
-			//			const body = request.body as any;
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
-			const userID = 5;
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const userID = request.user.userID;
 			const body = request.body as any;
-
 
 			const profileUpdates: any = {};
 			const accountUpdates: any = {};
@@ -251,10 +247,10 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const updateTasks: Promise<void>[] = [];
 
 			if (Object.keys(profileUpdates).length > 0)
-				updateTasks.push(updateUserProfile(serv.log, userID, profileUpdates/* , token */));
+				updateTasks.push(updateUserProfile(serv.log, userID, profileUpdates, token));
 
 			if (Object.keys(accountUpdates).length > 0)
-				updateTasks.push(updateAuthSettings(serv.log, userID, accountUpdates/* , token */));
+				updateTasks.push(updateAuthSettings(serv.log, userID, accountUpdates, token));
 
 			if (updateTasks.length === 0)
 				return reply.code(200).send({ message: '[BFF] No settings to update.' });
@@ -269,7 +265,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 					if (customError.code === 409)
 						return reply.code(409).send({ message: customError.message || '[BFF] Conflict error. Username taken' });
-				
+
 					if (customError.code === 404)
 						return reply.code(404).send({ message: customError.message || '[BFF] User/account not found.' });
 

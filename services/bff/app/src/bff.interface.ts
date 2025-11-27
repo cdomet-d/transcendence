@@ -102,3 +102,10 @@ export interface Matches {
 	duration: string;
 	tournament: boolean;
 }
+
+export interface UserProfileUpdates {
+	avatar?: string;
+	biography?: string;
+	profileColor?: string;
+	defaultLang?: string;
+}
