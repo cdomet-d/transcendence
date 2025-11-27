@@ -17,15 +17,15 @@ export async function createUserProfile(log: any, userID: number, username: stri
 	} catch (error) {
 		log.error(`[AUTH] User service (via NGINX) is unreachable: ${error}`);
 		throw new Error(`Profile service failed with status`);
-;
 	}
 
 	if (response.status === 409) {
 		log.warn(`[AUTH] Username already taken for profile creation`);
-		let message = 'Username is already taken.';
+		let message = 'Username or userID is already taken.';
 		try {
 			const errorBody = (await response.json()) as { message: string };
 			if (errorBody.message) message = errorBody.message;
+			return { errorCode: 'conflict' };
 		} catch (error) { }
 		return { errorCode: 'conflict' };
 	}

@@ -10,7 +10,7 @@
     "module": "nodenext",
     "target": "esnext",
     "lib": ["esnext"],
-    "types": ["jest", "node"],
+    "types": ["node"],
 
     // Other Outputs
     // "sourceMap": true,

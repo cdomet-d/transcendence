@@ -27,16 +27,23 @@ export async function getFriendship(db: Database, userID: number): Promise<Frien
 	return (requests);
 }
 
-export async function friendshipExistsUsersID(db: Database, userA_ID: number, userB_ID: number): Promise<number | null> {
+export async function friendshipExistsUsersID(db: Database, userA_ID: number, userB_ID: number) {
 	const query = `
-		SELECT 1 FROM friendship 
+		SELECT friendshipID, statusFriendship FROM friendship 
 		WHERE (userID = ? AND friendID = ?) 
-			OR (userID = ? AND friendID = ?)
-		LIMIT 1;
+			OR (userID = ? AND friendID = ?);
 	`;
 
 	const params = [userA_ID, userB_ID, userB_ID, userA_ID];
-	const response = await db.get<{ friendshipID: number }>(query, params);
+	const response = await db.get<any>(query, params);
 
-	return (response ? response.friendshipID : null);
+	if (!response) {
+		console.log('here');
+		return undefined;
+	}
+	const isAccepted = String(response.statusFriendship) === 'true' || String(response.statusFriendship) === '1';
+	if (isAccepted)
+		throw { code: 409, message: 'Friendship already accepted.' };
+
+	return response.friendshipID;
 }
