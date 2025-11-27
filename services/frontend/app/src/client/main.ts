@@ -2,7 +2,7 @@ import { loadHistoryLocation } from './event-listeners.js';
 import { Layout } from './web-elements/layouts/layout.js';
 import { PageHeader } from './web-elements/navigation/header.js';
 import { Router, routes } from './router.js';
-import { createErrorFeedback } from './web-elements/event-elements/error.js';
+import { createErrorFeedback } from './error.js';
 
 // import { pong } from './game/pong.js';
 // import { addLanguageEvents } from './language/languageEvents.js';

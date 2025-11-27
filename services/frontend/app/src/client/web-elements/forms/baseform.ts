@@ -3,7 +3,7 @@ import type { FormDetails } from '../types-interfaces.js';
 import { createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
 import { createHeading } from '../typography/helpers.js';
 import { createButton } from '../navigation/buttons-helpers.js';
-import { UIFeedback } from '../event-elements/error';
+import { UIFeedback } from '../../error.js';
 
 const emptyForm: FormDetails = {
     action: '',
@@ -145,6 +145,7 @@ export abstract class BaseForm extends HTMLFormElement {
     }
 
     #validate() {
+		console.log(this.id, this.reportValidity())
         if (!this.checkValidity()) {
             this.#formContent.get('submit')?.setAttribute('disabled', '');
         } else {

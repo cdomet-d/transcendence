@@ -39,8 +39,7 @@ export class UserMasonery extends HTMLDivElement {
      */
     setUsers(users: UserData[]) {
         users.forEach((el) => {
-			const card = createUserCardSocial(el)
-            this.append(card);
+            this.append(createUserCardSocial(el));
         });
     }
 
@@ -57,7 +56,7 @@ if (!customElements.get('user-masonery')) {
     customElements.define('user-masonery', UserMasonery, { extends: 'div' });
 }
 
-export class ProfileWithTabs extends HTMLDivElement {
+export class ProfilePage extends HTMLDivElement {
     #userProfile: UserProfile;
     #userTabs: TabContainer;
 
@@ -93,5 +92,5 @@ export class ProfileWithTabs extends HTMLDivElement {
 }
 
 if (!customElements.get('profile-page')) {
-    customElements.define('profile-page', ProfileWithTabs, { extends: 'div' });
+    customElements.define('profile-page', ProfilePage, { extends: 'div' });
 }

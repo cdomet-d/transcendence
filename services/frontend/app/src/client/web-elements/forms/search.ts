@@ -1,5 +1,5 @@
 import { BaseForm } from './baseform.js';
-import { createErrorFeedback } from '../event-elements/error.js';
+import { createErrorFeedback } from '../../error.js';
 import { createInputGroup } from '../inputs/helpers.js';
 import { createUserInline } from '../users/profile-helpers.js';
 import { InputGroup } from '../inputs/fields.js';

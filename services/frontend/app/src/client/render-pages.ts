@@ -1,30 +1,22 @@
+import { tournament } from './web-elements/default-values.js';
+import { buildUserProfile, userDataFromAPIRes } from './api-responses/user-responses.js';
+import { createForm } from './web-elements/forms/helpers.js';
 import { createHeading, createNoResult } from './web-elements/typography/helpers.js';
 import { createLeaderboard } from './web-elements/statistics/leaderboard.js';
 import { createMenu } from './web-elements/navigation/menu-helpers.js';
-import { main } from './web-elements/navigation/default-menus.js';
-import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
-import { ProfileWithTabs, user } from './web-elements/users/user-profile-containers.js';
-import { type Match } from 'path-to-regexp';
 import { createTabs } from './web-elements/navigation/tabs-helpers.js';
-import { type TabData } from './web-elements/types-interfaces.js';
-import { createForm } from './web-elements/forms/helpers.js';
-import {
-    localPong,
-    registrationForm,
-    loginForm,
-    remotePong,
-    userSettingsForm,
-} from './web-elements/forms/default-forms.js';
-import { tournament } from './web-elements/default-values.js';
 import { farm, ocean, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
+import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
+import { localPong, remotePong, userSettingsForm } from './web-elements/forms/default-forms.js';
+import { main } from './web-elements/navigation/default-menus.js';
 import { pong } from './pong/pong.js';
-import { TournamentBrackets } from './web-elements/game/tournament.js';
 import { PongUI } from './web-elements/game/game-ui.js';
-import { userStatus } from './main.js';
-import { router } from './main.js';
-import { createErrorFeedback } from './web-elements/event-elements/error.js';
-import { userArrayFromAPIRes, userDataFromAPIRes } from './api-responses/user-responses.js';
-import { createFriendsPanel } from './web-elements/users/profile-helpers.js';
+import { errorMessageFromException, redirectOnError } from './error.js';
+import { TournamentBrackets } from './web-elements/game/tournament.js';
+import { type Match } from 'path-to-regexp';
+import { type TabData } from './web-elements/types-interfaces.js';
+import { userStatus, router } from './main.js';
+import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -36,9 +28,24 @@ const layoutPerPage: { [key: string]: string } = {
     leaderboard: 'page-w-header',
     lobby: 'page-w-header',
     profile: 'page-w-header',
-    regitration: 'full-screen',
+    auth: 'full-screen',
     userSettings: 'page-w-header',
 };
+
+const authOptions: TabData[] = [
+	{
+		id: 'login-tab',
+		content: 'Login',
+		default: true,
+		panelContent: createForm('login-form', loginForm),
+	},
+	{
+		id: 'registration-tab',
+		content: 'Register',
+		default: false,
+		panelContent: createForm('registration-form', registrationForm),
+	},
+];
 
 function updatePageTitle(newPage: string) {
     document.title = `🌻 BigT - ${newPage} 🌻`;
@@ -85,22 +92,9 @@ export function renderHome() {
 }
 
 export function renderAuth() {
-    prepareLayout(document.body.layoutInstance, 'home');
-    const authOptions: TabData[] = [
-        {
-            id: 'login-tab',
-            content: 'Login',
-            default: true,
-            panelContent: createForm('login-form', loginForm),
-        },
-        {
-            id: 'registration-tab',
-            content: 'Register',
-            default: false,
-            panelContent: createForm('registration-form', registrationForm),
-        },
-    ];
+    prepareLayout(document.body.layoutInstance, 'auth');
     const wrapper = createWrapper('authsettings');
+
     wrapper.append(createTabs(authOptions));
     document.body.layoutInstance!.appendAndCache(wrapper);
     updatePageTitle('Login | Register');
@@ -120,24 +114,13 @@ export async function renderSelf() {
     console.log('renderSelf');
 
     const status = await userStatus();
-    if (!status.auth) {
-        router.loadRoute('/auth', true);
-        createErrorFeedback('You must register or login to see your profile');
-        return;
-    }
+    if (!status.auth) return redirectOnError('auth', 'You must be registered to see this page');
 
     const url = `https://localhost:8443/api/bff/profile/${status.username}?userB=${status.userID}`;
 
     try {
-        const reply = await fetch(url);
-        const profile = await reply.json();
         prepareLayout(document.body.layoutInstance, 'profile');
-        const UserProfile = document.createElement('div', {
-            is: 'profile-page',
-        }) as ProfileWithTabs;
-        console.log(profile);
-        document.body.layoutInstance?.appendAndCache(UserProfile);
-        UserProfile.profile = userDataFromAPIRes(profile.userData);
+        buildUserProfile(await fetch(url));
         updatePageTitle(status.username!);
     } catch (error) {
         console.error(error);
@@ -146,43 +129,40 @@ export async function renderSelf() {
 
 export async function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
     console.log('renderProfile');
-    if (param) {
-        const login = param.params.login;
+    if (param && param.params.login && typeof param.params.login === 'string') {
         const status = await userStatus();
-        if (!status.auth) {
-            router.loadRoute('/auth', true);
-            createErrorFeedback("You must register or login to see another user's profile");
-            return;
-        }
+        if (!status.auth) return redirectOnError('auth', 'You must be registered to see this page');
 
+        const login = param.params.login;
         const url = `https://localhost:8443/api/bff/profile/${login}?userB=${status.userID}`;
         try {
-            const reply = await fetch(url);
-            const profile = await reply.json();
             prepareLayout(document.body.layoutInstance, 'profile');
-            const UserProfile = document.createElement('div', {
-                is: 'profile-page',
-            }) as ProfileWithTabs;
-
-            console.log(profile);
-            document.body.layoutInstance?.appendAndCache(UserProfile);
-            UserProfile.profile = userDataFromAPIRes(profile.userData);
-			UserProfile.panelContent = createFriendsPanel(userArrayFromAPIRes(profile.friends));
-            updatePageTitle('User ' + login);
+            buildUserProfile(await fetch(url));
+            updatePageTitle(login);
         } catch (error) {
             console.error(error);
         }
     } else renderNotFound();
 }
 
-export function renderSettings() {
+export async function renderSettings() {
     console.log('renderSettings');
-    //TODO: API call with login here to fetch user data
-    prepareLayout(document.body.layoutInstance, 'profile');
-    document.body.layoutInstance?.appendAndCache(
-        createForm('settings-form', userSettingsForm, user),
-    );
-    updatePageTitle('Settings');
+    const status = await userStatus();
+    if (!status.auth) return redirectOnError('auth', 'You must be registered to see this page');
+
+    const url = `https://localhost:8443/api/bff/tiny-profile/${status.username}`;
+
+    try {
+        const raw = await fetch(url);
+        const res = await raw.json();
+        prepareLayout(document.body.layoutInstance, 'userSettings');
+        document.body.layoutInstance?.appendAndCache(
+            createForm('settings-form', userSettingsForm, userDataFromAPIRes(res)),
+        );
+    } catch (error) {
+        redirectOnError(router.stepBefore, errorMessageFromException(error));
+    }
+    updatePageTitle(status.username + 'Settings');
 }
 
 export function renderLobby() {

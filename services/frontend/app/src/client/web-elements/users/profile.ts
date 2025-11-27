@@ -86,7 +86,6 @@ export class UserProfile extends HTMLDivElement {
     set profileView(v: ProfileView) {
         if (this.#actionButtons.view !== v) {
             this.#actionButtons.view = v;
-            console.log('set user view');
         }
     }
 

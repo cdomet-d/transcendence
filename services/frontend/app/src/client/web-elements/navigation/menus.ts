@@ -33,7 +33,6 @@ export class SocialMenu extends Menu {
     set view(v: ProfileView) {
         this.#view = v;
         this.render();
-		console.log(this.#view);
     }
 
     /** Called when element connects to DOM; calls base and updates view. */

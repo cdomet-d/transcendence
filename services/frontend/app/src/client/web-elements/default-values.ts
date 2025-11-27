@@ -6,11 +6,11 @@ export const usernamePattern: string = '^[A-Za-z0-9]{4,18}$';
 export const searchbarPattern: string = '^[A-Za-z0-9]{0,18}$';
 
 export const defaultAvatar: types.ImgData = {
-        alt: 'A pink pixel art little blob',
-        id: 'user-avatar',
-        size: 'ilarge',
-        src: '/public/assets/images/purple-avatar.png',
-}
+    alt: 'A pink pixel art little blob',
+    id: 'user-avatar',
+    size: 'ilarge',
+    src: '/public/assets/images/purple-avatar.png',
+};
 
 export const user: types.UserData = {
     avatar: {
