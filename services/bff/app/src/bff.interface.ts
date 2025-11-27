@@ -1,9 +1,15 @@
 export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
 export type FriendshipStatus = 'friend' | 'pending';
 
+export interface JwtPayload {
+	userID: number;
+	username: string;
+	iat: number;
+	exp: number;
+}
 
 export interface userData {
-	avatar: string,
+	avatar: string | null | undefined,
 	biography: string,
 	userID: string,
 	lang: string,

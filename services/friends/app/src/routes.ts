@@ -2,21 +2,45 @@ import type { FastifyInstance } from 'fastify';
 import { getFriendship, friendshipExistsUsersID } from './friends.service.js'
 type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
 
+interface JwtPayload {
+	userID: number;
+	username: string;
+	iat: number;
+	exp: number;
+}
+
 export async function routeFriend(serv: FastifyInstance) {
 
-	//GET hips?userA=1&userB=2
-	//TODO : separate route in two 1. get relation betweem two users // "/" ---> to test 
-	//							   2. get frienlist					 //	"/friend-list"
+	//GET friendship?userA=1&userB=2
 	serv.get('/friendship', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
 
 			const query = request.query as {
 				userA?: number,
 				userB?: number,
-				userID?: number,
 			};
 
-			//get relationship between two user
 			if (query.userA && query.userB) {
 
 				const sql = `
@@ -38,12 +62,6 @@ export async function routeFriend(serv: FastifyInstance) {
 				return (reply.code(200).send({ status: status }));
 			}
 
-			//get friends list
-			if (query.userID) {
-				const friends = await getFriendship(serv.dbFriends, query.userID);
-				return (reply.code(200).send(friends));
-			}
-
 			return (reply.code(400).send({ message: '[FRIENDS] Invalid query parameters.' }));
 
 		} catch (error) {
@@ -52,19 +70,75 @@ export async function routeFriend(serv: FastifyInstance) {
 		}
 	});
 
+	//GET friendlist?userID=1
+	serv.get('/friendlist', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const query = request.query as {
+				userID?: number,
+			};
+
+			if (query.userID) {
+				const friends = await getFriendship(serv.dbFriends, query.userID);
+				return (reply.code(200).send(friends));
+			}
+
+			return (reply.code(400).send({ message: '[FRIENDS] Invalid query parameters.' }));
+		} catch (error) {
+			serv.log.error(`[FRIENDS] Error checking relationship: ${error}`);
+			throw (error);
+		}
+
+	});
+
 	//create a pending friend request
 	serv.post('/relation', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const { senderID: senderID } = request.body as { senderID: number };
 			const { friendID: friendID } = request.body as { friendID: number };
-
-			const alreadyExists = await friendshipExistsUsersID(serv.dbFriends, senderID, friendID);
-			if (alreadyExists) {
-				return reply.code(409).send({
-					success: false,
-					message: '[FRIENDS] Friendship already exists!'
-				});
-			}
 
 			const query = `
 				INSERT INTO friendship (userID, friendID, statusFriendship)
@@ -86,6 +160,12 @@ export async function routeFriend(serv: FastifyInstance) {
 			}));
 
 		} catch (error) {
+			if (error && typeof error === 'object' && 'code' in error &&
+				((error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' || (error as { code: string }).code === 'SQLITE_CONSTRAINT'))
+				return reply.code(409).send({
+					success: false,
+					message: '[FRIENDS] Friendship already exists!'
+				});
 			console.error('[FRIENDS] Error processing friend request:', error);
 			throw (error);
 		}
@@ -94,10 +174,32 @@ export async function routeFriend(serv: FastifyInstance) {
 	//accept a friend request
 	serv.patch('/relation', async (request, reply) => {
 		try {
-			const { receiverID: receiverID } = request.body as { receiverID: number };
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const { senderRequestID: senderRequestID } = request.body as { senderRequestID: number };
 			const { friendID: friendID } = request.body as { friendID: number };
 
-			const friendshipID = await friendshipExistsUsersID(serv.dbFriends, receiverID, friendID);
+			const friendshipID = await friendshipExistsUsersID(serv.dbFriends, senderRequestID, friendID);
 			if (!friendshipID) {
 				return reply.code(404).send({
 					success: false,
@@ -111,7 +213,7 @@ export async function routeFriend(serv: FastifyInstance) {
 
 			const params =
 				[friendshipID,
-					receiverID];
+					senderRequestID];
 
 			const response = await serv.dbFriends.run(query, params);
 			if (response.changes === 0) {
@@ -127,6 +229,15 @@ export async function routeFriend(serv: FastifyInstance) {
 			}));
 
 		} catch (error) {
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number, message?: string };
+				if (customError.code === 409) {
+					return reply.code(409).send({
+						success: false,
+						message: customError.message || '[FRIENDS] Friendship already accepted!'
+					});
+				}
+			}
 			console.error('[FRIENDS] Error accepting friend request', error);
 			throw (error);
 		}
@@ -135,15 +246,37 @@ export async function routeFriend(serv: FastifyInstance) {
 	//Delete a relation between users
 	serv.delete('/relation', async (request, reply) => {
 		try {
-			const { userA: userA } = request.body as { userA: number };
-			const { userB: userB } = request.body as { userB: number };
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const { removerID: removerID } = request.body as { removerID: number };
+			const { friendID: friendID } = request.body as { friendID: number };
 
 			const query = `
 				DELETE FROM friendship 
 				WHERE (userID = ? AND friendID = ?) 
 					OR (userID = ? AND friendID = ?);
 			`;
-			const params = [userA, userB, userB, userA];
+			const params = [removerID, friendID, friendID, removerID];
 			const response = await serv.dbFriends.run(query, params);
 
 			if (response.changes === 0)
@@ -158,11 +291,30 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//delete all friendship a user is a part of
-
 	serv.delete('/', async (request, reply) => {
 		try {
-			//TODO: get JWT from cookies when JWT plugins is register in fastify request.cookies.token as {userID: string}
-			// Conversion might be needed to use the userID before using (probably in the plugin already)
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const { userID } = request.params as { userID: string };
 
 			const query = `

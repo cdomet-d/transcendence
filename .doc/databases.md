@@ -19,7 +19,7 @@ Bad SQL query (dangerous) :
 ```
 	const word;
 	const langCode;
-
+sta
 	const query = `
 		SELECT translation FROM translations WHERE {$word} = ? AND {$language_code} = ?
 	`;
@@ -174,7 +174,7 @@ This table has the following column :
 * avatar &rarr; text
 * biography &rarr; text
 * profileColor &rarr; text
-* activityStatus &rarr; integer 
+* activityStatus &rarr; boolean 
 * lastConnexion &rarr; datetime
 
 userID will match between different table and database and if a general ID for a user.
@@ -185,14 +185,13 @@ activityStatus will be used to keep track of whether the user if offline, online
 | ------ |:-------:|
 |   0    | offline |
 |   1    | online  |
-|   2    | playing |
 
 #### userStats
 
 This table has the following column :
 * userID &rarr; integer (__primary key__)
 * longestMatch &rarr; integer
-* shorestMatch &rarr; integer
+* shortestMatch &rarr; integer
 * totalMatch &rarr; integer
 * totalWins &rarr; integer
 * winStreak &rarr; integer
@@ -717,26 +716,13 @@ WHERE userID = 101;
 [WIP] DOC NOT UP TO DATE YET (nginx conf not done yet)
 
 
-
-
-* servir le profile 
-* servir la leaderboard
-* servir les users pour search bar
+* servir traduction      
 * envoyer les settings
-* servir userCard        ✅
-* supprimer le compte    ✅
-* envouyer demande d'ami ✅
-* accepter demande d'ami ✅
-* supprimer ami          ✅
-* servir traduction      ✅
 
-
-TODO : is username needed in users service
-
-TODO: register and login straight to account
-The account service is going away, we create a db in auth instead with a username/password/userID
-Everything else is going to user.
-Auth takes to bff 
-Update bff accordingly
-
-front -> nginx -> auth -> bff -> users -> bff -> auth -> nginx -> front
+* supprimer ami                    ✅
+* envoyer demande d'ami            ✅
+* accepter demande d'ami           ✅
+* servir la leaderboard            ✅
+* servir les users pour search bar ✅
+* servir le profile                ✅
+* servir userCard                  ✅
