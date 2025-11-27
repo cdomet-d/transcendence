@@ -35,10 +35,11 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 		socket.close(1011, event.message);
 	};
 
-	socket.on('close', () => {
+	socket.onclose = (event) => {
 		if (game) {
 			game.cleanTimeoutIDs();
-			cheater(game, socket);
+			if (event.code != 1003 && event.code != 1011)
+				cheater(game, socket);
 			if (game.endSent === false) {
 				game.fillGameInfos();
 				const sc = StringCodec();
@@ -49,7 +50,7 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 			this.gameRegistry.deleteGame(game.gameID);
 			natsSubscription(this); //TODO: only for testing
 		}
-	});
+	}
 }
 
 export function waitForMessage(serv: FastifyInstance, socket: WebSocket): Promise<idsObj> {
