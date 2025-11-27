@@ -1,18 +1,27 @@
-import { Game, HEIGHT, WIDTH } from './classes/game.class.js';
-import { raycast, updateVelocity } from './collision.utils.js';
-import type { keysObj, paddleSpec, coordinates } from './classes/game.interfaces.js';
+import { Game, HEIGHT, WIDTH } from './classes/game-class.js';
+import { raycast, updateVelocity } from './collision-utils.js';
+import type { keysObj, paddleSpec, coordinates } from './classes/game-interfaces.js';
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function updatePaddlePos(paddle: coordinates, leftSide: boolean, game: Game, keys: keysObj) {
-    const step: coordinates = { x: 0, y: 0 };
-    if ((leftSide && keys._w) || (!leftSide && keys._ArrowUp)) up(paddle, game.padSpec.speed, step);
-    if ((leftSide && keys._s) || (!leftSide && keys._ArrowDown)) down(paddle, game.padSpec, step);
-    if (leftSide && keys._a) left(paddle, game, 0, step);
-    if (leftSide && keys._d)
+    let step: coordinates = { x: 0, y: 0 };
+    if (leftSide)
+        step = game.leftStep;
+    else
+        step = game.rightStep;
+    if ((leftSide && keys.w) || (!leftSide && keys.ArrowUp)) 
+        up(paddle, game.padSpec.speed, step);
+    if ((leftSide && keys.s) || (!leftSide && keys.ArrowDown)) 
+        down(paddle, game.padSpec, step);
+    if (leftSide && keys.a) 
+        left(paddle, game, 0, step);
+    if (leftSide && keys.d)
         right(paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, step);
-    if (!leftSide && keys._ArrowLeft) left(paddle, game, WIDTH / 2 + game.ball.r + 1, step);
-    if (!leftSide && keys._ArrowRight) right(paddle, game, WIDTH - game.padSpec.w, step);
+    if (!leftSide && keys.ArrowLeft) 
+        left(paddle, game, WIDTH / 2 + game.ball.r + 1, step);
+    if (!leftSide && keys.ArrowRight) 
+        right(paddle, game, WIDTH - game.padSpec.w, step);
     movePaddle(game, paddle, step);
 }
 
@@ -36,13 +45,15 @@ function right(pad: coordinates, game: Game, limit: number, step: coordinates) {
     else step.x += limit - pad.x;
 }
 
-function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
+export function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
     const nextX: number = game.ball.x - step.x;
     const nextY: number = game.ball.y - step.y;
     const result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);
     if (!result) {
         paddle.x += step.x;
         paddle.y += step.y;
+        step.x = 0;
+        step.y = 0;
         return;
     }
     const [t, n] = result;
@@ -54,7 +65,11 @@ function movePaddle(game: Game, paddle: coordinates, step: coordinates) {
     }
     const nx = step.x / len;
     const ny = step.y / len;
-    paddle.x += nx * contactDist;
-    paddle.y += ny * contactDist;
+    const x: number = nx * contactDist;
+    const y: number = ny * contactDist;
+    paddle.x += x;
+    paddle.y += y;
+    step.x -= x;
+    step.y -= y;
     updateVelocity(game, paddle, n.x);
 }

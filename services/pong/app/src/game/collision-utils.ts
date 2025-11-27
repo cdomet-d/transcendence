@@ -1,5 +1,5 @@
-import { Game } from "../classes/game.class.js";
-import { type coordinates } from "../classes/game.interfaces.js";
+import { Game } from "../classes/game-class.js";
+import { type coordinates } from "../classes/game-interfaces.js";
 
 export function raycast(game: Game, paddle: coordinates, nextX: number, nextY: number): [number, coordinates] | null {
 	const inflatedPad: coordinates = {x: paddle.x - game.ball.r, y: paddle.y - game.ball.r};
@@ -43,8 +43,7 @@ export function lineIntersection(p1: coordinates, p2: coordinates, p3: coordinat
 	return t;
 }
 
-const maxSpeed = 0.75;
-const maxAngleDeg: number = 45;
+const maxAngleDeg: number = 40;
 const maxAngle: number = maxAngleDeg * Math.PI / 180; 
 export function updateVelocity(game: Game, paddle: coordinates, nx: number) {
 	let pos: number = 0;
@@ -60,9 +59,18 @@ export function updateVelocity(game: Game, paddle: coordinates, nx: number) {
 		game.ball.dx = speed * Math.cos(angle);
 	game.ball.dy = speed * Math.sin(angle);
 
-	const boostedSpeed = Math.min(speed * 1.15, maxSpeed);
-	const factor = boostedSpeed / speed;
-	game.ball.dx *= factor;
-	game.ball.dy *= factor;
+	const boostedSpeed = Math.min(speed * 1.1, game.ball.maxSpeed);
+	if (speed !== 0) {
+		const factor: number = boostedSpeed / speed;
+		game.ball.dx *= factor;
+		game.ball.dy *= factor;
+	}
 }
-//TODO: take into account paddle speed and direction ?
+
+export function distBallPad(p: coordinates, b: coordinates): number {
+    const d: coordinates = {x: Math.abs(p.x) - b.x, y: Math.abs(p.y) - b.y};
+	d.x = Math.max(d.x, 0.0);
+	d.y = Math.max(d.y, 0.0);
+	const length: number = Math.sqrt(d.x * d.x + d.y * d.y);
+    return length + Math.min(Math.max(d.x, d.y), 0.0);
+}

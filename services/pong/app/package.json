@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-        "dev": "nodemon -q",
-    "test": "jest --verbose > jest.results.txt 2>&1",
+    "dev": "nodemon -q",
     "start": "tsc && node dist/server.js"
   },
   "keywords": [],
@@ -13,7 +12,6 @@
   "description": "",
   "type": "module",
   "dependencies": {
-    "@fastify/cookie": "^11.0.2",
     "@fastify/websocket": "^11.2.0",
     "@types/node": "^24.3.0",
     "@types/ws": "^8.18.1",
@@ -22,11 +20,8 @@
     "typescript": "^5.9.2"
   },
   "devDependencies": {
-    "@jest/globals": "^30.1.2",
-    "jest": "^30.1.3",
     "nodemon": "^3.1.10",
     "pino-pretty": "^13.1.2",
-    "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2"
   }
 }
