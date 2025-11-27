@@ -15,6 +15,7 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 			if (data.event === "LOBBY_REQUEST") {
 				
 				userID = payload.userID;
+				console.log("UID: ", userID);
 				// userID = getUniqueUserID(); // use JWT payload
 				
 				if (!wsClientsMap.has(userID!)) {
@@ -54,12 +55,4 @@ export function wsSend(ws: WebSocket, message: string): void {
 		console.log(`Error: Connection for userID < ${payload.userID} > not found or not open...`);
 		console.log(`\tCould not start game with gameID < ${payload.gameID} > `);
 	}
-}
-
-// TODO get userID from JWT payload
-let idIndex: number = 1;
-
-function getUniqueUserID(): number {
-	const uniqueID = idIndex++;
-	return uniqueID;
 }

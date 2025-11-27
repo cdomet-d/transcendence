@@ -27,6 +27,7 @@ export async function natsSubscribe() {
 			}
 			for (let i = 0; i < game.users.length; i++) {
 				const userID = game.users[i]!.userID;
+				if (userID === -1) break;
 				const socket = wsClientsMap.get(userID);
 
 				const gameReq: gameRequest = {
