@@ -4,12 +4,11 @@ import Fastify from 'fastify';
 import websocket from '@fastify/websocket';
 import type { WebSocket } from '@fastify/websocket';
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-// import cookie from '@fastify/cookie';
 // Local modules
-import { wsRoute } from './ws.route.js';
-import { options } from './serv.conf.js';
+import { wsRoute } from './route.js';
+import { options } from './serv-conf.js';
 import { initNatsConnection, natsSubscription } from './nats/subscriber.js';
-import { GameRegistry } from './classes/gameRegistry.class.js';
+import { GameRegistry } from './classes/gameRegistry-class.js';
 import { NatsConnection } from 'nats';
 
 (async () => {
@@ -59,20 +58,18 @@ function addPlugins(serv: FastifyInstance) {
             req: FastifyRequest,
             reply: FastifyReply
         ) {
-            //TODO: send html error page ?
             serv.log.error(error);
-            socket.close();
+            socket.close(1011, error.message);
         },
         options: {},
     });
     serv.register(wsRoute);
-    // serv.register(cookie);
 }
 
 //run server
 async function runServ(serv: FastifyInstance): Promise<void> {
     const port: number = getPort();
-    const address: string = await serv.listen({ port: port, host: '0.0.0.0' });
+    await serv.listen({ port: port, host: '0.0.0.0' });
 }
 
 function getPort(): number {

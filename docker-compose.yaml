@@ -38,9 +38,6 @@ services:
             - PORT=3939
             - JWT_SECRET=${JWT_SECRET}
             - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-            #    volumes:
-        #      - ./services/account/app:/usr/app
-        #      - ./services/account/data:/usr/data
         volumes:
             - ./services/auth/app:/usr/app
             - ./services/auth/data:/usr/data
@@ -102,7 +99,6 @@ services:
             - JWT_SECRET=${JWT_SECRET}
         volumes:
             - ./services/bff/app:/usr/app
-        # user: "${T_UID}:${T_GID}"
     gamemanager:
         build:
             context: ./services/game-manager
@@ -174,7 +170,6 @@ services:
         restart: unless-stopped
         volumes:
             - ./services/pong/app:/usr/app
-        # user: "${T_UID}:${T_GID}"
     users:
         build:
             context: ./services/users

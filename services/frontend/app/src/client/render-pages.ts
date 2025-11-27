@@ -208,8 +208,8 @@ export function renderGame() {
 
     const layout = document.body.layoutInstance;
     // TODO: set pong-court theme from game-manager object
-    court.theme = ocean;
-    if (layout) layout.theme = oceanAssets;
+    court.theme = farm;
+    if (layout) layout.theme = farmAssets;
     document.body.layoutInstance?.appendAndCache(ui, court);
 
     pong({ userID: 1, gameID: 1, remote: false }, court.ctx, ui);

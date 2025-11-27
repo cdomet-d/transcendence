@@ -17,6 +17,8 @@ interface game {
 	score: string,
 	winnerID: number,
 	loserID: number,
+	duration: number,
+    longuestPass: number
 }
 
 interface tournament {
