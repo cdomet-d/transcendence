@@ -8,6 +8,7 @@ export interface keysObj {
     ArrowDown: boolean;
     ArrowLeft: boolean;
     ArrowRight: boolean;
+    [key: string]: boolean;
 }
 
 export interface ballObj {

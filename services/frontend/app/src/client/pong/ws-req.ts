@@ -1,6 +1,6 @@
 import { startGame } from './game-loop.js';
 import { Game, WIDTH, HEIGHT } from './classes/game-class.js';
-import { createKeyDownEvent, createKeyUpEvent, addMessEvent } from './game-events.js';
+import { addMessEvent, createKeyEvent } from './game-events.js';
 import { renderGame } from './game-render-utils.js';
 import { createErrorFeedback } from '../web-elements/event-elements/error.js';
 
@@ -40,8 +40,8 @@ export function wsRequest(game: Game, ids: { gameID: number; userID: number }) {
 async function setUpGame(game: Game, ws: WebSocket, ballDir: number) {
 	game.ball.dx *= ballDir;
 	addMessEvent(game, ws);
-	window.addEventListener('keydown', createKeyDownEvent(game.req.keys, game.horizontal));
-	window.addEventListener('keyup', createKeyUpEvent(game.req.keys));
+	window.addEventListener('keydown', createKeyEvent(game.req.keys, game.horizontal, true));
+	window.addEventListener('keyup', createKeyEvent(game.req.keys, game.horizontal, false));
 
 	await new Promise((res) => setTimeout(res, START_DELAY));
 	startGame(game, ws);

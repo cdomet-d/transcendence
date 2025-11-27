@@ -2,42 +2,31 @@ import { Game } from './classes/game-class.js';
 import type { keysObj, repObj } from './classes/game-interfaces.js';
 
 export function addMessEvent(game: Game, ws: WebSocket) {
-    ws.onmessage = (event) => {
-        const rep: repObj = JSON.parse(event.data);
-        rep.timestamp = performance.now();
-        game.addReply(rep);
-    };
+	ws.onmessage = (event) => {
+		const rep: repObj = JSON.parse(event.data);
+		rep.timestamp = performance.now();
+		game.addReply(rep);
+	};
 }
 
-export function createKeyDownEvent(keys: keysObj, horizontal: boolean) {
-    return function keyDownEvent(event: KeyboardEvent): void {
-        if (event.key === 'w' || event.key === 'W') keys.w = true;
-        if (event.key === 's' || event.key === 'S') keys.s = true;
-        if (horizontal && (event.key === 'a' || event.key === 'A')) keys.a = true;
-        if (horizontal && (event.key === 'd' || event.key === 'D')) keys.d = true;
-        if (event.key === 'ArrowUp') {
-            event.preventDefault();
-            keys.ArrowUp = true;
-        }
-        if (event.key === 'ArrowDown') {
-            event.preventDefault();
-            keys.ArrowDown = true;
-        }
-        if (horizontal && event.key === 'ArrowLeft') keys.ArrowLeft = true;
-        if (horizontal && event.key === 'ArrowRight') keys.ArrowRight = true;
+export function createKeyEvent(keys: keysObj, horizontal: boolean, isKeyDown: boolean) {
+    const keyMap = {
+        w: ['z', 'Z'],
+        s: ['s', 'S'],
+        a: horizontal ? ['q', 'Q'] : [],
+        d: horizontal ? ['d', 'D'] : [],
+        ArrowUp: ['ArrowUp'],
+        ArrowDown: ['ArrowDown'],
+        ArrowLeft: horizontal ? ['ArrowLeft'] : [],
+        ArrowRight: horizontal ? ['ArrowRight'] : []
     };
-}
 
-export function createKeyUpEvent(keys: keysObj) {
-    return function keyUpEvent(event: KeyboardEvent): void {
-        event.preventDefault();
-        if (event.key === 'w' || event.key === 'W') keys.w = false;
-        if (event.key === 's' || event.key === 'S') keys.s = false;
-        if (event.key === 'a' || event.key === 'A') keys.a = false;
-        if (event.key === 'd' || event.key === 'D') keys.d = false;
-        if (event.key === 'ArrowUp') keys.ArrowUp = false;
-        if (event.key === 'ArrowDown') keys.ArrowDown = false;
-        if (event.key === 'ArrowLeft') keys.ArrowLeft = false;
-        if (event.key === 'ArrowRight') keys.ArrowRight = false;
+    return function keyEvent(event: KeyboardEvent): void {
+        for (const [key, values] of Object.entries(keyMap)) {
+            if (values.includes(event.key)) {
+                keys[key] = isKeyDown;
+                if (key.startsWith('Arrow')) event.preventDefault();
+            }
+        }
     };
 }
