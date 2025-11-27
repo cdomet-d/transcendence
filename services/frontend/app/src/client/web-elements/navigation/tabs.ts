@@ -208,14 +208,15 @@ export class TabContainer extends HTMLDivElement {
             this.populatePanels(tab);
         });
     }
-
     populatePanels(tab: TabData) {
         if (tab && tab.panelContent) {
             this.#tabPanels[tab.id]?.appendContent(tab.panelContent);
-        } else if (tab && !tab.panelContent) {
-            this.#tabPanels[tab.id]?.appendContent(createNoResult('light', 'ifs'));
-        } else console.log('No such tab - do better');
-    }
+        } else {
+            if (tab && !tab.panelContent) {
+                this.#tabPanels[tab.id]?.appendContent(createNoResult('light', 'ifs'));
+            } else console.log('No such tab - do better');
+        }
+	}
 
     /**
      * Renders tab wrapper structure and adds tab buttons and panels.
