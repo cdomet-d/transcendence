@@ -116,8 +116,6 @@ export async function deleteFriendRequest(log: any, removerID: number, friendID:
 	return;
 }
 
-
-
 /*----------  WIP  ----------*/
 
 /* export async function deleteFriendship(log: any, userID: number): Promise<Response | null> {

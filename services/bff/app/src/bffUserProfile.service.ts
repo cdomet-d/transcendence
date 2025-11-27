@@ -327,9 +327,8 @@ async function fetchUsernames(log: any, userIDs: number[], token: string): Promi
 export async function processMatches(log: any, userID: number, token: string): Promise<Matches[]> {
 	const rawMatches = await fetchMatches(log, userID, token);
 
-	if (!rawMatches || rawMatches.length === 0) {
+	if (!rawMatches || rawMatches.length === 0)
 		return [];
-	}
 
 	const opponentIDs = new Set<number>();
 	rawMatches.forEach(match => {
@@ -367,10 +366,10 @@ export async function processMatches(log: any, userID: number, token: string): P
 			tournament: isTournament
 		};
 
-		return match;
+		return (match);
 	});
 
-	return processedMatches;
+	return (processedMatches);
 }
 
 function formatDuration(seconds: number): string {
