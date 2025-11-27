@@ -31,7 +31,9 @@ export async function natsSubscribe() {
 				const socket = wsClientsMap.get(userID);
 
 				const gameReq: gameRequest = {
+					username: game.users[i]!.username,
 					userID: userID,
+					// opponent: game.users // TODO figure out how to send username of opponent to PONG depending on local, index etc. 
 					gameID: game.gameID,
 					remote: game.remote
 					// gameSettings

@@ -3,8 +3,8 @@ import type { game } from '../manager.interface.js';
 
 export function gameOver(payload: string) {
     // send obj to DB
-    const game: game = JSON.parse(payload);
-    postGameToDashboard(game);
+    // const game: game = JSON.parse(payload);
+    // postGameToDashboard(game);
     // showWinnerScreen();
 }
 

@@ -73,7 +73,7 @@ export class LocalPongSettings extends BaseForm {
 
         // console.log("F: ", req.body);
         console.log("1");
-        await wsConnect('game', 'quickmatch', '', '', req.body);
+        await wsConnect('game', 'quickmatch', 'localForm', '', req.body);
 
     }
 

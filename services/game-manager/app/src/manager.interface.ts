@@ -30,6 +30,8 @@ interface game {
 	score: string,
 	winnerID: number,
 	loserID: number,
+	duration: number,
+	longuestPass: number
 }
 
 interface tournament {
@@ -39,6 +41,7 @@ interface tournament {
 }
 
 interface gameRequest {
+	username: string,
 	userID: number,
 	gameID: string,
 	remote: boolean

@@ -1,10 +1,11 @@
 import { renderNotFound } from './render-pages.js';
 import { match, type Match } from 'path-to-regexp';
 import * as page from './render-pages.js';
+import type { gameRequest } from './pong/pong.js';
 
 export interface routeInterface {
     path: string;
-    callback: (param?: Match<Partial<Record<string, string | string[]>>>) => void;
+    callback: (param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest) => void;
 }
 
 export const routes: routeInterface[] = [
@@ -57,7 +58,7 @@ export class Router {
     /** Parses the defined route array to check if the current URL is defined as a route.
      * Calls `renderNotFount()` if the route was not found, and the route's callback otherwise.
      */
-    loadRoute(path: string, updateHistory: boolean) {
+    loadRoute(path: string, updateHistory: boolean, gameRequest?: gameRequest) {
         this.sanitisePath(path);
 
         let matchedRoute = this.#getRouteFromPath(path);
@@ -78,6 +79,6 @@ export class Router {
             renderNotFound();
             return;
         }
-        matchedRoute.callback(res ? res : undefined);
+        matchedRoute.callback(res ? res : undefined, gameRequest);
     }
 }

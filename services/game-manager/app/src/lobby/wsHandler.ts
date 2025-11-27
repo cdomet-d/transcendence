@@ -31,7 +31,7 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 				}
 			} else if (data.event === "GAME_REQUEST") {
 		        console.log("4");
-
+				console.log("REMOTE OU BIEN", payload.remote);
 				processGameRequest(payload);
 			}
 		} catch (error) {

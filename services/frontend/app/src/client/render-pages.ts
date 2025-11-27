@@ -237,7 +237,7 @@ export function renderTournamentLobby() {
     wsConnect('create', 'tournament', 'tournamentForm');
 }
 
-export function renderGame(gameRequest: gameRequest) {
+export function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest) {
     console.log('renderGame');
     prepareLayout(document.body.layoutInstance, 'game');
 
@@ -250,12 +250,16 @@ export function renderGame(gameRequest: gameRequest) {
 
     const layout = document.body.layoutInstance;
     // TODO: set pong-court theme from game-manager object
-    court.theme = ocean;
-    if (layout) layout.theme = oceanAssets;
+    court.theme = farm;
+    if (layout) layout.theme = farmAssets;
     document.body.layoutInstance?.appendAndCache(ui, court);
 
     // pong({ userID: 1, gameID: 1, remote: false }, court.ctx, ui);
-    pong(gameRequest, court.ctx, ui);
+    if (gameRequest === undefined) {
+        console.log("GameRequest =>", gameRequest);
+        return;
+    }
+    pong(gameRequest!, court.ctx, ui);
 }
 
 export function renderBracket() {

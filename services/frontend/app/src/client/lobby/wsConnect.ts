@@ -1,5 +1,5 @@
 import { createGameRequest, createLobbyRequest, joinLobbyRequest } from './lobby.js';
-// import { router } from '../main.js';
+import { router } from '../main.js';
 import { type gameRequest } from '../pong/pong.js';
 import { renderGame } from '../render-pages.js';
 
@@ -57,7 +57,8 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		        console.log("9");
 
             const gameRequest: gameRequest = data;
-            renderGame(gameRequest);
+            console.log("IN WS CONNECT GameRequest =>", gameRequest);
+            router.loadRoute('/game', true, gameRequest);
         } catch (error) {
             console.error("Error: Failed to parse WS message", error);
         }

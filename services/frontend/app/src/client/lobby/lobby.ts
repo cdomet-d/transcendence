@@ -23,7 +23,7 @@ function createGameRequest(format: string, formInstance: string, gameSettings: s
 
     const customSettings = JSON.parse(gameSettings);
     const localOpponent: string | undefined = customSettings.opponent;
-    // console.log("OPPONENT: ", localOpponent);
+    console.log("FORM: ", formInstance);
 
     const gameRequestForm: gameRequestForm = {
         event: 'GAME_REQUEST',
@@ -32,7 +32,7 @@ function createGameRequest(format: string, formInstance: string, gameSettings: s
             remote: formInstance === 'localForm' ? false : true,
             nbPlayers: format === 'quickmatch' ? 2 : 4,
             userList: [ // this a Map now
-                { userID: 7, username: 'waka' },
+                { userID: 8, username: 'waka' }, // TODO const status = await userStatus /*  */
                 localOpponent !== undefined ? { userID: -1 /* uid will become 'temporary' */, username: localOpponent } : { userID: 2, username: 'alex' }, // TODO differentiate local, remote, tournament
                 // { userID: 3, username: "cha" },
                 // { userID: 4, username: "coco" }
@@ -65,7 +65,7 @@ function createLobbyRequest(action: string, format: string, formInstance: string
         payload: {
             action: action,
             format: format,
-            userID: 7, // TODO: get uid from JWT
+            userID: 8, // TODO: get uid from JWT
         },
         formInstance: formInstance
     };
