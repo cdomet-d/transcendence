@@ -1,5 +1,4 @@
 import { options } from './serv.conf.js';
-// import { renderNotFound } from '../client/pages/html.pages.js';
 import { servRoutes } from './route.js';
 import cookie from '@fastify/cookie';
 import Fastify from 'fastify';

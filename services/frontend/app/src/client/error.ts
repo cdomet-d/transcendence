@@ -48,4 +48,5 @@ export function createErrorFeedback(message: string) {
 
 export function redirectOnError(route: string, message: string) {
     router.loadRoute(route, true);
+	createErrorFeedback(message);
 }

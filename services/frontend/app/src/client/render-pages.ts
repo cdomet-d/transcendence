@@ -114,7 +114,7 @@ export async function renderSelf() {
     console.log('renderSelf');
 
     const status = await userStatus();
-    if (!status.auth) return redirectOnError('auth', 'You must be registered to see this page');
+    if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
 
     const url = `https://localhost:8443/api/bff/profile/${status.username}?userB=${status.userID}`;
 
@@ -131,7 +131,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
     console.log('renderProfile');
     if (param && param.params.login && typeof param.params.login === 'string') {
         const status = await userStatus();
-        if (!status.auth) return redirectOnError('auth', 'You must be registered to see this page');
+        if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
 
         const login = param.params.login;
         const url = `https://localhost:8443/api/bff/profile/${login}?userB=${status.userID}`;
@@ -148,7 +148,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
 export async function renderSettings() {
     console.log('renderSettings');
     const status = await userStatus();
-    if (!status.auth) return redirectOnError('auth', 'You must be registered to see this page');
+    if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
 
     const url = `https://localhost:8443/api/bff/tiny-profile/${status.username}`;
 
