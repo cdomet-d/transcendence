@@ -174,27 +174,27 @@ export async function routeFriend(serv: FastifyInstance) {
 	//accept a friend request
 	serv.patch('/relation', async (request, reply) => {
 		try {
-			//const token = request.cookies.token;
-			//if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
-			//
-			//if (token) {
-			//	try {
-			//		const user = serv.jwt.verify(token) as JwtPayload;
-			//		if (typeof user !== 'object') throw new Error('Invalid token detected');
-			//	} catch (error) {
-			//		if (error instanceof Error && 'code' in error) {
-			//			if (
-			//				error.code === 'FST_JWT_BAD_REQUEST' ||
-			//				error.code === 'ERR_ASSERTION' ||
-			//				error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-			//			)
-			//				return reply.code(400).send({ code: error.code, message: error.message });
-			//			return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-			//		} else {
-			//			return reply.code(401).send({ message: 'Unknown error' });
-			//		}
-			//	}
-			//}
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
 
 			const { senderRequestID: senderRequestID } = request.body as { senderRequestID: number };
 			const { friendID: friendID } = request.body as { friendID: number };
@@ -268,15 +268,15 @@ export async function routeFriend(serv: FastifyInstance) {
 				}
 			}
 
-			const { userA: userA } = request.body as { userA: number };
-			const { userB: userB } = request.body as { userB: number };
+			const { removerID: removerID } = request.body as { removerID: number };
+			const { friendID: friendID } = request.body as { friendID: number };
 
 			const query = `
 				DELETE FROM friendship 
 				WHERE (userID = ? AND friendID = ?) 
 					OR (userID = ? AND friendID = ?);
 			`;
-			const params = [userA, userB, userB, userA];
+			const params = [removerID, friendID, friendID, removerID];
 			const response = await serv.dbFriends.run(query, params);
 
 			if (response.changes === 0)

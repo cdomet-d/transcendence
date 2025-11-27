@@ -2,7 +2,6 @@ import type { FastifyInstance } from 'fastify';
 import { updateUserStats } from './dashboard.service.js'
 import type { GameInput, userStats } from '././dashboard.service.js';
 
-
 export interface userData {
 	avatar: string | null | undefined,
 	biography: string,
