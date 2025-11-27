@@ -10,7 +10,7 @@ const MAX_TIME: number = 90000; // 1min30
 
 export async function setUpGame(game: Game) {
 	if (!game.players[0] || !game.players[1])
-		return; //TODO: deal with that  // make player1 and player2 getters
+		return; //TODO: make player1 and player2 getters
 	const player1: Player = game.players[0];
 	const player2: Player = game.players[1];
 
@@ -35,10 +35,8 @@ function setMessEvent(player: Player, playerNbr: number, game: Game) {
 		let req: reqObj;
 		try { 
 			req = JSON.parse(payload);
-			if (!validRequest(req)) {
-				console.log("REQ:", JSON.stringify(req));
+			if (!validRequest(req))
 				throw new Error("invalid request"); 
-			}
 			game.addReq(req, playerNbr);
 		}
 		catch (err: any) {

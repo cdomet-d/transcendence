@@ -21,18 +21,18 @@ export async function natsSubscription(serv: FastifyInstance) {
 	// (async () => {
 	// 	for await (const msg of sub) {
 
-	// 		const _gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
+	// 		const gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
 	// 		// serv.log.info(`Received message: ${JSON.stringify(_gameInfo)}`);
-	// 		serv.gameRegistry.addGame(new Game(_gameInfo, serv.nc));
+	// 		serv.gameRegistry.addGame(new Game(gameInfo, serv.nc, serv.log));
 
 	// 		// Approval given HERE from PONG if game is ok to start
 	// 		if (msg.reply) {
 	// 			const game = {
-	// 				gameID: _gameInfo.gameID,
-	// 				users: _gameInfo.users,
-	// 				remote: _gameInfo.remote
+	// 				gameID: gameInfo.gameID,
+	// 				users: gameInfo.users,
+	// 				remote: gameInfo.remote
 	// 			}
-	// 			natsPublish(msg.reply, JSON.stringify(game));
+	// 			natsPublish(serv.nc, msg.reply, JSON.stringify(game));
 	// 		}
 	// 	}
 	// })();
