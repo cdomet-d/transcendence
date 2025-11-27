@@ -1,5 +1,5 @@
-import { Game } from './classes/game.class.js';
-import { type coordinates } from './classes/game.interfaces.js';
+import { Game } from './classes/game-class.js';
+import { type coordinates } from './classes/game-interfaces.js';
 
 export function raycast(
     game: Game,
@@ -52,8 +52,7 @@ export function lineIntersection(
     return t;
 }
 
-const maxSpeed = 0.75;
-const maxAngleDeg: number = 45;
+const maxAngleDeg: number = 40;
 const maxAngle: number = (maxAngleDeg * Math.PI) / 180;
 export function updateVelocity(game: Game, paddle: coordinates, nx: number) {
     let pos: number = 0;
@@ -67,9 +66,11 @@ export function updateVelocity(game: Game, paddle: coordinates, nx: number) {
     else game.ball.dx = speed * Math.cos(angle);
     game.ball.dy = speed * Math.sin(angle);
 
-    const boostedSpeed = Math.min(speed * 1.15, maxSpeed);
-    const factor = boostedSpeed / speed;
-    game.ball.dx *= factor;
-    game.ball.dy *= factor;
+    const boostedSpeed = Math.min(speed * 1.1, game.ball.maxSpeed);
+	if (speed !== 0) {
+		const factor: number = boostedSpeed / speed;
+		game.ball.dx *= factor;
+		game.ball.dy *= factor;
+	}
 }
-//TODO: take into account paddle speed and direction ?
+

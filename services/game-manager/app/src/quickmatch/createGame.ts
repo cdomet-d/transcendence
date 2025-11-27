@@ -14,7 +14,9 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 		userList: lobbyInfo.userList,
 		score: "",
 		winnerID: 0,
-		loserID: 0
+		loserID: 0, 
+		duration: 0, 
+		longuestPass: 0
 	};
 
 	return game;
