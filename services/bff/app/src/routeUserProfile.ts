@@ -92,8 +92,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO : I didn't add the JWT verif here because the front request that (not the user) so no JWT, right ?
-	// should I tho ??
 	serv.get('/tiny-profile/:username', async (request, reply) => {
 		try {
 			const token = request.cookies.token;

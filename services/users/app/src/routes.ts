@@ -1,4 +1,7 @@
 import type { FastifyInstance } from 'fastify';
+import { updateUserStats } from './dashboard.service.js'
+import type { GameInput, userStats } from '././dashboard.service.js';
+
 
 export interface userData {
 	avatar: string | null | undefined,
@@ -10,18 +13,6 @@ export interface userData {
 	username: string,
 	winstreak: string,
 	since: string
-}
-
-interface UserStats {
-	userID: number;
-	longestMatch: number;
-	shortestMatch: number;
-	totalMatch: number;
-	totalWins: number;
-	winStreak: number;
-	averageMatchDuration: number;
-	longuestPass: number;
-	[key: string]: number;
 }
 
 interface JwtPayload {
@@ -396,7 +387,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				SELECT * FROM userStats WHERE userID = ?
 			`;
 
-			const userStats = await serv.dbUsers.get<UserStats>(query, [userID]);
+			const userStats = await serv.dbUsers.get<userStats>(query, [userID]);
 			if (!userStats)
 				return reply.code(404).send({ success: false, message: 'User profile not found' });
 
@@ -414,73 +405,30 @@ export async function userRoutes(serv: FastifyInstance) {
 	//update all stats of a user
 	serv.patch('/stats/:userID', async (request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
-			const actions = request.body as { action: string; field: string; value: number }[];
+			const body = request.body as GameInput;
 
-			const currentStats = await serv.dbUsers.get<UserStats>(
-				'SELECT * FROM userStats WHERE userID = ?',
-				[userID]
-			);
-			if (!currentStats)
-				return reply.code(404).send({ success: false, message: 'User not found.' });
+			if (!body.playerID1 || !body.playerID2)
+				return reply.code(400).send({ message: 'Missing player IDs' });
 
-			const updates: { [key: string]: number } = {};
-			const validFields = [
-				'totalMatch',
-				'totalWins',
-				'longestMatch',
-				'shortestMatch',
-				'longuestPass',
-			];
+			const p1IsWinner = body.playerScore1 > body.playerScore2;
+			const p2IsWinner = body.playerScore2 > body.playerScore1;
 
-			for (const action of actions) {
-				if (!validFields.includes(action.field)) continue;
+			await Promise.all([
+				updateUserStats(serv, body.playerID1, p1IsWinner, body),
+				updateUserStats(serv, body.playerID2, p2IsWinner, body)
+			]);
 
-				switch (action.action) {
-					case 'increment': {
-						updates[action.field] = (currentStats[action.field] || 0) + action.value;
-						break;
-					}
-					case 'setIfGreater': {
-						if (action.value > (currentStats[action.field] || 0))
-							updates[action.field] = action.value;
-						break;
-					}
-					case 'setIfLess': {
-						const currentValue = currentStats[action.field];
-						if (
-							currentValue === undefined ||
-							currentValue === 0 ||
-							action.value < currentValue
-						)
-							updates[action.field] = action.value;
-						break;
-					}
-				}
-			}
+			return reply.code(200).send({
+				success: true,
+				message: 'Stats updated for both players.'
+			});
 
-			if (Object.keys(updates).length === 0)
-				return reply.code(200).send({ success: true, message: 'No stats were updated.' });
-
-			const setClauses = Object.keys(updates)
-				.map((key) => `${key} = ?`)
-				.join(', ');
-			const params = [...Object.values(updates), userID];
-			const query = `UPDATE userStats SET ${setClauses} WHERE userID = ?`;
-
-			const response = await serv.dbUsers.run(query, params);
-			if (!response.changes)
-				return reply.code(404).send({
-					success: false,
-					message: 'User not found',
-				});
-
-			return reply
-				.code(200)
-				.send({ success: true, message: 'User stats updated successfully.' });
 		} catch (error) {
-			serv.log.error(`Error updating user stats: ${error}`);
-			throw error;
+			serv.log.error(`[USERS] Error processing match stats: ${error}`);
+			if (error instanceof Error && error.message.includes('Stats not found')) {
+				return reply.code(404).send({ message: error.message });
+			}
+			return reply.code(500).send({ message: 'Internal Server Error' });
 		}
 	});
 
