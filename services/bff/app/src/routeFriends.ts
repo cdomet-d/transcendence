@@ -64,33 +64,33 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			return reply.code(503).send({ message: '[BFF] A backend service is currently unavailable.' });
 		}
 	});
-/*
+
 	serv.patch('/relation', async (request, reply) => {
 		try {
-			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			//const token = request.cookies.token;
+			//if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+//
+			//if (token) {
+			//	try {
+			//		const user = serv.jwt.verify(token) as JwtPayload;
+			//		if (typeof user !== 'object') throw new Error('Invalid token detected');
+			//	} catch (error) {
+			//		if (error instanceof Error && 'code' in error) {
+			//			if (
+			//				error.code === 'FST_JWT_BAD_REQUEST' ||
+			//				error.code === 'ERR_ASSERTION' ||
+			//				error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+			//			)
+			//				return reply.code(400).send({ code: error.code, message: error.message });
+			//			return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+			//		} else {
+			//			return reply.code(401).send({ message: 'Unknown error' });
+			//		}
+			//	}
+			//}
 
-			if (token) {
-				try {
-					const user = serv.jwt.verify(token) as JwtPayload;
-					if (typeof user !== 'object') throw new Error('Invalid token detected');
-				} catch (error) {
-					if (error instanceof Error && 'code' in error) {
-						if (
-							error.code === 'FST_JWT_BAD_REQUEST' ||
-							error.code === 'ERR_ASSERTION' ||
-							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-						)
-							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-					} else {
-						return reply.code(401).send({ message: 'Unknown error' });
-					}
-				}
-			}
-
-			const receiverID = request.user.userID;
-			const receiverUsername = request.user.username;
+			const receiverID = 5;
+			const receiverUsername = 'Sam';
 
 			const { username: senderRequestUsername } = request.body as { username: string };
 
@@ -100,11 +100,11 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			if (senderRequestUsername === receiverUsername)
 				return reply.code(400).send({ message: '[BFF] You cannot accept a friend request to yourself.' });
 
-			const senderRequestUserID = await fetchUserID(serv.log, senderRequestUsername, token);
+			const senderRequestUserID = await fetchUserID(serv.log, senderRequestUsername/* , token */);
 			if (!senderRequestUserID)
 				return reply.code(404).send({ message: `[BFF] User '${senderRequestUsername}' not found.` });
 
-			await acceptFriendRequest(serv.log, receiverID, senderRequestUserID, token);
+			await acceptFriendRequest(serv.log, receiverID, senderRequestUserID/* , token */);
 			return (reply
 				.code(200)
 				.send({ message: '[BFF] Friend request accepted.' }));
@@ -117,7 +117,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			serv.log.error(`[BFF] Error accepting friend request: ${error}`);
 			return reply.code(503).send({ message: '[BFF] A backend service is currently unavailable.' });
 		}
-	});
+	});/*
 
 	serv.delete('/relation', async (request, reply) => {
 		try {

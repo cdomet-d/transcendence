@@ -6,7 +6,7 @@ export async function createFriendRequest(log: any, senderID: number, friendID: 
 		response = await fetch(url, {
 			method: 'POST',
 			headers: {
-			//	'Cookie': `token=${token}`,
+				//	'Cookie': `token=${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({ senderID, friendID })
@@ -37,7 +37,7 @@ export async function createFriendRequest(log: any, senderID: number, friendID: 
 	return;
 }
 
-export async function acceptFriendRequest(log: any, senderRequestID: number, friendID: number, token: string): Promise<void> {
+export async function acceptFriendRequest(log: any, senderRequestID: number, friendID: number/* , token: string */): Promise<void> {
 	const url = 'http://friends:1616/relation';
 	let response: Response;
 
@@ -45,7 +45,7 @@ export async function acceptFriendRequest(log: any, senderRequestID: number, fri
 		response = await fetch(url, {
 			method: 'PATCH',
 			headers: {
-				'Cookie': `token=${token}`,
+				/* 'Cookie': `token=${token}`, */
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({ senderRequestID, friendID })

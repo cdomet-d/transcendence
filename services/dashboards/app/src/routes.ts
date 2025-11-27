@@ -134,7 +134,6 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				'tournamentID',
 				'nbPlayers',
 				'tournamentStatus',
-				'winnerID',
 			];
 			const keysToInsert = Object.keys(body).filter(key => validKeys.includes(key));
 
