@@ -6,7 +6,7 @@ import type { PongUI } from '../web-elements/game/game-ui.js';
 
 export interface gameRequest {
     userID: number;
-    gameID: number;
+    gameID: string;
     remote: boolean;
 }
 
