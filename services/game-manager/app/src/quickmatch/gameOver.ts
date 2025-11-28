@@ -42,7 +42,7 @@ async function postGameToDashboard(game: game) {
 		// TODO check response status ?
 		if (!response.ok) {
 			console.error(`[GM] Dashboard service failed with status: ${response.status}`);
-			// throw new Error(`Dashboard service failed with status ${response.status}`);
+			throw new Error(`Dashboard service failed with status ${response.status}`);
 		}
 	} catch (error) {
 		console.error(`[GM] Dashboard service (via route /game) is unreachable: ${error}`);
