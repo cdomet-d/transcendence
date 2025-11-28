@@ -269,19 +269,9 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			});
 
 		} catch (error) {
-			if (
-				error &&
-				typeof error === 'object' &&
-				'code' in error &&
-				(
-					(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' ||
-					(error as { code: string }).code === 'SQLITE_CONSTRAINT'
-				)
-			) {
-				return reply
-					.code(409)
-					.send({ success: false, message: '[AUTH] This username is already taken.' });
-			}
+			if (error && typeof error === 'object' && 'code' in error &&(
+				(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' || (error as { code: string }).code === 'SQLITE_CONSTRAINT'))
+				return reply.code(409).send({ success: false, message: '[AUTH] This username is already taken.' });
 			serv.log.error(`[AUTH] Error updating account: ${error}`);
 			throw error;
 		}

@@ -723,6 +723,7 @@ WHERE userID = 101;
 * status in db on login logout
 * sanitise input in back
 * GDPR: check profile photos and more
+* add schemas to route
 
 * envoyer les settings             ✅
 * supprimer ami                    ✅

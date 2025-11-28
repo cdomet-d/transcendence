@@ -1,18 +1,16 @@
 import type { FastifyInstance } from 'fastify';
 import type { UserProfileView, JwtPayload } from './bff.interface.js';
-import { fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches } from './bffUserProfile.service.js';
-//import { updatePassword, fetchUserDataAccount, updateUsername,  updateDefaultLang, deleteAccount, deleteUser  } from './bffAccount.service.js';
-//import { deleteFriendship } from './bffFriends.service.js'
+import { fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches, updateAuthSettings, updateUserProfile } from './bffUserProfile.service.js';
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
-    //get's profile + stats + game + friendslist
-    // userID -> userID of requested profile
-    // get big profile with username
-    // TODO : add tournaments
-    serv.get('/profile/:username', async (request, reply) => {
-        try {
-            const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+	//get's profile + stats + game + friendslist
+	// userID -> userID of requested profile
+	// get big profile with username
+	//error handled
+	serv.get('/profile/:username', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
 			if (token) {
 				try {
@@ -33,61 +31,63 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 					}
 				}
 			}
-			//}
+
 			const userB = request.user.userID;
 			const { username } = request.params as { username: string };
 
-            if (userB === undefined) {
-                serv.log.error('[BFF] Parameter missing');
-                return reply.code(400).send({
-                    message:
-                        '[BFF] Missing required query parameters: userA and userB are required.',
-                });
-            }
-            const combinedUserData = await buildTinyProfile(serv.log, userB, username, token);
+			if (userB === undefined) {
+				serv.log.error('[BFF] Parameter missing');
+				return reply.code(400).send({
+					message:
+						'[BFF] Missing required query parameters: userA and userB are required.',
+				});
+			}
+			const combinedUserData = await buildTinyProfile(serv.log, userB, username, token);
 
-            if (!combinedUserData)
-                return reply.code(404).send({ message: 'User profile data not found.' });
+			if (!combinedUserData)
+				return reply.code(404).send({ message: 'User profile data not found.' });
 
-            const [userData, userStats, friends, pending, recentMatches] = await Promise.all([
-                combinedUserData,
-                fetchUserStats(serv.log, Number(combinedUserData.userID), token),
-                fetchFriendships(serv.log, Number(combinedUserData.userID), 'friend', token),
-                fetchFriendships(serv.log, Number(combinedUserData.userID), 'pending', token),
-                processMatches(serv.log, Number(combinedUserData.userID), token),
-            ]);
+			const [userData, userStats, friends, pending, recentMatches] = await Promise.all([
+				combinedUserData,
+				fetchUserStats(serv.log, Number(combinedUserData.userID), token),
+				fetchFriendships(serv.log, Number(combinedUserData.userID), 'friend', token),
+				fetchFriendships(serv.log, Number(combinedUserData.userID), 'pending', token),
+				processMatches(serv.log, Number(combinedUserData.userID), token),
+			]);
 
-            if (!userData || !userStats)
-                return reply
-                    .code(404)
-                    .send({ message: '[BFF] Failed to retrieve essential user data.' });
+			if (!userData || !userStats)
+				return reply
+					.code(404)
+					.send({ message: '[BFF] Failed to retrieve essential user data.' });
 
-            const responseData: UserProfileView = {
-                userData: userData,
-                userStats: userStats,
-                friends: friends || [],
-                pending: pending || [],
-                matches: recentMatches || [],
-            };
+			const responseData: UserProfileView = {
+				userData: userData,
+				userStats: userStats,
+				friends: friends || [],
+				pending: pending || [],
+				matches: recentMatches || [],
+			};
 
 			return reply.code(200).send(responseData);
 
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
 				const customError = error as { code: number, message: string };
-				if (customError.code === 404) {
-					return (reply.code(404).send({ message: 'User profile data not found.' }));
-				}
+				if (customError.code === 404) return (reply.code(404).send({ message: 'User profile data not found.' }));
+				if (customError.code === 401) return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+				if (customError.code === 400) return reply.code(400).send({ code: error.code, message: 'Unauthaurized' });
+
 				serv.log.error(`[BFF] Error building user profile view: ${error}`);
 				throw (error);
 			}
 		}
 	});
 
-    serv.get('/tiny-profile/:username', async (request, reply) => {
-        try {
-            const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+	//error handled
+	serv.get('/tiny-profile/:username', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
 			if (token) {
 				try {
@@ -112,36 +112,38 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const { username: targetUsername } = request.params as { username: string };
 			const { userID: viewerUserID } = request.user as { userID: number };
 
-            if (!viewerUserID) return reply.code(401).send({ message: 'Unauthorized.' });
+			if (!viewerUserID) return reply.code(401).send({ message: 'Unauthorized.' });
 
-            const tinyProfile = await buildTinyProfile(
-                serv.log,
-                viewerUserID,
-                targetUsername,
-                token
-            );
+			const tinyProfile = await buildTinyProfile(
+				serv.log,
+				viewerUserID,
+				targetUsername,
+				token
+			);
 
-            if (!tinyProfile)
-                return reply.code(404).send({ message: 'User profile data not found.' });
+			if (!tinyProfile)
+				return reply.code(404).send({ message: 'User profile data not found.' });
 
 			return (reply.code(200).send(tinyProfile));
 
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
 				const customError = error as { code: number, message: string };
-				if (customError.code === 404) {
-					return (reply.code(404).send({ message: 'User profile data not found.' }));
-				}
+				if (customError.code === 404) return (reply.code(404).send({ message: 'User profile data not found.' }));
+				if (customError.code === 400) return (reply.code(400).send({ message: 'Unauthorized' }));
+				if (customError.code === 401) return (reply.code(401).send({ message: 'Unauthorized' }));
+
 				serv.log.error(`[BFF] Error building tiny profile: ${error}`);
 				throw error;
 			}
 		}
 	});
 
-    serv.get('/search', async (request, reply) => {
-        try {
-            const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+	//error handled
+	serv.get('/search', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
 			if (token) {
 				try {
@@ -173,20 +175,21 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
 				const customError = error as { code: number, message: string };
-				if (customError.code === 400)
-					return (reply.code(400).send({ message: 'Could not search.' }));
-				if (customError.code === 401)
-					return (reply.code(401).send({ message: 'Could not search.' }));
-				serv.log.error(`[BFF] Error searching users: ${error}`);
-				throw (error);
+
+				if (customError.code === 400) return (reply.code(400).send({ message: 'Unauthorized' }));
+				if (customError.code === 401) return (reply.code(401).send({ message: 'Unauthorized' }));
 			}
+			serv.log.error(`[BFF] Error searching users: ${error}`);
+			throw (error);
+
 		}
 	});
 
-    serv.get('/leaderboard', async (request, reply) => {
-        try {
-            const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+	//error handled
+	serv.get('/leaderboard', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
 			if (token) {
 				try {
@@ -212,12 +215,19 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			return (reply.code(200).send(leaderboard));
 
 		} catch (error) {
-			serv.log.error(`[BFF] Error searching users: ${error}`);
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number, message: string };
+
+				if (customError.code === 400) return (reply.code(400).send({ message: 'Unauthorized' }));
+				if (customError.code === 401) return (reply.code(401).send({ message: 'Unauthorized' }));
+			}
+			serv.log.error(`[BFF] Error searching leaderboard: ${error}`);
 			throw (error);
 
 		}
 	});
 
+	//error handled
 	serv.patch('/settings', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
@@ -277,14 +287,10 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				if (typeof error === 'object' && error !== null && 'code' in error) {
 					const customError = error as { code: number, message: string };
 
-					if (customError.code === 409)
-						return reply.code(409).send({ message: customError.message || '[BFF] Conflict error. Username taken' });
-
-					if (customError.code === 404)
-						return reply.code(404).send({ message: customError.message || '[BFF] User/account not found.' });
-
-					if (customError.code === 400)
-						return reply.code(400).send({ message: customError.message || '[BFF] Bad Request.' });
+					if (customError.code === 409) return reply.code(409).send({ message: customError.message || '[BFF] Conflict error. Username taken' });
+					if (customError.code === 404) return reply.code(404).send({ message: customError.message || '[BFF] User/account not found.' });
+					if (customError.code === 400) return reply.code(400).send({ message: customError.message || '[BFF] Bad Request.' });
+					if (customError.code === 401) return reply.code(401).send({ message: customError.message || '[BFF] Unauthorized' });
 				}
 				throw error;
 			}
@@ -293,4 +299,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			throw error;
 		}
 	});
+
+
+	//TODO : endpoint friendlist pending
+	// get-pending-relation
 }

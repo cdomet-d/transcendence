@@ -3,6 +3,7 @@ import type {
 	userData, UserIDResponse, UserProfileUpdates
 } from "./bff.interface.js";
 
+//error handled
 export async function buildTinyProfile(log: any, viewerUserID: number, targetUsername: string, token: string): Promise<userData> {
 	try {
 		const targetUserID = await fetchUserID(log, targetUsername, token);
@@ -41,11 +42,8 @@ export async function buildTinyProfile(log: any, viewerUserID: number, targetUse
 			if (customError.code === 404) throw { code: 404, message: customError.message || '[BFF] User not found.' };
 			if (customError.code === 400) throw { code: 400, message: customError.message || '[BFF] Unauthorized' };
 			if (customError.code === 401) throw { code: 401, message: customError.message || '[BFF] Unauthorized' };
-
-			throw (error);
 		}
-		//TODO fix this
-		return;
+		throw (error);
 	}
 }
 
@@ -94,7 +92,7 @@ export async function searchBar(log: any, username: string, token: string): Prom
 	return (body.profiles);
 }
 
-//TODO handle error 404 with a throw 404 and catch in route
+//error handled
 export async function fetchUserData(log: any, userID: number, token: string): Promise<userData | null> {
 	const url = `http://users:2626/${userID}`;
 	let response: Response;
@@ -188,7 +186,7 @@ export async function fetchProfileView(log: any, userID: number, targetUserID: n
 	return (friendshipData.status);
 }
 
-//TODO handle error 404 with a throw 404 and catch in route
+//error handled
 export async function fetchUserID(log: any, username: string, token: string): Promise<number | null> {
 	const url = `http://users:2626/userID/${username}`;
 
@@ -237,7 +235,7 @@ export async function fetchUserID(log: any, username: string, token: string): Pr
 	return body.response.userID;
 }
 
-//TODO handle error 404 with a throw 404 and catch in route
+//error handled
 export async function fetchUserStats(log: any, userID: number, token: string): Promise<userStats | null> {
 	const url = `http://users:2626/stats/${userID}`;
 	let response: Response;
@@ -282,7 +280,7 @@ export async function fetchUserStats(log: any, userID: number, token: string): P
 
 //The 'since' in the friendlist will store the friendship creation data, not the creation of the profile of the friend
 // Make a issue on github if you'd rather it to be the creation of the friend's profile
-
+//error handled
 export async function fetchFriendships(log: any, userID: number, status: FriendshipStatus, token: string): Promise<userData[]> {
 	const url = `http://friends:1616/friendlist?userID=${userID}`;
 	let response: Response;
@@ -311,9 +309,6 @@ export async function fetchFriendships(log: any, userID: number, status: Friends
 		const errorBody = await response.json() as { message: string };
 		throw { code: 401, message: errorBody.message || '[BFF] Could not friendlist.' };
 	}
-
-	if (response.status === 404)
-		return [];
 
 	if (!response.ok) {
 		log.error(`[BFF] Friends service failed with status ${response.status}`);
@@ -346,11 +341,23 @@ export async function fetchFriendships(log: any, userID: number, status: Friends
 				const customError = error as { code: number, message: string };
 				if (customError.code === 404) {
 					const errorBody = await response.json() as { message: string };
-					throw { code: 401, message: errorBody.message || '[BFF] Could not friendlist.' };
+					throw { code: 404, message: errorBody.message || '[BFF] Could not friendlist.' };
+				}
+
+				if (response.status === 400) {
+					log.warn(`[BFF] Auth service validation error`);
+					const errorBody = await response.json() as { message: string };
+					throw { code: 400, message: errorBody.message || '[BFF] Unauthorized.' };
+				}
+
+				if (response.status === 401) {
+					log.warn(`[BFF] Auth service validation error`);
+					const errorBody = await response.json() as { message: string };
+					throw { code: 401, message: errorBody.message || '[BFF] Unauthorized.' };
 				}
 
 				log.warn(`[BFF] Could not fetch profile for user ${friendship.friendID}`);
-				return null;
+				return (null);
 			}
 		}
 	});
@@ -360,7 +367,7 @@ export async function fetchFriendships(log: any, userID: number, status: Friends
 	return profiles.filter((p): p is userData => p !== null);
 }
 
-//TODO handle error 404 with a throw 404 and catch in route
+//error handled
 async function fetchMatches(log: any, userID: number, token: string): Promise<RawMatches[]> {
 	const url = `http://dashboard:1515/games/${userID}`;
 	let response: Response;
@@ -401,6 +408,7 @@ async function fetchMatches(log: any, userID: number, token: string): Promise<Ra
 	return (response.json() as Promise<RawMatches[]>);
 }
 
+//error handled
 async function fetchUsernames(log: any, userIDs: number[], token: string): Promise<Map<number, string>> {
 	if (userIDs.length === 0) return new Map();
 
@@ -450,6 +458,7 @@ async function fetchUsernames(log: any, userIDs: number[], token: string): Promi
 	return (usernameMap);
 }
 
+//error handled
 export async function processMatches(log: any, userID: number, token: string): Promise<Matches[]> {
 	try {
 		const rawMatches = await fetchMatches(log, userID, token);
@@ -498,8 +507,25 @@ export async function processMatches(log: any, userID: number, token: string): P
 
 		return (processedMatches);
 	} catch (error) {
-		throw (error);
+		if (typeof error === 'object' && error !== null && 'code' in error) {
+			const customError = error as { code: number, message: string };
+			if (customError.code === 404) {
+				log.warn(`[BFF] Could no find user`);
+				throw { code: 404, message: '[BFF] Could not find user.' };
+			}
 
+			if (customError.code === 400) {
+				log.warn(`[BFF] Auth service validation error`);
+				throw { code: 400, message: '[BFF] Unauthorized.' };
+			}
+
+			if (customError.code === 401) {
+				log.warn(`[BFF] Auth service validation error`);
+				throw { code: 401, message: '[BFF] Unauthorized.' };
+			}
+
+		}
+		throw (error);
 	}
 }
 
@@ -509,7 +535,7 @@ function formatDuration(seconds: number): string {
 	return (`${mins}m ${secs}s`);
 }
 
-//TODO handle error with a throw and catch in route
+//error handled
 export async function fetchLeaderboard(log: any, token: string): Promise<userData[]> {
 	const url = `http://users:2626/leaderboard`;
 	let response: Response;
@@ -554,7 +580,7 @@ export async function fetchLeaderboard(log: any, token: string): Promise<userDat
 	return (body.profiles);
 }
 
-//error handling done
+//error handled
 export async function updateUserProfile(log: any, userID: number, updates: UserProfileUpdates, token: string): Promise<void> {
 	const url = `http://users:2626/${userID}`;
 
@@ -582,9 +608,9 @@ export async function updateUserProfile(log: any, userID: number, updates: UserP
 	if (response.status === 401) {
 		log.warn(`[BFF] User service validation error for user ${userID}`);
 		const errorBody = await response.json() as { message: string };
-		throw { code: 400, message: errorBody.message || '[BFF] Could not change settings.' };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not change settings.' };
 	}
-	if (response.status === 401) {
+	if (response.status === 400) {
 		log.warn(`[BFF] User service validation error for user ${userID}`);
 		const errorBody = await response.json() as { message: string };
 		throw { code: 400, message: errorBody.message || '[BFF] Could not change settings.' };
@@ -636,10 +662,10 @@ export async function updateAuthSettings(log: any, userID: number, updates: User
 	if (response.status === 401) {
 		log.warn(`[BFF] Auth service validation error for user ${userID}`);
 		const errorBody = await response.json() as { message: string };
-		throw { code: 400, message: errorBody.message || '[BFF] Could not change settings.' };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not change settings.' };
 	}
 
-	if (response.status === 401) {
+	if (response.status === 404) {
 		log.warn(`[BFF] Account not found for update: ${userID}`);
 		const errorBody = await response.json() as { message: string };
 		throw { code: 404, message: errorBody.message || '[BFF] User not found.' };
