@@ -1,5 +1,9 @@
 import { tournament } from './web-elements/default-values.js';
-import { buildUserProfile, userDataFromAPIRes } from './api-responses/user-responses.js';
+import {
+    buildUserProfile,
+    userArrayFromAPIRes,
+    userDataFromAPIRes,
+} from './api-responses/user-responses.js';
 import { createForm } from './web-elements/forms/helpers.js';
 import { createHeading, createNoResult } from './web-elements/typography/helpers.js';
 import { createLeaderboard } from './web-elements/statistics/leaderboard.js';
@@ -15,7 +19,7 @@ import {
 import { main } from './web-elements/navigation/default-menus.js';
 import { pong } from './pong/pong.js';
 import { PongUI } from './web-elements/game/game-ui.js';
-import { errorMessageFromException, redirectOnError } from './error.js';
+import { errorMessageFromException, errorMessageFromResponse, redirectOnError } from './error.js';
 import { TournamentBrackets } from './web-elements/game/tournament.js';
 import { type Match } from 'path-to-regexp';
 import { type TabData } from './web-elements/types-interfaces.js';
@@ -103,13 +107,29 @@ export function renderAuth() {
     updatePageTitle('Login | Register');
 }
 
-export function renderLeaderboard() {
+export async function renderLeaderboard() {
     console.log('renderLeaderboard');
     prepareLayout(document.body.layoutInstance, 'leaderboard');
-    document.body.layoutInstance!.appendAndCache(
-        createHeading('1', 'Leaderboard'),
-        createLeaderboard([]),
-    );
+
+    const url = 'https://localhost:8443/api/bff/leaderboard';
+
+    //TODO: crashes if user is not registered
+    try {
+        const rawRes = await fetch(url);
+        if (rawRes.status === 401)
+            return redirectOnError('/auth', 'You must be registered to see this page');
+        if (!rawRes.ok) throw await errorMessageFromResponse(rawRes);
+
+        const res = await rawRes.json();
+        console.log(res);
+        document.body.layoutInstance!.appendAndCache(
+            createHeading('1', 'Leaderboard'),
+            createLeaderboard(userArrayFromAPIRes(res)),
+        );
+    } catch (error) {
+        redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
+    }
+
     updatePageTitle('Leaderboard');
 }
 
@@ -126,7 +146,7 @@ export async function renderSelf() {
         buildUserProfile(await fetch(url));
         updatePageTitle(status.username!);
     } catch (error) {
-        console.error(error);
+        redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
     }
 }
 
@@ -144,7 +164,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
             buildUserProfile(await fetch(url));
             updatePageTitle(login);
         } catch (error) {
-            console.error(error);
+            redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
         }
     } else renderNotFound();
 }

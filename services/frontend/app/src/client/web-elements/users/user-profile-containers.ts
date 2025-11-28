@@ -1,4 +1,4 @@
-import { createUserCardSocial } from './profile-helpers.js';
+import { createUserCardSocial, createUserInline } from './profile-helpers.js';
 import type { TabData, UserData } from '../types-interfaces.js';
 import { UserProfile } from './profile.js';
 import { TabContainer } from '../navigation/tabs.js';
@@ -56,6 +56,30 @@ if (!customElements.get('user-masonery')) {
     customElements.define('user-masonery', UserMasonery, { extends: 'div' });
 }
 
+export class UserList extends HTMLDivElement {
+    constructor() {
+        super();
+    }
+
+    setUsers(users: UserData[]) {
+        users.forEach((el) => {
+            this.append(createUserInline(el));
+        });
+    }
+
+    connectedCallback() {
+        this.render();
+    }
+
+    render() {
+        this.classList.add('grid', 'matches', 'grid-flow-rows', 'gap-xs', 'pad-s', 'h-full', 'w-full');
+    }
+}
+
+if (!customElements.get('user-list')) {
+    customElements.define('user-list', UserList, { extends: 'div' });
+}
+
 export class ProfilePage extends HTMLDivElement {
     #userProfile: UserProfile;
     #userTabs: TabContainer;
@@ -75,7 +99,7 @@ export class ProfilePage extends HTMLDivElement {
 	
     If not, fails silently (for now, maybe I'll add an error management later)  */
     set panelContent(tabData: TabData | null) {
-		if (!tabData) return;
+        if (!tabData) return;
         this.#userTabs.populatePanels(tabData);
     }
 

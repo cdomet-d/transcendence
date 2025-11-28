@@ -1,24 +1,24 @@
-import { createMatchHistory, MatchHistory } from './matches.js';
-import type { MatchOutcome } from '../types-interfaces.js';
+import type {  UserData } from '../types-interfaces.js';
+import { UserList } from '../users/user-profile-containers.js';
 
 export class Leaderboard extends HTMLDivElement {
-    #data: MatchOutcome[];
-    #matches: MatchHistory;
+    #data: UserData[];
+    #users: UserList;
     constructor() {
         super();
         this.#data = [];
-        this.#matches = createMatchHistory(this.#data);
-        this.append(this.#matches);
+        this.#users = createUserList(this.#data);
+        this.append(this.#users);
     }
 
-    set data(newData: MatchOutcome[]) {
+    set data(newData: UserData[]) {
         this.#data = newData;
     }
 
     update() {
-        this.#matches.remove();
-        this.#matches = createMatchHistory(this.#data);
-        this.append(this.#matches);
+        this.#users.remove();
+        this.#users = createUserList(this.#data);
+        this.append(this.#users);
     }
 
     connectedCallback() {
@@ -36,8 +36,16 @@ if (!customElements.get('leader-board')) {
     customElements.define('leader-board', Leaderboard, { extends: 'div' });
 }
 
-export function createLeaderboard(data: MatchOutcome[]): Leaderboard {
+export function createUserList(users: UserData[]): UserList {
+    const el = document.createElement('div', { is: 'user-list' }) as UserList;
+    el.setUsers(users);
+    return el;
+}
+
+
+export function createLeaderboard(data: UserData[]): Leaderboard {
     const el = document.createElement('div', { is: 'leader-board' }) as Leaderboard;
     el.data = data;
     return el;
 }
+
