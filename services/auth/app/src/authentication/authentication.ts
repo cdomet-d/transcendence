@@ -222,12 +222,20 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			const { userID } = request.params as { userID: string };
 			const body = request.body as { [key: string]: any };
 
-			const validKeys = ['hashedPassword', 'username'];
+			const dbUpdates: { [key: string]: any } = {};
 
-			const keysToUpdate = Object.keys(body).filter(
-				(key) => validKeys.includes(key) && body[key] !== ''
-			);
+			if (body.username && body.username !== '')
+				dbUpdates.username = body.username;
 
+			if (body.password && body.password !== '') {
+				const hashedPassword = await bcrypt.hash(body.password, 12);
+				dbUpdates.hashedPassword = hashedPassword;
+			}
+
+			if (body.defaultLang && body.defaultLang !== '')
+				dbUpdates.defaultLang = body.defaultLang;
+
+			const keysToUpdate = Object.keys(dbUpdates);
 			if (keysToUpdate.length === 0) {
 				return reply.code(400).send({
 					success: false,
@@ -236,7 +244,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			}
 
 			const setClauses = keysToUpdate.map((key) => `${key} = ?`).join(', ');
-			const params = keysToUpdate.map((key) => body[key]);
+			const params = keysToUpdate.map((key) => dbUpdates[key]);
 			params.push(userID);
 
 			const query = `
@@ -244,6 +252,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			`;
 
 			const response = await serv.dbAuth.run(query, params);
+
 			if (response.changes === 0) {
 				return reply.code(404).send({
 					success: false,
@@ -255,16 +264,21 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 				success: true,
 				message: '[AUTH] Account updated successfully!',
 			});
+
 		} catch (error) {
 			if (
 				error &&
 				typeof error === 'object' &&
 				'code' in error &&
-				(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE'
-			)
+				(
+					(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' ||
+					(error as { code: string }).code === 'SQLITE_CONSTRAINT'
+				)
+			) {
 				return reply
 					.code(409)
 					.send({ success: false, message: '[AUTH] This username is already taken.' });
+			}
 			serv.log.error(`[AUTH] Error updating account: ${error}`);
 			throw error;
 		}
