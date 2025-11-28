@@ -8,6 +8,7 @@ import { search } from './default-forms.js';
 import { UserInline } from '../users/profile.js';
 import type { UserData } from '../types-interfaces.js';
 import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
+import { createNoResult } from '../typography/helpers.js';
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -195,7 +196,7 @@ export class Searchbar extends BaseForm {
         this.#results.classList.remove('hidden');
         this.#results.removeAttribute('hidden');
         if (res.length < 1)
-            this.#results.append(document.createElement('div', { is: 'no-results' }) as NoResults);
+            this.#results.append(createNoResult('light', 'ilarge'));
         res.forEach((user) => this.addUser(user));
     }
 }

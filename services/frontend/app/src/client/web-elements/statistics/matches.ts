@@ -113,8 +113,6 @@ export class InlineMatch extends HTMLDivElement {
         return this;
     }
 
-    // https://localhost:8443/user/Coralie
-    // https://localhost:8443/user/Coralie
     connectedCallback() {
         this.render();
     }
@@ -123,7 +121,7 @@ export class InlineMatch extends HTMLDivElement {
      * Renders the InlineMatch element with default styles.
      */
     render() {
-        this.classList.add('box-border', 'grid', 'grid-cols-6', 'h-m', 'text-center', 'pad-s');
+        this.classList.add('box-border', 'grid', 'grid-cols-6', 'h-m', 'text-center');
     }
 }
 

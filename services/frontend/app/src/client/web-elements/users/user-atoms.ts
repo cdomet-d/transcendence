@@ -36,7 +36,7 @@ export class Username extends HTMLDivElement {
      */
     set name(val: string) {
         const link: navigationLinksData = {
-			styleButton: false,
+            styleButton: false,
             img: null,
             datalink: val,
             href: `/user/${val}`,
@@ -44,7 +44,7 @@ export class Username extends HTMLDivElement {
             title: val,
         };
         this.#link.info = link;
-		this.#link.render();
+        this.#link.render();
     }
 
     /**
@@ -172,7 +172,8 @@ export class Biography extends HTMLParagraphElement {
     render() {
         this.id = 'biography';
         this.className =
-            'box-border max-h[6.5rem] leading-[1rem] biography place-self-stretch bg thin brdr light';
+            'box-border max-h[6.5rem] leading-[1rem] biography \
+			 place-self-stretch bg thin brdr light';
     }
 }
 

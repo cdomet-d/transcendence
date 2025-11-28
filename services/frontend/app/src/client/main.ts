@@ -2,7 +2,7 @@ import { loadHistoryLocation } from './event-listeners.js';
 import { Layout } from './web-elements/layouts/layout.js';
 import { PageHeader } from './web-elements/navigation/header.js';
 import { Router, routes } from './router.js';
-import { createErrorFeedback } from './error.js';
+import { createErrorFeedback, redirectOnError } from './error.js';
 
 // import { pong } from './game/pong.js';
 // import { addLanguageEvents } from './language/languageEvents.js';
@@ -36,7 +36,7 @@ export async function userStatus(): Promise<userStatusInfo> {
     } catch (error) {
         let mess = 'Something when wrong';
         if (error instanceof Error) mess = error.message;
-		createErrorFeedback(mess);
+		redirectOnError('/', mess);
         return { auth: false };
     }
 }

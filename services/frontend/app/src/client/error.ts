@@ -1,5 +1,6 @@
 import type { Feedback } from './web-elements/types-interfaces';
 import { router } from './main';
+import { DOMReady } from './router';
 
 export class UIFeedback extends HTMLSpanElement {
     constructor() {
@@ -41,12 +42,13 @@ export async function responseErrorMessage(response: Response): Promise<Error> {
 
 export function createErrorFeedback(message: string) {
     const err = document.createElement('span', { is: 'ui-feedback' }) as UIFeedback;
-    document.body.layoutInstance?.append(err);
+    document.body.layoutInstance?.appendAndCache(err);
     err.content = message;
     err.type = 'error';
 }
 
-export function redirectOnError(route: string, message: string) {
+export async function redirectOnError(route: string, message: string) {
     router.loadRoute(route, true);
+	await DOMReady();
 	createErrorFeedback(message);
 }

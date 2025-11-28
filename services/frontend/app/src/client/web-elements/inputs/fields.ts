@@ -35,6 +35,7 @@ export class CustomInput extends HTMLInputElement {
     }
 
     render() {
+		this.autocomplete = 'off';
         this.className = 'brdr w-full';
     }
 

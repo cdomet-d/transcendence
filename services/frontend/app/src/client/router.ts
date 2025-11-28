@@ -20,6 +20,11 @@ export const routes: routeInterface[] = [
     { path: '/game', callback: page.renderGame },
 ];
 
+export async function DOMReady(): Promise<void> {
+	await new Promise((resolve) => requestAnimationFrame(resolve));
+	await new Promise((resolve) => requestAnimationFrame(resolve));
+}
+
 export class Router {
     /*                            PROPERTIES                                  */
     _routes: Array<routeInterface>;
@@ -28,7 +33,7 @@ export class Router {
     /*                           CONSTRUCTORS                                 */
     constructor(routes: routeInterface[]) {
         this._routes = routes;
-		this.#stepBefore = '';
+        this.#stepBefore = '';
     }
 
     /*                             METHODS                                    */

@@ -240,8 +240,6 @@
 				var(--gradient2),
 				var(--gradient3),
 				var(--gradient4) 100%);
-		background-repeat: no-repeat;
-		overflow: hidden;
 	}
 
 	p,
@@ -648,7 +646,7 @@
 	}
 
 	.tiny-shadow {
-		text-shadow: -1px -1px var(--orange), -2px -1px var(--orange),
+		text-shadow: -1px -1px var(--orange), -2px -1px var(--orange);
 	}
 
 	.button-shadow {
@@ -670,18 +668,17 @@
 
 	.masonery {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(100px, max-content));
+		grid-template-columns: repeat(auto-fill, 11.25rem);
 		place-items: start;
 	}
 
 	.matches {
 		display: grid;
-		grid-template-rows: repeat(auto-fit, minmax(24px, max-content));
+		grid-template-rows: repeat(auto-fill, var(--m));
 	}
 
 	.biography {
 		display: -webkit-box;
-		-webkit-box-orient: vertical;
 		-webkit-line-clamp: 6;
 		line-clamp: 6;
 		overflow: hidden;

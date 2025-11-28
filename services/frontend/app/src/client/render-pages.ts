@@ -7,7 +7,11 @@ import { createMenu } from './web-elements/navigation/menu-helpers.js';
 import { createTabs } from './web-elements/navigation/tabs-helpers.js';
 import { farm, ocean, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
 import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
-import { localPong, remotePong, userSettingsForm } from './web-elements/forms/default-forms.js';
+import {
+    customizeUserSettingsForm,
+    localPong,
+    remotePong,
+} from './web-elements/forms/default-forms.js';
 import { main } from './web-elements/navigation/default-menus.js';
 import { pong } from './pong/pong.js';
 import { PongUI } from './web-elements/game/game-ui.js';
@@ -32,21 +36,6 @@ const layoutPerPage: { [key: string]: string } = {
     userSettings: 'page-w-header',
 };
 
-const authOptions: TabData[] = [
-	{
-		id: 'login-tab',
-		content: 'Login',
-		default: true,
-		panelContent: createForm('login-form', loginForm),
-	},
-	{
-		id: 'registration-tab',
-		content: 'Register',
-		default: false,
-		panelContent: createForm('registration-form', registrationForm),
-	},
-];
-
 function updatePageTitle(newPage: string) {
     document.title = `🌻 BigT - ${newPage} 🌻`;
 }
@@ -58,7 +47,7 @@ function createWrapper(id: string): HTMLDivElement {
     return el;
 }
 
-function prepareLayout(curLayout: Layout | undefined, page: string) {
+async function prepareLayout(curLayout: Layout | undefined, page: string) {
     if (!layoutPerPage[page]) throw new Error('Requested page is undefined');
     if (!curLayout)
         throw new Error("Something is wrong with the document's layout - page cannot be charged");
@@ -95,6 +84,20 @@ export function renderAuth() {
     prepareLayout(document.body.layoutInstance, 'auth');
     const wrapper = createWrapper('authsettings');
 
+    const authOptions: TabData[] = [
+        {
+            id: 'login-tab',
+            content: 'Login',
+            default: true,
+            panelContent: createForm('login-form', loginForm),
+        },
+        {
+            id: 'registration-tab',
+            content: 'Register',
+            default: false,
+            panelContent: createForm('registration-form', registrationForm),
+        },
+    ];
     wrapper.append(createTabs(authOptions));
     document.body.layoutInstance!.appendAndCache(wrapper);
     updatePageTitle('Login | Register');
@@ -131,7 +134,8 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
     console.log('renderProfile');
     if (param && param.params.login && typeof param.params.login === 'string') {
         const status = await userStatus();
-        if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
+        if (!status.auth)
+            return redirectOnError('/auth', 'You must be registered to see this page');
 
         const login = param.params.login;
         const url = `https://localhost:8443/api/bff/profile/${login}`;
@@ -156,11 +160,11 @@ export async function renderSettings() {
         const raw = await fetch(url);
         const res = await raw.json();
         prepareLayout(document.body.layoutInstance, 'userSettings');
-        document.body.layoutInstance?.appendAndCache(
-            createForm('settings-form', userSettingsForm, userDataFromAPIRes(res)),
-        );
+        const user = userDataFromAPIRes(res);
+        const form = customizeUserSettingsForm(user);
+        document.body.layoutInstance?.appendAndCache(createForm('settings-form', form, user));
     } catch (error) {
-        redirectOnError(router.stepBefore, errorMessageFromException(error));
+        redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
     }
     updatePageTitle(status.username + 'Settings');
 }
