@@ -1,5 +1,5 @@
 import type {
-	UsernameResponse, FriendshipStatus, Friendship, ProfileDataBatch, ProfileDataBatchResponse, ProfileView, userStats, StatsResponse, Matches, RawMatches,
+	UsernameResponse, FriendshipStatus, Friendship, ProfileView, userStats, StatsResponse, Matches, RawMatches,
 	userData, UserIDResponse, UserProfileUpdates
 } from "./bff.interface.js";
 
@@ -36,6 +36,7 @@ export async function buildTinyProfile(log: any, viewerUserID: number, targetUse
 	};
 }
 
+//TODO handle error
 export async function searchBar(log: any, username: string, token: string): Promise<userData[]> {
 	const url = `http://users:2626/search?name=${username}`;
 	let response: Response;
@@ -68,6 +69,7 @@ export async function searchBar(log: any, username: string, token: string): Prom
 	return body.profiles;
 }
 
+//TODO handle error 404 with a throw 4041 and catch in route
 export async function fetchUserData(log: any, userID: number, token: string): Promise<userData | null> {
 	const url = `http://users:2626/${userID}`;
 	let response: Response;
@@ -104,6 +106,7 @@ export async function fetchUserData(log: any, userID: number, token: string): Pr
 
 	return body.userData;
 }
+
 
 export async function fetchProfileView(log: any, userID: number, targetUserID: number, token: string): Promise<ProfileView> {
 

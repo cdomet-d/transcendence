@@ -32,6 +32,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			try {
 				const user = serv.jwt.verify(token) as JwtPayload;
 				if (typeof user !== 'object') throw new Error('Invalid token detected');
+				request.user = user;
 				return reply.code(200).send({ username: user.username, userID: user.userID });
 			} catch (error) {
 				if (error instanceof Error && 'code' in error) {
@@ -166,6 +167,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -204,6 +206,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
