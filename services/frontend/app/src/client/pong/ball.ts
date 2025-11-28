@@ -67,8 +67,8 @@ export function paddleCollision(
     game.ball.x += game.ball.dx * TIME_STEP * t + 1 * n.x;
     game.ball.y += game.ball.dy * TIME_STEP * t + 1 * n.y;
     updateVelocity(game, paddle, n.x);
-    const remainingStep: number = 1 - t;
-    game.ball.x += game.ball.dx * TIME_STEP * remainingStep;
-    game.ball.y += game.ball.dy * TIME_STEP * remainingStep;
+    // const remainingStep: number = 1 - t;
+    // game.ball.x += game.ball.dx * TIME_STEP * remainingStep;
+    // game.ball.y += game.ball.dy * TIME_STEP * remainingStep;
     return true;
 }
