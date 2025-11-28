@@ -3,6 +3,7 @@ import Fastify from 'fastify';
 import type { FastifyInstance } from 'fastify';
 import cookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
+import natsConnector from './nats.js';
 
 import { routeFriend } from './routes.js';
 import dbConnector from "./db.js";
@@ -16,6 +17,7 @@ import dbConnector from "./db.js";
 		process.exit(1);
 	}
 })();
+
 
 //init server
 export async function init(): Promise<FastifyInstance> {
@@ -33,6 +35,7 @@ function addPlugins(serv: FastifyInstance) {
 	serv.register(cookie);
 	serv.register(dbConnector);
 	serv.register(routeFriend);
+	serv.register(natsConnector);
 }
 
 //run server

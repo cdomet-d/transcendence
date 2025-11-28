@@ -36,7 +36,6 @@ function addPlugins(serv: FastifyInstance) {
 	serv.register(bffAccessibilityRoutes);
 	serv.register(bffUsersRoutes);
 	serv.register(bffFriendRoutes);
-
 }
 
 //run server

@@ -617,7 +617,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					userStats s ON p.userID = s.userID
 				WHERE
 					p.userID = ?
-			`;
+			`;            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
 
 			const userData = await serv.dbUsers.get(query, [userID]);
 			if (!userData) {

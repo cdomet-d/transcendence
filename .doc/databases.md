@@ -717,8 +717,8 @@ WHERE userID = 101;
 
 
 * servir traduction      
-* envoyer les settings
 
+* envoyer les settings             ✅
 * supprimer ami                    ✅
 * envoyer demande d'ami            ✅
 * accepter demande d'ami           ✅
