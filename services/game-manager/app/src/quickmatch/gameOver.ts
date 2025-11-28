@@ -4,7 +4,7 @@ import type { game } from '../manager.interface.js';
 export function gameOver(payload: string) {
 	const game: game = JSON.parse(payload);
 	postGameToDashboard(game);
-	postGameToUsers(game);
+	patchGameToUsers(game);
 	// showWinnerScreen();
 }
 
@@ -59,7 +59,7 @@ interface usersReqBody {
 	duration: number;
 }
 
-async function postGameToUsers(game: game) {
+async function patchGameToUsers(game: game) {
 	const url = `http://users:2626/stats`;
 	const reqBody: usersReqBody = {
 		player1: game.users![0]!.userID!,
