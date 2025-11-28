@@ -24,7 +24,7 @@ import { PongUI } from './web-elements/game/game-ui.js';
 import { userStatus } from './main.js';
 import { router } from './main.js';
 import { createErrorFeedback } from './web-elements/event-elements/error.js';
-import { wsConnect } from './lobby/wsConnect.js';
+import { wsConnect } from './lobby/wsConnect.front.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -257,6 +257,7 @@ export function renderGame(param?: Match<Partial<Record<string, string | string[
     // pong({ userID: 1, gameID: 1, remote: false }, court.ctx, ui);
     if (gameRequest === undefined) {
         console.log("GameRequest =>", gameRequest);
+        // TODO Show explicit error in UI
         return;
     }
     pong(gameRequest!, court.ctx, ui);

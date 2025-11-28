@@ -1,4 +1,4 @@
-import { wsHandler } from '../lobby/wsHandler.js'
+import { wsHandler } from '../lobby/wsHandler.gm.js'
 import type { FastifyPluginCallback } from 'fastify';
 
 const wsRoute: FastifyPluginCallback = function (serv, options, done) {

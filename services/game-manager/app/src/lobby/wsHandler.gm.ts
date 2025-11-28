@@ -1,6 +1,6 @@
 import type { lobbyInfo } from '../manager.interface.js';
 import { processGameRequest } from '../manager.js';
-import { wsClientsMap, addUserToLobby, createLobby } from './lobby.js';
+import { wsClientsMap, addUserToLobby, createLobby } from './lobby.gm.js';
 import type { FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 
@@ -16,7 +16,6 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 				
 				userID = payload.userID;
 				console.log("UID: ", userID);
-				// userID = getUniqueUserID(); // use JWT payload
 				
 				if (!wsClientsMap.has(userID!)) {
 					wsClientsMap.set(userID!, socket);
@@ -31,7 +30,6 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 				}
 			} else if (data.event === "GAME_REQUEST") {
 		        console.log("4");
-				console.log("REMOTE OU BIEN", payload.remote);
 				processGameRequest(payload);
 			}
 		} catch (error) {

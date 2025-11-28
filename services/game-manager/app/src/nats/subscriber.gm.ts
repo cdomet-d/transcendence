@@ -1,9 +1,9 @@
 import { StringCodec } from 'nats';
-import { wsSend } from '../lobby/wsHandler.js';
+import { wsSend } from '../lobby/wsHandler.gm.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
-import { natsConnect } from './publisher.js';
+import { natsConnect } from './publisher.gm.js';
 import type { game, gameRequest } from '../manager.interface.js';
-import { wsClientsMap } from '../lobby/lobby.js';
+import { wsClientsMap } from '../lobby/lobby.gm.js';
 import { gameOver } from '../quickmatch/gameOver.js';
 
 interface user {
@@ -33,7 +33,7 @@ export async function natsSubscribe() {
 				const gameReq: gameRequest = {
 					username: game.users[i]!.username,
 					userID: userID,
-					// opponent: game.users // TODO figure out how to send username of opponent to PONG depending on local, index etc. 
+					// opponent: game.users.username // TODO send username of opponent to PONG depending on local/remote, user index etc. 
 					gameID: game.gameID,
 					remote: game.remote
 					// gameSettings
@@ -61,26 +61,3 @@ export async function natsSubscribe() {
 		}
 	})();
 }
-
-/* SAM */
-// interface game {
-// 	lobbyID: string,
-// 	gameID: string,
-// 	tournamentID?: string,
-// 	remote: boolean,
-// 	userList: userInfo[] | undefined | null,
-// 	score: string,
-// 	winnerID: number,
-// 	loserID: number,
-// }
-
-/* CHARLOTTE */
-// export interface gameInfo {
-//     gameID: number,
-//     tournamentID: number,
-//     remote: boolean,
-//     users: [user, user],
-//     score: [number, number],
-//     winnerID: number,
-//     loserID: number
-// }

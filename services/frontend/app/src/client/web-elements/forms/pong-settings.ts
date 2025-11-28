@@ -7,8 +7,8 @@ import { DropdownMenu } from '../navigation/menus.js';
 import { NoResults } from '../typography/images.js';
 import type { Searchbar } from './search.js';
 import type { UserData } from '../types-interfaces.js';
-import { createGameRequest } from '../../lobby/lobby.js';
-import { wsConnect } from '../../lobby/wsConnect.js';
+import { createGameRequest } from '../../lobby/gameRequest.front.js';
+import { wsConnect } from '../../lobby/wsConnect.front.js';
 
 /**
  * A form allowing user to create a local pong game.
@@ -71,9 +71,8 @@ export class LocalPongSettings extends BaseForm {
         req.body = this.createReqBody(f);
         // await this.fetchAndRedirect(this.details.action, req);
 
-        // console.log("F: ", req.body);
         console.log("1");
-        await wsConnect('game', 'quickmatch', 'localForm', '', req.body);
+        wsConnect('game', 'quickmatch', 'localForm', '', req.body);
 
     }
 
