@@ -1,16 +1,16 @@
 import type { ProfileCreationResult, UserAuth } from "./auth.interfaces.js";
 import { Database } from "sqlite";
 
-export async function createUserProfile(log: any, userID: number, username: string): Promise<ProfileCreationResult> {
+export async function createUserProfile(log: any, userID: string, username: string): Promise<ProfileCreationResult> {
 	const url = `http://nginx:80/api/users/${userID}`;
 
-	const body = JSON.stringify({ username: username });
+	//const body = JSON.stringify({ username: username });
 	let response: Response;
 	try {
 		response = await fetch(url, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ username: username }),
+			body: JSON.stringify({ username: username}),
 		});
 	} catch (error) {
 		log.error(`[AUTH] User service (via NGINX) is unreachable: ${error}`);
@@ -52,7 +52,7 @@ export async function checkUsernameUnique(db: Database, username: string): Promi
 	}
 };
 
-export async function deleteAccount(db: Database, log: any, userID: number): Promise<boolean> {
+export async function deleteAccount(db: Database, log: any, userID: string): Promise<boolean> {
 
 	try {
 		const query = `DELETE FROM account WHERE userID = ?`;

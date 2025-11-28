@@ -110,7 +110,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			}
 
 			const { username: targetUsername } = request.params as { username: string };
-			const { userID: viewerUserID } = request.user as { userID: number };
+			const { userID: viewerUserID } = request.user as { userID: string };
 
 			if (!viewerUserID) return reply.code(401).send({ message: 'Unauthorized.' });
 

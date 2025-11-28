@@ -4,6 +4,6 @@ export type ProfileCreationResult =
 	| { errorCode: 'user_not_found' }; // For 404
 
 export interface UserAuth {
-	userID: number,
+	userID: string,
 	username: string
 }
