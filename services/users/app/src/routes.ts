@@ -341,17 +341,11 @@ export async function userRoutes(serv: FastifyInstance) {
 			`;
 
 			const usersNames = await serv.dbUsers.all<{ userID: number, username: string }[]>(query, userIDs);
-
-			serv.log.error(`${usersNames}`);
-
 			return (reply.code(200).send({ success: true, usersNames }));
 
 		} catch (error) {
 			serv.log.error(error);
-			return (reply.code(500).send({
-				success: false,
-				message: 'Internal server error'
-			}));
+			throw(error);
 		}
 	});
 

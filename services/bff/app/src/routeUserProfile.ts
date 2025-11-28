@@ -86,8 +86,14 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			return reply.code(200).send(responseData);
 
 		} catch (error) {
-			serv.log.error(`[BFF] Error building user profile view: ${error}`);
-			throw (error);
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number, message: string };
+				if (customError.code === 404) {
+					return (reply.code(404).send({ message: 'User profile data not found.' }));
+				}
+				serv.log.error(`[BFF] Error building user profile view: ${error}`);
+				throw (error);
+			}
 		}
 	});
 
@@ -130,8 +136,14 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			return (reply.code(200).send(tinyProfile));
 
 		} catch (error) {
-			serv.log.error(`[BFF] Error building tiny profile: ${error}`);
-			throw error;
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number, message: string };
+				if (customError.code === 404) {
+					return (reply.code(404).send({ message: 'User profile data not found.' }));
+				}
+				serv.log.error(`[BFF] Error building tiny profile: ${error}`);
+				throw error;
+			}
 		}
 	});
 
@@ -161,16 +173,22 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			}
 
 			const query = request.query as { name?: string };
-
 			if (!query.name || query.name.trim() === '')
 				return reply.code(200).send([]);
 
 			const profiles = await searchBar(serv.log, query.name, token);
-
 			return (reply.code(200).send(profiles));
+
 		} catch (error) {
-			serv.log.error(`[BFF] Error searching users: ${error}`);
-			throw (error);
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number, message: string };
+				if (customError.code === 400)
+					return (reply.code(400).send({ message: 'Could not search.' }));
+				if (customError.code === 401)
+					return (reply.code(401).send({ message: 'Could not search.' }));
+				serv.log.error(`[BFF] Error searching users: ${error}`);
+				throw (error);
+			}
 		}
 	});
 
