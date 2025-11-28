@@ -145,7 +145,6 @@ export abstract class BaseForm extends HTMLFormElement {
     }
 
     #validate() {
-		console.log(this.id, this.reportValidity())
         if (!this.checkValidity()) {
             this.#formContent.get('submit')?.setAttribute('disabled', '');
         } else {

@@ -2,10 +2,15 @@ import { createButton } from './buttons-helpers.js';
 import type { ButtonData, ProfileView, DropdownBg } from '../types-interfaces.js';
 import type { CustomButton } from './buttons.js';
 import { Menu } from './basemenu.js';
+import { errorMessageFromException, createErrorFeedback, errorMessageFromResponse } from '../../error.js';
 
 //TODO: update SocialMenu to Setting button when view is 'self'
 //TODO: each button is actually a form, lol
 //TODO: is the UI update as smooth as it could be ?
+
+interface Relation {
+    username: string;
+}
 
 /**
  * Represents a social menu with dynamic view state for user relationships.
@@ -18,15 +23,18 @@ import { Menu } from './basemenu.js';
  */
 export class SocialMenu extends Menu {
     #view: ProfileView;
-	#APIRemoveFriend: (ev: Event) => void;
-	#APIAddFriend: (ev: Event) => void;
+    #owner: string;
+
+    #APIRemoveFriend: (ev: Event) => void;
+    #APIAddFriend: (ev: Event) => void;
 
     constructor() {
         super();
         this.id = 'social-menu';
         this.#view = 'stranger';
-		this.#APIAddFriend = this.#APIAddFriendImplementation.bind(this);
-		this.#APIRemoveFriend = this.#APIRemoveFriendImplementation.bind(this);
+        this.#owner = '';
+        this.#APIAddFriend = this.#APIAddFriendImplementation.bind(this);
+        this.#APIRemoveFriend = this.#APIRemoveFriendImplementation.bind(this);
     }
 
     /**
@@ -39,24 +47,75 @@ export class SocialMenu extends Menu {
         this.render();
     }
 
-	#APIRemoveFriendImplementation() {
-		console.log('RemoveFriends')
-	}
+    set owner(o: string) {
+        this.#owner = o;
+    }
 
-	#APIAddFriendImplementation() {
-		console.log('AddFriends')
-	}
+    get owner(): string {
+        return this.#owner;
+    }
+
+	// TODO: RemoveFriends is calling correctly but results in 404 = unsure whether there's a true issue 
+	// or if it's because the current friendships are artificially created.
+    async #APIRemoveFriendImplementation() {
+        console.log('RemoveFriends');
+        const url = 'https://localhost:8443/api/bff/relation';
+        const req: RequestInit = {
+            method: 'delete',
+            headers: { 'Content-Type': 'application/json' },
+        };
+        const profileOwner: Relation = { username: this.owner };
+        req.body = JSON.stringify(profileOwner);
+        try {
+            const rawRes = await fetch(url, req);
+			if (!rawRes.ok) throw await errorMessageFromResponse(rawRes)
+            this.view = 'stranger';
+            this.updateView();
+        } catch (error) {
+			createErrorFeedback(errorMessageFromException(error));
+        }
+    }
+
+    async #APIAddFriendImplementation() {
+        console.log('AddFriends');
+        const url = 'https://localhost:8443/api/bff/relation';
+        const req: RequestInit = {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' },
+        };
+        const profileOwner: Relation = { username: this.owner };
+        req.body = JSON.stringify(profileOwner);
+        try {
+            const rawRes = await fetch(url, req);
+			if (!rawRes.ok) throw await errorMessageFromResponse(rawRes)
+            this.view = 'pending';
+            this.updateView();
+        } catch (error) {
+			createErrorFeedback(errorMessageFromException(error));
+        }
+    }
     /** Called when element connects to DOM; calls base and updates view. */
     override connectedCallback(): void {
         super.render();
-		super.cache.get('removeFriend')?.addEventListener('click', this.#APIRemoveFriend)
-		super.cache.get('addFriend')?.addEventListener('click', this.#APIAddFriend)
+        super.cache.get('removeFriend')?.addEventListener('click', this.#APIRemoveFriend);
+        super.cache.get('addFriend')?.addEventListener('click', this.#APIAddFriend);
+    }
+
+    disconnectedCallback() {
+        super.cache.get('removeFriend')?.removeEventListener('click', this.#APIRemoveFriend);
+        super.cache.get('addFriend')?.removeEventListener('click', this.#APIAddFriend);
     }
 
     clearView() {
         super.cache.forEach((el) => {
             el.classList.add('hidden');
         });
+    }
+
+    pending() {
+        super.cache.get('addFriend')?.classList.remove('hidden');
+        super.cache.get('addFriend')?.setAttribute('disabled', '');
+        super.cache.get('challenge')?.classList.remove('hidden');
     }
 
     friend() {
@@ -80,6 +139,7 @@ export class SocialMenu extends Menu {
         if (this.#view === 'friend') this.friend();
         else if (this.#view === 'stranger') this.stranger();
         else if (this.#view === 'self') this.self();
+        else if (this.#view === 'pending') this.pending();
     }
 
     override render() {

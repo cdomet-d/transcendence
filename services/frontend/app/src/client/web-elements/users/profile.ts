@@ -104,6 +104,7 @@ export class UserProfile extends HTMLDivElement {
     set username(name: string) {
         if (this.#username.name !== name) {
             this.#username.name = name;
+			this.#actionButtons.owner = name;
         }
     }
 
