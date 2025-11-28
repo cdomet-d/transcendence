@@ -2,7 +2,14 @@ import type { FastifyInstance } from 'fastify';
 import type { JwtPayload } from './bff.interface.js'
 import { fetchUserID } from './bffUserProfile.service.js';
 import { createFriendRequest, deleteFriendRequest, acceptFriendRequest } from './bffFriends.service.js';
+import { jsonCodec } from './nats.js';
+import type { NatsConnection } from 'nats';
 
+declare module 'fastify' {
+	interface FastifyInstance {
+		nats: NatsConnection;
+	}
+}
 
 //TODO test all routes (clc a cause du JWT)
 export async function bffFriendRoutes(serv: FastifyInstance) {
@@ -12,7 +19,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
-		
+
 			if (token) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
@@ -47,8 +54,21 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			const friendUserID = await fetchUserID(serv.log, friendUsername, token);
 			if (!friendUserID)
 				return reply.code(404).send({ message: `[BFF] User '${friendUsername}' not found.` });
-		
-			await createFriendRequest(serv.log, senderID, friendUserID, token );
+
+			await createFriendRequest(serv.log, senderID, friendUserID, token);
+			try {
+				const eventPayload = {
+					type: 'FRIEND_REQUEST',
+					senderUsername: senderUsername,
+					receiverID: friendUserID,
+				};
+				console.log('nats published !');
+				serv.nats.publish('post.notif', jsonCodec.encode(eventPayload));
+
+				serv.log.error(`[NATS] Published friend request notification for user ${friendUserID}`);
+			} catch (natsError) {
+				serv.log.error(`[NATS] Failed to publish notification: ${natsError}`);
+			}
 			return (reply
 				.code(201)
 				.send({ message: '[BFF] Friend request sent.' }));
@@ -141,7 +161,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 						return reply.code(401).send({ message: 'Unknown error' });
 				}
 			}
-			
+
 			const removerID = request.user.userID;
 			const removerUsername = request.user.username;
 
@@ -151,13 +171,13 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 				return reply.code(400).send({ message: '[BFF] Missing friend username in request body.' });
 
 			if (friendUsername === removerUsername)
-				return reply.code(400).send({ message: '[BFF] You cannot dellete a friendship with yourself.' });
+				return reply.code(400).send({ message: '[BFF] You cannot delete a friendship with yourself.' });
 
-			const friendUserID = await fetchUserID(serv.log, friendUsername, token );
+			const friendUserID = await fetchUserID(serv.log, friendUsername, token);
 			if (!friendUserID)
 				return reply.code(404).send({ message: `[BFF] User '${friendUsername}' not found.` });
 
-			await deleteFriendRequest(serv.log, removerID, friendUserID, token );
+			await deleteFriendRequest(serv.log, removerID, friendUserID, token);
 			return (reply
 				.code(200)
 				.send({ message: '[BFF] Friendship deleted.' }));

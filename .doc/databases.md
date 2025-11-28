@@ -718,13 +718,13 @@ WHERE userID = 101;
 
 * servir traduction ---> localisation library, language page
 * changer userID to string like in game-manager
-* gestion erreur dans le bff
 * move nats publisher to bff 
 * status in db on login logout
 * sanitise input in back
 * GDPR: check profile photos and more
 * add schemas to route
 
+* gestion erreur dans le bff       ✅
 * envoyer les settings             ✅
 * supprimer ami                    ✅
 * envoyer demande d'ami            ✅

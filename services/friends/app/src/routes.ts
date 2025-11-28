@@ -1,6 +1,4 @@
 import type { FastifyInstance } from 'fastify';
-import { jsonCodec } from './nats.js';
-import type { NatsConnection } from 'nats';
 
 import { getFriendship, friendshipExistsUsersID } from './friends.service.js'
 type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
@@ -10,12 +8,6 @@ interface JwtPayload {
 	username: string;
 	iat: number;
 	exp: number;
-}
-
-declare module 'fastify' {
-	interface FastifyInstance {
-		nats: NatsConnection;
-	}
 }
 
 export async function routeFriend(serv: FastifyInstance) {
@@ -167,20 +159,6 @@ export async function routeFriend(serv: FastifyInstance) {
 			if (response.changes === 0)
 				throw new Error('[FRIENDS] Friend request failed to save.');
 
-			//TODO : move that to bff
-			try {
-				const eventPayload = {
-					type: 'FRIEND_REQUEST',
-					senderID: senderID,
-					receiverID: friendID,
-				};
-				console.log('nats published !');
-				serv.nats.publish('post.notif', jsonCodec.encode(eventPayload));
-
-				serv.log.info(`[NATS] Published friend request notification for user ${friendID}`);
-			} catch (natsError) {
-				serv.log.error(`[NATS] Failed to publish notification: ${natsError}`);
-			}
 			return (reply.code(201).send({
 				success: true,
 				message: `[FRIENDS] Friend request sent to ${friendID}`
