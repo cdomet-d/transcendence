@@ -55,6 +55,10 @@ export class LocalPongSettings extends BaseForm {
     /*                               Event listeners                              */
     /* -------------------------------------------------------------------------- */
 
+	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
+		console.log('Fetch&Redirect')
+	}
+	
     override async submitHandlerImplementation(ev: SubmitEvent): Promise<void> {
         ev.preventDefault();
         const f = new FormData(this);
@@ -118,6 +122,9 @@ export class RemotePongSettings extends LocalPongSettings {
         this.#guests = null;
         // this.#inviteHandler = this.#inviteHandlerImplementation.bind(this);
     }
+	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
+		console.log('Fetch&Redirect')
+	}
 
     override connectedCallback(): void {
         super.connectedCallback();

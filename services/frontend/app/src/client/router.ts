@@ -20,18 +20,29 @@ export const routes: routeInterface[] = [
     { path: '/game', callback: page.renderGame },
 ];
 
+export async function DOMReady(): Promise<void> {
+	await new Promise((resolve) => requestAnimationFrame(resolve));
+	await new Promise((resolve) => requestAnimationFrame(resolve));
+}
+
 export class Router {
     /*                            PROPERTIES                                  */
     _routes: Array<routeInterface>;
+    #stepBefore: string;
 
     /*                           CONSTRUCTORS                                 */
     constructor(routes: routeInterface[]) {
         this._routes = routes;
+        this.#stepBefore = '';
     }
 
     /*                             METHODS                                    */
     #getRouteFromPath(path: string): routeInterface | undefined {
         return this._routes.find((route) => route.path === path);
+    }
+
+    get stepBefore(): string {
+        return this.#stepBefore;
     }
 
     /** Getter for current path
@@ -47,7 +58,6 @@ export class Router {
     }
 
     updateURL(newURL: string) {
-        console.log('updating URL');
         window.history.pushState({}, '', newURL);
     }
 
@@ -55,6 +65,7 @@ export class Router {
      * Calls `renderNotFount()` if the route was not found, and the route's callback otherwise.
      */
     loadRoute(path: string, updateHistory: boolean) {
+        this.#stepBefore = this.currentPath;
         this.sanitisePath(path);
 
         let matchedRoute = this.#getRouteFromPath(path);

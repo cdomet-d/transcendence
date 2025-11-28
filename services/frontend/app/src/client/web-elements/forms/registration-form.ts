@@ -1,6 +1,6 @@
 import { BaseForm } from './baseform';
 import { router } from '../../main';
-import { responseErrorMessage } from '../event-elements/error';
+import { responseErrorMessage } from '../../error';
 
 export class RegistrationForm extends BaseForm {
     constructor() {

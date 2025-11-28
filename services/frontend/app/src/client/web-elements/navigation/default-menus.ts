@@ -3,20 +3,36 @@ import type { ButtonData, MenuData, TabData } from '../types-interfaces.js';
 export const main: MenuData = {
     links: [
         {
+            styleButton: true,
             id: 'leaderboard',
             title: 'Leaderboard',
             datalink: 'leaderboard',
             href: '/leaderboard',
             img: null,
         },
-        { id: 'lobby', title: 'Play', datalink: '/lobby', href: '/lobby', img: null },
-        { id: 'profile', title: 'Profile', datalink: 'profile', href: '/me', img: null },
+        {
+            styleButton: true,
+            id: 'lobby',
+            title: 'Play',
+            datalink: '/lobby',
+            href: '/lobby',
+            img: null,
+        },
+        {
+            styleButton: true,
+            id: 'profile',
+            title: 'Profile',
+            datalink: 'profile',
+            href: '/me',
+            img: null,
+        },
     ],
 };
 
 export const homeLink: MenuData = {
     links: [
         {
+            styleButton: false,
             datalink: 'home',
             href: '/',
             title: 'Home',
@@ -80,6 +96,7 @@ export const social: MenuData = {
     links: [
         {
             //TODO: autofill pongsettings form and lauch a 2 persons match
+            styleButton: true,
             datalink: '/lobby',
             id: 'challenge',
             href: '/lobby',
@@ -92,6 +109,7 @@ export const social: MenuData = {
             },
         },
         {
+            styleButton: true,
             datalink: '/user/settings',
             id: 'settings',
             href: '/user/settings',

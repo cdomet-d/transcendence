@@ -35,6 +35,7 @@
 		"@types/jsonwebtoken": "^9.0.10",
 		"@types/node": "^24.6.0",
 		"@typescript-eslint/eslint-plugin": "^8.46.1",
+		"ajv": "^8.17.1",
 		"autoprefixer": "^10.4.21",
 		"browser-image-compression": "^2.0.2",
 		"concurrently": "^9.2.1",

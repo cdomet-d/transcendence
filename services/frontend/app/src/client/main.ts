@@ -2,7 +2,7 @@ import { loadHistoryLocation } from './event-listeners.js';
 import { Layout } from './web-elements/layouts/layout.js';
 import { PageHeader } from './web-elements/navigation/header.js';
 import { Router, routes } from './router.js';
-import { createErrorFeedback, UIFeedback } from './web-elements/event-elements/error.js';
+import { createErrorFeedback, redirectOnError } from './error.js';
 
 // import { pong } from './game/pong.js';
 // import { addLanguageEvents } from './language/languageEvents.js';
@@ -31,13 +31,12 @@ export async function userStatus(): Promise<userStatusInfo> {
     try {
         const isLogged: Response = await fetch('/api/auth/status');
         const data = await isLogged.json();
-        console.log(data);
         if (isLogged.ok) return { auth: true, username: data.username, userID: data.userID };
         else return { auth: false };
     } catch (error) {
         let mess = 'Something when wrong';
         if (error instanceof Error) mess = error.message;
-		createErrorFeedback(mess);
+		redirectOnError('/', mess);
         return { auth: false };
     }
 }

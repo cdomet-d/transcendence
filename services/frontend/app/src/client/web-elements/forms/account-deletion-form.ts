@@ -1,5 +1,5 @@
 import { BaseForm } from './baseform';
-import { responseErrorMessage } from '../event-elements/error';
+import { responseErrorMessage } from '../../error';
 
 export class DeleteAccountForm extends BaseForm {
     override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
