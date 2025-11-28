@@ -21,19 +21,19 @@ export async function natsSubscription(serv: FastifyInstance) {
 	(async () => {
 		for await (const msg of sub) {
 
-			const _gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
-			console.log("game id", _gameInfo.gameID)
-			console.log("remote", _gameInfo.remote)
+			const gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
+			console.log("game id", gameInfo.gameID)
+			console.log("remote", gameInfo.remote)
 
 			// serv.log.info(`Received message: ${JSON.stringify(_gameInfo)}`);
-			serv.gameRegistry.addGame(new Game(_gameInfo, serv.nc, serv.log));
+			serv.gameRegistry.addGame(new Game(gameInfo, serv.nc, serv.log));
 
 			// Approval given HERE from PONG if game is ok to start
 			if (msg.reply) {
 				const game = {
-					gameID: _gameInfo.gameID,
-					users: _gameInfo.users,
-					remote: _gameInfo.remote
+					gameID: gameInfo.gameID,
+					users: gameInfo.users,
+					remote: gameInfo.remote
 					// gameSettings
 				}
 				natsPublish(serv.nc, msg.reply, JSON.stringify(game));
@@ -41,7 +41,7 @@ export async function natsSubscription(serv: FastifyInstance) {
 		}
 	})();
 
-	// serv.gameRegistry.addGame(new Game(gameobj, serv.nc)); //TODO: for testing
+	// serv.gameRegistry.addGame(new Game(gameobj, serv.nc, serv.log)); //TODO: for testing
 };
 
 import type { user } from '../classes/game-interfaces.js';
@@ -57,8 +57,8 @@ const player2: user = {
 
 const gameobj: gameInfo = {
 	lobbyID: 1,
-	gameID: "",
-	tournamentID: 99,
+	gameID: "1",
+	tournamentID: "99",
 	remote: false,
 	users: [player1, player2],
 	score: [0, 0],
