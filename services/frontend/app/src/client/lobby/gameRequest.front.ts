@@ -1,3 +1,4 @@
+import { redirectOnError } from "../error";
 import { userStatus, type userStatusInfo } from "../main";
 
 interface lobbyInfo {
@@ -25,8 +26,8 @@ async function createGameRequest(format: string, formInstance: string, gameSetti
     // console.log("FORM: ", formInstance); // will be useful at some point
 
     const host: userStatusInfo = await userStatus();
-    if (!host) {
-        console.log("Error: User token is not valid!");
+    if (!host.auth) {
+        redirectOnError('/auth', 'You must be registered to see this page')
         return JSON.stringify({ event: 'BAD_USER_TOKEN'});
     }
 

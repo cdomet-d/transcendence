@@ -66,6 +66,8 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
+            - PORT=1616
+            - JWT_SECRET=${JWT_SECRET}
         volumes:
             - ./services/friends/app:/usr/app
             - ./services/friends/data:/usr/data
@@ -93,6 +95,8 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
+            - PORT=1818
+            - JWT_SECRET=${JWT_SECRET}
         volumes:
             - ./services/bff/app:/usr/app
         # user: "${T_UID}:${T_GID}"
@@ -178,6 +182,8 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
+            - PORT=2626
+            - JWT_SECRET=${JWT_SECRET}
         volumes:
             - ./services/users/app:/usr/app
             - ./services/users/data:/usr/data

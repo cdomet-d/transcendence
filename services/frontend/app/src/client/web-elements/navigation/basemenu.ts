@@ -24,7 +24,6 @@ export class Menu extends HTMLElement {
         this.#linkInfo = null;
         this.#style = 'horizontal';
         this.#animated = false;
-
         this.#menuLinks = document.createElement('ul');
         this.append(this.#menuLinks);
     }
@@ -36,6 +35,7 @@ export class Menu extends HTMLElement {
      */
     set menuContent(list: MenuData) {
         this.#linkInfo = list;
+        this.id = list.id;
     }
 
     /**

@@ -1,7 +1,16 @@
-import type { FormDetails } from '../types-interfaces.js';
-import { usernamePattern, passwordPattern } from '../default-values.js';
+import type { FormDetails, UserData } from '../types-interfaces.js';
+import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
 
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
+
+export function customizeUserSettingsForm(user: UserData): FormDetails {
+	userSettingsForm.fields.forEach((f) => {
+		if (f.id === 'biography' && user.biography) f.placeholder = user.biography;
+		else if (f.id === 'username') f.placeholder = user.username;
+	})
+	return userSettingsForm;
+}
+
 export const userSettingsForm: FormDetails = {
     action: 'http://localhost:8443/api/bff/settings/',
     heading: 'Settings',
@@ -109,7 +118,7 @@ export const search: FormDetails = {
         {
             id: 'searchbar',
             labelContent: 'Searchbar',
-            pattern: usernamePattern,
+            pattern: searchbarPattern,
             placeholder: 'Search...',
             type: 'text',
             required: true,

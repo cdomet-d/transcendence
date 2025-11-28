@@ -7,7 +7,6 @@ import { DropdownMenu } from '../navigation/menus.js';
 import { NoResults } from '../typography/images.js';
 import type { Searchbar } from './search.js';
 import type { UserData } from '../types-interfaces.js';
-import { createGameRequest } from '../../lobby/gameRequest.front.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 
 /**
@@ -43,10 +42,6 @@ export class LocalPongSettings extends BaseForm {
         this.classList.add('sidebar-left');
     }
 
-    override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
-        ;
-    }
-
     /* -------------------------------------------------------------------------- */
     /*                                   Getters                                  */
     /* -------------------------------------------------------------------------- */
@@ -61,6 +56,10 @@ export class LocalPongSettings extends BaseForm {
     /*                               Event listeners                              */
     /* -------------------------------------------------------------------------- */
 
+	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
+		console.log('Fetch&Redirect')
+	}
+	
     override async submitHandlerImplementation(ev: SubmitEvent): Promise<void> {
         ev.preventDefault();
         const f = new FormData(this);

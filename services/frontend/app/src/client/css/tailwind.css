@@ -240,8 +240,6 @@
 				var(--gradient2),
 				var(--gradient3),
 				var(--gradient4) 100%);
-		background-repeat: no-repeat;
-		overflow: hidden;
 	}
 
 	p,
@@ -391,6 +389,9 @@
 	a:hover,
 	a:focus-visible {
 		transform: scale(1.04);
+		border: none;
+		outline: none;
+		text-decoration: underline;
 	}
 
 	button:hover>span,
@@ -667,15 +668,18 @@
 	}
 
 	.masonery {
-		height: auto;
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(170px, max-content));
-		justify-content: space-evenly;
+		grid-template-columns: repeat(auto-fill, 11.25rem);
+		place-items: start;
+	}
+
+	.matches {
+		display: grid;
+		grid-template-rows: repeat(auto-fill, var(--m));
 	}
 
 	.biography {
 		display: -webkit-box;
-		-webkit-box-orient: vertical;
 		-webkit-line-clamp: 6;
 		line-clamp: 6;
 		overflow: hidden;
@@ -728,7 +732,8 @@
 			var(--inner-border-w) var(--n-inner-border-w) var(--border),
 			var(--inner-border-w) var(--inner-border-w) var(--border),
 			var(--n-border-w) 0 0 0 var(--border), var(--border-w) 0 0 0 var(--border),
-			0 var(--n-border-w) 0 0 var(--border), 0 var(--border-w) 0 0 var(--border);
+			0 var(--n-border-w) 0 0 var(--border), 0 var(--border-w) 0 0 var(--border),
+			4px 4px 10px rgba(0, 0, 0, 0.599);
 	}
 
 	.input-emphasis {

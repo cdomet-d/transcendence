@@ -4,10 +4,10 @@ import * as bcrypt from 'bcrypt';
 import { deleteAccount, createUserProfile, checkUsernameUnique } from './auth.service.js';
 
 interface JwtPayload {
-    userID: number;
-    username: string;
-    iat: number;
-    exp: number;
+	userID: number;
+	username: string;
+	iat: number;
+	exp: number;
 }
 
 const authSchema = {
@@ -23,32 +23,30 @@ const authSchema = {
 };
 
 //TODO update user status on login and logout
-
 export async function authenticationRoutes(serv: FastifyInstance) {
-    serv.get('/status', async (request, reply) => {
-        const token = request.cookies.token;
-        if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
-        console.log('');
-        if (token) {
-            try {
-                const user = serv.jwt.verify(token) as JwtPayload;
-                if (typeof user !== 'object') throw new Error('Invalid token detected');
-                return reply.code(200).send({ username: user.username, userID: user.userID });
-            } catch (error) {
-                if (error instanceof Error && 'code' in error) {
-                    if (
-                        error.code === 'FST_JWT_BAD_REQUEST' ||
-                        error.code === 'ERR_ASSERTION' ||
-                        error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-                    )
-                        return reply.code(400).send({ code: error.code, message: error.message });
-                    return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-                } else {
-                    return reply.code(401).send({ message: 'Unknown error' });
-                }
-            }
-        }
-    });
+	serv.get('/status', async (request, reply) => {
+		const token = request.cookies.token;
+		if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+		if (token) {
+			try {
+				const user = serv.jwt.verify(token) as JwtPayload;
+				if (typeof user !== 'object') throw new Error('Invalid token detected');
+				return reply.code(200).send({ username: user.username, userID: user.userID });
+			} catch (error) {
+				if (error instanceof Error && 'code' in error) {
+					if (
+						error.code === 'FST_JWT_BAD_REQUEST' ||
+						error.code === 'ERR_ASSERTION' ||
+						error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+					)
+						return reply.code(400).send({ code: error.code, message: error.message });
+					return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+				} else {
+					return reply.code(401).send({ message: 'Unknown error' });
+				}
+			}
+		}
+	});
 
 	serv.post('/login', { schema: authSchema }, async (request, reply) => {
 		try {
@@ -118,6 +116,9 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			newAccountId = account.lastID;
 
 			const usersResponse = createUserProfile(serv.log, newAccountId, username);
+			if ((await usersResponse).errorCode === `conflict`)
+				return reply.code(409).send({ message: 'UserID taken' });
+
 
 			const tokenPayload = { userID: newAccountId, username: username };
 			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
@@ -154,8 +155,31 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//TODO delete users/friends
 	serv.delete('/:userID', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const { userID } = request.params as { userID: string };
 
 			const query = `DELETE FROM account WHERE userID = ?`;
@@ -172,15 +196,45 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 
 	serv.patch('/:userID', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const { userID } = request.params as { userID: string };
 			const body = request.body as { [key: string]: any };
 
-			const validKeys = ['hashedPassword', 'username'];
+			const dbUpdates: { [key: string]: any } = {};
 
-			const keysToUpdate = Object.keys(body).filter(
-				(key) => validKeys.includes(key) && body[key] !== ''
-			);
+			if (body.username && body.username !== '')
+				dbUpdates.username = body.username;
 
+			if (body.password && body.password !== '') {
+				const hashedPassword = await bcrypt.hash(body.password, 12);
+				dbUpdates.hashedPassword = hashedPassword;
+			}
+
+			if (body.defaultLang && body.defaultLang !== '')
+				dbUpdates.defaultLang = body.defaultLang;
+
+			const keysToUpdate = Object.keys(dbUpdates);
 			if (keysToUpdate.length === 0) {
 				return reply.code(400).send({
 					success: false,
@@ -189,7 +243,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			}
 
 			const setClauses = keysToUpdate.map((key) => `${key} = ?`).join(', ');
-			const params = keysToUpdate.map((key) => body[key]);
+			const params = keysToUpdate.map((key) => dbUpdates[key]);
 			params.push(userID);
 
 			const query = `
@@ -197,6 +251,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			`;
 
 			const response = await serv.dbAuth.run(query, params);
+
 			if (response.changes === 0) {
 				return reply.code(404).send({
 					success: false,
@@ -208,16 +263,21 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 				success: true,
 				message: '[AUTH] Account updated successfully!',
 			});
+
 		} catch (error) {
 			if (
 				error &&
 				typeof error === 'object' &&
 				'code' in error &&
-				(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE'
-			)
+				(
+					(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' ||
+					(error as { code: string }).code === 'SQLITE_CONSTRAINT'
+				)
+			) {
 				return reply
 					.code(409)
 					.send({ success: false, message: '[AUTH] This username is already taken.' });
+			}
 			serv.log.error(`[AUTH] Error updating account: ${error}`);
 			throw error;
 		}

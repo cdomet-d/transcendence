@@ -1,7 +1,9 @@
 import type { FastifyInstance } from 'fastify';
+import { updateUserStats } from './dashboard.service.js'
+import type { GameInput, userStats } from '././dashboard.service.js';
 
 export interface userData {
-	avatar: string,
+	avatar: string | null | undefined,
 	biography: string,
 	userID: string,
 	lang: string,
@@ -12,16 +14,11 @@ export interface userData {
 	since: string
 }
 
-interface UserStats {
+interface JwtPayload {
 	userID: number;
-	longestMatch: number;
-	shortestMatch: number;
-	totalMatch: number;
-	totalWins: number;
-	winStreak: number;
-	averageMatchDuration: number;
-	longuestPass: number;
-	[key: string]: number;
+	username: string;
+	iat: number;
+	exp: number;
 }
 
 export async function userRoutes(serv: FastifyInstance) {
@@ -30,6 +27,28 @@ export async function userRoutes(serv: FastifyInstance) {
 	//GET /<userID>
 	serv.get('/:userID', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const { userID } = request.params as { userID: string };
 
 			const query = `
@@ -55,8 +74,88 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	serv.get('/leaderboard', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const query = `
+				SELECT
+					p.avatar,
+					p.biography,
+					p.userID,
+					p.lang,
+					p.profileColor,
+					p.activityStatus,
+					p.lastConnection,
+					p.userRole,
+					p.username,
+					s.winStreak,
+					p.since
+				FROM 
+					userProfile p
+				JOIN 
+					userStats s ON p.userID = s.userID
+				ORDER BY 
+					s.winStreak DESC
+				LIMIT 50;
+			`;
+
+			const leaderboard = await serv.dbUsers.all<userData[]>(query);
+
+			return reply.code(200).send({
+				success: true,
+				profiles: leaderboard
+			});
+
+		} catch (error) {
+			serv.log.error(`[USERS] Error fetching leaderboard: ${error}`);
+			throw (error);
+		}
+	});
+
 	serv.get('/search', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
 			const query = request.query as { name?: string };
 
 			if (!query.name || query.name.length === 0)
@@ -64,15 +163,21 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			//ASC is the way sqlite3 sorts result 
 			const sql = `
-				SELECT * 
-				FROM userProfile 
-				WHERE username LIKE ? 
-				ORDER BY length(username) ASC, username ASC 
+				SELECT 
+					p.*,
+					s.winStreak as winstreak
+				FROM 
+					userProfile p
+				LEFT JOIN 
+					userStats s ON p.userID = s.userID
+				WHERE 
+					p.username LIKE ? 
+				ORDER BY 
+					length(p.username) ASC, p.username ASC 
 				LIMIT 5
 			`;
 
 			const searchParam = `${query.name}%`;
-
 			const profiles = await serv.dbUsers.all<userData[]>(sql, [searchParam]);
 
 			return reply.code(200).send({
@@ -88,6 +193,28 @@ export async function userRoutes(serv: FastifyInstance) {
 	//fetch users profiles
 	serv.post('/profiles', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const { userIDs } = request.body as { userIDs: number[] };
 
 			if (!Array.isArray(userIDs) || userIDs.length === 0)
@@ -118,6 +245,28 @@ export async function userRoutes(serv: FastifyInstance) {
 	//GET ?username=<username>
 	serv.get('/userID/:username', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const query = request.params as { username: string };
 
 			if (query.username) {
@@ -150,6 +299,28 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	serv.post('/usernames', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const { userIDs } = request.body as { userIDs: number[] };
 
 			if (!userIDs || userIDs.length === 0)
@@ -179,6 +350,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//create profile and stats
+	//Called by auth so no need for JWT verif
 	serv.post('/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
@@ -201,7 +373,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				throw new Error('Database Error: Profile INSERT failed (0 changes).');
 
 			const queryStats = `
-				INSERT INTO userStats (userID, longestMatch, shorestMatch, totalMatch, totalWins,
+				INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins,
 				winStreak, averageMatchDuration, longuestPass)
 				VALUES (?, 0, 0, 0, 0, 0, 0, 0)
 			`;
@@ -214,16 +386,17 @@ export async function userRoutes(serv: FastifyInstance) {
 				.code(201)
 				.send({ success: true, message: 'Profile created successfully!' });
 		} catch (error) {
-			if (
-				error &&
-				typeof error === 'object' &&
-				'code' in error &&
-				error.code === 'SQLITE_CONSTRAINT_UNIQUE'
-			) {
-				return reply.code(409).send({
+			if (error && typeof error === 'object' && 'code' in error && error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+				return (reply.code(409).send({
 					success: false,
 					message: 'A profile for this user already exists.',
-				});
+				}));
+			}
+			if (error && typeof error === 'object' && 'code' in error && error.code === 'SQLITE_CONSTRAINT') {
+				return (reply.code(409).send({
+					success: false,
+					message: 'UserID already taken',
+				}));
 			}
 			serv.log.error(`Error creating user profile: ${error}`);
 			throw error;
@@ -233,6 +406,28 @@ export async function userRoutes(serv: FastifyInstance) {
 	//update user profile
 	serv.patch('/:userID', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const { userID } = request.params as { userID: string };
 			const body = request.body as { [key: string]: any };
 
@@ -241,8 +436,6 @@ export async function userRoutes(serv: FastifyInstance) {
 				'avatar',
 				'biography',
 				'profileColor',
-				'lastConnection',
-				'activityStatus',
 				'lang',
 			];
 
@@ -276,15 +469,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				message: 'User profile updated successfully!',
 			});
 		} catch (error) {
-			if (
-				error &&
-				typeof error === 'object' &&
-				'code' in error &&
-				(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE'
-			)
-				return reply
-					.code(409)
-					.send({ success: false, message: 'This username is already taken.' });
+			if ( error && typeof error === 'object' && 'code' in error && (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE')
+				return (reply.code(409).send({ success: false, message: 'This username is already taken.' }));
 			serv.log.error(`Error fetching user profile: ${error}`);
 			throw error;
 		}
@@ -293,6 +479,28 @@ export async function userRoutes(serv: FastifyInstance) {
 	//delete profile and stats
 	serv.delete('/:userID', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const { userID } = request.params as { userID: number };
 
 			const query = `
@@ -318,13 +526,35 @@ export async function userRoutes(serv: FastifyInstance) {
 	//get all user's stats with userID
 	serv.get('/stats/:userID', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const { userID } = request.params as { userID: string };
 
 			const query = `
 				SELECT * FROM userStats WHERE userID = ?
 			`;
 
-			const userStats = await serv.dbUsers.get<UserStats>(query, [userID]);
+			const userStats = await serv.dbUsers.get<userStats>(query, [userID]);
 			if (!userStats)
 				return reply.code(404).send({ success: false, message: 'User profile not found' });
 
@@ -340,79 +570,36 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update all stats of a user
-	serv.patch('/stats/:userID', async (request, reply) => {
+	//Called in game-manager so no need for JWT verif
+	serv.patch('/stats', async (request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
-			const actions = request.body as { action: string; field: string; value: number }[];
+			const body = request.body as GameInput;
 
-			const currentStats = await serv.dbUsers.get<UserStats>(
-				'SELECT * FROM userStats WHERE userID = ?',
-				[userID]
-			);
-			if (!currentStats)
-				return reply.code(404).send({ success: false, message: 'User not found.' });
+			if (!body.player1 || !body.player2)
+				return reply.code(400).send({ message: 'Missing player IDs' });
 
-			const updates: { [key: string]: number } = {};
-			const validFields = [
-				'totalMatch',
-				'totalWins',
-				'longestMatch',
-				'shortestMatch',
-				'longuestPass',
-			];
+			const p1IsWinner = body.player1Score > body.player2Score;
+			const p2IsWinner = body.player2Score > body.player1Score;
 
-			for (const action of actions) {
-				if (!validFields.includes(action.field)) continue;
+			await Promise.all([
+				updateUserStats(serv, body.player1, p1IsWinner, body),
+				updateUserStats(serv, body.player2, p2IsWinner, body)
+			]);
 
-				switch (action.action) {
-					case 'increment': {
-						updates[action.field] = (currentStats[action.field] || 0) + action.value;
-						break;
-					}
-					case 'setIfGreater': {
-						if (action.value > (currentStats[action.field] || 0))
-							updates[action.field] = action.value;
-						break;
-					}
-					case 'setIfLess': {
-						const currentValue = currentStats[action.field];
-						if (
-							currentValue === undefined ||
-							currentValue === 0 ||
-							action.value < currentValue
-						)
-							updates[action.field] = action.value;
-						break;
-					}
-				}
-			}
+			return reply.code(200).send({
+				success: true,
+				message: 'Stats updated for both players.'
+			});
 
-			if (Object.keys(updates).length === 0)
-				return reply.code(200).send({ success: true, message: 'No stats were updated.' });
-
-			const setClauses = Object.keys(updates)
-				.map((key) => `${key} = ?`)
-				.join(', ');
-			const params = [...Object.values(updates), userID];
-			const query = `UPDATE userStats SET ${setClauses} WHERE userID = ?`;
-
-			const response = await serv.dbUsers.run(query, params);
-			if (!response.changes)
-				return reply.code(404).send({
-					success: false,
-					message: 'User not found',
-				});
-
-			return reply
-				.code(200)
-				.send({ success: true, message: 'User stats updated successfully.' });
 		} catch (error) {
-			serv.log.error(`Error updating user stats: ${error}`);
-			throw error;
+			serv.log.error(`[USERS] Error processing match stats: ${error}`);
+			if (error instanceof Error && error.message.includes('Stats not found')) {
+				return reply.code(404).send({ message: error.message });
+			}
+			return reply.code(500).send({ message: 'Internal Server Error' });
 		}
 	});
 
-	// TODO : Repeting route, check usage in BFF and switch it up with correct route
 	/* 	serv.get('/:userID/userData', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };

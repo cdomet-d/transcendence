@@ -1,3 +1,4 @@
+import { redirectOnError } from "../error";
 import { userStatus, type userStatusInfo } from "../main";
 
 interface lobbyRequestForm {
@@ -14,9 +15,8 @@ interface lobbyRequestForm {
 async function createLobbyRequest(action: string, format: string, formInstance: string): Promise<string> {
 
     const host: userStatusInfo = await userStatus();
-    if (host.auth === false) {
-        window.alert("You are not logged in!"); // TODO use redirectOnError(route, message);
-        console.log("Error: User token is not valid!");
+    if (!host.auth) {
+        redirectOnError('/auth', 'You must be registered to see this page')
         return JSON.stringify({ event: 'BAD_USER_TOKEN'});
     }
 
@@ -37,7 +37,7 @@ function joinLobbyRequest(action: string, format: string, lobbyID: string) {
 
     // const host: userStatusInfo = await userStatus();
     // if (host.auth === false) {
-    //     console.log("Error: User token is not valid!");
+    // redirectOnError('/auth', 'You must be registered to see this page')
     //     return JSON.stringify({ event: 'BAD_USER_TOKEN'});
     // }
 
