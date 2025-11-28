@@ -1,7 +1,10 @@
 import type { UserData, ImgData, ProfileView } from '../web-elements/types-interfaces';
 import { defaultAvatar } from '../web-elements/default-values';
 import { ProfilePage } from '../web-elements/users/user-profile-containers';
-import { createFriendsPanel } from '../web-elements/users/profile-helpers';
+import { createFriendsPanel, createMatchHistoryPanel } from '../web-elements/users/profile-helpers';
+import { redirectOnError } from '../error';
+import { router } from '../main';
+import { MatchOutcomeArrayFromAPIRes } from './matches';
 
 function UTCtoDays(since: string): string {
     const today = new Date();
@@ -36,7 +39,7 @@ function setAvatar(a: string): ImgData {
 
 export function userDataFromAPIRes(responseObject: any): UserData {
     if (!responseObject || typeof responseObject !== 'object')
-        throw new Error('Malformed API Response');
+        redirectOnError(router.stepBefore, 'Malformed API response');
     const user: UserData = {
         // winstreak: responseObject.winstreak,
         avatar: setAvatar(responseObject.avatar),
@@ -75,5 +78,8 @@ export async function buildUserProfile(reponse: Response): Promise<ProfilePage> 
     document.body.layoutInstance?.appendAndCache(userProfileElem);
     userProfileElem.profile = userDataFromAPIRes(rawProfile.userData);
     userProfileElem.panelContent = createFriendsPanel(userArrayFromAPIRes(rawProfile.friends));
+    userProfileElem.panelContent = createMatchHistoryPanel(
+        MatchOutcomeArrayFromAPIRes(rawProfile.matches),
+    );
     return userProfileElem;
 }

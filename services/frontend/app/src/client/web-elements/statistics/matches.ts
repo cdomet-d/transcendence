@@ -1,4 +1,14 @@
-import type { MatchOutcome } from '../types-interfaces.js';
+import type { NavigationLinks } from '../navigation/links.js';
+import type { MatchOutcome, navigationLinksData } from '../types-interfaces.js';
+
+const emptyMatch: MatchOutcome = {
+    date: '',
+    opponent: '',
+    outcome: '',
+    score: '',
+    duration: '',
+    tournament: true,
+};
 
 /**
  * Creates an InlineMatch element and populates it with match outcome data.
@@ -68,8 +78,8 @@ export class InlineMatch extends HTMLDivElement {
             span.id = key;
             span.textContent = key;
         }
-        this.classList.add('bg-yellow', 'sticky', 'top-0');
-        this.id = 'lb-header';
+        this.classList.add('bg-yellow', 'sticky', 'top-0', 'thin', 'brdr');
+        this.id = 'matchesheader';
         return this;
     }
 
@@ -80,14 +90,31 @@ export class InlineMatch extends HTMLDivElement {
      */
     createSpans(): InlineMatch {
         for (const key in this.#data) {
-            const span = document.createElement('span');
-            this.append(span);
-            span.id = key;
-            span.textContent = this.#data[key as keyof MatchOutcome].toString();
+            let el;
+            if (key === 'opponent') {
+                const opponent = this.#data[key].toString();
+                const opp: navigationLinksData = {
+                    styleButton: false,
+                    id: 'opponent-link',
+                    datalink: opponent,
+                    href: `/user/${opponent}`,
+                    title: opponent,
+                    img: null,
+                };
+
+                el = document.createElement('a', { is: 'nav-link' }) as NavigationLinks;
+                el.info = opp;
+            } else el = document.createElement('span');
+            this.append(el);
+            el.id = key;
+            el.textContent = this.#data[key as keyof MatchOutcome].toString();
         }
         this.id = 'match';
         return this;
     }
+
+    // https://localhost:8443/user/Coralie
+    // https://localhost:8443/user/Coralie
     connectedCallback() {
         this.render();
     }
@@ -96,7 +123,7 @@ export class InlineMatch extends HTMLDivElement {
      * Renders the InlineMatch element with default styles.
      */
     render() {
-        this.classList.add('box-border', 'grid', 'grid-cols-6', 'h-m', 'text-center');
+        this.classList.add('box-border', 'grid', 'grid-cols-6', 'h-m', 'text-center', 'pad-s');
     }
 }
 
@@ -120,16 +147,16 @@ export class MatchHistory extends HTMLDivElement {
      */
     setHistory(matches: MatchOutcome[]) {
         const currentHistory = Array.from(this.children);
-        currentHistory.forEach((el) => {
-            if (el.id !== 'lb-header') el.remove();
-        });
-        if (matches.length < 1) {
-            // this.append(createNoResult('light', 'ifs'));
+        if (currentHistory.length < 1) {
+            this.append(createMatchOutcome(emptyMatch, true));
         } else {
-            matches.forEach((el) => {
-                this.append(createMatchOutcome(el, false));
+            currentHistory.forEach((el) => {
+                if (el.id !== 'matchesheader') el.remove();
             });
         }
+        matches.forEach((el) => {
+            this.append(createMatchOutcome(el, false));
+        });
     }
 
     connectedCallback() {
@@ -138,7 +165,7 @@ export class MatchHistory extends HTMLDivElement {
 
     render() {
         this.id = 'match-history';
-        this.classList.add('grid', 'grid-flow-rows', 'gap-xs', 'grid-auto-rows-auto', 'h-full');
+        this.classList.add('grid', 'matches', 'grid-flow-rows', 'gap-xs', 'pad-s', 'h-full', 'w-full');
     }
 }
 

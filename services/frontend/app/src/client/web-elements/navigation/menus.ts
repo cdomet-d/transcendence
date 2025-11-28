@@ -38,7 +38,6 @@ export class SocialMenu extends Menu {
     /** Called when element connects to DOM; calls base and updates view. */
     override connectedCallback(): void {
         super.render();
-        super.cache.get('challenge')?.styleButton();
     }
 
     clearView() {

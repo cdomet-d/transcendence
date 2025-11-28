@@ -67,7 +67,7 @@ export class TabPanel extends HTMLDivElement {
      * Renders the panel's base classes and visibility.
      */
     render() {
-        this.className = 'panel box-border overflow-y-scroll overflow-x-hidden h-full w-full';
+        this.className = 'box-border overflow-y-scroll overflow-x-hidden h-full w-full';
         if (this.hasAttribute('selected')) {
             this.classList.add('block');
         } else {
@@ -204,7 +204,6 @@ export class TabContainer extends HTMLDivElement {
                 el.setAttribute('selected', '');
             }
             this.append(el);
-            el.classList.add('pad-xs');
             this.populatePanels(tab);
         });
     }
@@ -216,7 +215,7 @@ export class TabContainer extends HTMLDivElement {
                 this.#tabPanels[tab.id]?.appendContent(createNoResult('light', 'ifs'));
             } else console.log('No such tab - do better');
         }
-	}
+    }
 
     /**
      * Renders tab wrapper structure and adds tab buttons and panels.

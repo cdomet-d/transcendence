@@ -1,6 +1,7 @@
 import { defaultAvatar } from '../default-values.js';
 import { createUserMasonery } from '../navigation/tabs-helpers.js';
-import type { ImgData, Size, TabData, UserData } from '../types-interfaces.js';
+import { createMatchHistory } from '../statistics/matches.js';
+import type { ImgData, MatchOutcome, Size, TabData, UserData } from '../types-interfaces.js';
 import { UserProfile, UserCardSocial, UserInline } from './profile.js';
 
 export function setAvatar(
@@ -68,13 +69,24 @@ export function createUserProfile(user: UserData): UserProfile {
     return el;
 }
 
-export function createFriendsPanel(users: UserData[]): TabData | null{
-	if (users.length < 1) return null;
+export function createFriendsPanel(users: UserData[]): TabData | null {
+    if (users.length < 1) return null;
     const friends = {
         id: 'friends',
         content: 'Friends',
         default: true,
-        panelContent: createUserMasonery(users)
+        panelContent: createUserMasonery(users),
     };
-	return friends;
+    return friends;
+}
+
+export function createMatchHistoryPanel(matches: MatchOutcome[]): TabData | null {
+    if (matches.length < 1) return null;
+    const history = {
+        id: 'history',
+        content: 'Game History',
+        default: false,
+        panelContent: createMatchHistory(matches),
+    };
+    return history;
 }

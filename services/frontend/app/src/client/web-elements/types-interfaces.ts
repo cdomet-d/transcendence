@@ -53,7 +53,7 @@ export type MenuSize = 's' | 'm' | 'l';
 export type DropdownBg = 'dynamic' | 'static';
 
 export interface navigationLinksData {
-	styleButton: boolean;
+    styleButton: boolean;
     id: string;
     datalink: string;
     href: string;
@@ -251,10 +251,10 @@ export interface InputFieldsData {
  */
 export interface MatchOutcome {
     date: string;
+    duration: string;
     opponent: string;
     outcome: string;
     score: string;
-    duration: string;
     tournament: boolean;
 }
 

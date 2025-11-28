@@ -674,6 +674,11 @@
 		place-items: start;
 	}
 
+	.matches {
+		display: grid;
+		grid-template-rows: repeat(auto-fit, minmax(24px, max-content));
+	}
+
 	.biography {
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
