@@ -10,9 +10,9 @@ export function gameOver(payload: string) {
 
 interface gameDashboardReqBody {
 	gameID: string //TODO: need to update type in db
-	tournamentID?: string | undefined //TODO: does db handle undefined ?
+	tournamentID?: string | undefined
 	localGame: boolean
-	startTime: number;//DATETIME //(a checker la gueule en typescript)
+	startTime: string;//new Date().toISOString()
 	player1: number
 	player2: number
 	duration: number
@@ -25,7 +25,7 @@ async function postGameToDashboard(game: game) {
 	const reqBody: gameDashboardReqBody = {
 		gameID: game.gameID,
 		tournamentID: game.tournamentID,
-		startTime: 1, //TODO: add it to gameInfo in pong
+		startTime: "1", //TODO: add it to gameInfo in pong
 		localGame: game.remote ? false : true,
 		player1: game.users![0]!.userID!,
 		player2: game.users![1]!.userID!,
@@ -36,7 +36,7 @@ async function postGameToDashboard(game: game) {
 	try {
 		const response: Response = await fetch(url, {
 			method: 'POST',
-			// headers: {'Content-Type': 'application/json'}, //TODO: why does it create an error 500 ?
+			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify(reqBody),
 		});
 		// TODO check response status ?

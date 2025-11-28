@@ -27,7 +27,7 @@ export function processGameRequest(lobbyInfo: lobbyInfo) {
 }
 
 async function postTournamentToDashboard(tournament: tournament) {
-	const url = `http://dashboard:1515/tournament/`;
+	const url = `http://dashboard:1515/tournament`;
 	const reqBody: { tournamentID: string, nbPlayers: number} = {
 		tournamentID: tournament.tournamentID, 
 		nbPlayers: tournament.nbPlayers, 

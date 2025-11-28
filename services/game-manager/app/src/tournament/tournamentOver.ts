@@ -7,7 +7,7 @@ export function tournamentOver(tournament: tournament) {
 }
 
 async function patchTournamentToDashboard(tournament: tournament) {
-	const url = `http://dashboard:1515/tournament/:${tournament.tournamentID}`;
+	const url = `http://dashboard:1515/tournament/${tournament.tournamentID}`;
 	try {
 		const response: Response = await fetch(url, {
 			method: 'PATCH',

@@ -53,6 +53,8 @@ function calculateStats(current: userStats, isWinner: boolean, duration: number,
 }
 
 export async function updateUserStats(serv: FastifyInstance, userID: number, isWinner: boolean, gameData: GameInput) {
+	if (userID === -1)
+		return ;
 	let currentStats = await serv.dbUsers.get<userStats>(
 		'SELECT * FROM userStats WHERE userID = ?',
 		[userID]
