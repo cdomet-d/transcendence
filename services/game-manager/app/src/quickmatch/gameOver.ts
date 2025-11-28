@@ -12,7 +12,7 @@ interface gameDashboardReqBody {
 	gameID: string //TODO: need to update type in db
 	tournamentID?: string | undefined //TODO: does db handle undefined ?
 	localGame: boolean
-	// startTime: DATETIME //(a checker la gueule en typescript)
+	startTime: number;//DATETIME //(a checker la gueule en typescript)
 	player1: number
 	player2: number
 	duration: number
@@ -25,6 +25,7 @@ async function postGameToDashboard(game: game) {
 	const reqBody: gameDashboardReqBody = {
 		gameID: game.gameID,
 		tournamentID: game.tournamentID,
+		startTime: 1, //TODO: add it to gameInfo in pong
 		localGame: game.remote ? false : true,
 		player1: game.users![0]!.userID!,
 		player2: game.users![1]!.userID!,
@@ -35,13 +36,13 @@ async function postGameToDashboard(game: game) {
 	try {
 		const response: Response = await fetch(url, {
 			method: 'POST',
-			headers: {'Content-Type': 'application/json'},
+			// headers: {'Content-Type': 'application/json'}, //TODO: why does it create an error 500 ?
 			body: JSON.stringify(reqBody),
 		});
 		// TODO check response status ?
 		if (!response.ok) {
 			console.error(`[GM] Dashboard service failed with status: ${response.status}`);
-			throw new Error(`Dashboard service failed with status ${response.status}`);
+			// throw new Error(`Dashboard service failed with status ${response.status}`);
 		}
 	} catch (error) {
 		console.error(`[GM] Dashboard service (via route /game) is unreachable: ${error}`);
@@ -76,12 +77,12 @@ async function postGameToUsers(game: game) {
 		});
 		// TODO check response status ?
 		if (!response.ok) {
-			console.error(`[GM] Dashboard service failed with status: ${response.status}`);
-			throw new Error(`Dashboard service failed with status ${response.status}`);
+			console.error(`[GM] Users service failed with status: ${response.status}`);
+			// throw new Error(`Users service failed with status ${response.status}`);
 		}
 	} catch (error) {
-		console.error(`[GM] Dashboard service (via route /game) is unreachable: ${error}`);
-		throw new Error('Dashboard service is unreachable.');
+		console.error(`[GM] Users service (via route /game) is unreachable: ${error}`);
+		throw new Error('Users service is unreachable.');
 	}
 }
 
