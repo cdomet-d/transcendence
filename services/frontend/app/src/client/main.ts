@@ -17,7 +17,7 @@ declare global {
     }
 }
 
-interface userStatusInfo {
+export interface userStatusInfo {
     auth: boolean;
     username?: string;
     userID?: number;

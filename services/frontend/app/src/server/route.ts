@@ -12,7 +12,7 @@ function handler(req: FastifyRequest, res: FastifyReply) {
 
 const servRoutes: FastifyPluginCallback = function (serv, options, done) {
     serv.get('/*', handler);
-    serv.get('/notification', { websocket: true}, notifHandler)
+    serv.get('/notification/:userID', { websocket: true}, notifHandler)
     done();
 };
 

@@ -9,6 +9,7 @@ import websocket from '@fastify/websocket';
 import type { WebSocket } from '@fastify/websocket';
 import { initNatsConnection, natsSubscription } from './notifications/nats-subscriber.js';
 import type { NatsConnection } from 'nats';
+import { Users } from './notifications/users-class.js';
 
 (async () => {
     try {
@@ -23,11 +24,19 @@ import type { NatsConnection } from 'nats';
 export async function init(): Promise<FastifyInstance> {
     const serv: FastifyInstance = Fastify(options);
     serv.setNotFoundHandler(notFound);
+
+	//plugins
     await addPlugins(serv);
+
+	// decorations
+    serv.decorate("users", new Users());
     const nc: NatsConnection = await initNatsConnection();
 	serv.decorate("nc", nc);
-	await natsSubscription();
+	await natsSubscription(serv);
+
+	//hooks
 	addHooks(serv);
+
     await serv.ready();
     return serv;
 }

@@ -190,6 +190,19 @@ export interface UserData {
  */
 export type GameType = '1 vs 1' | 'tournament';
 
+export interface friendNotif {
+	type: 'FRIEND_REQUEST',
+	senderUsername: string,
+	receiverID: number //will be string eventually
+}
+
+export interface gameNotif {
+	type: 'GAME_INVITE',
+	receiverName: string,
+	receiverID: number, //will be string eventually
+	gameType: GameType
+}
+
 /* -------------------------------------------------------------------------- */
 /*                               Forms & Inputs                               */
 /* -------------------------------------------------------------------------- */

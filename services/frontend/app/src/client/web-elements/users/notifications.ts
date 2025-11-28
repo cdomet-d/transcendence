@@ -1,5 +1,6 @@
-import type { GameType, MenuData } from '../types-interfaces.js';
+import type { GameType, MenuData, friendNotif, gameNotif } from '../types-interfaces.js';
 import { createMenu } from '../navigation/menu-helpers.js';
+import { userStatus, type userStatusInfo } from '../../main.js';
 
 //TODO: Make notifications tab-focusable
 //TODO: Buttons are actually a form
@@ -311,6 +312,7 @@ export class NotifBox extends HTMLDivElement {
         window.addEventListener('scroll', this.computePanelPos);
         this.notifWsRequest();
         this.render();
+        //TODO:request db for pending friend request
     }
 
     /** Cleans up listeners and polling when the element is disconnected from the DOM. */
@@ -331,8 +333,12 @@ export class NotifBox extends HTMLDivElement {
         this.className = 'relative box-border w-fit flex items-start gap-m';
     }
 
-    notifWsRequest() {
-        const ws = new WebSocket('wss://localhost:8443/notification');
+    async notifWsRequest() {
+        const userStatusInfo: userStatusInfo = await userStatus();
+        if (userStatusInfo.auth === false || userStatusInfo.userID === undefined)
+            return;
+        const userID: number = userStatusInfo.userID;
+        const ws = new WebSocket(`wss://localhost:8443/notification/${userID}`);
 
         ws.onerror = () => {
             ws.close(1011, "websocket error")
@@ -341,13 +347,19 @@ export class NotifBox extends HTMLDivElement {
         ws.onopen = () => {
             console.log('NOTIF webSocket connection established!');
             this.#ws = ws;
+            ws.addEventListener('message', (event) => {
+                const notif: friendNotif | gameNotif = JSON.parse(event.data);
+                if (notif.type === 'FRIEND_REQUEST')
+                    this.newFriendRequest(notif.senderUsername);
+                else
+                    this.newGameInvitation(notif.receiverName, notif.gameType);
+            })
         }
 
         ws.onclose = (event) => {
             console.log('NOTIF webSocket connection closed!');
         }
     }
-
 }
 
 if (!customElements.get('notif-container'))
