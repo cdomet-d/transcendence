@@ -29,7 +29,7 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 		return;
 	}
 
-	getPlayerInGame(game, ids.userID, socket);
+	getPlayerInGame(game, ids.userID, socket);//TODO: what if second player never manages to connect ? add timer?
 
 	socket.onerror = (event) => {
 		this.log.error(event.message);
