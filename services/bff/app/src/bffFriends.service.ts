@@ -16,6 +16,18 @@ export async function createFriendRequest(log: any, senderID: number, friendID: 
 		throw new Error('Friends service is unreachable.');
 	}
 
+	if (response.status === 400) {
+		log.warn(`[BFF] Friend service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Unauthorized' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Friend service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Unauthorized' };
+	}
+
 	if (response.status === 409) {
 		log.warn(`[BFF] Friend request failed: Friendship already exists between ${senderID} and ${friendID}`);
 		const errorBody = await response.json() as { message: string };
@@ -53,6 +65,18 @@ export async function acceptFriendRequest(log: any, senderRequestID: number, fri
 	} catch (error) {
 		log.error(`[BFF] Friends service (acceptfriend) is unreachable: ${error}`);
 		throw new Error('Friends service is unreachable.');
+	}
+
+	if (response.status === 400) {
+		log.warn(`[BFF] Friend service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Unauthorized' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Friend service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Unauthorized' };
 	}
 
 	if (response.status === 409) {
@@ -93,6 +117,18 @@ export async function deleteFriendRequest(log: any, removerID: number, friendID:
 	} catch (error) {
 		log.error(`[BFF] Friends service (deletefriend) is unreachable: ${error}`);
 		throw new Error('Friends service is unreachable.');
+	}
+
+	if (response.status === 400) {
+		log.warn(`[BFF] Friend service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Unauthorized' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Friend service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Unauthorized' };
 	}
 
 	if (response.status === 409) {

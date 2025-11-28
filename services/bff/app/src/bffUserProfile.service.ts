@@ -367,6 +367,7 @@ export async function fetchFriendships(log: any, userID: number, status: Friends
 	return profiles.filter((p): p is userData => p !== null);
 }
 
+
 //error handled
 async function fetchMatches(log: any, userID: number, token: string): Promise<RawMatches[]> {
 	const url = `http://dashboard:1515/games/${userID}`;
