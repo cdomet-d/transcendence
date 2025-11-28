@@ -15,7 +15,7 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 		gameID: crypto.randomUUID().toString(),
 		remote: lobbyInfo.remote, // TODO this value will change just before click on start local game 
 		users: usersArray,
-		score: "",
+		score: [0, 0],
 		winnerID: 0,
 		loserID: 0, 
 		duration: 0, 

@@ -27,7 +27,7 @@ interface game {
 	tournamentID?: string,
 	remote: boolean,
 	users: userInfo[] | undefined | null,
-	score: string,
+	score: [number, number],
 	winnerID: number,
 	loserID: number,
 	duration: number,
@@ -37,7 +37,8 @@ interface game {
 interface tournament {
 	tournamentID: string,
 	winnerID: number | undefined | null,
-	bracket: game[]
+	bracket: game[],
+	nbPlayers: number
 }
 
 interface gameRequest {
