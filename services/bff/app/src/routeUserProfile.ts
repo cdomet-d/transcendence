@@ -1,13 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import type { UserProfileView, JwtPayload } from './bff.interface.js';
-import {
-    fetchLeaderboard,
-    searchBar,
-    buildTinyProfile,
-    fetchUserStats,
-    fetchFriendships,
-    processMatches,
-} from './bffUserProfile.service.js';
+import { fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches } from './bffUserProfile.service.js';
 //import { updatePassword, fetchUserDataAccount, updateUsername,  updateDefaultLang, deleteAccount, deleteUser  } from './bffAccount.service.js';
 //import { deleteFriendship } from './bffFriends.service.js'
 
@@ -209,7 +202,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
         }
     });
 
-    /* 	serv.patch('/settings', async (request, reply) => {
+	/* 	serv.patch('/settings', async (request, reply) => {
 			try {
 	
 				//TODO: userID is in the cookies so setup fastify JWT plugin and get userID this way

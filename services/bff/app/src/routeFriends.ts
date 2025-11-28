@@ -5,7 +5,6 @@ import { createFriendRequest, deleteFriendRequest, acceptFriendRequest } from '.
 
 
 //TODO test all routes (clc a cause du JWT)
-//TODO : add the token back to 'fetchUserID' once routes are tested
 export async function bffFriendRoutes(serv: FastifyInstance) {
 
 	//TESTED (without JWT)

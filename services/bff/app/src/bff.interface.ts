@@ -103,42 +103,9 @@ export interface Matches {
 	tournament: boolean;
 }
 
-/*----------  WIP  ----------*/
-
-export type userStatus = 'offline' | 'online' | 'in-game';
-
-export interface ProfileResponse {
-	success: boolean;
-	profile: UserProfile;
+export interface UserProfileUpdates {
+	avatar?: string;
+	biography?: string;
+	profileColor?: string;
+	defaultLang?: string;
 }
-
-export interface RawUserActivity { activityStatus: userStatus; }
-
-export interface UserAuth {
-	userID: number,
-	username: string
-}
-
-export interface UserProfile {
-	userID: number;
-	username: string;
-	avatar: string;
-	biography: string;
-	status: string
-	profileColor: string;
-}
-
-
-
-export interface settings {
-	defaultLang: string;
-	profileColor: string;
-	username: string;
-	biography: string;
-	password: string;
-}
-
-export type ProfileCreationResult =
-	| { errorCode: 'success'; data: any }
-	| { errorCode: 'conflict' }  // For 409
-	| { errorCode: 'user_not_found' }; // For 404
