@@ -14,7 +14,8 @@ export interface gameInfo {
     winnerID: number,
     loserID: number,
     duration: number,
-    longuestPass: number
+    longuestPass: number,
+    startTime: string,
 }
 
 /******************************** GAME OBJ ***********************************/

@@ -9,15 +9,15 @@ export function gameOver(payload: string) {
 }
 
 interface gameDashboardReqBody {
-	gameID: string //TODO: need to update type in db
-	tournamentID?: string | undefined
-	localGame: boolean
-	startTime: string;//new Date().toISOString()
-	player1: number
-	player2: number
-	duration: number
-	player1Score: number
-	player2Score: number
+	gameID: string;
+	tournamentID?: string | undefined;
+	localGame: boolean;
+	startTime: string;
+	player1: number;
+	player2: number;
+	duration: number;
+	player1Score: number;
+	player2Score: number;
 }
 
 async function postGameToDashboard(game: game) {
@@ -25,7 +25,7 @@ async function postGameToDashboard(game: game) {
 	const reqBody: gameDashboardReqBody = {
 		gameID: game.gameID,
 		tournamentID: game.tournamentID,
-		startTime: "1", //TODO: add it to gameInfo in pong
+		startTime: game.startTime,
 		localGame: game.remote ? false : true,
 		player1: game.users![0]!.userID!,
 		player2: game.users![1]!.userID!,

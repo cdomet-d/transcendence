@@ -65,5 +65,6 @@ const gameobj: gameInfo = {
 	winnerID: 0,
 	loserID: 0,
 	duration: 0,
-	longuestPass: 0
+	longuestPass: 0,
+	startTime: ""
 }
