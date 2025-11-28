@@ -18,11 +18,15 @@ import { Menu } from './basemenu.js';
  */
 export class SocialMenu extends Menu {
     #view: ProfileView;
+	#APIRemoveFriend: (ev: Event) => void;
+	#APIAddFriend: (ev: Event) => void;
 
     constructor() {
         super();
         this.id = 'social-menu';
         this.#view = 'stranger';
+		this.#APIAddFriend = this.#APIAddFriendImplementation.bind(this);
+		this.#APIRemoveFriend = this.#APIRemoveFriendImplementation.bind(this);
     }
 
     /**
@@ -35,9 +39,18 @@ export class SocialMenu extends Menu {
         this.render();
     }
 
+	#APIRemoveFriendImplementation() {
+		console.log('RemoveFriends')
+	}
+
+	#APIAddFriendImplementation() {
+		console.log('AddFriends')
+	}
     /** Called when element connects to DOM; calls base and updates view. */
     override connectedCallback(): void {
         super.render();
+		super.cache.get('removeFriend')?.addEventListener('click', this.#APIRemoveFriend)
+		super.cache.get('addFriend')?.addEventListener('click', this.#APIAddFriend)
     }
 
     clearView() {

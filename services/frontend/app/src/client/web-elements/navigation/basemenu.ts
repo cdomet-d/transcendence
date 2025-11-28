@@ -12,11 +12,13 @@ import type { NavigationLinks } from './links.js';
  * Menu elements are configured using {@link ButtonData} and created via {@link createButton}.
  */
 export class Menu extends HTMLElement {
+    /* ------------------------------- attributes ------------------------------- */
     #style: MenuStyle;
     #animated: boolean;
     #cache: Map<string, NavigationLinks | CustomButton>;
     #linkInfo: MenuData | null;
     #menuLinks: HTMLUListElement;
+    /* -------------------------------------------------------------------------- */
 
     constructor() {
         super();
@@ -29,10 +31,17 @@ export class Menu extends HTMLElement {
         this.append(this.#menuLinks);
     }
 
+    /** Called when the element is inserted into the DOM; triggers rendering. */
+    connectedCallback() {
+        this.render();
+    }
+
+    /* ---------------------------- setters & getters --------------------------- */
     /**
      * Sets the menu's button elements.
      *
-     * @param {ButtonData[] | navigationLinksData[]} list - Array of objects containing the data for the menus items
+     * @param {ButtonData[] | navigationLinksData[]} list - Array of objects 
+	 * containing the data for the menus items
      */
     set menuContent(list: MenuData) {
         this.#linkInfo = list;
@@ -72,11 +81,7 @@ export class Menu extends HTMLElement {
         return this.#cache;
     }
 
-    /** Called when the element is inserted into the DOM; triggers rendering. */
-    connectedCallback() {
-        this.render();
-    }
-
+    /* --------------------------------- render --------------------------------- */
     renderBtns() {
         if (!this.#linkInfo || !this.#linkInfo.buttons) throw new Error('Undefined data');
         this.#linkInfo.buttons.forEach((button) => {
@@ -97,6 +102,7 @@ export class Menu extends HTMLElement {
             this.#cache.set(el.id, el);
         });
     }
+
     /**
      * Renders the menu layout and appends button elements.
      *
