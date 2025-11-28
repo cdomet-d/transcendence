@@ -216,14 +216,15 @@ export class Game {
 			else
 				score2 = this.#players[1].score;
 		}
-		this.#gameInfo.score = [score1, score2];
 		if (score1 > score2) {
 			this.#gameInfo.winnerID = user1;
 			this.#gameInfo.loserID = user2;
+			this.#gameInfo.score = [score1, score2];
 		}
 		else {
 			this.#gameInfo.winnerID = user2;
 			this.#gameInfo.loserID = user1;
+			this.#gameInfo.score = [score2, score1];
 		}
 	}
 }
