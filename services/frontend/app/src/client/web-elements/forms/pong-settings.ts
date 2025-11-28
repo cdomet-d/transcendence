@@ -71,9 +71,7 @@ export class LocalPongSettings extends BaseForm {
         req.body = this.createReqBody(f);
         // await this.fetchAndRedirect(this.details.action, req);
 
-        console.log("1");
         wsConnect('game', 'quickmatch', 'localForm', '', req.body);
-
     }
 
     /* -------------------------------------------------------------------------- */

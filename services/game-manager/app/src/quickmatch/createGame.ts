@@ -27,7 +27,5 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 }
 
 export function startGame(game: game) {
-        console.log("6");
-
 	natsPublish("game.request", JSON.stringify(game), "game.reply");
 }

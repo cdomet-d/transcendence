@@ -16,12 +16,12 @@ function openWsConnection() {
 async function wsConnect(action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string) {
     const ws: WebSocket = openWsConnection();
 
-    ws.onopen = () => {
+    ws.onopen = async () => {
         console.log("Lobby WebSocket connection established!")
         // send Lobby Request
         if (action === 'create') {
             if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-                wsInstance.send(createLobbyRequest(action, format, formInstance));
+                wsInstance.send(await createLobbyRequest(action, format, formInstance));
             } else {
                 console.log(`Error: WebSocket is not open for ${action}`);
             }
@@ -37,9 +37,8 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 
     // send Game Request
     if (action === 'game') {
-        console.log("2");
         if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-            wsInstance.send(createGameRequest(format, formInstance, gameSettings!));
+            wsInstance.send(await createGameRequest(format, formInstance, gameSettings!));
         } else {
             console.log(`Error: WebSocket is not open for ${action}`);
         }
@@ -48,24 +47,20 @@ async function wsConnect(action: string, format: string, formInstance: string, l
     ws.onmessage = (message: MessageEvent) => {
         try {
             // handle Response for lobbyRequest
-            console.log("8");
-
             const data = JSON.parse(message.data);
             if (data.lobby && (data.lobby === 'created' || data.lobby === 'joined')) {
                 console.log(`${data.lobby} lobby ${data.lobbyID} successfully!`);
                 // send lobbyID to Form
-                console.log(data.formInstance)
+                console.log("Form instance: ", data.formInstance);
                 // updateGameForm(data.formInstance);
                 return;
             }
 
             // handle Response for gameRequest
-            console.log("9");
-
             const gameRequest: gameRequest = data;
             // verify gameRequest content before rendering PONG
             console.log("IN WS CONNECT GameRequest =>", gameRequest);
-            router.loadRoute('/game', true, gameRequest);
+            router.loadRoute('/game', true, gameRequest); // TODO give usernames in gameRequest
         } catch (error) {
             console.error("Error: Failed to parse WS message", error);
         }

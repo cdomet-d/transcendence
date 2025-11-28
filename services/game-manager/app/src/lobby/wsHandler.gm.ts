@@ -10,12 +10,14 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 	socket.on('message', (message: string) => {
 		try {
 			const data = JSON.parse(message);
+			if (data.event === "BAD_USER_TOKEN") return;
+
 			const { payload, formInstance } = data;
 			
 			if (data.event === "LOBBY_REQUEST") {
 				
 				userID = payload.userID;
-				console.log("UID: ", userID);
+				console.log("lobbyHost UID: ", userID);
 				
 				if (!wsClientsMap.has(userID!)) {
 					wsClientsMap.set(userID!, socket);
@@ -29,7 +31,6 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 					socket.send(JSON.stringify({ lobby: "joined", lobbyID: payload.lobbyID }));
 				}
 			} else if (data.event === "GAME_REQUEST") {
-		        console.log("4");
 				processGameRequest(payload);
 			}
 		} catch (error) {

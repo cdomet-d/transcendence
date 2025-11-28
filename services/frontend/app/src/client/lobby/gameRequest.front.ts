@@ -1,3 +1,5 @@
+import { userStatus, type userStatusInfo } from "../main";
+
 interface lobbyInfo {
     userList: userInfo[];
     remote: boolean;
@@ -17,12 +19,16 @@ interface gameRequestForm {
     payload: lobbyInfo;
 }
 
-function createGameRequest(format: string, formInstance: string, gameSettings: string): string {
-        console.log("3");
-
+async function createGameRequest(format: string, formInstance: string, gameSettings: string): Promise<string> {
     const customSettings = JSON.parse(gameSettings);
     const localOpponent: string | undefined = customSettings.opponent;
-    console.log("FORM: ", formInstance);
+    // console.log("FORM: ", formInstance); // will be useful at some point
+
+    const host: userStatusInfo = await userStatus();
+    if (!host) {
+        console.log("Error: User token is not valid!");
+        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+    }
 
     const gameRequestForm: gameRequestForm = {
         event: 'GAME_REQUEST',
@@ -31,7 +37,7 @@ function createGameRequest(format: string, formInstance: string, gameSettings: s
             remote: formInstance === 'localForm' ? false : true,
             nbPlayers: format === 'quickmatch' ? 2 : 4,
             userList: [
-                { userID: 8, username: 'waka' }, // TODO const status = await userStatus /*  */ // WHAT IS THIS STATUS FOR AGAIN?
+                { userID: host.userID, username: host.username },
                 localOpponent !== undefined ? 
                     { userID: -1 /* uid will become 'temporary' */, username: localOpponent } : { userID: 2, username: 'alex' }, // TODO add remote user once we have operational Notifications
                 
