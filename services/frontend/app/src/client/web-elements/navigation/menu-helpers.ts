@@ -1,6 +1,5 @@
 import type {
     MenuStyle,
-    ProfileView,
     DropdownBg,
     ButtonData,
     MenuData,

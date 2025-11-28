@@ -35,6 +35,7 @@ export class CustomInput extends HTMLInputElement {
     }
 
     render() {
+		this.autocomplete = 'off';
         this.className = 'brdr w-full';
     }
 
@@ -63,11 +64,14 @@ export class CustomInput extends HTMLInputElement {
     }
 
     #typeText(el: HTMLInputElement): string[] {
+		let min: number;
+
+		el.id === 'searchbar' ? min = 0 : min = 4;
         const val = el.value;
         let feedback: string[] = [];
         if (!/[A-Za-z0-9]/.test(val)) feedback.push('Forbidden character');
-        if (val.length < 4 || val.length > 18)
-            feedback.push(`Username should be 4-18 character long, is: ${val.length}`);
+        if (val.length < min || val.length > 18)
+            feedback.push(`Username should be ${min.toString()}-18 character long, is: ${val.length}`);
         return feedback;
     }
 

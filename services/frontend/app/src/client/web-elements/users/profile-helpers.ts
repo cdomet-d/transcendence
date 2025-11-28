@@ -1,7 +1,15 @@
-import type { ImgData, Size, UserData } from '../types-interfaces.js';
+import { defaultAvatar } from '../default-values.js';
+import { createUserMasonery } from '../navigation/tabs-helpers.js';
+import { createMatchHistory } from '../statistics/matches.js';
+import type { ImgData, MatchOutcome, Size, TabData, UserData } from '../types-interfaces.js';
 import { UserProfile, UserCardSocial, UserInline } from './profile.js';
 
-export function setAvatar(av: ImgData, size: Size, el: UserProfile | UserCardSocial | UserInline) {
+export function setAvatar(
+    size: Size,
+    el: UserProfile | UserCardSocial | UserInline,
+    av?: ImgData | null,
+) {
+    if (!av) av = defaultAvatar;
     const avatar = { ...av };
     avatar.size = size;
     el.avatar = avatar;
@@ -18,7 +26,7 @@ export function setUserProfileCommonValues(
     el.status = user.status;
     el.username = user.username;
     el.winstreak = user.winstreak;
-    setAvatar(user.avatar, size, el);
+    setAvatar(size, el, user.avatar);
 }
 
 /**
@@ -59,4 +67,26 @@ export function createUserProfile(user: UserData): UserProfile {
     el.biography = user.biography;
     el.profileAge = user.since;
     return el;
+}
+
+export function createFriendsPanel(users: UserData[]): TabData | null {
+    if (users.length < 1) return null;
+    const friends = {
+        id: 'friends',
+        content: 'Friends',
+        default: true,
+        panelContent: createUserMasonery(users),
+    };
+    return friends;
+}
+
+export function createMatchHistoryPanel(matches: MatchOutcome[]): TabData | null {
+    if (matches.length < 1) return null;
+    const history = {
+        id: 'history',
+        content: 'Game History',
+        default: false,
+        panelContent: createMatchHistory(matches),
+    };
+    return history;
 }

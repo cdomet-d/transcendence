@@ -2,7 +2,14 @@ import type { navigationLinksData } from '../types-interfaces.js';
 import { createIcon } from '../typography/helpers.js';
 import { router } from '../../main.js';
 
-const emptyLink: navigationLinksData = { id: '', datalink: '', href: '', title: '', img: null };
+const emptyLink: navigationLinksData = {
+    id: '',
+    datalink: '',
+    href: '',
+    title: '',
+    img: null,
+    styleButton: false,
+};
 
 export class NavigationLinks extends HTMLAnchorElement {
     #info: navigationLinksData;
@@ -82,7 +89,21 @@ export class NavigationLinks extends HTMLAnchorElement {
         );
     }
 
+    #dynamicRender() {
+        if (this.#info.img) this.#renderIconLink();
+        else if (this.#info.title && !this.#animated) {
+            this.#renderTextLink();
+        } else if (this.#info.title && this.#animated) {
+            this.#renderAnimatedLink();
+        }
+        if (this.#info.styleButton) this.styleButton();
+    }
     connectedCallback() {
+        this.className =
+            'box-border pad-xs outline-hidden \
+			overflow-hidden  cursor-pointer   text-center \
+			hover:transform hover:scale-[1.02] \
+			focus-visible:transform focus-visible:scale-[1.02]';
         this.addEventListener('click', this.#clickHandler);
         this.render();
     }
@@ -92,19 +113,7 @@ export class NavigationLinks extends HTMLAnchorElement {
     }
 
     render() {
-        this.className =
-            'box-border pad-xs outline-hidden \
-			overflow-hidden  cursor-pointer   text-center \
-			hover:transform hover:scale-[1.02] \
-			focus-visible:transform focus-visible:scale-[1.02]';
-        if (this.#info.img) this.#renderIconLink();
-        else if (this.#info.title && !this.#animated) {
-            this.#renderTextLink();
-            this.styleButton();
-        } else if (this.#info.title && this.#animated) {
-            this.#renderAnimatedLink();
-            this.styleButton();
-        }
+        this.#dynamicRender();
         this.href = this.#info.href;
         this.title = this.#info.title;
         this.id = this.#info.id;

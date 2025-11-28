@@ -1,4 +1,4 @@
-import { createUserCardSocial, createUserProfile } from './profile-helpers.js';
+import { createUserCardSocial } from './profile-helpers.js';
 import type { TabData, UserData } from '../types-interfaces.js';
 import { UserProfile } from './profile.js';
 import { TabContainer } from '../navigation/tabs.js';
@@ -12,15 +12,15 @@ export const user: UserData = {
         size: 'ilarge',
         src: '/public/assets/images/magenta-avatar.png',
     },
-    biography: '(╯°□°)╯︵ ┻━┻',
-    id: '64',
+    biography: '',
+    id: '',
     relation: 'self',
-    profileColor: 'bg-BE5103',
-    language: 'English',
+    profileColor: '',
+    language: '',
     status: true,
-    username: 'Elaine',
-    winstreak: '7',
-    since: '145',
+    username: '',
+    winstreak: '',
+    since: '',
 };
 
 /**
@@ -48,7 +48,7 @@ export class UserMasonery extends HTMLDivElement {
     }
 
     render() {
-        this.className = 'w-full masonery gap-xs';
+        this.className = 'w-full h-full masonery gap-s pad-s';
     }
 }
 
@@ -56,13 +56,13 @@ if (!customElements.get('user-masonery')) {
     customElements.define('user-masonery', UserMasonery, { extends: 'div' });
 }
 
-export class ProfileWithTabs extends HTMLDivElement {
+export class ProfilePage extends HTMLDivElement {
     #userProfile: UserProfile;
     #userTabs: TabContainer;
 
     constructor() {
         super();
-        this.#userProfile = createUserProfile(user);
+        this.#userProfile = document.createElement('div', { is: 'user-profile' }) as UserProfile;
         this.#userTabs = createTabs(profileTabs);
     }
 
@@ -74,7 +74,8 @@ export class ProfileWithTabs extends HTMLDivElement {
     the provided tabData matches one of the current tab for the Tab container.
 	
     If not, fails silently (for now, maybe I'll add an error management later)  */
-    set panelContent(tabData: TabData) {
+    set panelContent(tabData: TabData | null) {
+		if (!tabData) return;
         this.#userTabs.populatePanels(tabData);
     }
 
@@ -91,5 +92,5 @@ export class ProfileWithTabs extends HTMLDivElement {
 }
 
 if (!customElements.get('profile-page')) {
-    customElements.define('profile-page', ProfileWithTabs, { extends: 'div' });
+    customElements.define('profile-page', ProfilePage, { extends: 'div' });
 }
