@@ -15,9 +15,9 @@ export function updatePaddlePos(player: Player, keys: keysObj, game: Game) {
 	if ((player.left && keys.a))
 		left(player.paddle, game, 0, player.padStep);
 	if ((player.left && keys.d))
-		right(player.paddle, game, WIDTH / 2 - game.ball.r - 10 - game.padSpec.w, player.padStep);
+		right(player.paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, player.padStep);
 	if (player.right && (keys.ArrowLeft || !game.local && keys.d))
-		left(player.paddle, game, WIDTH / 2 + game.ball.r + 10, player.padStep);
+		left(player.paddle, game, WIDTH / 2 + game.ball.r + 1, player.padStep);
 	if (player.right && (keys.ArrowRight || !game.local && keys.a))
 		right(player.paddle, game, WIDTH - game.padSpec.w, player.padStep);
 	movePaddle(game, player.paddle, player.padStep);
