@@ -37,14 +37,19 @@ export async function buildTinyProfile(log: any, viewerUserID: number, targetUse
 	} catch (error) {
 		if (typeof error === 'object' && error !== null && 'code' in error) {
 			const customError = error as { code: number, message: string };
-			if (customError.code === 404) {
-				throw { code: 404, message: customError.message || '[BFF] User not found.' };
-			}
+
+			if (customError.code === 404) throw { code: 404, message: customError.message || '[BFF] User not found.' };
+			if (customError.code === 400) throw { code: 400, message: customError.message || '[BFF] Unauthorized' };
+			if (customError.code === 401) throw { code: 401, message: customError.message || '[BFF] Unauthorized' };
+
+			throw (error);
 		}
+		//TODO fix this
+		return;
 	}
 }
 
-//TODO handle error
+//error handled
 export async function searchBar(log: any, username: string, token: string): Promise<userData[]> {
 	const url = `http://users:2626/search?name=${username}`;
 	let response: Response;
@@ -86,7 +91,7 @@ export async function searchBar(log: any, username: string, token: string): Prom
 		throw new Error('User service returned invalid data.');
 	}
 
-	return body.profiles;
+	return (body.profiles);
 }
 
 //TODO handle error 404 with a throw 404 and catch in route
@@ -276,7 +281,8 @@ export async function fetchUserStats(log: any, userID: number, token: string): P
 }
 
 //The 'since' in the friendlist will store the friendship creation data, not the creation of the profile of the friend
-// Make a issue on github if you'd rather it to be the creation of the friend's profile 
+// Make a issue on github if you'd rather it to be the creation of the friend's profile
+
 export async function fetchFriendships(log: any, userID: number, status: FriendshipStatus, token: string): Promise<userData[]> {
 	const url = `http://friends:1616/friendlist?userID=${userID}`;
 	let response: Response;
@@ -336,8 +342,16 @@ export async function fetchFriendships(log: any, userID: number, status: Friends
 			}
 			return (profile);
 		} catch (error) {
-			log.warn(`[BFF] Could not fetch profile for user ${friendship.friendID}`);
-			return null;
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number, message: string };
+				if (customError.code === 404) {
+					const errorBody = await response.json() as { message: string };
+					throw { code: 401, message: errorBody.message || '[BFF] Could not friendlist.' };
+				}
+
+				log.warn(`[BFF] Could not fetch profile for user ${friendship.friendID}`);
+				return null;
+			}
 		}
 	});
 
@@ -484,6 +498,7 @@ export async function processMatches(log: any, userID: number, token: string): P
 
 		return (processedMatches);
 	} catch (error) {
+		throw (error);
 
 	}
 }
@@ -539,6 +554,7 @@ export async function fetchLeaderboard(log: any, token: string): Promise<userDat
 	return (body.profiles);
 }
 
+//error handling done
 export async function updateUserProfile(log: any, userID: number, updates: UserProfileUpdates, token: string): Promise<void> {
 	const url = `http://users:2626/${userID}`;
 
@@ -586,6 +602,7 @@ export async function updateUserProfile(log: any, userID: number, updates: UserP
 	}
 }
 
+//error handling done
 export async function updateAuthSettings(log: any, userID: number, updates: UserProfileUpdates, token: string): Promise<void> {
 	const url = `http://auth:3939/${userID}`;
 

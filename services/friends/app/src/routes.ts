@@ -167,15 +167,15 @@ export async function routeFriend(serv: FastifyInstance) {
 			if (response.changes === 0)
 				throw new Error('[FRIENDS] Friend request failed to save.');
 
+			//TODO : move that to bff
 			try {
 				const eventPayload = {
 					type: 'FRIEND_REQUEST',
 					senderID: senderID,
 					receiverID: friendID,
-					timestamp: new Date().toISOString()
 				};
 				console.log('nats published !');
-				serv.nats.publish('notification.friendRequest', jsonCodec.encode(eventPayload));
+				serv.nats.publish('post.notif', jsonCodec.encode(eventPayload));
 
 				serv.log.info(`[NATS] Published friend request notification for user ${friendID}`);
 			} catch (natsError) {
