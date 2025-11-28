@@ -5,6 +5,8 @@ import cookie from '@fastify/cookie';
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import websocket from '@fastify/websocket';
+import type { WebSocket } from '@fastify/websocket';
 
 function notFound(request: FastifyRequest, reply: FastifyReply) {
     reply
@@ -40,6 +42,18 @@ async function addPlugins(serv: FastifyInstance) {
                     res.setHeader('Content-Type', 'application/javascript');
                 }
             },
+        })
+        .register(websocket, {
+            errorHandler: function (
+                error,
+                socket: WebSocket,
+                req: FastifyRequest,
+                reply: FastifyReply
+            ) {
+                serv.log.error(error);
+                socket.close(1011, error.message);
+            },
+            options: {},
         })
         .register(servRoutes)
         .register(

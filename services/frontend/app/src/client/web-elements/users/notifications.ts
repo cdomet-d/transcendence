@@ -237,6 +237,7 @@ export class NotifBox extends HTMLDivElement {
     #toggle: NotifToggle;
     #popup: NotifPanel;
     #newNotifIntervalId!: NodeJS.Timeout;
+    #ws: WebSocket | null;
 
     constructor() {
         super();
@@ -244,6 +245,7 @@ export class NotifBox extends HTMLDivElement {
         this.#popup = document.createElement('div', { is: 'notif-panel' }) as NotifPanel;
         this.computePanelPos = this.computePanelPos.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.#ws = null;
     }
 
     /** Computes and updates the position of the notification popup relative to the toggle button. */
@@ -301,12 +303,13 @@ export class NotifBox extends HTMLDivElement {
     //TODO: Improve notification polling with NATS messages when a user receives a notification
     /** Sets up Event listeners and polling logic when the container is attached to the DOM. */
     connectedCallback() {
-        this.#newNotifIntervalId = setInterval(() => {
-            this.#toggle.toggleAlert(this.#popup.checkUnreadNotification());
-        }, 5000);
+        // this.#newNotifIntervalId = setInterval(() => {
+        //     this.#toggle.toggleAlert(this.#popup.checkUnreadNotification());
+        // }, 5000);
         this.addEventListener('click', this.handleClick);
         window.addEventListener('resize', this.computePanelPos);
         window.addEventListener('scroll', this.computePanelPos);
+        this.notifWsRequest();
         this.render();
     }
 
@@ -316,6 +319,8 @@ export class NotifBox extends HTMLDivElement {
         window.removeEventListener('resize', this.computePanelPos);
         window.removeEventListener('scroll', this.computePanelPos);
         this.removeEventListener('click', this.handleClick);
+        if (this.#ws)
+            this.#ws.close;
     }
 
     /** Renders the toggle and panel elements inside the main wrapper. */
@@ -325,6 +330,24 @@ export class NotifBox extends HTMLDivElement {
         this.id = 'notificationWrapper';
         this.className = 'relative box-border w-fit flex items-start gap-m';
     }
+
+    notifWsRequest() {
+        const ws = new WebSocket('wss://localhost:8443/notification');
+
+        ws.onerror = () => {
+            ws.close(1011, "websocket error")
+        };
+
+        ws.onopen = () => {
+            console.log('NOTIF webSocket connection established!');
+            this.#ws = ws;
+        }
+
+        ws.onclose = (event) => {
+            console.log('NOTIF webSocket connection closed!');
+        }
+    }
+
 }
 
 if (!customElements.get('notif-container'))
