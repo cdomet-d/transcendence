@@ -9,7 +9,7 @@ import { wsRoute } from './route.js';
 import { options } from './serv-conf.js';
 import { initNatsConnection, natsSubscription } from './nats/subscriber.js';
 import { GameRegistry } from './classes/gameRegistry-class.js';
-import { NatsConnection } from 'nats';
+import type { NatsConnection } from 'nats';
 
 (async () => {
     try {
