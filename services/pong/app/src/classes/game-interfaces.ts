@@ -7,7 +7,7 @@ export interface user {
 export interface gameInfo {
     lobbyID: number,
     gameID: string,
-    tournamentID?: number,
+    tournamentID?: string,
     remote: boolean,
     users: [user, user],
     score: [number, number],
