@@ -169,7 +169,7 @@ export class Game {
 		let serverSide: string = "left";
 		if (this.#players.length === 1)
 			serverSide = "right";
-		const player: Player = new Player(userID, socket, serverSide, clientSide, this.#paddleSpec);
+		const player: Player = new Player(userID, socket, serverSide, clientSide, this.#paddleSpec, this.#ball);
 		this.#players.push(player);
 	}
 
