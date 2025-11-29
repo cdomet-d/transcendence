@@ -4,7 +4,7 @@ import type { repObj } from './classes/game.interfaces.js';
 import { movePaddle, updatePaddlePos } from './paddle.js';
 import { deadReckoning, updateBallPos } from './ball.js';
 
-const SERVER_TICK: number = 1000 / 50;
+const SERVER_TICK: number = 1000 / 60;
 const TIME_STEP: number = 1000 / 60;
 const MAX_UPDATES_PER_FRAME = 8;
 
@@ -72,7 +72,6 @@ function lerp(start: number, end: number, t: number): number {
 
 function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean {
 	let id: number = latestReply._ID;
-	game.deleteReq(id);
 
 	if (latestReply._score[0] != game.score[0] 
 		|| latestReply._score[1] != game.score[1])
@@ -82,33 +81,23 @@ function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean
 		game.rightPad = latestReply._rightPad;
 	game.ball = latestReply._ball;
 
-	// if (game.leftStep.x != 0 || game.leftStep.y != 0
-	// 	|| game.rightStep.x != 0 || game.rightStep.y != 0) {
-	// 	deadReckoning(game, undefined);
-	// 	finishSteps(game);
-	// }
-	// for (let i = id + 1; game.reqHistory.has(i); i++) {
-	// 	updatePaddlePos(game.leftPad, true, game, game.reqHistory.get(i)!._keys);
-	// 	if (game.local) 
-	// 		updatePaddlePos(game.rightPad, false, game, game.reqHistory.get(i)!._keys);
-	// 	deadReckoning(game, latestReply);
-	// 	finishSteps(game);
-	// }
 	const sortedRequests = Array.from(game.reqHistory.entries())
         .filter(req => req[0] > id)    
-    let lastTimestamp = latestReply._timestamp;
+    let lastTimestamp = game.reqHistory.get(id)!._timeStamp + TIME_STEP;
+	game.deleteReq(id);
+	let timeSinceUpdate: number = 0;
 
     for (const req of sortedRequests) {
         const deltaTime = req[1]._timeStamp - lastTimestamp;
         let simulatedTime = 0;
-        
+        timeSinceUpdate = req[1]._timeStamp - latestReply._timestamp;
         while (simulatedTime + TIME_STEP <= deltaTime) {
-            simulatedTime += TIME_STEP;
-			const nextX: number = game.ball.x + game.ball.dx * simulatedTime//TIME_STEP;
-			const nextY: number = game.ball.y + game.ball.dy * simulatedTime//TIME_STEP;
-			updateBallPos(game, nextX, nextY);
-            // deadReckoning(game, latestReply);
+			const nextX: number = game.ball.x + game.ball.dx * timeSinceUpdate;
+			const nextY: number = game.ball.y + game.ball.dy * timeSinceUpdate;
+			updateBallPos(game, nextX, nextY, timeSinceUpdate);
             finishSteps(game);
+            simulatedTime += TIME_STEP;
+			timeSinceUpdate += TIME_STEP;
         }
         
         updatePaddlePos(game.leftPad, true, game, req[1]._keys);
@@ -117,6 +106,14 @@ function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean
         
         lastTimestamp = req[1]._timeStamp;
     }
+	const last = sortedRequests.at(-1);
+	if (last) {
+		timeSinceUpdate = last[1]._timeStamp - latestReply._timestamp;
+		const nextX: number = game.ball.x + game.ball.dx * TIME_STEP;
+		const nextY: number = game.ball.y + game.ball.dy * TIME_STEP;
+		updateBallPos(game, nextX, nextY, timeSinceUpdate);
+		finishSteps(game);
+	}
 	if (latestReply._end === true) {
 		ws.send("0");
 		return true;

@@ -15,16 +15,16 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
         timeSinceUpdate = 100;//TODO: add var for 100
     const nextX: number = ball.x + ball.dx * timeSinceUpdate;
     const nextY: number = ball.y + ball.dy * timeSinceUpdate;
-    updateBallPos(game, nextX, nextY);
+    updateBallPos(game, nextX, nextY, timeSinceUpdate);
 }
 
-export function updateBallPos(game: Game, nextX: number, nextY: number) {
+export function updateBallPos(game: Game, nextX: number, nextY: number, timeSinceUpdate: number) {
     if (sideWallCollision(game, nextX)) 
         return false;
     nextY = upperAndBottomWallCollision(game, nextY);
-    if (paddleCollision(game, game.leftPad, nextX, nextY))
+    if (paddleCollision(game, game.leftPad, nextX, nextY, timeSinceUpdate))
         return false;
-    if (paddleCollision(game, game.rightPad, nextX, nextY))
+    if (paddleCollision(game, game.rightPad, nextX, nextY, timeSinceUpdate))
         return false;
     game.ball.x = nextX;
     game.ball.y = nextY;
@@ -59,15 +59,13 @@ export function paddleCollision(
     paddle: coordinates,
     nextX: number,
     nextY: number,
+    timeSinceUpdate: number
 ): boolean {
     const result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);
     if (!result) return false;
     const [t, n] = result;
-    game.ball.x += game.ball.dx * TIME_STEP * t + 1 * n.x;
-    game.ball.y += game.ball.dy * TIME_STEP * t + 1 * n.y;
+    game.ball.x += game.ball.dx * timeSinceUpdate * t + 1 * n.x;
+    game.ball.y += game.ball.dy * timeSinceUpdate * t + 1 * n.y;
     updateVelocity(game, paddle, n.x);
-    const remainingStep: number = 1 - t;
-    game.ball.x += game.ball.dx * TIME_STEP * remainingStep;
-    game.ball.y += game.ball.dy * TIME_STEP * remainingStep;
     return true;
 }

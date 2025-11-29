@@ -5,7 +5,7 @@ import { movePaddle, updatePaddlePos } from './paddle.js';
 import { Player } from "../classes/player.class.js";
 import { messageHandler } from './pong.js';
 
-const SERVER_TICK: number = 1000 / 50;
+const SERVER_TICK: number = 1000 / 60;
 const TIME_STEP: number = 1000 / 60;
 
 export async function gameLoop(game: Game, player1: Player, player2: Player) { //TODO: make player1 and player2 getters
@@ -17,27 +17,26 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) { /
 
 	// get requests
 	const reqsToProcess = game.reqHistory.filter(playerReq => playerReq._req._timeStamp < tickEnd);
-	// const futureReqs = game.reqHistory.filter(playerReq => playerReq._req._timeStamp >= tickEnd);
 	reqsToProcess.sort((a, b) => a._req._timeStamp - b._req._timeStamp);
 
 	// update game
 	let simulatedTime = 0;
 	for (const playerReq of reqsToProcess) {
 		const player: Player = playerReq._id === 1 ? player1 : player2;
-		simulatedTime = moveBall(game, simulatedTime, playerReq._req._timeStamp - tickStart, TIME_STEP);
+		simulatedTime = moveBall(game, simulatedTime, playerReq._req._timeStamp - tickStart);
 		if (simulatedTime === -1)
 			return;
 		updatePaddlePos(player, playerReq._req._keys, game);
 		player.reply._ID = playerReq._req._ID;
 	}
-	simulatedTime = moveBall(game, simulatedTime, SERVER_TICK, TIME_STEP)
+	simulatedTime = moveBall(game, simulatedTime, SERVER_TICK)
 	if (simulatedTime === -1)
 		return;
 	sendToPlayers(game, player1, player2);
 	game.remainingTickTime = SERVER_TICK - simulatedTime;
 
 	// clean
-	game.reqHistory = game.reqHistory.filter(playerReq => playerReq._req._timeStamp >= tickEnd - game.remainingTickTime);//futureReqs;
+	game.reqHistory = game.reqHistory.filter(playerReq => playerReq._req._timeStamp >= tickEnd - game.remainingTickTime);
 
 	// new loop
 	const delay: number = SERVER_TICK - (performance.now() - game.startLoop);
@@ -45,8 +44,8 @@ export async function gameLoop(game: Game, player1: Player, player2: Player) { /
 	game.addTimoutID(setTimeout(gameLoop, Math.max(0, delay), game, player1, player2));
 }
 
-function moveBall(game: Game, simulatedTime: number, end: number, i: number): number {
-	while(simulatedTime + i <= end) {
+function moveBall(game: Game, simulatedTime: number, end: number): number {
+	while(simulatedTime + TIME_STEP <= end) {
 		if (updateBallPos(game, game.players[0]!, game.players[1]!)) {
 			endGame(game.players[0]!, game.players[1]!, game);
 			return -1;

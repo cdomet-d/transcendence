@@ -24,7 +24,7 @@ export class Player {
 			_rightPad: {
 				coord: {x: WIDTH - (padSpec.w + 25), y: HEIGHT / 2 - padSpec.halfH},
 				step: {x: 0, y: 0}},
-			_ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.03, r: 15}, 
+			_ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.03, r: 13}, 
 			_score: [0, 0],
 			_end: false
 		};
