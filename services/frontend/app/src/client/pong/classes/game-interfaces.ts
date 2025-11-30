@@ -36,8 +36,8 @@ export interface coordinates {
 
 /**************************** WS DATA OBJ ********************************/
 export interface paddleObj {
-    coord: coordinates,
-    step: coordinates
+    coord: coordinates;
+    step: coordinates;
 }
 
 export interface repObj {
@@ -47,7 +47,7 @@ export interface repObj {
     rightPad: paddleObj;
     ball: ballObj;
     score: [number, number];
-    end: boolean
+    end: boolean;
 }
 
 export interface reqObj {

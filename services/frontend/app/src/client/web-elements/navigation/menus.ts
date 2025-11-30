@@ -2,7 +2,11 @@ import { createButton } from './buttons-helpers.js';
 import type { ButtonData, ProfileView, DropdownBg } from '../types-interfaces.js';
 import type { CustomButton } from './buttons.js';
 import { Menu } from './basemenu.js';
-import { errorMessageFromException, createErrorFeedback, errorMessageFromResponse } from '../../error.js';
+import {
+    errorMessageFromException,
+    createErrorFeedback,
+    errorMessageFromResponse,
+} from '../../error.js';
 
 //TODO: update SocialMenu to Setting button when view is 'self'
 //TODO: each button is actually a form, lol
@@ -55,8 +59,8 @@ export class SocialMenu extends Menu {
         return this.#owner;
     }
 
-	// TODO: RemoveFriends is calling correctly but results in 404 = unsure whether there's a true issue 
-	// or if it's because the current friendships are artificially created.
+    // TODO: RemoveFriends is calling correctly but results in 404 = unsure whether there's a true issue
+    // or if it's because the current friendships are artificially created.
     async #APIRemoveFriendImplementation() {
         console.log('RemoveFriends');
         const url = 'https://localhost:8443/api/bff/relation';
@@ -68,11 +72,11 @@ export class SocialMenu extends Menu {
         req.body = JSON.stringify(profileOwner);
         try {
             const rawRes = await fetch(url, req);
-			if (!rawRes.ok) throw await errorMessageFromResponse(rawRes)
+            if (!rawRes.ok) throw await errorMessageFromResponse(rawRes);
             this.view = 'stranger';
             this.updateView();
         } catch (error) {
-			createErrorFeedback(errorMessageFromException(error));
+            createErrorFeedback(errorMessageFromException(error));
         }
     }
 
@@ -87,11 +91,11 @@ export class SocialMenu extends Menu {
         req.body = JSON.stringify(profileOwner);
         try {
             const rawRes = await fetch(url, req);
-			if (!rawRes.ok) throw await errorMessageFromResponse(rawRes)
+            if (!rawRes.ok) throw await errorMessageFromResponse(rawRes);
             this.view = 'pending';
             this.updateView();
         } catch (error) {
-			createErrorFeedback(errorMessageFromException(error));
+            createErrorFeedback(errorMessageFromException(error));
         }
     }
     /** Called when element connects to DOM; calls base and updates view. */

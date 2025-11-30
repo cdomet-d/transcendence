@@ -26,12 +26,7 @@ function setStatus(n: number): boolean {
 }
 
 function setAvatar(a: string): ImgData {
-    let uAvatar: ImgData = {
-        src: '',
-        alt: '',
-        id: 'user-profile-picture',
-        size: 'ilarge',
-    };
+    let uAvatar: ImgData = { src: '', alt: '', id: 'user-profile-picture', size: 'ilarge' };
     if (!a || a === 'avatar1.png') uAvatar = defaultAvatar;
     else uAvatar.src = a;
     return uAvatar;
@@ -68,11 +63,9 @@ export function userArrayFromAPIRes(responseObject: any): UserData[] {
 }
 
 export async function buildUserProfile(response: Response): Promise<ProfilePage> {
-	if (!response.ok) throw await errorMessageFromResponse(response);
+    if (!response.ok) throw await errorMessageFromResponse(response);
     const rawProfile = await response.json();
-    const userProfileElem = document.createElement('div', {
-        is: 'profile-page',
-    }) as ProfilePage;
+    const userProfileElem = document.createElement('div', { is: 'profile-page' }) as ProfilePage;
 
     console.log(rawProfile);
     document.body.layoutInstance?.appendAndCache(userProfileElem);

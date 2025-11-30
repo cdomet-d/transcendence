@@ -104,7 +104,7 @@ export class UserProfile extends HTMLDivElement {
     set username(name: string) {
         if (this.#username.name !== name) {
             this.#username.name = name;
-			this.#actionButtons.owner = name;
+            this.#actionButtons.owner = name;
         }
     }
 
@@ -203,7 +203,7 @@ export class UserCardSocial extends UserProfile {
 
     override render() {
         this.append(super.getAvatar, super.getUsername, super.getActionMenu);
-		super.getActionMenu.updateView();
+        super.getActionMenu.updateView();
         super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
         this.classList.add('grid', 'gap-s', 'place-items-center', 'w-full');
     }

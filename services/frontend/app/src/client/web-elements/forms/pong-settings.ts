@@ -34,10 +34,9 @@ export class LocalPongSettings extends BaseForm {
      */
     override render() {
         super.renderTitle();
-        this.renderFields();
         this.append(this.#backgroundSelector);
+        this.renderFields();
         this.renderButtons();
-        this.styleFields();
         this.classList.add('sidebar-left');
     }
 
@@ -55,10 +54,10 @@ export class LocalPongSettings extends BaseForm {
     /*                               Event listeners                              */
     /* -------------------------------------------------------------------------- */
 
-	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
-		console.log('Fetch&Redirect')
-	}
-	
+    override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
+        console.log('Fetch&Redirect');
+    }
+
     override async submitHandlerImplementation(ev: SubmitEvent): Promise<void> {
         ev.preventDefault();
         const f = new FormData(this);
@@ -68,21 +67,6 @@ export class LocalPongSettings extends BaseForm {
         const req = this.initReq();
         req.body = this.createReqBody(f);
         await this.fetchAndRedirect(this.details.action, req);
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                                  Rendering                                 */
-    /* -------------------------------------------------------------------------- */
-
-    styleFields() {
-        super.contentMap.get('title')?.classList.add('col-span-2');
-        super.contentMap.get('paddlesize')?.classList.add('col-start-1');
-        super.contentMap.get('paddlespeed')?.classList.add('col-start-1');
-        super.contentMap.get('ballspeed')?.classList.add('col-start-1');
-        super.contentMap.get('opponent')?.classList.add('row-start-2', 'col-start-2');
-        this.#backgroundSelector.classList.add('row-start-3', 'col-start-2');
-        super.contentMap.get('submit')?.classList.remove('w-full');
-        super.contentMap.get('submit')?.classList.add('row-start-5', 'col-span-2', 'w-5/6');
     }
 }
 
@@ -122,9 +106,9 @@ export class RemotePongSettings extends LocalPongSettings {
         this.#guests = null;
         // this.#inviteHandler = this.#inviteHandlerImplementation.bind(this);
     }
-	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
-		console.log('Fetch&Redirect')
-	}
+    override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
+        console.log('Fetch&Redirect');
+    }
 
     override connectedCallback(): void {
         super.connectedCallback();
@@ -139,8 +123,8 @@ export class RemotePongSettings extends LocalPongSettings {
     override render() {
         super.renderTitle();
         super.renderFields();
-        this.append(this.#searchbar, this.#guestWrapper);
         this.append(super.dropdownMenu);
+        this.append(this.#searchbar, this.#guestWrapper);
         super.renderButtons();
         this.styleFields();
         this.styleInviteList();
@@ -199,21 +183,21 @@ export class RemotePongSettings extends LocalPongSettings {
     /* -------------------------------------------------------------------------- */
     /*                                   Styling                                  */
     /* -------------------------------------------------------------------------- */
-    override styleFields() {
+    styleFields() {
         super.contentMap.get('title')?.classList.add('col-span-2');
-        this.#searchbar.classList.add('row-start-2', 'col-start-2');
-        super.dropdownMenu.classList.add('row-start-5', 'col-start-1');
+        this.#searchbar.classList.add('row-start-3', 'col-start-2');
+        super.dropdownMenu.classList.add('row-start-2', 'col-start-2');
         super.contentMap.get('paddlespeed')?.classList.add('col-start-1');
         super.contentMap.get('ballspeed')?.classList.add('col-start-1');
         super.contentMap.get('paddlesize')?.classList.add('col-start-1');
         super.contentMap.get('submit')?.classList.remove('w-full');
-        super.contentMap.get('submit')?.classList.add('row-start-5', 'col-span-2', 'w-5/6');
+        super.contentMap.get('submit')?.classList.add('col-span-2', 'w-5/6');
     }
 
     styleInviteList() {
         this.#guestWrapper.className =
             'brdr grid row-m gap-xs pad-xs overflow-y-auto box-border \
-			row-start-3 col-start-2 row-span-2 place-self-stretch';
+			row-start-4 col-start-2 row-span-2 place-self-stretch';
     }
 }
 

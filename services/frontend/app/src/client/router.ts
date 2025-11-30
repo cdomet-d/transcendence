@@ -21,8 +21,8 @@ export const routes: routeInterface[] = [
 ];
 
 export async function DOMReady(): Promise<void> {
-	await new Promise((resolve) => requestAnimationFrame(resolve));
-	await new Promise((resolve) => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
 }
 
 export class Router {

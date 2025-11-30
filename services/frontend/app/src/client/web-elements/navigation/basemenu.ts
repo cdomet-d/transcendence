@@ -40,8 +40,8 @@ export class Menu extends HTMLElement {
     /**
      * Sets the menu's button elements.
      *
-     * @param {ButtonData[] | navigationLinksData[]} list - Array of objects 
-	 * containing the data for the menus items
+     * @param {ButtonData[] | navigationLinksData[]} list - Array of objects
+     * containing the data for the menus items
      */
     set menuContent(list: MenuData) {
         this.#linkInfo = list;

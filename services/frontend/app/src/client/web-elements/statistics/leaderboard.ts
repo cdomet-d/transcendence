@@ -1,4 +1,4 @@
-import type {  UserData } from '../types-interfaces.js';
+import type { UserData } from '../types-interfaces.js';
 import { UserList } from '../users/user-profile-containers.js';
 
 export class Leaderboard extends HTMLDivElement {
@@ -42,10 +42,8 @@ export function createUserList(users: UserData[]): UserList {
     return el;
 }
 
-
 export function createLeaderboard(data: UserData[]): Leaderboard {
     const el = document.createElement('div', { is: 'leader-board' }) as Leaderboard;
     el.data = data;
     return el;
 }
-

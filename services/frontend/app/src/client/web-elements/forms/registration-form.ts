@@ -12,7 +12,7 @@ export class RegistrationForm extends BaseForm {
             const response = await fetch(url, req);
             if (!response.ok) throw await errorMessageFromResponse(response);
             if (typeof req.body === 'string') {
-	            router.loadRoute('/me', true);
+                router.loadRoute('/me', true);
             }
         } catch (error) {
             throw error;
@@ -23,4 +23,3 @@ export class RegistrationForm extends BaseForm {
 if (!customElements.get('registration-form')) {
     customElements.define('registration-form', RegistrationForm, { extends: 'form' });
 }
-	
