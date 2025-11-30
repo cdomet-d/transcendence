@@ -4,9 +4,16 @@ import { createDropdown } from '../navigation/menu-helpers.js';
 import { createForm } from './helpers.js';
 import { createUserInline } from '../users/profile-helpers.js';
 import { DropdownMenu } from '../navigation/menus.js';
-import { NoResults } from '../typography/images.js';
 import type { Searchbar } from './search.js';
 import type { UserData } from '../types-interfaces.js';
+import {
+    createErrorFeedback,
+    errorMessageFromException,
+    errorMessageFromResponse,
+} from '../../error.js';
+import { userDataFromAPIRes } from '../../api-responses/user-responses.js';
+import { createNoResult } from '../typography/helpers.js';
+import { userStatus } from '../../main.js';
 
 /**
  * A form allowing user to create a local pong game.
@@ -62,10 +69,11 @@ export class LocalPongSettings extends BaseForm {
         ev.preventDefault();
         const f = new FormData(this);
         const background = this.#backgroundSelector.selectedElement;
-
         if (background) f.append('background', background.id);
+
         const req = this.initReq();
         req.body = this.createReqBody(f);
+        console.log(f);
         await this.fetchAndRedirect(this.details.action, req);
     }
 }
@@ -92,32 +100,33 @@ if (!customElements.get('local-pong-settings')) {
 export class RemotePongSettings extends LocalPongSettings {
     #searchbar: Searchbar;
     #guestWrapper: HTMLDivElement;
-    #guests: UserData[] | null;
-    // #inviteHandler: (ev: SubmitEvent) => void
+    #guests: Map<string, UserData>;
+    #owner: string;
+    #inviteHandler: (ev: Event) => void;
 
-    /* -------------------------------------------------------------------------- */
-    /*                                   Default                                  */
     /* -------------------------------------------------------------------------- */
     constructor() {
         super();
 
         this.#searchbar = createForm('search-form');
         this.#guestWrapper = document.createElement('div');
-        this.#guests = null;
-        // this.#inviteHandler = this.#inviteHandlerImplementation.bind(this);
+        this.#guests = new Map<string, UserData>();
+        this.#inviteHandler = this.#inviteImplementation.bind(this);
+        this.#owner = '';
     }
+
     override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
         console.log('Fetch&Redirect');
     }
 
-    override connectedCallback(): void {
+    override connectedCallback() {
         super.connectedCallback();
-        // this.#searchbar.addEventListener('submit', this.#inviteHandler)
+        this.#searchbar.addEventListener('click', this.#inviteHandler, { capture: true });
     }
 
     override disconnectedCallback(): void {
         super.disconnectedCallback();
-        // this.#searchbar.removeEventListener('submit', this.#inviteHandler)
+        this.#searchbar.removeEventListener('click', this.#inviteHandler);
     }
 
     override render() {
@@ -132,29 +141,46 @@ export class RemotePongSettings extends LocalPongSettings {
         this.classList.add('sidebar-left');
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                                   Setters                                  */
-    /* -------------------------------------------------------------------------- */
-    /**
-     * Sets the invited users and updates the guest list display.
-     * @param users - Array of invited user data.
-     */
-    set guests(users: UserData[]) {
-        this.#guests = users;
-        this.#displayGuests();
+    /* -------------------------------- listeners ------------------------------- */
+    async fetchGuests(guestUsername: string): Promise<UserData | null> {
+        const url = `https://localhost:8443/api/bff/tiny-profile/${guestUsername}`;
+        try {
+            const rawResp = await fetch(url);
+            console.log(rawResp.ok);
+            if (!rawResp.ok) throw await errorMessageFromResponse(rawResp);
+            const resp = await rawResp.json();
+            const user = userDataFromAPIRes(resp);
+            return user;
+        } catch (error) {
+            throw error;
+        }
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                               Event listeners                              */
-    /* -------------------------------------------------------------------------- */
-    // #inviteHandlerImplementation(ev: SubmitEvent) {
-    // 	ev.preventDefault();
-    // 	const form = new FormData(this.#searchbar);
-    // }
+    async #inviteImplementation(ev: Event) {
+        const target = ev.target as HTMLElement;
+        if (target.tagName === 'A') {
+            ev.preventDefault();
+            ev.stopImmediatePropagation();
+            // TODO: keep lobby owner from adding themselves to the lobby;
+            //  && target.title !== this.#owner
+            if (this.#guests.size < 4) {
+                try {
+                    const user = await this.fetchGuests(target.title);
+                    if (user) this.#guests.set(user.username, user);
+                    this.#displayGuests();
+                } catch (error) {
+                    console.log(error);
+                }
+            } else {
+                console.log('too many guests');
+                if (target.title === this.#owner)
+                    createErrorFeedback("You can't invite yourself, dummy");
+                else createErrorFeedback("You can't invite any more people!");
+            }
+        }
+    }
 
-    /* -------------------------------------------------------------------------- */
-    /*                              Guest Management                              */
-    /* -------------------------------------------------------------------------- */
+    /* ---------------------------- guest management ---------------------------- */
     #clearGuests() {
         while (this.#guestWrapper.firstChild) {
             this.#guestWrapper.removeChild(this.#guestWrapper.firstChild);
@@ -169,10 +195,10 @@ export class RemotePongSettings extends LocalPongSettings {
     #displayGuests() {
         if (this.#guestWrapper.firstChild) this.#clearGuests();
 
-        if (!this.#guests || this.#guests.length < 1) {
-            this.#guestWrapper.append(
-                document.createElement('div', { is: 'no-results' }) as NoResults,
-            );
+        if (this.#guests.size < 1) {
+            const el = createNoResult('light', 'ilarge');
+            this.#guestWrapper.append(el);
+            el.classList.add('col-span-2');
         } else {
             this.#guests.forEach((user) => {
                 this.#guestWrapper.append(createUserInline(user));
@@ -180,9 +206,7 @@ export class RemotePongSettings extends LocalPongSettings {
         }
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                                   Styling                                  */
-    /* -------------------------------------------------------------------------- */
+    /* --------------------------------- styling -------------------------------- */
     styleFields() {
         super.contentMap.get('title')?.classList.add('col-span-2');
         this.#searchbar.classList.add('row-start-3', 'col-start-2');
@@ -196,7 +220,7 @@ export class RemotePongSettings extends LocalPongSettings {
 
     styleInviteList() {
         this.#guestWrapper.className =
-            'brdr grid row-m gap-xs pad-xs overflow-y-auto box-border \
+            'brdr pad-sm max-h-[214px] grid grid-cols-2 gap-s overflow-y-auto box-border \
 			row-start-4 col-start-2 row-span-2 place-self-stretch';
     }
 }

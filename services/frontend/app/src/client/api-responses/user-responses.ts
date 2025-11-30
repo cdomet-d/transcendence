@@ -33,8 +33,8 @@ function setAvatar(a: string): ImgData {
 }
 
 export function userDataFromAPIRes(responseObject: any): UserData {
-    if (!responseObject || typeof responseObject !== 'object')
-        redirectOnError(router.stepBefore, 'Malformed API response');
+    if (!responseObject || typeof responseObject !== 'object' || responseObject instanceof Error)
+        redirectOnError(router.stepBefore, 'Something bad happened :(');
     const user: UserData = {
         // winstreak: responseObject.winstreak,
         avatar: setAvatar(responseObject.avatar),
@@ -53,7 +53,6 @@ export function userDataFromAPIRes(responseObject: any): UserData {
 
 export function userArrayFromAPIRes(responseObject: any): UserData[] {
     let userArray: UserData[] = [];
-
     responseObject.forEach((el: any) => {
         const u = userDataFromAPIRes(el);
         userArray.push(u);
