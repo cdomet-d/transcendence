@@ -97,6 +97,7 @@ services:
             - NGINXIP=nginx
             - PORT=1818
             - JWT_SECRET=${JWT_SECRET}
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
         volumes:
             - ./services/bff/app:/usr/app
     gamemanager:
