@@ -20,7 +20,7 @@ async function patchTournamentToDashboard(tournament: tournament) {
 			throw new Error(`Dashboard service failed with status ${response.status}`);
 		}
 	} catch (error) {
-		console.error(`[GM] Dashboard service (via route /tournament/:tournamentID) is unreachable: ${error}`);
+		console.error(`[GM] Dashboard service (via route /tournament/${tournament.tournamentID}) is unreachable: ${error}`);
 		throw new Error('Dashboard service is unreachable.');
 	}
 }
