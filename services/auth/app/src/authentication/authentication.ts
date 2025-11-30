@@ -31,6 +31,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			try {
 				const user = serv.jwt.verify(token) as JwtPayload;
 				if (typeof user !== 'object') throw new Error('Invalid token detected');
+				request.user = user;
 				return reply.code(200).send({ username: user.username, userID: user.userID });
 			} catch (error) {
 				if (error instanceof Error && 'code' in error) {
@@ -165,6 +166,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -203,6 +205,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -265,19 +268,9 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			});
 
 		} catch (error) {
-			if (
-				error &&
-				typeof error === 'object' &&
-				'code' in error &&
-				(
-					(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' ||
-					(error as { code: string }).code === 'SQLITE_CONSTRAINT'
-				)
-			) {
-				return reply
-					.code(409)
-					.send({ success: false, message: '[AUTH] This username is already taken.' });
-			}
+			if (error && typeof error === 'object' && 'code' in error &&(
+				(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' || (error as { code: string }).code === 'SQLITE_CONSTRAINT'))
+				return reply.code(409).send({ success: false, message: '[AUTH] This username is already taken.' });
 			serv.log.error(`[AUTH] Error updating account: ${error}`);
 			throw error;
 		}

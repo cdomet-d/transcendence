@@ -77,6 +77,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//TODO : add JWT verif
 	//get all game of a player
 	serv.get('/games/:userID', async (request, reply) => {
 		try {
