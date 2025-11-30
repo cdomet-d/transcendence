@@ -73,7 +73,7 @@ export class Game {
 		return this.#gameInfo;
 	}
 
-	get gameID(): number {
+	get gameID(): string {
 		return this.#gameInfo.gameID;
 	}
 

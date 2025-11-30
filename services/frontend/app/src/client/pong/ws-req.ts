@@ -26,16 +26,17 @@ export function wsRequest(game: Game, ids: { gameID: number; userID: number }) {
         ws.send(JSON.stringify(ids));
     };
 
-    ws.onclose = (event) => {
-        console.log('PONG webSocket connection closed!');
-        if (event.code === 1003 || event.code === 1011) {
-            createErrorFeedback(event.reason); //TODO: fix
-            return;
-        }
-        game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
-        renderGame(game);
-        window.cancelAnimationFrame(game.frameId);
-    };
+	ws.onclose = (event) => {
+		console.log('PONG webSocket connection closed!');
+		console.log('EVENT received:  ', event.reason);
+		if (event.code === 1003 || event.code === 1011) {
+			createErrorFeedback(event.reason); //TODO: fix
+			return;
+		}
+		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
+		renderGame(game);
+		window.cancelAnimationFrame(game.frameId);
+	};
 }
 
 async function setUpGame(game: Game, ws: WebSocket, ballDir: number) {

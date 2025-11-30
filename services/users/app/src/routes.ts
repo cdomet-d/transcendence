@@ -34,6 +34,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -83,6 +84,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -142,6 +144,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -200,6 +203,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -252,6 +256,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -306,6 +311,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -335,17 +341,11 @@ export async function userRoutes(serv: FastifyInstance) {
 			`;
 
 			const usersNames = await serv.dbUsers.all<{ userID: number, username: string }[]>(query, userIDs);
-
-			serv.log.error(`${usersNames}`);
-
 			return (reply.code(200).send({ success: true, usersNames }));
 
 		} catch (error) {
 			serv.log.error(error);
-			return (reply.code(500).send({
-				success: false,
-				message: 'Internal server error'
-			}));
+			throw(error);
 		}
 	});
 
@@ -413,6 +413,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -436,8 +437,6 @@ export async function userRoutes(serv: FastifyInstance) {
 				'avatar',
 				'biography',
 				'profileColor',
-				'lastConnection',
-				'activityStatus',
 				'lang',
 			];
 
@@ -471,15 +470,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				message: 'User profile updated successfully!',
 			});
 		} catch (error) {
-			if (
-				error &&
-				typeof error === 'object' &&
-				'code' in error &&
-				(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE'
-			)
-				return reply
-					.code(409)
-					.send({ success: false, message: 'This username is already taken.' });
+			if ( error && typeof error === 'object' && 'code' in error && (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE')
+				return (reply.code(409).send({ success: false, message: 'This username is already taken.' }));
 			serv.log.error(`Error fetching user profile: ${error}`);
 			throw error;
 		}
@@ -495,6 +487,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -542,6 +535,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -626,7 +620,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					userStats s ON p.userID = s.userID
 				WHERE
 					p.userID = ?
-			`;
+			`;            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
 
 			const userData = await serv.dbUsers.get(query, [userID]);
 			if (!userData) {

@@ -75,6 +75,7 @@ export interface TabData {
 }
 
 export interface MenuData {
+    id: string;
     buttons?: ButtonData[];
     links?: navigationLinksData[];
 }
@@ -208,6 +209,7 @@ export interface FormDetails {
     action: string;
     ariaLabel: string;
     button: ButtonData;
+    gameFormat?: 'remote-quickmatch' | 'local-quickmatch' | 'tournament' | undefined;
     fields: InputFieldsData[];
     heading: string;
     id: string;

@@ -716,9 +716,16 @@ WHERE userID = 101;
 [WIP] DOC NOT UP TO DATE YET (nginx conf not done yet)
 
 
-* servir traduction      
-* envoyer les settings
+* servir traduction ---> localisation library, language page
+* changer userID to string like in game-manager
+* move nats publisher to bff 
+* status in db on login logout
+* sanitise input in back
+* GDPR: check profile photos and more
+* add schemas to route
 
+* gestion erreur dans le bff       ✅
+* envoyer les settings             ✅
 * supprimer ami                    ✅
 * envoyer demande d'ami            ✅
 * accepter demande d'ami           ✅

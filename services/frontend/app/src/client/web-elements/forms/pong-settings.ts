@@ -14,6 +14,7 @@ import {
 import { userDataFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
 import { userStatus } from '../../main.js';
+import { wsConnect } from '../../lobby/wsConnect.front.js';
 
 /**
  * A form allowing user to create a local pong game.
@@ -74,7 +75,9 @@ export class LocalPongSettings extends BaseForm {
         const req = this.initReq();
         req.body = this.createReqBody(f);
         console.log(f);
-        await this.fetchAndRedirect(this.details.action, req);
+        // await this.fetchAndRedirect(this.details.action, req);
+
+        wsConnect('game', 'quickmatch', 'localForm', '', req.body);
     }
 }
 

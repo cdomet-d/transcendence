@@ -6,7 +6,7 @@ export interface user {
 
 export interface gameInfo {
     lobbyID: number,
-    gameID: number,
+    gameID: string,
     tournamentID?: number,
     remote: boolean,
     users: [user, user],
@@ -60,7 +60,7 @@ export interface playerReq {
 
 /**************************** WS DATA OBJ ********************************/
 export interface idsObj {
-	gameID: number,
+	gameID: string,
 	userID: number
 }
 

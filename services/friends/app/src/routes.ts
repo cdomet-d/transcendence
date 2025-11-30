@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
-import { getFriendship, friendshipExistsUsersID } from './friends.service.js';
+
+import { getFriendship, friendshipExistsUsersID } from './friends.service.js'
 type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
 
 interface JwtPayload {
@@ -16,26 +17,25 @@ export async function routeFriend(serv: FastifyInstance) {
             const token = request.cookies.token;
             if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
-            if (token) {
-                try {
-                    const user = serv.jwt.verify(token) as JwtPayload;
-                    if (typeof user !== 'object') throw new Error('Invalid token detected');
-                } catch (error) {
-                    if (error instanceof Error && 'code' in error) {
-                        if (
-                            error.code === 'FST_JWT_BAD_REQUEST' ||
-                            error.code === 'ERR_ASSERTION' ||
-                            error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-                        )
-                            return reply
-                                .code(400)
-                                .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-                    } else {
-                        return reply.code(401).send({ message: 'Unknown error' });
-                    }
-                }
-            }
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
 
             const query = request.query as {
                 userA?: number;
@@ -78,26 +78,25 @@ export async function routeFriend(serv: FastifyInstance) {
             const token = request.cookies.token;
             if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
-            if (token) {
-                try {
-                    const user = serv.jwt.verify(token) as JwtPayload;
-                    if (typeof user !== 'object') throw new Error('Invalid token detected');
-                } catch (error) {
-                    if (error instanceof Error && 'code' in error) {
-                        if (
-                            error.code === 'FST_JWT_BAD_REQUEST' ||
-                            error.code === 'ERR_ASSERTION' ||
-                            error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-                        )
-                            return reply
-                                .code(400)
-                                .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-                    } else {
-                        return reply.code(401).send({ message: 'Unknown error' });
-                    }
-                }
-            }
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
 
             const query = request.query as {
                 userID?: number;
@@ -121,26 +120,25 @@ export async function routeFriend(serv: FastifyInstance) {
             const token = request.cookies.token;
             if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
-            if (token) {
-                try {
-                    const user = serv.jwt.verify(token) as JwtPayload;
-                    if (typeof user !== 'object') throw new Error('Invalid token detected');
-                } catch (error) {
-                    if (error instanceof Error && 'code' in error) {
-                        if (
-                            error.code === 'FST_JWT_BAD_REQUEST' ||
-                            error.code === 'ERR_ASSERTION' ||
-                            error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-                        )
-                            return reply
-                                .code(400)
-                                .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-                    } else {
-                        return reply.code(401).send({ message: 'Unknown error' });
-                    }
-                }
-            }
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
 
             const { senderID: senderID } = request.body as { senderID: number };
             const { friendID: friendID } = request.body as { friendID: number };
@@ -152,55 +150,52 @@ export async function routeFriend(serv: FastifyInstance) {
 
             const params = [senderID, friendID, false];
 
-            const response = await serv.dbFriends.run(query, params);
-            if (response.changes === 0) throw new Error('[FRIENDS] Friend request failed to save.');
-            return reply.code(201).send({
-                success: true,
-                message: `[FRIENDS] Friend request sent to ${friendID}`,
-            });
-        } catch (error) {
-            if (
-                error &&
-                typeof error === 'object' &&
-                'code' in error &&
-                ((error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' ||
-                    (error as { code: string }).code === 'SQLITE_CONSTRAINT')
-            )
-                return reply.code(409).send({
-                    success: false,
-                    message: '[FRIENDS] Friendship already exists!',
-                });
-            console.error('[FRIENDS] Error processing friend request:', error);
-            throw error;
-        }
-    });
+			const response = await serv.dbFriends.run(query, params);
+			if (response.changes === 0)
+				throw new Error('[FRIENDS] Friend request failed to save.');
 
-    //accept a friend request
-    serv.patch('/relation', async (request, reply) => {
-        try {
-            const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			return (reply.code(201).send({
+				success: true,
+				message: `[FRIENDS] Friend request sent to ${friendID}`
+			}));
 
-            if (token) {
-                try {
-                    const user = serv.jwt.verify(token) as JwtPayload;
-                    if (typeof user !== 'object') throw new Error('Invalid token detected');
-                } catch (error) {
-                    if (error instanceof Error && 'code' in error) {
-                        if (
-                            error.code === 'FST_JWT_BAD_REQUEST' ||
-                            error.code === 'ERR_ASSERTION' ||
-                            error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-                        )
-                            return reply
-                                .code(400)
-                                .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-                    } else {
-                        return reply.code(401).send({ message: 'Unknown error' });
-                    }
-                }
-            }
+		} catch (error) {
+			if (error && typeof error === 'object' && 'code' in error &&
+				((error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' || (error as { code: string }).code === 'SQLITE_CONSTRAINT'))
+				return reply.code(409).send({
+					success: false,
+					message: '[FRIENDS] Friendship already exists!'
+				});
+			console.error('[FRIENDS] Error processing friend request:', error);
+			throw (error);
+		}
+	});
+
+	//accept a friend request
+	serv.patch('/relation', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
 
             const { senderRequestID: senderRequestID } = request.body as {
                 senderRequestID: number;
@@ -257,26 +252,25 @@ export async function routeFriend(serv: FastifyInstance) {
             const token = request.cookies.token;
             if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
-            if (token) {
-                try {
-                    const user = serv.jwt.verify(token) as JwtPayload;
-                    if (typeof user !== 'object') throw new Error('Invalid token detected');
-                } catch (error) {
-                    if (error instanceof Error && 'code' in error) {
-                        if (
-                            error.code === 'FST_JWT_BAD_REQUEST' ||
-                            error.code === 'ERR_ASSERTION' ||
-                            error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-                        )
-                            return reply
-                                .code(400)
-                                .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-                    } else {
-                        return reply.code(401).send({ message: 'Unknown error' });
-                    }
-                }
-            }
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
 
             const { removerID: removerID } = request.body as { removerID: number };
             const { friendID: friendID } = request.body as { friendID: number };
@@ -305,26 +299,25 @@ export async function routeFriend(serv: FastifyInstance) {
             const token = request.cookies.token;
             if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
-            if (token) {
-                try {
-                    const user = serv.jwt.verify(token) as JwtPayload;
-                    if (typeof user !== 'object') throw new Error('Invalid token detected');
-                } catch (error) {
-                    if (error instanceof Error && 'code' in error) {
-                        if (
-                            error.code === 'FST_JWT_BAD_REQUEST' ||
-                            error.code === 'ERR_ASSERTION' ||
-                            error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-                        )
-                            return reply
-                                .code(400)
-                                .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-                    } else {
-                        return reply.code(401).send({ message: 'Unknown error' });
-                    }
-                }
-            }
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
 
             const { userID } = request.params as { userID: string };
 

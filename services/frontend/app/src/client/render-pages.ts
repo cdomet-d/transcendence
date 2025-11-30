@@ -15,9 +15,10 @@ import {
     customizeUserSettingsForm,
     localPong,
     remotePong,
+    pongTournament,
 } from './web-elements/forms/default-forms.js';
-import { main } from './web-elements/navigation/default-menus.js';
-import { pong } from './pong/pong.js';
+import { lobbyQuickmatchMenu, lobbyTournamentMenu, main } from './web-elements/navigation/default-menus.js';
+import { pong, type gameRequest } from './pong/pong.js';
 import { PongUI } from './web-elements/game/game-ui.js';
 import { errorMessageFromException, errorMessageFromResponse, redirectOnError } from './error.js';
 import { TournamentBrackets } from './web-elements/game/tournament.js';
@@ -25,6 +26,8 @@ import { type Match } from 'path-to-regexp';
 import { type TabData } from './web-elements/types-interfaces.js';
 import { userStatus, router } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
+import { wsConnect } from './lobby/wsConnect.front.js';
+import type { Menu } from './web-elements/navigation/basemenu.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -34,7 +37,9 @@ const layoutPerPage: { [key: string]: string } = {
     game: 'page-w-header',
     home: 'full-screen',
     leaderboard: 'page-w-header',
-    lobby: 'page-w-header',
+    quickLobby: 'page-w-header',
+    tournamentLobby: 'page-w-header',
+    lobbyMenu: 'page-w-header',
     profile: 'page-w-header',
     auth: 'full-screen',
     userSettings: 'page-w-header',
@@ -189,18 +194,44 @@ export async function renderSettings() {
     updatePageTitle(status.username + 'Settings');
 }
 
-export function renderLobby() {
-    prepareLayout(document.body.layoutInstance, 'lobby');
+export function renderLobbyMenu() {
+    console.log('renderLobbyMenu');
+    prepareLayout(document.body.layoutInstance, 'lobbyMenu');
+    document.body.layoutInstance?.appendAndCache(
+        createHeading('1', 'Choose Lobby'),
+        createMenu(lobbyQuickmatchMenu, 'horizontal', true),
+        createMenu(lobbyTournamentMenu, 'vertical', true),
+    );
+    const quickMen = document.body.layoutInstance?.components.get('quickMatchMenu') as Menu;
+    quickMen?.cache.forEach((el) => {
+        el.classList.remove('t2');
+        el.classList.add('f-l');
+    })
+    updatePageTitle('Choose Lobby');
+}
+
+export function renderQuickLocalLobby() {
+    prepareLayout(document.body.layoutInstance, 'quickLobby');
     const pongOptions: TabData[] = [
         {
             id: 'pong-local',
-            content: 'Play local',
-            default: false,
+            content: '',
+            default: true,
             panelContent: createForm('local-pong-settings', localPong),
         },
+    ];
+    const wrapper = createWrapper('pongsettings');
+    wrapper.append(createTabs(pongOptions));
+    document.body.layoutInstance?.appendAndCache(wrapper);
+    wsConnect('create', 'quickmatch', 'localForm');
+}
+
+export function renderQuickRemoteLobby() {
+    prepareLayout(document.body.layoutInstance, 'quickLobby');
+    const pongOptions: TabData[] = [
         {
             id: 'pong-remote',
-            content: 'Play remote',
+            content: '',
             default: true,
             panelContent: createForm('remote-pong-settings', remotePong),
         },
@@ -208,9 +239,26 @@ export function renderLobby() {
     const wrapper = createWrapper('pongsettings');
     wrapper.append(createTabs(pongOptions));
     document.body.layoutInstance?.appendAndCache(wrapper);
+    wsConnect('create', 'quickmatch', 'remoteForm');
 }
 
-export function renderGame() {
+export function renderTournamentLobby() {
+    prepareLayout(document.body.layoutInstance, 'tournamentLobby');
+    const pongOptions: TabData[] = [
+        {
+            id: 'pong-tournament',
+            content: '',
+            default: true,
+            panelContent: createForm('remote-pong-settings', pongTournament),
+        },
+    ];
+    const wrapper = createWrapper('pongsettings');
+    wrapper.append(createTabs(pongOptions));
+    document.body.layoutInstance?.appendAndCache(wrapper);
+    wsConnect('create', 'tournament', 'tournamentForm');
+}
+
+export function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest) {
     console.log('renderGame');
     prepareLayout(document.body.layoutInstance, 'game');
 
@@ -227,7 +275,13 @@ export function renderGame() {
     if (layout) layout.theme = farmAssets;
     document.body.layoutInstance?.appendAndCache(ui, court);
 
-    pong({ userID: 1, gameID: 1, remote: false }, court.ctx, ui);
+    // pong({ userID: 1, gameID: 1, remote: false }, court.ctx, ui);
+    if (gameRequest === undefined) {
+        console.log("GameRequest =>", gameRequest);
+        // TODO Show explicit error in UI
+        return;
+    }
+    pong(gameRequest!, court.ctx, ui);
 }
 
 export function renderBracket() {

@@ -1,41 +1,53 @@
 import type {
-	UsernameResponse, FriendshipStatus, Friendship, ProfileDataBatch, ProfileDataBatchResponse, ProfileView, userStats, StatsResponse, Matches, RawMatches,
-	userData, UserIDResponse
+	UsernameResponse, FriendshipStatus, Friendship, ProfileView, userStats, StatsResponse, Matches, RawMatches,
+	userData, UserIDResponse, UserProfileUpdates
 } from "./bff.interface.js";
 
-export async function buildTinyProfile(log: any, viewerUserID: number, targetUsername: string, token: string): Promise<userData | null> {
+//error handled
+export async function buildTinyProfile(log: any, viewerUserID: number, targetUsername: string, token: string): Promise<userData> {
+	try {
+		const targetUserID = await fetchUserID(log, targetUsername, token);
 
-	const targetUserID = await fetchUserID(log, targetUsername, token);
+		if (!targetUserID) {
+			log.warn(`[BFF] buildTinyProfile: UserID not found for ${targetUsername}`);
+			throw { code: 404, message: '[BFF] User not found.' };
+		}
 
-	if (!targetUserID) {
-		log.warn(`[BFF] buildTinyProfile: UserID not found for ${targetUsername}`);
-		return (null);
+		const [data, relation] = await Promise.all([
+			fetchUserData(log, targetUserID, token),
+			fetchProfileView(log, viewerUserID, targetUserID, token)
+		]);
+
+		if (!data) {
+			log.warn(`[BFF] buildTinyProfile: Data not found for userID ${targetUserID}`);
+			throw { code: 404, message: '[BFF] User not found.' };
+		}
+
+		return {
+			userID: String(targetUserID),
+			username: data.username,
+			avatar: data.avatar,
+			biography: data.biography,
+			profileColor: data.profileColor,
+			since: data.since,
+			status: data.status,
+			winstreak: data.winstreak,
+			lang: data.lang,
+			relation: relation
+		};
+	} catch (error) {
+		if (typeof error === 'object' && error !== null && 'code' in error) {
+			const customError = error as { code: number, message: string };
+
+			if (customError.code === 404) throw { code: 404, message: customError.message || '[BFF] User not found.' };
+			if (customError.code === 400) throw { code: 400, message: customError.message || '[BFF] Unauthorized' };
+			if (customError.code === 401) throw { code: 401, message: customError.message || '[BFF] Unauthorized' };
+		}
+		throw (error);
 	}
-
-	const [data, relation] = await Promise.all([
-		fetchUserData(log, targetUserID, token),
-		fetchProfileView(log, viewerUserID, targetUserID, token)
-	]);
-
-	if (!data) {
-		log.warn(`[BFF] buildTinyProfile: Data not found for userID ${targetUserID}`);
-		return (null);
-	}
-
-	return {
-		userID: String(targetUserID),
-		username: data.username,
-		avatar: data.avatar,
-		biography: data.biography,
-		profileColor: data.profileColor,
-		since: data.since,
-		status: data.status,
-		winstreak: data.winstreak,
-		lang: data.lang,
-		relation: relation
-	};
 }
 
+//error handled
 export async function searchBar(log: any, username: string, token: string): Promise<userData[]> {
 	const url = `http://users:2626/search?name=${username}`;
 	let response: Response;
@@ -53,6 +65,18 @@ export async function searchBar(log: any, username: string, token: string): Prom
 		throw new Error('User service is unreachable.');
 	}
 
+	if (response.status === 400) {
+		log.warn(`[BFF] User service validation error for user ${username}`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not search.' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] User service validation error for user ${username}`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not search.' };
+	}
+
 	if (!response.ok) {
 		log.error(`[BFF] User service (search) failed with status ${response.status}`);
 		throw new Error('User service failed.');
@@ -65,9 +89,10 @@ export async function searchBar(log: any, username: string, token: string): Prom
 		throw new Error('User service returned invalid data.');
 	}
 
-	return body.profiles;
+	return (body.profiles);
 }
 
+//error handled
 export async function fetchUserData(log: any, userID: number, token: string): Promise<userData | null> {
 	const url = `http://users:2626/${userID}`;
 	let response: Response;
@@ -85,9 +110,22 @@ export async function fetchUserData(log: any, userID: number, token: string): Pr
 		throw new Error('User service is unreachable.');
 	}
 
+	if (response.status === 400) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not fetch userdata' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not fetch userdata' };
+	}
+
 	if (response.status === 404) {
 		log.warn(`[BFF] User data not found for user ${userID}`);
-		return null;
+		const errorBody = await response.json() as { message: string };
+		throw { code: 404, message: errorBody.message || '[BFF] User not found.' };
 	}
 
 	if (!response.ok) {
@@ -102,19 +140,20 @@ export async function fetchUserData(log: any, userID: number, token: string): Pr
 		throw new Error('User service returned invalid data.');
 	}
 
-	return body.userData;
+	return (body.userData);
 }
 
+//TODO handle error and catch in route
 export async function fetchProfileView(log: any, userID: number, targetUserID: number, token: string): Promise<ProfileView> {
 
 	if (Number(targetUserID) === Number(userID))
 		return ('self');
 
-	let friendsResponse: Response;
+	let response: Response;
 	const friendsUrl = `http://friends:1616/friendship?userA=${userID}&userB=${targetUserID}`;
 
 	try {
-		friendsResponse = await fetch(friendsUrl, {
+		response = await fetch(friendsUrl, {
 			method: 'GET',
 			headers: {
 				'Cookie': `token=${token}`,
@@ -126,16 +165,29 @@ export async function fetchProfileView(log: any, userID: number, targetUserID: n
 		return 'stranger';
 	}
 
-	if (!friendsResponse.ok) {
-		log.error(`[BFF] Friends service failed with status ${friendsResponse.status}`);
+	if (response.status === 400) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not fetch relation for profileView' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not fetch relation for profileView' };
+	}
+
+	if (!response.ok) {
+		log.error(`[BFF] Friends service failed with status ${response.status}`);
 		return 'stranger';
 	}
 
-	const friendshipData = (await friendsResponse.json()) as { status: ProfileView };
-	return friendshipData.status;
+	const friendshipData = (await response.json()) as { status: ProfileView };
+	return (friendshipData.status);
 }
 
-export async function fetchUserID(log: any, username: string, token: string ): Promise<number | null> {
+//error handled
+export async function fetchUserID(log: any, username: string, token: string): Promise<number | null> {
 	const url = `http://users:2626/userID/${username}`;
 
 	let response: Response;
@@ -151,6 +203,18 @@ export async function fetchUserID(log: any, username: string, token: string ): P
 	} catch (error) {
 		log.error(`[BFF] User service (userID) is unreachable: ${error}`);
 		throw new Error('User service is unreachable.');
+	}
+
+	if (response.status === 400) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not fetch userID.' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not fetch userID.' };
 	}
 
 	if (response.status === 404) {
@@ -171,6 +235,7 @@ export async function fetchUserID(log: any, username: string, token: string ): P
 	return body.response.userID;
 }
 
+//error handled
 export async function fetchUserStats(log: any, userID: number, token: string): Promise<userStats | null> {
 	const url = `http://users:2626/stats/${userID}`;
 	let response: Response;
@@ -187,6 +252,19 @@ export async function fetchUserStats(log: any, userID: number, token: string): P
 		log.error(`[BFF] User service is unreachable: ${error}`);
 		throw new Error('User service is unreachable.');
 	}
+
+	if (response.status === 400) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not fetch user stats.' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not fetch user stats.' };
+	}
+
 	if (response.status === 404) {
 		log.warn(`[BFF] User stats not found for user ${userID}`);
 		throw new Error('User stats not found.');
@@ -201,7 +279,8 @@ export async function fetchUserStats(log: any, userID: number, token: string): P
 }
 
 //The 'since' in the friendlist will store the friendship creation data, not the creation of the profile of the friend
-// Make a issue on github if you'd rather it to be the creation of the friend's profile 
+// Make a issue on github if you'd rather it to be the creation of the friend's profile
+//error handled
 export async function fetchFriendships(log: any, userID: number, status: FriendshipStatus, token: string): Promise<userData[]> {
 	const url = `http://friends:1616/friendlist?userID=${userID}`;
 	let response: Response;
@@ -219,8 +298,17 @@ export async function fetchFriendships(log: any, userID: number, status: Friends
 		throw new Error('Friends service is unreachable.');
 	}
 
-	if (response.status === 404)
-		return [];
+	if (response.status === 400) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not friendlist.' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not friendlist.' };
+	}
 
 	if (!response.ok) {
 		log.error(`[BFF] Friends service failed with status ${response.status}`);
@@ -248,9 +336,29 @@ export async function fetchFriendships(log: any, userID: number, status: Friends
 				profile.since = friendship.startTime;
 			}
 			return (profile);
-		} catch (err) {
-			log.warn(`[BFF] Could not fetch profile for user ${friendship.friendID}`);
-			return null;
+		} catch (error) {
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number, message: string };
+				if (customError.code === 404) {
+					const errorBody = await response.json() as { message: string };
+					throw { code: 404, message: errorBody.message || '[BFF] Could not friendlist.' };
+				}
+
+				if (response.status === 400) {
+					log.warn(`[BFF] Auth service validation error`);
+					const errorBody = await response.json() as { message: string };
+					throw { code: 400, message: errorBody.message || '[BFF] Unauthorized.' };
+				}
+
+				if (response.status === 401) {
+					log.warn(`[BFF] Auth service validation error`);
+					const errorBody = await response.json() as { message: string };
+					throw { code: 401, message: errorBody.message || '[BFF] Unauthorized.' };
+				}
+
+				log.warn(`[BFF] Could not fetch profile for user ${friendship.friendID}`);
+				return (null);
+			}
 		}
 	});
 
@@ -259,6 +367,8 @@ export async function fetchFriendships(log: any, userID: number, status: Friends
 	return profiles.filter((p): p is userData => p !== null);
 }
 
+
+//error handled
 async function fetchMatches(log: any, userID: number, token: string): Promise<RawMatches[]> {
 	const url = `http://dashboard:1515/games/${userID}`;
 	let response: Response;
@@ -275,6 +385,18 @@ async function fetchMatches(log: any, userID: number, token: string): Promise<Ra
 		throw new Error('User service is unreachable.');
 	}
 
+	if (response.status === 400) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not fetch matches.' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not fetch matches.' };
+	}
+
 	if (response.status === 404) {
 		log.warn(`[BFF] User data not found for user ${userID}`);
 		throw new Error('User data not found.');
@@ -287,6 +409,7 @@ async function fetchMatches(log: any, userID: number, token: string): Promise<Ra
 	return (response.json() as Promise<RawMatches[]>);
 }
 
+//error handled
 async function fetchUsernames(log: any, userIDs: number[], token: string): Promise<Map<number, string>> {
 	if (userIDs.length === 0) return new Map();
 
@@ -307,6 +430,18 @@ async function fetchUsernames(log: any, userIDs: number[], token: string): Promi
 		throw new Error('User service is unreachable.');
 	}
 
+	if (response.status === 400) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not fetch usernames for game opponent.' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not fetch usernames for game opponent.' };
+	}
+
 	if (!response.ok) {
 		log.error(`[BFF] User service failed with status ${response.status}`);
 		throw new Error('User service error.');
@@ -324,52 +459,75 @@ async function fetchUsernames(log: any, userIDs: number[], token: string): Promi
 	return (usernameMap);
 }
 
+//error handled
 export async function processMatches(log: any, userID: number, token: string): Promise<Matches[]> {
-	const rawMatches = await fetchMatches(log, userID, token);
+	try {
+		const rawMatches = await fetchMatches(log, userID, token);
 
-	if (!rawMatches || rawMatches.length === 0)
-		return [];
+		if (!rawMatches || rawMatches.length === 0)
+			return [];
 
-	const opponentIDs = new Set<number>();
-	rawMatches.forEach(match => {
-		const opponentID = (match.player1 === userID) ? match.player2 : match.player1;
-		opponentIDs.add(opponentID);
-	});
+		const opponentIDs = new Set<number>();
+		rawMatches.forEach(match => {
+			const opponentID = (match.player1 === userID) ? match.player2 : match.player1;
+			opponentIDs.add(opponentID);
+		});
 
-	const opponentMap = await fetchUsernames(log, Array.from(opponentIDs), token);
+		const opponentMap = await fetchUsernames(log, Array.from(opponentIDs), token);
 
-	const processedMatches = rawMatches.map(rawMatch => {
-		const isPlayer1 = rawMatch.player1 === userID;
+		const processedMatches = rawMatches.map(rawMatch => {
+			const isPlayer1 = rawMatch.player1 === userID;
 
-		const opponentID = isPlayer1 ? rawMatch.player2 : rawMatch.player1;
-		const myScore = isPlayer1 ? rawMatch.player1Score : rawMatch.player2Score;
-		const opponentScore = isPlayer1 ? rawMatch.player2Score : rawMatch.player1Score;
+			const opponentID = isPlayer1 ? rawMatch.player2 : rawMatch.player1;
+			const myScore = isPlayer1 ? rawMatch.player1Score : rawMatch.player2Score;
+			const opponentScore = isPlayer1 ? rawMatch.player2Score : rawMatch.player1Score;
 
-		let outcome = 'Draw';
-		if (myScore > opponentScore) outcome = 'Win';
-		if (myScore < opponentScore) outcome = 'Loss';
+			let outcome = 'Draw';
+			if (myScore > opponentScore) outcome = 'Win';
+			if (myScore < opponentScore) outcome = 'Loss';
 
-		const scoreWinner = Math.max(myScore, opponentScore);
-		const scoreLoser = Math.min(myScore, opponentScore);
-		const scoreString = `${scoreWinner} - ${scoreLoser}`;
+			const scoreWinner = Math.max(myScore, opponentScore);
+			const scoreLoser = Math.min(myScore, opponentScore);
+			const scoreString = `${scoreWinner} - ${scoreLoser}`;
 
-		const opponentName = opponentMap.get(opponentID) || "Unknown User";
+			const opponentName = opponentMap.get(opponentID) || "Unknown User";
 
-		const isTournament = rawMatch.tournamentID > 0;
+			const isTournament = rawMatch.tournamentID > 0;
 
-		const match: Matches = {
-			date: new Date(rawMatch.startTime).toLocaleDateString(),
-			opponent: opponentName,
-			outcome: outcome,
-			score: scoreString,
-			duration: formatDuration(rawMatch.duration),
-			tournament: isTournament
-		};
+			const match: Matches = {
+				date: new Date(rawMatch.startTime).toLocaleDateString(),
+				opponent: opponentName,
+				outcome: outcome,
+				score: scoreString,
+				duration: formatDuration(rawMatch.duration),
+				tournament: isTournament
+			};
 
-		return (match);
-	});
+			return (match);
+		});
 
-	return (processedMatches);
+		return (processedMatches);
+	} catch (error) {
+		if (typeof error === 'object' && error !== null && 'code' in error) {
+			const customError = error as { code: number, message: string };
+			if (customError.code === 404) {
+				log.warn(`[BFF] Could no find user`);
+				throw { code: 404, message: '[BFF] Could not find user.' };
+			}
+
+			if (customError.code === 400) {
+				log.warn(`[BFF] Auth service validation error`);
+				throw { code: 400, message: '[BFF] Unauthorized.' };
+			}
+
+			if (customError.code === 401) {
+				log.warn(`[BFF] Auth service validation error`);
+				throw { code: 401, message: '[BFF] Unauthorized.' };
+			}
+
+		}
+		throw (error);
+	}
 }
 
 function formatDuration(seconds: number): string {
@@ -378,6 +536,7 @@ function formatDuration(seconds: number): string {
 	return (`${mins}m ${secs}s`);
 }
 
+//error handled
 export async function fetchLeaderboard(log: any, token: string): Promise<userData[]> {
 	const url = `http://users:2626/leaderboard`;
 	let response: Response;
@@ -395,6 +554,18 @@ export async function fetchLeaderboard(log: any, token: string): Promise<userDat
 		throw new Error('User service is unreachable.');
 	}
 
+	if (response.status === 400) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not fetch leaderboard.' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not fetch leaderboard.' };
+	}
+
 	if (!response.ok) {
 		log.error(`[BFF] User service failed with status ${response.status}`);
 		throw new Error('User service error.');
@@ -410,218 +581,99 @@ export async function fetchLeaderboard(log: any, token: string): Promise<userDat
 	return (body.profiles);
 }
 
-/*----------  WIP  ----------*/
+//error handled
+export async function updateUserProfile(log: any, userID: number, updates: UserProfileUpdates, token: string): Promise<void> {
+	const url = `http://users:2626/${userID}`;
 
-export async function fetchProfileDataBatch(
-	log: any,
-	userIDs: number[]
-): Promise<ProfileDataBatch[]> {
-	if (!userIDs || userIDs.length === 0) return [];
-
-	const url = 'http://users:2626/profiles';
-	let response: Response;
-
-	try {
-		response = await fetch(url, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ userIDs: userIDs }),
-		});
-	} catch (error) {
-		log.error(`[BFF] User service (userDataBatch) is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] User service (userDataBatch) failed with status ${response.status}`);
-		throw new Error('User service (batch) failed.');
-	}
-
-	const body = (await response.json()) as ProfileDataBatchResponse;
-
-	if (!body.success || !body.profileData) {
-		log.error(`[BFF] User service (userDataBatch) returned 200 OK but with a failure body.`);
-		throw new Error('User service (batch) returned invalid data.');
-	}
-
-	return body.profileData;
-}
-
-export async function fetchUserProfile(log: any, userID: number): Promise<userData | null> {
-	const url = `http://users:2626/internal/users/${userID}/profile`;
-
-	let response: Response;
-
-	try {
-		response = await fetch(url)
-	} catch (error) {
-		log.error(`[BFF] User service is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
-	}
-	if (response.status === 404) {
-		log.warn(`[BFF] User data not found for user ${userID}`);
-		throw new Error('User data not found.');
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] User service failed with status ${response.status}`);
-		throw new Error('User service failed.');
-	}
-
-	const data = await response.json() as userData;
-	return (data);
-}
-
-export async function fetchView(
-	log: any,
-	viewerID: number,
-	targetID: number
-): Promise<ProfileView> {
-	if (viewerID === targetID) {
-		return 'self';
-	}
-
-	const url = `http://friends:1616/internal/friendships?userA=${viewerID}&userB=${targetID}`;
-	let response: Response;
-
-	try {
-		response = await fetch(url);
-	} catch (error) {
-		log.error(`[BFF] Friends service (relationship) is unreachable: ${error}`);
-		throw new Error('Friends service is unreachable.');
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] Friends service (relationship) failed: ${response.status}`);
-		throw new Error('Friends service failed.');
-	}
-
-	const body = (await response.json()) as { status: ProfileView };
-	return body.status || 'stranger';
-}
-
-/* export async function buildFullUserData(log: any, viewerUserID: number, targetUserID: number): Promise<userData> {
-	const [
-		accountData,
-		profileData
-	] = await Promise.all([
-		fetchUserDataAccount(log, targetUserID),
-		fetchProfileData(log, targetUserID)
-	]);
-
-	const relationship = await fetchView(log, viewerUserID, targetUserID);
-
-	const combinedData: userData = {
-		userID: accountData.userID,
-		username: accountData.username,
-		since: accountData.registerDate,
-		language: accountData.defaultLang,
-		status: profileData.userStatus,
-
-		avatar: profileData.avatar,
-		biography: profileData.biography,
-		profileColor: profileData.profileColor,
-		winstreak: profileData.winstreak,
-
-		relation: relationship
-	};
-
-	return (combinedData);
-} */
-
-export async function updateAvatar(log: any, userID: number, avatar: string): Promise<void> {
-	const url = `http://users:2626/internal/users/${userID}`;
 	let response: Response;
 	try {
 		response = await fetch(url, {
 			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ avatar: avatar }),
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(updates)
 		});
 	} catch (error) {
 		log.error(`[BFF] User service is unreachable: ${error}`);
 		throw new Error('User service is unreachable.');
 	}
 
+	if (response.status === 409) {
+		log.warn(`[BFF] Username taken in user service change for user: ${userID}`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 409, message: errorBody.message || '[BFF] Username taken' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] User service validation error for user ${userID}`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not change settings.' };
+	}
 	if (response.status === 400) {
-		log.warn(`[BFF] User service reported a validation error for user ${userID}`);
-		throw new Error('User validation failed.');
+		log.warn(`[BFF] User service validation error for user ${userID}`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not change settings.' };
 	}
 
 	if (response.status === 404) {
-		log.warn(`[BFF] User not found for avatar update: ${userID}`);
-		throw new Error('User not found in profile service.');
+		log.warn(`[BFF] User not found for update: ${userID}`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 404, message: errorBody.message || '[BFF] User not found.' };
 	}
 
 	if (!response.ok) {
 		log.error(`[BFF] User service failed with status ${response.status}`);
-		throw new Error('User service failed.');
+		throw new Error('[BFF] User service failed.');
 	}
-	return;
 }
 
-export async function updateBio(log: any, userID: number, biography: string): Promise<void> {
-	const url = `http://users:2626/internal/users/${userID}`;
+//error handling done
+export async function updateAuthSettings(log: any, userID: number, updates: UserProfileUpdates, token: string): Promise<void> {
+	const url = `http://auth:3939/${userID}`;
+
 	let response: Response;
 	try {
 		response = await fetch(url, {
 			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ biography: biography }),
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(updates)
 		});
 	} catch (error) {
-		log.error(`[BFF] User service is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
+		log.error(`[BFF] Auth service is unreachable: ${error}`);
+		throw new Error('Auth service is unreachable.');
+	}
+
+	if (response.status === 409) {
+		log.warn(`[BFF] Username taken in auth service change for user: ${userID}`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 409, message: errorBody.message || '[BFF] Username taken' };
 	}
 
 	if (response.status === 400) {
-		log.warn(`[BFF] User service reported a validation error for user ${userID}`);
-		throw new Error('User validation failed.');
+		log.warn(`[BFF] Auth service validation error for user ${userID}`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not change settings.' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Auth service validation error for user ${userID}`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not change settings.' };
 	}
 
 	if (response.status === 404) {
-		log.warn(`[BFF] User not found for biography update: ${userID}`);
-		throw new Error('User not found in profile service.');
+		log.warn(`[BFF] Account not found for update: ${userID}`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 404, message: errorBody.message || '[BFF] User not found.' };
 	}
 
 	if (!response.ok) {
-		log.error(`[BFF] User service failed with status ${response.status}`);
-		throw new Error('User service failed.');
+		log.error(`[BFF] Auth service failed with status ${response.status}`);
+		throw new Error('Auth service failed.');
 	}
-	return;
-}
-
-export async function updateProfileColor(
-	log: any,
-	userID: number,
-	profileColor: string
-): Promise<void> {
-	const url = `http://users:2626/internal/users/${userID}/profileColor`;
-	let response: Response;
-	try {
-		response = await fetch(url, {
-			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ profileColor: profileColor }),
-		});
-	} catch (error) {
-		log.error(`[BFF] User service is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
-	}
-
-	if (response.status === 400) {
-		log.warn(`[BFF] User service reported a validation error for user ${userID}`);
-		throw new Error('User validation failed.');
-	}
-
-	if (response.status === 404) {
-		log.warn(`[BFF] User not found for profileColor update: ${userID}`);
-		throw new Error('User not found in profile service.');
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] User service failed with status ${response.status}`);
-		throw new Error('User service failed.');
-	}
-	return;
 }
