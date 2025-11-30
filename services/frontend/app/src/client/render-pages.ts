@@ -205,13 +205,9 @@ export function renderLobby() {
             panelContent: createForm('remote-pong-settings', remotePong),
         },
     ];
-    try {
-        const wrapper = createWrapper('pongsettings');
-        wrapper.append(createTabs(pongOptions));
-        document.body.layoutInstance?.appendAndCache(wrapper);
-    } catch (error) {
-        redirectOnError(router.stepBefore, errorMessageFromException(error));
-    }
+    const wrapper = createWrapper('pongsettings');
+    wrapper.append(createTabs(pongOptions));
+    document.body.layoutInstance?.appendAndCache(wrapper);
 }
 
 export function renderGame() {
