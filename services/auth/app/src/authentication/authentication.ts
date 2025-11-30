@@ -1,5 +1,4 @@
 import type { FastifyInstance } from 'fastify';
-
 import * as bcrypt from 'bcrypt';
 
 import { deleteAccount, createUserProfile, checkUsernameUnique } from './auth.service.js';
@@ -52,7 +51,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 
 	serv.post('/login', { schema: authSchema }, async (request, reply) => {
 		try {
-			const { username, password } = request.body as { username: string, password: string };
+			const { username, password } = request.body as { username: string; password: string };
 
 			const query = `
 				SELECT userID, hashedPassword FROM account WHERE username = ?

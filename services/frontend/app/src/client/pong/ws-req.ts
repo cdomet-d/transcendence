@@ -28,6 +28,7 @@ export function wsRequest(game: Game, ids: { gameID: number; userID: number }) {
 
 	ws.onclose = (event) => {
 		console.log('PONG webSocket connection closed!');
+		console.log('EVENT received:  ', event.reason);
 		if (event.code === 1003 || event.code === 1011) {
 			createErrorFeedback(event.reason); //TODO: fix
 			return;

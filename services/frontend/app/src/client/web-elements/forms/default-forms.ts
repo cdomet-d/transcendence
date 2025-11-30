@@ -128,8 +128,9 @@ export const search: FormDetails = {
 };
 
 export const localPong: FormDetails = {
-    action: 'https://localhost:8443/api/game/lobby/',
+    action: 'https://localhost:8443/api/game/quick-lobby/',
     heading: 'Local Pong',
+    gameFormat: 'local-quickmatch',
     ariaLabel: 'Pong settings',
     id: 'local-pong-settings',
     method: 'post',
@@ -180,8 +181,9 @@ export const localPong: FormDetails = {
 };
 
 export const remotePong: FormDetails = {
-    action: 'https://localhost:8443/api/game/lobby/',
+    action: 'https://localhost:8443/api/game/quick-lobby/',
     heading: 'Remote Pong',
+    gameFormat: 'remote-quickmatch',
     ariaLabel: 'Remote Pong settings',
     id: 'remote-pong-settings',
     method: 'post',
@@ -221,6 +223,51 @@ export const remotePong: FormDetails = {
         },
     ],
     button: { id: 'submit', type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
+};
+
+export const pongTournament: FormDetails = {
+    action: 'https://localhost:8443/api/game/tournament-lobby/',
+    heading: 'Pong Tournament',
+    gameFormat: 'tournament',
+    ariaLabel: 'Pong tournament settings',
+    id: 'pong-tournament-settings',
+    method: 'post',
+    fields: [
+        {
+            id: 'ballspeed',
+            labelContent: 'Starting Ball Speed',
+            max: '5',
+            min: '0',
+            pattern: '',
+            placeholder: '',
+            required: true,
+            step: '1',
+            type: 'range',
+        },
+        {
+            id: 'paddlesize',
+            labelContent: 'Paddle size',
+            max: '5',
+            min: '0',
+            pattern: '',
+            placeholder: '',
+            required: true,
+            step: '1',
+            type: 'range',
+        },
+        {
+            id: 'paddlespeed',
+            labelContent: 'Paddle speed',
+            max: '5',
+            min: '0',
+            pattern: '',
+            placeholder: '',
+            required: true,
+            step: '1',
+            type: 'range',
+        },
+    ],
+    button: { id: 'submit', type: 'submit', content: 'Start tournament', img: null, ariaLabel: '' },
 };
 
 export const deleteAccount: FormDetails = {
