@@ -1,4 +1,3 @@
-import { fetch, Agent } from 'undici';
 import type { game } from '../manager.interface.js';
 
 export function gameOver(payload: string) {
@@ -8,10 +7,11 @@ export function gameOver(payload: string) {
     // showWinnerScreen();
 }
 
-const sslAgent = new Agent({
-    connect: { rejectUnauthorized: false }
-});
+// const sslAgent = new Agent({
+//     connect: { rejectUnauthorized: false }
+// });
 
+// FIXED IN CHARLOTTE'S BRANCH, WAIT FOR NEXT PR
 async function postGameToDashboard(game: game) {
     const url = `https://dashboard:1515/game}`;
     let response: Response;
@@ -19,7 +19,7 @@ async function postGameToDashboard(game: game) {
     try {
         response = await fetch(url, {
             method: 'POST',
-            dispatcher: sslAgent,
+            // dispatcher: sslAgent,
             body: JSON.stringify(game),
         });
     } catch (error) {
