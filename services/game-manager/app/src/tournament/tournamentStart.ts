@@ -21,29 +21,25 @@ function startFirstRound(tournament: tournament) {
 	}
 }
 
-const sslAgent = new Agent({
-	connect: { rejectUnauthorized: false }
-});
-
-async function postTournamentToDashboard(tournamement: tournament) {
-	const url = `https://dashboard:1515/tournament}`;
-	let response: Response;
-
+async function postTournamentToDashboard(tournament: tournament) {
+	const url = `http://dashboard:1515/tournament`;
+	const reqBody: { tournamentID: string, nbPlayers: number} = {
+		tournamentID: tournament.tournamentID, 
+		nbPlayers: tournament.nbPlayers, 
+	};
 	try {
-		response = await fetch(url, {
+		const response: Response = await fetch(url, {
 			method: 'POST',
-			dispatcher: sslAgent,
-			body: JSON.stringify(tournamement),
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify(reqBody),
 		});
+		// TODO check response status ?	
+		if (!response.ok) {
+			console.error(`[GM] Dashboard service failed with status: ${response.status}`);
+			throw new Error(`Dashboard service failed with status ${response.status}`);
+		}
 	} catch (error) {
 		console.error(`[GM] Dashboard service (via route /tournament) is unreachable: ${error}`);
 		throw new Error('Dashboard service is unreachable.');
-	}
-
-	// TODO check response status ?
-
-	if (!response.ok) {
-		console.error(`[GM] Dashboard service failed with status: ${response.status}`);
-		throw new Error(`Dashboard service failed with status ${response.status}`);
 	}
 };
