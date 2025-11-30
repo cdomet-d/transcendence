@@ -6,14 +6,9 @@ import { createUserInline } from '../users/profile-helpers.js';
 import { DropdownMenu } from '../navigation/menus.js';
 import type { Searchbar } from './search.js';
 import type { UserData } from '../types-interfaces.js';
-import {
-    createErrorFeedback,
-    errorMessageFromException,
-    errorMessageFromResponse,
-} from '../../error.js';
+import { createErrorFeedback, errorMessageFromResponse } from '../../error.js';
 import { userDataFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
-import { userStatus } from '../../main.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 
 /**
@@ -170,6 +165,11 @@ export class RemotePongSettings extends LocalPongSettings {
                 try {
                     const user = await this.fetchGuests(target.title);
                     if (user) this.#guests.set(user.username, user);
+                    /**
+                     * HERE @ElSamsam && @cmsweeting
+                     * When the lobby's owner adds a guest to the lobby, I fetch the associated data and store it in the guest Map to render it later.
+                     * You can add whatever you need websocket wise HERE and send `user.username` to add the user to the lobby server-side.
+                     */
                     this.#displayGuests();
                 } catch (error) {
                     console.log(error);

@@ -210,6 +210,8 @@ export function renderLobbyMenu() {
     updatePageTitle('Choose Lobby');
 }
 
+//TODO: for each lobby: set 'owner' with currently registered user to avoid owner
+//  being able to add himself to the game (in the UI - even if it's handled in the pong server)
 export function renderQuickLocalLobby() {
     prepareLayout(document.body.layoutInstance, 'quickLobby');
     const pongOptions: TabData[] = [
@@ -260,8 +262,11 @@ export function renderTournamentLobby() {
 
 export function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest) {
     console.log('renderGame');
+
+	if (!gameRequest) return redirectOnError('/', 'Uh-oh! You can\'t be there - go join a lobby or something !')
     prepareLayout(document.body.layoutInstance, 'game');
 
+	console.log(gameRequest)
     const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
     const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
 

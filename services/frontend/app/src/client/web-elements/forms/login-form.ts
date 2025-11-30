@@ -11,7 +11,7 @@ export class LoginForm extends BaseForm {
         try {
             const response = await fetch(url, req);
             if (!response.ok) throw await errorMessageFromResponse(response);
-            router.loadRoute('/me', true);
+            router.loadRoute(router.stepBefore, true);
         } catch (error) {
             throw error;
         }
