@@ -351,7 +351,7 @@ export class NotifBox extends HTMLDivElement {
                 const notif: friendNotif | gameNotif = JSON.parse(event.data);
                 if (notif.type === 'FRIEND_REQUEST')
                     this.newFriendRequest(notif.senderUsername);
-                else
+                else if (notif.type === 'GAME_INVITE')
                     this.newGameInvitation(notif.receiverName, notif.gameType);
             })
         }
