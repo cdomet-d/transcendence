@@ -54,10 +54,10 @@ export class CustomButton extends HTMLButtonElement {
         if (name === 'disabled') {
             if (this.disabled) {
                 this.classList.add('disabled', 'bg');
-                this.classList.remove('bg-yellow');
+                this.classList.remove('bg-yellow', 'input-emphasis');
             } else {
                 this.classList.remove('disabled', 'bg');
-                this.classList.add('bg-yellow');
+                this.classList.add('bg-yellow', 'input-emphasis');
             }
         }
     }
