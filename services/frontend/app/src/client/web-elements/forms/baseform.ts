@@ -1,9 +1,10 @@
 import type { InputGroup, TextAreaGroup } from '../inputs/fields.js';
 import type { FormDetails } from '../types-interfaces.js';
-import { createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
+import { createCheckbox, createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
 import { createHeading } from '../typography/helpers.js';
 import { createButton } from '../navigation/buttons-helpers.js';
 import { UIFeedback } from '../../error.js';
+import { Checkbox } from '../inputs/buttons.js';
 
 const emptyForm: FormDetails = {
     action: '',
@@ -145,7 +146,6 @@ export abstract class BaseForm extends HTMLFormElement {
     }
 
     #validate() {
-		console.log(this.id, this.reportValidity())
         if (!this.checkValidity()) {
             this.#formContent.get('submit')?.setAttribute('disabled', '');
         } else {
@@ -162,7 +162,7 @@ export abstract class BaseForm extends HTMLFormElement {
      */
     renderTitle() {
         if (this.#formData.heading) {
-            const title = createHeading('1', this.#formData.heading);
+            const title = createHeading('2', this.#formData.heading);
             this.#formContent.set('title', title);
             this.append(title);
         }
@@ -177,15 +177,14 @@ export abstract class BaseForm extends HTMLFormElement {
             let el: HTMLElement;
             if (field.type !== 'textarea') {
                 el = createInputGroup(field) as InputGroup;
-                this.#formContent.set(field.id, el);
             } else {
                 el = createTextAreaGroup(field) as TextAreaGroup;
-                this.#formContent.set(field.id, el);
             }
+            this.#formContent.set(field.id, el);
             this.append(el);
             el.classList.remove('w-full');
             el.classList.add('w-5/6', 'z-2');
-            if (field.type === 'textarea') el.classList.add('row-span-3', 'h-full');
+            if (field.type === 'textarea') el.classList.add('h-full');
         });
     }
 

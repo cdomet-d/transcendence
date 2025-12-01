@@ -1,4 +1,6 @@
 import type { InputFieldsData } from '../types-interfaces.js';
+import { Checkbox } from './buttons.js';
+import { createCheckbox } from './helpers.js';
 const MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
 
 //TODO: feedback on username
@@ -35,7 +37,7 @@ export class CustomInput extends HTMLInputElement {
     }
 
     render() {
-		this.autocomplete = 'off';
+        this.autocomplete = 'off';
         this.className = 'brdr w-full';
     }
 
@@ -64,14 +66,16 @@ export class CustomInput extends HTMLInputElement {
     }
 
     #typeText(el: HTMLInputElement): string[] {
-		let min: number;
+        let min: number;
 
-		el.id === 'searchbar' ? min = 0 : min = 4;
+        el.id === 'searchbar' ? (min = 0) : (min = 4);
         const val = el.value;
         let feedback: string[] = [];
         if (!/[A-Za-z0-9]/.test(val)) feedback.push('Forbidden character');
         if (val.length < min || val.length > 18)
-            feedback.push(`Username should be ${min.toString()}-18 character long, is: ${val.length}`);
+            feedback.push(
+                `Username should be ${min.toString()}-18 character long, is: ${val.length}`,
+            );
         return feedback;
     }
 
@@ -141,8 +145,12 @@ export class InputLabel extends HTMLLabelElement {
         this.setAttribute('for', val);
     }
 
+    isForCheckbox() {
+        this.className = 'min-w-fit w-[10%] inline-flex';
+    }
+
     render() {
-        this.className = 'min-w-[fit-content] w-[10%] absolute left-[0px] -top-[25px]';
+        this.className = 'min-w-fit w-[10%] absolute left-[0px] -top-[25px]';
     }
 }
 
@@ -157,7 +165,7 @@ if (!customElements.get('input-label')) {
 export class InputGroup extends HTMLDivElement {
     #feedback: HTMLDivElement;
     #info: InputFieldsData;
-    #input: CustomInput;
+    #input: CustomInput | Checkbox;
     #label: InputLabel;
     #renderFeedback: (event: Event) => void;
     #hide: () => void;
@@ -214,6 +222,7 @@ export class InputGroup extends HTMLDivElement {
     }
 
     #isRange() {
+        if (!(this.#input instanceof CustomInput)) return;
         if (!this.#info.min || !this.#info.max || !this.#info.step) {
             throw new Error('Slider type input needs min, max and step');
         }
@@ -234,11 +243,24 @@ export class InputGroup extends HTMLDivElement {
         this.#input.setAttribute('accept', 'image/jpeg,image/png,image/gif');
     }
 
+    #appendAndStyle() {
+        if (this.#info.type === 'checkbox') {
+            this.#input = createCheckbox(this.#info.id, this.#info.id) as Checkbox;
+            this.append(this.#input, this.#label);
+            this.#label.isForCheckbox();
+            if (this.#info.type === 'checkbox') this.classList.add('flex', 'gap-s');
+        } else {
+            this.append(this.#label, this.#input, this.#feedback);
+            this.#feedback.className = 'brdr bg absolute hidden';
+        }
+    }
+
     /**
      * Sets Input attributes based on info.
      * @private
      */
     #setInputAttributes() {
+        if (!(this.#input instanceof CustomInput)) return;
         this.#input.name = this.#info.id;
         this.#input.id = this.#info.id;
         this.#input.placeholder = this.#info.placeholder;
@@ -255,10 +277,8 @@ export class InputGroup extends HTMLDivElement {
     }
 
     render() {
-        this.append(this.#label, this.#input, this.#feedback);
-
         this.className = 'box-border relative w-full';
-        this.#feedback.className = 'brdr bg absolute hidden';
+        this.#appendAndStyle();
 
         this.#isRequiredField();
         this.#setInputAttributes();

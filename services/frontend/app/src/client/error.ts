@@ -31,11 +31,12 @@ if (!customElements.get('ui-feedback')) {
 }
 
 export function errorMessageFromException(error: unknown): string {
-	let mess = 'Something went wrong';
-	if (error && error instanceof Error) mess = error.message;
-	return mess;
+    let mess = 'Something went wrong';
+    if (error && error instanceof Error) mess = error.message;
+    return mess;
 }
-export async function responseErrorMessage(response: Response): Promise<Error> {
+
+export async function errorMessageFromResponse(response: Response): Promise<Error> {
     const errorData = await response.json();
     return new Error(`Error: ${response.status}: ${errorData.message}`);
 }
@@ -49,6 +50,6 @@ export function createErrorFeedback(message: string) {
 
 export async function redirectOnError(route: string, message: string) {
     router.loadRoute(route, true);
-	await DOMReady();
-	createErrorFeedback(message);
+    await DOMReady();
+    createErrorFeedback(message);
 }

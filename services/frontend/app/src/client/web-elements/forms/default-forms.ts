@@ -4,11 +4,11 @@ import { usernamePattern, passwordPattern, searchbarPattern } from '../default-v
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
 
 export function customizeUserSettingsForm(user: UserData): FormDetails {
-	userSettingsForm.fields.forEach((f) => {
-		if (f.id === 'biography' && user.biography) f.placeholder = user.biography;
-		else if (f.id === 'username') f.placeholder = user.username;
-	})
-	return userSettingsForm;
+    userSettingsForm.fields.forEach((f) => {
+        if (f.id === 'biography' && user.biography) f.placeholder = user.biography;
+        else if (f.id === 'username') f.placeholder = user.username;
+    });
+    return userSettingsForm;
 }
 
 export const userSettingsForm: FormDetails = {
@@ -147,19 +147,16 @@ export const localPong: FormDetails = {
             type: 'range',
         },
         {
-            id: 'paddlesize',
-            labelContent: 'Paddle size',
-            max: '5',
-            min: '0',
+            id: 'horizontal',
+            labelContent: 'Horizontal paddle movement',
             pattern: '',
             placeholder: '',
+            type: 'checkbox',
             required: true,
-            step: '1',
-            type: 'range',
         },
         {
-            id: 'paddlespeed',
-            labelContent: 'Paddle speed',
+            id: 'paddlesize',
+            labelContent: 'Paddle size',
             max: '5',
             min: '0',
             pattern: '',
@@ -172,9 +169,20 @@ export const localPong: FormDetails = {
             id: 'opponent',
             labelContent: 'Opponent Nickname',
             pattern: usernamePattern,
-            placeholder: "Challenger's nickname",
+            placeholder: 'CrimeGoose...',
             type: 'text',
             required: true,
+        },
+        {
+            id: 'paddlespeed',
+            labelContent: 'Paddle speed',
+            max: '5',
+            min: '0',
+            pattern: '',
+            placeholder: '',
+            required: true,
+            step: '1',
+            type: 'range',
         },
     ],
     button: { id: 'submit', type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
@@ -188,6 +196,14 @@ export const remotePong: FormDetails = {
     id: 'remote-pong-settings',
     method: 'post',
     fields: [
+        {
+            id: 'horizontal',
+            labelContent: 'Horizontal paddle movement',
+            pattern: '',
+            placeholder: '',
+            type: 'checkbox',
+            required: true,
+        },
         {
             id: 'ballspeed',
             labelContent: 'Starting Ball Speed',

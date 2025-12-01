@@ -27,12 +27,7 @@ export const farmAssets: ImgData[] = [
 export const oceanAssets: ImgData[] = [
     { id: 'tuna', src: '/public/assets/images/ocean-scene/tuna.png', alt: 'ahah', size: 'iicon' },
     { id: 'coral', src: '/public/assets/images/ocean-scene/coral.png', alt: 'ahah', size: 'iicon' },
-    {
-        id: 'algae',
-        src: '/public/assets/images/ocean-scene/algae.png',
-        alt: 'ahah',
-        size: 'iicon',
-    },
+    { id: 'algae', src: '/public/assets/images/ocean-scene/algae.png', alt: 'ahah', size: 'iicon' },
     {
         id: 'algae1',
         src: '/public/assets/images/ocean-scene/algae1.png',
@@ -112,7 +107,7 @@ export class Layout extends HTMLDivElement {
     render() {
         this.#renderTheme();
         this.className =
-            'box-border relative grid h-dvh w-dvw grid-auto-rows-auto \
+            'box-border relative grid h-screen w-screen grid-auto-rows-auto \
 			place-content-center layout-col gap-s z-0';
     }
 
