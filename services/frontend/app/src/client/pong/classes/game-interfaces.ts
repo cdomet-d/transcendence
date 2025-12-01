@@ -41,7 +41,7 @@ export interface paddleObj {
 }
 
 export interface repObj {
-    ID: number;
+    ID: string;
     timestamp: number;
     leftPad: paddleObj;
     rightPad: paddleObj;
@@ -51,7 +51,7 @@ export interface repObj {
 }
 
 export interface reqObj {
-    ID: number;
+    ID: string;
     keys: keysObj;
     timeStamp: number;
 }

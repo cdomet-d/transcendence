@@ -10,7 +10,7 @@ import type {
     paddleObj,
 } from './game-interfaces.js';
 
-type requestMap = Map<number, reqObj>;
+type requestMap = Map<string, reqObj>;
 type replyTab = Array<repObj>;
 
 export class Game {
@@ -59,7 +59,7 @@ export class Game {
         this.#delta = 0;
         this.#lastFrameTime = 0;
         this.#req = {
-            ID: 0,
+            ID: "",
             keys: {
                 w: false,
                 s: false,
@@ -190,7 +190,7 @@ export class Game {
         this.#reqHistory.set(req.ID, newReq);
     }
 
-    public deleteReq(id: number) {
+    public deleteReq(id: string) {
         for (const key of this.#reqHistory.keys()) {
             if (key <= id) {
                 this.#reqHistory.delete(key);
