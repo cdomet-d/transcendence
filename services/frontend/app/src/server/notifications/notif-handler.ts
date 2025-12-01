@@ -7,7 +7,8 @@ interface Params {
 
 export function notifHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest<{ Params: Params }>) {
 	this.log.info('NOTIF webSocket connection established');
-	const userID: number = req.params.userID;
+	const userID: number = Number(req.params.userID);
+	//TODO: if nan
 	this.users.addUser(userID, socket);
 
 	const interval = setInterval(() => {
