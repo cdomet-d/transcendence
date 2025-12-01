@@ -1,3 +1,4 @@
+import { lobbyMap } from '../lobby/lobby.gm.js';
 import type { game } from '../manager.interface.js';
 
 export function gameOver(payload: string) {
@@ -5,6 +6,8 @@ export function gameOver(payload: string) {
 	postGameToDashboard(game);
 	patchGameToUsers(game);
 	// showWinnerScreen();
+	// TODO redirect all players to their lobby
+	const lobby = lobbyMap.get(game.lobbyID);
 }
 
 interface gameDashboardReqBody {
@@ -19,7 +22,6 @@ interface gameDashboardReqBody {
 	player2Score: number;
 }
 
-// FIXED IN CHARLOTTE'S BRANCH, WAIT FOR NEXT PR
 async function postGameToDashboard(game: game) {
 	const url = `http://dashboard:1515/game`;
 	const reqBody: gameDashboardReqBody = {
@@ -85,38 +87,3 @@ async function patchGameToUsers(game: game) {
 		throw new Error('Users service is unreachable.');
 	}
 }
-
-
-/* SAM */
-// interface game {
-// 	lobbyID: string,
-// 	gameID: string,
-// 	tournamentID?: string,
-// 	remote: boolean,
-// 	userList: userInfo[] | undefined | null,
-// 	score: string,
-// 	winnerID: number,
-// 	loserID: number,
-// }
-
-/* CHARLOTTE */
-// export interface gameInfo {
-//     gameID: number,
-//     tournamentID: number,
-//     remote: boolean,
-//     users: [user, user],
-//     score: [number, number],
-//     winnerID: number,
-//     loserID: number
-// }
-
-/* ALEX */
-// export interface Match {
-// 	gameID: number;
-// 	duration: number;
-// 	startTime: string;
-// 	player1: number;
-// 	player2: number;
-// 	player1Score: number;
-// 	player2Score: number;
-// }

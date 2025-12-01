@@ -4,7 +4,6 @@ import { startGame } from "../quickmatch/createGame.js";
 import { gameOver } from "../quickmatch/gameOver.js";
 import { tournamentOver } from "./tournamentOver.js";
 
-// const nextPlayersMap: Map<number, { player1?: userInfo, player2?: userInfo }> = new Map();
 const nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }> = new Map();
 
 export async function tournamentState(payload: string) {
@@ -67,10 +66,11 @@ function getUsernameFromID(userID: number, game: game): string {
 }
 
 function getNextGameInBracket(tournament: tournament): game | undefined {
-	tournament.bracket.forEach((GameObj) => {
-		if (GameObj.users === null) {
-			return GameObj;
+	tournament.bracket.forEach((gameObj) => {
+		if (gameObj.users === null) {
+			return gameObj;
 		}
 	});
+	// TODO Find better way to verify if tournament is over?
 	return undefined;
 }

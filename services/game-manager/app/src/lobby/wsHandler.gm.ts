@@ -1,6 +1,6 @@
 import type { lobbyInfo } from '../manager.interface.js';
 import { processGameRequest } from '../manager.js';
-import { wsClientsMap, addUserToLobby, createLobby } from './lobby.gm.js';
+import { wsClientsMap, addUserToLobby, createLobby, lobbyMap, removeUserFromLobby } from './lobby.gm.js';
 import type { FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 
@@ -13,12 +13,11 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 			if (data.event === "BAD_USER_TOKEN") return;
 
 			const { payload, formInstance } = data;
-			
+
 			if (data.event === "LOBBY_REQUEST") {
-				
 				userID = payload.userID;
 				console.log("lobbyHost UID: ", userID);
-				
+
 				if (!wsClientsMap.has(userID!)) {
 					wsClientsMap.set(userID!, socket);
 				}
@@ -40,8 +39,16 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 
 	socket.on('close', () => {
 		if (userID !== null) {
-			wsClientsMap.delete(userID);
-			// TODO: remove user from lobby too no?
+			let lobbyID: string | undefined = undefined;
+
+			for (const [_, lobbyInfo] of lobbyMap.entries()) {
+				if (lobbyInfo.userList.has(userID)) {
+					lobbyID = lobbyInfo.lobbyID;
+					break;
+				}
+			}
+			if (lobbyID !== undefined)
+				removeUserFromLobby(userID, lobbyID);
 		}
 	});
 }

@@ -18,7 +18,7 @@ interface lobbyInfo {
 interface whitelist {
 	lobbyId: string,
 	hostID: number,
-	userIDs: number[]
+	userIDs: Map<number, userInfo>
 }
 
 interface game {

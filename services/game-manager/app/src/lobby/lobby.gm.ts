@@ -8,27 +8,6 @@ export function createLobby(hostID: number, format: string) {
 	return lobby;
 }
 
-export function addUserToLobby(userID: number, socket: WebSocket, lobbyID: string) {
-    const lobby = lobbyMap.get(lobbyID);
-    if (!lobby) return;
-
-    if (!lobby.userList.has(userID)) {
-        lobby.userList.set(userID, { userID });
-    }
-
-    if (!wsClientsMap.has(userID)) {
-        wsClientsMap.set(userID, socket);
-    }
-}
-
-export function removeUserFromLobby(userID: number, lobbyID: string) {
-    const lobby = lobbyMap.get(lobbyID);
-	if (!lobby) return;
-
-	lobby.userList.delete(userID);
-    wsClientsMap.delete(userID);
-}
-
 // add INVITEE in parameter and get all userInfo (invitee) from JWT payload
 function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 	const lobbyID = crypto.randomUUID().toString();
@@ -38,13 +17,15 @@ function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 		whitelist: {
 			lobbyId: lobbyID,
 			hostID: hostID,
-			userIDs: [hostID] // TODO Make this a map ? // 1. put invitee ID here on invite
+			userIDs: new Map<number, userInfo>([
+				[hostID, { userID: hostID }], // TODO Make this a map // 1. put invitee ID here on invite
+			]),
 		},
 		joinable: true,
-        userList: new Map<number, userInfo>([
-            [hostID, { userID: hostID }] //  TODO get username JWT
-        ]),
-		remote: true, // TODO set remote or local HERE just before START event
+		userList: new Map<number, userInfo>([
+			[hostID, { userID: hostID }], //  TODO get username JWT
+		]),
+		remote: true, // TODO set to false if local pong before START event
 		format: format,
 		nbPlayers: format === "quickmatch" ? 2 : 4
 	}
@@ -52,13 +33,35 @@ function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 	return lobby;
 }
 
-export function printPlayersInLobby(lobbyID: string) {
+export function addUserToLobby(userID: number, socket: WebSocket, lobbyID: string) {
 	const lobby = lobbyMap.get(lobbyID);
-	if (!lobby) {
-		console.log("AAAH PAS DE LOBBY");
-		return;
+	if (!lobby) return;
+
+	if (!lobby.userList.has(userID)) {
+		lobby.userList.set(userID, { userID }); // add username (and socket?) too
 	}
-	lobby?.userList.forEach(user => {
-		console.log(`User #${user.userID} is in Lobby #${lobbyID}`);
-	});
+
+	if (!wsClientsMap.has(userID)) {
+		wsClientsMap.set(userID, socket);
+	}
 }
+
+export function removeUserFromLobby(userID: number, lobbyID: string) {
+	const lobby = lobbyMap.get(lobbyID);
+	if (!lobby) return;
+
+	lobby.userList.delete(userID);
+	lobby.whitelist!.userIDs.delete(userID);
+	wsClientsMap.delete(userID);
+}
+
+// export function printPlayersInLobby(lobbyID: string) {
+// 	const lobby = lobbyMap.get(lobbyID);
+// 	if (!lobby) {
+// 		console.log(`Lobby #${lobbyID} not found`);
+// 		return;
+// 	}
+// 	lobby?.userList.forEach(user => {
+// 		console.log(`User #${user.userID} is in Lobby #${lobbyID}`);
+// 	});
+// }
