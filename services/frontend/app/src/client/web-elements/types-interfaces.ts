@@ -293,3 +293,41 @@ export interface PongOptions {
     paddlesize: string;
     paddlespeed: string;
 }
+
+/* -------------------------------------------------------------------------- */
+/*                               Dictonnary                                   */
+/* -------------------------------------------------------------------------- */
+
+export interface Dictionary {
+	common: {
+		submit: string;
+		cancel: string;
+		search: string;
+		delete: string;
+	};
+	forms: {
+		username: string;
+		password: string;
+		biography: string;
+		avatar: string;
+		search_placeholder: string;
+	};
+	game: {
+		ball_speed: string;
+		paddle_size: string;
+		paddle_speed: string;
+		opponent: string;
+		start: string;
+        local: string;
+        remote: string;
+	};
+	titles: {
+		settings: string;
+		register: string;
+		login: string;
+		local_pong: string;
+		remote_pong: string;
+		tournament: string;
+	};
+}
+
