@@ -14,7 +14,7 @@ export class Player {
 	#reply: repObj;
 
 	/*                            CONSTRUCTORS                               */
-	constructor(userID: number, socket: WebSocket, serverSide: string, clientSide: string, padSpec: paddleSpec) {
+	constructor(userID: number, socket: WebSocket, serverSide: string, clientSide: string, padSpec: paddleSpec, ballSpec: ballObj) {
 		this.#userID = userID;
 		this.#socket = socket;
 		this.#reply = {
@@ -24,7 +24,7 @@ export class Player {
 			rightPad: {
 				coord: {x: WIDTH - (padSpec.w + 25), y: HEIGHT / 2 - padSpec.halfH},
 				step: {x: 0, y: 0}},
-			ball: {x: WIDTH / 2, y: HEIGHT / 2, dx: 0.3, dy: 0.03, maxSpeed: 0.65, r: 15}, 
+			ball: {...ballSpec}, 
 			score: [0, 0],
 			end: false
 		};

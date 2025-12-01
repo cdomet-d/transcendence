@@ -7,9 +7,10 @@ export function raycast(
     nextX: number,
     nextY: number,
 ): [number, coordinates] | null {
-    const inflatedPad: coordinates = { x: paddle.x - game.ball.r, y: paddle.y - game.ball.r };
-    const padHeight: number = game.padSpec.h + 2 * game.ball.r;
-    const padWidth: number = game.padSpec.w + 2 * game.ball.r;
+    const offset: number = game.ball.r// + 1 TODO
+    const inflatedPad: coordinates = { x: paddle.x - offset, y: paddle.y - offset };
+    const padHeight: number = game.padSpec.h + 2 * offset;
+    const padWidth: number = game.padSpec.w + 2 * offset;
     const leftX: number = inflatedPad.x;
     const rightX: number = inflatedPad.x + padWidth;
     const topY: number = inflatedPad.y;

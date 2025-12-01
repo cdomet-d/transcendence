@@ -27,6 +27,7 @@ export async function setUpGame(game: Game) {
 	game.addTimoutID(setTimeout(endGame, MAX_TIME, player1, player2, game));
 	game.startTimestamp = performance.now();
 	game.passStart = performance.now();
+	game.infos.startTime = new Date().toISOString(); //TODO: winter time
 	game.addTimoutID(setTimeout(gameLoop, SERVER_TICK, game, player1, player2));
 }
 

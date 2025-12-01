@@ -9,7 +9,7 @@ export function createTournament(payload: lobbyInfo): tournament | undefined {
 		return undefined;
 	}
 
-	const tournamentObj = makeTournamentObj(tournamentID, games);
+	const tournamentObj = makeTournamentObj(tournamentID, games, payload.nbPlayers);
 	return tournamentObj;
 }
 
@@ -31,9 +31,15 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: string): game[
     ];
 
 	const games: game[] = [
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), tournamentID: tournamentID, remote: true, users: opponents[0], score: "", winnerID: 0, loserID: 0, duration: 0, longuestPass: 0 },
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), tournamentID: tournamentID, remote: true, users: opponents[1], score: "", winnerID: 0, loserID: 0, duration: 0, longuestPass: 0 },
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), tournamentID: tournamentID, remote: true, users: null, score: "", winnerID: 0, loserID: 0, duration: 0, longuestPass: 0 },
+		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
+			tournamentID: tournamentID, remote: true, users: opponents[0], 
+			score: [0, 0], winnerID: 0, loserID: 0, duration: 0, longuestPass: 0, startTime: "" },
+		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
+			tournamentID: tournamentID, remote: true, users: opponents[1], 
+			score: [0, 0], winnerID: 0, loserID: 0, duration: 0, longuestPass: 0, startTime: "" },
+		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
+			tournamentID: tournamentID, remote: true, users: null, 
+			score: [0, 0], winnerID: 0, loserID: 0, duration: 0, longuestPass: 0, startTime: "" },
 	];
 
 	return games;
@@ -49,11 +55,12 @@ function fisherYatesShuffle(usersArray: any) {
 }
 
 
-export function makeTournamentObj(tournamentID: string, games: game[]): tournament {
+export function makeTournamentObj(tournamentID: string, games: game[], nbPlayers: number): tournament {
 	const tournament: tournament = {
 		tournamentID: tournamentID,
 		winnerID: null,
-		bracket: games
+		bracket: games,
+		nbPlayers: nbPlayers,
 	}
 	return tournament;
 }

@@ -7,14 +7,15 @@ export interface user {
 export interface gameInfo {
     lobbyID: number,
     gameID: string,
-    tournamentID?: number,
+    tournamentID?: string,
     remote: boolean,
     users: [user, user],
     score: [number, number],
     winnerID: number,
     loserID: number,
     duration: number,
-    longuestPass: number
+    longuestPass: number,
+    startTime: string,
 }
 
 /******************************** GAME OBJ ***********************************/

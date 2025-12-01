@@ -15,11 +15,12 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 		gameID: crypto.randomUUID().toString(),
 		remote: lobbyInfo.remote,
 		users: usersArray,
-		score: "",
+		score: [0, 0],
 		winnerID: 0,
 		loserID: 0, 
 		duration: 0, 
-		longuestPass: 0
+		longuestPass: 0,
+		startTime: "",
 		// gameSettings
 	};
 

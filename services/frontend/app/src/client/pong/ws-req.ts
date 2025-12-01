@@ -6,8 +6,8 @@ import { createErrorFeedback } from '../error.js';
 
 const START_DELAY = 500;
 
-export function wsRequest(game: Game, ids: { gameID: number; userID: number }) {
-    const ws = new WebSocket('wss://localhost:8443/api/game/');
+export function wsRequest(game: Game, ids: { gameID: string; userID: number }) {
+	const ws = new WebSocket('wss://localhost:8443/api/game/');
 
     ws.onerror = () => {
         ws.close(1011, 'websocket error');
