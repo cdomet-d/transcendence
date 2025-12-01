@@ -17,6 +17,7 @@ import dbConnector from "./db.js";
 	}
 })();
 
+
 //init server
 export async function init(): Promise<FastifyInstance> {
 	const serv: FastifyInstance = Fastify(options);
@@ -33,6 +34,7 @@ function addPlugins(serv: FastifyInstance) {
 	serv.register(cookie);
 	serv.register(dbConnector);
 	serv.register(routeFriend);
+
 }
 
 //run server

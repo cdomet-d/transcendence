@@ -1,5 +1,5 @@
 import { BaseForm } from './baseform';
-import { responseErrorMessage } from '../event-elements/error';
+import { responseErrorMessage } from '../../error';
 import { router } from '../../main';
 
 export class LoginForm extends BaseForm {

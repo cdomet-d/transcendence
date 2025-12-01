@@ -13,14 +13,12 @@ export function processGameRequest(lobbyInfo: lobbyInfo) {
 		lobbyInfo.joinable = false; // TODO: turn back to true when tournament over
 		startTournament(tournament);
 	} else if (lobbyInfo.format === "quickmatch") {
-        console.log("5");
-
 		const quickmatch: game | undefined = createGameObj(lobbyInfo);
 		if (quickmatch === undefined) {
 			console.log("Error: Something went wrong!");
 			return;
 		}
-		lobbyInfo.joinable = false; // TODO: turn back to true when game over
+		lobbyInfo.joinable = false; // TODO: turn back to true when game over (only for remote)
 		startGame(quickmatch);
 	}
 }

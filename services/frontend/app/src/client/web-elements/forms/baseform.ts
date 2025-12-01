@@ -3,7 +3,7 @@ import type { FormDetails } from '../types-interfaces.js';
 import { createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
 import { createHeading } from '../typography/helpers.js';
 import { createButton } from '../navigation/buttons-helpers.js';
-import { UIFeedback } from '../event-elements/error';
+import { UIFeedback } from '../../error.js';
 
 const emptyForm: FormDetails = {
     action: '',
@@ -43,7 +43,7 @@ export abstract class BaseForm extends HTMLFormElement {
         this.validationHandler = this.#validate.bind(this);
         this.#formContent = new Map<string, HTMLElement>();
         this.className =
-            'w-full h-full grid grid-auto-rows-auto form-gap place-items-center justify-center box-border pad-m';
+            'w-full h-full grid grid-auto-rows-auto form-gap place-items-center justify-center box-border pad-m relative';
     }
 
     /** Called when the element is inserted into the DOM.
@@ -109,7 +109,6 @@ export abstract class BaseForm extends HTMLFormElement {
     createReqBody(form: FormData): string {
         const fObject = Object.fromEntries(form.entries());
         const jsonBody = JSON.stringify(fObject);
-        console.log(jsonBody);
         return jsonBody;
     }
 
@@ -146,6 +145,7 @@ export abstract class BaseForm extends HTMLFormElement {
     }
 
     #validate() {
+		console.log(this.id, this.reportValidity())
         if (!this.checkValidity()) {
             this.#formContent.get('submit')?.setAttribute('disabled', '');
         } else {

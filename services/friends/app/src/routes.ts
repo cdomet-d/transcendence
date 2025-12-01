@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+
 import { getFriendship, friendshipExistsUsersID } from './friends.service.js'
 type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
 
@@ -21,6 +22,7 @@ export async function routeFriend(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -80,6 +82,7 @@ export async function routeFriend(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -122,6 +125,7 @@ export async function routeFriend(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -154,6 +158,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			const response = await serv.dbFriends.run(query, params);
 			if (response.changes === 0)
 				throw new Error('[FRIENDS] Friend request failed to save.');
+
 			return (reply.code(201).send({
 				success: true,
 				message: `[FRIENDS] Friend request sent to ${friendID}`
@@ -176,11 +181,12 @@ export async function routeFriend(serv: FastifyInstance) {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
-			
+
 			if (token) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -253,6 +259,7 @@ export async function routeFriend(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (
@@ -300,6 +307,7 @@ export async function routeFriend(serv: FastifyInstance) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
 						if (

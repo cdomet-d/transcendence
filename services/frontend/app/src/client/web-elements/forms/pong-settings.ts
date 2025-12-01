@@ -7,8 +7,7 @@ import { DropdownMenu } from '../navigation/menus.js';
 import { NoResults } from '../typography/images.js';
 import type { Searchbar } from './search.js';
 import type { UserData } from '../types-interfaces.js';
-import { createGameRequest } from '../../lobby/lobby.js';
-import { wsConnect } from '../../lobby/wsConnect.js';
+import { wsConnect } from '../../lobby/wsConnect.front.js';
 
 /**
  * A form allowing user to create a local pong game.
@@ -43,10 +42,6 @@ export class LocalPongSettings extends BaseForm {
         this.classList.add('sidebar-left');
     }
 
-    override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
-        ;
-    }
-
     /* -------------------------------------------------------------------------- */
     /*                                   Getters                                  */
     /* -------------------------------------------------------------------------- */
@@ -61,6 +56,10 @@ export class LocalPongSettings extends BaseForm {
     /*                               Event listeners                              */
     /* -------------------------------------------------------------------------- */
 
+	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
+		console.log('Fetch&Redirect')
+	}
+	
     override async submitHandlerImplementation(ev: SubmitEvent): Promise<void> {
         ev.preventDefault();
         const f = new FormData(this);
@@ -71,10 +70,7 @@ export class LocalPongSettings extends BaseForm {
         req.body = this.createReqBody(f);
         // await this.fetchAndRedirect(this.details.action, req);
 
-        // console.log("F: ", req.body);
-        console.log("1");
-        await wsConnect('game', 'quickmatch', 'localForm', '', req.body);
-
+        wsConnect('game', 'quickmatch', 'localForm', '', req.body);
     }
 
     /* -------------------------------------------------------------------------- */

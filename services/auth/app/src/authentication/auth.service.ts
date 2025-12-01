@@ -4,9 +4,7 @@ import { Database } from "sqlite";
 export async function createUserProfile(log: any, userID: number, username: string): Promise<ProfileCreationResult> {
 	const url = `http://nginx:80/api/users/${userID}`;
 
-	console.log('USER ID:', url);
 	const body = JSON.stringify({ username: username });
-	console.log(body);
 	let response: Response;
 	try {
 		response = await fetch(url, {

@@ -28,7 +28,6 @@ export async function natsSubscription(serv: FastifyInstance) {
 			// serv.log.info(`Received message: ${JSON.stringify(_gameInfo)}`);
 			serv.gameRegistry.addGame(new Game(gameInfo, serv.nc, serv.log));
 
-			// Approval given HERE from PONG if game is ok to start
 			if (msg.reply) {
 				const game = {
 					gameID: gameInfo.gameID,

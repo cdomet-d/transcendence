@@ -38,11 +38,11 @@ function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 		whitelist: {
 			lobbyId: lobbyID,
 			hostID: hostID,
-			userIDs: [hostID] // TODO Make this a map // 1. put invitee ID here on invite
+			userIDs: [hostID] // TODO Make this a map ? // 1. put invitee ID here on invite
 		},
 		joinable: true,
         userList: new Map<number, userInfo>([
-            [hostID, { userID: hostID }] //  get username from token 
+            [hostID, { userID: hostID }] //  TODO get username JWT
         ]),
 		remote: true, // TODO set remote or local HERE just before START event
 		format: format,

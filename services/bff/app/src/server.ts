@@ -3,6 +3,7 @@ import Fastify from 'fastify';
 import type { FastifyInstance } from 'fastify';
 import cookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
+import natsConnector from './nats.js';
 
 import { bffFriendRoutes } from './routeFriends.js';
 import { bffAccessibilityRoutes } from './routeAccessibility.js';
@@ -36,7 +37,7 @@ function addPlugins(serv: FastifyInstance) {
 	serv.register(bffAccessibilityRoutes);
 	serv.register(bffUsersRoutes);
 	serv.register(bffFriendRoutes);
-
+	serv.register(natsConnector);
 }
 
 //run server

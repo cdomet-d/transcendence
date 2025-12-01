@@ -1,4 +1,3 @@
-import { fetch, Agent } from 'undici';
 import type { game } from '../manager.interface.js';
 
 export function gameOver(payload: string) {
@@ -20,6 +19,7 @@ interface gameDashboardReqBody {
 	player2Score: number;
 }
 
+// FIXED IN CHARLOTTE'S BRANCH, WAIT FOR NEXT PR
 async function postGameToDashboard(game: game) {
 	const url = `http://dashboard:1515/game`;
 	const reqBody: gameDashboardReqBody = {

@@ -2,7 +2,7 @@ import { startGame } from './game-loop.js';
 import { Game, WIDTH, HEIGHT } from './classes/game-class.js';
 import { addMessEvent, createKeyEvent } from './game-events.js';
 import { renderGame } from './game-render-utils.js';
-import { createErrorFeedback } from '../web-elements/event-elements/error.js';
+import { createErrorFeedback } from '../error.js';
 
 const START_DELAY = 500;
 

@@ -1,22 +1,38 @@
 import type { ButtonData, MenuData, TabData } from '../types-interfaces.js';
 
 export const main: MenuData = {
+    id: 'mainNav',
     links: [
         {
+            styleButton: true,
             id: 'leaderboard',
             title: 'Leaderboard',
             datalink: 'leaderboard',
             href: '/leaderboard',
             img: null,
         },
-        { id: 'lobby', title: 'Play', datalink: '/lobby-menu', href: '/lobby-menu', img: null },
-        { id: 'profile', title: 'Profile', datalink: 'profile', href: '/user/default', img: null },
+        {   styleButton: true,
+            id: 'lobby',
+            title: 'Play',
+            datalink: '/lobby-menu',
+            href: '/lobby-menu',
+            img: null
+        },
+        {   styleButton: true,
+            id: 'profile',
+            title: 'Profile',
+            datalink: 'profile',
+            href: '/me',
+            img: null
+        },
     ],
 };
 
 export const homeLink: MenuData = {
+    id: 'backHome',
     links: [
         {
+            styleButton: false,
             datalink: 'home',
             href: '/',
             title: 'Home',
@@ -50,6 +66,7 @@ export const logIn: ButtonData = {
 };
 
 export const social: MenuData = {
+    id: 'social',
     buttons: [
         {
             ariaLabel: 'Add user as friend',
@@ -80,6 +97,7 @@ export const social: MenuData = {
     links: [
         {
             //TODO: autofill pongsettings form and lauch a 2 persons match
+            styleButton: true,
             datalink: '/lobby',
             id: 'challenge',
             href: '/lobby',
@@ -92,6 +110,7 @@ export const social: MenuData = {
             },
         },
         {
+            styleButton: true,
             datalink: '/user/settings',
             id: 'settings',
             href: '/user/settings',
@@ -171,14 +190,16 @@ export const profileTabs: TabData[] = [
 ];
 
 export const lobbyQuickmatchMenu: MenuData = {
+    id: 'quickMatchMenu',
     links: [
-        { id: 'local-quickmatch', title: 'Local Quickmatch', datalink: '/quick-local-lobby', href: '/quick-local-lobby', img: null },
-        { id: 'remote-quickmatch', title: 'Remote Quickmatch', datalink: '/quick-remote-lobby', href: '/quick-remote-lobby', img: null },
+        { styleButton: true, id: 'local-quickmatch', title: 'Local 1vs1', datalink: '/quick-local-lobby', href: '/quick-local-lobby', img: null },
+        { styleButton: true, id: 'remote-quickmatch', title: 'Remote 1vs1', datalink: '/quick-remote-lobby', href: '/quick-remote-lobby', img: null },
     ],
 };
 
 export const lobbyTournamentMenu: MenuData = {
+    id: 'tournamentMenu',
     links: [
-        { id: 'tournament', title: 'Tournament', datalink: '/tournament-lobby', href: '/tournament-lobby', img: null },
+        { styleButton: true, id: 'tournament', title: 'Tournament', datalink: '/tournament-lobby', href: '/tournament-lobby', img: null },
     ],
 };
