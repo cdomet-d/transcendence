@@ -1,6 +1,6 @@
 import type { Game } from "./game-class.js";
 
-type gameMap = Map<number, Game>;
+type gameMap = Map<string, Game>;
 
 export class GameRegistry {
 	/*                             PROPERTIES                                */
@@ -16,11 +16,11 @@ export class GameRegistry {
 		this.#games.set(newGame.gameID, newGame);
 	}
 
-	public deleteGame(gameID: number) {
+	public deleteGame(gameID: string) {
 		this.#games.delete(gameID);
 	}
 
-	public findGame(gameID: number): Game | undefined {
+	public findGame(gameID: string): Game | undefined {
 		return this.#games.get(gameID);
 	}
 }

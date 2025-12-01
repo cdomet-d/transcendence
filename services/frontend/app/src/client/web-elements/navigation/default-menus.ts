@@ -1,6 +1,7 @@
 import type { ButtonData, MenuData, TabData } from '../types-interfaces.js';
 
 export const main: MenuData = {
+    id: 'mainNav',
     links: [
         {
             styleButton: true,
@@ -10,26 +11,25 @@ export const main: MenuData = {
             href: '/leaderboard',
             img: null,
         },
-        {
-            styleButton: true,
+        {   styleButton: true,
             id: 'lobby',
             title: 'Play',
-            datalink: '/lobby',
-            href: '/lobby',
-            img: null,
+            datalink: '/lobby-menu',
+            href: '/lobby-menu',
+            img: null
         },
-        {
-            styleButton: true,
+        {   styleButton: true,
             id: 'profile',
             title: 'Profile',
             datalink: 'profile',
             href: '/me',
-            img: null,
+            img: null
         },
     ],
 };
 
 export const homeLink: MenuData = {
+    id: 'backHome',
     links: [
         {
             styleButton: false,
@@ -66,6 +66,7 @@ export const logIn: ButtonData = {
 };
 
 export const social: MenuData = {
+    id: 'social',
     buttons: [
         {
             ariaLabel: 'Add user as friend',
@@ -187,3 +188,18 @@ export const profileTabs: TabData[] = [
     { id: 'history', content: 'Game history', default: false, panelContent: null },
     { id: 'stats', content: 'Statistics', default: false, panelContent: null },
 ];
+
+export const lobbyQuickmatchMenu: MenuData = {
+    id: 'quickMatchMenu',
+    links: [
+        { styleButton: true, id: 'local-quickmatch', title: 'Local 1vs1', datalink: '/quick-local-lobby', href: '/quick-local-lobby', img: null },
+        { styleButton: true, id: 'remote-quickmatch', title: 'Remote 1vs1', datalink: '/quick-remote-lobby', href: '/quick-remote-lobby', img: null },
+    ],
+};
+
+export const lobbyTournamentMenu: MenuData = {
+    id: 'tournamentMenu',
+    links: [
+        { styleButton: true, id: 'tournament', title: 'Tournament', datalink: '/tournament-lobby', href: '/tournament-lobby', img: null },
+    ],
+};

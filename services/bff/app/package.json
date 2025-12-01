@@ -21,7 +21,8 @@
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "typescript": "^5.9.3",
-    "undici": "^7.16.0"
+    "undici": "^7.16.0",
+    "nats": "^2.29.3"
   },
   "devDependencies": {
     "@fastify/cookie": "^11.0.2",

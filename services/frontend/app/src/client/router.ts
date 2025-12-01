@@ -1,10 +1,11 @@
 import { renderNotFound } from './render-pages.js';
 import { match, type Match } from 'path-to-regexp';
 import * as page from './render-pages.js';
+import type { gameRequest } from './pong/pong.js';
 
 export interface routeInterface {
     path: string;
-    callback: (param?: Match<Partial<Record<string, string | string[]>>>) => void;
+    callback: (param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest) => void;
 }
 
 export const routes: routeInterface[] = [
@@ -15,7 +16,10 @@ export const routes: routeInterface[] = [
     { path: '/me', callback: page.renderSelf },
     { path: '/user/:login', callback: page.renderProfile },
     { path: '/user/settings', callback: page.renderSettings },
-    { path: '/lobby', callback: page.renderLobby },
+    { path: '/lobby-menu', callback: page.renderLobbyMenu },
+    { path: '/quick-local-lobby', callback: page.renderQuickLocalLobby },
+    { path: '/quick-remote-lobby', callback: page.renderQuickRemoteLobby },
+    { path: '/tournament-lobby', callback: page.renderTournamentLobby },
     { path: '/bracket', callback: page.renderBracket },
     { path: '/game', callback: page.renderGame },
 ];
@@ -64,7 +68,7 @@ export class Router {
     /** Parses the defined route array to check if the current URL is defined as a route.
      * Calls `renderNotFount()` if the route was not found, and the route's callback otherwise.
      */
-    loadRoute(path: string, updateHistory: boolean) {
+    loadRoute(path: string, updateHistory: boolean, gameRequest?: gameRequest) {
         this.#stepBefore = this.currentPath;
         this.sanitisePath(path);
 
@@ -86,6 +90,6 @@ export class Router {
             renderNotFound();
             return;
         }
-        matchedRoute.callback(res ? res : undefined);
+        matchedRoute.callback(res ? res : undefined, gameRequest);
     }
 }

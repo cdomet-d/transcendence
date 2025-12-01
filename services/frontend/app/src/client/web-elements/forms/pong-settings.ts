@@ -7,6 +7,7 @@ import { DropdownMenu } from '../navigation/menus.js';
 import { NoResults } from '../typography/images.js';
 import type { Searchbar } from './search.js';
 import type { UserData } from '../types-interfaces.js';
+import { wsConnect } from '../../lobby/wsConnect.front.js';
 
 /**
  * A form allowing user to create a local pong game.
@@ -67,7 +68,9 @@ export class LocalPongSettings extends BaseForm {
         if (background) f.append('background', background.id);
         const req = this.initReq();
         req.body = this.createReqBody(f);
-        await this.fetchAndRedirect(this.details.action, req);
+        // await this.fetchAndRedirect(this.details.action, req);
+
+        wsConnect('game', 'quickmatch', 'localForm', '', req.body);
     }
 
     /* -------------------------------------------------------------------------- */
@@ -122,9 +125,6 @@ export class RemotePongSettings extends LocalPongSettings {
         this.#guests = null;
         // this.#inviteHandler = this.#inviteHandlerImplementation.bind(this);
     }
-	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
-		console.log('Fetch&Redirect')
-	}
 
     override connectedCallback(): void {
         super.connectedCallback();
@@ -160,13 +160,17 @@ export class RemotePongSettings extends LocalPongSettings {
         this.#displayGuests();
     }
 
+    
     /* -------------------------------------------------------------------------- */
     /*                               Event listeners                              */
     /* -------------------------------------------------------------------------- */
     // #inviteHandlerImplementation(ev: SubmitEvent) {
-    // 	ev.preventDefault();
-    // 	const form = new FormData(this.#searchbar);
-    // }
+        // 	ev.preventDefault();
+        // 	const form = new FormData(this.#searchbar);
+        // }
+    override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
+        ;
+    }
 
     /* -------------------------------------------------------------------------- */
     /*                              Guest Management                              */

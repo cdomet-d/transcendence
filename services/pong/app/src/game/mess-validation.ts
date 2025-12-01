@@ -4,7 +4,7 @@ const idsObjSchema = {
 	type: 'object',
 	required: ['gameID', 'userID'],
 	properties: {
-		gameID: { type: 'number' },
+		gameID: { type: 'string' },
 		userID: { type: 'number' },
 	}
 }
