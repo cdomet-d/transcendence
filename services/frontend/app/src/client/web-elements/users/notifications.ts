@@ -348,11 +348,15 @@ export class NotifBox extends HTMLDivElement {
             console.log('NOTIF webSocket connection established!');
             this.#ws = ws;
             ws.addEventListener('message', (event) => {
-                const notif: friendNotif | gameNotif = JSON.parse(event.data);
-                if (notif.type === 'FRIEND_REQUEST')
-                    this.newFriendRequest(notif.senderUsername);
-                else if (notif.type === 'GAME_INVITE')
-                    this.newGameInvitation(notif.receiverName, notif.gameType);
+                const notif: friendNotif | gameNotif | string = JSON.parse(event.data);
+                if (typeof notif === "string" && notif === "ping")
+                    ws.send("pong");
+                if (typeof notif === 'object') {
+                    if (notif.type === 'FRIEND_REQUEST')
+                        this.newFriendRequest(notif.senderUsername);
+                    else if (notif.type === 'GAME_INVITE')
+                        this.newGameInvitation(notif.receiverName, notif.gameType);
+                }
             })
         }
 

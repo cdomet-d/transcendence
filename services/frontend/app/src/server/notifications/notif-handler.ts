@@ -10,6 +10,17 @@ export function notifHandler(this: FastifyInstance, socket: WebSocket, req: Fast
 	const userID: number = req.params.userID;
 	this.users.addUser(userID, socket);
 
+	const interval = setInterval(() => {
+		if (socket.readyState === socket.OPEN)
+			socket.send("ping");
+		else
+			clearInterval(interval);
+	}, 30000);
+
+	socket.on('pong', () => {
+		this.log.info("pong");
+	});
+
     socket.onclose = (event) => {
 		this.users.deleteUser(userID);
     }
