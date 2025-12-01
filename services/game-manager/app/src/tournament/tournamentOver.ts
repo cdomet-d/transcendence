@@ -1,4 +1,4 @@
-// import { fetch, Agent } from 'undici'; // TODO remove this right ?
+import { fetch } from 'undici'; // TODO remove this right ?
 import { lobbyMap } from '../lobby/lobby.gm.js';
 import type { tournament } from '../manager.interface.js';
 

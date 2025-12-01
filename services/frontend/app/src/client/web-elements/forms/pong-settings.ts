@@ -167,6 +167,7 @@ export class RemotePongSettings extends LocalPongSettings {
                     if (user) this.#guests.set(user.username, user);
                     /**
                      * HERE @ElSamsam && @cmsweeting
+                     * // TODO ask Charlotte how to send WS invite in front (and also ws.send invite to gm)
                      * When the lobby's owner adds a guest to the lobby, I fetch the associated data and store it in the guest Map to render it later.
                      * You can add whatever you need websocket wise HERE and send `user.username` to add the user to the lobby server-side.
                      */

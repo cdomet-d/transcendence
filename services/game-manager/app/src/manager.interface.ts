@@ -43,10 +43,11 @@ interface tournament {
 }
 
 interface gameRequest {
-	username: string,
-	userID: number,
+	// username?: string,
+	// userID?: number,
+	opponent: string,
 	gameID: string,
-	remote: boolean
+	remote: boolean,
 }
 
 export type { userInfo, lobbyInfo, whitelist, tournament, game, gameRequest };

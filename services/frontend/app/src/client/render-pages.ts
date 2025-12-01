@@ -24,7 +24,7 @@ import { errorMessageFromException, errorMessageFromResponse, redirectOnError } 
 import { TournamentBrackets } from './web-elements/game/tournament.js';
 import { type Match } from 'path-to-regexp';
 import { type TabData } from './web-elements/types-interfaces.js';
-import { userStatus, router } from './main.js';
+import { userStatus, router, type userStatusInfo } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
@@ -260,7 +260,7 @@ export function renderTournamentLobby() {
     wsConnect('create', 'tournament', 'tournamentForm');
 }
 
-export function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest) {
+export async function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest) {
     console.log('renderGame');
 
 	if (!gameRequest) return redirectOnError('/', 'Uh-oh! You can\'t be there - go join a lobby or something !')
@@ -271,8 +271,17 @@ export function renderGame(param?: Match<Partial<Record<string, string | string[
     const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
 
     //TODO: set playerNames from game-manager object
-    ui.player1.innerText = 'CrimeGoose';
-    ui.player2.innerText = 'WinnerWolf';
+    const user: userStatusInfo = await userStatus();
+    if (!user.auth) {
+        redirectOnError('/auth', 'You must be registered to see this page')
+        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+    }
+    if (user.username === undefined) {
+        //TODO: why could it be undefined?
+        return;
+    }
+    ui.player1.innerText = user.username;
+    ui.player2.innerText = gameRequest.opponent;
 
     const layout = document.body.layoutInstance;
     // TODO: set pong-court theme from game-manager object

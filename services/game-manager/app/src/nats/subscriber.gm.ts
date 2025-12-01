@@ -11,6 +11,12 @@ interface user {
 	username: string,
 }
 
+interface gameReply {
+	gameID: string,
+	users: user[],
+	remote: boolean
+}
+
 export async function natsSubscribe() {
 	const nc = await natsConnect();
 
@@ -18,30 +24,17 @@ export async function natsSubscribe() {
 	(async () => {
 		for await (const msg of pregame) {
 			const sc = StringCodec();
-			const game: { gameID: string, users: user[], remote: boolean } = JSON.parse(sc.decode(msg.data));
+			const game: gameReply = JSON.parse(sc.decode(msg.data));
 			// console.log(`GM received in "game.reply" : `, payload);
 			console.log("USERS:", game.users);
 			if (game.users === null || game.users === undefined) {
 				console.log("EMPTY USERS");
 				return;
 			}
-			for (let i = 0; i < game.users.length; i++) {
-				const userID = game.users[i]!.userID;
-				if (userID === -1) break; // TODO -1 will become 'temporary' 
-				const socket = wsClientsMap.get(userID);
-
-				const gameReq: gameRequest = {
-					username: game.users[i]!.username,
-					userID: userID,
-					// opponent: game.users.username // TODO send username of opponent to PONG depending on local/remote, user index etc. 
-					gameID: game.gameID,
-					remote: game.remote
-					// gameSettings
-				}
-
-				wsSend(socket, JSON.stringify(gameReq));
-			}
+			sendGameRequest(game.users[0]!.userID, game.users[1]!.userID, game, game.users[1]!.username);
+			sendGameRequest(game.users[1]!.userID, game.users[0]!.userID, game, game.users[0]!.username);
 		}
+
 	})();
 
 	const postgame = nc.subscribe('game.over'); // where PONG sends game that just finished
@@ -58,4 +51,23 @@ export async function natsSubscribe() {
 			// }
 		}
 	})();
+}
+
+function sendGameRequest(userID: number, opponentID: number, game: gameReply, opponentUsername?: string) {
+	if (userID === -1) return; // TODO -1 will become 'temporary' 
+
+	const socket = wsClientsMap.get(userID);
+
+	if (opponentUsername === undefined) {
+		// TODO get username from userID
+		// const opponentUsername = fetch DB ??;
+	}
+	const gameReq: gameRequest = {
+		opponent: opponentUsername!, // TODO send username of opponent to PONG depending on local/remote, user index etc. 
+		gameID: game.gameID,
+		remote: game.remote
+		// gameSettings
+	}
+
+	wsSend(socket, JSON.stringify(gameReq));
 }
