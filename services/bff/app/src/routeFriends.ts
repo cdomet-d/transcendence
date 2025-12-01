@@ -2,8 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import type { JwtPayload } from './bff.interface.js'
 import { fetchUserID } from './bffUserProfile.service.js';
 import { createFriendRequest, deleteFriendRequest, acceptFriendRequest } from './bffFriends.service.js';
-import { jsonCodec } from './nats.js';
-import type { NatsConnection } from 'nats';
+import { type NatsConnection, StringCodec } from 'nats';
 
 declare module 'fastify' {
 	interface FastifyInstance {
@@ -63,8 +62,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 					receiverID: friendUserID,
 				};
 				console.log('nats published !');
-				serv.nats.publish('post.notif', jsonCodec.encode(eventPayload));
-
+				serv.nats.publish('post.notif', StringCodec().encode(JSON.stringify(eventPayload)));
 				serv.log.error(`[NATS] Published friend request notification for user ${friendUserID}`);
 			} catch (natsError) {
 				serv.log.error(`[NATS] Failed to publish notification: ${natsError}`);

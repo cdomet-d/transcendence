@@ -3,7 +3,8 @@ import Fastify from 'fastify';
 import type { FastifyInstance } from 'fastify';
 import cookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
-import natsConnector from './nats.js';
+import { initNatsConnection } from './nats.js';
+import type { NatsConnection } from 'nats';
 
 import { bffFriendRoutes } from './routeFriends.js';
 import { bffAccessibilityRoutes } from './routeAccessibility.js';
@@ -25,9 +26,23 @@ export async function init(): Promise<FastifyInstance> {
 
 	//plugins
 	addPlugins(serv);
-	await serv.ready();
 
+	// decorations
+	const nc: NatsConnection = await initNatsConnection();
+	serv.decorate("nats", nc);
+
+	//hooks
+	addHook(serv);
+
+	await serv.ready();
 	return (serv);
+}
+
+function addHook(serv: FastifyInstance) {
+	serv.addHook('onClose', (instance, done) => {
+		instance.nats.close();
+		done()
+	})
 }
 
 //add plugins
@@ -37,7 +52,6 @@ function addPlugins(serv: FastifyInstance) {
 	serv.register(bffAccessibilityRoutes);
 	serv.register(bffUsersRoutes);
 	serv.register(bffFriendRoutes);
-	serv.register(natsConnector);
 }
 
 //run server
