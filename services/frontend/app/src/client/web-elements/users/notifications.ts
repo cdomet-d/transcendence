@@ -350,7 +350,7 @@ export class NotifBox extends HTMLDivElement {
             ws.addEventListener('message', (event) => {
                 const notif: friendNotif | gameNotif | string = JSON.parse(event.data);
                 if (typeof notif === "string" && notif === "ping")
-                    ws.send("pong");
+                    ws.send(JSON.stringify("pong"));
                 if (typeof notif === 'object') {
                     if (notif.type === 'FRIEND_REQUEST')
                         this.newFriendRequest(notif.senderUsername);
