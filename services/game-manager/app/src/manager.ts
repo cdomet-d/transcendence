@@ -1,39 +1,7 @@
 import { createTournament } from "./tournament/tournamentCreation.js";
-import { startGame, startTournament } from "./tournament/tournamentStart.js";
-import type { lobbyInfo } from './lobby/lobby.js'
-import { createGameObj } from "./quickmatch/createGame.js";
-
-interface userInfo {
-	userID?: number,
-	username?: string
-}
-
-interface game {
-	lobbyID: number,
-	gameID: number,
-	tournamentID?: number,
-	remote: boolean,
-	userList: userInfo[] | undefined | null,
-	score: string,
-	winnerID: number,
-	loserID: number,
-	duration: number,
-    longuestPass: number
-}
-
-interface tournament {
-	tournamentID: number,
-	winnerID: number | undefined | null,
-	bracket: game[]
-}
-
-interface gameRequest {
-	userID: number,
-	gameID: number,
-	remote: boolean
-}
-
-export type { userInfo, game, tournament, gameRequest }
+import { startTournament } from "./tournament/tournamentStart.js";
+import { createGameObj, startGame } from "./quickmatch/createGame.js";
+import type { game, lobbyInfo, tournament } from "./manager.interface.js";
 
 export function processGameRequest(lobbyInfo: lobbyInfo) {
 	if (lobbyInfo.format === "tournament") {
@@ -44,13 +12,13 @@ export function processGameRequest(lobbyInfo: lobbyInfo) {
 		}
 		lobbyInfo.joinable = false; // TODO: turn back to true when tournament over
 		startTournament(tournament);
-	} else if (lobbyInfo.format === "quick") {
-		const quickmatch: game | boolean = createGameObj(lobbyInfo);
-		if (quickmatch === false) {
+	} else if (lobbyInfo.format === "quickmatch") {
+		const quickmatch: game | undefined = createGameObj(lobbyInfo);
+		if (quickmatch === undefined) {
 			console.log("Error: Something went wrong!");
 			return;
 		}
-		lobbyInfo.joinable = false; // TODO: turn back to true when game over
+		lobbyInfo.joinable = false; // TODO: turn back to true when game over (only for remote)
 		startGame(quickmatch);
 	}
 }

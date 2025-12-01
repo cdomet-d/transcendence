@@ -17,6 +17,7 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 	const ids: idsObj = await waitForMessage(this, socket);
 
 	const game: Game | undefined = this.gameRegistry.findGame(ids.gameID);
+	console.log("local: ", game?.local);
 	if (!game) {
 		this.log.error("game " + ids.gameID + " not found");
 		socket.close(1003, "game " + ids.gameID + " not found");
@@ -28,7 +29,7 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 		return;
 	}
 
-	getPlayerInGame(game, ids.userID, socket);
+	getPlayerInGame(game, ids.userID, socket);//TODO: what if second player never manages to connect ? add timer?
 
 	socket.onerror = (event) => {
 		this.log.error(event.message);
@@ -36,6 +37,7 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 	};
 
 	socket.onclose = (event) => {
+		this.log.info('PONG webSocket connection closed');
 		if (game) {
 			game.cleanTimeoutIDs();
 			if (event.code != 1003 && event.code != 1011)
@@ -48,7 +50,7 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 			}
 			game.deletePlayers();
 			this.gameRegistry.deleteGame(game.gameID);
-			natsSubscription(this); //TODO: only for testing
+			// natsSubscription(this); //TODO: only for testing
 		}
 	}
 }
@@ -58,6 +60,7 @@ export function waitForMessage(serv: FastifyInstance, socket: WebSocket): Promis
 		socket.once('message', (payload: string) => {
 			try {
 				const ids: idsObj = JSON.parse(payload);
+				console.log("IDs: ", ids);
 				if (!validIds(ids))
 					reject("Invalid ids");
 				resolve(ids);

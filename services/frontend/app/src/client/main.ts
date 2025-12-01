@@ -17,7 +17,7 @@ declare global {
     }
 }
 
-interface userStatusInfo {
+export interface userStatusInfo {
     auth: boolean;
     username?: string;
     userID?: number;
@@ -36,7 +36,7 @@ export async function userStatus(): Promise<userStatusInfo> {
     } catch (error) {
         let mess = 'Something when wrong';
         if (error instanceof Error) mess = error.message;
-		redirectOnError('/', mess);
+        redirectOnError('/', mess);
         return { auth: false };
     }
 }

@@ -6,15 +6,16 @@ export interface user {
 
 export interface gameInfo {
     lobbyID: number,
-    gameID: number,
-    tournamentID?: number,
+    gameID: string,
+    tournamentID?: string,
     remote: boolean,
     users: [user, user],
     score: [number, number],
     winnerID: number,
     loserID: number,
     duration: number,
-    longuestPass: number
+    longuestPass: number,
+    startTime: string,
 }
 
 /******************************** GAME OBJ ***********************************/
@@ -60,7 +61,7 @@ export interface playerReq {
 
 /**************************** WS DATA OBJ ********************************/
 export interface idsObj {
-	gameID: number,
+	gameID: string,
 	userID: number
 }
 

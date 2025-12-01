@@ -2,11 +2,11 @@ import { Game } from './classes/game-class.js';
 import type { keysObj, repObj } from './classes/game-interfaces.js';
 
 export function addMessEvent(game: Game, ws: WebSocket) {
-	ws.onmessage = (event) => {
-		const rep: repObj = JSON.parse(event.data);
-		rep.timestamp = performance.now();
-		game.addReply(rep);
-	};
+    ws.onmessage = (event) => {
+        const rep: repObj = JSON.parse(event.data);
+        rep.timestamp = performance.now();
+        game.addReply(rep);
+    };
 }
 
 export function createKeyEvent(keys: keysObj, horizontal: boolean, isKeyDown: boolean) {
@@ -18,7 +18,7 @@ export function createKeyEvent(keys: keysObj, horizontal: boolean, isKeyDown: bo
         ArrowUp: ['ArrowUp'],
         ArrowDown: ['ArrowDown'],
         ArrowLeft: horizontal ? ['ArrowLeft'] : [],
-        ArrowRight: horizontal ? ['ArrowRight'] : []
+        ArrowRight: horizontal ? ['ArrowRight'] : [],
     };
 
     return function keyEvent(event: KeyboardEvent): void {

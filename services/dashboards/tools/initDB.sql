@@ -5,7 +5,7 @@ CREATE TABLE game (
   startTime DATETIME,
   player1 INTEGER,
   player2 INTEGER,
-  tournamentID INTEGER, --zero == no tournament
+  tournamentID TEXT, --zero == no tournament
   localGame BOOLEAN, --zero == local, 1 == remote
   player1Score INTEGER,
   player2Score INTEGER

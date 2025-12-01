@@ -13,31 +13,34 @@ export async function initNatsConnection(): Promise<NatsConnection> {
 }
 
 export async function natsSubscription(serv: FastifyInstance) {
-	// const sc = StringCodec();
+	const sc = StringCodec();
 
-	// const sub = serv.nc.subscribe('game.request');
-	// // console.log(`Listening for messages on "game.request"...`);
+	const sub = serv.nc.subscribe('game.request');
+	// console.log(`Listening for messages on "game.request"...`);
 
-	// (async () => {
-	// 	for await (const msg of sub) {
+	(async () => {
+		for await (const msg of sub) {
 
-	// 		const gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
-	// 		// serv.log.info(`Received message: ${JSON.stringify(_gameInfo)}`);
-	// 		serv.gameRegistry.addGame(new Game(gameInfo, serv.nc, serv.log));
+			const gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
+			console.log("game id", gameInfo.gameID)
+			console.log("remote", gameInfo.remote)
 
-	// 		// Approval given HERE from PONG if game is ok to start
-	// 		if (msg.reply) {
-	// 			const game = {
-	// 				gameID: gameInfo.gameID,
-	// 				users: gameInfo.users,
-	// 				remote: gameInfo.remote
-	// 			}
-	// 			natsPublish(serv.nc, msg.reply, JSON.stringify(game));
-	// 		}
-	// 	}
-	// })();
+			// serv.log.info(`Received message: ${JSON.stringify(_gameInfo)}`);
+			serv.gameRegistry.addGame(new Game(gameInfo, serv.nc, serv.log));
 
-	serv.gameRegistry.addGame(new Game(gameobj, serv.nc, serv.log)); //TODO: for testing
+			if (msg.reply) {
+				const game = {
+					gameID: gameInfo.gameID,
+					users: gameInfo.users,
+					remote: gameInfo.remote
+					// gameSettings
+				}
+				natsPublish(serv.nc, msg.reply, JSON.stringify(game));
+			}
+		}
+	})();
+
+	// serv.gameRegistry.addGame(new Game(gameobj, serv.nc, serv.log)); //TODO: for testing
 };
 
 import type { user } from '../classes/game-interfaces.js';
@@ -53,13 +56,14 @@ const player2: user = {
 
 const gameobj: gameInfo = {
 	lobbyID: 1,
-	gameID: 1,
-	tournamentID: 99,
+	gameID: "1",
+	tournamentID: "99",
 	remote: false,
 	users: [player1, player2],
 	score: [0, 0],
 	winnerID: 0,
 	loserID: 0,
 	duration: 0,
-	longuestPass: 0
+	longuestPass: 0,
+	startTime: ""
 }

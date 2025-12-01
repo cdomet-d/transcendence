@@ -1,6 +1,6 @@
 import { BaseForm } from './baseform';
 import { router } from '../../main';
-import { responseErrorMessage } from '../../error';
+import { errorMessageFromResponse } from '../../error';
 
 export class RegistrationForm extends BaseForm {
     constructor() {
@@ -10,9 +10,9 @@ export class RegistrationForm extends BaseForm {
     override async fetchAndRedirect(url: string, req: RequestInit) {
         try {
             const response = await fetch(url, req);
-            if (!response.ok) throw await responseErrorMessage(response);
+            if (!response.ok) throw await errorMessageFromResponse(response);
             if (typeof req.body === 'string') {
-	            router.loadRoute('/me', true);
+                router.loadRoute('/me', true);
             }
         } catch (error) {
             throw error;
@@ -23,4 +23,3 @@ export class RegistrationForm extends BaseForm {
 if (!customElements.get('registration-form')) {
     customElements.define('registration-form', RegistrationForm, { extends: 'form' });
 }
-	

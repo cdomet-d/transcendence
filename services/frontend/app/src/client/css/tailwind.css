@@ -246,6 +246,7 @@
 	span {
 		margin: 0;
 		padding: 0;
+		white-space: pre;
 	}
 
 	a {
@@ -369,7 +370,6 @@
 				#f4b000 0 100%);
 	}
 
-	#searchform button,
 	form button {
 		height: var(--m);
 	}
@@ -419,7 +419,7 @@
 	}
 
 	.layout-col {
-		grid-template-columns: minmax(600px, 60%);
+		grid-template-columns: minmax(600px, 75%);
 	}
 }
 
@@ -447,8 +447,8 @@
 	}
 
 	.content-h {
-		min-height: 650px;
-		height: 45vh;
+		min-height: 750px;
+		height: 50vh;
 	}
 
 	.f-yellow {
@@ -574,7 +574,7 @@
 	}
 
 	.form-gap {
-		gap: var(--m) var(--s);
+		gap: var(--sm) var(--s);
 	}
 
 	.search-gap {
@@ -750,11 +750,5 @@
 	.input-emphasis:active {
 		border-top: 2px solid var(--shadow);
 		border-bottom: 2px solid var(--shadow);
-	}
-
-	.orange-bg {
-		background-color: var(--orange);
-		border-top: 2px solid var(--highlight-orange);
-		border-bottom: 2px solid var(--shadow-orange);
 	}
 }

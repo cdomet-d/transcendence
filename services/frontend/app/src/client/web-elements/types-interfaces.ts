@@ -75,6 +75,7 @@ export interface TabData {
 }
 
 export interface MenuData {
+    id: string;
     buttons?: ButtonData[];
     links?: navigationLinksData[];
 }
@@ -208,6 +209,7 @@ export interface FormDetails {
     action: string;
     ariaLabel: string;
     button: ButtonData;
+    gameFormat?: 'remote-quickmatch' | 'local-quickmatch' | 'tournament' | undefined;
     fields: InputFieldsData[];
     heading: string;
     id: string;
@@ -272,4 +274,22 @@ export type CourtTheme = 'default' | 'farm' | 'ocean' | 'forest';
 export interface pongTheme {
     color: string;
     theme: CourtTheme;
+}
+
+/**
+ * Interface to handle pong customization.
+ * Background & horizontal are optional arguments.
+ *
+ * If `background` is undefined, the pong will render with the default theme;
+ *
+ * If `horizontal` is undefined, the horizontal paddle movements are disabled.
+ *
+ * **NB**: background is handled in `renderGame` -> it's just needed for the UI.
+ */
+export interface PongOptions {
+    background?: string;
+    ballspeed: string;
+    horizontal?: string;
+    paddlesize: string;
+    paddlespeed: string;
 }
