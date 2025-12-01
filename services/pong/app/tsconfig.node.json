@@ -5,14 +5,12 @@
     "rootDir": "./src",
     "outDir": "./dist",
 
-    "typeRoots": ["./node_modules/@types", "./types"],
-  
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "node20",
     "moduleResolution": "nodenext",
     "target": "es2024",
-    "types": ["node"],
+    "types": ["fastify", "node"],
     "lib": ["esnext"],
 
     // Other Outputs
@@ -43,7 +41,7 @@
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*", "types"],
+  "include": ["src/**/*", "fastify.d.ts"],
   "exclude": ["node_modules", "test", "dist"]
 }
 

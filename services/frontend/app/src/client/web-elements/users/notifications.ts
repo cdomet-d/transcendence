@@ -1,5 +1,6 @@
-import type { GameType, MenuData } from '../types-interfaces.js';
+import type { GameType, MenuData, friendNotif, gameNotif } from '../types-interfaces.js';
 import { createMenu } from '../navigation/menu-helpers.js';
+import { userStatus, type userStatusInfo } from '../../main.js';
 
 //TODO: Make notifications tab-focusable
 //TODO: Buttons are actually a form
@@ -237,6 +238,7 @@ export class NotifBox extends HTMLDivElement {
     #toggle: NotifToggle;
     #popup: NotifPanel;
     #newNotifIntervalId!: NodeJS.Timeout;
+    #ws: WebSocket | null;
 
     constructor() {
         super();
@@ -244,6 +246,7 @@ export class NotifBox extends HTMLDivElement {
         this.#popup = document.createElement('div', { is: 'notif-panel' }) as NotifPanel;
         this.computePanelPos = this.computePanelPos.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.#ws = null;
     }
 
     /** Computes and updates the position of the notification popup relative to the toggle button. */
@@ -301,13 +304,15 @@ export class NotifBox extends HTMLDivElement {
     //TODO: Improve notification polling with NATS messages when a user receives a notification
     /** Sets up Event listeners and polling logic when the container is attached to the DOM. */
     connectedCallback() {
-        this.#newNotifIntervalId = setInterval(() => {
-            this.#toggle.toggleAlert(this.#popup.checkUnreadNotification());
-        }, 5000);
+        // this.#newNotifIntervalId = setInterval(() => {
+        //     this.#toggle.toggleAlert(this.#popup.checkUnreadNotification());
+        // }, 5000);
         this.addEventListener('click', this.handleClick);
         window.addEventListener('resize', this.computePanelPos);
         window.addEventListener('scroll', this.computePanelPos);
+        this.notifWsRequest();
         this.render();
+        //TODO:request db for pending friend request
     }
 
     /** Cleans up listeners and polling when the element is disconnected from the DOM. */
@@ -316,6 +321,8 @@ export class NotifBox extends HTMLDivElement {
         window.removeEventListener('resize', this.computePanelPos);
         window.removeEventListener('scroll', this.computePanelPos);
         this.removeEventListener('click', this.handleClick);
+        if (this.#ws)
+            this.#ws.close;
     }
 
     /** Renders the toggle and panel elements inside the main wrapper. */
@@ -324,6 +331,39 @@ export class NotifBox extends HTMLDivElement {
 
         this.id = 'notificationWrapper';
         this.className = 'relative box-border w-fit flex items-start gap-m';
+    }
+
+    async notifWsRequest() {
+        const userStatusInfo: userStatusInfo = await userStatus();
+        if (userStatusInfo.auth === false || userStatusInfo.userID === undefined)
+            return;
+        const userID: number = userStatusInfo.userID;
+        const ws = new WebSocket(`wss://localhost:8443/notification/${userID}`);
+
+        ws.onerror = () => {
+            ws.close(1011, "websocket error")
+        };
+
+        ws.onopen = () => {
+            console.log('NOTIF webSocket connection established!');
+            this.#ws = ws;
+            ws.addEventListener('message', (event) => {
+                const notif: friendNotif | gameNotif | string = JSON.parse(event.data);
+                // console.log(`Received message: ${JSON.stringify(notif)}`);
+                if (typeof notif === "string" && notif === "ping")
+                    ws.send(JSON.stringify("pong"));
+                if (typeof notif === 'object') {
+                    if (notif.type === 'FRIEND_REQUEST')
+                        this.newFriendRequest(notif.senderUsername);
+                    else if (notif.type === 'GAME_INVITE')
+                        this.newGameInvitation(notif.receiverName, notif.gameType);
+                }
+            })
+        }
+
+        ws.onclose = (event) => {
+            console.log('NOTIF webSocket connection closed!');
+        }
     }
 }
 
