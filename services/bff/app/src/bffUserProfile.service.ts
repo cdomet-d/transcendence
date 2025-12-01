@@ -4,7 +4,7 @@ import type {
 } from "./bff.interface.js";
 
 //error handled
-export async function buildTinyProfile(log: any, viewerUserID: number, targetUsername: string, token: string): Promise<userData> {
+export async function buildTinyProfile(log: any, viewerUserID: string, targetUsername: string, token: string): Promise<userData> {
 	try {
 		const targetUserID = await fetchUserID(log, targetUsername, token);
 
@@ -24,7 +24,7 @@ export async function buildTinyProfile(log: any, viewerUserID: number, targetUse
 		}
 
 		return {
-			userID: String(targetUserID),
+			userID: targetUserID,
 			username: data.username,
 			avatar: data.avatar,
 			biography: data.biography,
@@ -93,7 +93,7 @@ export async function searchBar(log: any, username: string, token: string): Prom
 }
 
 //error handled
-export async function fetchUserData(log: any, userID: number, token: string): Promise<userData | null> {
+export async function fetchUserData(log: any, userID: string, token: string): Promise<userData | null> {
 	const url = `http://users:2626/${userID}`;
 	let response: Response;
 
@@ -144,7 +144,7 @@ export async function fetchUserData(log: any, userID: number, token: string): Pr
 }
 
 //TODO handle error and catch in route
-export async function fetchProfileView(log: any, userID: number, targetUserID: number, token: string): Promise<ProfileView> {
+export async function fetchProfileView(log: any, userID: string, targetUserID: string, token: string): Promise<ProfileView> {
 
 	if (Number(targetUserID) === Number(userID))
 		return ('self');
@@ -187,7 +187,7 @@ export async function fetchProfileView(log: any, userID: number, targetUserID: n
 }
 
 //error handled
-export async function fetchUserID(log: any, username: string, token: string): Promise<number | null> {
+export async function fetchUserID(log: any, username: string, token: string): Promise<string | null> {
 	const url = `http://users:2626/userID/${username}`;
 
 	let response: Response;
@@ -236,7 +236,7 @@ export async function fetchUserID(log: any, username: string, token: string): Pr
 }
 
 //error handled
-export async function fetchUserStats(log: any, userID: number, token: string): Promise<userStats | null> {
+export async function fetchUserStats(log: any, userID: string, token: string): Promise<userStats | null> {
 	const url = `http://users:2626/stats/${userID}`;
 	let response: Response;
 
@@ -281,7 +281,7 @@ export async function fetchUserStats(log: any, userID: number, token: string): P
 //The 'since' in the friendlist will store the friendship creation data, not the creation of the profile of the friend
 // Make a issue on github if you'd rather it to be the creation of the friend's profile
 //error handled
-export async function fetchFriendships(log: any, userID: number, status: FriendshipStatus, token: string): Promise<userData[]> {
+export async function fetchFriendships(log: any, userID: string, status: FriendshipStatus, token: string): Promise<userData[]> {
 	const url = `http://friends:1616/friendlist?userID=${userID}`;
 	let response: Response;
 
@@ -329,7 +329,7 @@ export async function fetchFriendships(log: any, userID: number, status: Friends
 		try {
 			const otherID = (friendship.userID === userID) ? friendship.friendID : friendship.userID;
 
-			const profile = await fetchUserData(log, otherID, token);
+			const profile = await fetchUserData(log, String(otherID), token);
 
 			if (profile) {
 				(profile as any).relation = status;
@@ -369,7 +369,7 @@ export async function fetchFriendships(log: any, userID: number, status: Friends
 
 
 //error handled
-async function fetchMatches(log: any, userID: number, token: string): Promise<RawMatches[]> {
+async function fetchMatches(log: any, userID: string, token: string): Promise<RawMatches[]> {
 	const url = `http://dashboard:1515/games/${userID}`;
 	let response: Response;
 	try {
@@ -410,7 +410,7 @@ async function fetchMatches(log: any, userID: number, token: string): Promise<Ra
 }
 
 //error handled
-async function fetchUsernames(log: any, userIDs: number[], token: string): Promise<Map<number, string>> {
+async function fetchUsernames(log: any, userIDs: string[], token: string): Promise<Map<string, string>> {
 	if (userIDs.length === 0) return new Map();
 
 	const url = `http://users:2626/usernames`;
@@ -449,7 +449,7 @@ async function fetchUsernames(log: any, userIDs: number[], token: string): Promi
 
 	const body = await response.json() as UsernameResponse;
 
-	const usernameMap = new Map<number, string>();
+	const usernameMap = new Map<string, string>();
 
 	if (body.usersNames) {
 		for (const user of body.usersNames)
@@ -460,14 +460,15 @@ async function fetchUsernames(log: any, userIDs: number[], token: string): Promi
 }
 
 //error handled
-export async function processMatches(log: any, userID: number, token: string): Promise<Matches[]> {
+export async function processMatches(log: any, userID: string, token: string): Promise<Matches[]> {
+
 	try {
 		const rawMatches = await fetchMatches(log, userID, token);
 
 		if (!rawMatches || rawMatches.length === 0)
 			return [];
 
-		const opponentIDs = new Set<number>();
+		const opponentIDs = new Set<string>();
 		rawMatches.forEach(match => {
 			const opponentID = (match.player1 === userID) ? match.player2 : match.player1;
 			opponentIDs.add(opponentID);
@@ -582,7 +583,7 @@ export async function fetchLeaderboard(log: any, token: string): Promise<userDat
 }
 
 //error handled
-export async function updateUserProfile(log: any, userID: number, updates: UserProfileUpdates, token: string): Promise<void> {
+export async function updateUserProfile(log: any, userID: string, updates: UserProfileUpdates, token: string): Promise<void> {
 	const url = `http://users:2626/${userID}`;
 
 	let response: Response;
@@ -630,7 +631,7 @@ export async function updateUserProfile(log: any, userID: number, updates: UserP
 }
 
 //error handling done
-export async function updateAuthSettings(log: any, userID: number, updates: UserProfileUpdates, token: string): Promise<void> {
+export async function updateAuthSettings(log: any, userID: string, updates: UserProfileUpdates, token: string): Promise<void> {
 	const url = `http://auth:3939/${userID}`;
 
 	let response: Response;

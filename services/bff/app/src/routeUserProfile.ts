@@ -49,10 +49,10 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 			const [userData, userStats, friends, pending, recentMatches] = await Promise.all([
 				combinedUserData,
-				fetchUserStats(serv.log, Number(combinedUserData.userID), token),
-				fetchFriendships(serv.log, Number(combinedUserData.userID), 'friend', token),
-				fetchFriendships(serv.log, Number(combinedUserData.userID), 'pending', token),
-				processMatches(serv.log, Number(combinedUserData.userID), token),
+				fetchUserStats(serv.log, combinedUserData.userID, token),
+				fetchFriendships(serv.log, combinedUserData.userID, 'friend', token),
+				fetchFriendships(serv.log, combinedUserData.userID, 'pending', token),
+				processMatches(serv.log, combinedUserData.userID, token),
 			]);
 
 			if (!userData || !userStats)

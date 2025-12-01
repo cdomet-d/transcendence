@@ -716,11 +716,12 @@ WHERE userID = 101;
 [WIP] DOC NOT UP TO DATE YET (nginx conf not done yet)
 
 * servir traduction ---> localisation library, language page
-* changer userID to string like in game-manager
 * status in db on login logout
 * sanitise input in back
 * GDPR: check profile photos and more
 * add schemas to route
+
+* changer userID to string like in game-manager
 
 * move nats publisher to bff       ✅
 * gestion erreur dans le bff       ✅

@@ -39,8 +39,9 @@ export interface userStats {
 	winStreak: number;
 	averageMatchDuration: number;
 	longuestPass: number;
-	[key: string]: number;
+    [key: string]: number | string;
 }
+
 export interface StatsResponse {
 	success: boolean;
 	stats: userStats;
@@ -86,11 +87,11 @@ export interface RawMatches {
 	gameID: number;
 	duration: number;
 	startTime: string;
-	player1: number;
-	player2: number;
+	player1: string;
+	player2: string;
 	player1Score: number;
 	player2Score: number;
-	opponentID: number;
+	opponentID: string;
 	tournamentID: number
 }
 
