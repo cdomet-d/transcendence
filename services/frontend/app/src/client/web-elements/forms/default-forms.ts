@@ -12,11 +12,11 @@ export function customizeUserSettingsForm(user: UserData): FormDetails {
 }
 
 export const userSettingsForm: FormDetails = {
-    action: 'http://localhost:8443/api/bff/settings/',
+    action: 'https://localhost:8443/api/bff/settings',
     heading: 'Settings',
     ariaLabel: 'User settings',
     id: 'user-settings',
-    method: 'post',
+    method: 'patch',
     fields: [
         {
             id: 'upload',
@@ -249,6 +249,14 @@ export const pongTournament: FormDetails = {
     id: 'pong-tournament-settings',
     method: 'post',
     fields: [
+        {
+            id: 'horizontal',
+            labelContent: 'Horizontal paddle movement',
+            pattern: '',
+            placeholder: '',
+            type: 'checkbox',
+            required: true,
+        },
         {
             id: 'ballspeed',
             labelContent: 'Starting Ball Speed',

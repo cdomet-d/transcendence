@@ -9,6 +9,7 @@ import { userColorsMenu, languageMenu } from '../navigation/default-menus.js';
 import type { Avatar } from '../typography/images.js';
 import type { DropdownMenu } from '../navigation/menus.js';
 import type { UserData } from '../types-interfaces.js';
+import { createErrorFeedback, errorMessageFromException, errorMessageFromResponse } from '../../error.js';
 // import imageCompression from 'browser-image-compression';
 
 /**
@@ -52,8 +53,26 @@ export class UserSettingsForm extends BaseForm {
         this.contentMap.get('upload')?.removeEventListener('input', this.#previewAvatar);
     }
 
+	override initReq(): RequestInit {
+		console.log('user requestInit')
+		const req: RequestInit = {
+            method: super.details.method,
+			headers: {'Content-Type': 'application/merge-patch+json'}
+		}
+		return req;
+	}
+
     override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
-        console.log(url);
+        console.log(url, req);
+		
+		try {
+			const rawRes = await fetch(url, req)
+			if (!rawRes.ok) throw await errorMessageFromResponse(rawRes);
+			const res = await rawRes.json();
+			console.log(res);
+		} catch (error) {
+			createErrorFeedback(errorMessageFromException(error));
+		}
     }
 
     /* -------------------------------------------------------------------------- */

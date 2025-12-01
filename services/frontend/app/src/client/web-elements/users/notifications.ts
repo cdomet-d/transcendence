@@ -12,6 +12,7 @@ import { createMenu } from '../navigation/menu-helpers.js';
  * Used by {@link NotifContent} to render Accept/Decline actions.
  */
 const notificationBtns: MenuData = {
+	id: 'notificationMenu',
     buttons: [
         {
             id: 'decline',
@@ -267,6 +268,7 @@ export class NotifBox extends HTMLDivElement {
         const notif = document.createElement('div', { is: 'notif-content' }) as NotifContent;
         notif.setContent = `${username} sent you a friend request!`;
         this.#popup.newNotification(notif);
+		this.#popup.setAttribute('selected', '');
         this.computePanelPos();
     }
 

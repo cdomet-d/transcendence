@@ -32,13 +32,27 @@ function setAvatar(a: string): ImgData {
     return uAvatar;
 }
 
+function setBiography(b: string): string {
+    if (b) return b;
+    const bio =
+        "What a wee little part of a person's life are his acts and his words!\
+	 His real life is led in his head, and is known to none but himself. \
+	 All day long, the mill of his brain is grinding, and his thoughts, \
+	 not those of other things, are his history. These are his life, and they\
+	 are not written. Everyday would make a whole book of 80,000 words -- \
+	 365 books a year. Biographies are but the clothes and buttons of the man \
+	 -- the biography of the man himself cannot be written. ― Mark Twain ";
+    return bio;
+}
+
 export function userDataFromAPIRes(responseObject: any): UserData {
     if (!responseObject || typeof responseObject !== 'object' || responseObject instanceof Error)
         redirectOnError(router.stepBefore, 'Something bad happened :(');
     const user: UserData = {
         // winstreak: responseObject.winstreak,
+        winstreak: '9',
         avatar: setAvatar(responseObject.avatar),
-        biography: responseObject.biography,
+        biography: setBiography(responseObject.biography),
         id: responseObject.userID,
         language: responseObject.lang,
         profileColor: setColor(responseObject.profileColor),
@@ -46,7 +60,6 @@ export function userDataFromAPIRes(responseObject: any): UserData {
         since: UTCtoDays(responseObject.since),
         status: setStatus(responseObject.status),
         username: responseObject.username,
-        winstreak: '9',
     };
     return user;
 }

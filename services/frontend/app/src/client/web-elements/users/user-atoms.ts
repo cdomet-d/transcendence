@@ -172,7 +172,7 @@ export class Biography extends HTMLParagraphElement {
     render() {
         this.id = 'biography';
         this.className =
-            'box-border max-h[6.5rem] leading-[1rem] biography \
+            'box-border max-h[6.5rem] leading-[1rem] whitespace-normal pad-s \
 			 place-self-stretch bg thin brdr light';
     }
 }

@@ -223,7 +223,7 @@ export class RemotePongSettings extends LocalPongSettings {
 
     styleInviteList() {
         this.#guestWrapper.className =
-            'brdr pad-sm max-h-[214px] grid grid-cols-2 gap-s overflow-y-auto box-border \
+            'brdr pad-sm min-h-[190px] max-h-[214px] grid grid-cols-2 gap-s overflow-y-auto box-border \
 			row-start-4 col-start-2 row-span-2 place-self-stretch';
     }
 }

@@ -73,7 +73,7 @@ export class Avatar extends HTMLDivElement {
         this.id = 'avatar';
         this.className = `${
             this.#data.size
-        } avatar-wrapper flex justify-center overflow-hidden rounded-[100px] box-border`;
+        } avatar-wrapper flex justify-center overflow-hidden pad-s box-border brdr bg`;
         this.#img.metadata = this.#data;
     }
 }

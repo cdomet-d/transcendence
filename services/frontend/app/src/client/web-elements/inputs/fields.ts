@@ -433,7 +433,7 @@ export class TextAreaGroup extends HTMLDivElement {
         this.#setInputAttributes();
         this.#setLabelAttributes();
         this.#feedback.className = 'brdr bg hidden';
-        this.#input.className = 'resize-y brdr h-full pad-xs';
+        this.#input.className = 'resize-none brdr h-full pad-xs';
         this.className = 'box-border relative';
     }
 }

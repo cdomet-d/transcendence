@@ -170,13 +170,13 @@ export class DropdownMenu extends HTMLDivElement {
     /** A {@link HTMLUListElement} containing the `<li>` option of the menu */
     #listbox: HTMLUListElement;
 
-    /** Event handling */
+    /* ----------------------------- event handlers ----------------------------- */
     #keynavHandler: (ev: KeyboardEvent) => void;
     #mouseNavHandler: (ev: MouseEvent) => void;
     #focusHandler: (ev: FocusEvent) => void;
-    /** Index to the currently focused option in the listbox */
     #currentFocus: number;
 
+    /* -------------------------------- defaults -------------------------------- */
     constructor() {
         super();
         this.#dropdownStyle = 'static';
@@ -196,6 +196,21 @@ export class DropdownMenu extends HTMLDivElement {
         this.#focusHandler = this.#handleFocusOut.bind(this);
     }
 
+    connectedCallback() {
+        this.#renderListbox();
+        this.render();
+        this.addEventListener('keydown', this.#keynavHandler);
+        this.addEventListener('click', this.#mouseNavHandler);
+        this.addEventListener('focusout', this.#focusHandler);
+    }
+
+    disconnectedCallback() {
+        this.removeEventListener('keydown', this.#keynavHandler);
+        this.removeEventListener('click', this.#mouseNavHandler);
+        this.removeEventListener('focusout', this.#focusHandler);
+    }
+
+    /* ---------------------------- setters & getters --------------------------- */
     /**
      * Sets inner property `#optionListData`
      */
@@ -227,6 +242,20 @@ export class DropdownMenu extends HTMLDivElement {
             if (option && option.hasAttribute('selected')) return option;
         }
         return null;
+    }
+
+    /* ----------------------------- rendering logic ---------------------------- */
+    render() {
+        this.append(this.#toggle);
+        this.append(this.#listbox);
+        this.className = 'h-m w-thxl relative z-1';
+
+        //TODO: add aria-controls on #toggle ?
+        this.#toggle.ariaExpanded = 'false';
+        this.#toggle.ariaHasPopup = 'listbox';
+        this.#toggle.ariaLabel = `Dropdown menu for ${this.#toggle.textContent}`;
+        this.#toggle.id = 'toggle';
+        this.id = 'dropdown';
     }
 
     /**
@@ -271,6 +300,8 @@ export class DropdownMenu extends HTMLDivElement {
         this.#listbox.className = 'hidden z-0';
         this.#listboxOptions = Array.from(this.#listbox.children) as HTMLLIElement[];
     }
+
+    /* ------------------------ navigation implementation ----------------------- */
 
     /**
      * Updates focus on the currently active option. Used to provide visual feedback.
@@ -384,33 +415,6 @@ export class DropdownMenu extends HTMLDivElement {
                 ? this.#expandOptions(false)
                 : this.#collapseOptions();
         } else this.#updateSelection(target);
-    }
-
-    connectedCallback() {
-        this.#renderListbox();
-        this.render();
-        this.addEventListener('keydown', this.#keynavHandler);
-        this.addEventListener('click', this.#mouseNavHandler);
-        this.addEventListener('focusout', this.#focusHandler);
-    }
-
-    disconnectedCallback() {
-        this.removeEventListener('keydown', this.#keynavHandler);
-        this.removeEventListener('click', this.#mouseNavHandler);
-        this.removeEventListener('focusout', this.#focusHandler);
-    }
-
-    render() {
-        this.append(this.#toggle);
-        this.append(this.#listbox);
-        this.className = 'h-m  relative z-1';
-
-        //TODO: add aria-controls on #toggle ?
-        this.#toggle.ariaExpanded = 'false';
-        this.#toggle.ariaHasPopup = 'listbox';
-        this.#toggle.ariaLabel = `Dropdown menu for ${this.#toggle.textContent}`;
-        this.#toggle.id = 'toggle';
-        this.id = 'dropdown';
     }
 }
 

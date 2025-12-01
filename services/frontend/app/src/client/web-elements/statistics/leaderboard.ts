@@ -28,7 +28,8 @@ export class Leaderboard extends HTMLDivElement {
     render() {
         this.id = 'leaderboard';
         this.className =
-            'bg content-h brdr overflow-y-auto overflow-x-hidden flex flex-col justify-start';
+            'bg content-h w-full brdr overflow-y-auto overflow-x-hidden justify-start';
+		this.update();
     }
 }
 

@@ -235,14 +235,7 @@ export class UserInline extends UserProfile {
     override render() {
         this.append(super.getAvatar, super.getUsername, super.getWinstreak);
         super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
-        this.classList.add(
-            'cursor-pointer',
-            'gap-s',
-            'flex',
-            'flex-initial',
-            'pad-xs',
-            `${super.getColor}`,
-        );
+        this.className = `pad-xs cursor-pointer gap-s grid uinline-grid ${super.getColor} brdr`
     }
 }
 

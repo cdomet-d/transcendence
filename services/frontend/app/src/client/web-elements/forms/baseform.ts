@@ -110,10 +110,12 @@ export abstract class BaseForm extends HTMLFormElement {
     createReqBody(form: FormData): string {
         const fObject = Object.fromEntries(form.entries());
         const jsonBody = JSON.stringify(fObject);
+		console.log(jsonBody)
         return jsonBody;
     }
 
     initReq(): RequestInit {
+		console.log('baseform requestInit')
         const req: RequestInit = {
             method: this.#formData.method,
             headers: { 'Content-Type': 'application/json' },
@@ -184,7 +186,7 @@ export abstract class BaseForm extends HTMLFormElement {
             this.append(el);
             el.classList.remove('w-full');
             el.classList.add('w-5/6', 'z-2');
-            if (field.type === 'textarea') el.classList.add('h-full');
+            if (field.type === 'textarea') el.classList.add('h-full', 'row-span-3');
         });
     }
 

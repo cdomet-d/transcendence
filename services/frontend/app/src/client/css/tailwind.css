@@ -34,7 +34,8 @@
 		--ml: 3.13rem;
 		--l: 4.16rem;
 		--xl: 5.53rem;
-		--xxl: 7.36rem;
+		--txl: 7.36rem;
+		--thxl: 9.79rem;
 
 		/* Elements sizes */
 		--percent-sidebar: 38.06%;
@@ -249,11 +250,6 @@
 		white-space: pre;
 	}
 
-	a {
-		line-height: 100%;
-		text-decoration: none;
-	}
-
 	input {
 		box-sizing: border-box;
 		min-width: 100px;
@@ -393,6 +389,16 @@
 		text-decoration: underline;
 	}
 
+	ul button:hover,
+	ul button:focus-visible,
+	ul a:hover,
+	ul a:focus-visible {
+		transform: scale(1.04);
+		border: none;
+		outline: none;
+		text-decoration: none;
+	}
+
 	button:hover>span,
 	button:focus-visible>span,
 	a:hover>span,
@@ -419,7 +425,7 @@
 	}
 
 	.layout-col {
-		grid-template-columns: minmax(600px, 75%);
+		grid-template-columns: minmax(600px, 60%);
 	}
 }
 
@@ -447,8 +453,8 @@
 	}
 
 	.content-h {
-		min-height: 750px;
-		height: 50vh;
+		min-height: 700px;
+		height: 45vh;
 	}
 
 	.f-yellow {
@@ -511,9 +517,14 @@
 		width: var(--xl);
 	}
 
-	.w-xxl {
-		min-width: var(--xxl);
-		width: var(--xxl);
+	.w-txl {
+		min-width: var(--txl);
+		width: var(--txl);
+	}
+
+	.w-thxl {
+		min-width: var(--thxl);
+		width: var(--thxl);
 	}
 
 	.body-min-w {
@@ -605,9 +616,9 @@
 		max-height: 558.9px;
 	}
 
-	.outline-focus:focus,
-	.outline-focus:focus-visible {
-		outline: 2px solid var(--yellow);
+	.uinline-grid {
+		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-rows: var(--s);
 	}
 
 	.user-profile-header-grid {
@@ -675,15 +686,6 @@
 	.matches {
 		display: grid;
 		grid-template-rows: repeat(auto-fill, var(--m));
-	}
-
-	.biography {
-		display: -webkit-box;
-		-webkit-line-clamp: 6;
-		line-clamp: 6;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		padding: var(--xs);
 	}
 
 	.title-shadow {
