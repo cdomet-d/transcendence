@@ -11,6 +11,11 @@ export class Users {
         this.#users = new Map();
     }
 
+    /*                              GETTERS                                  */
+    get userMap(): usersTab {
+        return this.#users;
+    }
+
 	/*                              METHODS                                  */
     public addUser(userID: number, socket: WebSocket) {
         this.#users.set(userID, socket);
