@@ -75,7 +75,7 @@ export interface TabData {
 }
 
 export interface MenuData {
-    id: string;
+    id?: string; //TODO: had to add "?" to stop having an error on notificationBtns in notifications.ts
     buttons?: ButtonData[];
     links?: navigationLinksData[];
 }
