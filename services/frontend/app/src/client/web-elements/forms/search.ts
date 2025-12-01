@@ -1,9 +1,8 @@
 import { BaseForm } from './baseform.js';
-import { createErrorFeedback } from '../../error.js';
+import { createErrorFeedback, redirectOnError } from '../../error.js';
 import { createInputGroup } from '../inputs/helpers.js';
 import { createUserInline } from '../users/profile-helpers.js';
 import { InputGroup } from '../inputs/fields.js';
-import { NoResults } from '../typography/images.js';
 import { search } from './default-forms.js';
 import { UserInline } from '../users/profile.js';
 import type { UserData } from '../types-interfaces.js';
@@ -26,9 +25,7 @@ export class Searchbar extends BaseForm {
     #navHandler: (ev: KeyboardEvent) => void;
     #blurHandler: (ev: FocusEvent) => void;
 
-    /* -------------------------------------------------------------------------- */
-    /*                                   Default                                  */
-    /* -------------------------------------------------------------------------- */
+    /* -------------- constructors and associated default functions ------------- */
     constructor() {
         super();
         super.details = search;
@@ -53,10 +50,7 @@ export class Searchbar extends BaseForm {
         this.removeEventListener('focusout', this.#blurHandler);
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                                  Rendering                                 */
-    /* -------------------------------------------------------------------------- */
-
+    /* -------------------------------- rendering ------------------------------- */
     /**
      * Renders the search bar structure including input, submit button, search icon, and results container.
      * Sets form attributes and class names appropriately.
@@ -72,7 +66,7 @@ export class Searchbar extends BaseForm {
 
         this.classList.add('sidebar-right', 'search-gap');
         this.#results.className =
-            'hidden absolute top-[64px] brdr bg min-h-fit w-full overflow-y-auto box-border';
+            'hidden absolute top-[64px] brdr bg min-h-fit w-full overflow-y-auto box-border z-1';
     }
 
     /**
@@ -88,13 +82,20 @@ export class Searchbar extends BaseForm {
         return img;
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                               Event listeners                              */
-    /* -------------------------------------------------------------------------- */
+    /* --------------------------------- getters -------------------------------- */
+
+    get results() {
+        return this.#results;
+    }
+    /* ----------------------------- event listeners ---------------------------- */
 
     override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
         const response = await fetch(url, req);
         const data = await response.json();
+        if (!data.ok) {
+            if (data.message === 'Unauthorized')
+                redirectOnError('/auth', 'You must be registered to access this page!');
+        }
 
         this.displayResults(userArrayFromAPIRes(data));
     }
@@ -148,9 +149,8 @@ export class Searchbar extends BaseForm {
             actions[ev.key]!();
         }
     }
-    /* -------------------------------------------------------------------------- */
-    /*                              Result Rendering                              */
-    /* -------------------------------------------------------------------------- */
+
+    /* ---------------------------- result management --------------------------- */
     /**
      * Clears all displayed search results from the results container.
      */
@@ -195,8 +195,7 @@ export class Searchbar extends BaseForm {
         this.clearResults();
         this.#results.classList.remove('hidden');
         this.#results.removeAttribute('hidden');
-        if (res.length < 1)
-            this.#results.append(createNoResult('light', 'ilarge'));
+        if (res.length < 1) this.#results.append(createNoResult('light', 'ilarge'));
         res.forEach((user) => this.addUser(user));
     }
 }

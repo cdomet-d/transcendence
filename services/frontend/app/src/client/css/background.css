@@ -2,6 +2,12 @@
 	background-color: #ffdb9976;
 }
 
+.bg-orange {
+	background-color: var(--orange);
+	border-top: 2px solid var(--highlight-orange);
+	border-bottom: 2px solid var(--shadow-orange);
+}
+
 .bg {
 	background: linear-gradient(180deg,
 			#FFE3AC 0 10%,
@@ -46,6 +52,8 @@
 }
 
 .bg-yellow:hover,
+.bg-yellow:focus,
+.bg-yellow:focus-within,
 .bg-yellow:focus-visible {
 	background: linear-gradient(180deg,
 			#ffc245 0 10%,

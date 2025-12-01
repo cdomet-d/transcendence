@@ -275,3 +275,21 @@ export interface pongTheme {
     color: string;
     theme: CourtTheme;
 }
+
+/**
+ * Interface to handle pong customization.
+ * Background & horizontal are optional arguments.
+ *
+ * If `background` is undefined, the pong will render with the default theme;
+ *
+ * If `horizontal` is undefined, the horizontal paddle movements are disabled.
+ *
+ * **NB**: background is handled in `renderGame` -> it's just needed for the UI.
+ */
+export interface PongOptions {
+    background?: string;
+    ballspeed: string;
+    horizontal?: string;
+    paddlesize: string;
+    paddlespeed: string;
+}

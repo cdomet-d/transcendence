@@ -11,21 +11,17 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
         timeSinceUpdate = performance.now() - latestReply.timestamp;
         ball = { ...latestReply.ball };
     }
-    if (timeSinceUpdate > 100)
-        timeSinceUpdate = 100;
+    if (timeSinceUpdate > 100) timeSinceUpdate = 100;
     const nextX: number = ball.x + ball.dx * timeSinceUpdate;
     const nextY: number = ball.y + ball.dy * timeSinceUpdate;
     updateBallPos(game, nextX, nextY);
 }
 
 export function updateBallPos(game: Game, nextX: number, nextY: number) {
-    if (sideWallCollision(game, nextX)) 
-        return false;
+    if (sideWallCollision(game, nextX)) return false;
     nextY = upperAndBottomWallCollision(game, nextY);
-    if (paddleCollision(game, game.leftPad, nextX, nextY))
-        return false;
-    if (paddleCollision(game, game.rightPad, nextX, nextY))
-        return false;
+    if (paddleCollision(game, game.leftPad, nextX, nextY)) return false;
+    if (paddleCollision(game, game.rightPad, nextX, nextY)) return false;
     game.ball.x = nextX;
     game.ball.y = nextY;
 }
@@ -37,7 +33,7 @@ function sideWallCollision(game: Game, nextX: number): boolean {
         game.ball.dx = 0;
         game.ball.dy = 0;
         game.delta = 0;
-		game.deleteReplies(game.replyHistory.length);
+        game.deleteReplies(game.replyHistory.length);
         return true;
     }
     return false;
