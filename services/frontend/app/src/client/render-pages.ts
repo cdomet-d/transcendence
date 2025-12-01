@@ -280,7 +280,7 @@ export function renderGame(param?: Match<Partial<Record<string, string | string[
     if (layout) layout.theme = farmAssets;
     document.body.layoutInstance?.appendAndCache(ui, court);
 
-    // pong({ userID: 1, gameID: 1, remote: false }, court.ctx, ui);
+    // pong({ userID: 1, gameID: "1", remote: false }, court.ctx, ui);
     if (gameRequest === undefined) {
         console.log("GameRequest =>", gameRequest);
         // TODO Show explicit error in UI
