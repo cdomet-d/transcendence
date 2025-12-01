@@ -27,6 +27,7 @@ export async function tournamentState(payload: string) {
 	const nextGame = getNextGameInBracket(tournamentObj);
 	if (nextGame === undefined) { // tournament is over
 		// handle end of tournament
+		tournamentObj.winnerID = game.winnerID;
 		tournamentOver(tournamentObj);
 		return;
 	}
