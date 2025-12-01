@@ -4,7 +4,7 @@ import type { coordinates, repObj, paddleSpec, ballObj } from './game-interfaces
 
 export class Player {
 	/*                             PROPERTIES                                */
-	#userID: number;
+	#userID: string;
 	#socket: WebSocket;
 	#serverSide: string;
 	#clientSide: string;
@@ -14,11 +14,11 @@ export class Player {
 	#reply: repObj;
 
 	/*                            CONSTRUCTORS                               */
-	constructor(userID: number, socket: WebSocket, serverSide: string, clientSide: string, padSpec: paddleSpec, ballSpec: ballObj) {
+	constructor(userID: string, socket: WebSocket, serverSide: string, clientSide: string, padSpec: paddleSpec, ballSpec: ballObj) {
 		this.#userID = userID;
 		this.#socket = socket;
 		this.#reply = {
-			ID: 0, 
+			ID: "", 
 			timestamp: 0, 
 			leftPad: {coord: {x: 25, y: HEIGHT / 2 - padSpec.halfH}, step: {x: 0, y: 0}},
 			rightPad: {
@@ -71,7 +71,7 @@ export class Player {
 		return this.#score;
 	}
 
-	get userID(): number {
+	get userID(): string {
 		return this.#userID;
 	}
 

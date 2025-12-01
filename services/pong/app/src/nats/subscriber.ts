@@ -43,7 +43,7 @@ export async function natsSubscription(serv: FastifyInstance) {
 	// serv.gameRegistry.addGame(new Game(gameobj, serv.nc, serv.log)); //TODO: for testing
 };
 
-import type { user } from '../classes/game-interfaces.js';
+/* import type { user } from '../classes/game-interfaces.js';
 const player1: user = {
 	userID: 1,
 	username: "cha",
@@ -66,4 +66,4 @@ const gameobj: gameInfo = {
 	duration: 0,
 	longuestPass: 0,
 	startTime: ""
-}
+} */

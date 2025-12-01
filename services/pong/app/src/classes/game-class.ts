@@ -87,7 +87,7 @@ export class Game {
 		return true;
 	}
 
-	get randUserID(): number {
+	get randUserID(): string {
 		return this.#gameInfo.users[1]!.userID;
 	}
 		
@@ -165,7 +165,7 @@ export class Game {
 	}
 
 	/*                              METHODS                                  */
-	public addPlayer(userID: number, socket: WebSocket, clientSide: string) {
+	public addPlayer(userID: string, socket: WebSocket, clientSide: string) {
 		let serverSide: string = "left";
 		if (this.#players.length === 1)
 			serverSide = "right";
@@ -200,8 +200,8 @@ export class Game {
 
 	public fillGameInfos() {
 		this.#gameInfo.duration = (performance.now() - this.#startTimestamp) / 1000;
-		const user1: number = this.#gameInfo.users[0].userID;
-		const user2: number = this.#gameInfo.users[1].userID;
+		const user1: string = this.#gameInfo.users[0].userID;
+		const user2: string = this.#gameInfo.users[1].userID;
 		let score1: number = 0;
 		let score2: number = 0;
 		if (this.#players[0]) {

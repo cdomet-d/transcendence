@@ -12,8 +12,8 @@ interface gameDashboardReqBody {
 	tournamentID?: string | undefined;
 	localGame: boolean;
 	startTime: string;
-	player1: number;
-	player2: number;
+	player1: string;
+	player2: string;
 	duration: number;
 	player1Score: number;
 	player2Score: number;
@@ -51,8 +51,8 @@ async function postGameToDashboard(game: game) {
 }
 
 interface usersReqBody {
-	player1: number;
-	player2: number;
+	player1: string;
+	player2: string;
 	player1Score: number;
 	player2Score: number;
 	longuestPass: number;

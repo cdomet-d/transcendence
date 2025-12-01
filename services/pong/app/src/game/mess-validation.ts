@@ -5,7 +5,7 @@ const idsObjSchema = {
 	required: ['gameID', 'userID'],
 	properties: {
 		gameID: { type: 'string' },
-		userID: { type: 'number' },
+		userID: { type: 'string' },
 	}
 }
 
@@ -13,7 +13,7 @@ const reqObjSchema = {
     type: 'object',
     required: ['ID', 'keys', 'timeStamp'],
     properties: {
-        ID: { type: 'number' },
+        ID: { type: 'string' },
         timeStamp: { type: 'number' },
         keys: {
             type: 'object',
