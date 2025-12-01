@@ -28,16 +28,16 @@ export async function natsSubscription(serv: FastifyInstance) {
 	const sc = StringCodec();
 
 	const sub = serv.nc.subscribe('post.notif');
-	// console.log(`Listening for messages on "game.request"...`);
 
 	(async () => {
 		for await (const msg of sub) {
 			const notif: friendNotif | gameNotif = JSON.parse(sc.decode(msg.data));
-			// serv.log.info(`Received message: ${JSON.stringify(notif)}`);
+			// serv.log.error(`Received message: ${JSON.stringify(notif)}`);
 			
 			const receiverWS: WebSocket | undefined = serv.users.getUserSocket(notif.receiverID)
 			if (receiverWS === undefined) {
 				//TODO
+				serv.log.error("receiver not found")
 				return;
 			}
 			if (receiverWS.OPEN)
