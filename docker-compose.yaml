@@ -100,7 +100,6 @@ services:
             - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
         volumes:
             - ./services/bff/app:/usr/app
-        # user: "${T_UID}:${T_GID}"
     game-manager:
         build:
             context: ./services/game-manager
