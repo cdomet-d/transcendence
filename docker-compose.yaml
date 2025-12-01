@@ -82,6 +82,7 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
         volumes:
             - ./services/frontend/app:/app
     bff:
