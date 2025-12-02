@@ -1,10 +1,9 @@
-import 'fastify';
-import { GameRegistry } from '../src/classes/gameRegistry-class.js';
 import type { NatsConnection } from 'nats'
+import type { Users } from './src/server/notifications/users-class';
 
 declare module 'fastify' {
     interface FastifyInstance {
-      gameRegistry: GameRegistry;
       nc: NatsConnection;
+      users: Users;
     }
 }

@@ -33,7 +33,8 @@
 	"include": [
 		"src/server/**/*",
 		"src/client/**/*",
-		"src/client/web-elements"
+		"src/client/web-elements",
+		"fastify.d.ts" 
 	],
 	"exclude": [
 		"node_modules",
