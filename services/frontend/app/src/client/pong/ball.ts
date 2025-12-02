@@ -5,13 +5,13 @@ import type { ballObj, coordinates, repObj } from './classes/game-interfaces.js'
 const TIME_STEP: number = 1000 / 60;
 
 export function deadReckoning(game: Game, latestReply: repObj | undefined) {
-    let timeSinceUpdate: number = performance.now() - game.lastFrameTime;
+    let timeSinceUpdate: number = TIME_STEP;
     let ball: ballObj = { ...game.ball };
     if (latestReply !== undefined) {
         timeSinceUpdate = performance.now() - latestReply.timestamp;
         ball = { ...latestReply.ball };
     }
-    if (timeSinceUpdate > 100) timeSinceUpdate = 100;
+    if (timeSinceUpdate > 30) timeSinceUpdate = 30;
     const nextX: number = ball.x + ball.dx * timeSinceUpdate;
     const nextY: number = ball.y + ball.dy * timeSinceUpdate;
     updateBallPos(game, nextX, nextY, timeSinceUpdate);
