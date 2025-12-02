@@ -1,8 +1,8 @@
 import type { FastifyInstance } from 'fastify';
 
 export interface GameInput {
-	player1: number;
-	player2: number;
+	player1: string;
+	player2: string;
 	player1Score: number;
 	player2Score: number;
 	longuestPass: number;
@@ -10,7 +10,7 @@ export interface GameInput {
 }
 
 export interface userStats {
-	userID: number;
+	userID: string;
 	longestMatch: number;
 	shortestMatch: number;
 	totalMatch: number;
@@ -18,7 +18,7 @@ export interface userStats {
 	winStreak: number;
 	averageMatchDuration: number;
 	longuestPass: number;
-	[key: string]: number;
+	[key: string]: number | string;
 }
 
 function calculateStats(current: userStats, isWinner: boolean, duration: number, matchLongestPass: number): userStats {
@@ -52,8 +52,8 @@ function calculateStats(current: userStats, isWinner: boolean, duration: number,
 	};
 }
 
-export async function updateUserStats(serv: FastifyInstance, userID: number, isWinner: boolean, gameData: GameInput) {
-	if (userID === -1)
+export async function updateUserStats(serv: FastifyInstance, userID: string, isWinner: boolean, gameData: GameInput) {
+	if (userID === "temporary")
 		return ;
 	
 	let currentStats = await serv.dbUsers.get<userStats>(

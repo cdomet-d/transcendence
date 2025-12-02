@@ -18,7 +18,7 @@ export class Player {
 		this.#userID = userID;
 		this.#socket = socket;
 		this.#reply = {
-			ID: "", 
+			ID: 0, 
 			timestamp: 0, 
 			leftPad: {coord: {x: 25, y: HEIGHT / 2 - padSpec.halfH}, step: {x: 0, y: 0}},
 			rightPad: {

@@ -13,7 +13,7 @@ const reqObjSchema = {
     type: 'object',
     required: ['ID', 'keys', 'timeStamp'],
     properties: {
-        ID: { type: 'string' },
+        ID: { type: 'number' },
         timeStamp: { type: 'number' },
         keys: {
             type: 'object',
