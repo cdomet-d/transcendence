@@ -23,11 +23,12 @@ import { PongUI } from './web-elements/game/game-ui.js';
 import { errorMessageFromException, errorMessageFromResponse, redirectOnError } from './error.js';
 import { TournamentBrackets } from './web-elements/game/tournament.js';
 import { type Match } from 'path-to-regexp';
-import { type TabData } from './web-elements/types-interfaces.js';
+import { type pongTheme, type TabData, type ImgData } from './web-elements/types-interfaces.js';
 import { userStatus, router, type userStatusInfo } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
+
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -266,7 +267,8 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 	if (!gameRequest) return redirectOnError('/', 'Uh-oh! You can\'t be there - go join a lobby or something !')
     prepareLayout(document.body.layoutInstance, 'game');
 
-	console.log(gameRequest)
+	// console.log("GAME REQUEST:", JSON.stringify(gameRequest))
+
     const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
     const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
 
@@ -285,17 +287,23 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 
     const layout = document.body.layoutInstance;
     // TODO: set pong-court theme from game-manager object
-    court.theme = farm;
-    if (layout) layout.theme = farmAssets;
+    const background: [pongTheme, ImgData[]] = getGameBackground(gameRequest.gameSettings.background)
+    court.theme = background[0];
+    if (layout) layout.theme = background[1];
     document.body.layoutInstance?.appendAndCache(ui, court);
 
     // pong({ userID: 1, gameID: "1", remote: false }, court.ctx, ui);
-    if (gameRequest === undefined) {
-        console.log("GameRequest =>", gameRequest);
-        // TODO Show explicit error in UI
-        return;
-    }
     pong(gameRequest!, court.ctx, ui);
+}
+
+function getGameBackground(background?: string): [pongTheme, ImgData[]] {
+    if (background === "Adorable Farm")
+        return [farm, farmAssets];
+    if (background === "Magical Underwater")
+        return [ocean, oceanAssets];
+    // if (background === "Enchanted Forest")
+    //     return [] //TODO
+    return [defaultTheme, []];
 }
 
 export function renderBracket() {
