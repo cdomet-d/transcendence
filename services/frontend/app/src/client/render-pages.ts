@@ -267,20 +267,16 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 	if (!gameRequest) return redirectOnError('/', 'Uh-oh! You can\'t be there - go join a lobby or something !')
     prepareLayout(document.body.layoutInstance, 'game');
 
-	// console.log("GAME REQUEST:", JSON.stringify(gameRequest))
+	console.log("GAME REQUEST:", JSON.stringify(gameRequest))
 
     const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
     const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
 
     //TODO: set playerNames from game-manager object
     const user: userStatusInfo = await userStatus();
-    if (!user.auth) {
+    if (!user.auth || user.username === undefined) {
         redirectOnError('/auth', 'You must be registered to see this page')
         return JSON.stringify({ event: 'BAD_USER_TOKEN'});
-    }
-    if (user.username === undefined) {
-        //TODO: why could it be undefined?
-        return;
     }
     ui.player1.innerText = user.username;
     ui.player2.innerText = gameRequest.opponent;

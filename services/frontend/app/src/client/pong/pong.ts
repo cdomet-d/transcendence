@@ -21,19 +21,12 @@ export async function pong(gameReq: gameRequest, ctx: CanvasRenderingContext2D |
         router.loadRoute('/404', true);
         return;
     }
-    const game: Game = new Game(ctx, gameReq.remote, true, ui);
-    // UI has the player names defined + has a default score of 0 for each player
+    const game: Game = new Game(ctx, gameReq.remote, gameReq.gameSettings, ui);
     renderGame(game);
-
     const user: userStatusInfo = await userStatus();
-    if (!user.auth) {
+    if (!user.auth || user.userID === undefined) {
         redirectOnError('/auth', 'You must be registered to see this page')
         return JSON.stringify({ event: 'BAD_USER_TOKEN'});
     }
-    if (user.userID === undefined) {
-        //TODO: why could it be undefined?
-        return;
-    }
-
     wsRequest(game, { gameID: gameReq.gameID, userID: user.userID! });
 }
