@@ -1,12 +1,13 @@
 import { redirectOnError } from "../error";
 import { userStatus, type userStatusInfo } from "../main";
+import type { PongOptions } from "../web-elements/types-interfaces";
 
 interface lobbyInfo {
     userList: userInfo[];
     remote: boolean;
     format: 'quickmatch' | 'tournament' | string;
     nbPlayers: number;
-    // gameSettings: gameSettingsObj
+    gameSettings: PongOptions;
 }
 
 interface userInfo {
@@ -21,7 +22,7 @@ interface gameRequestForm {
 }
 
 async function createGameRequest(format: string, formInstance: string, gameSettings: string): Promise<string> {
-    const customSettings = JSON.parse(gameSettings);
+    const customSettings: PongOptions = JSON.parse(gameSettings);
     const localOpponent: string | undefined = customSettings.opponent;
     // console.log("FORM: ", formInstance); // will be useful at some point
 
@@ -45,6 +46,7 @@ async function createGameRequest(format: string, formInstance: string, gameSetti
                 // { userID: 3, username: "cha" }, // TODO add more users for tournaments once we have operational Notifications
                 // { userID: 4, username: "coco" } // TODO add more users for tournaments once we have operational Notifications
             ],
+            gameSettings: customSettings,
         },
     };
 

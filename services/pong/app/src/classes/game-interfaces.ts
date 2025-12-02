@@ -4,6 +4,15 @@ export interface user {
     username?: string,
 }
 
+export interface PongOptions {
+    background?: string;
+    ballspeed: string;
+    horizontal?: string;
+    paddlesize: string;
+    paddlespeed: string;
+    opponent?: string;
+}
+
 export interface gameInfo {
     lobbyID: number,
     gameID: string,
@@ -16,6 +25,14 @@ export interface gameInfo {
     duration: number,
     longuestPass: number,
     startTime: string,
+    gameSettings: PongOptions,
+}
+
+export interface gameReply {
+	gameID: string,
+	users: [user, user],
+	remote: boolean,
+	gameSettings: PongOptions,
 }
 
 /******************************** GAME OBJ ***********************************/

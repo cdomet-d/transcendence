@@ -4,6 +4,15 @@ interface userInfo {
 	userSocket?: WebSocket
 }
 
+interface PongOptions {
+    background?: string;
+    ballspeed: string;
+    horizontal?: string;
+    paddlesize: string;
+    paddlespeed: string;
+    opponent?: string;
+}
+
 interface lobbyInfo {
 	lobbyID?: string,
 	whitelist?: whitelist,
@@ -12,7 +21,7 @@ interface lobbyInfo {
 	remote: boolean,
 	format: "quickmatch" | "tournament" | string,
 	nbPlayers: number
-	// gameSettings?: string
+	gameSettings?: PongOptions
 }
 
 interface whitelist {
@@ -33,6 +42,7 @@ interface game {
 	duration: number,
 	longuestPass: number,
     startTime: string,
+	gameSettings: PongOptions
 }
 
 interface tournament {
@@ -43,11 +53,10 @@ interface tournament {
 }
 
 interface gameRequest {
-	// username?: string,
-	// userID?: number,
 	opponent: string,
 	gameID: string,
 	remote: boolean,
+	gameSettings: PongOptions,
 }
 
-export type { userInfo, lobbyInfo, whitelist, tournament, game, gameRequest };
+export type { userInfo, lobbyInfo, whitelist, tournament, game, gameRequest, PongOptions };

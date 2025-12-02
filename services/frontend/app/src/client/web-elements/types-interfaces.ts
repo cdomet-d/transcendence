@@ -305,4 +305,5 @@ export interface PongOptions {
     horizontal?: string;
     paddlesize: string;
     paddlespeed: string;
+    opponent?: string;
 }

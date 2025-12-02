@@ -2,19 +2,20 @@ import { StringCodec } from 'nats';
 import { wsSend } from '../lobby/wsHandler.gm.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
 import { natsConnect } from './publisher.gm.js';
-import type { game, gameRequest } from '../manager.interface.js';
+import type { game, gameRequest, PongOptions } from '../manager.interface.js';
 import { wsClientsMap } from '../lobby/lobby.gm.js';
 import { gameOver } from '../quickmatch/gameOver.js';
 
 interface user {
 	userID: number,
-	username: string,
+	username?: string,
 }
 
 interface gameReply {
 	gameID: string,
-	users: user[],
-	remote: boolean
+	users: [user, user],
+	remote: boolean,
+	gameSettings: PongOptions,
 }
 
 export async function natsSubscribe() {
@@ -31,8 +32,8 @@ export async function natsSubscribe() {
 				console.log("EMPTY USERS");
 				return;
 			}
-			sendGameRequest(game.users[0]!.userID, game.users[1]!.userID, game, game.users[1]!.username);
-			sendGameRequest(game.users[1]!.userID, game.users[0]!.userID, game, game.users[0]!.username);
+			sendGameRequest(game.users[0].userID, game.users[1], game);
+			sendGameRequest(game.users[1].userID, game.users[0], game);
 		}
 
 	})();
@@ -53,11 +54,11 @@ export async function natsSubscribe() {
 	})();
 }
 
-function sendGameRequest(userID: number, opponentID: number, game: gameReply, opponentUsername?: string) {
+function sendGameRequest(userID: number, opponent: user, game: gameReply) {
 	if (userID === -1) return; // TODO -1 will become 'temporary' 
 
 	const socket = wsClientsMap.get(userID);
-
+	let opponentUsername: string | undefined = opponent.username;
 	if (opponentUsername === undefined) {
 		// TODO get username from userID
 		// const opponentUsername = fetch DB ??;
@@ -65,8 +66,8 @@ function sendGameRequest(userID: number, opponentID: number, game: gameReply, op
 	const gameReq: gameRequest = {
 		opponent: opponentUsername!, // TODO send username of opponent to PONG depending on local/remote, user index etc. 
 		gameID: game.gameID,
-		remote: game.remote
-		// gameSettings
+		remote: game.remote,
+		gameSettings: game.gameSettings,
 	}
 
 	wsSend(socket, JSON.stringify(gameReq));

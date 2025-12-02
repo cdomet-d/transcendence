@@ -21,7 +21,7 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 		duration: 0, 
 		longuestPass: 0,
 		startTime: "",
-		// gameSettings
+		gameSettings: lobbyInfo.gameSettings!,
 	};
 
 	return game;

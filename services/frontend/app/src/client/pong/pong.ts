@@ -4,12 +4,13 @@ import { wsRequest } from './ws-req.js';
 import { router, userStatus, type userStatusInfo } from '../main.js';
 import type { PongUI } from '../web-elements/game/game-ui.js';
 import { redirectOnError } from '../error.js';
+import type { PongOptions } from '../web-elements/types-interfaces.js';
 
 export interface gameRequest {
-    // userID: number;
     opponent: string,
     gameID: string;
     remote: boolean;
+	gameSettings: PongOptions;
 }
 
 export async function pong(gameReq: gameRequest, ctx: CanvasRenderingContext2D | null, ui: PongUI) {
