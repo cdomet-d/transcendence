@@ -267,6 +267,7 @@ export class NotifBox extends HTMLDivElement {
      * @param {string} username - The username who sent the friend request.
      */
     newFriendRequest(username: string) {
+        console.log('zebiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
         const notif = document.createElement('div', { is: 'notif-content' }) as NotifContent;
         notif.setContent = `${username} sent you a friend request!`;
         this.#popup.newNotification(notif);
@@ -337,7 +338,7 @@ export class NotifBox extends HTMLDivElement {
         const userStatusInfo: userStatusInfo = await userStatus();
         if (userStatusInfo.auth === false || userStatusInfo.userID === undefined)
             return;
-        const userID: number = userStatusInfo.userID;
+        const userID: string = userStatusInfo.userID;
         const ws = new WebSocket(`wss://localhost:8443/notification/${userID}`);
 
         ws.onerror = () => {
@@ -353,8 +354,10 @@ export class NotifBox extends HTMLDivElement {
                 if (typeof notif === "string" && notif === "ping")
                     ws.send(JSON.stringify("pong"));
                 if (typeof notif === 'object') {
-                    if (notif.type === 'FRIEND_REQUEST')
+                    if (notif.type === 'FRIEND_REQUEST') {
+                        console.log('HEEEEEEEEEEEERRRRRRRRRRRRRRRRREEEEEEEEEEEEEEEEEEE !');
                         this.newFriendRequest(notif.senderUsername);
+                    }
                     else if (notif.type === 'GAME_INVITE')
                         this.newGameInvitation(notif.receiverName, notif.gameType);
                 }

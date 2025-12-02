@@ -6,7 +6,7 @@ interface lobbyRequestForm {
     payload: {
         action: string,
         format: string,
-        userID: number,
+        userID: string,
         lobbyID?: string
     },
     formInstance?: string
@@ -46,7 +46,7 @@ function joinLobbyRequest(action: string, format: string, lobbyID: string) {
         payload: {
             action: action,
             format: format,
-            userID: 99, // TODO: get uid from 'host'
+            userID: "temp", // TODO: get uid from 'host'
             lobbyID: lobbyID,
         },
         // formInstance: formInstance
