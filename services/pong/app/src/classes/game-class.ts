@@ -3,7 +3,7 @@ import type { WebSocket } from '@fastify/websocket';
 import { NatsConnection } from 'nats';
 import type { reqObj, playerReq, gameInfo, ballObj, paddleSpec, coordinates } from './game-interfaces.js';
 import { FastifyBaseLogger } from 'fastify';
-import { getBallStartingSpeed, getPaddleSpeed } from './game-settings.js';
+import { getBallStartingSpeed, getPaddleHeight, getPaddleSpeed } from './game-settings.js';
 
 export const HEIGHT = 558.9;
 export const WIDTH = 1000;
@@ -45,13 +45,14 @@ export class Game {
 			r: 13
 		};
 		const paddleSpeed: number = getPaddleSpeed(this.#gameInfo.gameSettings.paddlespeed);
+		const paddleHeight: number = getPaddleHeight(this.#gameInfo.gameSettings.paddlesize);
 		this.#paddleSpec = {
 			speed: paddleSpeed,
 			w: 20, 
-			h: HEIGHT / 5, 
+			h: paddleHeight, 
 			halfW: 20 / 2, 
-			halfH: HEIGHT / 10
-		}; //custom
+			halfH: paddleHeight / 2,
+		};
 		this.#ballDir = -1;
 		this.#reqHistory = new Array();
 		this.#lastTick = 0;

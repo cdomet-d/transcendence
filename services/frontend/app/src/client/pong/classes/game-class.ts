@@ -10,7 +10,7 @@ import type {
     repObj,
     paddleObj,
 } from './game-interfaces.js';
-import { getBallStartingSpeed, getPaddleSpeed } from './game-settings.js';
+import { getBallStartingSpeed, getPaddleHeight, getPaddleSpeed } from './game-settings.js';
 
 type requestMap = Map<number, reqObj>;
 type replyTab = Array<repObj>;
@@ -53,7 +53,14 @@ export class Game {
             r: 13,
         };
         const paddleSpeed: number = getPaddleSpeed(gameSettings.paddlespeed);
-        this.#paddleSpec = { speed: paddleSpeed, w: 20, h: HEIGHT / 5, halfW: 20 / 2, halfH: HEIGHT / 10 }; //custom
+        const paddleHeight: number = getPaddleHeight(gameSettings.paddlesize);
+        this.#paddleSpec = { 
+            speed: paddleSpeed, 
+            w: 20, 
+            h: paddleHeight, 
+            halfW: 20 / 2, 
+            halfH: paddleHeight / 2, 
+        };
         this.#leftPaddle = { x: 25, y: HEIGHT / 2 - this.#paddleSpec.halfH };
         this.#rightPaddle = {
             x: WIDTH - (this.#paddleSpec.w + 25),

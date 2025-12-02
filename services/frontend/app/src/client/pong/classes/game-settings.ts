@@ -1,4 +1,5 @@
 import { redirectOnError } from "../../error";
+import { HEIGHT } from "./game-class";
 import type { coordinates } from "./game-interfaces";
 
 export function getBallStartingSpeed(ballspeed: string): coordinates /*| null*/ {
@@ -37,4 +38,21 @@ export function getPaddleSpeed(paddlespeed: string): number {
 	if (level >= 5)
         return 0.80;
 	return 0.42;
+}
+
+export function getPaddleHeight(paddlesize: string): number {
+	const level: number = Number(paddlesize);
+	if (level <= 0)
+		return HEIGHT / 5;
+	if (level === 1)
+		return HEIGHT / 4.6;
+	if (level === 2)
+		return HEIGHT / 4.2;
+	if (level === 3)
+        return HEIGHT / 3.8;
+	if (level === 4)
+        return HEIGHT / 3.4;
+	if (level >= 5)
+		return HEIGHT / 3;
+	return HEIGHT / 5;
 }
