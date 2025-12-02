@@ -18,12 +18,12 @@ function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 			lobbyId: lobbyID,
 			hostID: hostID,
 			userIDs: new Map<number, userInfo>([
-				[hostID, { userID: hostID }], // TODO Make this a map // 1. put invitee ID here on invite
+				[hostID, { userID: hostID }], // TODO Make this a vector ? // 1. put invitee ID here on invite
 			]),
 		},
 		joinable: true,
 		userList: new Map<number, userInfo>([
-			[hostID, { userID: hostID }], //  TODO get username JWT
+			[hostID, { userID: hostID }],
 		]),
 		remote: true, // TODO set to false if local pong before START event
 		format: format,
@@ -33,12 +33,30 @@ function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 	return lobby;
 }
 
+export function addUserToWhitelist(userID: number, lobbyID: string) {
+	const lobby = lobbyMap.get(lobbyID);
+	if (!lobby) return;
+
+	if (lobby.whitelist?.userIDs.size === 4) return; // send `whitelist full` to front?
+
+	if (lobby.whitelist?.userIDs.has(userID)) {
+		lobby.whitelist?.userIDs.set(userID, { userID });
+	}
+}
+
+export function removeUserFromWhitelist(userID: number, lobbyID: string) {
+	const lobby = lobbyMap.get(lobbyID);
+	if (!lobby) return;
+
+	lobby.whitelist!.userIDs.delete(userID);
+}
+
 export function addUserToLobby(userID: number, socket: WebSocket, lobbyID: string) {
 	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) return;
 
 	if (!lobby.userList.has(userID)) {
-		lobby.userList.set(userID, { userID }); // add username (and socket?) too
+		lobby.userList.set(userID, { userID });
 	}
 
 	if (!wsClientsMap.has(userID)) {
@@ -54,14 +72,3 @@ export function removeUserFromLobby(userID: number, lobbyID: string) {
 	lobby.whitelist!.userIDs.delete(userID);
 	wsClientsMap.delete(userID);
 }
-
-// export function printPlayersInLobby(lobbyID: string) {
-// 	const lobby = lobbyMap.get(lobbyID);
-// 	if (!lobby) {
-// 		console.log(`Lobby #${lobbyID} not found`);
-// 		return;
-// 	}
-// 	lobby?.userList.forEach(user => {
-// 		console.log(`User #${user.userID} is in Lobby #${lobbyID}`);
-// 	});
-// }

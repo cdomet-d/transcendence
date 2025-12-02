@@ -1,6 +1,6 @@
 import { router } from '../main.js';
 import { createGameRequest } from './gameRequest.front.js';
-import { createLobbyRequest } from './lobbyRequest.front.js';
+import { createLobbyRequest, joinLobbyRequest } from './lobbyRequest.front.js';
 import { type gameRequest } from '../pong/pong.js';
 
 let wsInstance: WebSocket | null = null;
@@ -13,7 +13,7 @@ function openWsConnection() {
     return wsInstance;
 }
 
-async function wsConnect(action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string) {
+async function wsConnect(action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string, inviteeID?: number) {
     const ws: WebSocket = openWsConnection();
 
     ws.onopen = async () => {
@@ -25,20 +25,36 @@ async function wsConnect(action: string, format: string, formInstance: string, l
             } else {
                 console.log(`Error: WebSocket is not open for ${action}`);
             }
-        } else if (action === 'join') {
-            if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-                // wsInstance.send(joinLobbyRequest(action, format, lobbyID)); // TODO Lobby invites are processed here
-            } else {
-                console.log(`Error: WebSocket is not open for ${action}`);
-            }
         }
-
     }
 
     // send Game Request
     if (action === 'game') {
         if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
             wsInstance.send(await createGameRequest(format, formInstance, gameSettings!));
+        } else {
+            console.log(`Error: WebSocket is not open for ${action}`);
+        }
+    }
+
+    // send Lobby Invites
+    if (action === 'invite') {
+        if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+            wsInstance.send(JSON.stringify({ action: action, inviteeID: inviteeID, lobbyID: lobbyID }));
+        } else {
+            console.log(`Error: WebSocket is not open for ${action}`);
+        }
+    } else if (action === 'decline') {
+        if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+            wsInstance.send(JSON.stringify({ action: action, inviteeID: inviteeID, lobbyID: lobbyID }));
+        } else {
+            console.log(`Error: WebSocket is not open for ${action}`);
+        }
+    }
+
+    if (action === 'join') {
+        if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+            wsInstance.send(await joinLobbyRequest(action, format, inviteeID!, lobbyID!));
         } else {
             console.log(`Error: WebSocket is not open for ${action}`);
         }
@@ -73,7 +89,7 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 
     ws.onclose = () => {
         console.log('Lobby WebSocket connection closed!');
-        // TODO KICK USER OUT OF LOBBY_MAP AND GM WS_CLIENT_MAP 
+        // TODO KICK USER OUT OF LOBBY_MAP AND GM WS_CLIENT_MAP // 'delete' action ? Handle in GM?
         // TODO: Check wether deconnection was expected or not
     };
 }

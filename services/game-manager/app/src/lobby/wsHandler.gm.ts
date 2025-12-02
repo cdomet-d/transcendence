@@ -1,6 +1,6 @@
 import type { lobbyInfo } from '../manager.interface.js';
 import { processGameRequest } from '../manager.js';
-import { wsClientsMap, addUserToLobby, createLobby, lobbyMap, removeUserFromLobby } from './lobby.gm.js';
+import { wsClientsMap, addUserToLobby, createLobby, lobbyMap, removeUserFromLobby, addUserToWhitelist, removeUserFromWhitelist } from './lobby.gm.js';
 import type { FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 
@@ -18,16 +18,22 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 				userID = payload.userID;
 				console.log("lobbyHost UID: ", userID);
 
-				if (!wsClientsMap.has(userID!)) {
+				if (!wsClientsMap.has(userID!) && payload.action !== "invite") {
 					wsClientsMap.set(userID!, socket);
 				}
 
 				if (payload.action === "create") {
 					const newLobby: lobbyInfo = createLobby(userID!, payload.format);
-					socket.send(JSON.stringify({ lobby: "created", lobbyID: newLobby.lobbyID, formInstance: formInstance }));
+					wsSend(socket, JSON.stringify({ lobby: "created", lobbyID: newLobby.lobbyID, formInstance: formInstance }))
+				} else if (payload.action === "invite") {
+					const inviteeID = payload.inviteeID;
+					addUserToWhitelist(inviteeID, payload.lobbyID);
+				} else if (payload.action === "decline") {
+					const inviteeID = payload.inviteeID;
+					removeUserFromWhitelist(inviteeID, payload.lobbyID);
 				} else if (payload.action === "join") {
 					addUserToLobby(userID!, socket, payload.lobbyID);
-					socket.send(JSON.stringify({ lobby: "joined", lobbyID: payload.lobbyID }));
+					wsSend(socket, JSON.stringify({ lobby: "joined", lobbyID: payload.lobbyID }));
 				}
 			} else if (data.event === "GAME_REQUEST") {
 				processGameRequest(payload);

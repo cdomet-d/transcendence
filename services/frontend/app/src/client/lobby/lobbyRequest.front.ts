@@ -33,20 +33,14 @@ async function createLobbyRequest(action: string, format: string, formInstance: 
     return JSON.stringify(createLobbyForm);
 }
 
-function joinLobbyRequest(action: string, format: string, lobbyID: string) {
-
-    // const host: userStatusInfo = await userStatus();
-    // if (host.auth === false) {
-    // redirectOnError('/auth', 'You must be registered to see this page')
-    //     return JSON.stringify({ event: 'BAD_USER_TOKEN'});
-    // }
+async function joinLobbyRequest(action: string, format: string, inviteeID: number, lobbyID: string) {
 
     const joinLobbyForm: lobbyRequestForm = {
         event: 'LOBBY_REQUEST',
         payload: {
             action: action,
             format: format,
-            userID: 99, // TODO: get uid from 'host'
+            userID: inviteeID,
             lobbyID: lobbyID,
         },
         // formInstance: formInstance

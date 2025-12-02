@@ -28,6 +28,7 @@ export async function tournamentState(payload: string) {
 		// handle end of tournament
 		tournamentObj.winnerID = game.winnerID;
 		tournamentOver(tournamentObj);
+		// TODO set lobby.joinable = true;
 		return;
 	}
 
