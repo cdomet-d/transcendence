@@ -1,36 +1,14 @@
-import type { UserAuth } from './bff.interface.js';
-
-export async function findUserByUsername(log: any, username: string): Promise<UserAuth | null> {
-	const url = `http://users:2626/internal/users?username=${username}`;
-	let response: Response;
-
-	try {
-		response = await fetch(url);
-	} catch (error) {
-		log.error(`[BFF] User service is unreachable: ${error}`);
-		throw new Error('User service is unreachable.');
-	}
-
-	if (response.status === 404) {
-		log.warn(`[BFF] User data not found for user ${username}`);
-		throw new Error('User data not found.');
-	}
-
-	if (!response.ok) {
-		log.error(`[BFF] User service failed with status ${response.status}`);
-		throw new Error('User service failed.');
-	}
-	return (response.json() as Promise<UserAuth>);
-}
-
-export async function createFriendRequest(log: any, senderID: number, friendID: number): Promise<void> {
-	const url = 'http://friends:1616/internal/friends/friendship';
+export async function createFriendRequest(log: any, senderID: number, friendID: number, token: string): Promise<void> {
+	const url = 'http://friends:1616/relation';
 	let response: Response;
 
 	try {
 		response = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			},
 			body: JSON.stringify({ senderID, friendID })
 		});
 	} catch (error) {
@@ -38,16 +16,31 @@ export async function createFriendRequest(log: any, senderID: number, friendID: 
 		throw new Error('Friends service is unreachable.');
 	}
 
+	if (response.status === 400) {
+		log.warn(`[BFF] Friend service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Unauthorized' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Friend service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Unauthorized' };
+	}
+
 	if (response.status === 409) {
 		log.warn(`[BFF] Friend request failed: Friendship already exists between ${senderID} and ${friendID}`);
-		return ;
+		const errorBody = await response.json() as { message: string };
+		throw { code: 409, message: errorBody.message || 'Friendship already exists.' };
 	}
 
 	if (response.status === 404) {
 		log.error(`[BFF] Friends service (sendrequest) reported 404: Friend request could not be sent.`);
-		throw new Error('Friend request could not be sent, user could not be found');
+		const errorBody = await response.json() as { message: string };
+		throw { code: 404, message: errorBody.message || 'user does not exists.' };
 	}
 
+	//TODO return error to handle in route
 	if (!response.ok) {
 		log.error(`[BFF] Friends service (sendrequest) failed with status ${response.status}`);
 		throw new Error('Friends service failed.');
@@ -56,19 +49,34 @@ export async function createFriendRequest(log: any, senderID: number, friendID: 
 	return;
 }
 
-export async function acceptFriendRequest(log: any, senderRequestID: number, friendID: number): Promise<void> {
-	const url = 'http://friends:1616/internal/friends/sendrequest';
+export async function acceptFriendRequest(log: any, senderRequestID: number, friendID: number, token: string): Promise<void> {
+	const url = 'http://friends:1616/relation';
 	let response: Response;
-	
+
 	try {
 		response = await fetch(url, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ senderRequestID, friendID })
+			method: 'PATCH',
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ senderRequestID, friendID })
 		});
 	} catch (error) {
 		log.error(`[BFF] Friends service (acceptfriend) is unreachable: ${error}`);
 		throw new Error('Friends service is unreachable.');
+	}
+
+	if (response.status === 400) {
+		log.warn(`[BFF] Friend service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Unauthorized' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Friend service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Unauthorized' };
 	}
 
 	if (response.status === 409) {
@@ -79,9 +87,11 @@ export async function acceptFriendRequest(log: any, senderRequestID: number, fri
 
 	if (response.status === 404) {
 		log.error(`[BFF] Friends service (acceptfriend) reported 404: Friend request could not be accepted.`);
-		throw new Error('Friend request could not be accepted due to a server error.');
+		const errorBody = await response.json() as { message: string };
+		throw { code: 404, message: errorBody.message || 'Friendship request does not exists.' };
 	}
 
+	//TODO return error to handle in route
 	if (!response.ok) {
 		log.error(`[BFF] Friends service (acceptfriend) failed with status ${response.status}`);
 		throw new Error('Friends service failed.');
@@ -90,20 +100,35 @@ export async function acceptFriendRequest(log: any, senderRequestID: number, fri
 	return;
 }
 
-export async function deleteFriendRequest(log: any, removerID: number, friendID: number): Promise<void> {
-		const url = 'http://friends:1616//internal/friends/deletefriendship';
+export async function deleteFriendRequest(log: any, removerID: number, friendID: number, token: string): Promise<void> {
+	const url = 'http://friends:1616/relation';
 	let response: Response;
-	
+
 	try {
-		response = await(fetch(url, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ removerID, friendID })
-	}));
+		response = await (fetch(url, {
+			method: 'DELETE',
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ removerID, friendID })
+		}));
 
 	} catch (error) {
 		log.error(`[BFF] Friends service (deletefriend) is unreachable: ${error}`);
 		throw new Error('Friends service is unreachable.');
+	}
+
+	if (response.status === 400) {
+		log.warn(`[BFF] Friend service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Unauthorized' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Friend service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Unauthorized' };
 	}
 
 	if (response.status === 409) {
@@ -114,9 +139,11 @@ export async function deleteFriendRequest(log: any, removerID: number, friendID:
 
 	if (response.status === 404) {
 		log.error(`[BFF] Friends service (deletefriend) reported 404: Friend request could not be deleted.`);
-		throw new Error('Friend request could not be deleted due to a server error.');
+		const errorBody = await response.json() as { message: string };
+		throw { code: 404, message: errorBody.message || 'Friendship does not exists.' };
 	}
 
+	//TODO return error to handle in route
 	if (!response.ok) {
 		log.error(`[BFF] Friends service (deletefriend) failed with status ${response.status}`);
 		throw new Error('Friends service failed.');
@@ -125,7 +152,9 @@ export async function deleteFriendRequest(log: any, removerID: number, friendID:
 	return;
 }
 
-export async function deleteFriendship(log: any, userID: number): Promise<Response | null> {
+/*----------  WIP  ----------*/
+
+/* export async function deleteFriendship(log: any, userID: number): Promise<Response | null> {
 	const url = `http://friends:1616/internal/friends/${userID}/friendships`;
 	let response: Response;
 	try {
@@ -140,4 +169,4 @@ export async function deleteFriendship(log: any, userID: number): Promise<Respon
 		throw new Error(`Friebnds service failed with status ${response.status}`);
 	}
 	return (response.json() as Promise<Response>);
-}
+} */

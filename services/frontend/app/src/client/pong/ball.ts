@@ -1,6 +1,6 @@
-import { Game, HEIGHT, WIDTH } from './classes/game.class.js';
-import { raycast, updateVelocity } from './collision.utils.js';
-import type { ballObj, coordinates, repObj } from './classes/game.interfaces.js';
+import { Game, HEIGHT, WIDTH } from './classes/game-class.js';
+import { raycast, updateVelocity } from './collision-utils.js';
+import type { ballObj, coordinates, repObj } from './classes/game-interfaces.js';
 
 const TIME_STEP: number = 1000 / 60;
 
@@ -8,11 +8,10 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
     let timeSinceUpdate: number = performance.now() - game.lastFrameTime;
     let ball: ballObj = { ...game.ball };
     if (latestReply !== undefined) {
-        timeSinceUpdate = performance.now() - latestReply._timestamp;
-        ball = { ...latestReply._ball };
+        timeSinceUpdate = performance.now() - latestReply.timestamp;
+        ball = { ...latestReply.ball };
     }
-    if (timeSinceUpdate > 100)
-        timeSinceUpdate = 100;//TODO: add var for 100
+    if (timeSinceUpdate > 100) timeSinceUpdate = 100;
     const nextX: number = ball.x + ball.dx * timeSinceUpdate;
     const nextY: number = ball.y + ball.dy * timeSinceUpdate;
     updateBallPos(game, nextX, nextY, timeSinceUpdate);
@@ -36,7 +35,8 @@ function sideWallCollision(game: Game, nextX: number): boolean {
         game.ball.y = HEIGHT / 2;
         game.ball.dx = 0;
         game.ball.dy = 0;
-		game.deleteReplies(game.replyHistory.length);
+        game.delta = 0;
+        game.deleteReplies(game.replyHistory.length);
         return true;
     }
     return false;

@@ -1,28 +1,33 @@
+import { tournament } from './web-elements/default-values.js';
+import {
+    buildUserProfile,
+    userArrayFromAPIRes,
+    userDataFromAPIRes,
+} from './api-responses/user-responses.js';
+import { createForm } from './web-elements/forms/helpers.js';
 import { createHeading, createNoResult } from './web-elements/typography/helpers.js';
 import { createLeaderboard } from './web-elements/statistics/leaderboard.js';
 import { createMenu } from './web-elements/navigation/menu-helpers.js';
-import { main } from './web-elements/navigation/default-menus.js';
-import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
-import { ProfileWithTabs, user } from './web-elements/users/user-profile-containers.js';
-import { type Match } from 'path-to-regexp';
 import { createTabs } from './web-elements/navigation/tabs-helpers.js';
-import { type TabData } from './web-elements/types-interfaces.js';
-import { createForm } from './web-elements/forms/helpers.js';
-import {
-    localPong,
-    registrationForm,
-    loginForm,
-    remotePong,
-    userSettingsForm,
-} from './web-elements/forms/default-forms.js';
-import { tournament } from './web-elements/default-values.js';
 import { farm, ocean, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
-import { pong } from './pong/pong.js';
-import { TournamentBrackets } from './web-elements/game/tournament.js';
+import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
+import {
+    customizeUserSettingsForm,
+    localPong,
+    remotePong,
+    pongTournament,
+} from './web-elements/forms/default-forms.js';
+import { lobbyQuickmatchMenu, lobbyTournamentMenu, main } from './web-elements/navigation/default-menus.js';
+import { pong, type gameRequest } from './pong/pong.js';
 import { PongUI } from './web-elements/game/game-ui.js';
-import { userStatus } from './main.js';
-import { router } from './main.js';
-import { createErrorFeedback } from './web-elements/event-elements/error.js';
+import { errorMessageFromException, errorMessageFromResponse, redirectOnError } from './error.js';
+import { TournamentBrackets } from './web-elements/game/tournament.js';
+import { type Match } from 'path-to-regexp';
+import { type TabData } from './web-elements/types-interfaces.js';
+import { userStatus, router } from './main.js';
+import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
+import { wsConnect } from './lobby/wsConnect.front.js';
+import type { Menu } from './web-elements/navigation/basemenu.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -32,9 +37,11 @@ const layoutPerPage: { [key: string]: string } = {
     game: 'page-w-header',
     home: 'full-screen',
     leaderboard: 'page-w-header',
-    lobby: 'page-w-header',
+    quickLobby: 'page-w-header',
+    tournamentLobby: 'page-w-header',
+    lobbyMenu: 'page-w-header',
     profile: 'page-w-header',
-    regitration: 'full-screen',
+    auth: 'full-screen',
     userSettings: 'page-w-header',
 };
 
@@ -49,7 +56,7 @@ function createWrapper(id: string): HTMLDivElement {
     return el;
 }
 
-function prepareLayout(curLayout: Layout | undefined, page: string) {
+async function prepareLayout(curLayout: Layout | undefined, page: string) {
     if (!layoutPerPage[page]) throw new Error('Requested page is undefined');
     if (!curLayout)
         throw new Error("Something is wrong with the document's layout - page cannot be charged");
@@ -83,7 +90,9 @@ export function renderHome() {
 }
 
 export function renderAuth() {
-    prepareLayout(document.body.layoutInstance, 'home');
+    prepareLayout(document.body.layoutInstance, 'auth');
+    const wrapper = createWrapper('authsettings');
+
     const authOptions: TabData[] = [
         {
             id: 'login-tab',
@@ -98,19 +107,34 @@ export function renderAuth() {
             panelContent: createForm('registration-form', registrationForm),
         },
     ];
-    const wrapper = createWrapper('authsettings');
     wrapper.append(createTabs(authOptions));
     document.body.layoutInstance!.appendAndCache(wrapper);
     updatePageTitle('Login | Register');
 }
 
-export function renderLeaderboard() {
+export async function renderLeaderboard() {
     console.log('renderLeaderboard');
     prepareLayout(document.body.layoutInstance, 'leaderboard');
-    document.body.layoutInstance!.appendAndCache(
-        createHeading('1', 'Leaderboard'),
-        createLeaderboard([]),
-    );
+
+    const url = 'https://localhost:8443/api/bff/leaderboard';
+
+    //TODO: crashes if user is not registered
+    try {
+        const rawRes = await fetch(url);
+        if (rawRes.status === 401)
+            return redirectOnError('/auth', 'You must be registered to see this page');
+        if (!rawRes.ok) throw await errorMessageFromResponse(rawRes);
+
+        const res = await rawRes.json();
+        console.log(res);
+        document.body.layoutInstance!.appendAndCache(
+            createHeading('1', 'Leaderboard'),
+            createLeaderboard(userArrayFromAPIRes(res)),
+        );
+    } catch (error) {
+        redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
+    }
+
     updatePageTitle('Leaderboard');
 }
 
@@ -118,74 +142,98 @@ export async function renderSelf() {
     console.log('renderSelf');
 
     const status = await userStatus();
-    console.log(status.auth, status.userID, status.username);
-    if (!status.auth) {
-        router.loadRoute('/auth', true);
-		createErrorFeedback('You must register or login to see your profile')
-        return;
-    }
-	// const url = `https://localhost:8443/api/bff/profile/${status.username}`
+    if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
 
-	try {
-		// const reply = await fetch(url)
-		// const profile = reply.json();
-		// console.log(profile);
-		prepareLayout(document.body.layoutInstance, 'profile');
-		document.body.layoutInstance?.appendAndCache(
-			document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
-		);
-		const pInstance = document.body.layoutInstance?.components.get(
-			'user-profile',
-		) as ProfileWithTabs;
-		pInstance.profile = user;
-   		updatePageTitle(status.username!);
-	} catch (error) {
-		console.error(error)
-	}
+    const url = `https://localhost:8443/api/bff/profile/${status.username}`;
+
+    try {
+        prepareLayout(document.body.layoutInstance, 'profile');
+        buildUserProfile(await fetch(url));
+        updatePageTitle(status.username!);
+    } catch (error) {
+        redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
+    }
 }
 
 export async function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
     console.log('renderProfile');
-    if (param) {
-        const login = param.params.login;
-        // const req: RequestInit = { method: 'get' };
+    if (param && param.params.login && typeof param.params.login === 'string') {
+        const status = await userStatus();
+        if (!status.auth)
+            return redirectOnError('/auth', 'You must be registered to see this page');
 
-        //TODO: API call with login here to fetch user data
-        // await fetch(`https://localhost:8443/api/bff/profile/${login}/profile`, req);
-        prepareLayout(document.body.layoutInstance, 'profile');
-        document.body.layoutInstance?.appendAndCache(
-            document.createElement('div', { is: 'profile-page' }) as ProfileWithTabs,
-        );
-        const pInstance = document.body.layoutInstance?.components.get(
-            'user-profile',
-        ) as ProfileWithTabs;
-        pInstance.profile = user;
-        updatePageTitle('User ' + login);
+        const login = param.params.login;
+        const url = `https://localhost:8443/api/bff/profile/${login}`;
+        try {
+            prepareLayout(document.body.layoutInstance, 'profile');
+            buildUserProfile(await fetch(url));
+            updatePageTitle(login);
+        } catch (error) {
+            redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
+        }
     } else renderNotFound();
 }
 
-export function renderSettings() {
+export async function renderSettings() {
     console.log('renderSettings');
-    //TODO: API call with login here to fetch user data
-    prepareLayout(document.body.layoutInstance, 'profile');
-    document.body.layoutInstance?.appendAndCache(
-        createForm('settings-form', userSettingsForm, user),
-    );
-    updatePageTitle('Settings');
+    const status = await userStatus();
+    if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
+
+    const url = `https://localhost:8443/api/bff/tiny-profile/${status.username}`;
+
+    try {
+        const raw = await fetch(url);
+        const res = await raw.json();
+        prepareLayout(document.body.layoutInstance, 'userSettings');
+        const user = userDataFromAPIRes(res);
+        const form = customizeUserSettingsForm(user);
+        document.body.layoutInstance?.appendAndCache(createForm('settings-form', form, user));
+    } catch (error) {
+        redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
+    }
+    updatePageTitle(status.username + 'Settings');
 }
 
-export function renderLobby() {
-    prepareLayout(document.body.layoutInstance, 'lobby');
+export function renderLobbyMenu() {
+    console.log('renderLobbyMenu');
+    prepareLayout(document.body.layoutInstance, 'lobbyMenu');
+    document.body.layoutInstance?.appendAndCache(
+        createHeading('1', 'Choose Lobby'),
+        createMenu(lobbyQuickmatchMenu, 'horizontal', true),
+        createMenu(lobbyTournamentMenu, 'vertical', true),
+    );
+    const quickMen = document.body.layoutInstance?.components.get('quickMatchMenu') as Menu;
+    quickMen?.cache.forEach((el) => {
+        el.classList.remove('t2');
+        el.classList.add('f-l');
+    })
+    updatePageTitle('Choose Lobby');
+}
+
+//TODO: for each lobby: set 'owner' with currently registered user to avoid owner
+//  being able to add himself to the game (in the UI - even if it's handled in the pong server)
+export function renderQuickLocalLobby() {
+    prepareLayout(document.body.layoutInstance, 'quickLobby');
     const pongOptions: TabData[] = [
         {
             id: 'pong-local',
-            content: 'Play local',
-            default: false,
+            content: '',
+            default: true,
             panelContent: createForm('local-pong-settings', localPong),
         },
+    ];
+    const wrapper = createWrapper('pongsettings');
+    wrapper.append(createTabs(pongOptions));
+    document.body.layoutInstance?.appendAndCache(wrapper);
+    wsConnect('create', 'quickmatch', 'localForm');
+}
+
+export function renderQuickRemoteLobby() {
+    prepareLayout(document.body.layoutInstance, 'quickLobby');
+    const pongOptions: TabData[] = [
         {
             id: 'pong-remote',
-            content: 'Play remote',
+            content: '',
             default: true,
             panelContent: createForm('remote-pong-settings', remotePong),
         },
@@ -193,12 +241,32 @@ export function renderLobby() {
     const wrapper = createWrapper('pongsettings');
     wrapper.append(createTabs(pongOptions));
     document.body.layoutInstance?.appendAndCache(wrapper);
+    wsConnect('create', 'quickmatch', 'remoteForm');
 }
 
-export function renderGame() {
+export function renderTournamentLobby() {
+    prepareLayout(document.body.layoutInstance, 'tournamentLobby');
+    const pongOptions: TabData[] = [
+        {
+            id: 'pong-tournament',
+            content: '',
+            default: true,
+            panelContent: createForm('remote-pong-settings', pongTournament),
+        },
+    ];
+    const wrapper = createWrapper('pongsettings');
+    wrapper.append(createTabs(pongOptions));
+    document.body.layoutInstance?.appendAndCache(wrapper);
+    wsConnect('create', 'tournament', 'tournamentForm');
+}
+
+export function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest) {
     console.log('renderGame');
+
+	if (!gameRequest) return redirectOnError('/', 'Uh-oh! You can\'t be there - go join a lobby or something !')
     prepareLayout(document.body.layoutInstance, 'game');
 
+	console.log(gameRequest)
     const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
     const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
 
@@ -212,7 +280,13 @@ export function renderGame() {
     if (layout) layout.theme = farmAssets;
     document.body.layoutInstance?.appendAndCache(ui, court);
 
-    pong({ userID: 1, gameID: 1, remote: false }, court.ctx, ui);
+    // pong({ userID: 1, gameID: "1", remote: false }, court.ctx, ui);
+    if (gameRequest === undefined) {
+        console.log("GameRequest =>", gameRequest);
+        // TODO Show explicit error in UI
+        return;
+    }
+    pong(gameRequest!, court.ctx, ui);
 }
 
 export function renderBracket() {

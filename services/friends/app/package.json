@@ -4,11 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-        "dev": "nodemon -q",
-    "start": "tsc && node dist/server.js",
-    "//": "This NOW includes the NODE_OPTIONS flag",
-    "test:setup": "rm -f /usr/data/testDB.db && /usr/local/bin/testDB.sh",
-    "test": "npm run test:setup && DATABASE_PATH=/usr/data/testDB.db NODE_OPTIONS=--experimental-vm-modules jest"
+    "dev": "nodemon -q",
+    "start": "tsc && node dist/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -22,10 +19,10 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/jwt": "^10.0.0",
     "@types/jest": "^30.0.0",
-    "jest": "^30.2.0",
     "nodemon": "^3.1.10",
-    "pino-pretty": "^13.1.2",
-    "ts-jest": "^29.4.5"
+    "pino-pretty": "^13.1.2"
   }
 }

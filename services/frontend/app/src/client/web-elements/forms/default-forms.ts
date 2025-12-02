@@ -1,7 +1,16 @@
-import type { FormDetails } from '../types-interfaces.js';
-import { usernamePattern, passwordPattern } from '../default-values.js';
+import type { FormDetails, UserData } from '../types-interfaces.js';
+import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
 
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
+
+export function customizeUserSettingsForm(user: UserData): FormDetails {
+    userSettingsForm.fields.forEach((f) => {
+        if (f.id === 'biography' && user.biography) f.placeholder = user.biography;
+        else if (f.id === 'username') f.placeholder = user.username;
+    });
+    return userSettingsForm;
+}
+
 export const userSettingsForm: FormDetails = {
     action: 'http://localhost:8443/api/bff/settings/',
     heading: 'Settings',
@@ -109,7 +118,7 @@ export const search: FormDetails = {
         {
             id: 'searchbar',
             labelContent: 'Searchbar',
-            pattern: usernamePattern,
+            pattern: searchbarPattern,
             placeholder: 'Search...',
             type: 'text',
             required: true,
@@ -119,8 +128,9 @@ export const search: FormDetails = {
 };
 
 export const localPong: FormDetails = {
-    action: 'https://localhost:8443/api/game/lobby/',
+    action: 'https://localhost:8443/api/game/quick-lobby/',
     heading: 'Local Pong',
+    gameFormat: 'local-quickmatch',
     ariaLabel: 'Pong settings',
     id: 'local-pong-settings',
     method: 'post',
@@ -137,6 +147,75 @@ export const localPong: FormDetails = {
             type: 'range',
         },
         {
+            id: 'horizontal',
+            labelContent: 'Horizontal paddle movement',
+            pattern: '',
+            placeholder: '',
+            type: 'checkbox',
+            required: true,
+        },
+        {
+            id: 'paddlesize',
+            labelContent: 'Paddle size',
+            max: '5',
+            min: '0',
+            pattern: '',
+            placeholder: '',
+            required: true,
+            step: '1',
+            type: 'range',
+        },
+        {
+            id: 'opponent',
+            labelContent: 'Opponent Nickname',
+            pattern: usernamePattern,
+            placeholder: 'CrimeGoose...',
+            type: 'text',
+            required: true,
+        },
+        {
+            id: 'paddlespeed',
+            labelContent: 'Paddle speed',
+            max: '5',
+            min: '0',
+            pattern: '',
+            placeholder: '',
+            required: true,
+            step: '1',
+            type: 'range',
+        },
+    ],
+    button: { id: 'submit', type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
+};
+
+export const remotePong: FormDetails = {
+    action: 'https://localhost:8443/api/game/quick-lobby/',
+    heading: 'Remote Pong',
+    gameFormat: 'remote-quickmatch',
+    ariaLabel: 'Remote Pong settings',
+    id: 'remote-pong-settings',
+    method: 'post',
+    fields: [
+        {
+            id: 'horizontal',
+            labelContent: 'Horizontal paddle movement',
+            pattern: '',
+            placeholder: '',
+            type: 'checkbox',
+            required: true,
+        },
+        {
+            id: 'ballspeed',
+            labelContent: 'Starting Ball Speed',
+            max: '5',
+            min: '0',
+            pattern: '',
+            placeholder: '',
+            required: true,
+            step: '1',
+            type: 'range',
+        },
+        {
             id: 'paddlesize',
             labelContent: 'Paddle size',
             max: '5',
@@ -158,23 +237,16 @@ export const localPong: FormDetails = {
             step: '1',
             type: 'range',
         },
-        {
-            id: 'opponent',
-            labelContent: 'Opponent Nickname',
-            pattern: usernamePattern,
-            placeholder: "Challenger's nickname",
-            type: 'text',
-            required: true,
-        },
     ],
     button: { id: 'submit', type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
 };
 
-export const remotePong: FormDetails = {
-    action: 'https://localhost:8443/api/game/lobby/',
-    heading: 'Remote Pong',
-    ariaLabel: 'Remote Pong settings',
-    id: 'remote-pong-settings',
+export const pongTournament: FormDetails = {
+    action: 'https://localhost:8443/api/game/tournament-lobby/',
+    heading: 'Pong Tournament',
+    gameFormat: 'tournament',
+    ariaLabel: 'Pong tournament settings',
+    id: 'pong-tournament-settings',
     method: 'post',
     fields: [
         {
@@ -211,7 +283,7 @@ export const remotePong: FormDetails = {
             type: 'range',
         },
     ],
-    button: { id: 'submit', type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
+    button: { id: 'submit', type: 'submit', content: 'Start tournament', img: null, ariaLabel: '' },
 };
 
 export const deleteAccount: FormDetails = {

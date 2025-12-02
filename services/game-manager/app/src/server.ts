@@ -6,8 +6,8 @@ import type { FastifyInstance } from 'fastify';
 
 import { wsRoute } from './routes/wsRoute.js';
 import { options } from './serv.conf.js';
-import { natsConnect } from './nats/publisher.js';
-import { natsSubscribe } from './nats/subscriber.js';
+import { natsConnect } from './nats/publisher.gm.js';
+import { natsSubscribe } from './nats/subscriber.gm.js';
 
 try {
     const serv: FastifyInstance = Fastify(options);

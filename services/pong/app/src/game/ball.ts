@@ -1,7 +1,7 @@
-import { Game, HEIGHT, WIDTH } from "../classes/game.class.js";
-import type { Player } from "../classes/player.class.js";
-import { distBallPad, raycast, updateVelocity } from "./collision.utils.js";
-import type { coordinates } from "../classes/game.interfaces.js";
+import { Game, HEIGHT, WIDTH } from "../classes/game-class.js";
+import type { Player } from "../classes/player-class.js";
+import { distBallPad, raycast, updateVelocity } from "./collision-utils.js";
+import type { coordinates } from "../classes/game-interfaces.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 const MAX_SCORE: number = 5;
@@ -51,6 +51,7 @@ function sideWallCollision(game: Game, player1: Player, player2: Player, nextX: 
 			game.ball.dx = 0.3 * game.ballDir;
 			game.ball.dy = 0.03;
 			game.ballDir *= -1;
+			game.lastTick = performance.now();
 			game.passStart = performance.now();
 		}, 1500));
 		return true;
@@ -64,14 +65,14 @@ function updateScore(game: Game, player1: Player, player2: Player, nextX: number
 		const pass: number = (performance.now() - game.passStart) / 1000;
 		if (pass > game.infos.longuestPass)
 			game.infos.longuestPass = pass;
-		console.log("PLAYER",  player1.userID, "SCORE:", player1.score);
+		// console.log("PLAYER",  player1.userID, "SCORE:", player1.score);
 	}
 	if (nextX + game.ball.r <= 0) {
 		player2.incScore();
 		const pass: number = (performance.now() - game.passStart) / 1000;
 		if (pass > game.infos.longuestPass)
 			game.infos.longuestPass = pass;
-		console.log("OPPONENT", player2.userID, "SCORE:", player2.score);
+		// console.log("OPPONENT", player2.userID, "SCORE:", player2.score);
 	}
 }
 

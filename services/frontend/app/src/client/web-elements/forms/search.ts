@@ -1,12 +1,13 @@
 import { BaseForm } from './baseform.js';
+import { createErrorFeedback, redirectOnError } from '../../error.js';
 import { createInputGroup } from '../inputs/helpers.js';
 import { createUserInline } from '../users/profile-helpers.js';
 import { InputGroup } from '../inputs/fields.js';
-import { NoResults } from '../typography/images.js';
-
-import type { UserData } from '../types-interfaces.js';
 import { search } from './default-forms.js';
-import { createErrorFeedback } from '../event-elements/error.js';
+import { UserInline } from '../users/profile.js';
+import type { UserData } from '../types-interfaces.js';
+import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
+import { createNoResult } from '../typography/helpers.js';
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -18,36 +19,38 @@ import { createErrorFeedback } from '../event-elements/error.js';
  */
 export class Searchbar extends BaseForm {
     #searchInput: InputGroup;
-    #results: HTMLDivElement;
+    #results: HTMLUListElement;
+    #currentFocus: number;
 
-    /* -------------------------------------------------------------------------- */
-    /*                                   Default                                  */
-    /* -------------------------------------------------------------------------- */
+    #navHandler: (ev: KeyboardEvent) => void;
+    #blurHandler: (ev: FocusEvent) => void;
+
+    /* -------------- constructors and associated default functions ------------- */
     constructor() {
         super();
         super.details = search;
-        this.#results = document.createElement('div');
-        this.submitHandler = this.submitHandlerImplementation.bind(this);
-        this.setResultPos = this.setResultPos.bind(this);
+        this.#results = document.createElement('ul');
         this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
+        this.#currentFocus = -1;
+
+        this.submitHandler = this.submitHandlerImplementation.bind(this);
+        this.#navHandler = this.#navigationImplementation.bind(this);
+        this.#blurHandler = this.#focusOutImplementation.bind(this);
     }
 
     override connectedCallback() {
         super.connectedCallback();
-        window.addEventListener('resize', this.setResultPos);
-        window.addEventListener('scroll', this.setResultPos);
+        this.addEventListener('keydown', this.#navHandler);
+        this.addEventListener('focusout', this.#blurHandler);
     }
 
     override disconnectedCallback() {
         super.disconnectedCallback();
-        window.removeEventListener('resize', this.setResultPos);
-        window.removeEventListener('scroll', this.setResultPos);
+        this.removeEventListener('keydown', this.#navHandler);
+        this.removeEventListener('focusout', this.#blurHandler);
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                                  Rendering                                 */
-    /* -------------------------------------------------------------------------- */
-
+    /* -------------------------------- rendering ------------------------------- */
     /**
      * Renders the search bar structure including input, submit button, search icon, and results container.
      * Sets form attributes and class names appropriately.
@@ -61,10 +64,9 @@ export class Searchbar extends BaseForm {
         super.renderButtons();
         this.append(this.#results);
 
-        this.classList.add('sidebar-right', 'search-gap', 'relative');
+        this.classList.add('sidebar-right', 'search-gap');
         this.#results.className =
-            'hidden absolute brdr bg min-h-fit max-h-l pad-xs overflow-y-auto box-border';
-        this.setResultPos();
+            'hidden absolute top-[64px] brdr bg min-h-fit w-full overflow-y-auto box-border z-1';
     }
 
     /**
@@ -80,15 +82,22 @@ export class Searchbar extends BaseForm {
         return img;
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                               Event listeners                              */
-    /* -------------------------------------------------------------------------- */
+    /* --------------------------------- getters -------------------------------- */
+
+    get results() {
+        return this.#results;
+    }
+    /* ----------------------------- event listeners ---------------------------- */
 
     override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
-        console.log(url, req);
         const response = await fetch(url, req);
         const data = await response.json();
-        console.log(data);
+        if (!data.ok) {
+            if (data.message === 'Unauthorized')
+                redirectOnError('/auth', 'You must be registered to access this page!');
+        }
+
+        this.displayResults(userArrayFromAPIRes(data));
     }
 
     #createQueryURL(form: FormData): string | undefined {
@@ -103,7 +112,6 @@ export class Searchbar extends BaseForm {
         ev.preventDefault();
         const form = new FormData(this);
         const url = this.#createQueryURL(form);
-        console.log(url);
         if (!url) {
             createErrorFeedback('Error processing query - try again');
             return;
@@ -115,9 +123,34 @@ export class Searchbar extends BaseForm {
         }
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                              Result Rendering                              */
-    /* -------------------------------------------------------------------------- */
+    /**
+     * Used by the `'keydown'` handler to calculate where the user is in the menu's option, remaining within the bounds of the options.
+     * @param {number} delta - the incrementing step; it's worth `-1` on `ArrowUp` and `1` on `ArrowDown`
+     */
+    #moveFocus(delta: number) {
+        this.#currentFocus =
+            (this.#currentFocus + delta + this.#results.children.length) %
+            this.#results.children.length;
+        const focusedOption = this.#results.children[this.#currentFocus];
+        if (focusedOption && focusedOption instanceof UserInline) {
+            focusedOption.getUsername.link.focus();
+        }
+    }
+
+    #navigationImplementation(ev: KeyboardEvent) {
+        const actions: { [key: string]: () => void } = {
+            ArrowDown: () => this.#moveFocus(1),
+            ArrowUp: () => this.#moveFocus(-1),
+            Escape: () => this.#hideResults(),
+        };
+
+        if (actions[ev.key]) {
+            ev.preventDefault();
+            actions[ev.key]!();
+        }
+    }
+
+    /* ---------------------------- result management --------------------------- */
     /**
      * Clears all displayed search results from the results container.
      */
@@ -125,6 +158,23 @@ export class Searchbar extends BaseForm {
         while (this.#results.firstChild) {
             this.#results.removeChild(this.#results.firstChild);
         }
+    }
+
+    #focusOutImplementation(ev?: FocusEvent) {
+        if (!ev) {
+            this.#hideResults();
+        } else {
+            const newFocus = ev.relatedTarget as HTMLElement | null;
+            if (!newFocus || !this.contains(newFocus)) {
+                this.#hideResults();
+            }
+        }
+    }
+
+    #hideResults() {
+        this.clearResults();
+        this.#results.classList.add('hidden');
+        this.#results.setAttribute('hidden', '');
     }
 
     /**
@@ -143,21 +193,10 @@ export class Searchbar extends BaseForm {
      */
     displayResults(res: UserData[]) {
         this.clearResults();
-        this.#results.classList.toggle('hidden');
-        if (res.length < 1)
-            this.#results.append(document.createElement('div', { is: 'no-results' }) as NoResults);
-
+        this.#results.classList.remove('hidden');
+        this.#results.removeAttribute('hidden');
+        if (res.length < 1) this.#results.append(createNoResult('light', 'ilarge'));
         res.forEach((user) => this.addUser(user));
-    }
-
-    /**
-     * Recalculates and sets the position and width of the results container
-     * relative to the search input element.
-     */
-    setResultPos() {
-        const pos = this.#searchInput.getBoundingClientRect();
-        this.#results.style.top = `44px`;
-        this.#results.style.width = `${pos.width}px`;
     }
 }
 

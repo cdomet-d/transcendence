@@ -54,10 +54,10 @@ export class CustomButton extends HTMLButtonElement {
         if (name === 'disabled') {
             if (this.disabled) {
                 this.classList.add('disabled', 'bg');
-                this.classList.remove('bg-yellow');
+                this.classList.remove('bg-yellow', 'input-emphasis');
             } else {
                 this.classList.remove('disabled', 'bg');
-                this.classList.add('bg-yellow');
+                this.classList.add('bg-yellow', 'input-emphasis');
             }
         }
     }
@@ -94,24 +94,13 @@ export class CustomButton extends HTMLButtonElement {
         }
     }
 
-    styleButton() {
-        this.classList.add(
-            'brdr',
-            'input-emphasis',
-            'whitenowrap',
-            'button',
-            'bg-yellow',
-            'w-full',
-        );
-    }
-
     #dynamicStyling() {
         if (this.disabled) this.classList.add('disabled', 'bg');
         else if (this.#btn.style) {
             this.#btn.style === 'green'
                 ? this.classList.add('valid', 'bg-green')
                 : this.classList.add('invalid', 'bg-red', 'text-white');
-        } else this.classList.add('bg-yellow');
+        } else this.classList.add('bg-yellow', 'button');
     }
 
     /** Updates button styles and content according to current state. */
@@ -223,7 +212,7 @@ export class TabButtonWrapper extends HTMLDivElement {
     /** Applies grid layout styling to the tab group container. */
     render() {
         this.className =
-            'tab-button-wrapper h-s box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center';
+            'box-border grid grid-flow-col auto-cols-fr auto-rows-[1fr] justify-items-center';
     }
 }
 

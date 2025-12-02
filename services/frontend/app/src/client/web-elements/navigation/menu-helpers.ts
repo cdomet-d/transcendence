@@ -1,10 +1,4 @@
-import type {
-    MenuStyle,
-    ProfileView,
-    DropdownBg,
-    ButtonData,
-    MenuData,
-} from '../types-interfaces.js';
+import type { MenuStyle, DropdownBg, ButtonData, MenuData } from '../types-interfaces.js';
 
 import { SocialMenu, DropdownMenu } from './menus.js';
 import { Menu } from './basemenu.js';

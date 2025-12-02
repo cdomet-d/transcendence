@@ -1,10 +1,10 @@
 CREATE TABLE userProfile (
-  userID INTEGER PRIMARY KEY NOT NULL,
+  userID INTEGER PRIMARY KEY NOT NULL UNIQUE,
   username TEXT,
   avatar TEXT,
   biography TEXT,
   profileColor TEXT,
-  activityStatus INTEGER,
+  activityStatus BOOLEAN,
   lastConnection DATETIME,
   userRole INTEGER,
   since TEXT,
@@ -14,7 +14,7 @@ CREATE TABLE userProfile (
 CREATE TABLE userStats (
   userID INTEGER PRIMARY KEY NOT NULL,
   longestMatch INTEGER,
-  shorestMatch INTEGER,
+  shortestMatch INTEGER,
   totalMatch INTEGER,
   totalWins INTEGER,
   winStreak INTEGER,

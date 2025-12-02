@@ -53,6 +53,7 @@ export type MenuSize = 's' | 'm' | 'l';
 export type DropdownBg = 'dynamic' | 'static';
 
 export interface navigationLinksData {
+    styleButton: boolean;
     id: string;
     datalink: string;
     href: string;
@@ -74,6 +75,7 @@ export interface TabData {
 }
 
 export interface MenuData {
+    id?: string; //TODO: had to add "?" to stop having an error on notificationBtns in notifications.ts
     buttons?: ButtonData[];
     links?: navigationLinksData[];
 }
@@ -190,6 +192,19 @@ export interface UserData {
  */
 export type GameType = '1 vs 1' | 'tournament';
 
+export interface friendNotif {
+	type: 'FRIEND_REQUEST',
+	senderUsername: string,
+	receiverID: number //will be string eventually
+}
+
+export interface gameNotif {
+	type: 'GAME_INVITE',
+	receiverName: string,
+	receiverID: number, //will be string eventually
+	gameType: GameType
+}
+
 /* -------------------------------------------------------------------------- */
 /*                               Forms & Inputs                               */
 /* -------------------------------------------------------------------------- */
@@ -207,6 +222,7 @@ export interface FormDetails {
     action: string;
     ariaLabel: string;
     button: ButtonData;
+    gameFormat?: 'remote-quickmatch' | 'local-quickmatch' | 'tournament' | undefined;
     fields: InputFieldsData[];
     heading: string;
     id: string;
@@ -250,10 +266,10 @@ export interface InputFieldsData {
  */
 export interface MatchOutcome {
     date: string;
+    duration: string;
     opponent: string;
     outcome: string;
     score: string;
-    duration: string;
     tournament: boolean;
 }
 
@@ -271,4 +287,22 @@ export type CourtTheme = 'default' | 'farm' | 'ocean' | 'forest';
 export interface pongTheme {
     color: string;
     theme: CourtTheme;
+}
+
+/**
+ * Interface to handle pong customization.
+ * Background & horizontal are optional arguments.
+ *
+ * If `background` is undefined, the pong will render with the default theme;
+ *
+ * If `horizontal` is undefined, the horizontal paddle movements are disabled.
+ *
+ * **NB**: background is handled in `renderGame` -> it's just needed for the UI.
+ */
+export interface PongOptions {
+    background?: string;
+    ballspeed: string;
+    horizontal?: string;
+    paddlesize: string;
+    paddlespeed: string;
 }

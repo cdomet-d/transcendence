@@ -1,27 +1,19 @@
-import { Game, HEIGHT, WIDTH } from './classes/game.class.js';
-import { raycast, updateVelocity } from './collision.utils.js';
-import type { keysObj, paddleSpec, coordinates } from './classes/game.interfaces.js';
+import { Game, HEIGHT, WIDTH } from './classes/game-class.js';
+import { raycast, updateVelocity } from './collision-utils.js';
+import type { keysObj, paddleSpec, coordinates } from './classes/game-interfaces.js';
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 
 export function updatePaddlePos(paddle: coordinates, leftSide: boolean, game: Game, keys: keysObj) {
     let step: coordinates = { x: 0, y: 0 };
-    if (leftSide)
-        step = game.leftStep;
-    else
-        step = game.rightStep;
-    if ((leftSide && keys.w) || (!leftSide && keys.ArrowUp)) 
-        up(paddle, game.padSpec.speed, step);
-    if ((leftSide && keys.s) || (!leftSide && keys.ArrowDown)) 
-        down(paddle, game.padSpec, step);
-    if (leftSide && keys.a) 
-        left(paddle, game, 0, step);
-    if (leftSide && keys.d)
-        right(paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, step);
-    if (!leftSide && keys.ArrowLeft) 
-        left(paddle, game, WIDTH / 2 + game.ball.r + 1, step);
-    if (!leftSide && keys.ArrowRight) 
-        right(paddle, game, WIDTH - game.padSpec.w, step);
+    if (leftSide) step = game.leftStep;
+    else step = game.rightStep;
+    if ((leftSide && keys.w) || (!leftSide && keys.ArrowUp)) up(paddle, game.padSpec.speed, step);
+    if ((leftSide && keys.s) || (!leftSide && keys.ArrowDown)) down(paddle, game.padSpec, step);
+    if (leftSide && keys.a) left(paddle, game, 0, step);
+    if (leftSide && keys.d) right(paddle, game, WIDTH / 2 - game.ball.r - 1 - game.padSpec.w, step);
+    if (!leftSide && keys.ArrowLeft) left(paddle, game, WIDTH / 2 + game.ball.r + 1, step);
+    if (!leftSide && keys.ArrowRight) right(paddle, game, WIDTH - game.padSpec.w, step);
     movePaddle(game, paddle, step);
 }
 

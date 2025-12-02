@@ -2,18 +2,24 @@
 	background-color: #ffdb9976;
 }
 
+.bg-orange {
+	background-color: var(--orange);
+	border-top: 2px solid var(--highlight-orange);
+	border-bottom: 2px solid var(--shadow-orange);
+}
+
 .bg {
 	background: linear-gradient(180deg,
-			#ffdc99 0 10%,
-			#ffe0a5 0 20%,
-			#ffe4b0 0 30%,
-			#ffe8bb 0 40%,
-			#ffecc6 0 50%,
-			#ffecc6 0 60%,
-			#ffe8bb 0 70%,
-			#ffe4b0 0 80%,
-			#ffe0a5 0 90%,
-			#ffdc99 0 100%);
+			#FFE3AC 0 10%,
+			#FFE5B3 0 20%,
+			#FFE8B9 0 30%,
+			#FFEAC0 0 40%,
+			#FFECC6 0 50%,
+			#FFECC6 0 60%,
+			#FFEAC0 0 70%,
+			#FFE8B9 0 80%,
+			#FFE5B3 0 90%,
+			#FFE3AC 0 100%);
 }
 
 .bg:focus,
@@ -46,6 +52,8 @@
 }
 
 .bg-yellow:hover,
+.bg-yellow:focus,
+.bg-yellow:focus-within,
 .bg-yellow:focus-visible {
 	background: linear-gradient(180deg,
 			#ffc245 0 10%,

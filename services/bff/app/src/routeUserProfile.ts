@@ -1,243 +1,306 @@
 import type { FastifyInstance } from 'fastify';
-import type { UserProfileView } from './bff.interface.js';
-import { searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches } from './bffUserProfile.service.js';
-//import { updatePassword, fetchUserDataAccount, updateUsername,  updateDefaultLang, deleteAccount, deleteUser  } from './bffAccount.service.js';
-//import { deleteFriendship } from './bffFriends.service.js'
-
+import type { UserProfileView, JwtPayload } from './bff.interface.js';
+import { fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches, updateAuthSettings, updateUserProfile } from './bffUserProfile.service.js';
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
-
 	//get's profile + stats + game + friendslist
 	// userID -> userID of requested profile
 	// get big profile with username
+	//error handled
 	serv.get('/profile/:username', async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
-			//TODO: userB ID is in the cookies so setup fastify JWT plugin and get userID this way
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const userB = request.user.userID;
 			const { username } = request.params as { username: string };
-			const query = request.query as {
-				userB?: number,
-			};
 
-			if (query.userB === undefined) {
-				serv.log.error("[BFF] Parameter missing")
+			if (userB === undefined) {
+				serv.log.error('[BFF] Parameter missing');
 				return reply.code(400).send({
-					message: '[BFF] Missing required query parameters: userA and userB are required.'
+					message:
+						'[BFF] Missing required query parameters: userA and userB are required.',
 				});
 			}
-			const combinedUserData = await buildTinyProfile(serv.log, query.userB, username);
+			const combinedUserData = await buildTinyProfile(serv.log, userB, username, token);
 
 			if (!combinedUserData)
-				return (reply.code(404).send({ message: 'User profile data not found.' }));
+				return reply.code(404).send({ message: 'User profile data not found.' });
 
-			const [
-				userData,
-				userStats,
-				friends,
-				pending,
-				recentMatches
-			] = await Promise.all([
+			const [userData, userStats, friends, pending, recentMatches] = await Promise.all([
 				combinedUserData,
-				fetchUserStats(serv.log, Number(combinedUserData.userID)),
-				fetchFriendships(serv.log, Number(combinedUserData.userID), 'friend'),
-				fetchFriendships(serv.log, Number(combinedUserData.userID), 'pending'),
-				processMatches(serv.log, Number(combinedUserData.userID))
+				fetchUserStats(serv.log, Number(combinedUserData.userID), token),
+				fetchFriendships(serv.log, Number(combinedUserData.userID), 'friend', token),
+				fetchFriendships(serv.log, Number(combinedUserData.userID), 'pending', token),
+				processMatches(serv.log, Number(combinedUserData.userID), token),
 			]);
 
 			if (!userData || !userStats)
-				return reply.code(404).send({ message: '[BFF] Failed to retrieve essential user data.' });
+				return reply
+					.code(404)
+					.send({ message: '[BFF] Failed to retrieve essential user data.' });
 
 			const responseData: UserProfileView = {
 				userData: userData,
 				userStats: userStats,
 				friends: friends || [],
 				pending: pending || [],
-				matches: recentMatches || []
+				matches: recentMatches || [],
 			};
 
 			return reply.code(200).send(responseData);
 
 		} catch (error) {
-			serv.log.error(`[BFF] Error building user profile view: ${error}`);
-			throw (error);
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number, message: string };
+				if (customError.code === 404) return (reply.code(404).send({ message: 'User profile data not found.' }));
+				if (customError.code === 401) return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+				if (customError.code === 400) return reply.code(400).send({ code: error.code, message: 'Unauthaurized' });
+
+				serv.log.error(`[BFF] Error building user profile view: ${error}`);
+				throw (error);
+			}
 		}
 	});
 
+	//error handled
 	serv.get('/tiny-profile/:username', async (request, reply) => {
 		try {
-			//FOR TESTING PURPOSES
-			/* 			if (!request.user && request.headers['x-test-userid']) {
-							(request as any).user = {
-								userID: Number(request.headers['x-test-userid']),
-								username: 'test_viewer'
-							};
-						} */
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const { username: targetUsername } = request.params as { username: string };
 			const { userID: viewerUserID } = request.user as { userID: number };
 
-			if (!viewerUserID)
-				return (reply.code(401).send({ message: 'Unauthorized.' }));
+			if (!viewerUserID) return reply.code(401).send({ message: 'Unauthorized.' });
 
-			const tinyProfile = await buildTinyProfile(serv.log, viewerUserID, targetUsername);
+			const tinyProfile = await buildTinyProfile(
+				serv.log,
+				viewerUserID,
+				targetUsername,
+				token
+			);
 
 			if (!tinyProfile)
-				return (reply.code(404).send({ message: 'User profile data not found.' }));
+				return reply.code(404).send({ message: 'User profile data not found.' });
 
 			return (reply.code(200).send(tinyProfile));
 
 		} catch (error) {
-			serv.log.error(`[BFF] Error building tiny profile: ${error}`);
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number, message: string };
+				if (customError.code === 404) return (reply.code(404).send({ message: 'User profile data not found.' }));
+				if (customError.code === 400) return (reply.code(400).send({ message: 'Unauthorized' }));
+				if (customError.code === 401) return (reply.code(401).send({ message: 'Unauthorized' }));
+
+				serv.log.error(`[BFF] Error building tiny profile: ${error}`);
+				throw error;
+			}
+		}
+	});
+
+	//error handled
+	serv.get('/search', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const query = request.query as { name?: string };
+			if (!query.name || query.name.trim() === '')
+				return reply.code(200).send([]);
+
+			const profiles = await searchBar(serv.log, query.name, token);
+			return (reply.code(200).send(profiles));
+
+		} catch (error) {
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number, message: string };
+
+				if (customError.code === 400) return (reply.code(400).send({ message: 'Unauthorized' }));
+				if (customError.code === 401) return (reply.code(401).send({ message: 'Unauthorized' }));
+			}
+			serv.log.error(`[BFF] Error searching users: ${error}`);
+			throw (error);
+
+		}
+	});
+
+	//error handled
+	serv.get('/leaderboard', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const leaderboard = await fetchLeaderboard(serv.log, token);
+			return (reply.code(200).send(leaderboard));
+
+		} catch (error) {
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number, message: string };
+
+				if (customError.code === 400) return (reply.code(400).send({ message: 'Unauthorized' }));
+				if (customError.code === 401) return (reply.code(401).send({ message: 'Unauthorized' }));
+			}
+			serv.log.error(`[BFF] Error searching leaderboard: ${error}`);
+			throw (error);
+
+		}
+	});
+
+	//error handled
+	serv.patch('/settings', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const userID = request.user.userID;
+			const body = request.body as any;
+
+			const profileUpdates: any = {};
+			const accountUpdates: any = {};
+
+			if (body.avatar) profileUpdates.avatar = body.avatar;
+			if (body.biography) profileUpdates.biography = body.biography;
+			if (body.profileColor) profileUpdates.profileColor = body.profileColor;
+			if (body.defaultLang) profileUpdates.lang = body.defaultLang;
+			if (body.username) profileUpdates.username = body.username;
+
+			if (body.password) accountUpdates.password = body.password;
+			if (body.username) accountUpdates.username = body.username;
+
+			const updateTasks: Promise<void>[] = [];
+
+			if (Object.keys(profileUpdates).length > 0)
+				updateTasks.push(updateUserProfile(serv.log, userID, profileUpdates, token));
+
+			if (Object.keys(accountUpdates).length > 0)
+				updateTasks.push(updateAuthSettings(serv.log, userID, accountUpdates, token));
+
+			if (updateTasks.length === 0)
+				return reply.code(200).send({ message: '[BFF] No settings to update.' });
+
+			try {
+				await Promise.all(updateTasks);
+				return reply.code(200).send({ message: '[BFF] Settings updated successfully.' });
+
+			} catch (error) {
+				if (typeof error === 'object' && error !== null && 'code' in error) {
+					const customError = error as { code: number, message: string };
+
+					if (customError.code === 409) return reply.code(409).send({ message: customError.message || '[BFF] Conflict error. Username taken' });
+					if (customError.code === 404) return reply.code(404).send({ message: customError.message || '[BFF] User/account not found.' });
+					if (customError.code === 400) return reply.code(400).send({ message: customError.message || '[BFF] Bad Request.' });
+					if (customError.code === 401) return reply.code(401).send({ message: customError.message || '[BFF] Unauthorized' });
+				}
+				throw error;
+			}
+		} catch (error) {
+			serv.log.error(`[BFF] Failed to update settings: ${error}`);
 			throw error;
 		}
 	});
 
-	serv.get('/search', async (request, reply) => {
-		try {
-			const query = request.query as { name?: string };
 
-			if (!query.name || query.name.trim() === '')
-				return reply.code(200).send([]);
-
-			const profiles = await searchBar(serv.log, query.name);
-			return (reply.code(200).send(profiles));
-		} catch (error) {
-			serv.log.error(`[BFF] Error searching users: ${error}`);
-			throw (error);
-		}
-	});
-
-	/* 	serv.patch('/settings', async (request, reply) => {
-			try {
-	
-				//TODO: userID is in the cookies so setup fastify JWT plugin and get userID this way
-				const { userID } = request.user;
-				const body = request.body as any;
-	
-				const updateTasks: Promise<void>[] = [];
-	
-				if (body.username)
-					updateTasks.push(updateUsername(serv.log, userID, body.username));
-				if (body.password) {
-					const hashedPassword = await bcrypt.hash(body.password, 10);
-					updateTasks.push(updatePassword(serv.log, userID, hashedPassword));
-				}
-				if (body.avatar)
-					updateTasks.push(updateAvatar(serv.log, userID, body.avatar));
-				if (body.biography)
-					updateTasks.push(updateBio(serv.log, userID, body.biography));
-				if (body.profileColor)
-					updateTasks.push(updateProfileColor(serv.log, userID, body.profileColor));
-				if (body.defaultLang)
-					updateTasks.push(updateDefaultLang(serv.log, userID, body.defaultLang));
-	
-				if (updateTasks.length === 0)
-					return reply.code(200).send({ message: '[BFF] No settings to update.' });
-	
-				try {
-					await Promise.all(updateTasks);
-					return reply.code(200).send({ message: '[BFF] Settings updated successfully.' });
-	
-				} catch (error) {
-					if (typeof error === 'object' && error !== null && 'code' in error && (error as { code: unknown }).code === 409) {
-						const message = ('message' in error)
-							? (error as { message: string }).message
-							: '[BFF] Username is already taken.';
-						return (reply.code(409).send({ message: message }));
-					}
-					throw error;
-				}
-			} catch (error) {
-				serv.log.error(`[BFF] Failed to update settings: ${error}`);
-				throw error;
-			}
-		});*/
-
-	/* 	serv.get('/tiny-profile/:username', async (request, reply) => {
-			try {
-	
-				const { username: targetUsername } = request.params as { username: string };
-				const { userID: viewerUserID } = request.user as { userID: number };
-	
-				if (!viewerUserID)
-					return (reply.code(401).send({ message: 'Unauthorized.' }));
-	
-				const targetUserID = await fetchUserID(serv.log, targetUsername);
-				if (!targetUserID)
-					return (reply.code(404).send({ message: 'User profile data not found.' }));
-	
-				const [
-					userData,
-					relation
-				] = await Promise.all([
-					fetchUserData(serv.log, Number(targetUserID)),
-					fetchProfileView(serv.log, viewerUserID, targetUserID),
-				]);
-	
-				if (!userData)
-					return reply.code(404).send({ message: 'User profile data not found.' });
-	
-				const combinedUserData: userData = {
-					userID: String(targetUserID),
-					username: userData.username,
-					avatar: userData.avatar,
-					biography: userData.biography,
-					profileColor: userData.profileColor,
-					since: userData.since,
-					status: userData.status,
-					winstreak: userData.winstreak,
-					lang: userData.lang,
-					relation: relation,
-				};
-	
-				return (reply.code(200).send(combinedUserData));
-	
-			} catch (error) {
-				if (typeof error === 'object' && error !== null && 'message' in error &&
-					(error as { message: string }).message.includes('User data not found'))
-					return (reply.code(404).send({ message: 'User not found.' }));
-				if (error instanceof Error)
-					serv.log.error(`[BFF] Failed to build user profile: ${error.message}`);
-				else
-					serv.log.error(`[BFF] Failed to build user profile: An unknown error occurred.`);
-				throw (error);
-			}
-		}); */
-
-	/* 	serv.delete('/delete-account', async (request, reply) => {
-			try {
-				const userID = request.user.userID;
-	
-				//UNCOMMENT FOR PASSWORD CHECK FOR ACCOUNT DELETION
-	
-				//const username = request.user.username;
-				//const { password } = request.body as { password: string };
-				//if (!password) {
-				//	return (reply.code(400).send({ message: '[BFF] Password is required.' }));
-				//const validationResponse = await validateCredentials(username, password);
-				//if (!validationResponse)
-				//	return (reply.code(401).send({ message: '[BFF] Invalid credentials.' }));
-	
-				const deletionResults = await Promise.allSettled([
-					deleteFriendship(serv.log, userID),
-					deleteUser(serv.log, userID),
-					deleteAccount(serv.log, userID)
-				]);
-	
-				const failures = deletionResults.filter(response => response.status === 'rejected');
-	
-				if (failures.length > 0) {
-					serv.log.error({
-						msg: `[CRITICAL][BFF] Partial deletion for userID: ${userID}.`,
-						failures: failures.map(f => (f as PromiseRejectedResult).reason?.message || f.reason)
-					});
-					throw new Error('[BFF] Failed to completely delete account. Please contact support.') ;
-				}
-	
-				return (reply.code(204).send());
-	
-			} catch (error) {
-				serv.log.error(`[BFF] Error during account deletion: ${error}`);
-				throw (error);
-			}
-		}); */
+	//TODO : endpoint friendlist pending
+	// get-pending-relation
 }
