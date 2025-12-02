@@ -9,9 +9,14 @@ import { userColorsMenu, languageMenu } from '../navigation/default-menus.js';
 import type { Avatar } from '../typography/images.js';
 import type { DropdownMenu } from '../navigation/menus.js';
 import type { UserData } from '../types-interfaces.js';
-import { createErrorFeedback, errorMessageFromException, errorMessageFromResponse } from '../../error.js';
+import {
+    createErrorFeedback,
+    errorMessageFromException,
+    errorMessageFromResponse,
+} from '../../error.js';
 // import imageCompression from 'browser-image-compression';
 
+const MAX_FILE = 2 * 1024 * 1024;
 /**
  * Custom form element for user settings, including avatar, color, language, and account deletion.
  * Extends BaseForm.
@@ -53,26 +58,17 @@ export class UserSettingsForm extends BaseForm {
         this.contentMap.get('upload')?.removeEventListener('input', this.#previewAvatar);
     }
 
-	override initReq(): RequestInit {
-		console.log('user requestInit')
-		const req: RequestInit = {
-            method: super.details.method,
-			headers: {'Content-Type': 'application/merge-patch+json'}
-		}
-		return req;
-	}
-
     override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
         console.log(url, req);
-		
-		try {
-			const rawRes = await fetch(url, req)
-			if (!rawRes.ok) throw await errorMessageFromResponse(rawRes);
-			const res = await rawRes.json();
-			console.log(res);
-		} catch (error) {
-			createErrorFeedback(errorMessageFromException(error));
-		}
+
+        try {
+            const rawRes = await fetch(url, req);
+            if (!rawRes.ok) throw await errorMessageFromResponse(rawRes);
+            const res = await rawRes.json();
+            console.log(res);
+        } catch (error) {
+            createErrorFeedback(errorMessageFromException(error));
+        }
     }
 
     /* -------------------------------------------------------------------------- */
@@ -91,8 +87,15 @@ export class UserSettingsForm extends BaseForm {
         this.renderDropdowns();
         super.renderButtons();
         this.append(this.#accountDelete);
-        this.#avatar.classList.add('row-span-2');
-        super.contentMap.get('title')?.classList.add('row-span-2');
+        console.log(super.contentMap);
+        this.#avatar.classList.add('row-span-2', 'col-start-1', 'row-start-1');
+        super.contentMap.get('title')?.classList.add('row-span-2', 'col-start-2', 'row-start-1');
+        super.contentMap.get('upload')?.classList.add('row-start-3', 'col-start-1');
+        super.contentMap.get('biography')?.classList.add('row-start-3', 'col-start-2');
+        super.contentMap.get('username')?.classList.add('row-start-4', 'col-start-1');
+        super.contentMap.get('password')?.classList.add('row-start-5', 'col-start-1');
+        super.contentMap.get('submit')?.classList.add('row-start-6', 'col-start-2');
+        this.#accountDelete.classList.add('row-start-7', 'col-start-1');
         this.classList.add('sidebar-left');
     }
 
@@ -102,7 +105,7 @@ export class UserSettingsForm extends BaseForm {
     renderDropdowns() {
         const dropdownWrapper = document.createElement('div');
         dropdownWrapper.append(this.#colors, this.#languages);
-        dropdownWrapper.className = 'grid gap-s grid-flow-col';
+        dropdownWrapper.className = 'grid gap-s grid-flow-col row-start-6 col-start-1';
         this.append(dropdownWrapper);
     }
 
@@ -115,6 +118,7 @@ export class UserSettingsForm extends BaseForm {
      */
     set user(details: UserData) {
         this.#user = details;
+        this.#avatar.metadata = details.avatar;
     }
 
     /* -------------------------------------------------------------------------- */
@@ -162,13 +166,17 @@ export class UserSettingsForm extends BaseForm {
         if (f.get('upload') && this.#user) {
             const file = f.get('upload');
             if (!file || !(file instanceof File)) throw new Error('Error processing avatar');
-            try {
-                // TODO: compress images
-                const binaryAvatar = await this.#fileToBinary(file);
-                if (binaryAvatar) f.append('avatar', binaryAvatar);
-            } catch (error) {
-                //TODO: better error handling;
-                console.error(error);
+            if (file.size > MAX_FILE)
+                return createErrorFeedback('That file is way too heavy; max is 2MB. Ta!');
+            if (file.name !== '') {
+                console.log(file);
+                try {
+                    // TODO: compress images
+                    const binaryAvatar = await this.#fileToBinary(file);
+                    if (binaryAvatar) f.append('avatar', binaryAvatar);
+                } catch (error) {
+                    createErrorFeedback(errorMessageFromException(error));
+                }
             }
         }
 

@@ -44,7 +44,7 @@ export function createForm<K extends keyof HTMLElementTagMap>(
     } else {
         const el = document.createElement('form', { is: tag }) as HTMLElementTagMap[K];
         if (form) el.details = form;
-        if (tag === 'settings-form') el.user = user;
+        if (tag === 'settings-form' && user) el.user = user;
         return el;
     }
 }

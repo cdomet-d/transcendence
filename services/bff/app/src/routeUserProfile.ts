@@ -283,10 +283,9 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
             if (body.avatar) profileUpdates.avatar = body.avatar;
             if (body.biography) profileUpdates.biography = body.biography;
-            if (body.profileColor) profileUpdates.profileColor = body.profileColor;
+            if (body.color) profileUpdates.profileColor = body.color;
             if (body.defaultLang) profileUpdates.lang = body.defaultLang;
             if (body.username) profileUpdates.username = body.username;
-
             if (body.password) accountUpdates.password = body.password;
             if (body.username) accountUpdates.username = body.username;
 

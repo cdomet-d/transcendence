@@ -16,7 +16,7 @@ export const userSettingsForm: FormDetails = {
     heading: 'Settings',
     ariaLabel: 'User settings',
     id: 'user-settings',
-    method: 'patch',
+    method: 'PATCH',
     fields: [
         {
             id: 'upload',

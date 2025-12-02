@@ -1,7 +1,9 @@
 import type { InputFieldsData } from '../types-interfaces.js';
 import { Checkbox } from './buttons.js';
 import { createCheckbox } from './helpers.js';
-const MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
+import { createErrorFeedback } from '../../error.js';
+
+const MAX_SIZE = 2 * 1024 * 1024; // 2MB
 
 //TODO: feedback on username
 //TODO: err message on required field empty
@@ -81,20 +83,20 @@ export class CustomInput extends HTMLInputElement {
 
     // TODO: test large file
     #typeFile(el: HTMLInputElement): string[] {
-        const file = el.files;
-        const allowed = ['image/jpeg', 'image/png', 'image/gif'];
         let feedback: string[] = [];
-        if (file && file[0]) {
-            if (!allowed.includes(file[0].type)) {
-                el.setCustomValidity('invalid extension');
-                feedback.push(`Invalid extension: ${file[0].type}`);
-                if (file[0].size >= MAX_FILE_SIZE_BYTES) {
-                    el.setCustomValidity('too large');
-                    feedback.push(`File is too large [max: 2MB]`);
-                }
-            } else {
-                el.setCustomValidity('');
-            }
+        const file = el.files;
+
+        if (!file || !file[0]) return feedback;
+        const allowed = ['image/jpeg', 'image/png', 'image/gif'];
+
+        if (file[0].size >= MAX_SIZE) {
+            el.setCustomValidity('too large');
+            feedback.push(`That file is too heavy: max is 2MB!`);
+        } else if (!allowed.includes(file[0].type)) {
+            el.setCustomValidity('invalid extension');
+            feedback.push(`Invalid extension: ${file[0].type}`);
+        } else {
+            el.setCustomValidity('');
         }
         return feedback;
     }
@@ -104,7 +106,6 @@ export class CustomInput extends HTMLInputElement {
         if (event.target instanceof HTMLInputElement) {
             target = event.target as HTMLInputElement;
         }
-
         if (!target) return;
         const type = target.getAttribute('type');
         if (!type) return;
@@ -251,7 +252,7 @@ export class InputGroup extends HTMLDivElement {
             if (this.#info.type === 'checkbox') this.classList.add('flex', 'gap-s');
         } else {
             this.append(this.#label, this.#input, this.#feedback);
-            this.#feedback.className = 'brdr bg absolute hidden';
+            this.#feedback.className = 'brdr bg absolute hidden w-full';
         }
     }
 
@@ -318,10 +319,14 @@ export class InputGroup extends HTMLDivElement {
     /* -------------------------------------------------------------------------- */
     #hideImplementation() {
         this.#feedback.classList.add('hidden');
+		this.classList.remove('z-5');
     }
 
     #unhideImplementation() {
-        if (this.#feedback.firstChild) this.#feedback.classList.remove('hidden');
+        if (this.#feedback.firstChild) {
+			this.#feedback.classList.remove('hidden');
+			this.classList.add('z-5');
+		}
     }
 
     /**
@@ -331,8 +336,15 @@ export class InputGroup extends HTMLDivElement {
     #renderFeedbackImplementation(event: Event) {
         const ev = event as CustomEvent;
 
-        if (ev.detail.feedback.length > 0) this.#feedback.classList.remove('hidden');
-        else this.#feedback.classList.add('hidden');
+        if (ev.detail.feedback.length > 0) {
+			this.#feedback.classList.remove('hidden');
+			this.classList.add('z-5');
+		}
+        else {
+			this.#feedback.classList.add('hidden');
+			this.classList.remove('z-5');
+			return;
+		}
         if (this.#feedback.firstChild) this.#feedback.removeChild(this.#feedback.firstChild);
 
         const list = document.createElement('ul');
@@ -432,9 +444,9 @@ export class TextAreaGroup extends HTMLDivElement {
 
         this.#setInputAttributes();
         this.#setLabelAttributes();
-        this.#feedback.className = 'brdr bg hidden';
+        this.#feedback.className = 'brdr bg hidden absolute w-full w-5';
         this.#input.className = 'resize-none brdr h-full pad-xs';
-        this.className = 'box-border relative';
+        this.className = 'box-border relative z-4';
     }
 }
 
