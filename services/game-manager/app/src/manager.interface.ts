@@ -43,8 +43,6 @@ interface tournament {
 }
 
 interface gameRequest {
-	// username?: string,
-	// userID?: number,
 	opponent: string,
 	gameID: string,
 	remote: boolean,
