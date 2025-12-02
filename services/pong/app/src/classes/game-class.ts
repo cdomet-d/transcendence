@@ -38,7 +38,7 @@ export class Game {
 		this.#ball = {
 			x: WIDTH / 2, 
 			y: HEIGHT / 2, 
-			dx: 0.3, 
+			dx: 0.42, 
 			dy: 0.03,
 			maxSpeed: 0.70,
 			r: 13
