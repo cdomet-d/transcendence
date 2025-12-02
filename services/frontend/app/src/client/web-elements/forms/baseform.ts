@@ -1,10 +1,10 @@
 import type { InputGroup, TextAreaGroup } from '../inputs/fields.js';
 import type { FormDetails } from '../types-interfaces.js';
-import { createCheckbox, createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
+import { createInputGroup, createTextAreaGroup } from '../inputs/helpers.js';
 import { createHeading } from '../typography/helpers.js';
 import { createButton } from '../navigation/buttons-helpers.js';
-import { UIFeedback } from '../../error.js';
-import { Checkbox } from '../inputs/buttons.js';
+import { errorMessageFromException, redirectOnError } from '../../error.js';
+import { router } from '../../main.js';
 
 const emptyForm: FormDetails = {
     action: '',
@@ -44,7 +44,7 @@ export abstract class BaseForm extends HTMLFormElement {
         this.validationHandler = this.#validate.bind(this);
         this.#formContent = new Map<string, HTMLElement>();
         this.className =
-            'w-full h-full grid grid-auto-rows-auto form-gap place-items-center justify-center box-border pad-m relative';
+            'w-full h-full grid grid-auto-rows-auto form-gap place-items-center justify-center box-border relative';
     }
 
     /** Called when the element is inserted into the DOM.
@@ -58,19 +58,19 @@ export abstract class BaseForm extends HTMLFormElement {
         this.addEventListener('submit', this.submitHandler);
         this.addEventListener('input', this.validationHandler);
         this.render();
+        this.#validate();
     }
 
     disconnectedCallback() {
         this.removeEventListener('submit', this.submitHandler);
         this.removeEventListener('input', this.validationHandler);
     }
-    /** Renders the form by calling the title, fields, and button renderers.
-     */
+
+    /** Renders the form by calling the title, fields, and button renderers. */
     render() {
         this.renderTitle();
         this.renderFields();
         this.renderButtons();
-        this.#validate();
     }
 
     abstract fetchAndRedirect(url: string, req: RequestInit): Promise<void>;
@@ -110,12 +110,12 @@ export abstract class BaseForm extends HTMLFormElement {
     createReqBody(form: FormData): string {
         const fObject = Object.fromEntries(form.entries());
         const jsonBody = JSON.stringify(fObject);
-		console.log(jsonBody)
+        console.log(jsonBody);
         return jsonBody;
     }
 
     initReq(): RequestInit {
-		console.log('baseform requestInit')
+        console.log('baseform requestInit');
         const req: RequestInit = {
             method: this.#formData.method,
             headers: { 'Content-Type': 'application/json' },
@@ -138,12 +138,7 @@ export abstract class BaseForm extends HTMLFormElement {
         try {
             await this.fetchAndRedirect(this.#formData.action, req);
         } catch (error) {
-            let mess = 'Something when wrong';
-            const err = document.createElement('span', { is: 'ui-feedback' }) as UIFeedback;
-            if (error instanceof Error) mess = error.message;
-            document.body.layoutInstance?.append(err);
-            err.content = mess;
-            err.type = 'error';
+			redirectOnError(router.stepBefore, errorMessageFromException(error))
         }
     }
 

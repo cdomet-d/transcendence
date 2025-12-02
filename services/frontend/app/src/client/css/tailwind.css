@@ -241,6 +241,7 @@
 				var(--gradient2),
 				var(--gradient3),
 				var(--gradient4) 100%);
+		overflow-x: hidden;
 	}
 
 	p,
@@ -618,7 +619,7 @@
 
 	.uinline-grid {
 		grid-template-columns: 1fr 1fr 1fr;
-		grid-template-rows: var(--s);
+		/* grid-template-rows: var(--s); */
 	}
 
 	.user-profile-header-grid {

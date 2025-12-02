@@ -81,6 +81,25 @@ export const registrationForm: FormDetails = {
     button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
 };
 
+export const sensitiveAccountChange: FormDetails = {
+    action: '',
+    heading: 'Password Required',
+    ariaLabel: 'Enter your password',
+    id: 'pw-check',
+    method: '',
+    fields: [
+        {
+            id: 'password',
+            labelContent: 'Password',
+            pattern: passwordPattern,
+            placeholder: 'Enter your password!',
+            type: 'password',
+            required: false,
+        },
+    ],
+    button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+};
+
 export const loginForm: FormDetails = {
     action: 'https://localhost:8443/api/auth/login',
     heading: 'Login',

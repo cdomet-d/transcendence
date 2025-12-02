@@ -14,6 +14,8 @@ import {
     errorMessageFromException,
     errorMessageFromResponse,
 } from '../../error.js';
+import { Popup } from '../layouts/popup.js';
+import { sensitiveAccountChange } from './default-forms.js';
 // import imageCompression from 'browser-image-compression';
 
 const MAX_FILE = 2 * 1024 * 1024;
@@ -58,6 +60,18 @@ export class UserSettingsForm extends BaseForm {
         this.contentMap.get('upload')?.removeEventListener('input', this.#previewAvatar);
     }
 
+    override createReqBody(form: FormData): string {
+        const fObject = Object.fromEntries(form.entries());
+
+        if (fObject.username || fObject.password) {
+			console.log('Username or pw change')
+            const dialog = document.createElement('dialog', { is: 'custom-popup' }) as Popup;
+            dialog.appendAndCache(createForm('pw-form', sensitiveAccountChange));
+            this.append(dialog);
+        }
+		return 'AAAAAAAAAAh';
+    }
+
     override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
         console.log(url, req);
 
@@ -87,7 +101,6 @@ export class UserSettingsForm extends BaseForm {
         this.renderDropdowns();
         super.renderButtons();
         this.append(this.#accountDelete);
-        console.log(super.contentMap);
         this.#avatar.classList.add('row-span-2', 'col-start-1', 'row-start-1');
         super.contentMap.get('title')?.classList.add('row-span-2', 'col-start-2', 'row-start-1');
         super.contentMap.get('upload')?.classList.add('row-start-3', 'col-start-1');

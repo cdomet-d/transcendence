@@ -2,7 +2,7 @@ import { loadHistoryLocation } from './event-listeners.js';
 import { Layout } from './web-elements/layouts/layout.js';
 import { PageHeader } from './web-elements/navigation/header.js';
 import { Router, routes } from './router.js';
-import { createErrorFeedback, redirectOnError } from './error.js';
+import { errorMessageFromException, redirectOnError } from './error.js';
 
 // import { pong } from './game/pong.js';
 // import { addLanguageEvents } from './language/languageEvents.js';
@@ -29,19 +29,17 @@ if (window) {
 
 export async function userStatus(): Promise<userStatusInfo> {
     try {
-        const isLogged: Response = await fetch('/api/auth/status');
+        const isLogged: Response = await fetch('https://localhost:8443/api/auth/status');
         const data = await isLogged.json();
         if (isLogged.ok) return { auth: true, username: data.username, userID: data.userID };
         else return { auth: false };
     } catch (error) {
-        let mess = 'Something when wrong';
-        if (error instanceof Error) mess = error.message;
-        redirectOnError('/', mess);
+        redirectOnError('/', errorMessageFromException(error));
         return { auth: false };
     }
 }
 
-document.body.layoutInstance = document.createElement('div', { is: 'custom-layout' }) as Layout;
+document.body.layoutInstance = document.createElement('main', { is: 'custom-layout' }) as Layout;
 document.body.header = document.createElement('header', { is: 'page-header' }) as PageHeader;
 if (!document.body.layoutInstance || !document.body.header) {
     throw new Error('Error initializing HTML Layouts - page cannot be charged.');

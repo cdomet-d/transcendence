@@ -3,8 +3,7 @@ import { BaseForm } from './baseform.js';
 import { RemotePongSettings, LocalPongSettings } from './pong-settings.js';
 import { Searchbar } from './search.js';
 import { UserSettingsForm } from './user-settings.js';
-import { RegistrationForm } from './registration-form.js';
-import { LoginForm } from './login-form.js';
+import { RegistrationForm, LoginForm, CriticalActionForm } from './auth.js';
 import type { DeleteAccountForm } from './account-deletion-form.js';
 
 /**
@@ -18,6 +17,7 @@ interface HTMLElementTagMap {
     'local-pong-settings': LocalPongSettings;
     'registration-form': RegistrationForm;
     'login-form': LoginForm;
+    'pw-form': CriticalActionForm;
     'remote-pong-settings': RemotePongSettings;
     'search-form': Searchbar;
     'settings-form': UserSettingsForm;

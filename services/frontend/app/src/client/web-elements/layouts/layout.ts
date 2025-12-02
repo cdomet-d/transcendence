@@ -61,7 +61,7 @@ export const oceanAssets: ImgData[] = [
     },
 ];
 
-export class Layout extends HTMLDivElement {
+export class Layout extends HTMLElement {
     /**
      * 	The layout's cache.
      */
@@ -172,5 +172,5 @@ export class Layout extends HTMLDivElement {
 }
 
 if (!customElements.get('custom-layout')) {
-    customElements.define('custom-layout', Layout, { extends: 'div' });
+    customElements.define('custom-layout', Layout, { extends: 'main' });
 }
