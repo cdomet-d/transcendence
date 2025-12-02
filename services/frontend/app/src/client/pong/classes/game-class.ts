@@ -10,6 +10,7 @@ import type {
     repObj,
     paddleObj,
 } from './game-interfaces.js';
+import { getBallStartingSpeed } from './game-settings.js';
 
 type requestMap = Map<number, reqObj>;
 type replyTab = Array<repObj>;
@@ -42,12 +43,13 @@ export class Game {
         else this.#local = true;
         this.#horizontal = gameSettings.horizontal === undefined ? false : true;
         this.#score = [0, 0];
+        const ballSartingSpeed: coordinates = getBallStartingSpeed(gameSettings.ballspeed);
         this.#ball = {
             x: WIDTH / 2,
             y: HEIGHT / 2,
-            dx: 0.3, //custom
-            dy: 0.03, //custom
-            maxSpeed: 0.7,
+            dx: ballSartingSpeed.x,
+            dy: ballSartingSpeed.y,
+            maxSpeed: 0.70,
             r: 13,
         };
         this.#paddleSpec = { speed: 0.42, w: 20, h: HEIGHT / 5, halfW: 20 / 2, halfH: HEIGHT / 10 }; //custom

@@ -1,8 +1,9 @@
 import { Player } from './player-class.js';
 import type { WebSocket } from '@fastify/websocket';
 import { NatsConnection } from 'nats';
-import type { reqObj, playerReq, gameInfo, ballObj, paddleSpec } from './game-interfaces.js';
+import type { reqObj, playerReq, gameInfo, ballObj, paddleSpec, coordinates } from './game-interfaces.js';
 import { FastifyBaseLogger } from 'fastify';
+import { getBallStartingSpeed } from './game-settings.js';
 
 export const HEIGHT = 558.9;
 export const WIDTH = 1000;
@@ -34,11 +35,12 @@ export class Game {
 		this.#nc = nc;
 		this.#log = log
 		this.#players = new Array();
+		const ballSartingSpeed: coordinates = getBallStartingSpeed(this.#gameInfo.gameSettings.ballspeed);
 		this.#ball = {
 			x: WIDTH / 2, 
 			y: HEIGHT / 2, 
-			dx: 0.3, 
-			dy: 0.03,
+			dx: ballSartingSpeed.x,
+            dy: ballSartingSpeed.y,
 			maxSpeed: 0.70,
 			r: 13
 		};
