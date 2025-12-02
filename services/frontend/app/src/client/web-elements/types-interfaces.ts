@@ -75,7 +75,7 @@ export interface TabData {
 }
 
 export interface MenuData {
-    id: string;
+    id?: string; //TODO: had to add "?" to stop having an error on notificationBtns in notifications.ts
     buttons?: ButtonData[];
     links?: navigationLinksData[];
 }
@@ -191,6 +191,19 @@ export interface UserData {
  * Used by notifications.
  */
 export type GameType = '1 vs 1' | 'tournament';
+
+export interface friendNotif {
+	type: 'FRIEND_REQUEST',
+	senderUsername: string,
+	receiverID: number //will be string eventually
+}
+
+export interface gameNotif {
+	type: 'GAME_INVITE',
+	receiverName: string,
+	receiverID: number, //will be string eventually
+	gameType: GameType
+}
 
 /* -------------------------------------------------------------------------- */
 /*                               Forms & Inputs                               */
