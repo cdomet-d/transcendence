@@ -8,6 +8,7 @@ import { UserInline } from '../users/profile.js';
 import type { UserData } from '../types-interfaces.js';
 import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
+import { defaultDictionary } from './language.js'
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -28,7 +29,7 @@ export class Searchbar extends BaseForm {
     /* -------------- constructors and associated default functions ------------- */
     constructor() {
         super();
-        super.details = search;
+        super.details = search(defaultDictionary);
         this.#results = document.createElement('ul');
         this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
         this.#currentFocus = -1;

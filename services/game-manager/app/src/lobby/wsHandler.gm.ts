@@ -5,7 +5,7 @@ import type { FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 
 export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
-	let userID: number | null = null;
+	let userID: string | null = null;
 
 	socket.on('message', (message: string) => {
 		try {

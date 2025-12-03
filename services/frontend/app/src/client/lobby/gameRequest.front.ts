@@ -11,7 +11,7 @@ interface lobbyInfo {
 }
 
 interface userInfo {
-    userID?: number;
+    userID?: string;
     username?: string;
     userSocket?: WebSocket;
 }
@@ -41,7 +41,7 @@ async function createGameRequest(format: string, formInstance: string, gameSetti
             userList: [
                 { userID: host.userID, username: host.username },
                 localOpponent !== undefined ? 
-                    { userID: -1 /* uid will become 'temporary' */, username: localOpponent } : { userID: 2, username: 'alex' }, // TODO add remote user once we have operational Notifications
+                    { userID: "temporary" , username: localOpponent } : { userID: "userID", username: 'alex' }, // TODO add remote user once we have operational Notifications
                 
                 // { userID: 3, username: "cha" }, // TODO add more users for tournaments once we have operational Notifications
                 // { userID: 4, username: "coco" } // TODO add more users for tournaments once we have operational Notifications

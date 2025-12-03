@@ -7,7 +7,7 @@ import { wsClientsMap } from '../lobby/lobby.gm.js';
 import { gameOver } from '../quickmatch/gameOver.js';
 
 interface user {
-	userID: number,
+	userID: string,
 	username?: string,
 }
 
@@ -45,8 +45,8 @@ export async function natsSubscribe() {
 			const payload = sc.decode(msg.data);
 			console.log(`GM received following in "game.over" :\n`, JSON.stringify(payload));
 
-			// if (tournamentID ==! -1)
-			tournamentState(payload);
+			//if (tournamentID ==! -1)
+			//	tournamentState(payload);
 			// else {
 			gameOver(payload);
 			// }
@@ -54,8 +54,8 @@ export async function natsSubscribe() {
 	})();
 }
 
-function sendGameRequest(userID: number, opponent: user, game: gameReply) {
-	if (userID === -1) return; // TODO -1 will become 'temporary' 
+function sendGameRequest(userID: string, opponent: user, game: gameReply) {
+	if (userID === "temporary") return; // TODO -1 will become 'temporary' 
 
 	const socket = wsClientsMap.get(userID);
 	let opponentUsername: string | undefined = opponent.username;

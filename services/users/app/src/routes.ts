@@ -359,7 +359,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			const queryProfile = `
 				INSERT INTO userProfile
 				(userID, username, activityStatus, lastConnection, profileColor, userRole, since, lang)
-				VALUES (?, ?, 1, ?, "bg-BE5103", 1, ?, "en")
+				VALUES (?, ?, 1, ?, "bg-000080", 1, ?, "en")
 			`;
 			const paramsProfile = [
 				userID,
