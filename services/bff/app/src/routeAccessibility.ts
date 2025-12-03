@@ -4,7 +4,7 @@ async function fetchTranslation(word: string, langCode: string): Promise<Respons
 	const url = `http://nginx:443/internal/translations?word=${encodeURIComponent(word)}&langCode=${encodeURIComponent(langCode)}`;
 	return (fetch(url));
 }
-
+//TODO make route match between front, bff and accessibility
 export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 
 	serv.get('/translations', async (request, reply) => {

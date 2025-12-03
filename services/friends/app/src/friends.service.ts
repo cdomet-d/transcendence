@@ -2,13 +2,13 @@ import { Database } from 'sqlite';
 
 interface Friendship {
 	friendshipID: number,
-	userID: number,
-	friendID: number,
+	userID: string,
+	friendID: string,
 	startTime: string,
 	statusFriendship: boolean
 }
 
-export async function getFriendship(db: Database, userID: number): Promise<Friendship[]> {
+export async function getFriendship(db: Database, userID: string): Promise<Friendship[]> {
 	const query = `
 		SELECT
 			friendshipID,
@@ -27,7 +27,7 @@ export async function getFriendship(db: Database, userID: number): Promise<Frien
 	return (requests);
 }
 
-export async function friendshipExistsUsersID(db: Database, userA_ID: number, userB_ID: number) {
+export async function friendshipExistsUsersID(db: Database, userA_ID: string, userB_ID: string) {
 	const query = `
 		SELECT friendshipID, statusFriendship FROM friendship 
 		WHERE (userID = ? AND friendID = ?) 

@@ -13,14 +13,14 @@ export async function initNatsConnection(): Promise<NatsConnection> {
 interface friendNotif {
 	type: 'FRIEND_REQUEST',
 	senderUsername: string,
-	receiverID: number //will be string eventually
+	receiverID: string //will be string eventually
 }
 
 type GameType = '1 vs 1' | 'tournament';
 interface gameNotif {
 	type: 'GAME_INVITE',
 	receiverName: string,
-	receiverID: number, //will be string eventually
+	receiverID: string, //will be string eventually
 	gameType: GameType,
 }
 
