@@ -1,5 +1,9 @@
 import { BaseForm } from './baseform';
-import { createVisualFeedback, errorMessageFromException, exceptionFromResponse } from '../../error';
+import {
+    createVisualFeedback,
+    errorMessageFromException,
+    exceptionFromResponse,
+} from '../../error';
 import { router } from '../../main';
 
 export class LoginForm extends BaseForm {
@@ -11,9 +15,10 @@ export class LoginForm extends BaseForm {
         try {
             const response = await fetch(url, req);
             if (!response.ok) throw await exceptionFromResponse(response);
+            document.body.header?.notif.notifWsRequest();
             router.loadRoute('/me', true);
         } catch (error) {
-			createVisualFeedback(errorMessageFromException(error));
+            createVisualFeedback(errorMessageFromException(error));
         }
     }
 }
