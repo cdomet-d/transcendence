@@ -4,18 +4,18 @@ import { getFriendship, friendshipExistsUsersID } from './friends.service.js'
 type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
 
 interface JwtPayload {
-    userID: number;
-    username: string;
-    iat: number;
-    exp: number;
+	userID: number;
+	username: string;
+	iat: number;
+	exp: number;
 }
 
 export async function routeFriend(serv: FastifyInstance) {
-    //GET friendship?userA=1&userB=2
-    serv.get('/friendship', async (request, reply) => {
-        try {
-            const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+	//GET friendship?userA=1&userB=2
+	serv.get('/friendship', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
 			if (token) {
 				try {
@@ -37,46 +37,46 @@ export async function routeFriend(serv: FastifyInstance) {
 				}
 			}
 
-            const query = request.query as {
-                userA?: number;
-                userB?: number;
-            };
+			const query = request.query as {
+				userA?: string;
+				userB?: string;
+			};
 
-            if (query.userA && query.userB) {
-                const sql = `
+			if (query.userA && query.userB) {
+				const sql = `
 					SELECT statusFriendship FROM friendship 
 					WHERE (userID = ? AND friendID = ?) OR (userID = ? AND friendID = ?)
 					LIMIT 1;
 				`;
-                const params = [query.userA, query.userB, query.userB, query.userA];
-                const response = await serv.dbFriends.get<{ statusFriendship: string }>(
-                    sql,
-                    params
-                );
+				const params = [query.userA, query.userB, query.userB, query.userA];
+				const response = await serv.dbFriends.get<{ statusFriendship: string }>(
+					sql,
+					params
+				);
 
-                if (!response) return reply.code(200).send({ status: 'stranger' });
+				if (!response) return reply.code(200).send({ status: 'stranger' });
 
-                const isFriend =
-                    String(response.statusFriendship) === 'true' ||
-                    String(response.statusFriendship) === '1';
+				const isFriend =
+					String(response.statusFriendship) === 'true' ||
+					String(response.statusFriendship) === '1';
 
-                const status: ProfileView = isFriend ? 'friend' : 'pending';
+				const status: ProfileView = isFriend ? 'friend' : 'pending';
 
-                return reply.code(200).send({ status: status });
-            }
+				return reply.code(200).send({ status: status });
+			}
 
-            return reply.code(400).send({ message: '[FRIENDS] Invalid query parameters.' });
-        } catch (error) {
-            serv.log.error(`[FRIENDS] Error checking relationship: ${error}`);
-            throw error;
-        }
-    });
+			return reply.code(400).send({ message: '[FRIENDS] Invalid query parameters.' });
+		} catch (error) {
+			serv.log.error(`[FRIENDS] Error checking relationship: ${error}`);
+			throw error;
+		}
+	});
 
-    //GET friendlist?userID=1
-    serv.get('/friendlist', async (request, reply) => {
-        try {
-            const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+	//GET friendlist?userID=1
+	serv.get('/friendlist', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
 			if (token) {
 				try {
@@ -98,27 +98,27 @@ export async function routeFriend(serv: FastifyInstance) {
 				}
 			}
 
-            const query = request.query as {
-                userID?: number;
-            };
+			const query = request.query as {
+				userID?: string;
+			};
 
-            if (query.userID) {
-                const friends = await getFriendship(serv.dbFriends, query.userID);
-                return reply.code(200).send(friends);
-            }
+			if (query.userID) {
+				const friends = await getFriendship(serv.dbFriends, query.userID);
+				return reply.code(200).send(friends);
+			}
 
-            return reply.code(400).send({ message: '[FRIENDS] Invalid query parameters.' });
-        } catch (error) {
-            serv.log.error(`[FRIENDS] Error checking relationship: ${error}`);
-            throw error;
-        }
-    });
+			return reply.code(400).send({ message: '[FRIENDS] Invalid query parameters.' });
+		} catch (error) {
+			serv.log.error(`[FRIENDS] Error checking relationship: ${error}`);
+			throw error;
+		}
+	});
 
-    //create a pending friend request
-    serv.post('/relation', async (request, reply) => {
-        try {
-            const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+	//create a pending friend request
+	serv.post('/relation', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
 			if (token) {
 				try {
@@ -140,15 +140,15 @@ export async function routeFriend(serv: FastifyInstance) {
 				}
 			}
 
-            const { senderID: senderID } = request.body as { senderID: number };
-            const { friendID: friendID } = request.body as { friendID: number };
+			const { senderID: senderID } = request.body as { senderID: string };
+			const { friendID: friendID } = request.body as { friendID: string };
 
-            const query = `
+			const query = `
 				INSERT INTO friendship (userID, friendID, statusFriendship)
 				VALUES (?, ?, ?)
 			`;
 
-            const params = [senderID, friendID, false];
+			const params = [senderID, friendID, false];
 
 			const response = await serv.dbFriends.run(query, params);
 			if (response.changes === 0)
@@ -197,60 +197,60 @@ export async function routeFriend(serv: FastifyInstance) {
 				}
 			}
 
-            const { senderRequestID: senderRequestID } = request.body as {
-                senderRequestID: number;
-            };
-            const { friendID: friendID } = request.body as { friendID: number };
+			const { senderRequestID: senderRequestID } = request.body as {
+				senderRequestID: string;
+			};
+			const { friendID: friendID } = request.body as { friendID: string };
 
-            const friendshipID = await friendshipExistsUsersID(
-                serv.dbFriends,
-                senderRequestID,
-                friendID
-            );
-            if (!friendshipID) {
-                return reply.code(404).send({
-                    success: false,
-                    message: '[FRIENDS] Friendship doesnt exists!',
-                });
-            }
+			const friendshipID = await friendshipExistsUsersID(
+				serv.dbFriends,
+				senderRequestID,
+				friendID
+			);
+			if (!friendshipID) {
+				return reply.code(404).send({
+					success: false,
+					message: '[FRIENDS] Friendship doesnt exists!',
+				});
+			}
 
-            const query = `UPDATE friendship SET statusFriendship = true WHERE friendshipID = ? AND friendID = ?
+			const query = `UPDATE friendship SET statusFriendship = true WHERE friendshipID = ? AND friendID = ?
 			`;
 
-            const params = [friendshipID, senderRequestID];
+			const params = [friendshipID, senderRequestID];
 
-            const response = await serv.dbFriends.run(query, params);
-            if (response.changes === 0) {
-                return reply.code(400).send({
-                    success: false,
-                    message: '[FRIENDS] Friendship could not be accepted.',
-                });
-            }
+			const response = await serv.dbFriends.run(query, params);
+			if (response.changes === 0) {
+				return reply.code(400).send({
+					success: false,
+					message: '[FRIENDS] Friendship could not be accepted.',
+				});
+			}
 
-            return reply.code(200).send({
-                success: true,
-                message: `[FRIENDS] Friendship accepted !`,
-            });
-        } catch (error) {
-            if (typeof error === 'object' && error !== null && 'code' in error) {
-                const customError = error as { code: number; message?: string };
-                if (customError.code === 409) {
-                    return reply.code(409).send({
-                        success: false,
-                        message: customError.message || '[FRIENDS] Friendship already accepted!',
-                    });
-                }
-            }
-            console.error('[FRIENDS] Error accepting friend request', error);
-            throw error;
-        }
-    });
+			return reply.code(200).send({
+				success: true,
+				message: `[FRIENDS] Friendship accepted !`,
+			});
+		} catch (error) {
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number; message?: string };
+				if (customError.code === 409) {
+					return reply.code(409).send({
+						success: false,
+						message: customError.message || '[FRIENDS] Friendship already accepted!',
+					});
+				}
+			}
+			console.error('[FRIENDS] Error accepting friend request', error);
+			throw error;
+		}
+	});
 
-    //Delete a relation between users
-    serv.delete('/relation', async (request, reply) => {
-        try {
-            const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+	//Delete a relation between users
+	serv.delete('/relation', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
 			if (token) {
 				try {
@@ -272,32 +272,32 @@ export async function routeFriend(serv: FastifyInstance) {
 				}
 			}
 
-            const { removerID: removerID } = request.body as { removerID: number };
-            const { friendID: friendID } = request.body as { friendID: number };
+			const { removerID: removerID } = request.body as { removerID: string };
+			const { friendID: friendID } = request.body as { friendID: string };
 			console.log('HERE', friendID, removerID);
-            const query = `
+			const query = `
 				DELETE FROM friendship 
 				WHERE (userID = ? AND friendID = ?) 
 					OR (userID = ? AND friendID = ?);
 			`;
-            const params = [removerID, friendID, friendID, removerID];
-            const response = await serv.dbFriends.run(query, params);
+			const params = [removerID, friendID, friendID, removerID];
+			const response = await serv.dbFriends.run(query, params);
 
-            if (response.changes === 0)
-                return reply.code(404).send({ message: '[FRIENDS] Friendship not found.' });
+			if (response.changes === 0)
+				return reply.code(404).send({ message: '[FRIENDS] Friendship not found.' });
 
-            return reply.code(204).send();
-        } catch (error) {
-            serv.log.error(`[FRIENDS] Error deleting friendship: ${error}`);
-            throw error;
-        }
-    });
+			return reply.code(204).send();
+		} catch (error) {
+			serv.log.error(`[FRIENDS] Error deleting friendship: ${error}`);
+			throw error;
+		}
+	});
 
-    //delete all friendship a user is a part of
-    serv.delete('/', async (request, reply) => {
-        try {
-            const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+	//delete all friendship a user is a part of
+	serv.delete('/', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
 			if (token) {
 				try {
@@ -319,19 +319,19 @@ export async function routeFriend(serv: FastifyInstance) {
 				}
 			}
 
-            const { userID } = request.params as { userID: string };
+			const { userID } = request.params as { userID: string };
 
-            const query = `
+			const query = `
 				DELETE FROM friendship 
 				WHERE (userID = ?) 
 					OR (friendID = ?);
 			`;
-            await serv.dbFriends.run(query, [userID, userID]);
+			await serv.dbFriends.run(query, [userID, userID]);
 
-            return reply.code(204).send();
-        } catch (error) {
-            serv.log.error(`[FRIENDS] Error deleting all friendships: ${error}`);
-            throw error;
-        }
-    });
+			return reply.code(204).send();
+		} catch (error) {
+			serv.log.error(`[FRIENDS] Error deleting all friendships: ${error}`);
+			throw error;
+		}
+	});
 }

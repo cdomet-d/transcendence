@@ -1,14 +1,14 @@
 import type { userInfo, lobbyInfo } from "../manager.interface.js";
-export const wsClientsMap: Map<number, WebSocket> = new Map();
+export const wsClientsMap: Map<string, WebSocket> = new Map();
 export const lobbyMap: Map<string | undefined, lobbyInfo> = new Map();
 
-export function createLobby(hostID: number, format: string) {
+export function createLobby(hostID: string, format: string) {
 	const lobby: lobbyInfo = makeLobbyInfo(hostID, format);
 	lobbyMap.set(lobby.lobbyID, lobby);
 	return lobby;
 }
 
-export function addUserToLobby(userID: number, socket: WebSocket, lobbyID: string) {
+export function addUserToLobby(userID: string, socket: WebSocket, lobbyID: string) {
     const lobby = lobbyMap.get(lobbyID);
     if (!lobby) return;
 
@@ -21,7 +21,7 @@ export function addUserToLobby(userID: number, socket: WebSocket, lobbyID: strin
     }
 }
 
-export function removeUserFromLobby(userID: number, lobbyID: string) {
+export function removeUserFromLobby(userID: string, lobbyID: string) {
     const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) return;
 
@@ -30,7 +30,7 @@ export function removeUserFromLobby(userID: number, lobbyID: string) {
 }
 
 // add INVITEE in parameter and get all userInfo (invitee) from JWT payload
-function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
+function makeLobbyInfo(hostID: string, format: string): lobbyInfo {
 	const lobbyID = crypto.randomUUID().toString();
 
 	const lobby: lobbyInfo = {
@@ -41,7 +41,7 @@ function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 			userIDs: [hostID] // TODO Make this a map ? // 1. put invitee ID here on invite
 		},
 		joinable: true,
-        userList: new Map<number, userInfo>([
+        userList: new Map<string, userInfo>([
             [hostID, { userID: hostID }] //  TODO get username JWT
         ]),
 		remote: true, // TODO set remote or local HERE just before START event

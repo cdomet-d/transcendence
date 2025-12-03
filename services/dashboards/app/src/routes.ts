@@ -85,7 +85,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			if (!userID)
 				return (reply.code(400).send({ message: '[DASHBOARD] userID query parameter is required.' }));
 
-			const games = await getGameHistory(serv.dbStats, Number(userID));
+			const games = await getGameHistory(serv.dbStats, userID);
 			return (reply.code(200).send(games));
 
 		} catch (error) {

@@ -3,8 +3,8 @@ CREATE TABLE game (
   gameID TEXT UNIQUE,
   duration INTEGER,
   startTime DATETIME,
-  player1 INTEGER,
-  player2 INTEGER,
+  player1 TEXT,
+  player2 TEXT,
   tournamentID TEXT, --zero == no tournament
   localGame BOOLEAN, --zero == local, 1 == remote
   player1Score INTEGER,

@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { deleteAccount, createUserProfile, checkUsernameUnique } from './auth.service.js';
 
 interface JwtPayload {
-	userID: number;
+	userID: string;
 	username: string;
 	iat: number;
 	exp: number;
@@ -91,7 +91,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 	});
 
 	serv.post('/register', { schema: authSchema }, async (request, reply) => {
-		let newAccountId: number | null = null;
+		let newAccountId: string | null = null;
 		try {
 			const { username, password } = request.body as { username: string; password: string };
 
@@ -104,17 +104,15 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			if (usernameTaken) return reply.code(409).send({ message: 'Username taken' });
 
 			const query = `
-				INSERT INTO account (hashedPassword, username)
-				VALUES (?, ?)
+				INSERT INTO account (userID, hashedPassword, username)
+				VALUES (?, ?, ?)
 			`;
-
-			const params = [hashedPassword, username];
+			newAccountId = crypto.randomUUID().toString();
+			const params = [newAccountId, hashedPassword, username];
 			const account = await serv.dbAuth.run(query, params);
 
 			if (account.changes === 0 || !account.lastID)
 				throw new Error('[AUTH] Failed to create account record.');
-
-			newAccountId = account.lastID;
 
 			const usersResponse = createUserProfile(serv.log, newAccountId, username);
 			if ((await usersResponse).errorCode === `conflict`)
@@ -268,7 +266,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			});
 
 		} catch (error) {
-			if (error && typeof error === 'object' && 'code' in error &&(
+			if (error && typeof error === 'object' && 'code' in error && (
 				(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' || (error as { code: string }).code === 'SQLITE_CONSTRAINT'))
 				return reply.code(409).send({ success: false, message: '[AUTH] This username is already taken.' });
 			serv.log.error(`[AUTH] Error updating account: ${error}`);
