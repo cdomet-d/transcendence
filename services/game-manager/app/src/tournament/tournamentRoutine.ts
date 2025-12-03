@@ -11,7 +11,8 @@ export async function tournamentState(payload: string) {
 
 	const tournamentObj = tournamentMap.get(game.tournamentID!);
 	if (!tournamentObj) {
-		console.log("Error: Could not make tournamentObj!");
+		console.log(`${tournamentObj}`)
+		console.log("Error: Could not make tournamentObj! ");
 		return;
 	}
 
@@ -56,7 +57,7 @@ export async function tournamentState(payload: string) {
 	}
 }
 
-function getUsernameFromID(userID: number, game: game): string {
+function getUsernameFromID(userID: string, game: game): string {
 	if (game.users?.length === 2) {
 		if (game.users[0]?.userID === userID)
 			return game.users[0]?.username!;

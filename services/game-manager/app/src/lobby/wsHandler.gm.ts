@@ -7,15 +7,19 @@ import type { lobbyInfo } from '../gameManager/gameManager.interface.js';
 import type { lobbyRequestForm } from './lobby.interface.js';
 
 export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
-	let userID: number | null = null;
+	let userID: string | null = null;
 
 	socket.on('message', (message: string) => {
 		try {
+		console.log("3");
+
 			const data = JSON.parse(message);
 			if (!validateData(data, req, socket)) return;
-
-			const { payload, formInstance } = data;
-			if (!validatePayload(data, payload, req, socket)) return;
+		console.log("4");
+		
+		const { payload, formInstance } = data;
+		if (!validatePayload(data, payload, req, socket)) return;
+		console.log("5");
 
 			if (data.event === "BAD_USER_TOKEN") return;
 

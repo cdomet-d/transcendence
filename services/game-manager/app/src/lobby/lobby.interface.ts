@@ -1,7 +1,7 @@
 export interface lobbyRequestForm {
 	action: string,
 	format: string,
-	userID: number,
-	inviteeID?: number,
+	userID: string,
+	inviteeID?: string,
 	lobbyID?: string
 }

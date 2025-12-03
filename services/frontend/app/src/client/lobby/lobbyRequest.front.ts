@@ -3,6 +3,7 @@ import { userStatus, type userStatusInfo } from "../main";
 import type { lobbyRequestForm } from "./gm.interface.front";
 
 async function createLobbyRequest(action: string, format: string, formInstance?: string): Promise<string> {
+		console.log("2");
 
     const host: userStatusInfo = await userStatus();
     if (!host.auth) {
@@ -23,7 +24,7 @@ async function createLobbyRequest(action: string, format: string, formInstance?:
     return JSON.stringify(createLobbyForm);
 }
 
-async function joinLobbyRequest(action: string, format: string, inviteeID: number, lobbyID: string) {
+async function joinLobbyRequest(action: string, format: string, inviteeID: string, lobbyID: string) {
 
     const joinLobbyForm: lobbyRequestForm = {
         event: 'LOBBY_REQUEST',

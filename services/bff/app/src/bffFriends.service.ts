@@ -1,4 +1,4 @@
-export async function createFriendRequest(log: any, senderID: number, friendID: number, token: string): Promise<void> {
+export async function createFriendRequest(log: any, senderID: string, friendID: string, token: string): Promise<void> {
 	const url = 'http://friends:1616/relation';
 	let response: Response;
 
@@ -49,7 +49,7 @@ export async function createFriendRequest(log: any, senderID: number, friendID: 
 	return;
 }
 
-export async function acceptFriendRequest(log: any, senderRequestID: number, friendID: number, token: string): Promise<void> {
+export async function acceptFriendRequest(log: any, senderRequestID: string, friendID: string, token: string): Promise<void> {
 	const url = 'http://friends:1616/relation';
 	let response: Response;
 
@@ -100,7 +100,7 @@ export async function acceptFriendRequest(log: any, senderRequestID: number, fri
 	return;
 }
 
-export async function deleteFriendRequest(log: any, removerID: number, friendID: number, token: string): Promise<void> {
+export async function deleteFriendRequest(log: any, removerID: string, friendID: string, token: string): Promise<void> {
 	const url = 'http://friends:1616/relation';
 	let response: Response;
 

@@ -6,7 +6,6 @@ import type { PongUI } from '../web-elements/game/game-ui.js';
 import { redirectOnError } from '../error.js';
 
 export interface gameRequest {
-    // userID: number;
     opponent: string,
     gameID: string;
     remote: boolean;

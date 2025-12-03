@@ -2,7 +2,7 @@ export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
 export type FriendshipStatus = 'friend' | 'pending';
 
 export interface JwtPayload {
-	userID: number;
+	userID: string;
 	username: string;
 	iat: number;
 	exp: number;
@@ -25,13 +25,13 @@ export interface UserIDResponse {
 	success: boolean;
 	message: string;
 	response: {
-		userID: number;
+		userID: string;
 		username: string;
 	};
 }
 
 export interface userStats {
-	userID: number;
+	userID: string;
 	longestMatch: number;
 	shortestMatch: number;
 	totalMatch: number;
@@ -39,15 +39,16 @@ export interface userStats {
 	winStreak: number;
 	averageMatchDuration: number;
 	longuestPass: number;
-	[key: string]: number;
+    [key: string]: number | string;
 }
+
 export interface StatsResponse {
 	success: boolean;
 	stats: userStats;
 }
 
 export interface ProfileDataBatch {
-	userID: number;
+	userID: string;
 	username: string,
 	avatar: string;
 	biography: string;
@@ -71,7 +72,7 @@ export interface UserProfileView {
 
 export interface Friendship {
 	friendshipID: number;
-	userID: number;
+	userID: string;
 	friendID: number;
 	startTime: string;
 	statusFriendship: boolean; // true = accepted, false = pending
@@ -79,18 +80,18 @@ export interface Friendship {
 
 export interface UsernameResponse {
 	success: boolean;
-	usersNames: { userID: number, username: string }[];
+	usersNames: { userID: string, username: string }[];
 }
 
 export interface RawMatches {
 	gameID: number;
 	duration: number;
 	startTime: string;
-	player1: number;
-	player2: number;
+	player1: string;
+	player2: string;
 	player1Score: number;
 	player2Score: number;
-	opponentID: number;
+	opponentID: string;
 	tournamentID: number
 }
 

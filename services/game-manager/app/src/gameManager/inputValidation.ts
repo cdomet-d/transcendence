@@ -20,7 +20,7 @@ export const lobbyRequestPayloadSchema = {
 	properties: {
 		action: { type: "string" },
 		format: { type: "string" },
-		userID: { type: "number" },
+		userID: { type: "string" },
 		lobbyID: { type: "string" }
 	},
 	required: ["action", "format", "userID"],
@@ -34,7 +34,7 @@ export const gameRequestPayloadSchema = {
 			items: {
 				type: "object",
 				properties: {
-					userID: { type: "number" },
+					userID: { type: "string" },
 					username: { type: "string" },
 					userSocket: { type: "object" }
 				},
@@ -70,10 +70,15 @@ export function validatePayload(data: any, payload: any, req: FastifyRequest, so
 	type EventType = keyof typeof validators;
 	const event = data.event;
 
-	if (typeof event === "string" && event in validators) {
-		const validate = validators[event as EventType];
-		if (!validate(payload)) {
+		console.log("6");
+		console.log("PAYLOAD: ", payload);
+		
+		if (typeof event === "string" && event in validators) {
+			const validate = validators[event as EventType];
+			if (!validate(payload)) {
+			console.log("7");
 			req.server.log.error(`Invalid payload for event ${event}: ${ajv.errorsText(validate.errors)}`);
+			console.log("8");
 			wsSend(socket, JSON.stringify({ error: "Invalid message payload" }));
 			return false;
 		}

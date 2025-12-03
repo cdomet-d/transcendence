@@ -12,7 +12,7 @@ import { createTabs } from './web-elements/navigation/tabs-helpers.js';
 import { farm, ocean, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
 import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
 import {
-    customizeUserSettingsForm,
+    userSettingsForm,
     localPong,
     remotePong,
     pongTournament,
@@ -28,6 +28,7 @@ import { userStatus, router, type userStatusInfo } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
+import { defaultDictionary } from './web-elements/forms/language.js'
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -92,19 +93,19 @@ export function renderHome() {
 export function renderAuth() {
     prepareLayout(document.body.layoutInstance, 'auth');
     const wrapper = createWrapper('authsettings');
-
+    
     const authOptions: TabData[] = [
         {
             id: 'login-tab',
             content: 'Login',
             default: true,
-            panelContent: createForm('login-form', loginForm),
+            panelContent: createForm('login-form', loginForm(defaultDictionary)),
         },
         {
             id: 'registration-tab',
             content: 'Register',
             default: false,
-            panelContent: createForm('registration-form', registrationForm),
+            panelContent: createForm('registration-form', registrationForm(defaultDictionary)),
         },
     ];
     wrapper.append(createTabs(authOptions));
@@ -186,7 +187,7 @@ export async function renderSettings() {
         const res = await raw.json();
         prepareLayout(document.body.layoutInstance, 'userSettings');
         const user = userDataFromAPIRes(res);
-        const form = customizeUserSettingsForm(user);
+        const form = userSettingsForm(defaultDictionary);
         document.body.layoutInstance?.appendAndCache(createForm('settings-form', form, user));
     } catch (error) {
         redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
@@ -219,7 +220,7 @@ export async function renderQuickLocalLobby() {
             id: 'pong-local',
             content: '',
             default: true,
-            panelContent: createForm('local-pong-settings', localPong),
+            panelContent: createForm('local-pong-settings', localPong(defaultDictionary)),
         },
     ];
     const wrapper = createWrapper('pongsettings');

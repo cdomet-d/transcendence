@@ -3,7 +3,7 @@ export interface lobbyRequestForm {
     payload: {
         action: string,
         format: string,
-        userID: number,
+        userID: string,
         lobbyID?: string
     },
     formInstance?: string
@@ -20,7 +20,7 @@ export interface gameRequestForm {
 }
 
 interface userInfo {
-    userID?: number;
+    userID?: string;
     username?: string;
     userSocket?: WebSocket;
 }

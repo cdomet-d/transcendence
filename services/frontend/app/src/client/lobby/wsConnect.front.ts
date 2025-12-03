@@ -13,12 +13,13 @@ function openWsConnection() {
 	return wsInstance;
 }
 
-async function wsConnect(action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string, inviteeID?: number) {
+async function wsConnect(action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string, inviteeID?: string) {
 	const ws: WebSocket = openWsConnection();
 
 	ws.onopen = async () => {
 		console.log("Lobby WebSocket connection established!")
 		// send Lobby Request
+		console.log("1");
 		if (action === 'create') {
 			if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 				wsInstance.send(await createLobbyRequest(action, format/* , formInstance */));

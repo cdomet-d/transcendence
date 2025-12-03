@@ -1,15 +1,15 @@
 import type { userInfo, lobbyInfo } from "../gameManager/gameManager.interface.js";
-export const wsClientsMap: Map<number, WebSocket> = new Map();
+export const wsClientsMap: Map<string, WebSocket> = new Map();
 export const lobbyMap: Map<string | undefined, lobbyInfo> = new Map();
 
-export function createLobby(hostID: number, format: string) {
+export function createLobby(hostID: string, format: string) {
 	const lobby: lobbyInfo = makeLobbyInfo(hostID, format);
 	lobbyMap.set(lobby.lobbyID, lobby);
 	return lobby;
 }
 
 // add INVITEE in parameter and get all userInfo (invitee) from JWT payload
-function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
+function makeLobbyInfo(hostID: string, format: string): lobbyInfo {
 	const lobbyID = crypto.randomUUID().toString();
 
 	const lobby: lobbyInfo = {
@@ -17,12 +17,12 @@ function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 		whitelist: {
 			lobbyId: lobbyID,
 			hostID: hostID,
-			userIDs: new Map<number, userInfo>([
+			userIDs: new Map<string, userInfo>([
 				[hostID, { userID: hostID }], // TODO Make this a vector ? // 1. put invitee ID here on invite
 			]),
 		},
 		joinable: true,
-		userList: new Map<number, userInfo>([
+		userList: new Map<string, userInfo>([
 			[hostID, { userID: hostID }],
 		]),
 		remote: true, // TODO set to false if local pong before START event
@@ -33,7 +33,7 @@ function makeLobbyInfo(hostID: number, format: string): lobbyInfo {
 	return lobby;
 }
 
-export function addUserToWhitelist(userID: number, lobbyID: string) {
+export function addUserToWhitelist(userID: string, lobbyID: string) {
 	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) return;
 
@@ -44,14 +44,14 @@ export function addUserToWhitelist(userID: number, lobbyID: string) {
 	}
 }
 
-export function removeUserFromWhitelist(userID: number, lobbyID: string) {
+export function removeUserFromWhitelist(userID: string, lobbyID: string) {
 	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) return;
 
 	lobby.whitelist!.userIDs.delete(userID);
 }
 
-export function addUserToLobby(userID: number, socket: WebSocket, lobbyID: string) {
+export function addUserToLobby(userID: string, socket: WebSocket, lobbyID: string) {
 	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) return;
 
@@ -64,11 +64,22 @@ export function addUserToLobby(userID: number, socket: WebSocket, lobbyID: strin
 	}
 }
 
-export function removeUserFromLobby(userID: number, lobbyID: string) {
+export function removeUserFromLobby(userID: string, lobbyID: string) {
 	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) return;
 
 	lobby.userList.delete(userID);
 	lobby.whitelist!.userIDs.delete(userID);
 	wsClientsMap.delete(userID);
+}
+
+export function printPlayersInLobby(lobbyID: string) {
+	const lobby = lobbyMap.get(lobbyID);
+	if (!lobby) {
+		console.log("AAAH PAS DE LOBBY");
+		return;
+	}
+	lobby?.userList.forEach(user => {
+		console.log(`User #${user.userID} is in Lobby #${lobbyID}`);
+	});
 }

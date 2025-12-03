@@ -32,8 +32,8 @@ export async function natsSubscribe() {
 			const payload = sc.decode(msg.data);
 			console.log(`GM received following in "game.over" :\n`, JSON.stringify(payload));
 
-			// if (tournamentID ==! -1)
-			tournamentState(payload);
+			//if (tournamentID ==! -1)
+			//	tournamentState(payload);
 			// else {
 			gameOver(payload);
 			// }
@@ -41,8 +41,8 @@ export async function natsSubscribe() {
 	})();
 }
 
-function sendGameRequest(userID: number, opponentID: number, game: gameReply, opponentUsername?: string) {
-	if (userID === -1) return; // TODO -1 will become 'temporary' 
+function sendGameRequest(userID: string, opponentID: string, game: gameReply, opponentUsername?: string) {
+	if (userID === "temporary") return; // TODO -1 will become 'temporary' 
 
 	const socket = wsClientsMap.get(userID);
 
