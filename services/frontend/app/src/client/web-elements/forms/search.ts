@@ -1,5 +1,5 @@
 import { BaseForm } from './baseform.js';
-import { createErrorFeedback, redirectOnError } from '../../error.js';
+import { createVisualFeedback, redirectOnError } from '../../error.js';
 import { createInputGroup } from '../inputs/helpers.js';
 import { createUserInline } from '../users/profile-helpers.js';
 import { InputGroup } from '../inputs/fields.js';
@@ -65,7 +65,7 @@ export class Searchbar extends BaseForm {
         super.renderButtons();
         this.append(this.#results);
 
-        this.classList.add('sidebar-right', 'search-gap');
+        this.classList.add('search-cols', 'search-gap');
         this.#results.className =
             'hidden absolute top-[64px] brdr bg min-h-fit w-full overflow-y-auto box-border z-1';
     }
@@ -114,7 +114,7 @@ export class Searchbar extends BaseForm {
         const form = new FormData(this);
         const url = this.#createQueryURL(form);
         if (!url) {
-            createErrorFeedback('Error processing query - try again');
+            createVisualFeedback('Error processing query - try again');
             return;
         }
         try {

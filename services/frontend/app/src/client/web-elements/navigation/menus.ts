@@ -4,8 +4,8 @@ import type { CustomButton } from './buttons.js';
 import { Menu } from './basemenu.js';
 import {
     errorMessageFromException,
-    createErrorFeedback,
-    errorMessageFromResponse,
+    createVisualFeedback,
+    exceptionFromResponse,
 } from '../../error.js';
 
 //TODO: update SocialMenu to Setting button when view is 'self'
@@ -72,11 +72,11 @@ export class SocialMenu extends Menu {
         req.body = JSON.stringify(profileOwner);
         try {
             const rawRes = await fetch(url, req);
-            if (!rawRes.ok) throw await errorMessageFromResponse(rawRes);
+            if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
             this.view = 'stranger';
             this.updateView();
         } catch (error) {
-            createErrorFeedback(errorMessageFromException(error));
+            createVisualFeedback(errorMessageFromException(error));
         }
     }
 
@@ -91,11 +91,11 @@ export class SocialMenu extends Menu {
         req.body = JSON.stringify(profileOwner);
         try {
             const rawRes = await fetch(url, req);
-            if (!rawRes.ok) throw await errorMessageFromResponse(rawRes);
+            if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
             this.view = 'pending';
             this.updateView();
         } catch (error) {
-            createErrorFeedback(errorMessageFromException(error));
+            createVisualFeedback(errorMessageFromException(error));
         }
     }
     /** Called when element connects to DOM; calls base and updates view. */
@@ -258,7 +258,8 @@ export class DropdownMenu extends HTMLDivElement {
                 el.id = option.content;
                 el.textContent = option.content;
                 el.className =
-                    'brdr pad-xs flex justify-center items-center cursor-pointer input-emphasis h-m';
+                    'brdr pad-xs flex justify-center items-center cursor-pointer \
+					input-emphasis h-m';
                 el.role = 'option';
                 el.ariaSelected = 'false';
                 el.setAttribute('tabindex', '-1');
