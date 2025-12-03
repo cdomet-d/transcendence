@@ -34,14 +34,16 @@ export async function natsSubscription(serv: FastifyInstance) {
 			const notif: friendNotif | gameNotif = JSON.parse(sc.decode(msg.data));
 			// serv.log.error(`Received message: ${JSON.stringify(notif)}`);
 			
-			const receiverWS: WebSocket | undefined = serv.users.getUserSocket(notif.receiverID)
+			const receiverWS: Array<WebSocket> | undefined = serv.users.getUserSockets(notif.receiverID)
 			if (receiverWS === undefined) {
-				//TODO
+				//TODO: le faire remonter au client
 				serv.log.error("receiver not found")
 				return;
 			}
-			if (receiverWS.OPEN)
-				receiverWS.send(JSON.stringify(notif));
+			for (const socket of receiverWS) {
+				if (socket.OPEN)
+					socket.send(JSON.stringify(notif));
+			}
 		}
 	})();
 }
