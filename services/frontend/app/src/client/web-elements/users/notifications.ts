@@ -310,9 +310,7 @@ export class NotifBox extends HTMLDivElement {
         this.addEventListener('click', this.handleClick);
         window.addEventListener('resize', this.computePanelPos);
         window.addEventListener('scroll', this.computePanelPos);
-        this.notifWsRequest();
         this.render();
-        //TODO:request db for pending friend request
     }
 
     /** Cleans up listeners and polling when the element is disconnected from the DOM. */
@@ -321,8 +319,6 @@ export class NotifBox extends HTMLDivElement {
         window.removeEventListener('resize', this.computePanelPos);
         window.removeEventListener('scroll', this.computePanelPos);
         this.removeEventListener('click', this.handleClick);
-        if (this.#ws)
-            this.#ws.close;
     }
 
     /** Renders the toggle and panel elements inside the main wrapper. */
@@ -363,7 +359,12 @@ export class NotifBox extends HTMLDivElement {
 
         ws.onclose = (event) => {
             console.log('NOTIF webSocket connection closed!');
+            //TODO: redirect on error ?
         }
+    }
+
+    get ws(): WebSocket | null {
+        return this.#ws;
     }
 }
 

@@ -11,6 +11,8 @@ export class LoginForm extends BaseForm {
         try {
             const response = await fetch(url, req);
             if (!response.ok) throw await errorMessageFromResponse(response);
+            //TODO:request db for pending friend request
+            document.body.header?.notif.notifWsRequest();
             router.loadRoute(router.stepBefore, true);
         } catch (error) {
             throw error;
