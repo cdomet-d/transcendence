@@ -406,13 +406,13 @@ async function fetchMatches(log: any, userID: string, token: string): Promise<Ra
 		log.error(`[BFF] User service failed with status ${response.status}`);
 		throw new Error('User service failed.');
 	}
+
 	return (response.json() as Promise<RawMatches[]>);
 }
 
 //error handled
 async function fetchUsernames(log: any, userIDs: string[], token: string): Promise<Map<string, string>> {
 	if (userIDs.length === 0) return new Map();
-
 	const url = `http://users:2626/usernames`;
 	let response: Response;
 
@@ -460,6 +460,7 @@ async function fetchUsernames(log: any, userIDs: string[], token: string): Promi
 }
 
 //error handled
+//TODO: problem for game history here are dashboard
 export async function processMatches(log: any, userID: string, token: string): Promise<Matches[]> {
 
 	try {
@@ -504,6 +505,7 @@ export async function processMatches(log: any, userID: string, token: string): P
 				tournament: isTournament
 			};
 
+			console.log("in process matches", JSON.stringify(match));
 			return (match);
 		});
 

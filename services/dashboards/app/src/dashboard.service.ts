@@ -1,7 +1,7 @@
 import { Database } from "sqlite";
 import type { Match, Tournament } from "./routes.js";
 
-export async function getGameHistory(db: Database, userID: number): Promise<Match[]> {
+export async function getGameHistory(db: Database, userID: string): Promise<Match[]> {
 	const query = `
 		SELECT
 			gameID,
@@ -22,10 +22,11 @@ export async function getGameHistory(db: Database, userID: number): Promise<Matc
 	`;
 
 	const matches = await db.all<Match[]>(query, [userID, userID, userID]);
+	
 	return (matches);
 };
 
-export async function getTournamentHistory(db: Database, userID: number): Promise<Tournament[]> {
+export async function getTournamentHistory(db: Database, userID: string): Promise<Tournament[]> {
 	const query =
 		` SELECT
 			t.tournamentID,

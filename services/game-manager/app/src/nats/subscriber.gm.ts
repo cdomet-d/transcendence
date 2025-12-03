@@ -51,8 +51,8 @@ export async function natsSubscribe() {
 			const payload = sc.decode(msg.data);
 			console.log(`GM received following in "game.over" :\n`, JSON.stringify(payload));
 
-			// if (tournamentID ==! -1)
-			tournamentState(payload);
+			//if (tournamentID ==! -1)
+			//	tournamentState(payload);
 			// else {
 			gameOver(payload);
 			// }
