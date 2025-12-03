@@ -63,17 +63,21 @@ export class PageHeader extends HTMLElement {
         this.#logout.removeEventListener('click', this.#logoutHandler);
     }
 
-    async getLogState() {
+    async getLogState(): Promise<void> {
         const log = await userStatus();
-
         if (log.auth) {
-            this.#login.remove();
-            this.append(this.#logout);
-            this.#logout.classList.add('h-m', 'w-l');
+            if (this.contains(this.#login)) this.#login.remove();
+            if (!this.contains(this.#logout)) {
+                this.append(this.#logout);
+                this.#logout.classList.add('h-m', 'w-l');
+            }
+            await this.#notif.fetchPendingFriendRequests();
         } else {
-            this.#logout.remove();
-            this.append(this.#login);
-            this.#login.classList.add('h-m', 'w-l');
+            if (this.contains(this.#logout)) this.#logout.remove();
+            if (!this.contains(this.#login)) {
+                this.append(this.#login);
+                this.#login.classList.add('h-m', 'w-l');
+            }
         }
     }
 

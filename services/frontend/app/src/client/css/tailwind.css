@@ -187,8 +187,12 @@
 		--n-inner-border-w: -1px;
 	}
 
-	.sidebar-right {
+	.search-cols {
 		grid-template-columns: 70% 25%;
+	}
+	
+	.notif-cols {
+		grid-template-columns: 60% 35%;
 	}
 
 	.sidebar-left {

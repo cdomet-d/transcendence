@@ -5,7 +5,7 @@ import { Menu } from './basemenu.js';
 import {
     errorMessageFromException,
     createErrorFeedback,
-    errorMessageFromResponse,
+    exceptionFromResponse,
 } from '../../error.js';
 
 //TODO: update SocialMenu to Setting button when view is 'self'
@@ -72,7 +72,7 @@ export class SocialMenu extends Menu {
         req.body = JSON.stringify(profileOwner);
         try {
             const rawRes = await fetch(url, req);
-            if (!rawRes.ok) throw await errorMessageFromResponse(rawRes);
+            if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
             this.view = 'stranger';
             this.updateView();
         } catch (error) {
@@ -91,7 +91,7 @@ export class SocialMenu extends Menu {
         req.body = JSON.stringify(profileOwner);
         try {
             const rawRes = await fetch(url, req);
-            if (!rawRes.ok) throw await errorMessageFromResponse(rawRes);
+            if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
             this.view = 'pending';
             this.updateView();
         } catch (error) {

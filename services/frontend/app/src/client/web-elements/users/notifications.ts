@@ -1,6 +1,15 @@
 import type { GameType, MenuData, friendNotif, gameNotif } from '../types-interfaces.js';
 import { createMenu } from '../navigation/menu-helpers.js';
 import { userStatus, type userStatusInfo } from '../../main.js';
+import {
+    createErrorFeedback,
+    errorMessageFromException,
+    exceptionFromResponse,
+    redirectOnError,
+} from '../../error.js';
+import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
+import { createLink } from '../navigation/buttons-helpers.js';
+import type { navigationLinksData } from '../types-interfaces.js';
 
 //TODO: Make notifications tab-focusable
 //TODO: Buttons are actually a form
@@ -45,27 +54,37 @@ const notificationBtns: MenuData = {
  * The element is rendered as a grid with text and action buttons.
  */
 class NotifContent extends HTMLDivElement {
-    #text: HTMLParagraphElement;
+    #message: HTMLSpanElement;
 
     constructor() {
         super();
-        this.#text = document.createElement('p');
+        this.#message = document.createElement('span');
     }
 
-    /**
-     * Sets the main text content for the notification message.
-     *
-     * @param {string} str - The message content shown to the user.
-     */
-    set setContent(str: string) {
-        this.#text.innerText = str;
+    createNotifMessage(profile: string, mess: string) {
+        const linkData: navigationLinksData = {
+            styleButton: false,
+            id: 'requester',
+            datalink: profile,
+            href: `/user/${profile}`,
+            title: profile,
+            img: null,
+        };
+        const a = createLink(linkData);
+        const p = document.createElement('p');
+
+        p.innerText = mess;
+        this.#message.append(a, p);
+        p.className = 'box-border pad-xs';
     }
 
     /** Called when the element is connected; renders text and buttons within the container. */
     connectedCallback() {
         const buttons = createMenu(notificationBtns, 'horizontal');
-        this.append(this.#text, buttons);
-        this.className = 'grid grid-cols-[65%_32%] gap-s';
+        this.append(this.#message, buttons);
+        buttons.listbox.classList.add('row-s');
+        this.#message.className = 'inline-flex justify-center';
+        this.className = 'grid notif-cols gap-s';
         this.id = 'notification';
         this.setAttribute('unread', '');
     }
@@ -116,7 +135,7 @@ class NotifToggle extends HTMLDivElement {
         this.#alert.className =
             'hidden z-2 invalid thin brdr bg-red w-s h-s absolute top-[8px] right-[8px]';
         this.className =
-            'w-[fit-content] relative cursor-pointer hover:scale-108 transform transition-transform';
+            'w-fit relative cursor-pointer hover:scale-108 transform transition-transform';
 
         this.append(notifIcon, this.#alert);
     }
@@ -159,7 +178,7 @@ class NotifPanel extends HTMLDivElement {
 
     /** Creates panel structure with background and decorative elements. */
     #createPopupContent() {
-        this.#content.className = 'box-border bg brdr pad-xs w-[fit-content] relative grid gap-s';
+        this.#content.className = 'box-border bg brdr pad-xs w-[fit-content] relative grid';
 
         const notifDecor = document.createElement('img');
         notifDecor.src = '/public/assets/images/notification-bubble.png';
@@ -204,6 +223,7 @@ class NotifPanel extends HTMLDivElement {
      * @param {NotifContent} el - The notification element to add.
      */
     newNotification(el: NotifContent) {
+        this.clearStaleNotifications();
         this.#content.querySelector('#default')?.remove();
         this.#content.insertBefore(el, this.#content.firstChild);
     }
@@ -211,8 +231,11 @@ class NotifPanel extends HTMLDivElement {
     /** Responds to observed attribute changes to toggle visibility and clear old markers. */
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
         if (oldValue === newValue) return;
+        console.log('attributechange');
         this.clearStaleNotifications();
-        if (name === 'selected') this.classList.toggle('hidden');
+        if (name === 'selected') {
+            this.classList.toggle('hidden');
+        }
     }
 
     /** Builds the popup layout and attaches the default message. */
@@ -268,9 +291,8 @@ export class NotifBox extends HTMLDivElement {
      */
     newFriendRequest(username: string) {
         const notif = document.createElement('div', { is: 'notif-content' }) as NotifContent;
-        notif.setContent = `${username} sent you a friend request!`;
+        notif.createNotifMessage(username, 'sent you a friend request!');
         this.#popup.newNotification(notif);
-        this.computePanelPos();
     }
 
     /**
@@ -281,9 +303,8 @@ export class NotifBox extends HTMLDivElement {
      */
     newGameInvitation(username: string, game: GameType) {
         const notif = document.createElement('div', { is: 'notif-content' }) as NotifContent;
-        notif.setContent = `${username} challenged you to a ${game}!`;
+        notif.createNotifMessage(username, `challenged you to a ${game}!`);
         this.#popup.newNotification(notif);
-        this.computePanelPos();
     }
 
     /**
@@ -301,17 +322,32 @@ export class NotifBox extends HTMLDivElement {
         }
     }
 
+    async fetchPendingFriendRequests() {
+        const status = await userStatus();
+        if (!status.auth) redirectOnError('/auth', 'You must be registered to see this page');
+        const url = `https://localhost:8443/api/bff/profile/${status.username}`;
+        try {
+            const rawRes = await fetch(url);
+            if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
+            const res = await rawRes.json();
+            const requests = userArrayFromAPIRes(res.pending);
+            requests.forEach((r) => {
+                this.newFriendRequest(r.username);
+            });
+        } catch (error) {
+            createErrorFeedback(errorMessageFromException(error));
+        }
+    }
+
     //TODO: Improve notification polling with NATS messages when a user receives a notification
     /** Sets up Event listeners and polling logic when the container is attached to the DOM. */
     connectedCallback() {
-        // this.#newNotifIntervalId = setInterval(() => {
-        //     this.#toggle.toggleAlert(this.#popup.checkUnreadNotification());
-        // }, 5000);
         this.addEventListener('click', this.handleClick);
         window.addEventListener('resize', this.computePanelPos);
         window.addEventListener('scroll', this.computePanelPos);
         this.notifWsRequest();
         this.render();
+
         //TODO:request db for pending friend request
     }
 
@@ -321,8 +357,7 @@ export class NotifBox extends HTMLDivElement {
         window.removeEventListener('resize', this.computePanelPos);
         window.removeEventListener('scroll', this.computePanelPos);
         this.removeEventListener('click', this.handleClick);
-        if (this.#ws)
-            this.#ws.close;
+        if (this.#ws) this.#ws.close;
     }
 
     /** Renders the toggle and panel elements inside the main wrapper. */
@@ -335,13 +370,12 @@ export class NotifBox extends HTMLDivElement {
 
     async notifWsRequest() {
         const userStatusInfo: userStatusInfo = await userStatus();
-        if (userStatusInfo.auth === false || userStatusInfo.userID === undefined)
-            return;
+        if (userStatusInfo.auth === false || userStatusInfo.userID === undefined) return;
         const userID: number = userStatusInfo.userID;
         const ws = new WebSocket(`wss://localhost:8443/notification/${userID}`);
 
         ws.onerror = () => {
-            ws.close(1011, "websocket error")
+            ws.close(1011, 'websocket error');
         };
 
         ws.onopen = () => {
@@ -350,20 +384,19 @@ export class NotifBox extends HTMLDivElement {
             ws.addEventListener('message', (event) => {
                 const notif: friendNotif | gameNotif | string = JSON.parse(event.data);
                 // console.log(`Received message: ${JSON.stringify(notif)}`);
-                if (typeof notif === "string" && notif === "ping")
-                    ws.send(JSON.stringify("pong"));
+                if (typeof notif === 'string' && notif === 'ping') ws.send(JSON.stringify('pong'));
                 if (typeof notif === 'object') {
                     if (notif.type === 'FRIEND_REQUEST')
                         this.newFriendRequest(notif.senderUsername);
                     else if (notif.type === 'GAME_INVITE')
                         this.newGameInvitation(notif.receiverName, notif.gameType);
                 }
-            })
-        }
+            });
+        };
 
         ws.onclose = (event) => {
             console.log('NOTIF webSocket connection closed!');
-        }
+        };
     }
 }
 

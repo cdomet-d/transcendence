@@ -36,7 +36,7 @@ export function errorMessageFromException(error: unknown): string {
     return mess;
 }
 
-export async function errorMessageFromResponse(response: Response): Promise<Error> {
+export async function exceptionFromResponse(response: Response): Promise<Error> {
     const errorData = await response.json();
     return new Error(`Error: ${response.status}: ${errorData.message}`);
 }
