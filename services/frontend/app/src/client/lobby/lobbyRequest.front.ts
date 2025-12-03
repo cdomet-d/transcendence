@@ -1,18 +1,8 @@
 import { redirectOnError } from "../error";
 import { userStatus, type userStatusInfo } from "../main";
+import type { lobbyRequestForm } from "./gm.interface.front";
 
-interface lobbyRequestForm {
-    event: string,
-    payload: {
-        action: string,
-        format: string,
-        userID: number,
-        lobbyID?: string
-    },
-    formInstance?: string
-}
-
-async function createLobbyRequest(action: string, format: string, formInstance: string): Promise<string> {
+async function createLobbyRequest(action: string, format: string, formInstance?: string): Promise<string> {
 
     const host: userStatusInfo = await userStatus();
     if (!host.auth) {
@@ -27,7 +17,7 @@ async function createLobbyRequest(action: string, format: string, formInstance: 
             format: format,
             userID: host.userID!,
         },
-        formInstance: formInstance
+        // formInstance: formInstance
     };
 
     return JSON.stringify(createLobbyForm);

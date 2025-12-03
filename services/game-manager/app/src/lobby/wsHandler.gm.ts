@@ -12,17 +12,15 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 	socket.on('message', (message: string) => {
 		try {
 			const data = JSON.parse(message);
-
 			if (!validateData(data, req, socket)) return;
 
 			const { payload, formInstance } = data;
-
 			if (!validatePayload(data, payload, req, socket)) return;
 
 			if (data.event === "BAD_USER_TOKEN") return;
 
 			if (data.event === "LOBBY_REQUEST") {
-				const lobbyPayload = payload as unknown as lobbyRequestForm;
+				const lobbyPayload = payload as lobbyRequestForm;
 
 				userID = lobbyPayload.userID;
 				console.log("lobbyHost UID: ", userID);
@@ -45,7 +43,7 @@ export function wsHandler(socket: WebSocket, req: FastifyRequest): void {
 					wsSend(socket, JSON.stringify({ lobby: "joined", lobbyID: lobbyPayload.lobbyID }));
 				}
 			} else if (data.event === "GAME_REQUEST") {
-				const gamePayload = payload as unknown as lobbyInfo;
+				const gamePayload = payload as lobbyInfo;
 				processGameRequest(gamePayload);
 			}
 		} catch (error) {

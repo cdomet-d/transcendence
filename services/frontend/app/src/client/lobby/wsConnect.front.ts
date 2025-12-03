@@ -21,7 +21,7 @@ async function wsConnect(action: string, format: string, formInstance: string, l
         // send Lobby Request
         if (action === 'create') {
             if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-                wsInstance.send(await createLobbyRequest(action, format, formInstance));
+                wsInstance.send(await createLobbyRequest(action, format/* , formInstance */));
             } else {
                 console.log(`Error: WebSocket is not open for ${action}`);
             }
