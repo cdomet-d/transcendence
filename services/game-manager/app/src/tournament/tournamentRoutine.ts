@@ -1,5 +1,5 @@
 import { tournamentMap } from "./tournamentStart.js";
-import type { game, tournament, userInfo } from "../manager.interface.js";
+import type { game, tournament, userInfo } from "../gameManager/gameManager.interface.js";
 import { startGame } from "../quickmatch/createGame.js";
 import { gameOver } from "../quickmatch/gameOver.js";
 import { tournamentOver } from "./tournamentOver.js";

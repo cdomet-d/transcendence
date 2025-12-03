@@ -42,10 +42,23 @@ interface tournament {
 	nbPlayers: number
 }
 
+// NATS
+interface user {
+	userID: number,
+	username: string,
+}
+
+interface gameReply {
+	gameID: string,
+	users: user[],
+	remote: boolean
+}
+
+// PONG
 interface gameRequest {
 	opponent: string,
 	gameID: string,
 	remote: boolean,
 }
 
-export type { userInfo, lobbyInfo, whitelist, tournament, game, gameRequest };
+export type { userInfo, lobbyInfo, whitelist, tournament, game, gameRequest, user, gameReply };

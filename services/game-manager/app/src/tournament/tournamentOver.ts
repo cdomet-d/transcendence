@@ -1,6 +1,6 @@
 import { fetch } from 'undici'; // TODO remove this right ?
 import { lobbyMap } from '../lobby/lobby.gm.js';
-import type { tournament } from '../manager.interface.js';
+import type { tournament } from '../gameManager/gameManager.interface.js';
 
 export function tournamentOver(tournament: tournament) {
 	patchTournamentToDashboard(tournament);

@@ -1,5 +1,5 @@
 import { lobbyMap } from '../lobby/lobby.gm.js';
-import type { game } from '../manager.interface.js';
+import type { game } from '../gameManager/gameManager.interface.js';
 
 export function gameOver(payload: string) {
 	const game: game = JSON.parse(payload);

@@ -1,7 +1,7 @@
 import { Ajv } from "ajv";
 import type { FastifyRequest } from "fastify";
 import type { WebSocket } from '@fastify/websocket';
-import { wsSend } from "./lobby/wsHandler.gm.js";
+import { wsSend } from "../lobby/wsHandler.gm.js";
 
 const ajv = new Ajv();
 

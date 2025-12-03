@@ -1,5 +1,5 @@
 import { fetch } from "undici";
-import type { tournament } from "../manager.interface.js";
+import type { tournament } from "../gameManager/gameManager.interface.js";
 import { startGame } from "../quickmatch/createGame.js";
 
 export const tournamentMap: Map<string, tournament> = new Map();

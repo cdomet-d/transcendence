@@ -1,9 +1,9 @@
-import type { lobbyInfo } from '../manager.interface.js';
-import { processGameRequest } from '../manager.js';
-import { wsClientsMap, addUserToLobby, createLobby, lobbyMap, removeUserFromLobby, addUserToWhitelist, removeUserFromWhitelist } from './lobby.gm.js';
 import type { FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
-import { validateData, validatePayload } from '../inputValidation.js';
+import { processGameRequest } from '../gameManager/gameManager.js';
+import { wsClientsMap, addUserToLobby, createLobby, lobbyMap, removeUserFromLobby, addUserToWhitelist, removeUserFromWhitelist } from './lobby.gm.js';
+import { validateData, validatePayload } from '../gameManager/inputValidation.js';
+import type { lobbyInfo } from '../gameManager/gameManager.interface.js';
 import type { lobbyRequestForm } from './lobby.interface.js';
 
 export function wsHandler(socket: WebSocket, req: FastifyRequest): void {

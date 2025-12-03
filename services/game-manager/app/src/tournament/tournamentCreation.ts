@@ -1,4 +1,4 @@
-import type { game, lobbyInfo, tournament, userInfo } from '../manager.interface.js';
+import type { game, lobbyInfo, tournament, userInfo } from '../gameManager/gameManager.interface.js';
 
 export function createTournament(payload: lobbyInfo): tournament | undefined {
 	const tournamentID = crypto.randomUUID().toString();

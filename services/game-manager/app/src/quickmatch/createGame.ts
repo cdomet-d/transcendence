@@ -1,4 +1,4 @@
-import type { game, lobbyInfo, userInfo } from "../manager.interface.js";
+import type { game, lobbyInfo, userInfo } from "../gameManager/gameManager.interface.js";
 import { natsPublish } from "../nats/publisher.gm.js";
 
 export function createGameObj(lobbyInfo: lobbyInfo) {

@@ -1,4 +1,4 @@
-import type { userInfo, lobbyInfo } from "../manager.interface.js";
+import type { userInfo, lobbyInfo } from "../gameManager/gameManager.interface.js";
 export const wsClientsMap: Map<number, WebSocket> = new Map();
 export const lobbyMap: Map<string | undefined, lobbyInfo> = new Map();
 
