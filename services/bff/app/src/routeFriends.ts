@@ -60,7 +60,6 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 
 			await createFriendRequest(serv.log, senderID, friendUserID, token);
 			try {
-				console.log('HEEEEEEEEEEEERRRRRRRRRRRRRRRRREEEEEEEEEEEEEEEEEEE !');
 
 				const eventPayload = {
 					type: 'FRIEND_REQUEST',

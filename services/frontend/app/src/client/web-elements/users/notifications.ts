@@ -355,7 +355,6 @@ export class NotifBox extends HTMLDivElement {
                     ws.send(JSON.stringify("pong"));
                 if (typeof notif === 'object') {
                     if (notif.type === 'FRIEND_REQUEST') {
-                        console.log('HEEEEEEEEEEEERRRRRRRRRRRRRRRRREEEEEEEEEEEEEEEEEEE !');
                         this.newFriendRequest(notif.senderUsername);
                     }
                     else if (notif.type === 'GAME_INVITE')
