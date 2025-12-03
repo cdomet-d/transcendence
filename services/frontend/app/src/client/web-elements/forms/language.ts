@@ -1,7 +1,6 @@
 import type { Dictionary } from '../types-interfaces.js';
 
-// 1. The Default Dictionary (English)
-// We hardcode this so the app renders instantly without waiting for a fetch.
+// TODO hardcoded this so the app renders instantly without waiting for a fetch for now, will do route calling in next branch
 export const defaultDictionary: Dictionary = {
 	common: {
 		submit: "Submit",
@@ -14,16 +13,16 @@ export const defaultDictionary: Dictionary = {
 		password: "Password",
 		biography: "Biography",
 		avatar: "Avatar",
-		search_placeholder: "Chercher..."
+		search_placeholder: "Search..."
 	},
 	game: {
-		ball_speed: "Vitesse de balle",
-		paddle_size: "Vitesse de paddle",
+		ball_speed: "Starting ball speed",
+		paddle_size: "Paddle size",
 		paddle_speed: "Paddle Speed",
 		opponent: "Opponent",
 		start: "Start Game",
 		local: "Locale",
-		remote: "A distance"
+		remote: "Remote"
 	},
 	titles: {
 		settings: "Settings",
