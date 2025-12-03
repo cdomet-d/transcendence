@@ -302,6 +302,61 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	serv.get('/username', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const query = request.params as { userID: string };
+
+			if (query.userID) {
+				const sql = `SELECT userID, username FROM userProfile WHERE userID = ?`;
+				const response = await serv.dbUsers.get(sql, [query.userID]);
+
+				if (!response) {
+					return (reply.code(404).send({
+						success: false,
+						message: 'User not found'
+					}));
+				}
+
+				return (reply.code(200).send({
+					success: true,
+					message: "user found!",
+					response
+				}));
+			}
+
+			return (reply.code(400).send({
+				success: false,
+				message: 'A query parameter (e.g., ?userID=...) is required.'
+			}));
+		} catch (error) {
+			serv.log.error(`Error fetching user profile: ${error}`);
+			throw (error);
+		}
+	});
+
 	serv.post('/usernames', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
@@ -345,7 +400,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(error);
-			throw(error);
+			throw (error);
 		}
 	});
 
@@ -470,7 +525,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				message: 'User profile updated successfully!',
 			});
 		} catch (error) {
-			if ( error && typeof error === 'object' && 'code' in error && (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE')
+			if (error && typeof error === 'object' && 'code' in error && (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE')
 				return (reply.code(409).send({ success: false, message: 'This username is already taken.' }));
 			serv.log.error(`Error fetching user profile: ${error}`);
 			throw error;

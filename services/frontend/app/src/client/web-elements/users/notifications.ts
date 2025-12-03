@@ -150,6 +150,7 @@ class NotifPanel extends HTMLDivElement {
     }
 
     /** Adds a default message when the list has no notifications. */
+    //TODO language notifs
     addDefault() {
         const defaultContent = document.createElement('p');
         defaultContent.innerText = 'No new notifications :<';

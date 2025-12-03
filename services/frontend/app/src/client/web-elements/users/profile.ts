@@ -92,6 +92,7 @@ export class UserProfile extends HTMLDivElement {
     /**
      * Sets the user's profile age (days since joined).
      */
+    //TODO joined for language
     set profileAge(val: string) {
         if (this.#joinedSince.textContent !== `Joined ${val} days ago`) {
             this.#joinedSince.textContent = `Joined ${val} days ago`;

@@ -143,7 +143,6 @@ export async function fetchUserData(log: any, userID: string, token: string): Pr
 	return (body.userData);
 }
 
-//TODO handle error and catch in route
 export async function fetchProfileView(log: any, userID: string, targetUserID: string, token: string): Promise<ProfileView> {
 
 	if (Number(targetUserID) === Number(userID))
@@ -460,7 +459,6 @@ async function fetchUsernames(log: any, userIDs: string[], token: string): Promi
 }
 
 //error handled
-//TODO: problem for game history here are dashboard
 export async function processMatches(log: any, userID: string, token: string): Promise<Matches[]> {
 
 	try {

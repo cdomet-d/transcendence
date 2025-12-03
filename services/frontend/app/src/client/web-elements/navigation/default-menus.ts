@@ -1,5 +1,6 @@
 import type { ButtonData, MenuData, TabData } from '../types-interfaces.js';
 
+//TODO language for header
 export const main: MenuData = {
     id: 'mainNav',
     links: [
@@ -47,6 +48,7 @@ export const homeLink: MenuData = {
     ],
 };
 
+//TODO language log in/out button 
 export const logOut: ButtonData = {
     type: 'button',
     id: 'logout',
@@ -122,8 +124,8 @@ export const social: MenuData = {
 
 export const languageMenu: ButtonData[] = [
     { id: 'English', ariaLabel: 'English', content: 'English', img: null, type: 'button' },
-    { id: 'Spanish', ariaLabel: 'Spanish', content: 'Spanish', img: null, type: 'button' },
-    { id: 'French', ariaLabel: 'French', content: 'French', img: null, type: 'button' },
+    { id: 'Spanish', ariaLabel: 'Spanish', content: 'Español', img: null, type: 'button' },
+    { id: 'French', ariaLabel: 'Francais', content: 'French', img: null, type: 'button' },
 ];
 
 export const backgroundMenu: ButtonData[] = [
@@ -183,12 +185,14 @@ export const userColorsMenu: ButtonData[] = [
     },
 ];
 
+//TODO language for profile
 export const profileTabs: TabData[] = [
     { id: 'friends', content: 'Friends', default: true, panelContent: null },
     { id: 'history', content: 'Game history', default: false, panelContent: null },
     { id: 'stats', content: 'Statistics', default: false, panelContent: null },
 ];
 
+//TODO language for lobby
 export const lobbyQuickmatchMenu: MenuData = {
     id: 'quickMatchMenu',
     links: [
@@ -197,6 +201,7 @@ export const lobbyQuickmatchMenu: MenuData = {
     ],
 };
 
+//TODO language for tournament
 export const lobbyTournamentMenu: MenuData = {
     id: 'tournamentMenu',
     links: [

@@ -195,6 +195,7 @@ export async function renderSettings() {
     updatePageTitle(status.username + 'Settings');
 }
 
+//TODO language lobby
 export function renderLobbyMenu() {
     console.log('renderLobbyMenu');
     prepareLayout(document.body.layoutInstance, 'lobbyMenu');

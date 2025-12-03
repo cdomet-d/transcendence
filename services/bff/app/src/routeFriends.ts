@@ -10,10 +10,8 @@ declare module 'fastify' {
 	}
 }
 
-//TODO test all routes (clc a cause du JWT)
 export async function bffFriendRoutes(serv: FastifyInstance) {
 
-	//TESTED (without JWT)
 	serv.post('/relation', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
