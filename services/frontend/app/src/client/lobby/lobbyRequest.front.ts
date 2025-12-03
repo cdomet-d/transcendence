@@ -46,7 +46,7 @@ function joinLobbyRequest(action: string, format: string, lobbyID: string) {
         payload: {
             action: action,
             format: format,
-            userID: "temp", // TODO: get uid from 'host'
+            userID: "temporary", // TODO: get uid from 'host'
             lobbyID: lobbyID,
         },
         // formInstance: formInstance
