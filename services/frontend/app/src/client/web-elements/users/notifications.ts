@@ -310,6 +310,10 @@ export class NotifBox extends HTMLDivElement {
         this.addEventListener('click', this.handleClick);
         window.addEventListener('resize', this.computePanelPos);
         window.addEventListener('scroll', this.computePanelPos);
+        if (this.#ws === null) {
+            //TODO:request db for pending friend request
+            this.notifWsRequest();
+        }
         this.render();
     }
 
