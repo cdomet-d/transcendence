@@ -10,7 +10,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
         heading: dic.titles.settings,
         ariaLabel: 'User settings',
         id: 'user-settings',
-        method: 'post',
+        method: 'POST',
         fields: [
             {
                 id: 'upload',
@@ -55,7 +55,7 @@ export function registrationForm(dic: Dictionary): FormDetails {
         heading: dic.titles.register,
         ariaLabel: 'Create an account',
         id: 'account-create',
-        method: 'post',
+        method: 'POST',
         fields: [
             {
                 id: 'username',
@@ -103,7 +103,7 @@ export function loginForm(dic: Dictionary): FormDetails {
         heading: dic.titles.login,
         ariaLabel: 'Log into an account',
         id: 'account-login',
-        method: 'post',
+        method: 'POST',
         fields: [
             {
                 id: 'username',
@@ -154,7 +154,7 @@ export function localPong(dic: Dictionary): FormDetails {
         gameFormat: 'local-quickmatch',
         ariaLabel: 'Pong settings',
         id: 'local-pong-settings',
-        method: 'post',
+        method: 'POST',
         fields: [
             {
                 id: 'ballspeed',

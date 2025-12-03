@@ -34,10 +34,10 @@ export async function init(): Promise<FastifyInstance> {
 
 //add plugins
 function addPlugins(serv: FastifyInstance) {
-	serv.register(authPlugin);
 	serv.register(dbConnector);
 	serv.register(fastifyJwt, {secret: process.env.JWT_SECRET!});
 	serv.register(cookie);
+	serv.register(authPlugin);
 	serv.register(authenticationRoutes);
 }
 

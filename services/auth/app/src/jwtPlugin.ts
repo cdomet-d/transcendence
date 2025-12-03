@@ -9,13 +9,13 @@ export interface JwtPayload {
 
 export async function authPlugin(serv: FastifyInstance) {
     serv.addHook('preHandler', async (request, reply) => {
+		console.log('RUNNING FOR...', request.url);
         const token = request.cookies.token;
         if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
         try {
             const user = serv.jwt.verify(token) as JwtPayload;
             if (typeof user !== 'object') throw new Error('Invalid token detected');
             request.user = user;
-            return reply.code(200).send({ username: user.username, userID: user.userID });
         } catch (error) {
             if (error instanceof Error && 'code' in error) {
                 if (

@@ -10,7 +10,7 @@ import type { Avatar } from '../typography/images.js';
 import type { DropdownMenu } from '../navigation/menus.js';
 import type { UserData } from '../types-interfaces.js';
 import {
-    createErrorFeedback,
+    createVisualFeedback,
     errorMessageFromException,
 } from '../../error.js';
 import { Popup } from '../layouts/popup.js';
@@ -86,7 +86,7 @@ export class UserSettingsForm extends BaseForm {
         //     const res = await rawRes.json();
         //     console.log(res);
         // } catch (error) {
-        //     createErrorFeedback(errorMessageFromException(error));
+        //     createVisualFeedback(errorMessageFromException(error));
         // }
     }
 
@@ -185,7 +185,7 @@ export class UserSettingsForm extends BaseForm {
             const file = f.get('upload');
             if (!file || !(file instanceof File)) throw new Error('Error processing avatar');
             if (file.size > MAX_FILE)
-                return createErrorFeedback('That file is way too heavy; max is 2MB. Ta!');
+                return createVisualFeedback('That file is way too heavy; max is 2MB. Ta!');
             if (file.name !== '') {
                 console.log(file);
                 try {
@@ -193,7 +193,7 @@ export class UserSettingsForm extends BaseForm {
                     const binaryAvatar = await this.#fileToBinary(file);
                     if (binaryAvatar) f.append('avatar', binaryAvatar);
                 } catch (error) {
-                    createErrorFeedback(errorMessageFromException(error));
+                    createVisualFeedback(errorMessageFromException(error));
                 }
             }
         }

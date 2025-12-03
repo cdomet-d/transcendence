@@ -236,7 +236,7 @@
 				var(--gradient2),
 				var(--gradient3),
 				var(--gradient4) 100%);
-		overflow-x: hidden;
+		overflow: hidden;
 	}
 
 	p,
