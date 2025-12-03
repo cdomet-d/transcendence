@@ -30,7 +30,7 @@ export function wsRequest(game: Game, ids: { gameID: string; userID: number }) {
 		console.log('PONG webSocket connection closed!');
 		console.log('EVENT received:  ', event.reason);
 		if (event.code === 1003 || event.code === 1011) {
-			createErrorFeedback(event.reason); //TODO: fix
+			createErrorFeedback(event.reason); //TODO: fix: call redirectOnError ?
 			return;
 		}
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);
