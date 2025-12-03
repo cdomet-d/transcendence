@@ -4,10 +4,6 @@ import { PageHeader } from './web-elements/navigation/header.js';
 import { Router, routes } from './router.js';
 import { errorMessageFromException, redirectOnError } from './error.js';
 
-// import { pong } from './game/pong.js';
-// import { addLanguageEvents } from './language/languageEvents.js';
-// import { initLanguageCSR } from './language/translation.js';
-
 export const router = new Router(routes);
 
 declare global {
@@ -47,6 +43,3 @@ if (!document.body.layoutInstance || !document.body.header) {
 
 document.body.append(document.body.header, document.body.layoutInstance);
 router.loadRoute(router.currentPath, true);
-
-// initLanguageCSR();
-// addLanguageEvents();

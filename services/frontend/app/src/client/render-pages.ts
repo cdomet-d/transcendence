@@ -12,7 +12,7 @@ import { createTabs } from './web-elements/navigation/tabs-helpers.js';
 import { farm, ocean, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
 import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
 import {
-    customizeUserSettingsForm,
+    userSettingsForm,
     localPong,
     remotePong,
     pongTournament,
@@ -24,7 +24,7 @@ import {
 } from './web-elements/navigation/default-menus.js';
 import { pong, type gameRequest } from './pong/pong.js';
 import { PongUI } from './web-elements/game/game-ui.js';
-import { errorMessageFromException, errorMessageFromResponse, redirectOnError } from './error.js';
+import { errorMessageFromException, exceptionFromResponse, redirectOnError } from './error.js';
 import { TournamentBrackets } from './web-elements/game/tournament.js';
 import type { Match } from 'path-to-regexp';
 import type { navigationLinksData, TabData } from './web-elements/types-interfaces.js';
@@ -34,6 +34,7 @@ import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
 import { createLink } from './web-elements/navigation/buttons-helpers.js';
 import type { NavigationLinks } from './web-elements/navigation/links.js';
+import { defaultDictionary } from './web-elements/forms/language.js'
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -83,7 +84,7 @@ export function renderNotFound() {
     const goHomeData: navigationLinksData = {
         styleButton: true,
         id: 'backHome',
-        title: 'Country Roads, take me home... to the place... I BELOOOoooOOOng... WEST VIRGINIAAAAaaAAA',
+        title: 'Go home',
         datalink: 'home',
         href: '/',
         img: null,
@@ -109,19 +110,19 @@ export function renderHome() {
 export function renderAuth() {
     prepareLayout(document.body.layoutInstance, 'auth');
     const wrapper = createWrapper('authsettings');
-
+    
     const authOptions: TabData[] = [
         {
             id: 'login-tab',
             content: 'Login',
             default: true,
-            panelContent: createForm('login-form', loginForm),
+            panelContent: createForm('login-form', loginForm(defaultDictionary)),
         },
         {
             id: 'registration-tab',
             content: 'Register',
             default: false,
-            panelContent: createForm('registration-form', registrationForm),
+            panelContent: createForm('registration-form', registrationForm(defaultDictionary)),
         },
     ];
     wrapper.append(createTabs(authOptions));
@@ -140,10 +141,9 @@ export async function renderLeaderboard() {
         const rawRes = await fetch(url);
         if (rawRes.status === 401)
             return redirectOnError('/auth', 'You must be registered to see this page');
-        if (!rawRes.ok) throw await errorMessageFromResponse(rawRes);
+        if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
 
         const res = await rawRes.json();
-        console.log(res);
         document.body.layoutInstance!.appendAndCache(
             createHeading('2', 'Leaderboard'),
             createLeaderboard(userArrayFromAPIRes(res)),
@@ -168,7 +168,7 @@ export async function renderSelf() {
         const res = await fetch(url);
         if (!res.ok) {
             if (res.status === 404) renderNotFound();
-            else throw await errorMessageFromResponse(res);
+            else throw await exceptionFromResponse(res);
         }
         buildUserProfile(res);
         updatePageTitle(status.username!);
@@ -191,7 +191,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
             const res = await fetch(url);
             if (!res.ok) {
                 if (res.status === 404) renderNotFound();
-                else throw await errorMessageFromResponse(res);
+                else throw await exceptionFromResponse(res);
             }
             buildUserProfile(res);
             updatePageTitle(login);
@@ -213,7 +213,7 @@ export async function renderSettings() {
         const res = await raw.json();
         prepareLayout(document.body.layoutInstance, 'userSettings');
         const user = userDataFromAPIRes(res);
-        const form = customizeUserSettingsForm(user);
+        const form = userSettingsForm(defaultDictionary);
         document.body.layoutInstance?.appendAndCache(createForm('settings-form', form, user));
     } catch (error) {
         redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));

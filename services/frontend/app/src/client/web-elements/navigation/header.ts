@@ -1,12 +1,12 @@
 import { createButton } from './buttons-helpers.js';
 import { createDropdown, createMenu } from './menu-helpers.js';
 import { createForm } from '../forms/helpers.js';
-import { createNotificationBox } from '../users/notifications-helpers.js';
+import { createNotificationBox } from '../notifications/notifications-helpers.js';
 import { CustomButton } from './buttons.js';
 import { DropdownMenu } from './menus.js';
 import { languageMenu, main, homeLink, logOut, logIn } from './default-menus.js';
 import { Menu } from './basemenu.js';
-import { NotifBox } from '../users/notifications.js';
+import { NotifBox } from '../notifications/notifications-wrapper.js';
 import { router } from '../../main.js';
 import { Searchbar } from '../forms/search.js';
 import { userStatus } from '../../main.js';
@@ -48,6 +48,7 @@ export class PageHeader extends HTMLElement {
 
     async #logoutImplementation() {
         await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+        this.#notif.ws?.close();
         router.loadRoute('/', true);
     }
 
@@ -63,17 +64,21 @@ export class PageHeader extends HTMLElement {
         this.#logout.removeEventListener('click', this.#logoutHandler);
     }
 
-    async getLogState() {
+    async getLogState(): Promise<void> {
         const log = await userStatus();
-
         if (log.auth) {
-            this.#login.remove();
-            this.append(this.#logout);
-            this.#logout.classList.add('h-m', 'w-l');
+            if (this.contains(this.#login)) this.#login.remove();
+            if (!this.contains(this.#logout)) {
+                this.append(this.#logout);
+                this.#logout.classList.add('h-m', 'w-l');
+            }
+			await this.#notif.fetchPendingFriendRequests();
         } else {
-            this.#logout.remove();
-            this.append(this.#login);
-            this.#login.classList.add('h-m', 'w-l');
+            if (this.contains(this.#logout)) this.#logout.remove();
+            if (!this.contains(this.#login)) {
+                this.append(this.#login);
+                this.#login.classList.add('h-m', 'w-l');
+            }
         }
     }
 
@@ -92,6 +97,10 @@ export class PageHeader extends HTMLElement {
             'z-1',
         );
         this.#mainNav.classList.add('place-self-stretch');
+    }
+
+    get notif(): NotifBox {
+        return this.#notif;
     }
 }
 

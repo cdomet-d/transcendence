@@ -4,10 +4,17 @@ import type { JwtPayload } from '../jwtPlugin.js';
 
 import { deleteAccount, createUserProfile, checkUsernameUnique } from './auth.service.js';
 
-// TODO: password is not required for temporary users
+// interface JwtPayload {
+//     userID: string;
+//     username: string;
+//     iat: number;
+//     exp: number;
+// }
+
 const authSchema = {
     body: {
         type: 'object',
+        // TODO: password is not required for temporary users
         required: ['username', 'password'],
         properties: {
             username: { type: 'string' },
@@ -25,7 +32,6 @@ const verifySchema = {
         },
     },
 };
-
 //TODO update user status on login and logout
 export async function authenticationRoutes(serv: FastifyInstance) {
     serv.get('/status', async (request, reply) => {
@@ -98,10 +104,10 @@ export async function authenticationRoutes(serv: FastifyInstance) {
         const { password } = request.body as { password: string };
     });
 
-    serv.post('/register', { schema: authSchema }, async (request, reply) => {
-        let newAccountId: number | null = null;
-        try {
-            const { username, password } = request.body as { username: string; password: string };
+	serv.post('/register', { schema: authSchema }, async (request, reply) => {
+		let newAccountId: string | null = null;
+		try {
+			const { username, password } = request.body as { username: string; password: string };
 
             if (!username || !password)
                 return reply.code(400).send({ message: '[AUTH] Missing username or password.' });
@@ -111,18 +117,16 @@ export async function authenticationRoutes(serv: FastifyInstance) {
             const usernameTaken = await checkUsernameUnique(serv.dbAuth, username);
             if (usernameTaken) return reply.code(409).send({ message: 'Username taken' });
 
-            const query = `
-				INSERT INTO account (hashedPassword, username)
-				VALUES (?, ?)
+			const query = `
+				INSERT INTO account (userID, hashedPassword, username)
+				VALUES (?, ?, ?)
 			`;
-
-            const params = [hashedPassword, username];
+            newAccountId = crypto.randomUUID().toString();
+            const params = [newAccountId, hashedPassword, username];
             const account = await serv.dbAuth.run(query, params);
 
             if (account.changes === 0 || !account.lastID)
                 throw new Error('[AUTH] Failed to create account record.');
-
-            newAccountId = account.lastID;
 
             const usersResponse = createUserProfile(serv.log, newAccountId, username);
             if ((await usersResponse).errorCode === `conflict`)
@@ -272,23 +276,17 @@ export async function authenticationRoutes(serv: FastifyInstance) {
                 });
             }
 
-            return reply.code(200).send({
-                success: true,
-                message: '[AUTH] Account updated successfully!',
-            });
-        } catch (error) {
-            if (
-                error &&
-                typeof error === 'object' &&
-                'code' in error &&
-                ((error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' ||
-                    (error as { code: string }).code === 'SQLITE_CONSTRAINT')
-            )
-                return reply
-                    .code(409)
-                    .send({ success: false, message: '[AUTH] This username is already taken.' });
-            serv.log.error(`[AUTH] Error updating account: ${error}`);
-            throw error;
-        }
-    });
+			return reply.code(200).send({
+				success: true,
+				message: '[AUTH] Account updated successfully!',
+			});
+
+		} catch (error) {
+			if (error && typeof error === 'object' && 'code' in error &&(
+				(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' || (error as { code: string }).code === 'SQLITE_CONSTRAINT'))
+				return reply.code(409).send({ success: false, message: '[AUTH] This username is already taken.' });
+			serv.log.error(`[AUTH] Error updating account: ${error}`);
+			throw error;
+		}
+	});
 }

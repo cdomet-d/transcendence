@@ -6,7 +6,7 @@ import { createUserInline } from '../users/profile-helpers.js';
 import { DropdownMenu } from '../navigation/menus.js';
 import type { Searchbar } from './search.js';
 import type { UserData } from '../types-interfaces.js';
-import { createErrorFeedback, errorMessageFromResponse } from '../../error.js';
+import { createVisualFeedback, exceptionFromResponse } from '../../error.js';
 import { userDataFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
@@ -145,7 +145,7 @@ export class RemotePongSettings extends LocalPongSettings {
         try {
             const rawResp = await fetch(url);
             console.log(rawResp.ok);
-            if (!rawResp.ok) throw await errorMessageFromResponse(rawResp);
+            if (!rawResp.ok) throw await exceptionFromResponse(rawResp);
             const resp = await rawResp.json();
             const user = userDataFromAPIRes(resp);
             return user;
@@ -177,8 +177,8 @@ export class RemotePongSettings extends LocalPongSettings {
             } else {
                 console.log('too many guests');
                 if (target.title === this.#owner)
-                    createErrorFeedback("You can't invite yourself, dummy");
-                else createErrorFeedback("You can't invite any more people!");
+                    createVisualFeedback("You can't invite yourself, dummy");
+                else createVisualFeedback("You can't invite any more people!");
             }
         }
     }

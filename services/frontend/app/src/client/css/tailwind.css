@@ -188,28 +188,23 @@
 		--n-inner-border-w: -1px;
 	}
 
-	.sidebar-right {
+	.search-cols {
 		grid-template-columns: 70% 25%;
+	}
+	
+	.notif-cols {
+		grid-template-columns: 60% 35%;
 	}
 
 	.sidebar-left {
 		grid-template-columns: 36.8% 60%;
 	}
 
-	/* Used to hide some UI elements from viewing users, 
-	but still keep them accessible to screen readers */
-	.visually-hidden {
-		position: absolute !important;
-		width: 1px;
-		height: 1px;
-		padding: 0;
-		margin: -1px;
-		overflow: hidden;
-		clip: rect(0, 0, 0, 0);
-		white-space: nowrap;
-		border: 0;
+	.notif-panel-pos {
+		position: fixed;
+		left: var(--panel-left, 0);
+		top: var(--panel-top, 0);
 	}
-
 }
 
 @layer base {
@@ -680,7 +675,7 @@
 
 	.masonery {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, 11.25rem);
+		grid-template-columns: repeat(auto-fill, 12rem);
 		place-items: start;
 	}
 

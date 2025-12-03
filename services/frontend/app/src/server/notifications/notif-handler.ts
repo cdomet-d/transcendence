@@ -2,14 +2,14 @@ import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 
 interface Params {
-  userID: number;//TODO: change to string
+  userID: string;
 }
 
 export function notifHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest<{ Params: Params }>) {
 	this.log.info('NOTIF webSocket connection established');
-	const userID: number = Number(req.params.userID);
+	const userID: string = req.params.userID;
 	//TODO: if nan
-	this.users.addUser(userID, socket);
+	this.users.addUserSocket(userID, socket);
 
 	const interval = setInterval(() => {
 		if (socket.readyState === socket.OPEN)
@@ -19,7 +19,7 @@ export function notifHandler(this: FastifyInstance, socket: WebSocket, req: Fast
 	}, 30000);
 
     socket.onclose = (event) => {
-		this.users.deleteUser(userID);
+		this.users.deleteUserSocket(userID, socket);
     }
 
     socket.onerror = (event) => {

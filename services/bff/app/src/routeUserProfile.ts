@@ -58,13 +58,13 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
             if (!combinedUserData)
                 return reply.code(404).send({ message: 'User profile data not found.' });
 
-            const [userData, userStats, friends, pending, recentMatches] = await Promise.all([
-                combinedUserData,
-                fetchUserStats(serv.log, Number(combinedUserData.userID), token),
-                fetchFriendships(serv.log, Number(combinedUserData.userID), 'friend', token),
-                fetchFriendships(serv.log, Number(combinedUserData.userID), 'pending', token),
-                processMatches(serv.log, Number(combinedUserData.userID), token),
-            ]);
+			const [userData, userStats, friends, pending, recentMatches] = await Promise.all([
+				combinedUserData,
+				fetchUserStats(serv.log, combinedUserData.userID, token),
+				fetchFriendships(serv.log, combinedUserData.userID, 'friend', token),
+				fetchFriendships(serv.log, combinedUserData.userID, 'pending', token),
+				processMatches(serv.log, combinedUserData.userID, token),
+			]);
 
             if (!userData || !userStats)
                 return reply
@@ -124,8 +124,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
                 }
             }
 
-            const { username: targetUsername } = request.params as { username: string };
-            const { userID: viewerUserID } = request.user as { userID: number };
+			const { username: targetUsername } = request.params as { username: string };
+			const { userID: viewerUserID } = request.user as { userID: string };
 
             if (!viewerUserID) return reply.code(401).send({ message: 'Unauthorized.' });
 
@@ -307,36 +307,48 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
                 if (typeof error === 'object' && error !== null && 'code' in error) {
                     const customError = error as { code: number; message: string };
 
-                    if (customError.code === 409)
-                        return reply
-                            .code(409)
-                            .send({
-                                message:
-                                    customError.message || '[BFF] Conflict error. Username taken',
-                            });
-                    if (customError.code === 404)
-                        return reply
-                            .code(404)
-                            .send({
-                                message: customError.message || '[BFF] User/account not found.',
-                            });
-                    if (customError.code === 400)
-                        return reply
-                            .code(400)
-                            .send({ message: customError.message || '[BFF] Bad Request.' });
-                    if (customError.code === 401)
-                        return reply
-                            .code(401)
-                            .send({ message: customError.message || '[BFF] Unauthorized' });
-                }
-                throw error;
-            }
-        } catch (error) {
-            serv.log.error(`[BFF] Failed to update settings: ${error}`);
-            throw error;
-        }
-    });
+					if (customError.code === 409) return reply.code(409).send({ message: customError.message || '[BFF] Conflict error. Username taken' });
+					if (customError.code === 404) return reply.code(404).send({ message: customError.message || '[BFF] User/account not found.' });
+					if (customError.code === 400) return reply.code(400).send({ message: customError.message || '[BFF] Bad Request.' });
+					if (customError.code === 401) return reply.code(401).send({ message: customError.message || '[BFF] Unauthorized' });
+				}
+				throw error;
+			}
+		} catch (error) {
+			serv.log.error(`[BFF] Failed to update settings: ${error}`);
+			throw error;
+		}
+	});
 
-    //TODO : endpoint friendlist pending
-    // get-pending-relation
+	//TODO : route to get username with userID 
+	/*serv.get('/username', async (request, reply) => {
+				  const token = request.cookies.token;
+			  if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+  	
+			  if (token) {
+				  try {
+					  const user = serv.jwt.verify(token) as JwtPayload;
+					  if (typeof user !== 'object') throw new Error('Invalid token detected');
+					  request.user = user;
+				  } catch (error) {
+					  if (error instanceof Error && 'code' in error) {
+						  if (
+							  error.code === 'FST_JWT_BAD_REQUEST' ||
+							  error.code === 'ERR_ASSERTION' ||
+							  error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						  )
+							  return reply.code(400).send({ code: error.code, message: error.message });
+						  return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					  } else {
+						  return reply.code(401).send({ message: 'Unknown error' });
+					  }
+				  }
+			  }
+
+	  const userID = request.user.userID;
+  	
+	  const response = await 
+  }); */
+	//TODO : endpoint friendlist pending
+	// get-pending-relation
 }

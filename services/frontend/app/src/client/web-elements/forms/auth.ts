@@ -1,6 +1,6 @@
 import { BaseForm } from './baseform';
 import { router } from '../../main';
-import { errorMessageFromResponse } from '../../error';
+import { exceptionFromResponse, createVisualFeedback, errorMessageFromException } from '../../error';
 
 export class RegistrationForm extends BaseForm {
     constructor() {
@@ -10,8 +10,9 @@ export class RegistrationForm extends BaseForm {
     override async fetchAndRedirect(url: string, req: RequestInit) {
         try {
             const response = await fetch(url, req);
-            if (!response.ok) throw await errorMessageFromResponse(response);
+            if (!response.ok) throw await exceptionFromResponse(response);
             if (typeof req.body === 'string') {
+                document.body.header?.notif.notifWsRequest();
                 router.loadRoute('/me', true);
             }
         } catch (error) {
@@ -31,12 +32,12 @@ export class LoginForm extends BaseForm {
 
     override async fetchAndRedirect(url: string, req: RequestInit) {
         try {
-			console.log(req);
             const response = await fetch(url, req);
-            if (!response.ok) throw await errorMessageFromResponse(response);
+            if (!response.ok) throw await exceptionFromResponse(response);
+            document.body.header?.notif.notifWsRequest();
             router.loadRoute('/me', true);
         } catch (error) {
-            throw error;
+            createVisualFeedback(errorMessageFromException(error));
         }
     }
 }
@@ -44,6 +45,7 @@ export class LoginForm extends BaseForm {
 if (!customElements.get('login-form')) {
     customElements.define('login-form', LoginForm, { extends: 'form' });
 }
+
 
 export class CriticalActionForm extends BaseForm {
     constructor() {

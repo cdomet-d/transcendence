@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 
 export interface JwtPayload {
-    userID: number;
+    userID: string;
     username: string;
     iat: number;
     exp: number;

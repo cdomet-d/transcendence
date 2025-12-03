@@ -80,7 +80,7 @@ export class Username extends HTMLDivElement {
     /** Called when element is added to the document. */
     connectedCallback() {
         this.id = 'username';
-        this.className = 'true false f-yellow grid f-m gap-s username justify-items-center';
+        this.className = 'true false f-yellow grid f-m gap-xs username justify-items-center';
         this.#link.classList.add('flex', 'items-center');
         this.render();
     }

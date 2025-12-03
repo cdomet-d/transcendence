@@ -36,21 +36,20 @@ export function errorMessageFromException(error: unknown): string {
     return mess;
 }
 
-export async function errorMessageFromResponse(response: Response): Promise<Error> {
-	console.log(response);
+export async function exceptionFromResponse(response: Response): Promise<Error> {
     const errorData = await response.json();
     return new Error(`Error: ${response.status}: ${errorData.message}`);
 }
 
-export function createErrorFeedback(message: string) {
+export function createVisualFeedback(message: string, type?: Feedback) {
     const err = document.createElement('span', { is: 'ui-feedback' }) as UIFeedback;
     document.body.layoutInstance?.appendAndCache(err);
     err.content = message;
-    err.type = 'error';
+    !type ? err.type = 'error' : err.type = type;
 }
 
 export async function redirectOnError(route: string, message: string) {
     router.loadRoute(route, true);
     await DOMReady();
-    createErrorFeedback(message);
+    createVisualFeedback(message);
 }
