@@ -1,7 +1,6 @@
 import type { InputFieldsData } from '../types-interfaces.js';
 import { Checkbox } from './buttons.js';
 import { createCheckbox } from './helpers.js';
-import { createErrorFeedback } from '../../error.js';
 
 const MAX_SIZE = 2 * 1024 * 1024; // 2MB
 
@@ -230,6 +229,7 @@ export class InputGroup extends HTMLDivElement {
         this.#input.min = this.#info.min;
         this.#input.max = this.#info.max;
         this.#input.step = this.#info.step;
+		this.#input.value = '0';
     }
 
     #isUpload() {

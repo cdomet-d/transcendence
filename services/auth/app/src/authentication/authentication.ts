@@ -4,10 +4,10 @@ import type { JwtPayload } from '../jwtPlugin.js';
 
 import { deleteAccount, createUserProfile, checkUsernameUnique } from './auth.service.js';
 
+// TODO: password is not required for temporary users
 const authSchema = {
     body: {
         type: 'object',
-        // TODO: password is not required for temporary users
         required: ['username', 'password'],
         properties: {
             username: { type: 'string' },
@@ -19,7 +19,7 @@ const authSchema = {
 const verifySchema = {
     body: {
         type: 'object',
-        required: 'password',
+        required: ['password'],
         properties: {
             password: { type: 'string' },
         },
