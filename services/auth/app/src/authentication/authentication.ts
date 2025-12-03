@@ -36,7 +36,7 @@ const verifySchema = {
 export async function authenticationRoutes(serv: FastifyInstance) {
     serv.get('/status', async (request, reply) => {
         const token = request.cookies.token;
-        if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+        if (!token) return reply.code(401).send({ message: 'Unauthorized' });
         if (token) {
             try {
                 const user = serv.jwt.verify(token) as JwtPayload;
@@ -51,7 +51,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
                         error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
                     )
                         return reply.code(400).send({ code: error.code, message: error.message });
-                    return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+                    return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
                 } else {
                     return reply.code(401).send({ message: 'Unknown error' });
                 }
@@ -171,7 +171,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
     serv.delete('/:userID', async (request, reply) => {
         try {
             const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+            if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
             if (token) {
                 try {
@@ -188,7 +188,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
                             return reply
                                 .code(400)
                                 .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+                        return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
                     } else {
                         return reply.code(401).send({ message: 'Unknown error' });
                     }
@@ -212,7 +212,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
     serv.patch('/:userID', async (request, reply) => {
         try {
             const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+            if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
             if (token) {
                 try {
@@ -229,7 +229,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
                             return reply
                                 .code(400)
                                 .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+                        return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
                     } else {
                         return reply.code(401).send({ message: 'Unknown error' });
                     }

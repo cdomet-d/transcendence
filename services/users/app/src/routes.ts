@@ -28,7 +28,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.get('/:userID', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -43,7 +43,7 @@ export async function userRoutes(serv: FastifyInstance) {
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
 							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -78,7 +78,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.get('/leaderboard', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -93,7 +93,7 @@ export async function userRoutes(serv: FastifyInstance) {
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
 							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -138,7 +138,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.get('/search', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -153,7 +153,7 @@ export async function userRoutes(serv: FastifyInstance) {
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
 							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -197,7 +197,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.post('/profiles', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -212,7 +212,7 @@ export async function userRoutes(serv: FastifyInstance) {
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
 							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -250,7 +250,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.get('/userID/:username', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -265,7 +265,7 @@ export async function userRoutes(serv: FastifyInstance) {
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
 							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -305,7 +305,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.post('/usernames', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -320,7 +320,7 @@ export async function userRoutes(serv: FastifyInstance) {
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
 							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -407,7 +407,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.patch('/:userID', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -422,7 +422,7 @@ export async function userRoutes(serv: FastifyInstance) {
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
 							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -481,7 +481,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.delete('/:userID', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -496,7 +496,7 @@ export async function userRoutes(serv: FastifyInstance) {
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
 							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -529,7 +529,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.get('/stats/:userID', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -544,7 +544,7 @@ export async function userRoutes(serv: FastifyInstance) {
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
 							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}

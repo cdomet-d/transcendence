@@ -19,7 +19,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
     serv.get('/profile/:username', async (request, reply) => {
         try {
             const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+            if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
             if (token) {
                 try {
@@ -36,7 +36,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
                             return reply
                                 .code(400)
                                 .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+                        return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
                     } else {
                         return reply.code(401).send({ message: 'Unknown error' });
                     }
@@ -86,9 +86,9 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
                 if (customError.code === 404)
                     return reply.code(404).send({ message: 'User profile data not found.' });
                 if (customError.code === 401)
-                    return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+                    return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
                 if (customError.code === 400)
-                    return reply.code(400).send({ code: error.code, message: 'Unauthaurized' });
+                    return reply.code(400).send({ code: error.code, message: 'Unauthorized' });
 
                 serv.log.error(`[BFF] Error building user profile view: ${error}`);
                 throw error;
@@ -100,7 +100,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
     serv.get('/tiny-profile/:username', async (request, reply) => {
         try {
             const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+            if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
             if (token) {
                 try {
@@ -117,7 +117,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
                             return reply
                                 .code(400)
                                 .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+                        return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
                     } else {
                         return reply.code(401).send({ message: 'Unknown error' });
                     }
@@ -160,7 +160,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
     serv.get('/search', async (request, reply) => {
         try {
             const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+            if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
             if (token) {
                 try {
@@ -177,7 +177,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
                             return reply
                                 .code(400)
                                 .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+                        return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
                     } else {
                         return reply.code(401).send({ message: 'Unknown error' });
                     }
@@ -207,7 +207,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
     serv.get('/leaderboard', async (request, reply) => {
         try {
             const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+            if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
             if (token) {
                 try {
@@ -224,7 +224,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
                             return reply
                                 .code(400)
                                 .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+                        return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
                     } else {
                         return reply.code(401).send({ message: 'Unknown error' });
                     }
@@ -251,7 +251,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
     serv.patch('/settings', async (request, reply) => {
         try {
             const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+            if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
             if (token) {
                 try {
@@ -268,7 +268,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
                             return reply
                                 .code(400)
                                 .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+                        return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
                     } else {
                         return reply.code(401).send({ message: 'Unknown error' });
                     }
@@ -323,7 +323,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	//TODO : route to get username with userID 
 	/*serv.get('/username', async (request, reply) => {
 				  const token = request.cookies.token;
-			  if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			  if (!token) return reply.code(401).send({ message: 'Unauthorized' });
   	
 			  if (token) {
 				  try {
@@ -338,7 +338,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 							  error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						  )
 							  return reply.code(400).send({ code: error.code, message: error.message });
-						  return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+						  return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					  } else {
 						  return reply.code(401).send({ message: 'Unknown error' });
 					  }
