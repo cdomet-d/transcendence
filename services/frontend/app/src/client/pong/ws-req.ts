@@ -2,7 +2,7 @@ import { startGame } from './game-loop.js';
 import { Game, WIDTH, HEIGHT } from './classes/game-class.js';
 import { addMessEvent, createKeyEvent } from './game-events.js';
 import { renderGame } from './game-render-utils.js';
-import { createErrorFeedback } from '../error.js';
+import { createVisualFeedback } from '../error.js';
 
 const START_DELAY = 500;
 
@@ -30,7 +30,7 @@ export function wsRequest(game: Game, ids: { gameID: string; userID: string }) {
 		console.log('PONG webSocket connection closed!');
 		console.log('EVENT received:  ', event.reason);
 		if (event.code === 1003 || event.code === 1011) {
-			createErrorFeedback(event.reason); //TODO: fix
+			createVisualFeedback(event.reason); //TODO: fix
 			return;
 		}
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);

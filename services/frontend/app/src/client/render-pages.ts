@@ -17,17 +17,23 @@ import {
     remotePong,
     pongTournament,
 } from './web-elements/forms/default-forms.js';
-import { lobbyQuickmatchMenu, lobbyTournamentMenu, main } from './web-elements/navigation/default-menus.js';
+import {
+    lobbyQuickmatchMenu,
+    lobbyTournamentMenu,
+    main,
+} from './web-elements/navigation/default-menus.js';
 import { pong, type gameRequest } from './pong/pong.js';
 import { PongUI } from './web-elements/game/game-ui.js';
-import { errorMessageFromException, errorMessageFromResponse, redirectOnError } from './error.js';
+import { errorMessageFromException, exceptionFromResponse, redirectOnError } from './error.js';
 import { TournamentBrackets } from './web-elements/game/tournament.js';
-import { type Match } from 'path-to-regexp';
-import { type TabData } from './web-elements/types-interfaces.js';
+import type { Match } from 'path-to-regexp';
+import type { navigationLinksData, TabData } from './web-elements/types-interfaces.js';
 import { userStatus, router } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
+import { createLink } from './web-elements/navigation/buttons-helpers.js';
+import type { NavigationLinks } from './web-elements/navigation/links.js';
 import { defaultDictionary } from './web-elements/forms/language.js'
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
@@ -75,8 +81,19 @@ async function prepareLayout(curLayout: Layout | undefined, page: string) {
 
 export function renderNotFound() {
     console.log('renderNotFound');
+    const goHomeData: navigationLinksData = {
+        styleButton: true,
+        id: 'backHome',
+        title: 'Go home',
+        datalink: 'home',
+        href: '/',
+        img: null,
+    };
     prepareLayout(document.body.layoutInstance, 'error');
-    document.body.layoutInstance!.appendAndCache(createNoResult('dark', 'ifs'));
+    const goHome = createLink(goHomeData, false) as NavigationLinks;
+    document.body.layoutInstance!.appendAndCache(createNoResult('dark', 'ifs'), goHome);
+    goHome.classList.remove('w-full');
+    goHome.classList.add('w-1/4', 'place-self-center');
     updatePageTitle('Not Found');
 }
 
@@ -124,12 +141,11 @@ export async function renderLeaderboard() {
         const rawRes = await fetch(url);
         if (rawRes.status === 401)
             return redirectOnError('/auth', 'You must be registered to see this page');
-        if (!rawRes.ok) throw await errorMessageFromResponse(rawRes);
+        if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
 
         const res = await rawRes.json();
-        console.log(res);
         document.body.layoutInstance!.appendAndCache(
-            createHeading('1', 'Leaderboard'),
+            createHeading('2', 'Leaderboard'),
             createLeaderboard(userArrayFromAPIRes(res)),
         );
     } catch (error) {
@@ -149,7 +165,12 @@ export async function renderSelf() {
 
     try {
         prepareLayout(document.body.layoutInstance, 'profile');
-        buildUserProfile(await fetch(url));
+        const res = await fetch(url);
+        if (!res.ok) {
+            if (res.status === 404) renderNotFound();
+            else throw await exceptionFromResponse(res);
+        }
+        buildUserProfile(res);
         updatePageTitle(status.username!);
     } catch (error) {
         redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
@@ -167,7 +188,12 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
         const url = `https://localhost:8443/api/bff/profile/${login}`;
         try {
             prepareLayout(document.body.layoutInstance, 'profile');
-            buildUserProfile(await fetch(url));
+            const res = await fetch(url);
+            if (!res.ok) {
+                if (res.status === 404) renderNotFound();
+                else throw await exceptionFromResponse(res);
+            }
+            buildUserProfile(res);
             updatePageTitle(login);
         } catch (error) {
             redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
@@ -208,7 +234,7 @@ export function renderLobbyMenu() {
     quickMen?.cache.forEach((el) => {
         el.classList.remove('t2');
         el.classList.add('f-l');
-    })
+    });
     updatePageTitle('Choose Lobby');
 }
 
@@ -216,59 +242,33 @@ export function renderLobbyMenu() {
 //  being able to add himself to the game (in the UI - even if it's handled in the pong server)
 export function renderQuickLocalLobby() {
     prepareLayout(document.body.layoutInstance, 'quickLobby');
-    const pongOptions: TabData[] = [
-        {
-            id: 'pong-local',
-            content: '',
-            default: true,
-            panelContent: createForm('local-pong-settings', localPong(defaultDictionary)),
-        },
-    ];
-    const wrapper = createWrapper('pongsettings');
-    wrapper.append(createTabs(pongOptions));
-    document.body.layoutInstance?.appendAndCache(wrapper);
+    document.body.layoutInstance?.appendAndCache(createForm('local-pong-settings', localPong));
     wsConnect('create', 'quickmatch', 'localForm');
 }
 
 export function renderQuickRemoteLobby() {
     prepareLayout(document.body.layoutInstance, 'quickLobby');
-    const pongOptions: TabData[] = [
-        {
-            id: 'pong-remote',
-            content: '',
-            default: true,
-            panelContent: createForm('remote-pong-settings', remotePong),
-        },
-    ];
-    const wrapper = createWrapper('pongsettings');
-    wrapper.append(createTabs(pongOptions));
-    document.body.layoutInstance?.appendAndCache(wrapper);
+    document.body.layoutInstance?.appendAndCache(createForm('remote-pong-settings', remotePong));
     wsConnect('create', 'quickmatch', 'remoteForm');
 }
 
 export function renderTournamentLobby() {
     prepareLayout(document.body.layoutInstance, 'tournamentLobby');
-    const pongOptions: TabData[] = [
-        {
-            id: 'pong-tournament',
-            content: '',
-            default: true,
-            panelContent: createForm('remote-pong-settings', pongTournament),
-        },
-    ];
-    const wrapper = createWrapper('pongsettings');
-    wrapper.append(createTabs(pongOptions));
-    document.body.layoutInstance?.appendAndCache(wrapper);
+    document.body.layoutInstance?.appendAndCache(createForm('remote-pong-settings', pongTournament));
     wsConnect('create', 'tournament', 'tournamentForm');
 }
 
-export function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest) {
+export function renderGame(
+    param?: Match<Partial<Record<string, string | string[]>>>,
+    gameRequest?: gameRequest,
+) {
     console.log('renderGame');
 
-	if (!gameRequest) return redirectOnError('/', 'Uh-oh! You can\'t be there - go join a lobby or something !')
+    if (!gameRequest)
+        return redirectOnError('/', "Uh-oh! You can't be there - go join a lobby or something !");
     prepareLayout(document.body.layoutInstance, 'game');
 
-	console.log(gameRequest)
+    console.log(gameRequest);
     const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
     const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
 
@@ -284,7 +284,7 @@ export function renderGame(param?: Match<Partial<Record<string, string | string[
 
     // pong({ userID: 1, gameID: "1", remote: false }, court.ctx, ui);
     if (gameRequest === undefined) {
-        console.log("GameRequest =>", gameRequest);
+        console.log('GameRequest =>', gameRequest);
         // TODO Show explicit error in UI
         return;
     }

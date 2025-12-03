@@ -44,7 +44,7 @@ export class Menu extends HTMLElement {
      */
     set menuContent(list: MenuData) {
         this.#linkInfo = list;
-        this.id = list.id;
+        if (list.id) this.id = list.id;
     }
 
     /**
@@ -63,6 +63,10 @@ export class Menu extends HTMLElement {
      */
     set animation(isAnimated: boolean) {
         this.#animated = isAnimated;
+    }
+
+    get listbox() {
+        return this.#menuLinks;
     }
 
     get menuStyle(): MenuStyle {
@@ -111,6 +115,7 @@ export class Menu extends HTMLElement {
      * Button elements are created using the {@link createButton} helper with animation option.
      */
     render() {
+        this.className = 'w-full';
         this.#menuLinks.className = `w-full grid gap-r justify-items-center \
 		auto-cols-fr auto-row-fr`;
         if (this.#style === 'horizontal') this.#menuLinks.classList.add('grid-flow-col');
