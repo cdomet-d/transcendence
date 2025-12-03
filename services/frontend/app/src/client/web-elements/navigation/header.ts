@@ -48,6 +48,7 @@ export class PageHeader extends HTMLElement {
 
     async #logoutImplementation() {
         await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+        this.#notif.ws?.close();
         router.loadRoute('/', true);
     }
 
@@ -96,6 +97,10 @@ export class PageHeader extends HTMLElement {
             'z-1',
         );
         this.#mainNav.classList.add('place-self-stretch');
+    }
+
+    get notif(): NotifBox {
+        return this.#notif;
     }
 }
 

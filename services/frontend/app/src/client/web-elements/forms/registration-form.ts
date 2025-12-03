@@ -12,6 +12,7 @@ export class RegistrationForm extends BaseForm {
             const response = await fetch(url, req);
             if (!response.ok) throw await exceptionFromResponse(response);
             if (typeof req.body === 'string') {
+                document.body.header?.notif.notifWsRequest();
                 router.loadRoute('/me', true);
             }
         } catch (error) {
