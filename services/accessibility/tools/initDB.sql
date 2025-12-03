@@ -1,6 +1,3 @@
--- Drop the old table if it exists
-DROP TABLE IF EXISTS language_packs;
-
 CREATE TABLE
     language_packs (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -46,13 +43,3 @@ VALUES
     "titles": { "settings": "Configuración", "register": "Registrarse", "login": "Iniciar sesión", "local_pong": "Pong Local", "remote_pong": "Pong Remoto", "tournament": "Torneo" }
 }'
     );
-
--- CREATE TABLE translations (
---     id INTEGER PRIMARY KEY AUTOINCREMENT,
---     word TEXT NOT NULL,            -- key or phrase identifier (e.g., 'hello')
---     language_code TEXT NOT NULL,   -- language code like 'English', 'Spanish', 'French'
---     translation TEXT NOT NULL      -- actual translated text in the given language
--- );
---UNIQUE(word, language_code) <--- check if it works
--- SELECT translation FROM translations WHERE word = 'hello' AND language_code = 'Spanish';
--- Returns: 'Hola'
