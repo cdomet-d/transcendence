@@ -267,7 +267,6 @@ export class NotifBox extends HTMLDivElement {
      * @param {string} username - The username who sent the friend request.
      */
     newFriendRequest(username: string) {
-        console.log('zebiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
         const notif = document.createElement('div', { is: 'notif-content' }) as NotifContent;
         notif.setContent = `${username} sent you a friend request!`;
         this.#popup.newNotification(notif);
