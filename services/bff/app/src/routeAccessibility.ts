@@ -1,27 +1,37 @@
 import type { FastifyInstance } from 'fastify';
 
-async function fetchTranslation(word: string, langCode: string): Promise<Response> {
-	const url = `http://nginx:443/internal/translations?word=${encodeURIComponent(word)}&langCode=${encodeURIComponent(langCode)}`;
-	return (fetch(url));
+async function fetchLanguagePack(log: any, langCode: string): Promise<Response> {
+	const url = `http://accessibility:1313/dictionary/${langCode}`;
+
+	try {
+		return await fetch(url);
+	} catch (error) {
+		log.error(`[BFF] Accessibility service unreachable: ${error}`);
+		throw error;
+	}
 }
-//TODO make route match between front, bff and accessibility
+
 export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 
-	serv.get('/translations', async (request, reply) => {
+	serv.get('/dictionary/:lang', async (request, reply) => {
 		try {
-			const { word, lang } = request.query as { word: string, lang: string };
+			const { lang } = request.params as { lang: string };
 
-			if (!word || !lang)
-				return reply.code(400).send({ message: 'Missing required query parameters: word, lang' });
+			const response = await fetchLanguagePack(serv.log, lang);
 
-			const translationResponse = await fetchTranslation(word, lang);
-			return (reply
-				.code(translationResponse.status)
-				.send(await translationResponse.json()));
+			if (!response.ok) {
+				if (response.status === 404) {
+					return reply.code(404).send({ message: 'Language not supported.' });
+				}
+				return reply.code(502).send({ message: 'Accessibility service error.' });
+			}
+
+			const dictionary = await response.json();
+			return reply.code(200).send(dictionary);
 
 		} catch (error) {
-			serv.log.error(`[BFF] Error getting translation: ${error}`);
-			return (reply.code(503).send({ message: 'The translation service is currently unavailable.' }));
+			serv.log.error(`[BFF] Error fetching dictionary: ${error}`);
+			return reply.code(503).send({ message: 'Service unavailable' });
 		}
 	});
 }
