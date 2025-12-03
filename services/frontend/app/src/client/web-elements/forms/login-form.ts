@@ -1,5 +1,5 @@
 import { BaseForm } from './baseform';
-import { createErrorFeedback, errorMessageFromException, exceptionFromResponse } from '../../error';
+import { createVisualFeedback, errorMessageFromException, exceptionFromResponse } from '../../error';
 import { router } from '../../main';
 
 export class LoginForm extends BaseForm {
@@ -13,7 +13,7 @@ export class LoginForm extends BaseForm {
             if (!response.ok) throw await exceptionFromResponse(response);
             router.loadRoute('/me', true);
         } catch (error) {
-			createErrorFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(error));
         }
     }
 }

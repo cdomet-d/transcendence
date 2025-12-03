@@ -1,12 +1,12 @@
 import { createButton } from './buttons-helpers.js';
 import { createDropdown, createMenu } from './menu-helpers.js';
 import { createForm } from '../forms/helpers.js';
-import { createNotificationBox } from '../users/notifications-helpers.js';
+import { createNotificationBox } from '../notifications/notifications-helpers.js';
 import { CustomButton } from './buttons.js';
 import { DropdownMenu } from './menus.js';
 import { languageMenu, main, homeLink, logOut, logIn } from './default-menus.js';
 import { Menu } from './basemenu.js';
-import { NotifBox } from '../users/notifications.js';
+import { NotifBox } from '../notifications/notifications-wrapper.js';
 import { router } from '../../main.js';
 import { Searchbar } from '../forms/search.js';
 import { userStatus } from '../../main.js';
@@ -72,7 +72,7 @@ export class PageHeader extends HTMLElement {
                 this.append(this.#logout);
                 this.#logout.classList.add('h-m', 'w-l');
             }
-            await this.#notif.fetchPendingFriendRequests();
+			await this.#notif.fetchPendingFriendRequests();
         } else {
             if (this.contains(this.#logout)) this.#logout.remove();
             if (!this.contains(this.#login)) {

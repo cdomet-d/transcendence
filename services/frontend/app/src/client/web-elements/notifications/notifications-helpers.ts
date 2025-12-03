@@ -1,4 +1,4 @@
-import { NotifBox } from './notifications.js';
+import { NotifBox } from './notifications-wrapper.js';
 
 export function createNotificationBox(): NotifBox {
     const el = document.createElement('div', { is: 'notif-container' }) as NotifBox;

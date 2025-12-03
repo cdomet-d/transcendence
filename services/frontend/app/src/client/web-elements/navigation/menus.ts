@@ -4,7 +4,7 @@ import type { CustomButton } from './buttons.js';
 import { Menu } from './basemenu.js';
 import {
     errorMessageFromException,
-    createErrorFeedback,
+    createVisualFeedback,
     exceptionFromResponse,
 } from '../../error.js';
 
@@ -76,7 +76,7 @@ export class SocialMenu extends Menu {
             this.view = 'stranger';
             this.updateView();
         } catch (error) {
-            createErrorFeedback(errorMessageFromException(error));
+            createVisualFeedback(errorMessageFromException(error));
         }
     }
 
@@ -95,7 +95,7 @@ export class SocialMenu extends Menu {
             this.view = 'pending';
             this.updateView();
         } catch (error) {
-            createErrorFeedback(errorMessageFromException(error));
+            createVisualFeedback(errorMessageFromException(error));
         }
     }
     /** Called when element connects to DOM; calls base and updates view. */
@@ -258,7 +258,8 @@ export class DropdownMenu extends HTMLDivElement {
                 el.id = option.content;
                 el.textContent = option.content;
                 el.className =
-                    'brdr pad-xs flex justify-center items-center cursor-pointer input-emphasis h-m';
+                    'brdr pad-xs flex justify-center items-center cursor-pointer \
+					input-emphasis h-m';
                 el.role = 'option';
                 el.ariaSelected = 'false';
                 el.setAttribute('tabindex', '-1');

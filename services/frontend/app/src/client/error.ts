@@ -41,15 +41,15 @@ export async function exceptionFromResponse(response: Response): Promise<Error> 
     return new Error(`Error: ${response.status}: ${errorData.message}`);
 }
 
-export function createErrorFeedback(message: string) {
+export function createVisualFeedback(message: string, type?: Feedback) {
     const err = document.createElement('span', { is: 'ui-feedback' }) as UIFeedback;
     document.body.layoutInstance?.appendAndCache(err);
     err.content = message;
-    err.type = 'error';
+    !type ? err.type = 'error' : err.type = type;
 }
 
 export async function redirectOnError(route: string, message: string) {
     router.loadRoute(route, true);
     await DOMReady();
-    createErrorFeedback(message);
+    createVisualFeedback(message);
 }
