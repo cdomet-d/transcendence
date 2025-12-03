@@ -1,5 +1,9 @@
 import { BaseForm } from './baseform';
-import { errorMessageFromResponse } from '../../error';
+import {
+    createVisualFeedback,
+    errorMessageFromException,
+    exceptionFromResponse,
+} from '../../error';
 import { router } from '../../main';
 
 export class LoginForm extends BaseForm {
@@ -10,10 +14,11 @@ export class LoginForm extends BaseForm {
     override async fetchAndRedirect(url: string, req: RequestInit) {
         try {
             const response = await fetch(url, req);
-            if (!response.ok) throw await errorMessageFromResponse(response);
-            router.loadRoute(router.stepBefore, true);
+            if (!response.ok) throw await exceptionFromResponse(response);
+            document.body.header?.notif.notifWsRequest();
+            router.loadRoute('/me', true);
         } catch (error) {
-            throw error;
+            createVisualFeedback(errorMessageFromException(error));
         }
     }
 }

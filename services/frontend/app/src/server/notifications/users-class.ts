@@ -1,6 +1,6 @@
 import type { WebSocket } from '@fastify/websocket';
 
-type usersTab = Map< string, WebSocket >
+type usersTab = Map< string, Array<WebSocket> >
 
 export class Users {
     /*                             PROPERTIES                                */
@@ -17,15 +17,23 @@ export class Users {
     }
 
 	/*                              METHODS                                  */
-    public addUser(userID: string, socket: WebSocket) {
-        this.#users.set(userID, socket);
+    public addUserSocket(userID: string, socket: WebSocket) {
+        const sockets: Array<WebSocket> = this.#users.get(userID) || [];
+        sockets.push(socket);
+        if (this.#users.has(userID) === false)
+            this.#users.set(userID, sockets);
     }
 
-    public deleteUser(userID: string) {
-        this.#users.delete(userID);
+    public deleteUserSocket(userID: string, ws: WebSocket) {
+        const sockets: Array<WebSocket> = this.#users.get(userID) || [];
+        const index: number = sockets.indexOf(ws);
+        if (index !== -1)
+            sockets.splice(index, 1);
+        if (sockets.length === 0)
+            this.#users.delete(userID);
     }
 
-    public getUserSocket(userID: string): WebSocket | undefined {
+    public getUserSockets(userID: string): Array<WebSocket> | undefined {
         return this.#users.get(userID);
     }
 }

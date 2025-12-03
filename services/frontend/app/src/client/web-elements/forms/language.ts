@@ -21,7 +21,7 @@ export const defaultDictionary: Dictionary = {
 		paddle_speed: "Paddle Speed",
 		opponent: "Opponent",
 		start: "Start Game",
-		local: "Locale",
+		local: "Local Pong",
 		remote: "Remote"
 	},
 	titles: {
