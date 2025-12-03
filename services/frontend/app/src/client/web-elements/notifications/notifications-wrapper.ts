@@ -117,7 +117,7 @@ export class NotifBox extends HTMLDivElement {
     async fetchPendingFriendRequests() {
         const status = await userStatus();
         if (!status.auth) redirectOnError('/auth', 'You must be registered to see this page');
-        const url = `https://localhost:8443/api/bff/profile/${status.username}`;
+        const url = `https://localhost:8443/api/bff/relation/${status.username}`;
         try {
             const rawRes = await fetch(url);
             if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
