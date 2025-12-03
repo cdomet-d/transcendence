@@ -31,9 +31,10 @@ export class LoginForm extends BaseForm {
 
     override async fetchAndRedirect(url: string, req: RequestInit) {
         try {
+			console.log(req);
             const response = await fetch(url, req);
             if (!response.ok) throw await errorMessageFromResponse(response);
-            router.loadRoute(router.stepBefore, true);
+            router.loadRoute('/me', true);
         } catch (error) {
             throw error;
         }
@@ -50,18 +51,17 @@ export class CriticalActionForm extends BaseForm {
     }
 
     override async fetchAndRedirect(url: string, req: RequestInit) {
-		return;
+		console.log('bitch');
     }
 
 	override async submitHandlerImplementation(ev: SubmitEvent): Promise<void> {
 		ev.preventDefault();
 		const form = new FormData(this);
-		super.createReqBody(form);
 		console.log(super.createReqBody(form))
 	}
 }
 
-if (!customElements.get('login-form')) {
-    customElements.define('login-form', CriticalActionForm, { extends: 'form' });
+if (!customElements.get('pw-form')) {
+    customElements.define('pw-form', CriticalActionForm, { extends: 'form' });
 }
 

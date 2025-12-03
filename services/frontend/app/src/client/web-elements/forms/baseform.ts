@@ -132,7 +132,7 @@ export abstract class BaseForm extends HTMLFormElement {
         ev.preventDefault();
         const form = new FormData(this);
         const req = this.initReq();
-        if (req.method === 'post') {
+        if (req.method === 'POST') {
             req.body = this.createReqBody(form);
         }
         try {

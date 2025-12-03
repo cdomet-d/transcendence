@@ -1,7 +1,7 @@
 import type { FormDetails, UserData } from '../types-interfaces.js';
 import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
 
-//TODO: HTML froms don't support patch must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
+//TODO: HTML froms don't support patch must come up with a way to identify which POST are actually POST and which are patch, to be handled in the server.
 
 export function customizeUserSettingsForm(user: UserData): FormDetails {
     userSettingsForm.fields.forEach((f) => {
@@ -59,7 +59,7 @@ export const registrationForm: FormDetails = {
     heading: 'Register',
     ariaLabel: 'Create an account',
     id: 'account-create',
-    method: 'post',
+    method: 'POST',
     fields: [
         {
             id: 'username',
@@ -94,7 +94,7 @@ export const sensitiveAccountChange: FormDetails = {
             pattern: passwordPattern,
             placeholder: 'Enter your password!',
             type: 'password',
-            required: false,
+            required: true,
         },
     ],
     button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
@@ -105,7 +105,7 @@ export const loginForm: FormDetails = {
     heading: 'Login',
     ariaLabel: 'Log into an account',
     id: 'account-login',
-    method: 'post',
+    method: 'POST',
     fields: [
         {
             id: 'username',
@@ -132,7 +132,7 @@ export const search: FormDetails = {
     heading: '',
     ariaLabel: 'Search for a user',
     id: 'searchform',
-    method: 'get',
+    method: 'GET',
     fields: [
         {
             id: 'searchbar',
@@ -152,7 +152,7 @@ export const localPong: FormDetails = {
     gameFormat: 'local-quickmatch',
     ariaLabel: 'Pong settings',
     id: 'local-pong-settings',
-    method: 'post',
+    method: 'POST',
     fields: [
         {
             id: 'ballspeed',
@@ -213,7 +213,7 @@ export const remotePong: FormDetails = {
     gameFormat: 'remote-quickmatch',
     ariaLabel: 'Remote Pong settings',
     id: 'remote-pong-settings',
-    method: 'post',
+    method: 'POST',
     fields: [
         {
             id: 'horizontal',
@@ -266,7 +266,7 @@ export const pongTournament: FormDetails = {
     gameFormat: 'tournament',
     ariaLabel: 'Pong tournament settings',
     id: 'pong-tournament-settings',
-    method: 'post',
+    method: 'POST',
     fields: [
         {
             id: 'horizontal',

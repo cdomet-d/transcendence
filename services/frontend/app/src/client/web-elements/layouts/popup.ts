@@ -12,8 +12,8 @@ export class Popup extends HTMLDialogElement {
 
     render() {
         this.className =
-            'box-border absolute top-0 left-0 grid w-full f-full grid-auto-rows-auto \
-			place-content-center layout-col gap-s z-1 bg-overlay';
+            'box-border absolute top-0 left-0 grid w-full h-full grid-auto-rows-auto \
+			place-content-center layout-col gap-s z-5 bg-overlay';
     }
 
     /**
@@ -32,6 +32,7 @@ export class Popup extends HTMLDialogElement {
      */
     appendAndCache(...el: HTMLElement[]) {
         el.forEach((component) => {
+			console.log(el)
             component.classList.add('z-1');
             this.append(component);
             this.#innerComponents.set(component.id, component);

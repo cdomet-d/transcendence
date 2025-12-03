@@ -8,6 +8,7 @@ import fastifyJwt from '@fastify/jwt';
 import { options } from './serv.conf.js'
 import { authenticationRoutes } from './authentication/authentication.js';
 import dbConnector from './db.js';
+import { authPlugin } from './jwtPlugin.js';
 
 
 (async () => {
@@ -33,6 +34,7 @@ export async function init(): Promise<FastifyInstance> {
 
 //add plugins
 function addPlugins(serv: FastifyInstance) {
+	serv.register(authPlugin);
 	serv.register(dbConnector);
 	serv.register(fastifyJwt, {secret: process.env.JWT_SECRET!});
 	serv.register(cookie);

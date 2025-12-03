@@ -4,7 +4,7 @@ import { RemotePongSettings, LocalPongSettings } from './pong-settings.js';
 import { Searchbar } from './search.js';
 import { UserSettingsForm } from './user-settings.js';
 import { RegistrationForm, LoginForm, CriticalActionForm } from './auth.js';
-import type { DeleteAccountForm } from './account-deletion-form.js';
+import { DeleteAccountForm } from './account-deletion-form.js';
 
 /**
  * Merges with the existing HTMLElementTag map.
@@ -26,7 +26,6 @@ interface HTMLElementTagMap {
 
 /**
  * A generic function allowing me to create whichever form I'd like, typing it dynamically.
- *
  * @export
  * @template K - a key of `HTMLElementTagMap` - see {@link HTMLElementTagMap}
  * @param {K} tag - the litteral key of the element I want to create
