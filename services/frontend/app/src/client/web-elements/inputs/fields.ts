@@ -229,6 +229,7 @@ export class InputGroup extends HTMLDivElement {
         this.#input.min = this.#info.min;
         this.#input.max = this.#info.max;
         this.#input.step = this.#info.step;
+        this.#input.value = '0';
     }
 
     #isUpload() {
