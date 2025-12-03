@@ -1,20 +1,20 @@
 import type { FastifyInstance } from 'fastify';
 
-async function fetchTranslation(word: string, langCode: string): Promise<Response> {
-	const url = `http://nginx:443/internal/translations?word=${encodeURIComponent(word)}&langCode=${encodeURIComponent(langCode)}`;
+async function fetchTranslation(langCode: string): Promise<Response> {
+	const url = `http://accessibility:1313/translation?langCode=${encodeURIComponent(langCode)}`;
 	return (fetch(url));
 }
 //TODO make route match between front, bff and accessibility
 export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 
-	serv.get('/translations', async (request, reply) => {
+	serv.get('/dictionary/:lang', async (request, reply) => {
 		try {
-			const { word, lang } = request.query as { word: string, lang: string };
+			const { lang } = request.params as { lang: string };
 
-			if (!word || !lang)
+			if (!lang)
 				return reply.code(400).send({ message: 'Missing required query parameters: word, lang' });
 
-			const translationResponse = await fetchTranslation(word, lang);
+			const translationResponse = await fetchTranslation(lang);
 			return (reply
 				.code(translationResponse.status)
 				.send(await translationResponse.json()));
