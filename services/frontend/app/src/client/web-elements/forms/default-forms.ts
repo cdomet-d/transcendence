@@ -138,7 +138,7 @@ export const localPong: FormDetails = {
         {
             id: 'ballspeed',
             labelContent: 'Starting Ball Speed',
-            max: '5',
+            max: '2',
             min: '0',
             pattern: '',
             placeholder: '',
@@ -157,7 +157,7 @@ export const localPong: FormDetails = {
         {
             id: 'paddlesize',
             labelContent: 'Paddle size',
-            max: '5',
+            max: '2',
             min: '0',
             pattern: '',
             placeholder: '',
@@ -176,7 +176,7 @@ export const localPong: FormDetails = {
         {
             id: 'paddlespeed',
             labelContent: 'Paddle speed',
-            max: '5',
+            max: '2',
             min: '0',
             pattern: '',
             placeholder: '',
@@ -207,7 +207,7 @@ export const remotePong: FormDetails = {
         {
             id: 'ballspeed',
             labelContent: 'Starting Ball Speed',
-            max: '5',
+            max: '2',
             min: '0',
             pattern: '',
             placeholder: '',
@@ -218,7 +218,7 @@ export const remotePong: FormDetails = {
         {
             id: 'paddlesize',
             labelContent: 'Paddle size',
-            max: '5',
+            max: '2',
             min: '0',
             pattern: '',
             placeholder: '',
@@ -229,7 +229,7 @@ export const remotePong: FormDetails = {
         {
             id: 'paddlespeed',
             labelContent: 'Paddle speed',
-            max: '5',
+            max: '2',
             min: '0',
             pattern: '',
             placeholder: '',
@@ -252,7 +252,7 @@ export const pongTournament: FormDetails = {
         {
             id: 'ballspeed',
             labelContent: 'Starting Ball Speed',
-            max: '5',
+            max: '2',
             min: '0',
             pattern: '',
             placeholder: '',
@@ -263,7 +263,7 @@ export const pongTournament: FormDetails = {
         {
             id: 'paddlesize',
             labelContent: 'Paddle size',
-            max: '5',
+            max: '2',
             min: '0',
             pattern: '',
             placeholder: '',
@@ -274,7 +274,7 @@ export const pongTournament: FormDetails = {
         {
             id: 'paddlespeed',
             labelContent: 'Paddle speed',
-            max: '5',
+            max: '2',
             min: '0',
             pattern: '',
             placeholder: '',
