@@ -242,7 +242,7 @@ export function renderLobbyMenu() {
 //  being able to add himself to the game (in the UI - even if it's handled in the pong server)
 export function renderQuickLocalLobby() {
     prepareLayout(document.body.layoutInstance, 'quickLobby');
-    document.body.layoutInstance?.appendAndCache(createForm('local-pong-settings', localPong));
+    document.body.layoutInstance?.appendAndCache(createForm('local-pong-settings', localPong(defaultDictionary)));
     wsConnect('create', 'quickmatch', 'localForm');
 }
 
@@ -258,7 +258,7 @@ export function renderTournamentLobby() {
     wsConnect('create', 'tournament', 'tournamentForm');
 }
 
-export function renderGame(
+export async function renderGame(
     param?: Match<Partial<Record<string, string | string[]>>>,
     gameRequest?: gameRequest,
 ) {
