@@ -212,7 +212,7 @@ export function renderLobbyMenu() {
 
 //TODO: for each lobby: set 'owner' with currently registered user to avoid owner
 //  being able to add himself to the game (in the UI - even if it's handled in the pong server)
-export function renderQuickLocalLobby() {
+export async function renderQuickLocalLobby() {
     prepareLayout(document.body.layoutInstance, 'quickLobby');
     const pongOptions: TabData[] = [
         {
@@ -225,10 +225,17 @@ export function renderQuickLocalLobby() {
     const wrapper = createWrapper('pongsettings');
     wrapper.append(createTabs(pongOptions));
     document.body.layoutInstance?.appendAndCache(wrapper);
+
+    const user: userStatusInfo = await userStatus();
+    if (!user.auth) {
+        redirectOnError('/auth', 'You must be registered to see this page')
+        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+    }
+
     wsConnect('create', 'quickmatch', 'localForm');
 }
 
-export function renderQuickRemoteLobby() {
+export async function renderQuickRemoteLobby() {
     prepareLayout(document.body.layoutInstance, 'quickLobby');
     const pongOptions: TabData[] = [
         {
@@ -241,10 +248,16 @@ export function renderQuickRemoteLobby() {
     const wrapper = createWrapper('pongsettings');
     wrapper.append(createTabs(pongOptions));
     document.body.layoutInstance?.appendAndCache(wrapper);
+
+    const user: userStatusInfo = await userStatus();
+    if (!user.auth) {
+        redirectOnError('/auth', 'You must be registered to see this page')
+        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+    }
     wsConnect('create', 'quickmatch', 'remoteForm');
 }
 
-export function renderTournamentLobby() {
+export async function renderTournamentLobby() {
     prepareLayout(document.body.layoutInstance, 'tournamentLobby');
     const pongOptions: TabData[] = [
         {
@@ -257,6 +270,13 @@ export function renderTournamentLobby() {
     const wrapper = createWrapper('pongsettings');
     wrapper.append(createTabs(pongOptions));
     document.body.layoutInstance?.appendAndCache(wrapper);
+
+    const user: userStatusInfo = await userStatus();
+    if (!user.auth) {
+        redirectOnError('/auth', 'You must be registered to see this page')
+        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+    }
+
     wsConnect('create', 'tournament', 'tournamentForm');
 }
 

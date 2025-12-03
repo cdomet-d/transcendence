@@ -1,7 +1,7 @@
-import { createTournament } from "./tournament/tournamentCreation.js";
-import { startTournament } from "./tournament/tournamentStart.js";
-import { createGameObj, startGame } from "./quickmatch/createGame.js";
-import type { game, lobbyInfo, tournament } from "./gameManager/gameManager.interface.js";
+import { createGameObj, startGame } from "../quickmatch/createGame.js";
+import { createTournament } from "../tournament/tournamentCreation.js";
+import { startTournament } from "../tournament/tournamentStart.js";
+import type { game, lobbyInfo, tournament } from "./gameManager.interface.js";
 
 export function processGameRequest(lobbyInfo: lobbyInfo) {
 	if (lobbyInfo.format === "tournament") {
