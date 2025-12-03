@@ -16,7 +16,7 @@ declare global {
 export interface userStatusInfo {
     auth: boolean;
     username?: string;
-    userID?: number;
+    userID?: string;
 }
 
 if (window) {

@@ -134,7 +134,7 @@ export class NotifBox extends HTMLDivElement {
     async notifWsRequest() {
         const userStatusInfo: userStatusInfo = await userStatus();
         if (userStatusInfo.auth === false || userStatusInfo.userID === undefined) return;
-        const userID: number = userStatusInfo.userID;
+        const userID: string = userStatusInfo.userID;
         const ws = new WebSocket(`wss://localhost:8443/notification/${userID}`);
 
         ws.onerror = () => {
