@@ -4,6 +4,7 @@ import { UserProfile } from './profile.js';
 import { TabContainer } from '../navigation/tabs.js';
 import { createTabs } from '../navigation/tabs-helpers.js';
 import { profileTabs } from '../navigation/default-menus.js';
+import { defaultDictionary } from '../forms/language.js';
 
 export const user: UserData = {
     avatar: {
@@ -95,7 +96,7 @@ export class ProfilePage extends HTMLDivElement {
     constructor() {
         super();
         this.#userProfile = document.createElement('div', { is: 'user-profile' }) as UserProfile;
-        this.#userTabs = createTabs(profileTabs);
+        this.#userTabs = createTabs(profileTabs(defaultDictionary));
     }
 
     set profile(user: UserData) {

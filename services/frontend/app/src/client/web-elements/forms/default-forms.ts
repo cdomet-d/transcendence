@@ -131,7 +131,7 @@ export function search(dic: Dictionary): FormDetails {
 export function localPong(dic: Dictionary): FormDetails {
     return {
         action: 'https://localhost:8443/api/game/quick-lobby/',
-        heading: dic.game.local,
+        heading: dic.gameCustom.local,
         gameFormat: 'local-quickmatch',
         ariaLabel: 'Pong settings',
         id: 'local-pong-settings',
@@ -139,7 +139,7 @@ export function localPong(dic: Dictionary): FormDetails {
         fields: [
             {
                 id: 'ballspeed',
-                labelContent: dic.game.ball_speed,
+                labelContent: dic.gameCustom.ball_speed,
                 max: '5',
                 min: '0',
                 pattern: '',
@@ -150,7 +150,7 @@ export function localPong(dic: Dictionary): FormDetails {
             },
             {
                 id: 'horizontal',
-                labelContent: dic.game.paddle_speed,
+                labelContent: dic.gameCustom.paddle_speed,
                 pattern: '',
                 placeholder: '',
                 type: 'checkbox',
@@ -158,7 +158,7 @@ export function localPong(dic: Dictionary): FormDetails {
             },
             {
                 id: 'paddlesize',
-                labelContent: dic.game.paddle_size,
+                labelContent: dic.gameCustom.paddle_size,
                 max: '5',
                 min: '0',
                 pattern: '',
@@ -171,13 +171,13 @@ export function localPong(dic: Dictionary): FormDetails {
                 id: 'opponent',
                 labelContent: 'Opponent Nickname',
                 pattern: usernamePattern,
-                placeholder: dic.game.opponent,
+                placeholder: dic.gameCustom.opponent,
                 type: 'text',
                 required: true,
             },
             {
                 id: 'paddlespeed',
-                labelContent: dic.game.paddle_speed,
+                labelContent: dic.gameCustom.paddle_speed,
                 max: '5',
                 min: '0',
                 pattern: '',

@@ -145,9 +145,6 @@ export async function fetchUserData(log: any, userID: string, token: string): Pr
 
 export async function fetchProfileView(log: any, userID: string, targetUserID: string, token: string): Promise<ProfileView> {
 
-	console.log("in fecth profileviwe");
-	console.log("targetUserID", targetUserID);
-	console.log("userID", userID);
 	if (targetUserID === userID)
 		return ('self');
 

@@ -102,7 +102,7 @@ export function renderHome() {
     prepareLayout(document.body.layoutInstance, 'home');
     document.body.layoutInstance!.appendAndCache(
         createHeading('0', 'PONG!'),
-        createMenu(main, 'vertical', true),
+        createMenu(main(defaultDictionary), 'vertical', true),
     );
     updatePageTitle('Home');
 }
@@ -227,8 +227,8 @@ export function renderLobbyMenu() {
     prepareLayout(document.body.layoutInstance, 'lobbyMenu');
     document.body.layoutInstance?.appendAndCache(
         createHeading('1', 'Choose Lobby'),
-        createMenu(lobbyQuickmatchMenu, 'horizontal', true),
-        createMenu(lobbyTournamentMenu, 'vertical', true),
+        createMenu(lobbyQuickmatchMenu(defaultDictionary), 'horizontal', true),
+        createMenu(lobbyTournamentMenu(defaultDictionary), 'vertical', true),
     );
     const quickMen = document.body.layoutInstance?.components.get('quickMatchMenu') as Menu;
     quickMen?.cache.forEach((el) => {
@@ -242,7 +242,7 @@ export function renderLobbyMenu() {
 //  being able to add himself to the game (in the UI - even if it's handled in the pong server)
 export function renderQuickLocalLobby() {
     prepareLayout(document.body.layoutInstance, 'quickLobby');
-    document.body.layoutInstance?.appendAndCache(createForm('local-pong-settings', localPong));
+    document.body.layoutInstance?.appendAndCache(createForm('local-pong-settings', localPong(defaultDictionary)));
     wsConnect('create', 'quickmatch', 'localForm');
 }
 

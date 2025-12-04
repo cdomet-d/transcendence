@@ -348,6 +348,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				reply.code(400).send({ code: response.status, message: '[BFF] Invalid query' });
 			}
 
+			reply.code(200).send({response});
+
 		} catch (error) {
 			serv.log.error(`[BFF] Failed to update settings: ${error}`);
 			throw error;

@@ -1,70 +1,78 @@
-import type { ButtonData, MenuData, TabData } from '../types-interfaces.js';
+import type { ButtonData, Dictionary, MenuData, TabData } from '../types-interfaces.js';
 
-//TODO language for header
-export const main: MenuData = {
-    id: 'mainNav',
-    links: [
-        {
-            styleButton: true,
-            id: 'leaderboard',
-            title: 'Leaderboard',
-            datalink: 'leaderboard',
-            href: '/leaderboard',
-            img: null,
-        },
-        {   styleButton: true,
-            id: 'lobby',
-            title: 'Play',
-            datalink: '/lobby-menu',
-            href: '/lobby-menu',
-            img: null
-        },
-        {   styleButton: true,
-            id: 'profile',
-            title: 'Profile',
-            datalink: 'profile',
-            href: '/me',
-            img: null
-        },
-    ],
-};
-
-export const homeLink: MenuData = {
-    id: 'backHome',
-    links: [
-        {
-            styleButton: false,
-            datalink: 'home',
-            href: '/',
-            title: 'Home',
-            id: 'home',
-            img: {
-                alt: 'A cute pixel art blob',
-                size: 'imedium',
-                src: '/public/assets/images/default-avatar.png',
-                id: 'homelink',
+export function main(dic: Dictionary): MenuData {
+    return {
+        id: 'mainNav',
+        links: [
+            {
+                styleButton: true,
+                id: 'leaderboard',
+                title: dic.titles.leaderboard,
+                datalink: 'leaderboard',
+                href: '/leaderboard',
+                img: null,
             },
-        },
-    ],
+            {
+                styleButton: true,
+                id: 'lobby',
+                title: 'Play',
+                datalink: '/lobby-menu',
+                href: '/lobby-menu',
+                img: null
+            },
+            {
+                styleButton: true,
+                id: 'profile',
+                title: 'Profile',
+                datalink: 'profile',
+                href: '/me',
+                img: null
+            },
+        ],
+    }
 };
 
-//TODO language log in/out button 
-export const logOut: ButtonData = {
-    type: 'button',
-    id: 'logout',
-    content: 'Log out',
-    img: null,
-    ariaLabel: 'The logout button',
-    style: 'red',
+export function homeLink(dic: Dictionary): MenuData {
+    return {
+        id: 'backHome',
+        links: [
+            {
+                styleButton: false,
+                datalink: 'home',
+                href: '/',
+                title: dic.titles.home,
+                id: 'home',
+                img: {
+                    alt: 'A cute pixel art blob',
+                    size: 'imedium',
+                    src: '/public/assets/images/default-avatar.png',
+                    id: 'homelink',
+                },
+            },
+        ],
+    }
 };
 
-export const logIn: ButtonData = {
-    type: 'button',
-    id: 'login',
-    content: 'Log in',
-    img: null,
-    ariaLabel: 'The login button',
-    style: 'green',
+export function logOut(dic: Dictionary): ButtonData {
+    return {
+        type: 'button',
+        id: 'logout',
+        content: dic.buttons.logout,
+        img: null,
+        ariaLabel: 'The logout button',
+        style: 'red',
+    }
+};
+
+export function logIn(dic: Dictionary): ButtonData {
+    return {
+        type: 'button',
+        id: 'login',
+        content: dic.buttons.login,
+        img: null,
+        ariaLabel: 'The login button',
+        style: 'green',
+    }
 };
 
 export const social: MenuData = {
@@ -185,26 +193,28 @@ export const userColorsMenu: ButtonData[] = [
     },
 ];
 
-//TODO language for profile
-export const profileTabs: TabData[] = [
-    { id: 'friends', content: 'Friends', default: true, panelContent: null },
+export function profileTabs(dict: Dictionary): TabData[] {
+    return [{ id: 'friends', content: dict.profile.friends, default: true, panelContent: null },
     { id: 'history', content: 'Game history', default: false, panelContent: null },
     { id: 'stats', content: 'Statistics', default: false, panelContent: null },
-];
+    ];
+}
 
-//TODO language for lobby
-export const lobbyQuickmatchMenu: MenuData = {
-    id: 'quickMatchMenu',
-    links: [
-        { styleButton: true, id: 'local-quickmatch', title: 'Local 1vs1', datalink: '/quick-local-lobby', href: '/quick-local-lobby', img: null },
-        { styleButton: true, id: 'remote-quickmatch', title: 'Remote 1vs1', datalink: '/quick-remote-lobby', href: '/quick-remote-lobby', img: null },
-    ],
-};
+export function lobbyQuickmatchMenu(dic: Dictionary): MenuData {
+    return {
+        id: 'quickMatchMenu',
+        links: [
+            { styleButton: true, id: 'local-quickmatch', title: dic.lobby.local, datalink: '/quick-local-lobby', href: '/quick-local-lobby', img: null },
+            { styleButton: true, id: 'remote-quickmatch', title: dic.lobby.remote, datalink: '/quick-remote-lobby', href: '/quick-remote-lobby', img: null },
+        ],
+    };
+}
 
-//TODO language for tournament
-export const lobbyTournamentMenu: MenuData = {
-    id: 'tournamentMenu',
-    links: [
-        { styleButton: true, id: 'tournament', title: 'Tournament', datalink: '/tournament-lobby', href: '/tournament-lobby', img: null },
-    ],
+export function lobbyTournamentMenu(dic: Dictionary): MenuData {
+    return {
+        id: 'tournamentMenu',
+        links: [
+            { styleButton: true, id: 'tournament', title: dic.lobby.tournament, datalink: '/tournament-lobby', href: '/tournament-lobby', img: null },
+        ],
+    }
 };

@@ -340,6 +340,8 @@ export interface Dictionary {
 		local_pong: string;
 		remote_pong: string;
 		tournament: string;
+		leaderboard: string;
+		home: string;
 	};
 	profile: {
 		joined: string;
@@ -373,6 +375,11 @@ export interface Dictionary {
 	error: {
 		username_error: string;
 		password_error: string;
+	};
+	lobby: {
+		local: string;
+		remote: string;
+		tournament: string;
 	}
 }
 

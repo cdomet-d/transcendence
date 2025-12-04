@@ -110,13 +110,18 @@ export interface UserProfileUpdates {
 	profileColor?: string;
 	defaultLang?: string;
 }
-
 export interface Dictionary {
-	common: {
+	buttons: {
 		submit: string;
 		cancel: string;
 		search: string;
 		delete: string;
+		decline: string;
+		play: string;
+		leaderboard: string;
+		profile: string;
+		login: string;
+		logout: string;
 	};
 	forms: {
 		username: string;
@@ -125,15 +130,6 @@ export interface Dictionary {
 		avatar: string;
 		search_placeholder: string;
 	};
-	game: {
-		ball_speed: string;
-		paddle_size: string;
-		paddle_speed: string;
-		opponent: string;
-		start: string;
-        local: string;
-        remote: string;
-	};
 	titles: {
 		settings: string;
 		register: string;
@@ -141,5 +137,39 @@ export interface Dictionary {
 		local_pong: string;
 		remote_pong: string;
 		tournament: string;
+		home: string;
 	};
+	profile: {
+		joined: string;
+		friends: string;
+		game_history: string;
+		statistics: string;
+		date: string;
+		opponent: string;
+		outcome: string;
+		score: string;
+		duration: string;
+		tournament: string;
+	};
+	notifs: {
+		notif_placeholder: string;
+	};
+	gameCustom: {
+		ball_speed: string;
+		paddle_size: string;
+		paddle_speed: string;
+		paddle_horizontal: string;
+		opponent: string;
+		start: string;
+		local: string;
+		remote: string;
+		background: string;
+		farm: string;
+		forest: string;
+		under_water: string;
+	};
+	error: {
+		username_error: string;
+		password_error: string;
+	}
 }
