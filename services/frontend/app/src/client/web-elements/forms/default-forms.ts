@@ -6,11 +6,11 @@ import { usernamePattern, passwordPattern, searchbarPattern } from '../default-v
 
 export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails {
     return {
-        action: 'https://localhost:8443/api/bff/settings/',
+        action: 'https://localhost:8443/api/bff/settings',
         heading: dic.titles.settings,
         ariaLabel: 'User settings',
         id: 'user-settings',
-        method: 'POST',
+        method: 'PATCH',
         fields: [
             {
                 id: 'upload',

@@ -9,6 +9,7 @@ import {
     processMatches,
     updateAuthSettings,
     updateUserProfile,
+    updateUserProfileUsername,
 } from './bffUserProfile.service.js';
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
@@ -58,13 +59,13 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
             if (!combinedUserData)
                 return reply.code(404).send({ message: 'User profile data not found.' });
 
-			const [userData, userStats, friends, pending, recentMatches] = await Promise.all([
-				combinedUserData,
-				fetchUserStats(serv.log, combinedUserData.userID, token),
-				fetchFriendships(serv.log, combinedUserData.userID, 'friend', token),
-				fetchFriendships(serv.log, combinedUserData.userID, 'pending', token),
-				processMatches(serv.log, combinedUserData.userID, token),
-			]);
+            const [userData, userStats, friends, pending, recentMatches] = await Promise.all([
+                combinedUserData,
+                fetchUserStats(serv.log, combinedUserData.userID, token),
+                fetchFriendships(serv.log, combinedUserData.userID, 'friend', token),
+                fetchFriendships(serv.log, combinedUserData.userID, 'pending', token),
+                processMatches(serv.log, combinedUserData.userID, token),
+            ]);
 
             if (!userData || !userStats)
                 return reply
@@ -124,8 +125,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
                 }
             }
 
-			const { username: targetUsername } = request.params as { username: string };
-			const { userID: viewerUserID } = request.user as { userID: string };
+            const { username: targetUsername } = request.params as { username: string };
+            const { userID: viewerUserID } = request.user as { userID: string };
 
             if (!viewerUserID) return reply.code(401).send({ message: 'Unauthorized.' });
 
@@ -279,23 +280,43 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
             const body = request.body as any;
 
             const profileUpdates: any = {};
+            const profileUpdatesUsername: any = {};
             const accountUpdates: any = {};
 
             if (body.avatar) profileUpdates.avatar = body.avatar;
             if (body.biography) profileUpdates.biography = body.biography;
             if (body.color) profileUpdates.profileColor = body.color;
             if (body.defaultLang) profileUpdates.lang = body.defaultLang;
-            if (body.username) profileUpdates.username = body.username;
-            if (body.password) accountUpdates.password = body.password;
-            if (body.username) accountUpdates.username = body.username;
 
             const updateTasks: Promise<void>[] = [];
 
+            if (body.username || body.password) {
+                serv.log.info('pw/username change detected');
+                const authToken = request.headers.authorization;
+                if (authToken) {
+                    if (body.username) profileUpdatesUsername.username = body.username;
+                    if (body.password) accountUpdates.password = body.password;
+                    if (body.username) accountUpdates.username = body.username;
+                    const tok = authToken.replace('Bearer', '');
+                    console.log(tok);
+                    if (Object.keys(accountUpdates).length > 0)
+                        updateTasks.push(
+                            updateAuthSettings(serv.log, userID, accountUpdates, token)
+                        );
+                    if (Object.keys(profileUpdates.username).length > 0)
+                        updateTasks.push(
+                            updateUserProfileUsername(
+                                serv.log,
+                                userID,
+                                profileUpdatesUsername,
+                                token
+                            )
+                        );
+                }
+            }
+
             if (Object.keys(profileUpdates).length > 0)
                 updateTasks.push(updateUserProfile(serv.log, userID, profileUpdates, token));
-
-            if (Object.keys(accountUpdates).length > 0)
-                updateTasks.push(updateAuthSettings(serv.log, userID, accountUpdates, token));
 
             if (updateTasks.length === 0)
                 return reply.code(200).send({ message: '[BFF] No settings to update.' });
@@ -307,21 +328,33 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
                 if (typeof error === 'object' && error !== null && 'code' in error) {
                     const customError = error as { code: number; message: string };
 
-					if (customError.code === 409) return reply.code(409).send({ message: customError.message || '[BFF] Conflict error. Username taken' });
-					if (customError.code === 404) return reply.code(404).send({ message: customError.message || '[BFF] User/account not found.' });
-					if (customError.code === 400) return reply.code(400).send({ message: customError.message || '[BFF] Bad Request.' });
-					if (customError.code === 401) return reply.code(401).send({ message: customError.message || '[BFF] Unauthorized' });
-				}
-				throw error;
-			}
-		} catch (error) {
-			serv.log.error(`[BFF] Failed to update settings: ${error}`);
-			throw error;
-		}
-	});
+                    if (customError.code === 409)
+                        return reply.code(409).send({
+                            message: customError.message || '[BFF] Conflict error. Username taken',
+                        });
+                    if (customError.code === 404)
+                        return reply.code(404).send({
+                            message: customError.message || '[BFF] User/account not found.',
+                        });
+                    if (customError.code === 400)
+                        return reply
+                            .code(400)
+                            .send({ message: customError.message || '[BFF] Bad Request.' });
+                    if (customError.code === 401)
+                        return reply
+                            .code(401)
+                            .send({ message: customError.message || '[BFF] Unauthorized' });
+                }
+                throw error;
+            }
+        } catch (error) {
+            serv.log.error(`[BFF] Failed to update settings: ${error}`);
+            throw error;
+        }
+    });
 
-	//TODO : route to get username with userID 
-	/*serv.get('/username', async (request, reply) => {
+    //TODO : route to get username with userID
+    /*serv.get('/username', async (request, reply) => {
 				  const token = request.cookies.token;
 			  if (!token) return reply.code(401).send({ message: 'Unauthorized' });
   	
@@ -349,6 +382,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
   	
 	  const response = await 
   }); */
-	//TODO : endpoint friendlist pending
-	// get-pending-relation
+    //TODO : endpoint friendlist pending
+    // get-pending-relation
 }

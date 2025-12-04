@@ -58,7 +58,6 @@ function addPlugins(serv: FastifyInstance) {
 async function runServ(serv: FastifyInstance): Promise<void> {
 	const port: number = getPort();
 	const address: string = await serv.listen({ port: port, host: '0.0.0.0' });
-	serv.log.info(`BFF Microservice listening on ${port} at ${address}`);
 }
 
 function getPort(): number {

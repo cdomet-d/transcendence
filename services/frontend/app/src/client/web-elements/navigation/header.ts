@@ -1,10 +1,9 @@
 import { createButton } from './buttons-helpers.js';
-import { createDropdown, createMenu } from './menu-helpers.js';
+import { createMenu } from './menu-helpers.js';
 import { createForm } from '../forms/helpers.js';
 import { createNotificationBox } from '../notifications/notifications-helpers.js';
 import { CustomButton } from './buttons.js';
-import { DropdownMenu } from './menus.js';
-import { languageMenu, main, homeLink, logOut, logIn } from './default-menus.js';
+import { main, homeLink, logOut, logIn } from './default-menus.js';
 import { Menu } from './basemenu.js';
 import { NotifBox } from '../notifications/notifications-wrapper.js';
 import { router } from '../../main.js';
@@ -23,7 +22,6 @@ export class PageHeader extends HTMLElement {
     #logout: CustomButton;
     #login: CustomButton;
     #notif: NotifBox;
-    #language: DropdownMenu;
 
     #loginHandler: () => void;
     #logoutHandler: () => void;
@@ -34,7 +32,6 @@ export class PageHeader extends HTMLElement {
         this.#searchbar = createForm('search-form');
         this.#mainNav = createMenu(main, 'horizontal', false);
         this.#notif = createNotificationBox();
-        this.#language = createDropdown(languageMenu, 'Language', 'static');
         this.#logout = createButton(logOut, false);
         this.#login = createButton(logIn, false);
 
@@ -53,7 +50,7 @@ export class PageHeader extends HTMLElement {
     }
 
     connectedCallback() {
-        this.append(this.#home, this.#searchbar, this.#mainNav, this.#notif, this.#language);
+        this.append(this.#home, this.#searchbar, this.#mainNav, this.#notif);
         this.#login.addEventListener('click', this.#loginHandler);
         this.#logout.addEventListener('click', this.#logoutHandler);
         this.render();

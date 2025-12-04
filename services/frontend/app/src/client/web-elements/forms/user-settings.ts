@@ -62,7 +62,7 @@ export class UserSettingsForm extends BaseForm {
     override async createReqBody(form: FormData): Promise<string> {
         const fObject = Object.fromEntries(form.entries());
         if (fObject.username || fObject.password) {
-			await CriticalActionForm.show()
+            await CriticalActionForm.show();
         }
         const jsonBody = JSON.stringify(fObject);
         return jsonBody;
@@ -72,6 +72,16 @@ export class UserSettingsForm extends BaseForm {
         console.log(url, req);
 
         try {
+            let token = localStorage.getItem('criticalChange');
+            if (token) {
+                const objToken = JSON.parse(token);
+                token = objToken.token;
+                console.log(token);
+                req.headers = {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                };
+            }
             const rawRes = await fetch(url, req);
             if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
             const res = await rawRes.json();
@@ -81,7 +91,7 @@ export class UserSettingsForm extends BaseForm {
         }
     }
 
-	    /**
+    /**
      * Handles the submit event for the form.
      * Appends color and language selections to the form data if changed.
      * @param ev - The submit event.
