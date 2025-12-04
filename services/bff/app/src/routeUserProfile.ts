@@ -66,7 +66,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				pending: pending || [],
 				matches: recentMatches || [],
 			};
-			console.log("PORFILE: ", JSON.stringify(responseData));
 
 			return reply.code(200).send(responseData);
 
@@ -300,7 +299,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/username', async (request, reply) => {
+	serv.get('/:username', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -325,11 +324,14 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				}
 			}
 
+			const username = request.params as { username: string };
+
 			const response = await fetch('http://users:2626/username', {
 				method: 'GET',
 				headers: {
 					'Cookie': `token=${token}`,
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					body: JSON.stringify(username)
 				}
 			});
 

@@ -10,7 +10,7 @@ export interface userData {
 	profileColor: string,
 	status: boolean,
 	username: string,
-	winstreak: string,
+	winStreak: string,
 	since: string
 }
 
@@ -53,7 +53,12 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { userID } = request.params as { userID: string };
 
 			const query = `
-				SELECT * FROM userProfile WHERE userID = ?
+				SELECT
+				p.*,
+				s.winStreak
+				FROM userProfile p
+				LEFT JOIN userStats s ON p.userID = s.userID
+				WHERE p.userID = ?
 			`;
 
 			const userProfile = await serv.dbUsers.get<userData>(query, [userID]);
@@ -327,11 +332,11 @@ export async function userRoutes(serv: FastifyInstance) {
 				}
 			}
 
-			const query = request.params as { userID: string };
+			const username = request.body as { username: string };
 
-			if (query.userID) {
-				const sql = `SELECT userID, username FROM userProfile WHERE userID = ?`;
-				const response = await serv.dbUsers.get(sql, [query.userID]);
+			if (username) {
+				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
+				const response = await serv.dbUsers.get(sql, [username]);
 
 				if (!response) {
 					return (reply.code(404).send({

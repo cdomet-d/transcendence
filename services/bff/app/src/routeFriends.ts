@@ -200,7 +200,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/relation/:username', async (request, reply) => {
+	serv.get('/relation', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });

@@ -22,7 +22,7 @@ export async function buildTinyProfile(log: any, viewerUserID: string, targetUse
 			log.warn(`[BFF] buildTinyProfile: Data not found for userID ${targetUserID}`);
 			throw { code: 404, message: '[BFF] User not found.' };
 		}
-
+		
 		return {
 			userID: targetUserID,
 			username: data.username,
@@ -31,7 +31,7 @@ export async function buildTinyProfile(log: any, viewerUserID: string, targetUse
 			profileColor: data.profileColor,
 			since: data.since,
 			status: data.status,
-			winstreak: data.winstreak,
+			winStreak: data.winStreak,
 			lang: data.lang,
 			relation: relation
 		};
@@ -145,7 +145,10 @@ export async function fetchUserData(log: any, userID: string, token: string): Pr
 
 export async function fetchProfileView(log: any, userID: string, targetUserID: string, token: string): Promise<ProfileView> {
 
-	if (Number(targetUserID) === Number(userID))
+	console.log("in fecth profileviwe");
+	console.log("targetUserID", targetUserID);
+	console.log("userID", userID);
+	if (targetUserID === userID)
 		return ('self');
 
 	let response: Response;

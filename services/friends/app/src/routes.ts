@@ -43,6 +43,10 @@ export async function routeFriend(serv: FastifyInstance) {
 			};
 
 			if (query.userA && query.userB) {
+				console.log("userA", query.userA);
+				console.log("userB", query.userB);
+
+
 				const sql = `
 					SELECT statusFriendship FROM friendship 
 					WHERE (userID = ? AND friendID = ?) OR (userID = ? AND friendID = ?)
@@ -54,6 +58,7 @@ export async function routeFriend(serv: FastifyInstance) {
 					params
 				);
 
+				console.log("ersponse", JSON.stringify(response));
 				if (!response) return reply.code(200).send({ status: 'stranger' });
 
 				const isFriend =
