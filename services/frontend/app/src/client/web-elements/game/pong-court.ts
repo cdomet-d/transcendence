@@ -8,6 +8,7 @@ export const defaultTheme: pongTheme = { color: '#2267A3', theme: 'default' };
 export class PongCourt extends HTMLDivElement {
     #canva: HTMLCanvasElement;
     #theme: pongTheme;
+    #ws: WebSocket | null;
 
     constructor() {
         super();
@@ -16,10 +17,15 @@ export class PongCourt extends HTMLDivElement {
         this.#canva.height = HEIGHT;
         this.#theme = defaultTheme;
         this.id = 'pongcourt';
+        this.#ws = null;
     }
 
     set theme(theme: pongTheme) {
         this.#theme = theme;
+    }
+
+    set socket(socket: WebSocket) {
+        this.#ws = socket;
     }
 
     get canva(): HTMLCanvasElement {
@@ -33,6 +39,11 @@ export class PongCourt extends HTMLDivElement {
     connectedCallback() {
         this.append(this.#canva);
         this.render();
+    }
+
+    disconnectedCallback() {
+        if (this.#ws !== null)
+            this.#ws.close();
     }
 
     render() {

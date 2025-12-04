@@ -290,7 +290,7 @@ export async function renderGame(
     document.body.layoutInstance?.appendAndCache(ui, court);
 
     // pong({ userID: 1, gameID: "1", remote: false }, court.ctx, ui);
-    pong(gameRequest!, court.ctx, ui);
+    pong(gameRequest!, court, ui);
 }
 
 function getGameBackground(background?: string): [pongTheme, ImgData[]] {

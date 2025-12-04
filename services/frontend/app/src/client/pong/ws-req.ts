@@ -3,10 +3,11 @@ import { Game, WIDTH, HEIGHT } from './classes/game-class.js';
 import { addMessEvent, createKeyEvent } from './game-events.js';
 import { renderGame } from './game-render-utils.js';
 import { createVisualFeedback } from '../error.js';
+import type { PongCourt } from '../web-elements/game/pong-court.js';
 
 const START_DELAY = 500;
 
-export function wsRequest(game: Game, ids: { gameID: string; userID: string }) {
+export function wsRequest(court: PongCourt ,game: Game, ids: { gameID: string; userID: string }) {
 	const ws = new WebSocket('wss://localhost:8443/api/game/');
 
     ws.onerror = () => {
@@ -15,6 +16,7 @@ export function wsRequest(game: Game, ids: { gameID: string; userID: string }) {
 
     ws.onopen = () => {
         console.log('PONG webSocket connection established!');
+        court.socket = ws;
         ws.addEventListener(
             'message',
             (event) => {
