@@ -32,6 +32,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				}
 
 				if (lobbyPayload.action === "create") {
+					this.log.error("IN CREATE");
 					const newLobby: lobbyInfo = createLobby(userID!, lobbyPayload.format);
 					wsSend(socket, JSON.stringify({ lobby: "created", lobbyID: newLobby.lobbyID, formInstance: formInstance }))
 				} else if (lobbyPayload.action === "invite") {
@@ -58,9 +59,11 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					addUserToWhitelist(inviteeID, lobbyID!);
 					natsPublish(this, "post.notif", JSON.stringify(notif));
 				} else if (lobbyPayload.action === "decline") {
+					this.log.error("IN DECLINE");
 					const inviteeID = lobbyPayload.inviteeID!;
 					removeUserFromWhitelist(inviteeID, lobbyPayload.lobbyID!);
 				} else if (lobbyPayload.action === "join") {
+					this.log.error("IN JOIN");
 					addUserToLobby(userID!, socket, lobbyPayload.lobbyID!);
 					wsSend(socket, JSON.stringify({ lobby: "joined", lobbyID: lobbyPayload.lobbyID }));
 				}

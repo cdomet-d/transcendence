@@ -18,7 +18,7 @@ async function createLobbyRequest(action: string, format: string, formInstance?:
             format: format,
             userID: host.userID!,
         },
-        // formInstance: formInstance
+        formInstance: formInstance
     };
 
     return JSON.stringify(createLobbyForm);

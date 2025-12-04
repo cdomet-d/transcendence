@@ -252,7 +252,11 @@ export async function renderQuickLocalLobby() {
     wsConnect('create', 'quickmatch', 'localForm');
 }
 
-export async function renderQuickRemoteLobby() {
+export async function renderQuickRemoteLobby(
+    param?: Match<Partial<Record<string, string | string[]>>>,
+    gameRequest?: gameRequest,
+    action?: string
+) {
     prepareLayout(document.body.layoutInstance, 'quickLobby');
     document.body.layoutInstance?.appendAndCache(createForm('remote-pong-settings', remotePong));
 
@@ -261,7 +265,10 @@ export async function renderQuickRemoteLobby() {
         redirectOnError('/auth', 'You must be registered to see this page')
         return JSON.stringify({ event: 'BAD_USER_TOKEN'});
     }
-    wsConnect('create', 'quickmatch', 'remoteForm');
+
+    if (action === undefined) action = 'create';
+    
+    wsConnect(action!, 'quickmatch', 'remoteForm');
 }
 
 export async function renderTournamentLobby() {

@@ -111,6 +111,7 @@ export class RemotePongSettings extends LocalPongSettings {
         this.#guests = new Map<string, UserData>();
         this.#inviteHandler = this.#inviteImplementation.bind(this);
         this.#owner = '';
+        super.contentMap.get('submit')?.setAttribute('disabled', '');
     }
 
     override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
@@ -139,6 +140,9 @@ export class RemotePongSettings extends LocalPongSettings {
         this.classList.add('sidebar-left');
     }
 
+    startGame() {
+        super.contentMap.get('submit')?.removeAttribute('disabled');
+    }
     /* -------------------------------- listeners ------------------------------- */
     async fetchGuests(guestUsername: string): Promise<UserData | null> {
         const url = `https://localhost:8443/api/bff/tiny-profile/${guestUsername}`;
