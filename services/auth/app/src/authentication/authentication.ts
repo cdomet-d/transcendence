@@ -13,7 +13,7 @@ interface JwtPayload {
 const authSchema = {
 	body: {
 		type: 'object',
-		// TODO: password is not required for temporary users
+		 // TODO: password is not required for temporary users
 		required: ['username', 'password'],
 		properties: {
 			username: { type: 'string' },

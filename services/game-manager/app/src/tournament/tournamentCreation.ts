@@ -33,13 +33,13 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: string): game[
 	const games: game[] = [
 		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
 			tournamentID: tournamentID, remote: true, users: opponents[0], 
-			score: [0, 0], winnerID: "yo", loserID: "loser", duration: 0, longuestPass: 0, startTime: "" },
+			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "" },
 		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
 			tournamentID: tournamentID, remote: true, users: opponents[1], 
-			score: [0, 0], winnerID: "nike", loserID: "lesstrings", duration: 0, longuestPass: 0, startTime: "" },
+			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "" },
 		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
 			tournamentID: tournamentID, remote: true, users: null, 
-			score: [0, 0], winnerID: "zebi", loserID: "wesh", duration: 0, longuestPass: 0, startTime: "" },
+			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "" },
 	];
 
 	return games;

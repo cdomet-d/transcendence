@@ -92,6 +92,7 @@ export class UserProfile extends HTMLDivElement {
     /**
      * Sets the user's profile age (days since joined).
      */
+    //TODO joined for language
     set profileAge(val: string) {
         if (this.#joinedSince.textContent !== `Joined ${val} days ago`) {
             this.#joinedSince.textContent = `Joined ${val} days ago`;
@@ -205,7 +206,7 @@ export class UserCardSocial extends UserProfile {
         this.append(super.getAvatar, super.getUsername, super.getActionMenu);
         super.getActionMenu.updateView();
         super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
-        this.classList.add('grid', 'gap-s', 'place-items-center', 'w-full');
+        this.classList.add('grid', 'gap-s', 'place-items-center', 'wrap-anywhere', 'w-full', 'h-[248px]',  'text-center');
     }
 }
 if (!customElements.get('user-card-social')) {

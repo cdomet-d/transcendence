@@ -2,7 +2,7 @@ import type { UserData, ImgData, ProfileView } from '../web-elements/types-inter
 import { defaultAvatar } from '../web-elements/default-values';
 import { ProfilePage } from '../web-elements/users/user-profile-containers';
 import { createFriendsPanel, createMatchHistoryPanel } from '../web-elements/users/profile-helpers';
-import { errorMessageFromResponse, redirectOnError } from '../error';
+import { exceptionFromResponse, redirectOnError } from '../error';
 import { router } from '../main';
 import { MatchOutcomeArrayFromAPIRes } from './matches';
 
@@ -62,11 +62,10 @@ export function userArrayFromAPIRes(responseObject: any): UserData[] {
 }
 
 export async function buildUserProfile(response: Response): Promise<ProfilePage> {
-    if (!response.ok) throw await errorMessageFromResponse(response);
+    if (!response.ok) throw await exceptionFromResponse(response);
     const rawProfile = await response.json();
     const userProfileElem = document.createElement('div', { is: 'profile-page' }) as ProfilePage;
 
-    console.log(rawProfile);
     document.body.layoutInstance?.appendAndCache(userProfileElem);
     userProfileElem.profile = userDataFromAPIRes(rawProfile.userData);
     userProfileElem.panelContent = createFriendsPanel(userArrayFromAPIRes(rawProfile.friends));
