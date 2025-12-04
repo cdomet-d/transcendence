@@ -1,4 +1,4 @@
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { UserProfileView, JwtPayload } from './bff.interface.js';
 import { fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches, updateAuthSettings, updateUserProfile } from './bffUserProfile.service.js';
 
@@ -299,36 +299,71 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			throw error;
 		}
 	});
+	
 
-	//TODO : route to get username with userID 
-	/*serv.get('/username', async (request, reply) => {
-				  const token = request.cookies.token;
-			  if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
-  	
-			  if (token) {
-				  try {
-					  const user = serv.jwt.verify(token) as JwtPayload;
-					  if (typeof user !== 'object') throw new Error('Invalid token detected');
-					  request.user = user;
-				  } catch (error) {
-					  if (error instanceof Error && 'code' in error) {
-						  if (
-							  error.code === 'FST_JWT_BAD_REQUEST' ||
-							  error.code === 'ERR_ASSERTION' ||
-							  error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-						  )
-							  return reply.code(400).send({ code: error.code, message: error.message });
-						  return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-					  } else {
-						  return reply.code(401).send({ message: 'Unknown error' });
-					  }
-				  }
-			  }
+	serv.get('/username/:username', async (request, reply) => {
+		try {
+			request.server.log.error("1");
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
-	  const userID = request.user.userID;
-  	
-	  const response = await 
-  }); */
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+			request.server.log.error("2");
+
+			const { username } = request.params as { username: string };
+			request.server.log.error(`USERNAME: ${username}`)
+			request.server.log.error("3");
+
+			const response = await fetch(`http://users:2626/username/${username.toString()}`, {
+				method: 'GET',
+				headers: {
+					'Cookie': `token=${token}`,
+					'Content-Type': 'application/json',
+				}
+			});
+			request.server.log.error("4");
+
+			if (response.status === 401) {
+				console.log("[BFF] Unauthaurized")
+				reply.code(401).send({ code: response.status, message: '[BFF] Unauthaurized' });
+			}
+			if (response.status === 404) {
+				console.log("[BFF] User not found")
+				reply.code(404).send({ code: response.status, message: '[BFF] User not found' });
+			}
+			if (response.status === 400) {
+				console.log("[BFF] Invalid query")
+				reply.code(400).send({ code: response.status, message: '[BFF] Invalid query' });
+			}
+			request.server.log.error("5");
+			const body = (await response.json()) as { username: string, userID: string };
+			reply.code(200).send(body);
+
+		} catch (error) {
+			request.server.log.error("6");
+
+			serv.log.error(`[BFF] Failed to update settings: ${error}`);
+			throw error;
+		}
+	});
 	//TODO : endpoint friendlist pending
 	// get-pending-relation
 }
