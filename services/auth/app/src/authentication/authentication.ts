@@ -1,15 +1,14 @@
 import type { FastifyInstance } from 'fastify';
 import * as bcrypt from 'bcrypt';
-import type { JwtPayload } from '../jwtPlugin.js';
 
 import { deleteAccount, createUserProfile, checkUsernameUnique } from './auth.service.js';
 
-// interface JwtPayload {
-//     userID: string;
-//     username: string;
-//     iat: number;
-//     exp: number;
-// }
+interface JwtPayload {
+    userID: string;
+    username: string;
+    iat: number;
+    exp: number;
+}
 
 const authSchema = {
     body: {
@@ -39,22 +38,11 @@ export async function authenticationRoutes(serv: FastifyInstance) {
         if (!token) return reply.code(401).send({ message: 'Unauthorized' });
         if (token) {
             try {
-                const user = serv.jwt.verify(token) as JwtPayload;
-                if (typeof user !== 'object') throw new Error('Invalid token detected');
-                request.user = user;
+                const user: JwtPayload = await request.jwtVerify();
+                console.log(request.user);
                 return reply.code(200).send({ username: user.username, userID: user.userID });
             } catch (error) {
-                if (error instanceof Error && 'code' in error) {
-                    if (
-                        error.code === 'FST_JWT_BAD_REQUEST' ||
-                        error.code === 'ERR_ASSERTION' ||
-                        error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-                    )
-                        return reply.code(400).send({ code: error.code, message: error.message });
-                    return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
-                } else {
-                    return reply.code(401).send({ message: 'Unknown error' });
-                }
+                return reply.code(401).send({ message: 'Unauthorized' });
             }
         }
     });
@@ -104,10 +92,10 @@ export async function authenticationRoutes(serv: FastifyInstance) {
         const { password } = request.body as { password: string };
     });
 
-	serv.post('/register', { schema: authSchema }, async (request, reply) => {
-		let newAccountId: string | null = null;
-		try {
-			const { username, password } = request.body as { username: string; password: string };
+    serv.post('/register', { schema: authSchema }, async (request, reply) => {
+        let newAccountId: string | null = null;
+        try {
+            const { username, password } = request.body as { username: string; password: string };
 
             if (!username || !password)
                 return reply.code(400).send({ message: '[AUTH] Missing username or password.' });
@@ -117,7 +105,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
             const usernameTaken = await checkUsernameUnique(serv.dbAuth, username);
             if (usernameTaken) return reply.code(409).send({ message: 'Username taken' });
 
-			const query = `
+            const query = `
 				INSERT INTO account (userID, hashedPassword, username)
 				VALUES (?, ?, ?)
 			`;
@@ -170,31 +158,6 @@ export async function authenticationRoutes(serv: FastifyInstance) {
     //TODO delete users/friends
     serv.delete('/:userID', async (request, reply) => {
         try {
-            const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthorized' });
-
-            if (token) {
-                try {
-                    const user = serv.jwt.verify(token) as JwtPayload;
-                    if (typeof user !== 'object') throw new Error('Invalid token detected');
-                    request.user = user;
-                } catch (error) {
-                    if (error instanceof Error && 'code' in error) {
-                        if (
-                            error.code === 'FST_JWT_BAD_REQUEST' ||
-                            error.code === 'ERR_ASSERTION' ||
-                            error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-                        )
-                            return reply
-                                .code(400)
-                                .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
-                    } else {
-                        return reply.code(401).send({ message: 'Unknown error' });
-                    }
-                }
-            }
-
             const { userID } = request.params as { userID: string };
 
             const query = `DELETE FROM account WHERE userID = ?`;
@@ -211,31 +174,6 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 
     serv.patch('/:userID', async (request, reply) => {
         try {
-            const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthorized' });
-
-            if (token) {
-                try {
-                    const user = serv.jwt.verify(token) as JwtPayload;
-                    if (typeof user !== 'object') throw new Error('Invalid token detected');
-                    request.user = user;
-                } catch (error) {
-                    if (error instanceof Error && 'code' in error) {
-                        if (
-                            error.code === 'FST_JWT_BAD_REQUEST' ||
-                            error.code === 'ERR_ASSERTION' ||
-                            error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-                        )
-                            return reply
-                                .code(400)
-                                .send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
-                    } else {
-                        return reply.code(401).send({ message: 'Unknown error' });
-                    }
-                }
-            }
-
             const { userID } = request.params as { userID: string };
             const body = request.body as { [key: string]: any };
 
@@ -276,17 +214,23 @@ export async function authenticationRoutes(serv: FastifyInstance) {
                 });
             }
 
-			return reply.code(200).send({
-				success: true,
-				message: '[AUTH] Account updated successfully!',
-			});
-
-		} catch (error) {
-			if (error && typeof error === 'object' && 'code' in error &&(
-				(error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' || (error as { code: string }).code === 'SQLITE_CONSTRAINT'))
-				return reply.code(409).send({ success: false, message: '[AUTH] This username is already taken.' });
-			serv.log.error(`[AUTH] Error updating account: ${error}`);
-			throw error;
-		}
-	});
+            return reply.code(200).send({
+                success: true,
+                message: '[AUTH] Account updated successfully!',
+            });
+        } catch (error) {
+            if (
+                error &&
+                typeof error === 'object' &&
+                'code' in error &&
+                ((error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' ||
+                    (error as { code: string }).code === 'SQLITE_CONSTRAINT')
+            )
+                return reply
+                    .code(409)
+                    .send({ success: false, message: '[AUTH] This username is already taken.' });
+            serv.log.error(`[AUTH] Error updating account: ${error}`);
+            throw error;
+        }
+    });
 }
