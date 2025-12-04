@@ -142,8 +142,8 @@ export async function renderLeaderboard() {
         if (rawRes.status === 401)
             return redirectOnError('/auth', 'You must be registered to see this page');
         if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
-
         const res = await rawRes.json();
+
         document.body.layoutInstance!.appendAndCache(
             createHeading('2', 'Leaderboard'),
             createLeaderboard(userArrayFromAPIRes(res)),
@@ -180,10 +180,6 @@ export async function renderSelf() {
 export async function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
     console.log('renderProfile');
     if (param && param.params.login && typeof param.params.login === 'string') {
-        const status = await userStatus();
-        if (!status.auth)
-            return redirectOnError('/auth', 'You must be registered to see this page');
-
         const login = param.params.login;
         const url = `https://localhost:8443/api/bff/profile/${login}`;
         try {
@@ -191,6 +187,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
             const res = await fetch(url);
             if (!res.ok) {
                 if (res.status === 404) renderNotFound();
+				else if (res.status === 401) return redirectOnError('/auth', 'You must be registered to see this page');
                 else throw await exceptionFromResponse(res);
             }
             buildUserProfile(res);

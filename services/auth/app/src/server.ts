@@ -23,9 +23,9 @@ import dbConnector from './db.js';
 
 const authPlugin = fp(async (serv: FastifyInstance) => {
     serv.addHook('onRequest', async (request: FastifyRequest, reply: FastifyReply) => {
-        serv.log.info(`PREHANDLER RUNNING FOR ${request.url}`);
         if (request.url === '/status' || request.url === '/login' || request.url === '/register')
             return;
+        serv.log.info(`PREHANDLER RUNNING FOR ${request.url}`);
         try {
             await request.jwtVerify();
         } catch (error) {
@@ -66,14 +66,3 @@ function getPort(): number {
     }
     return port;
 }
-
-// serv.addHook('onRequest', async (request: FastifyRequest, reply: FastifyReply) => {
-//     serv.log.info(`PREHANDLER RUNNING FOR ${request.url}`);
-//     if (request.url === '/status' || request.url === '/login' || request.url === '/register') return;
-//         try {
-//             await request.jwtVerify();
-//             serv.log.info(request.user);
-//         } catch (error) {
-//             return reply.code(401).send({ message: 'Unauthorized' });
-//         }
-// });

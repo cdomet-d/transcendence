@@ -12,8 +12,8 @@ export class Popup extends HTMLDialogElement {
 
     render() {
         this.className =
-            'box-border absolute top-0 left-0 grid w-full h-full grid-auto-rows-auto \
-			place-content-center layout-col gap-s z-5 bg-overlay';
+            'box-border absolute top-0 left-0 w-full h-full max-h-full max-w-full grid grid-auto-rows-auto \
+			place-content-center layout-col gap-s bg-overlay';
     }
 
     /**

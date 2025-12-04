@@ -68,7 +68,7 @@ export class LocalPongSettings extends BaseForm {
         if (background) f.append('background', background.id);
 
         const req = this.initReq();
-        req.body = this.createReqBody(f);
+        req.body = await this.createReqBody(f);
         console.log(f);
         // await this.fetchAndRedirect(this.details.action, req);
 

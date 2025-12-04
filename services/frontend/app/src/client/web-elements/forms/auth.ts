@@ -1,6 +1,14 @@
 import { BaseForm } from './baseform';
 import { router } from '../../main';
-import { exceptionFromResponse, createVisualFeedback, errorMessageFromException } from '../../error';
+import {
+    exceptionFromResponse,
+    createVisualFeedback,
+    errorMessageFromException,
+} from '../../error';
+
+import { createForm } from './helpers';
+import { criticalChange } from './default-forms';
+import { Popup } from '../layouts/popup';
 
 export class RegistrationForm extends BaseForm {
     constructor() {
@@ -46,24 +54,47 @@ if (!customElements.get('login-form')) {
     customElements.define('login-form', LoginForm, { extends: 'form' });
 }
 
-
 export class CriticalActionForm extends BaseForm {
+    #resolve?: (value: string) => void;
+    #reject?: (error: Error) => void;
+
     constructor() {
         super();
     }
 
-    override async fetchAndRedirect(url: string, req: RequestInit) {
-		console.log('bitch');
+    static show(): Promise<string> {
+        const dialog = document.createElement('dialog', { is: 'custom-popup' }) as Popup;
+        const form = createForm('pw-form', criticalChange);
+        form.classList.add('bg', 'brdr', 'pad-s');
+        document.body.layoutInstance?.appendAndCache(dialog);
+        dialog.appendAndCache(form);
+        dialog.showModal();
+        return form.#awaitSubmission();
     }
 
-	override async submitHandlerImplementation(ev: SubmitEvent): Promise<void> {
-		ev.preventDefault();
-		const form = new FormData(this);
-		console.log(super.createReqBody(form))
-	}
+    #awaitSubmission(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            this.#resolve = resolve;
+            this.#reject = reject;
+        });
+    }
+
+    override async fetchAndRedirect(url: string, req: RequestInit) {
+        try {
+            const response = await fetch(url, req);
+            if (!response.ok) throw await exceptionFromResponse(response);
+            const critical = await response.json();
+            localStorage.setItem('criticalChange', JSON.stringify(critical));
+			console.log(critical)
+            this.#resolve?.(JSON.stringify(critical));
+        } catch (error) {
+            createVisualFeedback(errorMessageFromException(error));
+            this.#reject?.(error as Error);
+        }
+        document.body.layoutInstance?.components.get('popup')?.remove();
+    }
 }
 
 if (!customElements.get('pw-form')) {
     customElements.define('pw-form', CriticalActionForm, { extends: 'form' });
 }
-

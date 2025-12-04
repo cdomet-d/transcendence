@@ -12,9 +12,9 @@ import type { UserData } from '../types-interfaces.js';
 import {
     createVisualFeedback,
     errorMessageFromException,
+    exceptionFromResponse,
 } from '../../error.js';
-import { Popup } from '../layouts/popup.js';
-import { sensitiveAccountChange } from './default-forms.js';
+import { CriticalActionForm } from './auth.js';
 // import imageCompression from 'browser-image-compression';
 
 const MAX_FILE = 2 * 1024 * 1024;
@@ -59,35 +59,67 @@ export class UserSettingsForm extends BaseForm {
         this.contentMap.get('upload')?.removeEventListener('input', this.#previewAvatar);
     }
 
-	enforcePassword() {
-		const dialog = document.createElement('dialog', { is: 'custom-popup' }) as Popup;
-		const form = createForm('pw-form', sensitiveAccountChange)
-		dialog.appendAndCache(form);
-		form.classList.add('bg', 'brdr', 'pad-s');
-		document.body.layoutInstance?.appendAndCache(dialog);
-
-	}
-
-    override createReqBody(form: FormData): string {
+    override async createReqBody(form: FormData): Promise<string> {
         const fObject = Object.fromEntries(form.entries());
-
-
         if (fObject.username || fObject.password) {
+			await CriticalActionForm.show()
         }
-		return 'AAAAAAAAAAh';
+        const jsonBody = JSON.stringify(fObject);
+        return jsonBody;
     }
 
     override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
         console.log(url, req);
 
-        // try {
-        //     const rawRes = await fetch(url, req);
-        //     if (!rawRes.ok) throw await errorMessageFromResponse(rawRes);
-        //     const res = await rawRes.json();
-        //     console.log(res);
-        // } catch (error) {
-        //     createVisualFeedback(errorMessageFromException(error));
-        // }
+        try {
+            const rawRes = await fetch(url, req);
+            if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
+            const res = await rawRes.json();
+            console.log(res);
+        } catch (error) {
+            createVisualFeedback(errorMessageFromException(error));
+        }
+    }
+
+	    /**
+     * Handles the submit event for the form.
+     * Appends color and language selections to the form data if changed.
+     * @param ev - The submit event.
+     */
+    override async submitHandlerImplementation(ev: SubmitEvent): Promise<void> {
+        ev.preventDefault();
+        const f = new FormData(this);
+        const colSelection = this.#colors.selectedElement;
+        const langSelection = this.#languages.selectedElement;
+
+        if (this.#user) {
+            if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
+                f.append('color', 'bg-' + colSelection.id);
+            if (langSelection && langSelection.id !== this.#user.language)
+                f.append('language', langSelection.id);
+        }
+
+        if (f.get('upload') && this.#user) {
+            const file = f.get('upload');
+            if (!file || !(file instanceof File)) throw new Error('Error processing avatar');
+            if (file.size > MAX_FILE)
+                return createVisualFeedback('That file is way too heavy; max is 2MB. Ta!');
+            if (file.name !== '') {
+                console.log(file);
+                try {
+                    // TODO: compress images
+                    const binaryAvatar = await this.#fileToBinary(file);
+                    if (binaryAvatar) f.append('avatar', binaryAvatar);
+                } catch (error) {
+                    createVisualFeedback(errorMessageFromException(error));
+                }
+            }
+        }
+
+        f.delete('upload');
+        const req = this.initReq();
+        req.body = await this.createReqBody(f);
+        await this.fetchAndRedirect(this.details.action, req);
     }
 
     /* -------------------------------------------------------------------------- */
@@ -161,47 +193,6 @@ export class UserSettingsForm extends BaseForm {
             //TODO: better error handling;
             console.error(error);
         }
-    }
-
-    /**
-     * Handles the submit event for the form.
-     * Appends color and language selections to the form data if changed.
-     * @param ev - The submit event.
-     */
-    override async submitHandlerImplementation(ev: SubmitEvent): Promise<void> {
-        ev.preventDefault();
-        const f = new FormData(this);
-        const colSelection = this.#colors.selectedElement;
-        const langSelection = this.#languages.selectedElement;
-
-        if (this.#user) {
-            if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
-                f.append('color', 'bg-' + colSelection.id);
-            if (langSelection && langSelection.id !== this.#user.language)
-                f.append('language', langSelection.id);
-        }
-
-        if (f.get('upload') && this.#user) {
-            const file = f.get('upload');
-            if (!file || !(file instanceof File)) throw new Error('Error processing avatar');
-            if (file.size > MAX_FILE)
-                return createVisualFeedback('That file is way too heavy; max is 2MB. Ta!');
-            if (file.name !== '') {
-                console.log(file);
-                try {
-                    // TODO: compress images
-                    const binaryAvatar = await this.#fileToBinary(file);
-                    if (binaryAvatar) f.append('avatar', binaryAvatar);
-                } catch (error) {
-                    createVisualFeedback(errorMessageFromException(error));
-                }
-            }
-        }
-
-        f.delete('upload');
-        const req = this.initReq();
-        req.body = this.createReqBody(f);
-        await this.fetchAndRedirect(this.details.action, req);
     }
 
     /**

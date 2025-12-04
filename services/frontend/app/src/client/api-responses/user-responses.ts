@@ -48,6 +48,8 @@ function setBiography(b: string): string {
 export function userDataFromAPIRes(responseObject: any): UserData {
     if (!responseObject || typeof responseObject !== 'object' || responseObject instanceof Error)
         redirectOnError(router.stepBefore, 'Something bad happened :(');
+
+	console.log(responseObject.relation)
     const user: UserData = {
         // winstreak: responseObject.winstreak,
         winstreak: '9',
@@ -61,6 +63,7 @@ export function userDataFromAPIRes(responseObject: any): UserData {
         status: setStatus(responseObject.status),
         username: responseObject.username,
     };
+	console.log(user);
     return user;
 }
 
@@ -80,6 +83,7 @@ export async function buildUserProfile(response: Response): Promise<ProfilePage>
     const userProfileElem = document.createElement('div', { is: 'profile-page' }) as ProfilePage;
 
     document.body.layoutInstance?.appendAndCache(userProfileElem);
+	console.log(rawProfile.userData);
     userProfileElem.profile = userDataFromAPIRes(rawProfile.userData);
     userProfileElem.panelContent = createFriendsPanel(userArrayFromAPIRes(rawProfile.friends));
     userProfileElem.panelContent = createMatchHistoryPanel(

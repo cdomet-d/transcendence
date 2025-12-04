@@ -6,7 +6,7 @@ import { usernamePattern, passwordPattern, searchbarPattern } from '../default-v
 
 export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails {
     return {
-        action: 'http://localhost:8443/api/bff/settings/',
+        action: 'https://localhost:8443/api/bff/settings/',
         heading: dic.titles.settings,
         ariaLabel: 'User settings',
         id: 'user-settings',
@@ -78,12 +78,12 @@ export function registrationForm(dic: Dictionary): FormDetails {
     }
 };
 
-export const sensitiveAccountChange: FormDetails = {
-    action: '',
+export const criticalChange: FormDetails = {
+    action: 'https://localhost:8443/api/auth/verify',
     heading: 'Password Required',
-    ariaLabel: 'Enter your password',
+    ariaLabel: 'Verify your password',
     id: 'pw-check',
-    method: '',
+    method: 'POST',
     fields: [
         {
             id: 'password',

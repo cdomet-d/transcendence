@@ -1,4 +1,4 @@
-import type { ProfileCreationResult, UserAuth } from "./auth.interfaces.js";
+import type { ProfileCreationResult } from "./auth.interfaces.js";
 import { Database } from "sqlite";
 
 export async function createUserProfile(log: any, userID: string, username: string): Promise<ProfileCreationResult> {

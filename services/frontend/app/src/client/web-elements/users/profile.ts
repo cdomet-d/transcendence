@@ -24,12 +24,12 @@ export class UserProfile extends HTMLDivElement {
      */
     constructor() {
         super();
-        this.#actionButtons = createSocialMenu(social, 'horizontal');
         this.#avatar = document.createElement('div', { is: 'user-avatar' }) as Avatar;
         this.#biography = document.createElement('p', { is: 'user-bio' }) as Biography;
         this.#joinedSince = document.createElement('span') as HTMLSpanElement;
         this.#username = document.createElement('div', { is: 'username-container' }) as Username;
         this.#winstreak = document.createElement('span', { is: 'winstreak-block' }) as Winstreak;
+        this.#actionButtons = createSocialMenu(social, 'horizontal');
         this.#color = 'bg-4F9FFF';
         this.className = `pad-s box-border brdr ${this.#color}`;
     }
@@ -102,6 +102,7 @@ export class UserProfile extends HTMLDivElement {
      * Sets the user's username.
      */
     set username(name: string) {
+		console.log('setting username', name);
         if (this.#username.name !== name) {
             this.#username.name = name;
             this.#actionButtons.owner = name;
@@ -123,6 +124,7 @@ export class UserProfile extends HTMLDivElement {
      * Sets all user information at once from a UserData object.
      */
     set userInfo(user: UserData) {
+        this.username = user.username;
         this.avatar = user.avatar;
         this.biography = user.biography;
         this.color = user.profileColor;
@@ -130,7 +132,6 @@ export class UserProfile extends HTMLDivElement {
         this.profileId = user.id;
         this.profileView = user.relation;
         this.status = user.status;
-        this.username = user.username;
         this.winstreak = user.winstreak;
     }
 

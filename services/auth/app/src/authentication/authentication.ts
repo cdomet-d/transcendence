@@ -1,14 +1,8 @@
 import type { FastifyInstance } from 'fastify';
+import type { JwtPayload } from './auth.interfaces.js';
 import * as bcrypt from 'bcrypt';
 
 import { deleteAccount, createUserProfile, checkUsernameUnique } from './auth.service.js';
-
-interface JwtPayload {
-    userID: string;
-    username: string;
-    iat: number;
-    exp: number;
-}
 
 const authSchema = {
     body: {
@@ -31,6 +25,30 @@ const verifySchema = {
         },
     },
 };
+
+async function verifyPasswordMatch(
+    serv: FastifyInstance,
+    username: string,
+    password: string
+): Promise<any> {
+    try {
+        const query = `
+				SELECT userID, hashedPassword FROM account WHERE username = ?
+			`;
+
+        const account = await serv.dbAuth.get(query, [username]);
+        if (!account) return 404;
+
+        const passwordMatches = await bcrypt.compare(password, account.hashedPassword);
+        if (!passwordMatches) return 401;
+
+        return account;
+    } catch (error) {
+        serv.log.error(`[AUTH] An unexpected error occurred while login: ${error}`);
+        throw error;
+    }
+}
+
 //TODO update user status on login and logout
 export async function authenticationRoutes(serv: FastifyInstance) {
     serv.get('/status', async (request, reply) => {
@@ -50,30 +68,25 @@ export async function authenticationRoutes(serv: FastifyInstance) {
     serv.post('/login', { schema: authSchema }, async (request, reply) => {
         try {
             const { username, password } = request.body as { username: string; password: string };
+            const account = await verifyPasswordMatch(serv, username, password);
 
-            const query = `
-				SELECT userID, hashedPassword FROM account WHERE username = ?
-			`;
-
-            const account = await serv.dbAuth.get(query, [username]);
-            if (!account) return reply.code(404).send({ message: '[AUTH] Account not found.' });
-
-            const passwordMatches = await bcrypt.compare(password, account.hashedPassword);
-
-            if (!passwordMatches)
+            if (account === 404)
+                return reply.code(404).send({ message: '[AUTH] Account not found.' });
+            if (account === 401)
                 return reply.code(401).send({ message: '[AUTH] Invalid credentials.' });
-
-            const tokenPayload = { userID: account.userID, username: username };
-            const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
-            reply.setCookie('token', token, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'strict',
-                path: '/',
-            });
-
-            return reply.code(200).send({ token: token });
+            if (typeof account === 'object') {
+                const tokenPayload = { userID: account.userID, username: username };
+                const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
+                reply.setCookie('token', token, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'strict',
+                    path: '/',
+                });
+                return reply.code(200).send({ token: token });
+            }
         } catch (error) {
+            serv.log.error(error);
             serv.log.error(`[AUTH] An unexpected error occurred while login: ${error}`);
             throw error;
         }
@@ -88,8 +101,30 @@ export async function authenticationRoutes(serv: FastifyInstance) {
         });
     });
 
-    serv.post('/validate-critical-action', { schema: verifySchema }, async (request, reply) => {
-        const { password } = request.body as { password: string };
+    serv.post('/verify', { schema: verifySchema }, async (request, reply) => {
+        try {
+            const { password } = request.body as { password: string };
+            const account = await verifyPasswordMatch(serv, request.user.username, password);
+
+            if (account === 404)
+                return reply.code(404).send({ message: '[AUTH] Account not found.' });
+            if (account === 401)
+                return reply.code(401).send({ message: '[AUTH] Invalid credentials.' });
+            if (typeof account === 'object') {
+                const tokenPayload = {
+                    userID: account.userID,
+                    username: request.user.username,
+                    action: true,
+                };
+                const token = serv.jwt.sign(tokenPayload, { expiresIn: '5m' });
+                return reply.code(200).send({ token: token });
+            }
+        } catch (error) {
+            serv.log.error(
+                `[AUTH] An unexpected error occurred while verifying password: ${error}`
+            );
+            throw error;
+        }
     });
 
     serv.post('/register', { schema: authSchema }, async (request, reply) => {

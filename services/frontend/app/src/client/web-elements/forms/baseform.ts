@@ -107,15 +107,13 @@ export abstract class BaseForm extends HTMLFormElement {
     /*                            Event listeners                                 */
     /* -------------------------------------------------------------------------- */
 
-    createReqBody(form: FormData): string {
+    async createReqBody(form: FormData): Promise<string> {
         const fObject = Object.fromEntries(form.entries());
         const jsonBody = JSON.stringify(fObject);
-        console.log(jsonBody);
         return jsonBody;
     }
 
     initReq(): RequestInit {
-        console.log('baseform requestInit');
         const req: RequestInit = {
             method: this.#formData.method,
             headers: { 'Content-Type': 'application/json' },
@@ -133,7 +131,7 @@ export abstract class BaseForm extends HTMLFormElement {
         const form = new FormData(this);
         const req = this.initReq();
         if (req.method === 'POST') {
-            req.body = this.createReqBody(form);
+            req.body = await this.createReqBody(form);
         }
         try {
             await this.fetchAndRedirect(this.#formData.action, req);
