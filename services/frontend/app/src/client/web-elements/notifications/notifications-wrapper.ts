@@ -105,11 +105,11 @@ export class NotifBox extends HTMLDivElement {
      * @param {string} username - The user who sent the invitation.
      * @param {GameType} game - The type of game the user is invited to.
      */
-    newGameInvitation(username: string, game: GameType) {
+    newGameInvitation(gameNotif: gameNotif) {
         const notif = document.createElement('div', { is: 'notif-content' }) as NotifContent;
-        notif.createNotifMessage(username, `challenged you to a ${game}!`);
+        notif.createNotifMessage(gameNotif.receiverName, `challenged you to a ${gameNotif.gameType}!`);
 		notif.id = 'game'
-		// notif.lobbyInfo = GAMEINFO FROM SOMEWHERE I GUESS
+		notif.lobbyInfo = {lobbyID: gameNotif.lobbyID, inviteeID: gameNotif.receiverID};
         this.#panel.newNotification(notif);
         this.#toggle.toggleAlert(true);
     }
@@ -152,7 +152,7 @@ export class NotifBox extends HTMLDivElement {
                     if (notif.type === 'FRIEND_REQUEST')
                         this.newFriendRequest(notif.senderUsername);
                     else if (notif.type === 'GAME_INVITE')
-                        this.newGameInvitation(notif.receiverName, notif.gameType);
+                        this.newGameInvitation(notif);
                 }
             });
         };

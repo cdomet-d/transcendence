@@ -1,7 +1,8 @@
-import { router } from '../main.js';
+import { router, userStatus, type userStatusInfo } from '../main.js';
 import { createGameRequest } from './gameRequest.front.js';
 import { createLobbyRequest, joinLobbyRequest } from './lobbyRequest.front.js';
 import { type gameRequest } from '../pong/pong.js';
+import { redirectOnError } from '../error.js';
 
 let wsInstance: WebSocket | null = null;
 
@@ -44,13 +45,19 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	// send Lobby Invites
 	if (action === 'invite') {
 		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-			wsInstance.send(JSON.stringify({ action: action, inviteeID: inviteeID, lobbyID: lobbyID }));
+
+			const host: userStatusInfo = await userStatus();
+			if (!host.auth || !host.userID) {
+				redirectOnError('/auth', 'You must be registered to see this page')
+			}
+			console.log("IN INVITE")
+			wsInstance.send(JSON.stringify({event: "LOBBY_REQUEST", payload: { action: action, inviteeID: inviteeID, userID: host.userID }})); // 
 		} else {
 			console.log(`Error: WebSocket is not open for ${action}`);
 		}
 	} else if (action === 'decline') {
 		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-			wsInstance.send(JSON.stringify({ action: action, inviteeID: inviteeID, lobbyID: lobbyID }));
+			wsInstance.send(JSON.stringify({event: "LOBBY_REQUEST", payload: { action: action, inviteeID: inviteeID, lobbyID: lobbyID }}));
 		} else {
 			console.log(`Error: WebSocket is not open for ${action}`);
 		}
