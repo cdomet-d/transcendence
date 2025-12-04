@@ -19,6 +19,14 @@ try {
     process.exit(1);
 }
 
+//add hook
+// function addHooks(serv: FastifyInstance) {
+//     serv.addHook('onClose', (instance, done) => {
+//       instance.nc.close();
+//       done()
+//     })
+// } //TODO
+
 function addPlugins(serv: FastifyInstance) {
     serv.register(websocket, {
         errorHandler: function (
@@ -30,6 +38,12 @@ function addPlugins(serv: FastifyInstance) {
             //TODO: send html error page ?
             serv.log.error(error);
             socket.close();
+        },
+        preClose: (done) => {
+            const serverWS = serv.websocketServer;
+            for (const socket of serverWS.clients)
+                socket.close(1001, 'WS server is going offline');
+            serverWS.close(done);
         },
         options: {},
     });
