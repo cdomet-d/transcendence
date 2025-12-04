@@ -53,6 +53,7 @@ export class CustomInput extends HTMLInputElement {
      * @param event - The input event.
      */
 
+    //TODO language
     #typePassword(el: HTMLInputElement): string[] {
         const val = el.value;
         let feedback: string[] = [];

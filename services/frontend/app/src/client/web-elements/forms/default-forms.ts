@@ -4,6 +4,7 @@ import { usernamePattern, passwordPattern, searchbarPattern } from '../default-v
 
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
 
+//TODO language
 export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails {
     return {
         action: 'http://localhost:8443/api/bff/settings/',
@@ -45,6 +46,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
                 required: false,
             },
         ],
+        //TODO Language
         button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
     }
 };

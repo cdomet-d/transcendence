@@ -85,6 +85,7 @@ export const uploadData: types.InputFieldsData = {
     required: false,
 };
 
+//TODO language
 export const pwData: types.InputFieldsData = {
     id: 'password',
     labelContent: 'Password',

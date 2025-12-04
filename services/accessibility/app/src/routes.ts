@@ -6,9 +6,10 @@ export async function languageRoutes(serv: FastifyInstance) {
 		const { langCode } = request.params as { langCode: string };
 
 		const query = `SELECT pack_json FROM language_packs WHERE language_code = ?`;
-
+		
 		try {
 			const result = await serv.dbLanguage.get<{ pack_json: string }>(query, [langCode]);
+			console.log(JSON.stringify(result));
 
 			if (!result)
 				return reply.code(404).send({ message: 'Language pack not found' });

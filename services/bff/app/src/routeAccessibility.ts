@@ -27,6 +27,7 @@ export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 			}
 
 			const dictionary = await response.json();
+			console.log(JSON.stringify(dictionary, null, 2));
 			return reply.code(200).send(dictionary);
 
 		} catch (error) {

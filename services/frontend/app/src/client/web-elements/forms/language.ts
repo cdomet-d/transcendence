@@ -71,17 +71,15 @@ export const defaultDictionary: Dictionary = {
 		tournament: "Tournament"
 	}
 };
-
 export let currentDictionary: Dictionary = defaultDictionary;
 export let currentLanguage: string = 'en';
 
 export async function setLanguage(lang: string): Promise<void> {
 	try {
-		//TODO fetch to bff
 		const response = await fetch(`https://localhost:8443/api/bff/dictionary/${lang}`);
 
-		//TODO error handling
-		if (!response.ok)
+		//TODO handle error
+		if (!response.ok) 
 			throw new Error(`Failed to load language: ${lang}`);
 
 		const newDict = (await response.json()) as Dictionary;
@@ -101,6 +99,7 @@ export async function setLanguage(lang: string): Promise<void> {
 }
 
 export function initLanguage() {
-	const savedLang = localStorage.getItem('preferred_language') || 'fr';
-	setLanguage(savedLang);
+	const savedLang = localStorage.getItem('preferred_language') || 'es';
+	if (savedLang !== 'en')
+		setLanguage(savedLang);
 }

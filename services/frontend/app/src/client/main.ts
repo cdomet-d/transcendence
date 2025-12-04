@@ -3,7 +3,7 @@ import { Layout } from './web-elements/layouts/layout.js';
 import { PageHeader } from './web-elements/navigation/header.js';
 import { Router, routes } from './router.js';
 import { errorMessageFromException, redirectOnError } from './error.js';
-//import { initLanguage } from './web-elements/forms/language.js';
+import { initLanguage } from './web-elements/forms/language.js';
 
 export const router = new Router(routes);
 
@@ -44,4 +44,4 @@ if (!document.body.layoutInstance || !document.body.header) {
 
 document.body.append(document.body.header, document.body.layoutInstance);
 router.loadRoute(router.currentPath, true);
-//initLanguage();
+initLanguage();
