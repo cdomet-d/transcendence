@@ -1,4 +1,4 @@
-import { redirectOnError } from "../../error";
+// import { redirectOnError } from "../../error";
 import { HEIGHT } from "./game-class";
 import type { coordinates } from "./game-interfaces";
 
@@ -22,9 +22,9 @@ export function getPaddleSpeed(paddlespeed: string): number {
 	if (level <= 0)
 		return 0.42;
 	if (level === 1)
-		return 0.57;
+		return 0.55;
 	if (level >= 2)
-        return 0.72;
+        return 0.68;
 	return 0.42;
 }
 
