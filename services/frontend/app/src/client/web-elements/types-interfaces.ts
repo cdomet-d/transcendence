@@ -328,6 +328,7 @@ export interface Dictionary {
 	};
 	game: {
 		ball_speed: string;
+        horizontal: string;
 		paddle_size: string;
 		paddle_speed: string;
 		opponent: string;

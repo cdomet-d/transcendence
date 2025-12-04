@@ -150,7 +150,7 @@ export function localPong(dic: Dictionary): FormDetails {
             },
             {
                 id: 'horizontal',
-                labelContent: dic.game.paddle_speed,
+                labelContent: dic.game.horizontal,
                 pattern: '',
                 placeholder: '',
                 type: 'checkbox',
