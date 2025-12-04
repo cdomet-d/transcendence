@@ -5,11 +5,10 @@ import { natsConnect } from './publisher.gm.js';
 import type { gameReply, gameRequest } from '../gameManager/gameManager.interface.js';
 import { wsClientsMap } from '../lobby/lobby.gm.js';
 import { gameOver } from '../quickmatch/gameOver.js';
+import type { FastifyInstance } from 'fastify';
 
-export async function natsSubscribe() {
-	const nc = await natsConnect();
-
-	const pregame = nc.subscribe('game.reply');
+export async function natsSubscribe(serv: FastifyInstance) {
+	const pregame = serv.nc.subscribe('game.reply');
 	(async () => {
 		for await (const msg of pregame) {
 			const sc = StringCodec();
@@ -25,7 +24,7 @@ export async function natsSubscribe() {
 
 	})();
 
-	const postgame = nc.subscribe('game.over');
+	const postgame = serv.nc.subscribe('game.over');
 	(async () => {
 		for await (const msg of postgame) {
 			const sc = StringCodec();
@@ -33,7 +32,7 @@ export async function natsSubscribe() {
 			console.log(`GM received following in "game.over" :\n`, JSON.stringify(payload));
 
 			//if (tournamentID ==! -1)
-			//	tournamentState(payload);
+			//	tournamentState(serv, payload);
 			// else {
 			gameOver(payload);
 			// }

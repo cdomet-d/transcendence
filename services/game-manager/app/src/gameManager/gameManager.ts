@@ -1,9 +1,10 @@
+import type { FastifyInstance } from "fastify";
 import { createGameObj, startGame } from "../quickmatch/createGame.js";
 import { createTournament } from "../tournament/tournamentCreation.js";
 import { startTournament } from "../tournament/tournamentStart.js";
 import type { game, lobbyInfo, tournament } from "./gameManager.interface.js";
 
-export function processGameRequest(lobbyInfo: lobbyInfo) {
+export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo) {
 	if (lobbyInfo.format === "tournament") {
 		const tournament: tournament | undefined = createTournament(lobbyInfo);
 		if (tournament === undefined) {
@@ -11,7 +12,7 @@ export function processGameRequest(lobbyInfo: lobbyInfo) {
 			return;
 		}
 		lobbyInfo.joinable = false; // TODO: turn back to true when tournament over
-		startTournament(tournament);
+		startTournament(serv, tournament);
 	} else if (lobbyInfo.format === "quickmatch") {
 		const quickmatch: game | undefined = createGameObj(lobbyInfo);
 		if (quickmatch === undefined) {
@@ -19,6 +20,6 @@ export function processGameRequest(lobbyInfo: lobbyInfo) {
 			return;
 		}
 		lobbyInfo.joinable = false; // TODO: turn back to true when game over (only for remote)
-		startGame(quickmatch);
+		startGame(serv, quickmatch);
 	}
 }

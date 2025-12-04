@@ -1,21 +1,22 @@
 import { fetch } from "undici";
 import type { tournament } from "../gameManager/gameManager.interface.js";
 import { startGame } from "../quickmatch/createGame.js";
+import type { FastifyInstance } from "fastify";
 
 export const tournamentMap: Map<string, tournament> = new Map();
 
-export function startTournament(tournamentObj: tournament) {
+export function startTournament(serv: FastifyInstance, tournamentObj: tournament) {
 	tournamentMap.set(tournamentObj.tournamentID, tournamentObj)
-	startFirstRound(tournamentObj);
+	startFirstRound(serv, tournamentObj);
 	postTournamentToDashboard(tournamentObj);
 }
 
-function startFirstRound(tournament: tournament) {
+function startFirstRound(serv: FastifyInstance, tournament: tournament) {
 	if (tournament.bracket && Array.isArray(tournament.bracket)) {
 		for (let i = 0; tournament.bracket[i]?.users !== null; i++) {
 			const game = tournament.bracket[i];
 			if (game && game.users && game.users.length > 0) {
-				startGame(game);
+				startGame(serv, game);
 			}
 		}
 	}

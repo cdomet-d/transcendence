@@ -3,10 +3,11 @@ import type { game, tournament, userInfo } from "../gameManager/gameManager.inte
 import { startGame } from "../quickmatch/createGame.js";
 import { gameOver } from "../quickmatch/gameOver.js";
 import { tournamentOver } from "./tournamentOver.js";
+import type { FastifyInstance } from "fastify";
 
 const nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }> = new Map();
 
-export async function tournamentState(payload: string) {
+export async function tournamentState(serv: FastifyInstance, payload: string) {
 	const game: game = JSON.parse(payload);
 
 	const tournamentObj = tournamentMap.get(game.tournamentID!);
@@ -52,7 +53,7 @@ export async function tournamentState(payload: string) {
 	if (nextPlayers.player1 && nextPlayers.player2) {
 		tournamentObj.bracket[index] = game; // update local tournamentObj
 		nextGame.users = [nextPlayers.player1, nextPlayers.player2];
-		startGame(nextGame);
+		startGame(serv, nextGame);
 		nextPlayersMap.delete(nextGameID);
 	}
 }

@@ -1,3 +1,4 @@
+import type { FastifyInstance } from "fastify";
 import type { game, lobbyInfo, userInfo } from "../gameManager/gameManager.interface.js";
 import { natsPublish } from "../nats/publisher.gm.js";
 
@@ -27,6 +28,6 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 	return game;
 }
 
-export function startGame(game: game) {
-	natsPublish("game.request", JSON.stringify(game), "game.reply");
+export function startGame(serv: FastifyInstance, game: game) {
+	natsPublish(serv, "game.request", JSON.stringify(game), "game.reply");
 }
