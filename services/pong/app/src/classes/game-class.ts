@@ -179,7 +179,7 @@ export class Game {
 
 	public deletePlayers() {
 		this.#players.forEach((player: Player) => {
-			if (player.socket.readyState === 1) //TODO: ou 0 ?
+			if (player.socket.OPEN || player.socket.CONNECTING)
 				player.socket.close();
 		})
 		this.#players.splice(0, this.#players.length);

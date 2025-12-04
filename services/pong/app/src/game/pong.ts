@@ -18,8 +18,9 @@ export async function setUpGame(game: Game) {
 	setMessEvent(player1, 1, game);
 	setMessEvent(player2, 2, game);
 
-	player1.socket.send(1);
-	if (!game.local)
+	if (player1.socket.OPEN)
+		player1.socket.send(1);
+	if (!game.local && player2.socket.OPEN)
 		player2.socket.send(-1);
 
 	// start game
@@ -42,7 +43,7 @@ function setMessEvent(player: Player, playerNbr: number, game: Game) {
 		}
 		catch (err: any) {
 			game.infos.score = [-1, -1];
-			player.socket.close();
+			player.socket.close(1003, err.message);
 			game.log.error(err.message);
 		};
 	})

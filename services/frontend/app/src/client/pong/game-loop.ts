@@ -42,7 +42,8 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 
 function sendRequest(game: Game, ws: WebSocket) {
     game.req.timeStamp = performance.now();
-    ws.send(JSON.stringify(game.req));
+    if (ws.OPEN)
+        ws.send(JSON.stringify(game.req));
     game.addReq(game.req);
     game.req.ID += 1; //TODO: overflow?
 }
@@ -91,7 +92,8 @@ function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean
         finishSteps(game);
     }
     if (latestReply.end === true) {
-        ws.send('0');
+        if (ws.OPEN)
+            ws.send('0');
         return true;
     }
     return false;

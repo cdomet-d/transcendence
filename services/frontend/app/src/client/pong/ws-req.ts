@@ -25,14 +25,15 @@ export function wsRequest(court: PongCourt ,game: Game, ids: { gameID: string; u
             },
             { once: true },
         );
-        ws.send(JSON.stringify(ids));
+        if (ws.OPEN)
+            ws.send(JSON.stringify(ids));
     };
 
 	ws.onclose = (event) => {
 		console.log('PONG webSocket connection closed!');
 		console.log('EVENT received:  ', event.reason);
 		if (event.code === 1003 || event.code === 1011) {
-			createVisualFeedback(event.reason); //TODO: fix
+			createVisualFeedback(`${event.code}: ${event.reason}`); //TODO: fix
 			return;
 		}
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);

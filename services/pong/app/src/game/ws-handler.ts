@@ -65,8 +65,7 @@ export function waitForMessage(serv: FastifyInstance, socket: WebSocket): Promis
 					reject("Invalid ids");
 				resolve(ids);
 			} catch (err: any) {
-				socket.send(err.message);
-				socket.close();
+				socket.close(1003, err.message);
 				serv.log.error(err.message);
 			}
 		});
