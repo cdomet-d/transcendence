@@ -44,7 +44,7 @@ export class Game {
 			r: 13
 		};
 		this.#paddleSpec = {
-			speed: 0.45,
+			speed: 0.50,
 			w: 20, 
 			h: HEIGHT / 5, 
 			halfW: 20 / 2, 

@@ -49,7 +49,7 @@ export class Game {
             maxSpeed: 0.90,
             r: 13,
         };
-        this.#paddleSpec = { speed: 0.45, w: 20, h: HEIGHT / 5, halfW: 20 / 2, halfH: HEIGHT / 10 }; //custom
+        this.#paddleSpec = { speed: 0.50, w: 20, h: HEIGHT / 5, halfW: 20 / 2, halfH: HEIGHT / 10 }; //custom
         this.#leftPaddle = { x: 25, y: HEIGHT / 2 - this.#paddleSpec.halfH };
         this.#rightPaddle = {
             x: WIDTH - (this.#paddleSpec.w + 25),
