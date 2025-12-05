@@ -47,7 +47,7 @@ export class NotifBox extends HTMLDivElement {
             const status = await userStatus();
             if (status.auth === false) return;
 			await this.fetchPendingFriendRequests();
-            this.notifWsRequest();
+            this.notifWsRequest();//TODO: if refresh game invite notifs are lost. add them to db ?
         }
     }
 
