@@ -13,15 +13,15 @@ import { DeleteAccountForm } from './account-deletion-form.js';
  * @interface HTMLElementTagMap
  */
 interface HTMLElementTagMap {
-    'default-form': BaseForm;
-    'local-pong-settings': LocalPongSettings;
-    'registration-form': RegistrationForm;
-    'login-form': LoginForm;
-    'pw-form': CriticalActionForm;
-    'remote-pong-settings': RemotePongSettings;
-    'search-form': Searchbar;
-    'settings-form': UserSettingsForm;
-    'delete-account-form': DeleteAccountForm;
+	'default-form': BaseForm;
+	'local-pong-settings': LocalPongSettings;
+	'registration-form': RegistrationForm;
+	'login-form': LoginForm;
+	'pw-form': CriticalActionForm;
+	'remote-pong-settings': RemotePongSettings;
+	'search-form': Searchbar;
+	'settings-form': UserSettingsForm;
+	'delete-account-form': DeleteAccountForm;
 }
 
 /**
@@ -34,18 +34,18 @@ interface HTMLElementTagMap {
  * @return {*}  {HTMLElementTagMap[K]}
  */
 export function createForm<K extends keyof HTMLElementTagMap>(
-    tag: K,
-    form?: FormDetails,
-    user?: UserData,
+	tag: K,
+	form?: FormDetails,
+	user?: UserData,
 ): HTMLElementTagMap[K] {
-    if (tag === 'settings-form' && !user) {
-        throw new Error('Missing user for user setting form.');
-    } else {
-        const el = document.createElement('form', { is: tag }) as HTMLElementTagMap[K];
-        if (form) el.details = form;
-        if (tag === 'settings-form' && user) el.user = user;
-        return el;
-    }
+	if (tag === 'settings-form' && !user) {
+		throw new Error('Missing user for user setting form.');
+	} else {
+		const el = document.createElement('form', { is: tag }) as HTMLElementTagMap[K];
+		if (form) el.details = form;
+		if (tag === 'settings-form' && user) el.user = user;
+		return el;
+	}
 }
 
 /**
@@ -57,18 +57,18 @@ export function createForm<K extends keyof HTMLElementTagMap>(
  * @returns {Promise<Searchbar | null>} A promise that resolves with the {@link Searchbar} element if found, or `null` if not found within the timeout.
  */
 export function getSearchbarAsync(): Promise<Searchbar | null> {
-    const timeout: number = 1000;
-    const start = Date.now();
-    return new Promise((resolve) => {
-        function resolveSearchbar() {
-            const s = document.getElementById('searchbar') as Searchbar | null;
-            if (s) {
-                resolve(s);
-            } else {
-                if (Date.now() - start >= timeout) resolve(null);
-                else setTimeout(resolveSearchbar, 100);
-            }
-        }
-        resolveSearchbar();
-    });
+	const timeout: number = 1000;
+	const start = Date.now();
+	return new Promise((resolve) => {
+		function resolveSearchbar() {
+			const s = document.getElementById('searchbar') as Searchbar | null;
+			if (s) {
+				resolve(s);
+			} else {
+				if (Date.now() - start >= timeout) resolve(null);
+				else setTimeout(resolveSearchbar, 100);
+			}
+		}
+		resolveSearchbar();
+	});
 }

@@ -7,13 +7,13 @@ import { errorMessageFromException, redirectOnError } from '../../error.js';
 import { router } from '../../main.js';
 
 const emptyForm: FormDetails = {
-    action: '',
-    ariaLabel: '',
-    button: { id: '', type: 'button', content: '', img: null, ariaLabel: '' },
-    fields: [],
-    heading: '',
-    id: '',
-    method: '',
+	action: '',
+	ariaLabel: '',
+	button: { id: '', type: 'button', content: '', img: null, ariaLabel: '' },
+	fields: [],
+	heading: '',
+	id: '',
+	method: '',
 };
 
 /** The parent class from which all forms derives.
@@ -24,175 +24,175 @@ const emptyForm: FormDetails = {
  * @extends {HTMLFormElement}
  */
 export abstract class BaseForm extends HTMLFormElement {
-    #formData: FormDetails;
-    submitHandler: (ev: SubmitEvent) => void;
-    validationHandler: () => void;
+	#formData: FormDetails;
+	submitHandler: (ev: SubmitEvent) => void;
+	validationHandler: () => void;
 
-    /** A map storing the individual elements of a form to allow easy manipulation.
-     * It's basically a cache.
-     */
-    #formContent: Map<string, HTMLElement>;
+	/** A map storing the individual elements of a form to allow easy manipulation.
+	 * It's basically a cache.
+	 */
+	#formContent: Map<string, HTMLElement>;
 
-    /* -------------------------------------------------------------------------- */
-    /*                                   Default                                  */
-    /* -------------------------------------------------------------------------- */
+	/* -------------------------------------------------------------------------- */
+	/*                                   Default                                  */
+	/* -------------------------------------------------------------------------- */
 
-    constructor() {
-        super();
-        this.#formData = emptyForm;
-        this.submitHandler = this.submitHandlerImplementation.bind(this);
-        this.validationHandler = this.#validate.bind(this);
-        this.#formContent = new Map<string, HTMLElement>();
-        this.className =
-            'w-full h-full grid grid-auto-rows-auto form-gap place-items-center justify-center box-border relative';
-    }
+	constructor() {
+		super();
+		this.#formData = emptyForm;
+		this.submitHandler = this.submitHandlerImplementation.bind(this);
+		this.validationHandler = this.#validate.bind(this);
+		this.#formContent = new Map<string, HTMLElement>();
+		this.className =
+			'w-full h-full grid grid-auto-rows-auto form-gap place-items-center justify-center box-border relative';
+	}
 
-    /** Called when the element is inserted into the DOM.
-     * Sets form attributes, attaches the submit event handler, and renders the form.
-     */
-    connectedCallback() {
-        this.action = this.#formData.action;
-        this.ariaLabel = this.#formData.ariaLabel;
-        this.id = this.#formData.id;
-        this.method = this.#formData.method;
-        this.addEventListener('submit', this.submitHandler);
-        this.addEventListener('input', this.validationHandler);
-        this.render();
-        this.#validate();
-    }
+	/** Called when the element is inserted into the DOM.
+	 * Sets form attributes, attaches the submit event handler, and renders the form.
+	 */
+	connectedCallback() {
+		this.action = this.#formData.action;
+		this.ariaLabel = this.#formData.ariaLabel;
+		this.id = this.#formData.id;
+		this.method = this.#formData.method;
+		this.addEventListener('submit', this.submitHandler);
+		this.addEventListener('input', this.validationHandler);
+		this.render();
+		this.#validate();
+	}
 
-    disconnectedCallback() {
-        this.removeEventListener('submit', this.submitHandler);
-        this.removeEventListener('input', this.validationHandler);
-    }
+	disconnectedCallback() {
+		this.removeEventListener('submit', this.submitHandler);
+		this.removeEventListener('input', this.validationHandler);
+	}
 
-    /** Renders the form by calling the title, fields, and button renderers. */
-    render() {
-        this.renderTitle();
-        this.renderFields();
-        this.renderButtons();
-    }
+	/** Renders the form by calling the title, fields, and button renderers. */
+	render() {
+		this.renderTitle();
+		this.renderFields();
+		this.renderButtons();
+	}
 
-    abstract fetchAndRedirect(url: string, req: RequestInit): Promise<void>;
+	abstract fetchAndRedirect(url: string, req: RequestInit): Promise<void>;
 
-    /* -------------------------------------------------------------------------- */
-    /*                                   Setters                                  */
-    /* -------------------------------------------------------------------------- */
+	/* -------------------------------------------------------------------------- */
+	/*                                   Setters                                  */
+	/* -------------------------------------------------------------------------- */
 
-    /**
-     * Sets the details of the form - expects a {@link FormDetails} object.
-     * Can also be `got`.
-     */
-    set details(form: FormDetails) {
-        this.#formData = form;
-    }
+	/**
+	 * Sets the details of the form - expects a {@link FormDetails} object.
+	 * Can also be `got`.
+	 */
+	set details(form: FormDetails) {
+		this.#formData = form;
+	}
 
-    /* -------------------------------------------------------------------------- */
-    /*                                   Getters                                  */
-    /* -------------------------------------------------------------------------- */
+	/* -------------------------------------------------------------------------- */
+	/*                                   Getters                                  */
+	/* -------------------------------------------------------------------------- */
 
-    get details() {
-        return this.#formData;
-    }
+	get details() {
+		return this.#formData;
+	}
 
-    /**
-     * Getter for `formContent`, the form's cache.
-     */
-    get contentMap() {
-        return this.#formContent;
-    }
+	/**
+	 * Getter for `formContent`, the form's cache.
+	 */
+	get contentMap() {
+		return this.#formContent;
+	}
 
-    // TODO: add getter for single element
-    /* -------------------------------------------------------------------------- */
-    /*                            Event listeners                                 */
-    /* -------------------------------------------------------------------------- */
+	// TODO: add getter for single element
+	/* -------------------------------------------------------------------------- */
+	/*                            Event listeners                                 */
+	/* -------------------------------------------------------------------------- */
 
-    async createReqBody(form: FormData): Promise<string> {
-        const fObject = Object.fromEntries(form.entries());
-        const jsonBody = JSON.stringify(fObject);
-        return jsonBody;
-    }
+	async createReqBody(form: FormData): Promise<string> {
+		const fObject = Object.fromEntries(form.entries());
+		const jsonBody = JSON.stringify(fObject);
+		return jsonBody;
+	}
 
-    initReq(): RequestInit {
-        const req: RequestInit = {
-            method: this.#formData.method,
-            headers: { 'Content-Type': 'application/json' },
-        };
-        return req;
-    }
+	initReq(): RequestInit {
+		const req: RequestInit = {
+			method: this.#formData.method,
+			headers: { 'Content-Type': 'application/json' },
+		};
+		return req;
+	}
 
-    /** Handles the default submit event for the form.
-     * Prevents default submission and log form data.
-     * Can be overridden in subclasses for custom behavior.
-     * @param ev - The submit event.
-     */
-    async submitHandlerImplementation(ev: SubmitEvent) {
-        ev.preventDefault();
-        const form = new FormData(this);
-        const req = this.initReq();
-        if (req.method === 'POST') {
-            req.body = await this.createReqBody(form);
-        }
-        try {
-            await this.fetchAndRedirect(this.#formData.action, req);
-        } catch (error) {
-			redirectOnError(router.stepBefore, errorMessageFromException(error))
-        }
-    }
+	/** Handles the default submit event for the form.
+	 * Prevents default submission and log form data.
+	 * Can be overridden in subclasses for custom behavior.
+	 * @param ev - The submit event.
+	 */
+	async submitHandlerImplementation(ev: SubmitEvent) {
+		ev.preventDefault();
+		const form = new FormData(this);
+		const req = this.initReq();
+		if (req.method === 'POST') {
+			req.body = await this.createReqBody(form);
+		}
+		try {
+			await this.fetchAndRedirect(this.#formData.action, req);
+		} catch (error) {
+			redirectOnError(router.stepBefore, errorMessageFromException(error));
+		}
+	}
 
-    #validate() {
-        if (!this.checkValidity()) {
-            this.#formContent.get('submit')?.setAttribute('disabled', '');
-        } else {
-            this.#formContent.get('submit')?.removeAttribute('disabled');
-        }
-    }
+	#validate() {
+		if (!this.checkValidity()) {
+			this.#formContent.get('submit')?.setAttribute('disabled', '');
+		} else {
+			this.#formContent.get('submit')?.removeAttribute('disabled');
+		}
+	}
 
-    /* -------------------------------------------------------------------------- */
-    /*                                  Rendering                                 */
-    /* -------------------------------------------------------------------------- */
+	/* -------------------------------------------------------------------------- */
+	/*                                  Rendering                                 */
+	/* -------------------------------------------------------------------------- */
 
-    /** Renders the form title if a heading is provided in form details.
-     * Appends the title element to the form and caches it in `formContent`.
-     */
-    renderTitle() {
-        if (this.#formData.heading) {
-            const title = createHeading('2', this.#formData.heading);
-            this.#formContent.set('title', title);
-            this.append(title);
-        }
-    }
+	/** Renders the form title if a heading is provided in form details.
+	 * Appends the title element to the form and caches it in `formContent`.
+	 */
+	renderTitle() {
+		if (this.#formData.heading) {
+			const title = createHeading('2', this.#formData.heading);
+			this.#formContent.set('title', title);
+			this.append(title);
+		}
+	}
 
-    /** Renders all fields defined in the form details.
-     * Creates input or textarea groups as needed, appends them, and caches
-     * them in `formContent`.
-     */
-    renderFields() {
-        this.#formData.fields.forEach((field) => {
-            let el: HTMLElement;
-            if (field.type !== 'textarea') {
-                el = createInputGroup(field) as InputGroup;
-            } else {
-                el = createTextAreaGroup(field) as TextAreaGroup;
-            }
-            this.#formContent.set(field.id, el);
-            this.append(el);
-            el.classList.remove('w-full');
-            el.classList.add('w-5/6', 'z-2');
-            if (field.type === 'textarea') el.classList.add('h-full', 'row-span-3');
-        });
-    }
+	/** Renders all fields defined in the form details.
+	 * Creates input or textarea groups as needed, appends them, and caches
+	 * them in `formContent`.
+	 */
+	renderFields() {
+		this.#formData.fields.forEach((field) => {
+			let el: HTMLElement;
+			if (field.type !== 'textarea') {
+				el = createInputGroup(field) as InputGroup;
+			} else {
+				el = createTextAreaGroup(field) as TextAreaGroup;
+			}
+			this.#formContent.set(field.id, el);
+			this.append(el);
+			el.classList.remove('w-full');
+			el.classList.add('w-5/6', 'z-2');
+			if (field.type === 'textarea') el.classList.add('h-full', 'row-span-3');
+		});
+	}
 
-    /** Renders the form's submit button as defined in form details.
-     * Appends the button to the form and caches it in `formContent`.
-     */
-    renderButtons() {
-        const submit = createButton(this.#formData.button);
-        this.#formContent.set('submit', submit);
-        this.append(submit);
-        if (!submit.classList.contains('bg-red')) {
-            submit.classList.remove('w-full');
-            submit.classList.add('w-5/6');
-        }
-    }
+	/** Renders the form's submit button as defined in form details.
+	 * Appends the button to the form and caches it in `formContent`.
+	 */
+	renderButtons() {
+		const submit = createButton(this.#formData.button);
+		this.#formContent.set('submit', submit);
+		this.append(submit);
+		if (!submit.classList.contains('bg-red')) {
+			submit.classList.remove('w-full');
+			submit.classList.add('w-5/6');
+		}
+	}
 }

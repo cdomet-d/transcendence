@@ -1,9 +1,10 @@
-import { options } from './serv.conf.js';
-import Fastify from 'fastify';
-import type { FastifyInstance } from 'fastify';
-import cookie from '@fastify/cookie';
-import fastifyJwt from '@fastify/jwt';
 import { initNatsConnection } from './nats.js';
+import { options } from './serv.conf.js';
+import cookie from '@fastify/cookie';
+import Fastify from 'fastify';
+import fastifyJwt from '@fastify/jwt';
+import fp from 'fastify-plugin';
+import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { NatsConnection } from 'nats';
 
 import { bffFriendRoutes } from './routeFriends.js';
@@ -20,35 +21,48 @@ import { bffUsersRoutes } from './routeUserProfile.js';
 	}
 })();
 
+const authPlugin = fp(async (serv: FastifyInstance) => {
+	serv.addHook('onRequest', async (request: FastifyRequest, reply: FastifyReply) => {
+		serv.log.info(`PREHANDLER RUNNING FOR ${request.url}`);
+		try {
+			await request.jwtVerify();
+		} catch (error) {
+			if (error instanceof Error) serv.log.error(`${error.message}`);
+			return reply.code(401).send({ message: `Unauthorized` });
+		}
+	});
+});
+
 //init server
 export async function init(): Promise<FastifyInstance> {
 	const serv: FastifyInstance = Fastify(options);
 
 	//plugins
-	addPlugins(serv);
+	await addPlugins(serv);
 
 	// decorations
 	const nc: NatsConnection = await initNatsConnection();
-	serv.decorate("nats", nc);
+	serv.decorate('nats', nc);
 
 	//hooks
 	addHook(serv);
 
 	await serv.ready();
-	return (serv);
+	return serv;
 }
 
 function addHook(serv: FastifyInstance) {
 	serv.addHook('onClose', (instance, done) => {
 		instance.nats.close();
-		done()
-	})
+		done();
+	});
 }
 
 //add plugins
-function addPlugins(serv: FastifyInstance) {
-	serv.register(fastifyJwt, { secret: process.env.JWT_SECRET! });
-	serv.register(cookie);
+async function addPlugins(serv: FastifyInstance) {
+	await serv.register(fastifyJwt, { secret: process.env.JWT_SECRET! });
+	await serv.register(cookie);
+	serv.register(authPlugin);
 	serv.register(bffAccessibilityRoutes);
 	serv.register(bffUsersRoutes);
 	serv.register(bffFriendRoutes);
@@ -63,7 +77,7 @@ async function runServ(serv: FastifyInstance): Promise<void> {
 function getPort(): number {
 	const port: number = Number(process.env.PORT);
 	if (Number.isNaN(port)) {
-		throw new Error("Invalid port");
+		throw new Error('Invalid port');
 	}
 	return port;
 }

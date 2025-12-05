@@ -16,91 +16,91 @@ import { userStatus } from '../../main.js';
  * Extends HTMLElement.
  */
 export class PageHeader extends HTMLElement {
-    #home: Menu;
-    #searchbar: Searchbar;
-    #mainNav: Menu;
-    #logout: CustomButton;
-    #login: CustomButton;
-    #notif: NotifBox;
+	#home: Menu;
+	#searchbar: Searchbar;
+	#mainNav: Menu;
+	#logout: CustomButton;
+	#login: CustomButton;
+	#notif: NotifBox;
 
-    #loginHandler: () => void;
-    #logoutHandler: () => void;
+	#loginHandler: () => void;
+	#logoutHandler: () => void;
 
-    constructor() {
-        super();
-        this.#home = createMenu(homeLink, 'horizontal', false);
-        this.#searchbar = createForm('search-form');
-        this.#mainNav = createMenu(main, 'horizontal', false);
-        this.#notif = createNotificationBox();
-        this.#logout = createButton(logOut, false);
-        this.#login = createButton(logIn, false);
+	constructor() {
+		super();
+		this.#home = createMenu(homeLink, 'horizontal', false);
+		this.#searchbar = createForm('search-form');
+		this.#mainNav = createMenu(main, 'horizontal', false);
+		this.#notif = createNotificationBox();
+		this.#logout = createButton(logOut, false);
+		this.#login = createButton(logIn, false);
 
-        this.#loginHandler = this.#loginImplementation.bind(this);
-        this.#logoutHandler = this.#logoutImplementation.bind(this);
-    }
+		this.#loginHandler = this.#loginImplementation.bind(this);
+		this.#logoutHandler = this.#logoutImplementation.bind(this);
+	}
 
-    async #loginImplementation() {
-        router.loadRoute('/auth', true);
-    }
+	async #loginImplementation() {
+		router.loadRoute('/auth', true);
+	}
 
-    async #logoutImplementation() {
-        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
-        this.#notif.ws?.close();
-        router.loadRoute('/', true);
-    }
+	async #logoutImplementation() {
+		await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+		this.#notif.ws?.close();
+		router.loadRoute('/', true);
+	}
 
-    connectedCallback() {
-        this.append(this.#home, this.#searchbar, this.#mainNav, this.#notif);
-        this.#login.addEventListener('click', this.#loginHandler);
-        this.#logout.addEventListener('click', this.#logoutHandler);
-        this.render();
-    }
+	connectedCallback() {
+		this.append(this.#home, this.#searchbar, this.#mainNav, this.#notif);
+		this.#login.addEventListener('click', this.#loginHandler);
+		this.#logout.addEventListener('click', this.#logoutHandler);
+		this.render();
+	}
 
-    disconnectedCallback() {
-        this.#login.removeEventListener('click', this.#loginHandler);
-        this.#logout.removeEventListener('click', this.#logoutHandler);
-    }
+	disconnectedCallback() {
+		this.#login.removeEventListener('click', this.#loginHandler);
+		this.#logout.removeEventListener('click', this.#logoutHandler);
+	}
 
-    async getLogState(): Promise<void> {
-        const log = await userStatus();
-        if (log.auth) {
-            if (this.contains(this.#login)) this.#login.remove();
-            if (!this.contains(this.#logout)) {
-                this.append(this.#logout);
-                this.#logout.classList.add('h-m', 'w-l');
-            }
+	async getLogState(): Promise<void> {
+		const log = await userStatus();
+		if (log.auth) {
+			if (this.contains(this.#login)) this.#login.remove();
+			if (!this.contains(this.#logout)) {
+				this.append(this.#logout);
+				this.#logout.classList.add('h-m', 'w-l');
+			}
 			await this.#notif.fetchPendingFriendRequests();
-        } else {
-            if (this.contains(this.#logout)) this.#logout.remove();
-            if (!this.contains(this.#login)) {
-                this.append(this.#login);
-                this.#login.classList.add('h-m', 'w-l');
-            }
-        }
-    }
+		} else {
+			if (this.contains(this.#logout)) this.#logout.remove();
+			if (!this.contains(this.#login)) {
+				this.append(this.#login);
+				this.#login.classList.add('h-m', 'w-l');
+			}
+		}
+	}
 
-    render() {
-        this.classList.add(
-            'box-border',
-            'w-screen',
-            'grid',
-            'header',
-            'grid-cols-5',
-            'gap-m',
-            'absolute',
-            'top-0',
-            'left-0',
-            'justify-between',
-            'z-1',
-        );
-        this.#mainNav.classList.add('place-self-stretch');
-    }
+	render() {
+		this.classList.add(
+			'box-border',
+			'w-screen',
+			'grid',
+			'header',
+			'grid-cols-5',
+			'gap-m',
+			'absolute',
+			'top-0',
+			'left-0',
+			'justify-between',
+			'z-1',
+		);
+		this.#mainNav.classList.add('place-self-stretch');
+	}
 
-    get notif(): NotifBox {
-        return this.#notif;
-    }
+	get notif(): NotifBox {
+		return this.#notif;
+	}
 }
 
 if (!customElements.get('page-header')) {
-    customElements.define('page-header', PageHeader, { extends: 'header' });
+	customElements.define('page-header', PageHeader, { extends: 'header' });
 }

@@ -10,11 +10,11 @@ import type { ImgData, Size, ColorTheme } from '../types-interfaces.js';
  * @returns The created {@link CustomTitle} element.
  */
 export function createHeading(level: string, content: string): CustomTitle {
-    const el = document.createElement('custom-title') as CustomTitle;
-    el.setAttribute('level', level);
-    el.content = content;
+	const el = document.createElement('custom-title') as CustomTitle;
+	el.setAttribute('level', level);
+	el.content = content;
 
-    return el;
+	return el;
 }
 
 /**
@@ -24,10 +24,10 @@ export function createHeading(level: string, content: string): CustomTitle {
  * @returns The {@link Icon} element.
  */
 export function createIcon(metadata: ImgData): Icon {
-    const el = document.createElement('img', { is: 'custom-icon' }) as Icon;
-    if (!metadata) return el;
-    el.metadata = metadata;
-    return el;
+	const el = document.createElement('img', { is: 'custom-icon' }) as Icon;
+	if (!metadata) return el;
+	el.metadata = metadata;
+	return el;
 }
 
 /**
@@ -37,15 +37,15 @@ export function createIcon(metadata: ImgData): Icon {
  * @returns The {@link Avatar} element.
  */
 export function createAvatar(metadata?: ImgData | null): Avatar {
-    const el = document.createElement('div', { is: 'user-avatar' }) as Avatar;
-    if (metadata) el.metadata = metadata;
+	const el = document.createElement('div', { is: 'user-avatar' }) as Avatar;
+	if (metadata) el.metadata = metadata;
 
-    return el;
+	return el;
 }
 
 export function createNoResult(theme: ColorTheme, size: Size): NoResults {
-    const el = document.createElement('div', { is: 'no-results' }) as NoResults;
-    el.theme = theme;
-    el.size = size;
-    return el;
+	const el = document.createElement('div', { is: 'no-results' }) as NoResults;
+	el.theme = theme;
+	el.size = size;
+	return el;
 }

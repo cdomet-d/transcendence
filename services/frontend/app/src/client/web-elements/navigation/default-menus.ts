@@ -1,205 +1,228 @@
 import type { ButtonData, MenuData, TabData } from '../types-interfaces.js';
 
 export const main: MenuData = {
-    id: 'mainNav',
-    links: [
-        {
-            styleButton: true,
-            id: 'leaderboard',
-            title: 'Leaderboard',
-            datalink: 'leaderboard',
-            href: '/leaderboard',
-            img: null,
-        },
-        {   styleButton: true,
-            id: 'lobby',
-            title: 'Play',
-            datalink: '/lobby-menu',
-            href: '/lobby-menu',
-            img: null
-        },
-        {   styleButton: true,
-            id: 'profile',
-            title: 'Profile',
-            datalink: 'profile',
-            href: '/me',
-            img: null
-        },
-    ],
+	id: 'mainNav',
+	links: [
+		{
+			styleButton: true,
+			id: 'leaderboard',
+			title: 'Leaderboard',
+			datalink: 'leaderboard',
+			href: '/leaderboard',
+			img: null,
+		},
+		{
+			styleButton: true,
+			id: 'lobby',
+			title: 'Play',
+			datalink: '/lobby-menu',
+			href: '/lobby-menu',
+			img: null,
+		},
+		{
+			styleButton: true,
+			id: 'profile',
+			title: 'Profile',
+			datalink: 'profile',
+			href: '/me',
+			img: null,
+		},
+	],
 };
 
 export const homeLink: MenuData = {
-    id: 'backHome',
-    links: [
-        {
-            styleButton: false,
-            datalink: 'home',
-            href: '/',
-            title: 'Home',
-            id: 'home',
-            img: {
-                alt: 'A cute pixel art blob',
-                size: 'imedium',
-                src: '/public/assets/images/default-avatar.png',
-                id: 'homelink',
-            },
-        },
-    ],
+	id: 'backHome',
+	links: [
+		{
+			styleButton: false,
+			datalink: 'home',
+			href: '/',
+			title: 'Home',
+			id: 'home',
+			img: {
+				alt: 'A cute pixel art blob',
+				size: 'imedium',
+				src: '/public/assets/images/default-avatar.png',
+				id: 'homelink',
+			},
+		},
+	],
 };
 
 export const logOut: ButtonData = {
-    type: 'button',
-    id: 'logout',
-    content: 'Log out',
-    img: null,
-    ariaLabel: 'The logout button',
-    style: 'red',
+	type: 'button',
+	id: 'logout',
+	content: 'Log out',
+	img: null,
+	ariaLabel: 'The logout button',
+	style: 'red',
 };
 
 export const logIn: ButtonData = {
-    type: 'button',
-    id: 'login',
-    content: 'Log in',
-    img: null,
-    ariaLabel: 'The login button',
-    style: 'green',
+	type: 'button',
+	id: 'login',
+	content: 'Log in',
+	img: null,
+	ariaLabel: 'The login button',
+	style: 'green',
 };
 
 export const social: MenuData = {
-    id: 'social',
-    buttons: [
-        {
-            ariaLabel: 'Add user as friend',
-            content: null,
-            type: 'button',
-            id: 'addFriend',
-            img: {
-                alt: 'a small pixel art blue blob with a green plus sign',
-                id: '',
-                size: 'ismall',
-                src: '/public/assets/images/add-user.png',
-            },
-        },
-        {
-            ariaLabel: 'Remove user from friends',
-            content: null,
-            type: 'button',
-            id: 'removeFriend',
-            img: {
-                alt: 'a small pixel art blue blob with a red minus sign',
-                id: '',
-                size: 'ismall',
-                src: '/public/assets/images/remove-user.png',
-            },
-        },
-    ],
+	id: 'social',
+	buttons: [
+		{
+			ariaLabel: 'Add user as friend',
+			content: null,
+			type: 'button',
+			id: 'addFriend',
+			img: {
+				alt: 'a small pixel art blue blob with a green plus sign',
+				id: '',
+				size: 'ismall',
+				src: '/public/assets/images/add-user.png',
+			},
+		},
+		{
+			ariaLabel: 'Remove user from friends',
+			content: null,
+			type: 'button',
+			id: 'removeFriend',
+			img: {
+				alt: 'a small pixel art blue blob with a red minus sign',
+				id: '',
+				size: 'ismall',
+				src: '/public/assets/images/remove-user.png',
+			},
+		},
+	],
 
-    links: [
-        {
-            //TODO: autofill pongsettings form and lauch a 2 persons match
-            styleButton: true,
-            datalink: '/lobby',
-            id: 'challenge',
-            href: '/lobby',
-            title: '',
-            img: {
-                alt: 'two overlapping pixel art ping pong paddles',
-                id: 'challengeIcon',
-                size: 'ismall',
-                src: '/public/assets/images/challenge.png',
-            },
-        },
-        {
-            styleButton: true,
-            datalink: '/user/settings',
-            id: 'settings',
-            href: '/user/settings',
-            title: 'Settings',
-            img: null,
-        },
-    ],
+	links: [
+		{
+			//TODO: autofill pongsettings form and lauch a 2 persons match
+			styleButton: true,
+			datalink: '/lobby',
+			id: 'challenge',
+			href: '/lobby',
+			title: '',
+			img: {
+				alt: 'two overlapping pixel art ping pong paddles',
+				id: 'challengeIcon',
+				size: 'ismall',
+				src: '/public/assets/images/challenge.png',
+			},
+		},
+		{
+			styleButton: true,
+			datalink: '/user/settings',
+			id: 'settings',
+			href: '/user/settings',
+			title: 'Settings',
+			img: null,
+		},
+	],
 };
 
 export const languageMenu: ButtonData[] = [
-    { id: 'English', ariaLabel: 'English', content: 'English', img: null, type: 'button' },
-    { id: 'Spanish', ariaLabel: 'Spanish', content: 'Spanish', img: null, type: 'button' },
-    { id: 'French', ariaLabel: 'French', content: 'French', img: null, type: 'button' },
+	{ id: 'English', ariaLabel: 'English', content: 'English', img: null, type: 'button' },
+	{ id: 'Spanish', ariaLabel: 'Spanish', content: 'Spanish', img: null, type: 'button' },
+	{ id: 'French', ariaLabel: 'French', content: 'French', img: null, type: 'button' },
 ];
 
 export const backgroundMenu: ButtonData[] = [
-    { id: 'farm', ariaLabel: 'farm', content: 'Adorable Farm', img: null, type: 'button' },
-    { id: 'forest', ariaLabel: 'forest', content: 'Enchanted Forest', img: null, type: 'button' },
-    {
-        id: 'underwater',
-        ariaLabel: 'underwater',
-        content: 'Magical Underwater',
-        img: null,
-        type: 'button',
-    },
+	{ id: 'farm', ariaLabel: 'farm', content: 'Adorable Farm', img: null, type: 'button' },
+	{ id: 'forest', ariaLabel: 'forest', content: 'Enchanted Forest', img: null, type: 'button' },
+	{
+		id: 'underwater',
+		ariaLabel: 'underwater',
+		content: 'Magical Underwater',
+		img: null,
+		type: 'button',
+	},
 ];
 
 export const userColorsMenu: ButtonData[] = [
-    {
-        id: '',
-        ariaLabel: 'Hexcode selection for azure background.',
-        content: '4F9FFF',
-        img: null,
-        type: 'button',
-    },
-    {
-        id: '',
-        ariaLabel: 'Hexcode selection for purple background.',
-        content: '5200FF',
-        img: null,
-        type: 'button',
-    },
-    {
-        id: '',
-        ariaLabel: 'Hexcode selection for navy background.',
-        content: '000080',
-        img: null,
-        type: 'button',
-    },
-    {
-        id: '',
-        ariaLabel: 'Hexcode selection for green background.',
-        content: '98A869',
-        img: null,
-        type: 'button',
-    },
-    {
-        id: '',
-        ariaLabel: 'Hexcode selection for orange background.',
-        content: 'BE5103',
-        img: null,
-        type: 'button',
-    },
-    {
-        id: '',
-        ariaLabel: 'Hexcode selection for red background.',
-        content: 'CE4257',
-        img: null,
-        type: 'button',
-    },
+	{
+		id: '',
+		ariaLabel: 'Hexcode selection for azure background.',
+		content: '4F9FFF',
+		img: null,
+		type: 'button',
+	},
+	{
+		id: '',
+		ariaLabel: 'Hexcode selection for purple background.',
+		content: '5200FF',
+		img: null,
+		type: 'button',
+	},
+	{
+		id: '',
+		ariaLabel: 'Hexcode selection for navy background.',
+		content: '000080',
+		img: null,
+		type: 'button',
+	},
+	{
+		id: '',
+		ariaLabel: 'Hexcode selection for green background.',
+		content: '98A869',
+		img: null,
+		type: 'button',
+	},
+	{
+		id: '',
+		ariaLabel: 'Hexcode selection for orange background.',
+		content: 'BE5103',
+		img: null,
+		type: 'button',
+	},
+	{
+		id: '',
+		ariaLabel: 'Hexcode selection for red background.',
+		content: 'CE4257',
+		img: null,
+		type: 'button',
+	},
 ];
 
 export const profileTabs: TabData[] = [
-    { id: 'friends', content: 'Friends', default: true, panelContent: null },
-    { id: 'history', content: 'Game history', default: false, panelContent: null },
-    { id: 'stats', content: 'Statistics', default: false, panelContent: null },
+	{ id: 'friends', content: 'Friends', default: true, panelContent: null },
+	{ id: 'history', content: 'Game history', default: false, panelContent: null },
+	{ id: 'stats', content: 'Statistics', default: false, panelContent: null },
 ];
 
 export const lobbyQuickmatchMenu: MenuData = {
-    id: 'quickMatchMenu',
-    links: [
-        { styleButton: true, id: 'local-quickmatch', title: 'Local 1vs1', datalink: '/quick-local-lobby', href: '/quick-local-lobby', img: null },
-        { styleButton: true, id: 'remote-quickmatch', title: 'Remote 1vs1', datalink: '/quick-remote-lobby', href: '/quick-remote-lobby', img: null },
-    ],
+	id: 'quickMatchMenu',
+	links: [
+		{
+			styleButton: true,
+			id: 'local-quickmatch',
+			title: 'Local 1vs1',
+			datalink: '/quick-local-lobby',
+			href: '/quick-local-lobby',
+			img: null,
+		},
+		{
+			styleButton: true,
+			id: 'remote-quickmatch',
+			title: 'Remote 1vs1',
+			datalink: '/quick-remote-lobby',
+			href: '/quick-remote-lobby',
+			img: null,
+		},
+	],
 };
 
 export const lobbyTournamentMenu: MenuData = {
-    id: 'tournamentMenu',
-    links: [
-        { styleButton: true, id: 'tournament', title: 'Tournament', datalink: '/tournament-lobby', href: '/tournament-lobby', img: null },
-    ],
+	id: 'tournamentMenu',
+	links: [
+		{
+			styleButton: true,
+			id: 'tournament',
+			title: 'Tournament',
+			datalink: '/tournament-lobby',
+			href: '/tournament-lobby',
+			img: null,
+		},
+	],
 };
