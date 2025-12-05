@@ -45,7 +45,7 @@ export class PageHeader extends HTMLElement {
 	}
 
 	async #logoutImplementation() {
-		await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+		await fetch('https://localhost:8443/api/auth/logout', { method: 'POST', credentials: 'include' });
 		this.#notif.ws?.close();
 		router.loadRoute('/', true);
 	}

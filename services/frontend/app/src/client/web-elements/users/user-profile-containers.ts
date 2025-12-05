@@ -73,7 +73,7 @@ export class UserList extends HTMLDivElement {
 	}
 
 	render() {
-		this.className = 'grid grid-flow-rows row-m gap-s pad-s h-full w-full';
+		this.className = 'grid grid-flow-rows row-m gap-m pad-s h-full w-full';
 	}
 }
 

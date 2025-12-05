@@ -44,7 +44,7 @@ async function startApp() {
         console.warn("Language failed to load, falling back to English", e);
     }
 
-    document.body.layoutInstance = document.createElement('div', { is: 'custom-layout' }) as Layout;
+    document.body.layoutInstance = document.createElement('main', { is: 'custom-layout' }) as Layout;
     document.body.header = document.createElement('header', { is: 'page-header' }) as PageHeader;
     if (!document.body.layoutInstance || !document.body.header)
         throw new Error('Error initializing HTML Layouts - page cannot be charged.');

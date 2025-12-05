@@ -138,7 +138,7 @@ export class Winstreak extends HTMLSpanElement {
 
 	render() {
 		this.id = 'winstreak';
-		this.className = 'flex flex-initial gap-s items-center even';
+		this.className = 'flex flex-initial gap-xs items-center even';
 		this.#val.className = 'f-bold dark';
 	}
 }

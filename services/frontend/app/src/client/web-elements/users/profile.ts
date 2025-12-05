@@ -89,21 +89,20 @@ export class UserProfile extends HTMLDivElement {
 		}
 	}
 
-    /**
-     * Sets the user's profile age (days since joined).
-     */
-    //TODO joined for language
-    set profileAge(val: string) {
-        if (this.#joinedSince.textContent !== `Joined ${val} days ago`) {
-            this.#joinedSince.textContent = `Joined ${val} days ago`;
-        }
-    }
+	/**
+	 * Sets the user's profile age (days since joined).
+	 */
+	//TODO joined for language
+	set profileAge(val: string) {
+		if (this.#joinedSince.textContent !== `Joined ${val} days ago`) {
+			this.#joinedSince.textContent = `Joined ${val} days ago`;
+		}
+	}
 
 	/**
 	 * Sets the user's username.
 	 */
 	set username(name: string) {
-		console.log('setting username', name);
 		if (this.#username.name !== name) {
 			this.#username.name = name;
 			this.#actionButtons.owner = name;
@@ -245,7 +244,9 @@ export class UserInline extends UserProfile {
 	override render() {
 		this.append(super.getAvatar, super.getUsername, super.getWinstreak);
 		super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
-		this.className = `pad-xs cursor-pointer gap-s grid uinline-grid ${super.getColor} brdr`;
+		super.getAvatar.classList.remove('pad-s');
+		super.getAvatar.classList.add('pad-xs');
+		this.className = `pad-xs cursor-pointer gap-xs grid uinline-grid ${super.getColor} brdr`;
 	}
 }
 

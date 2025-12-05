@@ -139,7 +139,6 @@ export class SocialMenu extends Menu {
 
 	/** Updates the menu appearance based on the current {@link ProfileView}. */
 	updateView() {
-		console.log(this.#owner, this.#view);
 		this.clearView();
 		if (this.#view === 'friend') this.friend();
 		else if (this.#view === 'stranger') this.stranger();

@@ -51,7 +51,7 @@ export function createUserCardSocial(user: UserData): UserCardSocial {
  */
 export function createUserInline(user: UserData): UserInline {
 	const el = document.createElement('div', { is: 'user-inline' }) as UserInline;
-	setUserProfileCommonValues(user, 'iicon', el);
+	setUserProfileCommonValues(user, 'ismall', el);
 	return el;
 }
 

@@ -321,13 +321,12 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 					updateTasks.push(
 						updateUserProfileUsername(serv.log, userID, profileUpdatesUsername, token)
 					);
-				serv.log.warn(updateTasks);
 			}
 
-			if (updateTasks.length === 0)
-				return reply.code(200).send({ message: '[BFF] No settings to update.' });
 			if (Object.keys(profileUpdates).length > 0)
 				updateTasks.push(updateUserProfile(serv.log, userID, profileUpdates, token));
+			if (updateTasks.length === 0)
+				return reply.code(200).send({ message: '[BFF] No settings to update.' });
 
 			try {
 				await Promise.all(updateTasks);

@@ -34,7 +34,7 @@ import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
 import { createLink } from './web-elements/navigation/buttons-helpers.js';
 import type { NavigationLinks } from './web-elements/navigation/links.js';
-import { currentDictionary } from './web-elements/forms/language.js'
+import { currentDictionary } from './web-elements/forms/language.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -89,7 +89,11 @@ export function renderNotFound() {
 		href: '/',
 		img: null,
 	};
-	prepareLayout(document.body.layoutInstance, 'error');
+	try {
+		prepareLayout(document.body.layoutInstance, 'error');
+	} catch (error) {
+		console.error(errorMessageFromException(error));
+	}
 	const goHome = createLink(goHomeData, false) as NavigationLinks;
 	document.body.layoutInstance!.appendAndCache(createNoResult('dark', 'ifs'), goHome);
 	goHome.classList.remove('w-full');
@@ -98,42 +102,54 @@ export function renderNotFound() {
 }
 
 export function renderHome() {
-    console.log('RenderHome');
-    prepareLayout(document.body.layoutInstance, 'home');
-    document.body.layoutInstance!.appendAndCache(
-        createHeading('0', 'PONG!'),
-        createMenu(main(currentDictionary), 'vertical', true),
-    );
-    updatePageTitle('Home');
+	console.log('RenderHome');
+	try {
+		prepareLayout(document.body.layoutInstance, 'home');
+	} catch (error) {
+		console.error(errorMessageFromException(error));
+	}
+	document.body.layoutInstance!.appendAndCache(
+		createHeading('0', 'PONG!'),
+		createMenu(main(currentDictionary), 'vertical', true),
+	);
+	updatePageTitle('Home');
 }
 
 export function renderAuth() {
-    prepareLayout(document.body.layoutInstance, 'auth');
-    const wrapper = createWrapper('authsettings');
-    
-    //TODO language
-    const authOptions: TabData[] = [
-        {
-            id: 'login-tab',
-            content: 'Login',
-            default: true,
-            panelContent: createForm('login-form', loginForm(currentDictionary)),
-        },
-        {
-            id: 'registration-tab',
-            content: 'Register',
-            default: false,
-            panelContent: createForm('registration-form', registrationForm(currentDictionary)),
-        },
-    ];
-    wrapper.append(createTabs(authOptions));
-    document.body.layoutInstance!.appendAndCache(wrapper);
-    updatePageTitle('Login | Register');
+	try {
+		prepareLayout(document.body.layoutInstance, 'auth');
+	} catch (error) {
+		console.error(errorMessageFromException(error));
+	}
+	const wrapper = createWrapper('authsettings');
+
+	//TODO language
+	const authOptions: TabData[] = [
+		{
+			id: 'login-tab',
+			content: 'Login',
+			default: true,
+			panelContent: createForm('login-form', loginForm(currentDictionary)),
+		},
+		{
+			id: 'registration-tab',
+			content: 'Register',
+			default: false,
+			panelContent: createForm('registration-form', registrationForm(currentDictionary)),
+		},
+	];
+	wrapper.append(createTabs(authOptions));
+	document.body.layoutInstance!.appendAndCache(wrapper);
+	updatePageTitle('Login | Register');
 }
 
 export async function renderLeaderboard() {
 	console.log('renderLeaderboard');
-	prepareLayout(document.body.layoutInstance, 'leaderboard');
+	try {
+		prepareLayout(document.body.layoutInstance, 'leaderboard');
+	} catch (error) {
+		console.error(errorMessageFromException(error));
+	}
 
 	const url = 'https://localhost:8443/api/bff/leaderboard';
 
@@ -183,8 +199,8 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
 	if (param && param.params.login && typeof param.params.login === 'string') {
 		const login = param.params.login;
 		const url = `https://localhost:8443/api/bff/profile/${login}`;
+
 		try {
-			prepareLayout(document.body.layoutInstance, 'profile');
 			const raw = await fetch(url);
 			console.error(raw.status);
 			if (!raw.ok) {
@@ -194,10 +210,11 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
 					return redirectOnError('/auth', 'You must be registered to see this page');
 				else throw await exceptionFromResponse(raw);
 			}
+			prepareLayout(document.body.layoutInstance, 'profile');
 			buildUserProfile(raw);
 			updatePageTitle(login);
 		} catch (error) {
-			redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
+			redirectOnError(router.stepBefore, errorMessageFromException(error));
 		}
 	} else return renderNotFound();
 }
@@ -218,12 +235,13 @@ export async function renderSettings() {
 				return redirectOnError('/auth', 'You must be registered to see this page');
 			else throw await exceptionFromResponse(raw);
 		}
+
 		prepareLayout(document.body.layoutInstance, 'userSettings');
 		const user = userDataFromAPIRes(raw);
 		const form = userSettingsForm(currentDictionary);
 		document.body.layoutInstance?.appendAndCache(createForm('settings-form', form, user));
 	} catch (error) {
-		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
+		redirectOnError(router.stepBefore, errorMessageFromException(error));
 	}
 	updatePageTitle(status.username + 'Settings');
 }
@@ -231,7 +249,12 @@ export async function renderSettings() {
 //TODO language lobby
 export function renderLobbyMenu() {
 	console.log('renderLobbyMenu');
-	prepareLayout(document.body.layoutInstance, 'lobbyMenu');
+
+	try {
+		prepareLayout(document.body.layoutInstance, 'lobbyMenu');
+	} catch (error) {
+		console.error(errorMessageFromException(error));
+	}
 	document.body.layoutInstance?.appendAndCache(
 		createHeading('1', 'Choose Lobby'),
 		createMenu(lobbyQuickmatchMenu(currentDictionary), 'horizontal', true),
@@ -248,7 +271,11 @@ export function renderLobbyMenu() {
 //TODO: for each lobby: set 'owner' with currently registered user to avoid owner
 //  being able to add himself to the game (in the UI - even if it's handled in the pong server)
 export function renderQuickLocalLobby() {
-	prepareLayout(document.body.layoutInstance, 'quickLobby');
+	try {
+		prepareLayout(document.body.layoutInstance, 'quickLobby');
+	} catch (error) {
+		console.error(errorMessageFromException(error));
+	}
 	document.body.layoutInstance?.appendAndCache(
 		createForm('local-pong-settings', localPong(currentDictionary)),
 	);
@@ -256,15 +283,27 @@ export function renderQuickLocalLobby() {
 }
 
 export function renderQuickRemoteLobby() {
-	prepareLayout(document.body.layoutInstance, 'quickLobby');
-	document.body.layoutInstance?.appendAndCache(createForm('remote-pong-settings', remotePong));
+	try {
+		prepareLayout(document.body.layoutInstance, 'quickLobby');
+	} catch (error) {
+		console.error(errorMessageFromException(error));
+	}
+
+	document.body.layoutInstance?.appendAndCache(
+		createForm('remote-pong-settings', remotePong(currentDictionary)),
+	);
 	wsConnect('create', 'quickmatch', 'remoteForm');
 }
 
 export function renderTournamentLobby() {
-	prepareLayout(document.body.layoutInstance, 'tournamentLobby');
+	try {
+		prepareLayout(document.body.layoutInstance, 'tournamentLobby');
+	} catch (error) {
+		console.error(errorMessageFromException(error));
+	}
+
 	document.body.layoutInstance?.appendAndCache(
-		createForm('remote-pong-settings', pongTournament),
+		createForm('remote-pong-settings', pongTournament(currentDictionary)),
 	);
 	wsConnect('create', 'tournament', 'tournamentForm');
 }
@@ -277,7 +316,11 @@ export function renderGame(
 
 	if (!gameRequest)
 		return redirectOnError('/', "Uh-oh! You can't be there - go join a lobby or something !");
-	prepareLayout(document.body.layoutInstance, 'game');
+	try {
+		prepareLayout(document.body.layoutInstance, 'game');
+	} catch (error) {
+		console.error(errorMessageFromException(error));
+	}
 
 	console.log(gameRequest);
 	const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
@@ -304,7 +347,11 @@ export function renderGame(
 
 export function renderBracket() {
 	console.log('renderBracket');
-	prepareLayout(document.body.layoutInstance, 'bracket');
+	try {
+		prepareLayout(document.body.layoutInstance, 'bracket');
+	} catch (error) {
+		console.error(errorMessageFromException(error));
+	}
 
 	const bracket = document.createElement('div', {
 		is: 'tournament-bracket',

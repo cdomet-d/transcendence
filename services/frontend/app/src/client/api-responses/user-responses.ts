@@ -51,8 +51,7 @@ export function userDataFromAPIRes(responseObject: any): UserData {
 		redirectOnError(router.stepBefore, 'Something bad happened :(');
 
 	const user: UserData = {
-		// winstreak: responseObject.winstreak,
-		winstreak: '9',
+		winstreak: responseObject.winStreak,
 		avatar: setAvatar(responseObject.avatar),
 		biography: setBiography(responseObject.biography),
 		id: responseObject.userID,
@@ -82,7 +81,6 @@ export async function buildUserProfile(response: Response): Promise<ProfilePage>
 	const userProfileElem = document.createElement('div', { is: 'profile-page' }) as ProfilePage;
 
 	document.body.layoutInstance?.appendAndCache(userProfileElem);
-	console.log(rawProfile.userData);
 	userProfileElem.profile = userDataFromAPIRes(rawProfile.userData);
 	userProfileElem.panelContent = createFriendsPanel(userArrayFromAPIRes(rawProfile.friends));
 	userProfileElem.panelContent = createMatchHistoryPanel(

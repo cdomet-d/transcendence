@@ -4,11 +4,18 @@ import { createDropdown } from '../navigation/menu-helpers.js';
 import { createForm } from './helpers.js';
 import { deleteAccount } from './default-forms.js';
 import { DeleteAccountForm } from './account-deletion-form.js';
+import { CriticalActionForm } from './auth.js';
 import { user } from '../default-values.js';
 import { userColorsMenu, languageMenu } from '../navigation/default-menus.js';
 import type { Avatar } from '../typography/images.js';
 import type { DropdownMenu } from '../navigation/menus.js';
 import type { UserData } from '../types-interfaces.js';
+import {
+	exceptionFromResponse,
+	errorMessageFromException,
+	createVisualFeedback,
+} from '../../error.js';
+import { router } from '../../main.js';
 //import { currentDictionary } from './language.js';
 // import imageCompression from 'browser-image-compression';
 
@@ -29,20 +36,23 @@ export class UserSettingsForm extends BaseForm {
 	/*                                   Default                                  */
 	/* -------------------------------------------------------------------------- */
 
-    /**
-     * Initializes the user settings form with user data, avatar, color and
-     * language dropdowns, and account deletion form.
-     */
-    constructor() {
-        super();
-        this.#user = user;
-        this.submitHandler = this.submitHandlerImplementation.bind(this);
-        this.#previewAvatar = this.#previewAvatarImplementation.bind(this);
-        this.#accountDelete = createForm('delete-account-form', deleteAccount/*( currentDictionary )*/);
-        this.#avatar = createAvatar(this.#user.avatar);
-        this.#colors = createDropdown(userColorsMenu, 'Pick color', 'dynamic');
-        this.#languages = createDropdown(languageMenu, 'Pick language', 'static');
-    }
+	/**
+	 * Initializes the user settings form with user data, avatar, color and
+	 * language dropdowns, and account deletion form.
+	 */
+	constructor() {
+		super();
+		this.#user = user;
+		this.submitHandler = this.submitHandlerImplementation.bind(this);
+		this.#previewAvatar = this.#previewAvatarImplementation.bind(this);
+		this.#accountDelete = createForm(
+			'delete-account-form',
+			deleteAccount /*( currentDictionary )*/,
+		);
+		this.#avatar = createAvatar(this.#user.avatar);
+		this.#colors = createDropdown(userColorsMenu, 'Pick color', 'dynamic');
+		this.#languages = createDropdown(languageMenu, 'Pick language', 'static');
+	}
 
 	override connectedCallback(): void {
 		super.connectedCallback();
@@ -64,14 +74,11 @@ export class UserSettingsForm extends BaseForm {
 	}
 
 	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
-		console.log(url, req);
-
 		try {
 			let token = localStorage.getItem('criticalChange');
 			if (token) {
 				const objToken = JSON.parse(token);
 				token = objToken.token;
-				console.log(token);
 				req.headers = {
 					Authorization: `Bearer ${token}`,
 					'Content-Type': 'application/json',
@@ -79,8 +86,7 @@ export class UserSettingsForm extends BaseForm {
 			}
 			const rawRes = await fetch(url, req);
 			if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
-			const res = await rawRes.json();
-			console.log(res);
+			router.loadRoute('/me', true);
 		} catch (error) {
 			createVisualFeedback(errorMessageFromException(error));
 		}
