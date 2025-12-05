@@ -1,6 +1,8 @@
 import type { FastifyInstance } from 'fastify';
-
+import { getFriendListSchema, getPendingListSchema, getFriendshipStatusSchema, postRelationSchema, patchRelationSchema, deleteAllRelationsSchema, deleteRelationSchema } from './schemas.js';
 import { getFriendship, friendshipExistsUsersID, getFriendshipPending } from './friends.service.js'
+import { cleanInput } from './sanitizer.js';
+
 type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
 
 interface JwtPayload {
@@ -12,7 +14,7 @@ interface JwtPayload {
 
 export async function routeFriend(serv: FastifyInstance) {
 	//GET friendship?userA=1&userB=2
-	serv.get('/friendship', async (request, reply) => {
+	serv.get('/friendship', { schema: schema.getFriendshipStatusSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -43,22 +45,20 @@ export async function routeFriend(serv: FastifyInstance) {
 			};
 
 			if (query.userA && query.userB) {
-				console.log("userA", query.userA);
-				console.log("userB", query.userB);
-
+				const safefuserA = cleanInput(query.userA);
+				const safefuserB = cleanInput(query.userB);
 
 				const sql = `
 					SELECT statusFriendship FROM friendship 
 					WHERE (userID = ? AND friendID = ?) OR (userID = ? AND friendID = ?)
 					LIMIT 1;
 				`;
-				const params = [query.userA, query.userB, query.userB, query.userA];
+				const params = [safefuserA, safefuserB, safefuserB, safefuserA];
 				const response = await serv.dbFriends.get<{ statusFriendship: string }>(
 					sql,
 					params
 				);
 
-				console.log("ersponse", JSON.stringify(response));
 				if (!response) return reply.code(200).send({ status: 'stranger' });
 
 				const isFriend =
@@ -78,7 +78,7 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//GET friendlist?userID=1
-	serv.get('/friendlist', async (request, reply) => {
+	serv.get('/friendlist', { schema: schema.getFriendListSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -108,7 +108,8 @@ export async function routeFriend(serv: FastifyInstance) {
 			};
 
 			if (query.userID) {
-				const friends = await getFriendship(serv.dbFriends, query.userID);
+				const safefuserID = cleanInput(query.userID);
+				const friends = await getFriendship(serv.dbFriends, safefuserID);
 				return reply.code(200).send(friends);
 			}
 
@@ -119,7 +120,7 @@ export async function routeFriend(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/friendlistpending', async (request, reply) => {
+	serv.get('/friendlistpending', { schema: schema.getFriendshipPending }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -148,7 +149,8 @@ export async function routeFriend(serv: FastifyInstance) {
 			};
 
 			if (query.userID) {
-				const friends = await getFriendshipPending(serv.dbFriends, query.userID);
+				const safefuserID = cleanInput(query.userID);
+				const friends = await getFriendshipPending(serv.dbFriends, safefuserID);
 				return reply.code(200).send(friends);
 			}
 
@@ -160,7 +162,7 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//create a pending friend request
-	serv.post('/relation', async (request, reply) => {
+	serv.post('/relation', async { schema: schema.postRelationSchema }, (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -187,13 +189,15 @@ export async function routeFriend(serv: FastifyInstance) {
 
 			const { senderID: senderID } = request.body as { senderID: string };
 			const { friendID: friendID } = request.body as { friendID: string };
+			const safefsenderID = cleanInput(senderID);
+			const safefriendID = cleanInput(friendID);
 
 			const query = `
 				INSERT INTO friendship (userID, friendID, statusFriendship)
 				VALUES (?, ?, ?)
 			`;
 
-			const params = [senderID, friendID, false];
+			const params = [safefsenderID, safefriendID, false];
 
 			const response = await serv.dbFriends.run(query, params);
 			if (response.changes === 0)
@@ -217,7 +221,7 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//accept a friend request
-	serv.patch('/relation', async (request, reply) => {
+	serv.patch('/relation', { schema: schema.patchRelationSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -242,10 +246,12 @@ export async function routeFriend(serv: FastifyInstance) {
 				}
 			}
 
-			const { senderRequestID: senderRequestID } = request.body as {
-				senderRequestID: string;
-			};
+			const { senderRequestID: senderRequestID } = request.body as {senderRequestID: string;};
 			const { friendID: friendID } = request.body as { friendID: string };
+
+			const safesenderRequestID = cleanInput(senderRequestID);
+			const safefriendID = cleanInput(friendID);
+
 
 			const friendshipID = await friendshipExistsUsersID(
 				serv.dbFriends,
@@ -262,7 +268,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			const query = `UPDATE friendship SET statusFriendship = true WHERE friendshipID = ? AND friendID = ?
 			`;
 
-			const params = [friendshipID, senderRequestID];
+			const params = [safefriendID, safesenderRequestID];
 
 			const response = await serv.dbFriends.run(query, params);
 			if (response.changes === 0) {
@@ -292,7 +298,7 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//Delete a relation between users
-	serv.delete('/relation', async (request, reply) => {
+	serv.delete('/relation', { schema: schema.deleteRelationSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -319,13 +325,15 @@ export async function routeFriend(serv: FastifyInstance) {
 
 			const { removerID: removerID } = request.body as { removerID: string };
 			const { friendID: friendID } = request.body as { friendID: string };
-			console.log('HERE', friendID, removerID);
+			const saferemoverID = cleanInput(removerID);
+			const safefriendID = cleanInput(friendID);
+
 			const query = `
 				DELETE FROM friendship 
 				WHERE (userID = ? AND friendID = ?) 
 					OR (userID = ? AND friendID = ?);
 			`;
-			const params = [removerID, friendID, friendID, removerID];
+			const params = [saferemoverID, safefriendID, safefriendID, saferemoverID];
 			const response = await serv.dbFriends.run(query, params);
 
 			if (response.changes === 0)
@@ -339,7 +347,7 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//delete all friendship a user is a part of
-	serv.delete('/', async (request, reply) => {
+	serv.delete('/', { schema: schema.deleteAllRelationsSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -365,13 +373,14 @@ export async function routeFriend(serv: FastifyInstance) {
 			}
 
 			const { userID } = request.params as { userID: string };
+			const safeUserID = cleanInput(userID);
 
 			const query = `
 				DELETE FROM friendship 
 				WHERE (userID = ?) 
 					OR (friendID = ?);
 			`;
-			await serv.dbFriends.run(query, [userID, userID]);
+			await serv.dbFriends.run(query, [safeUserID, safeUserID]);
 
 			return reply.code(204).send();
 		} catch (error) {
