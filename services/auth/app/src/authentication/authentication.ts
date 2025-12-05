@@ -96,8 +96,8 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			//TODO handle error
 			throw new Error('User service is unreachable.');
-		}
-		reply.clearCookie('token', { */
+		}*/
+		reply.clearCookie('token', { 
 			httpOnly: true,
 			secure: true,
 			sameSite: 'strict',
