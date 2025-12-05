@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import type { UserProfileView, JwtPayload } from '../utils/bff.interface.js';
 import { fetchFriendshipsPending, fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches, updateAuthSettings, updateUserProfile } from './bffUserProfile.service.js';
 import { profileGet, tinyProfileGet, searchGet, leaderboardGet, settingsPatch, usernameGet } from './bff.usersSchemas.js';
-import { cleanInput, cleanBioInput, isUsernameSafe } from '../utils/sanitize.js';
+import { cleanInput, cleanBioInput, isUsernameSafe } from '../utils/sanitizer.js';
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
 	//get's profile + stats + game + friendslist

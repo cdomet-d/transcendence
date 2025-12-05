@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { dictionaryGet } from './bff.accessibilitySchemas.js';
-import { cleanInput } from '../utils/sanitize.js';
+import { cleanInput } from '../utils/sanitizer.js';
 
 async function fetchLanguagePack(log: any, langCode: string): Promise<Response> {
 	const url = `http://accessibility:1313/dictionary/${langCode}`;

@@ -4,7 +4,7 @@ import { fetchUserID, fetchFriendships } from '../users/bffUserProfile.service.j
 import { createFriendRequest, deleteFriendRequest, acceptFriendRequest } from './bffFriends.service.js';
 import { type NatsConnection, StringCodec } from 'nats';
 import { relationPost, relationDelete, relationGet, relationPatch } from './bff.friendsSchemas.js';
-import { cleanInput } from '../utils/sanitize.js';
+import { cleanInput } from '../utils/sanitizer.js';
 
 declare module 'fastify' {
 	interface FastifyInstance {
