@@ -26,6 +26,18 @@ export const lobbyRequestPayloadSchema = {
 	required: ["action", "format", "userID"],
 };
 
+export const lobbyInvitePayloadSchema = {
+	type: "object",
+	properties: {
+		action: { type: "string" },
+		format: { type: "string" },
+		inviteeID: { type: "string" },
+		lobbyID: { type: "string" },
+		hostID: { type: "string" }
+	},
+	required: ["action", "inviteeID"],
+};
+
 export const gameRequestPayloadSchema = {
 	type: "object",
 	properties: {
@@ -50,11 +62,13 @@ export const gameRequestPayloadSchema = {
 
 export const validateBaseMessage = ajv.compile(baseMessageSchema);
 export const validateLobbyRequestPayload = ajv.compile(lobbyRequestPayloadSchema);
+export const validateLobbyInvitePayload = ajv.compile(lobbyInvitePayloadSchema);
 export const validateGameRequestPayload = ajv.compile(gameRequestPayloadSchema);
 
 export const validators = {
 	LOBBY_REQUEST: validateLobbyRequestPayload,
 	GAME_REQUEST: validateGameRequestPayload,
+	LOBBY_INVITE: validateLobbyInvitePayload
 };
 
 export function validateData(data: any, req: FastifyRequest, socket: WebSocket): boolean {
@@ -69,16 +83,10 @@ export function validateData(data: any, req: FastifyRequest, socket: WebSocket):
 export function validatePayload(data: any, payload: any, req: FastifyRequest, socket: WebSocket): boolean {
 	type EventType = keyof typeof validators;
 	const event = data.event;
-
-		console.log("6");
-		console.log("PAYLOAD: ", payload);
-		
 		if (typeof event === "string" && event in validators) {
 			const validate = validators[event as EventType];
 			if (!validate(payload)) {
-			console.log("7");
 			req.server.log.error(`Invalid payload for event ${event}: ${ajv.errorsText(validate.errors)}`);
-			console.log("8");
 			wsSend(socket, JSON.stringify({ error: "Invalid message payload" }));
 			return false;
 		}

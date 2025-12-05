@@ -14,3 +14,11 @@ export interface gameNotif {
     lobbyID: string,
 	// gameType: GameType,
 }
+
+export interface lobbyInviteForm {
+        action: string,
+        format?: string,
+        inviteeID: string,
+        lobbyID?: string,
+        hostID?: string,
+}

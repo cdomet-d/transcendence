@@ -20,7 +20,6 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	ws.onopen = async () => {
 		console.log("Lobby WebSocket connection established!")
 		// send Lobby Request
-		console.log("1");
 		if (action === 'create') {
 			if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 				wsInstance.send(await createLobbyRequest(action, format, formInstance));
@@ -32,9 +31,10 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		// TODO keep alive ws connection during whole tournament (until everyone leaves)
 		// TODO what happens if host leaves lobby, kick everyone ?
 
+		// reply Lobby Invite
 		if (action === 'decline') {
 			if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-				wsInstance.send(JSON.stringify({ event: "LOBBY_REQUEST", payload: { action: action, inviteeID: inviteeID, lobbyID: lobbyID } }));
+				wsInstance.send(JSON.stringify({ event: "LOBBY_INVITE", payload: { action: action, inviteeID: inviteeID, lobbyID: lobbyID } }));
 			} else {
 				console.log(`Error: WebSocket is not open for ${action}`);
 			}
@@ -58,7 +58,7 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		}
 	}
 
-	// send Lobby Invites
+	// send Lobby Invite
 	if (action === 'invite') {
 		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 
@@ -68,7 +68,9 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 			}
 
 			// TODO prevent non-host from inviting people
-			wsInstance.send(JSON.stringify({ event: "LOBBY_REQUEST", payload: { action: action, inviteeID: inviteeID, userID: host.userID } })); // 
+			// get lobby from ID, check if host, allow invite if yes, else wsSend some error code
+			console.log("INVITE FRONT | host ID: ", host.userID);
+			wsInstance.send(JSON.stringify({ event: "LOBBY_INVITE", payload: { action: action, inviteeID: inviteeID, hostID: host.userID } }));
 		} else {
 			console.log(`Error: WebSocket is not open for ${action}`);
 		}
@@ -78,6 +80,13 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		try {
 			// handle Response for lobbyRequest
 			const data = JSON.parse(message.data);
+			// TODO catch error message from GM
+
+			if (data.error) {
+				console.log("ERROR: ", data.error);
+				return;
+			}
+
 			if (data.lobby && (data.lobby === 'created' || data.lobby === 'joined')) {
 				console.log(`${data.lobby} lobby ${data.lobbyID} successfully!`);
 

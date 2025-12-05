@@ -1,3 +1,16 @@
+export interface lobbyInviteForm {
+    event: 'LOBBY_INVITE',
+    payload: {
+        action: string,
+        format?: string,
+        inviteeID: string,
+        lobbyID?: string,
+        hostID?: string
+    },
+    formInstance?: string
+}
+
+
 export interface lobbyRequestForm {
     event: 'LOBBY_REQUEST',
     payload: {

@@ -151,8 +151,9 @@ export class NotifBox extends HTMLDivElement {
                 if (typeof notif === 'object') {
                     if (notif.type === 'FRIEND_REQUEST')
                         this.newFriendRequest(notif.senderUsername);
-                    else if (notif.type === 'GAME_INVITE')
+                    else if (notif.type === 'GAME_INVITE') {
                         this.newGameInvitation(notif);
+                    }
                 }
             });
         };

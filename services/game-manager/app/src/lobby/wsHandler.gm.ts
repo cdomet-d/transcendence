@@ -1,10 +1,10 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 import { processGameRequest } from '../gameManager/gameManager.js';
-import { wsClientsMap, addUserToLobby, createLobby, lobbyMap, removeUserFromLobby, addUserToWhitelist, removeUserFromWhitelist } from './lobby.gm.js';
+import { wsClientsMap, addUserToLobby, createLobby, lobbyMap, removeUserFromLobby, addUserToWhitelist, removeUserFromWhitelist, findLobbyIDFromUserID } from './lobby.gm.js';
 import { validateData, validatePayload } from '../gameManager/inputValidation.js';
 import type { lobbyInfo } from '../gameManager/gameManager.interface.js';
-import type { lobbyRequestForm, gameNotif } from './lobby.interface.js';
+import type { lobbyRequestForm, gameNotif, lobbyInviteForm } from './lobby.interface.js';
 import { natsPublish } from '../nats/publisher.gm.js';
 
 export function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): void {
@@ -12,12 +12,11 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 
 	socket.on('message', (message: string) => {
 		try {
-			// TODO make custom GAME_INVITE interface to schema check with ajv
 			const data = JSON.parse(message);
-			// if (!validateData(data, req, socket)) return;
+			if (!validateData(data, req, socket)) return;
 
 			const { payload, formInstance } = data;
-			// if (!validatePayload(data, payload, req, socket)) return;
+			if (!validatePayload(data, payload, req, socket)) return;
 
 			if (data.event === "BAD_USER_TOKEN") return;
 
@@ -32,44 +31,51 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				}
 
 				if (lobbyPayload.action === "create") {
-					this.log.error("IN CREATE");
-					const newLobby: lobbyInfo = createLobby(userID!, lobbyPayload.format);
+					const newLobby: lobbyInfo = createLobby(userID!, lobbyPayload.format!);
 					wsSend(socket, JSON.stringify({ lobby: "created", lobbyID: newLobby.lobbyID, formInstance: formInstance }))
-				} else if (lobbyPayload.action === "invite") {
-					this.log.error("INVITE RECEIVED");
-					const inviteeID = lobbyPayload.inviteeID!;
-					//
-					// TODO This a function (findLobbyIDfromUID())
-					let lobbyID: string | undefined = undefined;
+				} else
+					return;
+			}
 
-					for (const [_, lobbyInfo] of lobbyMap.entries()) {
-						if (lobbyInfo.userList.has(userID)) {
-							lobbyID = lobbyInfo.lobbyID;
-							break;
-						}
+			if (data.event === "GAME_REQUEST") {
+				const gamePayload = payload as lobbyInfo;
+				processGameRequest(this, gamePayload);
+				return;
+			}
+
+			if (data.event === "LOBBY_INVITE") {
+				const invitePayload = payload as lobbyInviteForm;
+				const hostID = invitePayload.hostID;
+				console.log("HOST ID:", hostID);
+
+				if (invitePayload.action === "invite") {
+					const inviteeID = invitePayload.inviteeID!;
+					const lobbyID: string | null = findLobbyIDFromUserID(hostID!);
+					if (lobbyID === null) {
+						wsSend(socket, JSON.stringify({ error: "lobby not found" }));
+						return;
 					}
-					//
+					console.log("LOBBY ID:", lobbyID);
+
 					const notif: gameNotif = {
 						type: 'GAME_INVITE',
-						senderID: userID,
+						senderID: userID!,
 						receiverID: inviteeID,
 						lobbyID: lobbyID!,
 						// gameType: ;
 					};
+					console.log("inviteeID: ", inviteeID);
 					addUserToWhitelist(inviteeID, lobbyID!);
 					natsPublish(this, "post.notif", JSON.stringify(notif));
-				} else if (lobbyPayload.action === "decline") {
+				} else if (invitePayload.action === "decline") {
 					this.log.error("IN DECLINE");
-					const inviteeID = lobbyPayload.inviteeID!;
-					removeUserFromWhitelist(inviteeID, lobbyPayload.lobbyID!);
-				} else if (lobbyPayload.action === "join") {
+					const inviteeID = invitePayload.inviteeID!;
+					removeUserFromWhitelist(inviteeID, invitePayload.lobbyID!);
+				} else if (invitePayload.action === "join") {
 					this.log.error("IN JOIN");
-					addUserToLobby(userID!, socket, lobbyPayload.lobbyID!);
-					wsSend(socket, JSON.stringify({ lobby: "joined", lobbyID: lobbyPayload.lobbyID }));
+					addUserToLobby(userID!, socket, invitePayload.lobbyID!);
+					wsSend(socket, JSON.stringify({ lobby: "joined", lobbyID: invitePayload.lobbyID }));
 				}
-			} else if (data.event === "GAME_REQUEST") {
-				const gamePayload = payload as lobbyInfo;
-				processGameRequest(this, gamePayload);
 			}
 		} catch (error) {
 			req.server.log.error(`Malformed WS message: ${error}`);
@@ -78,15 +84,8 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 
 	socket.on('close', () => {
 		if (userID !== null) {
-			let lobbyID: string | undefined = undefined;
-
-			for (const [_, lobbyInfo] of lobbyMap.entries()) {
-				if (lobbyInfo.userList.has(userID)) {
-					lobbyID = lobbyInfo.lobbyID;
-					break;
-				}
-			}
-			if (lobbyID !== undefined)
+			let lobbyID: string | null = findLobbyIDFromUserID(userID);
+			if (lobbyID !== null)
 				removeUserFromLobby(userID, lobbyID);
 		}
 	});

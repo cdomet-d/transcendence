@@ -129,12 +129,10 @@ export class NotifContent extends HTMLDivElement {
 	}
 
     #joinGame() {
-        console.log("TARAS LA JOIN UN PEU");
         wsConnect("join", "", "", this.#lobbyInfo?.lobbyID, this.#lobbyInfo?.inviteeID);
     }
     
     #declineGame() {
-        console.log("T MOR DECLIN UN PEU");
         wsConnect("decline", "", "", this.#lobbyInfo?.lobbyID, this.#lobbyInfo?.inviteeID);
     }
 

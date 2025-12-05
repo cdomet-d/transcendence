@@ -83,3 +83,15 @@ export function printPlayersInLobby(lobbyID: string) {
 		console.log(`User #${user.userID} is in Lobby #${lobbyID}`);
 	});
 }
+
+export function findLobbyIDFromUserID(userID: string): string | null {
+	let lobbyID: string | null = null; 
+	
+	for (const [_, lobbyInfo] of lobbyMap.entries()) {
+		if (lobbyInfo.userList.has(userID!)) {
+			lobbyID = lobbyInfo.lobbyID!;
+			break;
+		}
+	}
+	return lobbyID;
+}
