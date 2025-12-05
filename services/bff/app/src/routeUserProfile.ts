@@ -1,13 +1,14 @@
 import type { FastifyInstance } from 'fastify';
 import type { UserProfileView, JwtPayload } from './bff.interface.js';
 import { fetchFriendshipsPending, fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches, updateAuthSettings, updateUserProfile } from './bffUserProfile.service.js';
+import { profileGet, tinyProfileGet, searchGet, leaderboardGet, settingsPatch, usernameGet } from './bff.usersSchemas.js';
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
 	//get's profile + stats + game + friendslist
 	// userID -> userID of requested profile
 	// get big profile with username
 	//error handled
-	serv.get('/profile/:username', async (request, reply) => {
+	serv.get('/profile/:username', { schema: schema.profileGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -85,7 +86,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	});
 
 	//error handled
-	serv.get('/tiny-profile/:username', async (request, reply) => {
+	serv.get('/tiny-profile/:username', { schema: schema.tinyProfileGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -141,7 +142,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	});
 
 	//error handled
-	serv.get('/search', async (request, reply) => {
+	serv.get('/search', { schema: schema.searchGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -187,7 +188,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	});
 
 	//error handled
-	serv.get('/leaderboard', async (request, reply) => {
+	serv.get('/leaderboard', { schema: schema.leaderboardGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -229,7 +230,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	});
 
 	//error handled
-	serv.patch('/settings', async (request, reply) => {
+	serv.patch('/settings', { schema: schema.settingsPatch }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -301,7 +302,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/:username', async (request, reply) => {
+	serv.get('/:username', { schema: schema.usernameGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -357,8 +358,4 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			throw error;
 		}
 	});
-
-
-	//TODO : endpoint friendlist pending
-	// get-pending-relation
 }
