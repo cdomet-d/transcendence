@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import type { UserProfileView, JwtPayload } from '../utils/bff.interface.js';
 import { fetchFriendshipsPending, fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches, updateAuthSettings, updateUserProfile } from './bffUserProfile.service.js';
 import { profileGet, tinyProfileGet, searchGet, leaderboardGet, settingsPatch, usernameGet } from './bff.usersSchemas.js';
+import { cleanInput, cleanBioInput, isUsernameSafe } from '../utils/sanitize.js';
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
 	//get's profile + stats + game + friendslist
@@ -36,6 +37,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const userB = request.user.userID;
 			const { username } = request.params as { username: string };
 
+			const safeUsername = cleanInput(username);
+
 			if (userB === undefined) {
 				serv.log.error('[BFF] Parameter missing');
 				return reply.code(400).send({
@@ -43,7 +46,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 						'[BFF] Missing required query parameters: userA and userB are required.',
 				});
 			}
-			const combinedUserData = await buildTinyProfile(serv.log, userB, username, token);
+			const combinedUserData = await buildTinyProfile(serv.log, userB, safeUsername, token);
 
 			if (!combinedUserData)
 				return reply.code(404).send({ message: 'User profile data not found.' });
@@ -114,12 +117,14 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const { username: targetUsername } = request.params as { username: string };
 			const { userID: viewerUserID } = request.user as { userID: string };
 
+			const safeTargetUsername = cleanInput(targetUsername);
+
 			if (!viewerUserID) return reply.code(401).send({ message: 'Unauthorized.' });
 
 			const tinyProfile = await buildTinyProfile(
 				serv.log,
 				viewerUserID,
-				targetUsername,
+				safeTargetUsername,
 				token
 			);
 
@@ -168,10 +173,13 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			}
 
 			const query = request.query as { name?: string };
+			const safeName = cleanInput(query.name || '').trim();
+			if (!safeName || safeName.length === 0)
+				return reply.code(200).send([]);
 			if (!query.name || query.name.trim() === '')
 				return reply.code(200).send([]);
 
-			const profiles = await searchBar(serv.log, query.name, token);
+			const profiles = await searchBar(serv.log, safeName, token);
 			return (reply.code(200).send(profiles));
 
 		} catch (error) {
@@ -230,6 +238,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	});
 
 	//error handled
+	//TODO : sanitize but will wait for PR to be merged first 
 	serv.patch('/settings', { schema: schema.settingsPatch }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
@@ -328,13 +337,14 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			}
 
 			const username = request.params as { username: string };
+			const safeUsername = cleanInput(username);
 
 			const response = await fetch('http://users:2626/username', {
 				method: 'GET',
 				headers: {
 					'Cookie': `token=${token}`,
 					'Content-Type': 'application/json',
-					body: JSON.stringify(username)
+					body: JSON.stringify(safeUsername)
 				}
 			});
 
