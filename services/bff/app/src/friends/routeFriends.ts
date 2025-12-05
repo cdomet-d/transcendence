@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
-import type { JwtPayload } from './bff.interface.js';
-import { fetchUserID, fetchFriendships } from './bffUserProfile.service.js';
+import type { JwtPayload } from '../utils/bff.interface.js';
+import { fetchUserID, fetchFriendships } from '../users/bffUserProfile.service.js';
 import { createFriendRequest, deleteFriendRequest, acceptFriendRequest } from './bffFriends.service.js';
 import { type NatsConnection, StringCodec } from 'nats';
 import { relationPost, relationDelete, relationGet, relationPatch } from './bff.friendsSchemas.js';

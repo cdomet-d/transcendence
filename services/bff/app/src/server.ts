@@ -3,7 +3,7 @@ import Fastify from 'fastify';
 import type { FastifyInstance } from 'fastify';
 import cookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
-import { initNatsConnection } from './nats.js';
+import { initNatsConnection } from './utils/nats.js';
 import type { NatsConnection } from 'nats';
 
 import { bffFriendRoutes } from './routeFriends.js';

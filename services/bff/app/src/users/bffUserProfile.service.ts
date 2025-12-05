@@ -1,7 +1,7 @@
 import type {
 	UsernameResponse, FriendshipStatus, Friendship, ProfileView, userStats, StatsResponse, Matches, RawMatches,
 	userData, UserIDResponse, UserProfileUpdates
-} from "./bff.interface.js";
+} from "../utils/bff.interface.js";
 
 //error handled
 export async function buildTinyProfile(log: any, viewerUserID: string, targetUsername: string, token: string): Promise<userData> {
