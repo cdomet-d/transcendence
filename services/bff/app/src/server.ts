@@ -3,8 +3,7 @@ import { options } from './serv.conf.js';
 import cookie from '@fastify/cookie';
 import Fastify from 'fastify';
 import fastifyJwt from '@fastify/jwt';
-import fp from 'fastify-plugin';
-import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import type { NatsConnection } from 'nats';
 
 import { bffFriendRoutes } from './routeFriends.js';
@@ -20,18 +19,6 @@ import { bffUsersRoutes } from './routeUserProfile.js';
 		process.exit(1);
 	}
 })();
-
-const authPlugin = fp(async (serv: FastifyInstance) => {
-	serv.addHook('onRequest', async (request: FastifyRequest, reply: FastifyReply) => {
-		serv.log.info(`PREHANDLER RUNNING FOR ${request.url}`);
-		try {
-			await request.jwtVerify();
-		} catch (error) {
-			if (error instanceof Error) serv.log.error(`${error.message}`);
-			return reply.code(401).send({ message: `Unauthorized` });
-		}
-	});
-});
 
 //init server
 export async function init(): Promise<FastifyInstance> {
@@ -60,9 +47,8 @@ function addHook(serv: FastifyInstance) {
 
 //add plugins
 async function addPlugins(serv: FastifyInstance) {
-	await serv.register(fastifyJwt, { secret: process.env.JWT_SECRET! });
-	await serv.register(cookie);
-	serv.register(authPlugin);
+	serv.register(fastifyJwt, { secret: process.env.JWT_SECRET! });
+	serv.register(cookie);
 	serv.register(bffAccessibilityRoutes);
 	serv.register(bffUsersRoutes);
 	serv.register(bffFriendRoutes);

@@ -1,4 +1,4 @@
-import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import type { UserProfileView, JwtPayload } from './bff.interface.js';
 import {
 	fetchLeaderboard,
