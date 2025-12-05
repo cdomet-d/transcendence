@@ -3,6 +3,7 @@ import type { JwtPayload } from './bff.interface.js';
 import { fetchUserID, fetchFriendships } from './bffUserProfile.service.js';
 import { createFriendRequest, deleteFriendRequest, acceptFriendRequest } from './bffFriends.service.js';
 import { type NatsConnection, StringCodec } from 'nats';
+import { relationPost, relationDelete, relationGet, relationPatch } from './bff.schemas.js';
 
 declare module 'fastify' {
 	interface FastifyInstance {
@@ -12,7 +13,7 @@ declare module 'fastify' {
 
 export async function bffFriendRoutes(serv: FastifyInstance) {
 
-	serv.post('/relation', async (request, reply) => {
+	serv.post('/relation', { schema: schema.relationPost }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -84,7 +85,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.patch('/relation', async (request, reply) => {
+	serv.patch('/relation', { schema: schema.relationPatch }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -144,7 +145,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.delete('/relation', async (request, reply) => {
+	serv.delete('/relation', { schema: schema.relationDelete }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -200,7 +201,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/relation', async (request, reply) => {
+	serv.get('/relation', { schema: schema.relationGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
