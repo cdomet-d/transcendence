@@ -9,6 +9,7 @@ import { wsConnect } from '../../lobby/wsConnect.front.js';
 interface GameInvite {
     lobbyID: string;
     inviteeID: string;
+    formInstance: string;
 }
 
 const notificationBtns: MenuData = {
@@ -129,11 +130,11 @@ export class NotifContent extends HTMLDivElement {
 	}
 
     #joinGame() {
-        wsConnect("join", "", "", this.#lobbyInfo?.lobbyID, this.#lobbyInfo?.inviteeID);
+        wsConnect("join", "", this.#lobbyInfo?.formInstance!, this.#lobbyInfo?.lobbyID, "", this.#lobbyInfo?.inviteeID);
     }
     
     #declineGame() {
-        wsConnect("decline", "", "", this.#lobbyInfo?.lobbyID, this.#lobbyInfo?.inviteeID);
+        wsConnect("decline", "", "", this.#lobbyInfo?.lobbyID, "", this.#lobbyInfo?.inviteeID);
     }
 
     #acceptImplementation(e: Event) {

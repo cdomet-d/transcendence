@@ -16,6 +16,8 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 			if (!validateData(data, req, socket)) return;
 
 			const { payload, formInstance } = data;
+			console.log("PAYLOAD", payload);
+			this.log.error("FORM_INSTANCE", formInstance);
 			if (!validatePayload(data, payload, req, socket)) return;
 
 			if (data.event === "BAD_USER_TOKEN") return;
@@ -32,9 +34,10 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 
 				if (lobbyPayload.action === "create") {
 					const newLobby: lobbyInfo = createLobby(userID!, lobbyPayload.format!);
+					this.log.error(`FORM IN GM CREATE: ${formInstance}`);
 					wsSend(socket, JSON.stringify({ lobby: "created", lobbyID: newLobby.lobbyID, formInstance: formInstance }))
-				} else
-					return;
+				}
+				return;
 			}
 
 			if (data.event === "GAME_REQUEST") {
@@ -44,13 +47,14 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 			}
 
 			if (data.event === "LOBBY_INVITE") {
+
 				const invitePayload = payload as lobbyInviteForm;
 				const hostID = invitePayload.hostID;
 				console.log("HOST ID:", hostID);
 
 				if (invitePayload.action === "invite") {
 					const inviteeID = invitePayload.inviteeID!;
-					const lobbyID: string | null = findLobbyIDFromUserID(hostID!);
+					const lobbyID: string | null = findLobbyIDFromUserID(invitePayload.hostID!);
 					if (lobbyID === null) {
 						wsSend(socket, JSON.stringify({ error: "lobby not found" }));
 						return;
@@ -62,19 +66,24 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 						senderID: userID!,
 						receiverID: inviteeID,
 						lobbyID: lobbyID!,
-						// gameType: ;
+						gameType: formInstance === "remoteForm" ? "1 vs 1" : "tournament"
 					};
 					console.log("inviteeID: ", inviteeID);
 					addUserToWhitelist(inviteeID, lobbyID!);
 					natsPublish(this, "post.notif", JSON.stringify(notif));
+
 				} else if (invitePayload.action === "decline") {
+
 					this.log.error("IN DECLINE");
 					const inviteeID = invitePayload.inviteeID!;
 					removeUserFromWhitelist(inviteeID, invitePayload.lobbyID!);
+
 				} else if (invitePayload.action === "join") {
-					this.log.error("IN JOIN");
+
+					this.log.error(`IN JOIN + ${formInstance}`);
 					addUserToLobby(userID!, socket, invitePayload.lobbyID!);
-					wsSend(socket, JSON.stringify({ lobby: "joined", lobbyID: invitePayload.lobbyID }));
+					wsSend(socket, JSON.stringify({ lobby: "joined", lobbyID: invitePayload.lobbyID, formInstance: formInstance }));
+
 				}
 			}
 		} catch (error) {

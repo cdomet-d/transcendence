@@ -12,7 +12,7 @@ export interface gameNotif {
 	senderID: string,
 	receiverID: string, //will be string eventually
     lobbyID: string,
-	// gameType: GameType,
+	gameType: GameType,
 }
 
 export interface lobbyInviteForm {

@@ -109,7 +109,7 @@ export class NotifBox extends HTMLDivElement {
         const notif = document.createElement('div', { is: 'notif-content' }) as NotifContent;
         notif.createNotifMessage(gameNotif.receiverName, `challenged you to a ${gameNotif.gameType}!`);
 		notif.id = 'game'
-		notif.lobbyInfo = {lobbyID: gameNotif.lobbyID, inviteeID: gameNotif.receiverID};
+		notif.lobbyInfo = {lobbyID: gameNotif.lobbyID, inviteeID: gameNotif.receiverID, formInstance: gameNotif.gameType!};
         this.#panel.newNotification(notif);
         this.#toggle.toggleAlert(true);
     }

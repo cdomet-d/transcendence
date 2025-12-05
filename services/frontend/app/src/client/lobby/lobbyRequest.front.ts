@@ -8,6 +8,7 @@ async function createLobbyRequest(action: string, format: string, formInstance?:
         redirectOnError('/auth', 'You must be registered to see this page')
         return JSON.stringify({ event: 'BAD_USER_TOKEN'});
     }
+
     const createLobbyForm: lobbyRequestForm = {
         event: 'LOBBY_REQUEST',
         payload: {
@@ -21,7 +22,7 @@ async function createLobbyRequest(action: string, format: string, formInstance?:
     return JSON.stringify(createLobbyForm);
 }
 
-async function joinLobbyRequest(action: string, format: string, inviteeID: string, lobbyID: string) {
+async function joinLobbyRequest(action: string, format: string, inviteeID: string, lobbyID: string, formInstance: string) {
 
     const joinLobbyForm: lobbyInviteForm = {
         event: 'LOBBY_INVITE',
@@ -31,7 +32,7 @@ async function joinLobbyRequest(action: string, format: string, inviteeID: strin
             inviteeID: inviteeID,
             lobbyID: lobbyID,
         },
-        // formInstance: formInstance
+        formInstance: formInstance
     };
 
     return JSON.stringify(joinLobbyForm);

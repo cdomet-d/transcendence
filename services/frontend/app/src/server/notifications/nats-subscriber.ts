@@ -22,7 +22,7 @@ interface gameNotif {
 	receiverName: string,
 	receiverID: string,
     lobbyID: string,
-	// gameType: GameType,
+	gameType: GameType,
 }
 
 export async function natsSubscription(serv: FastifyInstance) {

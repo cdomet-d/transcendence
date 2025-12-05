@@ -10,7 +10,7 @@ export const baseMessageSchema = {
 	properties: {
 		event: { type: "string" },
 		payload: { type: "object" },
-		formInstance: { type: "string" },
+		formInstance: { type: "string" }
 	},
 	required: ["event", "payload"],
 };

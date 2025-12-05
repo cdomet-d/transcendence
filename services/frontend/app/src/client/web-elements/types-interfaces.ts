@@ -202,6 +202,7 @@ export interface gameNotif {
 	type: 'GAME_INVITE',
 	receiverName: string,
 	receiverID: string,
+    owner: string,
     lobbyID: string,
 	gameType?: GameType
 }

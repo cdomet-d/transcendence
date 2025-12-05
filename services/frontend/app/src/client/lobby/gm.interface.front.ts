@@ -5,7 +5,7 @@ export interface lobbyInviteForm {
         format?: string,
         inviteeID: string,
         lobbyID?: string,
-        hostID?: string
+        hostID?: string,
     },
     formInstance?: string
 }

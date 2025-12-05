@@ -257,16 +257,21 @@ export async function renderQuickRemoteLobby(
     gameRequest?: gameRequest,
     action?: string
 ) {
-    prepareLayout(document.body.layoutInstance, 'quickLobby');
-    document.body.layoutInstance?.appendAndCache(createForm('remote-pong-settings', remotePong));
-
+    
     const user: userStatusInfo = await userStatus();
     if (!user.auth) {
         redirectOnError('/auth', 'You must be registered to see this page')
         return JSON.stringify({ event: 'BAD_USER_TOKEN'});
     }
+    
+    prepareLayout(document.body.layoutInstance, 'quickLobby');
+    const form = createForm('remote-pong-settings', remotePong)
+    document.body.layoutInstance?.appendAndCache(form);
 
-    if (action === undefined) action = 'create';
+    if (action === undefined) {
+        action = 'create';
+        form.owner = user.username!;
+    }
     
     wsConnect(action!, 'quickmatch', 'remoteForm');
 }
