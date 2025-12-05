@@ -28,7 +28,8 @@ VALUES
         "leaderboard": "Leaderboard",
         "profile": "Profile",
         "login": "Log in",
-        "logout": "Log out"
+        "logout": "Log out",
+        "delete_account": "Delete account"
     },
     "forms": {
         "username": "Username",
@@ -105,7 +106,8 @@ VALUES
         "leaderboard": "Classement",
         "profile": "Profil",
         "login": "Connexion",
-        "logout": "Déconnexion"
+        "logout": "Déconnexion",
+        "delete_account": "Supprimer le compte"
     },
     "forms": {
         "username": "Nom d''utilisateur",
@@ -182,7 +184,8 @@ VALUES
         "leaderboard": "Clasificación",
         "profile": "Perfil",
         "login": "Iniciar sesión",
-        "logout": "Cerrar sesión"
+        "logout": "Cerrar sesión",
+        "delete_account": "Eliminar cuenta"
     },
     "forms": {
         "username": "Nombre de usuario",

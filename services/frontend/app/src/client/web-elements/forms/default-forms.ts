@@ -296,21 +296,19 @@ export function pongTournament(dic: Dictionary): FormDetails {
     }
 };
 
-export function deleteAccount(dic: Dictionary): FormDetails {
-    return {
-        action: 'https://localhost:8443/api/bff/account',
-        heading: '',
-        ariaLabel: 'Account deletion request',
-        id: 'account-deletion-request',
-        method: 'delete',
-        fields: [],
-        button: {
-            id: 'submit',
-            type: 'submit',
-            content: dic.buttons.delete_account,
-            img: null,
-            ariaLabel: '',
-            style: 'red',
-        },
-    }
+export const deleteAccount: FormDetails = {
+    action: 'https://localhost:8443/api/bff/account',
+    heading: '',
+    ariaLabel: 'Account deletion request',
+    id: 'account-deletion-request',
+    method: 'delete',
+    fields: [],
+    button: {
+        id: 'submit',
+        type: 'submit',
+        content: 'Delete account',
+        img: null,
+        ariaLabel: '',
+        style: 'red',
+    },
 };
