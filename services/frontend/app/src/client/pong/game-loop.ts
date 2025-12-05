@@ -4,7 +4,7 @@ import type { repObj, reqObj } from './classes/game-interfaces.js';
 import { movePaddle, updatePaddlePos } from './paddle.js';
 import { deadReckoning, updateBallPos } from './ball.js';
 
-const SERVER_TICK: number = 1000 / 50;
+const SERVER_TICK: number = 1000 / 60;
 const TIME_STEP: number = 1000 / 60;
 const MAX_UPDATES_PER_FRAME = 8;
 
