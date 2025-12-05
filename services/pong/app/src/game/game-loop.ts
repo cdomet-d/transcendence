@@ -6,7 +6,7 @@ import { Player } from "../classes/player-class.js";
 import { coordinates } from '../classes/game-interfaces.js';
 import { getBallStartingSpeed } from '../classes/game-settings.js';
 
-const SERVER_TICK: number = 1000 / 50;
+const SERVER_TICK: number = 1000 / 60;
 const TIME_STEP: number = 1000 / 60;
 
 export async function gameLoop(game: Game, player1: Player, player2: Player) {
