@@ -35,8 +35,6 @@ function sideWallCollision(game: Game, nextX: number): boolean {
         game.ball.y = HEIGHT / 2;
         game.ball.dx = 0;
         game.ball.dy = 0;
-        game.delta = 0;
-        game.deleteReplies(game.replyHistory.length);
         return true;
     }
     return false;
