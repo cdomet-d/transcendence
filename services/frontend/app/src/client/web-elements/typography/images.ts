@@ -106,6 +106,7 @@ export class NoResults extends HTMLDivElement {
         this.#theme = theme;
     }
 
+    //TODO 404 for language
     connectedCallback() {
         const img = createIcon(this.#noResultsImg);
         const p = document.createElement('p');

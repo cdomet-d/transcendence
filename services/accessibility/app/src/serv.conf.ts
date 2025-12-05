@@ -1,5 +1,4 @@
 import dns from 'dns';
-import fs from 'fs';
 // import pino from 'pi	no'
 
 function getBffIP(): string | null {

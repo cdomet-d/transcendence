@@ -34,7 +34,7 @@ import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
 import { createLink } from './web-elements/navigation/buttons-helpers.js';
 import type { NavigationLinks } from './web-elements/navigation/links.js';
-import { defaultDictionary } from './web-elements/forms/language.js'
+import { currentDictionary } from './web-elements/forms/language.js'
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -102,7 +102,7 @@ export function renderHome() {
     prepareLayout(document.body.layoutInstance, 'home');
     document.body.layoutInstance!.appendAndCache(
         createHeading('0', 'PONG!'),
-        createMenu(main, 'vertical', true),
+        createMenu(main(currentDictionary), 'vertical', true),
     );
     updatePageTitle('Home');
 }
@@ -111,18 +111,19 @@ export function renderAuth() {
     prepareLayout(document.body.layoutInstance, 'auth');
     const wrapper = createWrapper('authsettings');
     
+    //TODO language
     const authOptions: TabData[] = [
         {
             id: 'login-tab',
             content: 'Login',
             default: true,
-            panelContent: createForm('login-form', loginForm(defaultDictionary)),
+            panelContent: createForm('login-form', loginForm(currentDictionary)),
         },
         {
             id: 'registration-tab',
             content: 'Register',
             default: false,
-            panelContent: createForm('registration-form', registrationForm(defaultDictionary)),
+            panelContent: createForm('registration-form', registrationForm(currentDictionary)),
         },
     ];
     wrapper.append(createTabs(authOptions));
@@ -213,7 +214,7 @@ export async function renderSettings() {
         const res = await raw.json();
         prepareLayout(document.body.layoutInstance, 'userSettings');
         const user = userDataFromAPIRes(res);
-        const form = userSettingsForm(defaultDictionary);
+        const form = userSettingsForm(currentDictionary);
         document.body.layoutInstance?.appendAndCache(createForm('settings-form', form, user));
     } catch (error) {
         redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
@@ -221,13 +222,14 @@ export async function renderSettings() {
     updatePageTitle(status.username + 'Settings');
 }
 
+//TODO language lobby
 export function renderLobbyMenu() {
     console.log('renderLobbyMenu');
     prepareLayout(document.body.layoutInstance, 'lobbyMenu');
     document.body.layoutInstance?.appendAndCache(
         createHeading('1', 'Choose Lobby'),
-        createMenu(lobbyQuickmatchMenu, 'horizontal', true),
-        createMenu(lobbyTournamentMenu, 'vertical', true),
+        createMenu(lobbyQuickmatchMenu(currentDictionary), 'horizontal', true),
+        createMenu(lobbyTournamentMenu(currentDictionary), 'vertical', true),
     );
     const quickMen = document.body.layoutInstance?.components.get('quickMatchMenu') as Menu;
     quickMen?.cache.forEach((el) => {
@@ -241,7 +243,7 @@ export function renderLobbyMenu() {
 //  being able to add himself to the game (in the UI - even if it's handled in the pong server)
 export function renderQuickLocalLobby() {
     prepareLayout(document.body.layoutInstance, 'quickLobby');
-    document.body.layoutInstance?.appendAndCache(createForm('local-pong-settings', localPong));
+    document.body.layoutInstance?.appendAndCache(createForm('local-pong-settings', localPong(currentDictionary)));
     wsConnect('create', 'quickmatch', 'localForm');
 }
 

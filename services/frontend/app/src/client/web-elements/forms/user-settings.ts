@@ -9,6 +9,7 @@ import { userColorsMenu, languageMenu } from '../navigation/default-menus.js';
 import type { Avatar } from '../typography/images.js';
 import type { DropdownMenu } from '../navigation/menus.js';
 import type { UserData } from '../types-interfaces.js';
+//import { currentDictionary } from './language.js';
 // import imageCompression from 'browser-image-compression';
 
 /**
@@ -36,7 +37,7 @@ export class UserSettingsForm extends BaseForm {
         this.#user = user;
         this.submitHandler = this.submitHandlerImplementation.bind(this);
         this.#previewAvatar = this.#previewAvatarImplementation.bind(this);
-        this.#accountDelete = createForm('delete-account-form', deleteAccount);
+        this.#accountDelete = createForm('delete-account-form', deleteAccount/*( currentDictionary )*/);
         this.#avatar = createAvatar(this.#user.avatar);
         this.#colors = createDropdown(userColorsMenu, 'Pick color', 'dynamic');
         this.#languages = createDropdown(languageMenu, 'Pick language', 'static');
