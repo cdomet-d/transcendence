@@ -73,14 +73,9 @@ function lerp(start: number, end: number, t: number): number {
 function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean {
     let id: number = latestReply.ID;
  
-    if (latestReply.score[0] != game.score[0] 
-        || latestReply.score[1] != game.score[1])
-        game.updateScore(latestReply);
-    game.leftPad = latestReply.leftPad;
-    if (game.local)
-        game.rightPad = latestReply.rightPad;
-    game.ball = latestReply.ball;
- 
+    if (applyServerState(game, latestReply, ws))
+        return true;
+
     const sortedRequests = Array.from(game.reqHistory.entries()).filter(req => req[0] > id)    
     let lastTimestamp = game.reqHistory.get(id)!.timeStamp + TIME_STEP;
     game.deleteReq(id);
@@ -108,11 +103,22 @@ function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean
     const last = sortedRequests.at(-1);
     if (last) {
         timeSinceUpdate = last[1].timeStamp - latestReply.timestamp;
-        const nextX: number = game.ball.x + game.ball.dx * TIME_STEP;
-        const nextY: number = game.ball.y + game.ball.dy * TIME_STEP;
+        const nextX: number = game.ball.x + game.ball.dx * timeSinceUpdate;
+        const nextY: number = game.ball.y + game.ball.dy * timeSinceUpdate;
         updateBallPos(game, nextX, nextY, timeSinceUpdate);
         finishSteps(game);
     }
+    return false;
+}
+
+function applyServerState(game: Game, latestReply: repObj, ws: WebSocket): boolean {
+    if (latestReply.score[0] != game.score[0] 
+        || latestReply.score[1] != game.score[1])
+        game.updateScore(latestReply);
+    game.leftPad = latestReply.leftPad;
+    if (game.local)
+        game.rightPad = latestReply.rightPad;
+    game.ball = latestReply.ball;
     if (latestReply.end === true) {
         ws.send("0");
         return true;
