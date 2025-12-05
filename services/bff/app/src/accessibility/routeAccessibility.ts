@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { dictionaryGet } from './bff.accessibilitySchemas.js';
+import { cleanInput } from '../utils/sanitize.js';
 
 async function fetchLanguagePack(log: any, langCode: string): Promise<Response> {
 	const url = `http://accessibility:1313/dictionary/${langCode}`;
@@ -17,8 +18,9 @@ export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 	serv.get('/dictionary/:lang', { schema: schema.dictionaryGet }, async (request, reply) => {
 		try {
 			const { lang } = request.params as { lang: string };
+			const safeLang = cleanInput(lang);
 
-			const response = await fetchLanguagePack(serv.log, lang);
+			const response = await fetchLanguagePack(serv.log, safeLang);
 
 			if (!response.ok) {
 				if (response.status === 404) {

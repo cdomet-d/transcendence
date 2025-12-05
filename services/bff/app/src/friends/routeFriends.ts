@@ -4,6 +4,7 @@ import { fetchUserID, fetchFriendships } from '../users/bffUserProfile.service.j
 import { createFriendRequest, deleteFriendRequest, acceptFriendRequest } from './bffFriends.service.js';
 import { type NatsConnection, StringCodec } from 'nats';
 import { relationPost, relationDelete, relationGet, relationPatch } from './bff.friendsSchemas.js';
+import { cleanInput } from '../utils/sanitize.js';
 
 declare module 'fastify' {
 	interface FastifyInstance {
@@ -41,7 +42,11 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			const senderID = request.user.userID;
 			const senderUsername = request.user.username;
 
-			const { username: friendUsername } = request.body as { username: string };
+			//TODO need to test if getting username like this works
+			//const { username: friendUsername } = request.body as { username: string };
+			const { username } = request.body as { username: string };
+
+			const friendUsername = cleanInput(username);
 
 			if (!friendUsername)
 				return reply
@@ -113,8 +118,10 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			const receiverID = request.user.userID;
 			const receiverUsername = request.user.username;
 
-			const { username: senderRequestUsername } = request.body as { username: string };
+			//const { username: senderRequestUsername } = request.body as { username: string };
+			const { username } = request.body as { username: string };
 
+			const senderRequestUsername = cleanInput(username);
 			if (!senderRequestUsername)
 				return reply
 					.code(400)
@@ -172,8 +179,10 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			const removerID = request.user.userID;
 			const removerUsername = request.user.username;
 
-			const { username: friendUsername } = request.body as { username: string };
+			//const { username: friendUsername } = request.body as { username: string };
+			const { username } = request.body as { username: string };
 
+			const friendUsername = cleanInput(username);
 			if (!friendUsername)
 				return reply
 					.code(400)
