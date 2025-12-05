@@ -12,12 +12,12 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
         ball = { ...latestReply.ball };
     }
     if (timeSinceUpdate > 30) timeSinceUpdate = 30;
-    const nextX: number = ball.x + ball.dx * timeSinceUpdate;
-    const nextY: number = ball.y + ball.dy * timeSinceUpdate;
-    updateBallPos(game, nextX, nextY, timeSinceUpdate);
+    updateBallPos(game, timeSinceUpdate);
 }
 
-export function updateBallPos(game: Game, nextX: number, nextY: number, timeSinceUpdate: number) {
+export function updateBallPos(game: Game, timeSinceUpdate: number) {
+    let nextX: number = game.ball.x + game.ball.dx * timeSinceUpdate;
+    let nextY: number = game.ball.y + game.ball.dy * timeSinceUpdate;
     if (sideWallCollision(game, nextX)) 
         return false;
     nextY = upperAndBottomWallCollision(game, nextY);
