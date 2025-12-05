@@ -2,11 +2,7 @@ import { loadHistoryLocation } from './event-listeners.js';
 import { Layout } from './web-elements/layouts/layout.js';
 import { PageHeader } from './web-elements/navigation/header.js';
 import { Router, routes } from './router.js';
-import { createErrorFeedback, redirectOnError } from './error.js';
-
-// import { pong } from './game/pong.js';
-// import { addLanguageEvents } from './language/languageEvents.js';
-// import { initLanguageCSR } from './language/translation.js';
+import { errorMessageFromException, redirectOnError } from './error.js';
 
 export const router = new Router(routes);
 
@@ -20,7 +16,7 @@ declare global {
 export interface userStatusInfo {
     auth: boolean;
     username?: string;
-    userID?: number;
+    userID?: string;
 }
 
 if (window) {
@@ -34,9 +30,7 @@ export async function userStatus(): Promise<userStatusInfo> {
         if (isLogged.ok) return { auth: true, username: data.username, userID: data.userID };
         else return { auth: false };
     } catch (error) {
-        let mess = 'Something when wrong';
-        if (error instanceof Error) mess = error.message;
-        redirectOnError('/', mess);
+        redirectOnError('/', errorMessageFromException(error));
         return { auth: false };
     }
 }
@@ -49,6 +43,3 @@ if (!document.body.layoutInstance || !document.body.header) {
 
 document.body.append(document.body.header, document.body.layoutInstance);
 router.loadRoute(router.currentPath, true);
-
-// initLanguageCSR();
-// addLanguageEvents();

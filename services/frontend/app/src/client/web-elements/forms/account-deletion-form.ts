@@ -1,11 +1,11 @@
 import { BaseForm } from './baseform';
-import { errorMessageFromResponse } from '../../error';
+import { exceptionFromResponse } from '../../error';
 
 export class DeleteAccountForm extends BaseForm {
     override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
         try {
             const response = await fetch(url, req);
-            if (!response.ok) throw await errorMessageFromResponse(response);
+            if (!response.ok) throw await exceptionFromResponse(response);
             if (typeof req.body === 'string') {
                 const payload = JSON.parse(req.body);
                 console.log(payload);

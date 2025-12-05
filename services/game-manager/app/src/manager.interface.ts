@@ -1,5 +1,5 @@
 interface userInfo {
-	userID?: number,
+	userID?: string,
 	username?: string,
 	userSocket?: WebSocket
 }
@@ -8,7 +8,7 @@ interface lobbyInfo {
 	lobbyID?: string,
 	whitelist?: whitelist,
 	joinable?: boolean,
-    userList: Map<number, userInfo>,
+	userList: Map<string, userInfo>,
 	remote: boolean,
 	format: "quickmatch" | "tournament" | string,
 	nbPlayers: number
@@ -17,8 +17,8 @@ interface lobbyInfo {
 
 interface whitelist {
 	lobbyId: string,
-	hostID: number,
-	userIDs: number[]
+	hostID: string,
+	userIDs: string[]
 }
 
 interface game {
@@ -28,23 +28,23 @@ interface game {
 	remote: boolean,
 	users: userInfo[] | undefined | null,
 	score: [number, number],
-	winnerID: number,
-	loserID: number,
+	winnerID: string,
+	loserID: string,
 	duration: number,
 	longuestPass: number,
-    startTime: string,
+	startTime: string,
 }
 
 interface tournament {
 	tournamentID: string,
-	winnerID: number | undefined | null,
+	winnerID: string | undefined | null,
 	bracket: game[],
 	nbPlayers: number
 }
 
 interface gameRequest {
 	username: string,
-	userID: number,
+	userID: string,
 	gameID: string,
 	remote: boolean
 }

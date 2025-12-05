@@ -1,18 +1,18 @@
 /******************************** NATS DATA OBJ ***********************************/
 export interface user {
-    userID: number,
+    userID: string,
     username: string,
 }
 
 export interface gameInfo {
-    lobbyID: number,
+    lobbyID: string,
     gameID: string,
     tournamentID?: string,
     remote: boolean,
     users: [user, user],
     score: [number, number],
-    winnerID: number,
-    loserID: number,
+    winnerID: string,
+    loserID: string,
     duration: number,
     longuestPass: number,
     startTime: string,
@@ -62,7 +62,7 @@ export interface playerReq {
 /**************************** WS DATA OBJ ********************************/
 export interface idsObj {
 	gameID: string,
-	userID: number
+	userID: string
 }
 
 export interface paddleObj {

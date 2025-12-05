@@ -5,7 +5,7 @@ import { router } from '../main.js';
 import type { PongUI } from '../web-elements/game/game-ui.js';
 
 export interface gameRequest {
-    userID: number;
+    userID: string;
     gameID: string;
     remote: boolean;
 }

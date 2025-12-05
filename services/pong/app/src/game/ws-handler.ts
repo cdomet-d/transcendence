@@ -73,7 +73,7 @@ export function waitForMessage(serv: FastifyInstance, socket: WebSocket): Promis
 	});
 }
 
-function getPlayerInGame(game: Game, userID: number, socket: WebSocket) {
+function getPlayerInGame(game: Game, userID: string, socket: WebSocket) {
 	game.addPlayer(userID, socket, "left");
 	if (game.local)
 		game.addPlayer(game.randUserID, socket, "right");
