@@ -38,13 +38,13 @@ export class Game {
 		this.#ball = {
 			x: WIDTH / 2, 
 			y: HEIGHT / 2, 
-			dx: 0.45, 
+			dx: 0.50, 
 			dy: 0.03,
-			maxSpeed: 0.85,
+			maxSpeed: 0.90,
 			r: 13
 		};
 		this.#paddleSpec = {
-			speed: 0.42,
+			speed: 0.45,
 			w: 20, 
 			h: HEIGHT / 5, 
 			halfW: 20 / 2, 
