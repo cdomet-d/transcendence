@@ -47,11 +47,12 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
             },
         ],
         //TODO Language
-        button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+        button: { id: 'submit', type: 'submit', content: dic.buttons.submit, img: null, ariaLabel: '' },
     }
 };
 
 export function registrationForm(dic: Dictionary): FormDetails {
+    console.log("IN REGISTREATION FORM", JSON.stringify(dic));
     return {
         action: 'https://localhost:8443/api/auth/register',
         heading: dic.titles.register,
@@ -61,7 +62,7 @@ export function registrationForm(dic: Dictionary): FormDetails {
         fields: [
             {
                 id: 'username',
-                labelContent: 'Username',
+                labelContent: dic.forms.username,
                 pattern: usernamePattern,
                 placeholder: 'Enter your username!',
                 type: 'text',
@@ -69,14 +70,14 @@ export function registrationForm(dic: Dictionary): FormDetails {
             },
             {
                 id: 'password',
-                labelContent: 'Password',
+                labelContent: dic.forms.password,
                 pattern: passwordPattern,
                 placeholder: 'Enter your password!',
                 type: 'password',
                 required: false,
             },
         ],
-        button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+        button: { id: 'submit', type: 'submit', content: dic.buttons.submit, img: null, ariaLabel: '' },
     }
 };
 
@@ -90,7 +91,7 @@ export function loginForm(dic: Dictionary): FormDetails {
         fields: [
             {
                 id: 'username',
-                labelContent: 'Username',
+                labelContent: dic.forms.username,
                 pattern: usernamePattern,
                 placeholder: 'Enter your username!',
                 type: 'text',
@@ -98,14 +99,14 @@ export function loginForm(dic: Dictionary): FormDetails {
             },
             {
                 id: 'password',
-                labelContent: 'Password',
+                labelContent: dic.forms.password,
                 pattern: passwordPattern,
                 placeholder: 'Enter your password!',
                 type: 'password',
                 required: false,
             },
         ],
-        button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+        button: { id: 'submit', type: 'submit', content: dic.buttons.submit, img: null, ariaLabel: '' },
     }
 };
 
@@ -126,7 +127,7 @@ export function search(dic: Dictionary): FormDetails {
                 required: true,
             },
         ],
-        button: { id: 'submit', type: 'submit', content: 'Search', img: null, ariaLabel: '' },
+        button: { id: 'submit', type: 'submit', content: dic.buttons.search, img: null, ariaLabel: '' },
     }
 };
 
@@ -189,121 +190,127 @@ export function localPong(dic: Dictionary): FormDetails {
                 type: 'range',
             },
         ],
-        button: { id: 'submit', type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
+        button: { id: 'submit', type: 'submit', content: dic.buttons.start_game, img: null, ariaLabel: '' },
     }
 };
 
-export const remotePong: FormDetails = {
-    action: 'https://localhost:8443/api/game/quick-lobby/',
-    heading: 'Remote Pong',
-    gameFormat: 'remote-quickmatch',
-    ariaLabel: 'Remote Pong settings',
-    id: 'remote-pong-settings',
-    method: 'post',
-    fields: [
-        {
-            id: 'horizontal',
-            labelContent: 'Horizontal paddle movement',
-            pattern: '',
-            placeholder: '',
-            type: 'checkbox',
-            required: true,
-        },
-        {
-            id: 'ballspeed',
-            labelContent: 'Starting Ball Speed',
-            max: '5',
-            min: '0',
-            pattern: '',
-            placeholder: '',
-            required: true,
-            step: '1',
-            type: 'range',
-        },
-        {
-            id: 'paddlesize',
-            labelContent: 'Paddle size',
-            max: '5',
-            min: '0',
-            pattern: '',
-            placeholder: '',
-            required: true,
-            step: '1',
-            type: 'range',
-        },
-        {
-            id: 'paddlespeed',
-            labelContent: 'Paddle speed',
-            max: '5',
-            min: '0',
-            pattern: '',
-            placeholder: '',
-            required: true,
-            step: '1',
-            type: 'range',
-        },
-    ],
-    button: { id: 'submit', type: 'submit', content: 'Start game', img: null, ariaLabel: '' },
+export function remotePong(dic: Dictionary): FormDetails {
+    return {
+        action: 'https://localhost:8443/api/game/quick-lobby/',
+        heading: 'Remote Pong',
+        gameFormat: 'remote-quickmatch',
+        ariaLabel: 'Remote Pong settings',
+        id: 'remote-pong-settings',
+        method: 'post',
+        fields: [
+            {
+                id: 'horizontal',
+                labelContent: dic.gameCustom.paddle_horizontal,
+                pattern: '',
+                placeholder: '',
+                type: 'checkbox',
+                required: true,
+            },
+            {
+                id: 'ballspeed',
+                labelContent: dic.gameCustom.ball_speed,
+                max: '5',
+                min: '0',
+                pattern: '',
+                placeholder: '',
+                required: true,
+                step: '1',
+                type: 'range',
+            },
+            {
+                id: 'paddlesize',
+                labelContent: dic.gameCustom.paddle_size,
+                max: '5',
+                min: '0',
+                pattern: '',
+                placeholder: '',
+                required: true,
+                step: '1',
+                type: 'range',
+            },
+            {
+                id: 'paddlespeed',
+                labelContent: dic.gameCustom.paddle_speed,
+                max: '5',
+                min: '0',
+                pattern: '',
+                placeholder: '',
+                required: true,
+                step: '1',
+                type: 'range',
+            },
+        ],
+        button: { id: 'submit', type: 'submit', content: dic.buttons.start_game, img: null, ariaLabel: '' },
+    }
 };
 
-export const pongTournament: FormDetails = {
-    action: 'https://localhost:8443/api/game/tournament-lobby/',
-    heading: 'Pong Tournament',
-    gameFormat: 'tournament',
-    ariaLabel: 'Pong tournament settings',
-    id: 'pong-tournament-settings',
-    method: 'post',
-    fields: [
-        {
-            id: 'ballspeed',
-            labelContent: 'Starting Ball Speed',
-            max: '5',
-            min: '0',
-            pattern: '',
-            placeholder: '',
-            required: true,
-            step: '1',
-            type: 'range',
-        },
-        {
-            id: 'paddlesize',
-            labelContent: 'Paddle size',
-            max: '5',
-            min: '0',
-            pattern: '',
-            placeholder: '',
-            required: true,
-            step: '1',
-            type: 'range',
-        },
-        {
-            id: 'paddlespeed',
-            labelContent: 'Paddle speed',
-            max: '5',
-            min: '0',
-            pattern: '',
-            placeholder: '',
-            required: true,
-            step: '1',
-            type: 'range',
-        },
-    ],
-    button: { id: 'submit', type: 'submit', content: 'Start tournament', img: null, ariaLabel: '' },
+export function pongTournament(dic: Dictionary): FormDetails {
+    return {
+        action: 'https://localhost:8443/api/game/tournament-lobby/',
+        heading: dic.titles.pong_tournament,
+        gameFormat: 'tournament',
+        ariaLabel: 'Pong tournament settings',
+        id: 'pong-tournament-settings',
+        method: 'post',
+        fields: [
+            {
+                id: 'ballspeed',
+                labelContent: dic.gameCustom.ball_speed,
+                max: '5',
+                min: '0',
+                pattern: '',
+                placeholder: '',
+                required: true,
+                step: '1',
+                type: 'range',
+            },
+            {
+                id: 'paddlesize',
+                labelContent: dic.gameCustom.paddle_size,
+                max: '5',
+                min: '0',
+                pattern: '',
+                placeholder: '',
+                required: true,
+                step: '1',
+                type: 'range',
+            },
+            {
+                id: 'paddlespeed',
+                labelContent: dic.gameCustom.paddle_speed,
+                max: '5',
+                min: '0',
+                pattern: '',
+                placeholder: '',
+                required: true,
+                step: '1',
+                type: 'range',
+            },
+        ],
+        button: { id: 'submit', type: 'submit', content: dic.buttons.start_tournament, img: null, ariaLabel: '' },
+    }
 };
 
-export const deleteAccount: FormDetails = {
-    action: 'https://localhost:8443/api/bff/account',
-    heading: '',
-    ariaLabel: 'Account deletion request',
-    id: 'account-deletion-request',
-    method: 'delete',
-    fields: [],
-    button: {
-        id: 'submit',
-        type: 'submit',
-        content: 'Delete account',
-        img: null,
-        ariaLabel: '',
-        style: 'red',
-    },
+export function deleteAccount(dic: Dictionary): FormDetails {
+    return {
+        action: 'https://localhost:8443/api/bff/account',
+        heading: '',
+        ariaLabel: 'Account deletion request',
+        id: 'account-deletion-request',
+        method: 'delete',
+        fields: [],
+        button: {
+            id: 'submit',
+            type: 'submit',
+            content: dic.buttons.delete_account,
+            img: null,
+            ariaLabel: '',
+            style: 'red',
+        },
+    }
 };

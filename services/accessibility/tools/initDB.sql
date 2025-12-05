@@ -1,20 +1,23 @@
 -- Drop the table if it exists to ensure a clean slate (optional but recommended during dev)
 -- DROP TABLE IF EXISTS language_packs;
-
--- Ensure table exists (matches your request)
-CREATE TABLE IF NOT EXISTS language_packs (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    language_code TEXT UNIQUE NOT NULL,
-    pack_json TEXT NOT NULL
-);
+-- Ensure table exists
+CREATE TABLE
+    IF NOT EXISTS language_packs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        language_code TEXT UNIQUE NOT NULL,
+        pack_json TEXT NOT NULL
+    );
 
 -- Clear existing data to prevent unique constraint errors on re-seed
 DELETE FROM language_packs;
 
 -- 1. English (en)
-INSERT INTO language_packs (language_code, pack_json) VALUES (
-    'en',
-    '{
+INSERT INTO
+    language_packs (language_code, pack_json)
+VALUES
+    (
+        'en',
+        '{
     "buttons": {
         "submit": "Submit",
         "cancel": "Cancel",
@@ -78,17 +81,20 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "password_error": "Password must be at least 8 characters."
     },
     "lobby": {
-        "local": "Local 1vs1",
-        "remote": "Remote 1vs1",
+        "local": "Local 1v1",
+        "remote": "Remote 1v1",
         "tournament": "Tournament"
     }
 }'
-);
+    );
 
 -- 2. French (fr)
-INSERT INTO language_packs (language_code, pack_json) VALUES (
-    'fr',
-    '{
+INSERT INTO
+    language_packs (language_code, pack_json)
+VALUES
+    (
+        'fr',
+        '{
     "buttons": {
         "submit": "Valider",
         "cancel": "Annuler",
@@ -157,12 +163,15 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "tournament": "Tournoi"
     }
 }'
-);
+    );
 
 -- 3. Spanish (es)
-INSERT INTO language_packs (language_code, pack_json) VALUES (
-    'es',
-    '{
+INSERT INTO
+    language_packs (language_code, pack_json)
+VALUES
+    (
+        'es',
+        '{
     "buttons": {
         "submit": "Enviar",
         "cancel": "Cancelar",
@@ -231,4 +240,4 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "tournament": "Torneo"
     }
 }'
-);
+    );

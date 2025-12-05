@@ -325,6 +325,9 @@ export interface Dictionary {
 		profile: string;
 		login: string;
 		logout: string;
+		start_game: string;
+		start_tournament: string;
+		delete_account: string;
 	};
 	forms: {
 		username: string;
@@ -342,6 +345,7 @@ export interface Dictionary {
 		tournament: string;
 		leaderboard: string;
 		home: string;
+		pong_tournament: string;
 	};
 	profile: {
 		joined: string;
@@ -380,6 +384,16 @@ export interface Dictionary {
 		local: string;
 		remote: string;
 		tournament: string;
+	};
+	placeholders: {
+		enter_username: string;
+		enter_password: string;
+		enter_biography: string,
+		upload_file: string;
+	};
+	settings: {
+		pick_color: string;
+		pick_language: string;
 	}
 }
 

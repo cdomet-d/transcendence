@@ -1,4 +1,5 @@
 import * as types from './types-interfaces.js';
+import type { Dictionary } from './types-interfaces.js';
 
 export const biographyPattern: string = '^[A-Za-z0-9\\s,\\.\\?!:\\)\\(\\/\\-_]{0,256}$';
 export const passwordPattern: string = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{12,64}$';
@@ -58,41 +59,48 @@ export const iMeta: types.ImgData = {
     src: '/public/assets/images/purple-avatar.png',
 };
 
-export const textData: types.InputFieldsData = {
-    id: 'username',
-    labelContent: 'Username',
-    pattern: usernamePattern,
-    placeholder: 'Enter your username!',
-    type: 'text',
-    required: false,
+export function textData(dic: Dictionary): types.InputFieldsData {
+    return {
+        id: 'username',
+        labelContent: 'Username',
+        pattern: usernamePattern,
+        placeholder: dic.placeholders.enter_username,
+        type: 'text',
+        required: false,
+    }
 };
 
-export const textArea: types.InputFieldsData = {
-    id: 'Biography',
-    labelContent: 'Biography',
-    pattern: '',
-    placeholder: 'Enter your biography',
-    type: '',
-    required: false,
+export function textArea(dic: Dictionary): types.InputFieldsData {
+    return {
+        id: 'Biography',
+        labelContent: 'Biography',
+        pattern: '',
+        placeholder: dic.placeholders.enter_biography,
+        type: '',
+        required: false,
+    }
 };
 
-export const uploadData: types.InputFieldsData = {
-    id: 'upload',
-    labelContent: 'Upload file',
-    pattern: '',
-    placeholder: 'Choose a file from your computer...',
-    type: 'file',
-    required: false,
+export function uploadData(dic: Dictionary): types.InputFieldsData {
+    return {
+        id: 'upload',
+        labelContent: 'Upload file',
+        pattern: '',
+        placeholder: dic.placeholders.upload_file,
+        type: 'file',
+        required: false,
+    }
 };
 
-//TODO language
-export const pwData: types.InputFieldsData = {
-    id: 'password',
-    labelContent: 'Password',
-    pattern: passwordPattern,
-    placeholder: 'Enter your password!',
-    type: 'password',
-    required: false,
+export function pwData(dic: Dictionary): types.InputFieldsData {
+    return {
+        id: 'password',
+        labelContent: 'Password',
+        pattern: passwordPattern,
+        placeholder: dic.placeholders.enter_password,
+        type: 'password',
+        required: false,
+    }
 };
 
 export const slider: types.InputFieldsData = {

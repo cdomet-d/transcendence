@@ -13,7 +13,10 @@ export const defaultDictionary: Dictionary = {
 		leaderboard: "Leaderboard",
 		profile: "Profile",
 		login: "Log in",
-		logout: "Log out"
+		logout: "Log out",
+		start_game: "Start game",
+		start_tournament: "Start tournament",
+		delete_account: "Delete account"
 	},
 	forms: {
 		username: "Username",
@@ -30,7 +33,8 @@ export const defaultDictionary: Dictionary = {
 		remote_pong: "Remote Pong",
 		tournament: "Tournament",
 		leaderboard: "Leaderboard",
-		home: "Home"
+		home: "Home",
+		pong_tournament: "Pong Tournament"
 	},
 	profile: {
 		joined: "Joined",
@@ -69,8 +73,19 @@ export const defaultDictionary: Dictionary = {
 		local: "Local 1v1",
 		remote: "Remote 1v1",
 		tournament: "Tournament"
+	},
+	placeholders: {
+		enter_password: "Enter your password!",
+		enter_username: "Enter your username!",
+		enter_biography: "Enter your biography",
+		upload_file: "Choose a file from your computer..."
+	},
+	settings: {
+		pick_color: "Pick color",
+		pick_language: "Pick language"
 	}
 };
+
 export let currentDictionary: Dictionary = defaultDictionary;
 export let currentLanguage: string = 'en';
 
@@ -92,14 +107,15 @@ export async function setLanguage(lang: string): Promise<void> {
 		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang } }));
 
 		console.log(`[LANG] Switched to ${lang}`);
+		console.log(JSON.stringify(currentDictionary));
 
 	} catch (error) {
 		console.error('[LANG] Error loading language pack:', error);
 	}
 }
 
-export function initLanguage() {
-	const savedLang = localStorage.getItem('preferred_language') || 'es';
+export async  function initLanguage() {
+	const savedLang = localStorage.getItem('preferred_language') || 'fr';
 	if (savedLang !== 'en')
-		setLanguage(savedLang);
-}
+		await setLanguage(savedLang);
+}``
