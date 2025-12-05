@@ -715,13 +715,14 @@ WHERE userID = 101;
 
 [WIP] DOC NOT UP TO DATE YET (nginx conf not done yet)
 
-* status in db on login logout
 * sanitise input in back
 * GDPR: check profile photos and more
 * add schemas to route
 
-* servir traduction ---> localisation library, language page
 
+* status in db on login logout
+
+* servir traduction ---> localisation library, language page
 * changer userID to string         ✅
 * move nats publisher to bff       ✅
 * gestion erreur dans le bff       ✅

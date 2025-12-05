@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import type { UserProfileView, JwtPayload } from './bff.interface.js';
-import { fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches, updateAuthSettings, updateUserProfile } from './bffUserProfile.service.js';
+import { fetchFriendshipsPending, fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches, updateAuthSettings, updateUserProfile } from './bffUserProfile.service.js';
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
 	//get's profile + stats + game + friendslist
@@ -51,13 +51,14 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				combinedUserData,
 				fetchUserStats(serv.log, combinedUserData.userID, token),
 				fetchFriendships(serv.log, combinedUserData.userID, 'friend', token),
-				fetchFriendships(serv.log, combinedUserData.userID, 'pending', token),
+				fetchFriendshipsPending(serv.log, combinedUserData.userID, 'pending', token),
 				processMatches(serv.log, combinedUserData.userID, token),
 			]);
 			if (!userData || !userStats)
 				return reply
 					.code(404)
 					.send({ message: '[BFF] Failed to retrieve essential user data.' });
+
 
 			const responseData: UserProfileView = {
 				userData: userData,
@@ -67,6 +68,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				matches: recentMatches || [],
 			};
 
+			console.log(JSON.stringify(responseData.pending));
 			return reply.code(200).send(responseData);
 
 		} catch (error) {
@@ -348,7 +350,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				reply.code(400).send({ code: response.status, message: '[BFF] Invalid query' });
 			}
 
-			reply.code(200).send({response});
+			reply.code(200).send({ response });
 
 		} catch (error) {
 			serv.log.error(`[BFF] Failed to update settings: ${error}`);

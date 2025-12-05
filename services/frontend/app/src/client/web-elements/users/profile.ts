@@ -4,6 +4,7 @@ import { createSocialMenu } from '../navigation/menu-helpers.js';
 import { social } from '../navigation/default-menus.js';
 import { SocialMenu } from '../navigation/menus.js';
 import type { UserData, ImgData, ProfileView } from '../types-interfaces.js';
+import { currentDictionary } from '../forms/language.js';
 
 /**
  * Custom element representing a user profile.
@@ -24,7 +25,7 @@ export class UserProfile extends HTMLDivElement {
      */
     constructor() {
         super();
-        this.#actionButtons = createSocialMenu(social, 'horizontal');
+        this.#actionButtons = createSocialMenu(social(currentDictionary), 'horizontal');
         this.#avatar = document.createElement('div', { is: 'user-avatar' }) as Avatar;
         this.#biography = document.createElement('p', { is: 'user-bio' }) as Biography;
         this.#joinedSince = document.createElement('span') as HTMLSpanElement;

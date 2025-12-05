@@ -15,7 +15,7 @@ export function main(dic: Dictionary): MenuData {
             {
                 styleButton: true,
                 id: 'lobby',
-                title: 'Play',
+                title: dic.buttons.play,
                 datalink: '/lobby-menu',
                 href: '/lobby-menu',
                 img: null
@@ -23,7 +23,7 @@ export function main(dic: Dictionary): MenuData {
             {
                 styleButton: true,
                 id: 'profile',
-                title: 'Profile',
+                title: dic.buttons.profile,
                 datalink: 'profile',
                 href: '/me',
                 img: null
@@ -75,59 +75,61 @@ export function logIn(dic: Dictionary): ButtonData {
     }
 };
 
-export const social: MenuData = {
-    id: 'social',
-    buttons: [
-        {
-            ariaLabel: 'Add user as friend',
-            content: null,
-            type: 'button',
-            id: 'addFriend',
-            img: {
-                alt: 'a small pixel art blue blob with a green plus sign',
-                id: '',
-                size: 'ismall',
-                src: '/public/assets/images/add-user.png',
+export function social(dic: Dictionary): MenuData {
+    return {
+        id: 'social',
+        buttons: [
+            {
+                ariaLabel: 'Add user as friend',
+                content: null,
+                type: 'button',
+                id: 'addFriend',
+                img: {
+                    alt: 'a small pixel art blue blob with a green plus sign',
+                    id: '',
+                    size: 'ismall',
+                    src: '/public/assets/images/add-user.png',
+                },
             },
-        },
-        {
-            ariaLabel: 'Remove user from friends',
-            content: null,
-            type: 'button',
-            id: 'removeFriend',
-            img: {
-                alt: 'a small pixel art blue blob with a red minus sign',
-                id: '',
-                size: 'ismall',
-                src: '/public/assets/images/remove-user.png',
+            {
+                ariaLabel: 'Remove user from friends',
+                content: null,
+                type: 'button',
+                id: 'removeFriend',
+                img: {
+                    alt: 'a small pixel art blue blob with a red minus sign',
+                    id: '',
+                    size: 'ismall',
+                    src: '/public/assets/images/remove-user.png',
+                },
             },
-        },
-    ],
+        ],
 
-    links: [
-        {
-            //TODO: autofill pongsettings form and lauch a 2 persons match
-            styleButton: true,
-            datalink: '/lobby',
-            id: 'challenge',
-            href: '/lobby',
-            title: '',
-            img: {
-                alt: 'two overlapping pixel art ping pong paddles',
-                id: 'challengeIcon',
-                size: 'ismall',
-                src: '/public/assets/images/challenge.png',
+        links: [
+            {
+                //TODO: autofill pongsettings form and lauch a 2 persons match
+                styleButton: true,
+                datalink: '/lobby',
+                id: 'challenge',
+                href: '/lobby',
+                title: '',
+                img: {
+                    alt: 'two overlapping pixel art ping pong paddles',
+                    id: 'challengeIcon',
+                    size: 'ismall',
+                    src: '/public/assets/images/challenge.png',
+                },
             },
-        },
-        {
-            styleButton: true,
-            datalink: '/user/settings',
-            id: 'settings',
-            href: '/user/settings',
-            title: 'Settings',
-            img: null,
-        },
-    ],
+            {
+                styleButton: true,
+                datalink: '/user/settings',
+                id: 'settings',
+                href: '/user/settings',
+                title: dic.titles.settings,
+                img: null,
+            },
+        ],
+    }
 };
 
 export const languageMenu: ButtonData[] = [
@@ -193,10 +195,10 @@ export const userColorsMenu: ButtonData[] = [
     },
 ];
 
-export function profileTabs(dict: Dictionary): TabData[] {
-    return [{ id: 'friends', content: dict.profile.friends, default: true, panelContent: null },
-    { id: 'history', content: 'Game history', default: false, panelContent: null },
-    { id: 'stats', content: 'Statistics', default: false, panelContent: null },
+export function profileTabs(dic: Dictionary): TabData[] {
+    return [{ id: 'friends', content: dic.profile.friends, default: true, panelContent: null },
+    { id: 'history', content: dic.profile.game_history, default: false, panelContent: null },
+    { id: 'stats', content: dic.profile.statistics, default: false, panelContent: null },
     ];
 }
 

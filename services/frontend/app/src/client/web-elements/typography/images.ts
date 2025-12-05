@@ -1,5 +1,6 @@
 import type { ImgData, Size, ColorTheme } from '../types-interfaces.js';
 import { createIcon } from './helpers.js';
+import type { Dictionary } from '../types-interfaces.js';
 
 /**
  * Custom image element representing an icon.
@@ -107,10 +108,11 @@ export class NoResults extends HTMLDivElement {
     }
 
     //TODO 404 for language
-    connectedCallback() {
+    connectedCallback(dic: Dictionary) {
         const img = createIcon(this.#noResultsImg);
         const p = document.createElement('p');
-        p.innerText = "There's nothing here :<";
+        const error404 = dic.error.page404;
+        p.innerText = error404;
         this.append(p, img);
         p.classList.add('text-center', 'f-s', `${this.#theme}`, 'f-bold');
         img.classList.add('breathe', 'justify-self-center');

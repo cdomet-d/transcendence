@@ -335,6 +335,7 @@ export interface Dictionary {
 		biography: string;
 		avatar: string;
 		search_placeholder: string;
+		avatar_uploader: string;
 	};
 	titles: {
 		settings: string;
@@ -346,6 +347,8 @@ export interface Dictionary {
 		leaderboard: string;
 		home: string;
 		pong_tournament: string;
+		choose_lobby: string;
+
 	};
 	profile: {
 		joined: string;
@@ -379,6 +382,7 @@ export interface Dictionary {
 	error: {
 		username_error: string;
 		password_error: string;
+		page404: string;
 	};
 	lobby: {
 		local: string;
@@ -394,6 +398,9 @@ export interface Dictionary {
 	settings: {
 		pick_color: string;
 		pick_language: string;
+		en: string;
+		fr: string;
+		es: string;
 	}
 }
 

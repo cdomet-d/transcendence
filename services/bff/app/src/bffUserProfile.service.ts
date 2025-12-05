@@ -22,7 +22,7 @@ export async function buildTinyProfile(log: any, viewerUserID: string, targetUse
 			log.warn(`[BFF] buildTinyProfile: Data not found for userID ${targetUserID}`);
 			throw { code: 404, message: '[BFF] User not found.' };
 		}
-		
+
 		return {
 			userID: targetUserID,
 			username: data.username,
@@ -282,6 +282,92 @@ export async function fetchUserStats(log: any, userID: string, token: string): P
 //error handled
 export async function fetchFriendships(log: any, userID: string, status: FriendshipStatus, token: string): Promise<userData[]> {
 	const url = `http://friends:1616/friendlist?userID=${userID}`;
+	let response: Response;
+
+	try {
+		response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'Cookie': `token=${token}`,
+				'Content-Type': 'application/json'
+			}
+		});
+	} catch (error) {
+		log.error(`[BFF] Friends service is unreachable: ${error}`);
+		throw new Error('Friends service is unreachable.');
+	}
+
+	if (response.status === 400) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not friendlist.' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Auth service validation error`);
+		const errorBody = await response.json() as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not friendlist.' };
+	}
+
+	if (!response.ok) {
+		log.error(`[BFF] Friends service failed with status ${response.status}`);
+		throw new Error('Friends service failed.');
+	}
+
+	const friendships = await response.json() as Friendship[];
+
+	const targetIsAccepted = (status === 'friend');
+
+	const filteredList = friendships.filter(f => {
+		const isAccepted = String(f.statusFriendship) === 'true' || String(f.statusFriendship) === '1';
+
+		return (isAccepted === targetIsAccepted);
+	});
+
+	const profilePromises = filteredList.map(async (friendship) => {
+		try {
+			const otherID = (friendship.userID === userID) ? friendship.friendID : friendship.userID;
+
+			const profile = await fetchUserData(log, String(otherID), token);
+
+			if (profile) {
+				(profile as any).relation = status;
+				profile.since = friendship.startTime;
+			}
+			return (profile);
+		} catch (error) {
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number, message: string };
+				if (customError.code === 404) {
+					const errorBody = await response.json() as { message: string };
+					throw { code: 404, message: errorBody.message || '[BFF] Could not friendlist.' };
+				}
+
+				if (response.status === 400) {
+					log.warn(`[BFF] Auth service validation error`);
+					const errorBody = await response.json() as { message: string };
+					throw { code: 400, message: errorBody.message || '[BFF] Unauthorized.' };
+				}
+
+				if (response.status === 401) {
+					log.warn(`[BFF] Auth service validation error`);
+					const errorBody = await response.json() as { message: string };
+					throw { code: 401, message: errorBody.message || '[BFF] Unauthorized.' };
+				}
+
+				log.warn(`[BFF] Could not fetch profile for user ${friendship.friendID}`);
+				return (null);
+			}
+		}
+	});
+
+	const profiles = await Promise.all(profilePromises);
+
+	return profiles.filter((p): p is userData => p !== null);
+}
+
+export async function fetchFriendshipsPending(log: any, userID: string, status: FriendshipStatus, token: string): Promise<userData[]> {
+	const url = `http://friends:1616/friendlistpending?userID=${userID}`;
 	let response: Response;
 
 	try {

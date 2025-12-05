@@ -48,7 +48,13 @@ export class PageHeader extends HTMLElement {
     }
 
     async #logoutImplementation() {
-        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+/*         const userState = await userStatus();
+        if (!userState.auth) return ;
+        const userID = userState.userID */
+        
+        const url = `https://localhost:8443/api/auth/logout`;
+
+        await fetch(url, { method: 'POST', credentials: 'include' });
         this.#notif.ws?.close();
         router.loadRoute('/', true);
     }

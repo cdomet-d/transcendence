@@ -13,7 +13,7 @@ interface JwtPayload {
 const authSchema = {
 	body: {
 		type: 'object',
-		 // TODO: password is not required for temporary users
+		// TODO: password is not required for temporary users
 		required: ['username', 'password'],
 		properties: {
 			username: { type: 'string' },
@@ -82,7 +82,22 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 	});
 
 	serv.post('/logout', async (request, reply) => {
-		reply.clearCookie('token', {
+		/* const url = `http://users:2626/${userID}`;
+		let response: Response;
+		try {
+			response = await fetch(url, {
+				method: 'PATCH',
+				headers: {
+					'Cookie': `token=${token}`,
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({activityStatus: false})
+			});
+		} catch (error) {
+			//TODO handle error
+			throw new Error('User service is unreachable.');
+		}
+		reply.clearCookie('token', { */
 			httpOnly: true,
 			secure: true,
 			sameSite: 'strict',

@@ -23,7 +23,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
             },
             {
                 id: 'biography',
-                labelContent: 'Biography',
+                labelContent: dic.forms.biography,
                 pattern: '',
                 placeholder: user?.biography || '',
                 type: 'textarea',
@@ -31,7 +31,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
             },
             {
                 id: 'username',
-                labelContent: 'Username',
+                labelContent: dic.forms.username,
                 pattern: usernamePattern,
                 placeholder: user?.username || 'Enter your new username!',
                 type: 'text',
@@ -39,7 +39,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
             },
             {
                 id: 'password',
-                labelContent: 'Password',
+                labelContent: dic.forms.password,
                 pattern: passwordPattern,
                 placeholder: 'Enter your new password!',
                 type: 'password',
@@ -52,7 +52,6 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 };
 
 export function registrationForm(dic: Dictionary): FormDetails {
-    console.log("IN REGISTREATION FORM", JSON.stringify(dic));
     return {
         action: 'https://localhost:8443/api/auth/register',
         heading: dic.titles.register,
@@ -64,7 +63,7 @@ export function registrationForm(dic: Dictionary): FormDetails {
                 id: 'username',
                 labelContent: dic.forms.username,
                 pattern: usernamePattern,
-                placeholder: 'Enter your username!',
+                placeholder: dic.placeholders.enter_username,
                 type: 'text',
                 required: true,
             },
@@ -72,7 +71,7 @@ export function registrationForm(dic: Dictionary): FormDetails {
                 id: 'password',
                 labelContent: dic.forms.password,
                 pattern: passwordPattern,
-                placeholder: 'Enter your password!',
+                placeholder: dic.placeholders.enter_password,
                 type: 'password',
                 required: false,
             },
@@ -93,7 +92,7 @@ export function loginForm(dic: Dictionary): FormDetails {
                 id: 'username',
                 labelContent: dic.forms.username,
                 pattern: usernamePattern,
-                placeholder: 'Enter your username!',
+                placeholder: dic.placeholders.enter_username,
                 type: 'text',
                 required: true,
             },
@@ -101,7 +100,7 @@ export function loginForm(dic: Dictionary): FormDetails {
                 id: 'password',
                 labelContent: dic.forms.password,
                 pattern: passwordPattern,
-                placeholder: 'Enter your password!',
+                placeholder: dic.placeholders.enter_password,
                 type: 'password',
                 required: false,
             },
@@ -120,6 +119,7 @@ export function search(dic: Dictionary): FormDetails {
         fields: [
             {
                 id: 'searchbar',
+                //TODO: language ?
                 labelContent: 'Searchbar',
                 pattern: searchbarPattern,
                 placeholder: dic.forms.search_placeholder,
@@ -296,6 +296,7 @@ export function pongTournament(dic: Dictionary): FormDetails {
     }
 };
 
+//TODO language but it broke everything
 export const deleteAccount: FormDetails = {
     action: 'https://localhost:8443/api/bff/account',
     heading: '',

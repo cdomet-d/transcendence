@@ -27,7 +27,7 @@ import { PongUI } from './web-elements/game/game-ui.js';
 import { errorMessageFromException, exceptionFromResponse, redirectOnError } from './error.js';
 import { TournamentBrackets } from './web-elements/game/tournament.js';
 import type { Match } from 'path-to-regexp';
-import type { navigationLinksData, TabData } from './web-elements/types-interfaces.js';
+import type { Dictionary, navigationLinksData, TabData } from './web-elements/types-interfaces.js';
 import { userStatus, router } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 import { wsConnect } from './lobby/wsConnect.front.js';
@@ -157,8 +157,6 @@ export async function renderLeaderboard() {
 }
 
 export async function renderSelf() {
-    console.log('renderSelf');
-
     const status = await userStatus();
     if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
 
@@ -223,11 +221,11 @@ export async function renderSettings() {
 }
 
 //TODO language lobby
-export function renderLobbyMenu() {
+export function renderLobbyMenu(dic: Dictionary) {
     console.log('renderLobbyMenu');
     prepareLayout(document.body.layoutInstance, 'lobbyMenu');
     document.body.layoutInstance?.appendAndCache(
-        createHeading('1', 'Choose Lobby'),
+        createHeading('1', dic.titles.choose_lobby),
         createMenu(lobbyQuickmatchMenu(currentDictionary), 'horizontal', true),
         createMenu(lobbyTournamentMenu(currentDictionary), 'vertical', true),
     );
@@ -249,13 +247,13 @@ export function renderQuickLocalLobby() {
 
 export function renderQuickRemoteLobby() {
     prepareLayout(document.body.layoutInstance, 'quickLobby');
-    document.body.layoutInstance?.appendAndCache(createForm('remote-pong-settings', remotePong));
+    document.body.layoutInstance?.appendAndCache(createForm('remote-pong-settings', remotePong(currentDictionary)));
     wsConnect('create', 'quickmatch', 'remoteForm');
 }
 
 export function renderTournamentLobby() {
     prepareLayout(document.body.layoutInstance, 'tournamentLobby');
-    document.body.layoutInstance?.appendAndCache(createForm('remote-pong-settings', pongTournament));
+    document.body.layoutInstance?.appendAndCache(createForm('remote-pong-settings', pongTournament(currentDictionary)));
     wsConnect('create', 'tournament', 'tournamentForm');
 }
 

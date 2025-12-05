@@ -1,23 +1,17 @@
--- Drop the table if it exists to ensure a clean slate (optional but recommended during dev)
--- DROP TABLE IF EXISTS language_packs;
 -- Ensure table exists
-CREATE TABLE
-    IF NOT EXISTS language_packs (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        language_code TEXT UNIQUE NOT NULL,
-        pack_json TEXT NOT NULL
-    );
+CREATE TABLE IF NOT EXISTS language_packs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    language_code TEXT UNIQUE NOT NULL,
+    pack_json TEXT NOT NULL
+);
 
 -- Clear existing data to prevent unique constraint errors on re-seed
 DELETE FROM language_packs;
 
 -- 1. English (en)
-INSERT INTO
-    language_packs (language_code, pack_json)
-VALUES
-    (
-        'en',
-        '{
+INSERT INTO language_packs (language_code, pack_json) VALUES (
+    'en',
+    '{
     "buttons": {
         "submit": "Submit",
         "cancel": "Cancel",
@@ -29,6 +23,8 @@ VALUES
         "profile": "Profile",
         "login": "Log in",
         "logout": "Log out",
+        "start_game": "Start game",
+        "start_tournament": "Start tournament",
         "delete_account": "Delete account"
     },
     "forms": {
@@ -36,7 +32,8 @@ VALUES
         "password": "Password",
         "biography": "Biography",
         "avatar": "Avatar",
-        "search_placeholder": "Search..."
+        "search_placeholder": "Search...",
+        "avatar_uploader": "Avatar uploader"
     },
     "titles": {
         "settings": "Settings",
@@ -46,7 +43,9 @@ VALUES
         "remote_pong": "Remote Pong",
         "tournament": "Tournament",
         "leaderboard": "Leaderboard",
-        "home": "Home"
+        "home": "Home",
+        "pong_tournament": "Pong Tournament",
+		"choose_lobby": "Choose lobby"
     },
     "profile": {
         "joined": "Joined",
@@ -79,23 +78,34 @@ VALUES
     },
     "error": {
         "username_error": "Invalid username or password.",
-        "password_error": "Password must be at least 8 characters."
+        "password_error": "Password must be at least 8 characters.",
+        "page404": "Page not found"
     },
     "lobby": {
         "local": "Local 1v1",
         "remote": "Remote 1v1",
         "tournament": "Tournament"
+    },
+    "placeholders": {
+        "enter_password": "Enter your password!",
+        "enter_username": "Enter your username!",
+        "enter_biography": "Enter your biography",
+        "upload_file": "Choose a file from your computer..."
+    },
+    "settings": {
+        "pick_color": "Pick color",
+        "pick_language": "Pick language",
+        "en": "English",
+        "fr": "French",
+        "es": "Spanish"
     }
 }'
-    );
+);
 
 -- 2. French (fr)
-INSERT INTO
-    language_packs (language_code, pack_json)
-VALUES
-    (
-        'fr',
-        '{
+INSERT INTO language_packs (language_code, pack_json) VALUES (
+    'fr',
+    '{
     "buttons": {
         "submit": "Valider",
         "cancel": "Annuler",
@@ -107,6 +117,8 @@ VALUES
         "profile": "Profil",
         "login": "Connexion",
         "logout": "Déconnexion",
+        "start_game": "Lancer la partie",
+        "start_tournament": "Lancer le tournoi",
         "delete_account": "Supprimer le compte"
     },
     "forms": {
@@ -114,7 +126,8 @@ VALUES
         "password": "Mot de passe",
         "biography": "Biographie",
         "avatar": "Avatar",
-        "search_placeholder": "Rechercher..."
+        "search_placeholder": "Rechercher...",
+        "avatar_uploader": "Téléchargement d''avatar"
     },
     "titles": {
         "settings": "Paramètres",
@@ -124,7 +137,10 @@ VALUES
         "remote_pong": "Pong Distant",
         "tournament": "Tournoi",
         "leaderboard": "Classement",
-        "home": "Accueil"
+        "home": "Accueil",
+        "pong_tournament": "Tournoi de Pong",
+		"choose_lobby": "Choisi un lobby"
+
     },
     "profile": {
         "joined": "Rejoint le",
@@ -157,23 +173,34 @@ VALUES
     },
     "error": {
         "username_error": "Nom d''utilisateur ou mot de passe invalide.",
-        "password_error": "Le mot de passe doit contenir au moins 8 caractères."
+        "password_error": "Le mot de passe doit contenir au moins 8 caractères.",
+        "page404": "Page introuvable"
     },
     "lobby": {
         "local": "Local 1vs1",
         "remote": "Distant 1vs1",
         "tournament": "Tournoi"
+    },
+    "placeholders": {
+        "enter_password": "Entrez votre mot de passe !",
+        "enter_username": "Entrez votre nom d''utilisateur !",
+        "enter_biography": "Entrez votre biographie",
+        "upload_file": "Choisir un fichier..."
+    },
+    "settings": {
+        "pick_color": "Choisir une couleur",
+        "pick_language": "Choisir la langue",
+        "en": "Anglais",
+        "fr": "Français",
+        "es": "Espagnol"
     }
 }'
-    );
+);
 
 -- 3. Spanish (es)
-INSERT INTO
-    language_packs (language_code, pack_json)
-VALUES
-    (
-        'es',
-        '{
+INSERT INTO language_packs (language_code, pack_json) VALUES (
+    'es',
+    '{
     "buttons": {
         "submit": "Enviar",
         "cancel": "Cancelar",
@@ -185,6 +212,8 @@ VALUES
         "profile": "Perfil",
         "login": "Iniciar sesión",
         "logout": "Cerrar sesión",
+        "start_game": "Empezar partida",
+        "start_tournament": "Empezar torneo",
         "delete_account": "Eliminar cuenta"
     },
     "forms": {
@@ -192,7 +221,8 @@ VALUES
         "password": "Contraseña",
         "biography": "Biografía",
         "avatar": "Avatar",
-        "search_placeholder": "Buscar..."
+        "search_placeholder": "Buscar...",
+        "avatar_uploader": "Subir avatar"
     },
     "titles": {
         "settings": "Configuración",
@@ -202,7 +232,10 @@ VALUES
         "remote_pong": "Pong Remoto",
         "tournament": "Torneo",
         "leaderboard": "Clasificación",
-        "home": "Inicio"
+        "home": "Inicio",
+        "pong_tournament": "Torneo de Pong",
+		"choose_lobby": "Elige lobby"
+
     },
     "profile": {
         "joined": "Unido el",
@@ -235,12 +268,26 @@ VALUES
     },
     "error": {
         "username_error": "Nombre de usuario o contraseña inválidos.",
-        "password_error": "La contraseña debe tener al menos 8 caracteres."
+        "password_error": "La contraseña debe tener al menos 8 caracteres.",
+        "page404": "Página no encontrada"
     },
     "lobby": {
         "local": "Local 1vs1",
         "remote": "Remoto 1vs1",
         "tournament": "Torneo"
+    },
+    "placeholders": {
+        "enter_password": "¡Introduce tu contraseña!",
+        "enter_username": "¡Introduce tu nombre de usuario!",
+        "enter_biography": "Introduce tu biografía",
+        "upload_file": "Elige un archivo..."
+    },
+    "settings": {
+        "pick_color": "Elegir color",
+        "pick_language": "Elegir idioma",
+        "en": "Inglés",
+        "fr": "Francés",
+        "es": "Español"
     }
 }'
-    );
+);

@@ -113,7 +113,6 @@ export async function userRoutes(serv: FastifyInstance) {
 					p.lang,
 					p.profileColor,
 					p.activityStatus,
-					p.lastConnection,
 					p.userRole,
 					p.username,
 					s.winStreak,
@@ -418,13 +417,12 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const queryProfile = `
 				INSERT INTO userProfile
-				(userID, username, activityStatus, lastConnection, profileColor, userRole, since, lang)
-				VALUES (?, ?, 1, ?, "bg-000080", 1, ?, "en")
+				(userID, username, activityStatus, profileColor, userRole, since, lang)
+				VALUES (?, ?, 1, "bg-000080", 1, ?, "en")
 			`;
 			const paramsProfile = [
 				userID,
 				username,
-				new Date().toISOString(),
 				new Date().toISOString(),
 			];
 
@@ -491,6 +489,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const { userID } = request.params as { userID: string };
 			const body = request.body as { [key: string]: any };
+			console.log("IN USERS body = ", JSON.stringify(body));
 
 			const validStatKeys = [
 				'username',
@@ -498,6 +497,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				'biography',
 				'profileColor',
 				'lang',
+				'activityStatus',
 			];
 
 			const keysToUpdate = Object.keys(body).filter((key) => validStatKeys.includes(key));

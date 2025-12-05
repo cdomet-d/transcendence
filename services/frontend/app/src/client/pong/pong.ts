@@ -11,8 +11,6 @@ export interface gameRequest {
 }
 
 export function pong(gameReq: gameRequest, ctx: CanvasRenderingContext2D | null, ui: PongUI) {
-    console.log('game request obj: ', gameReq);
-
     if (!ctx) {
         console.log('error: context not supported');
         router.loadRoute('/404', true);

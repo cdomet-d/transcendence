@@ -23,7 +23,8 @@ export const defaultDictionary: Dictionary = {
 		password: "Password",
 		biography: "Biography",
 		avatar: "Avatar",
-		search_placeholder: "Search..."
+		search_placeholder: "Search...",
+		avatar_uploader: "Avatar uploader"
 	},
 	titles: {
 		settings: "Settings",
@@ -34,7 +35,8 @@ export const defaultDictionary: Dictionary = {
 		tournament: "Tournament",
 		leaderboard: "Leaderboard",
 		home: "Home",
-		pong_tournament: "Pong Tournament"
+		pong_tournament: "Pong Tournament",
+		choose_lobby: "Choose Lobby"
 	},
 	profile: {
 		joined: "Joined",
@@ -67,7 +69,8 @@ export const defaultDictionary: Dictionary = {
 	},
 	error: {
 		username_error: "Invalid username or password.",
-		password_error: "Password must be at least 8 characters."
+		password_error: "Password must be at least 8 characters.",
+		page404: "There's nothing here :<"
 	},
 	lobby: {
 		local: "Local 1v1",
@@ -82,7 +85,10 @@ export const defaultDictionary: Dictionary = {
 	},
 	settings: {
 		pick_color: "Pick color",
-		pick_language: "Pick language"
+		pick_language: "Pick language",
+		en: "English",
+		fr: "French",
+		es: "Spanish"
 	}
 };
 
@@ -118,4 +124,4 @@ export async  function initLanguage() {
 	const savedLang = localStorage.getItem('preferred_language') || 'en';
 	if (savedLang !== 'en')
 		await setLanguage(savedLang);
-}``
+}

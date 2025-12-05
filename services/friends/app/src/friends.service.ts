@@ -1,3 +1,4 @@
+import { request } from 'http';
 import { Database } from 'sqlite';
 
 interface Friendship {
@@ -22,6 +23,24 @@ export async function getFriendship(db: Database, userID: string): Promise<Frien
 	`;
 
 	const params = [userID, userID];
+	const requests = await db.all<Friendship[]>(query, params);
+
+	return (requests);
+}
+
+export async function getFriendshipPending(db: Database, userID: string): Promise<Friendship[]> {
+	const query = `
+		SELECT
+			userID,
+			friendshipID,
+			friendID,
+			statusFriendship
+		FROM
+			friendship
+		WHERE (friendID = ?)
+	`;
+
+	const params = [userID];
 	const requests = await db.all<Friendship[]>(query, params);
 
 	return (requests);
