@@ -1,5 +1,5 @@
 import { renderGame } from './game-render-utils.js';
-import { Game, HEIGHT, WIDTH, type requestMap } from './classes/game-class.js';
+import { Game, HEIGHT, WIDTH } from './classes/game-class.js';
 import type { repObj, reqObj } from './classes/game-interfaces.js';
 import { movePaddle, updatePaddlePos } from './paddle.js';
 import { deadReckoning, updateBallPos } from './ball.js';
@@ -50,6 +50,8 @@ function sendRequest(game: Game, ws: WebSocket) {
     ws.send(JSON.stringify(game.req));
     game.addReq(game.req);
     game.req.ID += 1; //TODO: overflow?
+    if (game.req.ID === Number.MAX_SAFE_INTEGER)
+        game.req.ID = 0;
 }
 
 function interpolation(game: Game) {
@@ -71,41 +73,33 @@ function lerp(start: number, end: number, t: number): number {
 }
 
 function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean {
-    let id: number = latestReply.ID;
- 
     if (applyServerState(game, latestReply, ws))
         return true;
 
-    const sortedRequests = Array.from(game.reqHistory.entries()).filter(req => req[0] > id)    
+    let id: number = latestReply.ID;
+    const sortedRequests: Array<[number, reqObj]> = Array.from(game.reqHistory.entries()).filter(req => req[0] > id)
     let lastTimestamp = game.reqHistory.get(id)!.timeStamp + TIME_STEP;
     game.deleteReq(id);
     let timeSinceUpdate: number = 0;
-
     for (const req of sortedRequests) {
         const deltaTime = req[1].timeStamp - lastTimestamp;
         let simulatedTime = 0;
         timeSinceUpdate = req[1].timeStamp - latestReply.timestamp;
         while (simulatedTime + TIME_STEP <= deltaTime) {
-            const nextX: number = game.ball.x + game.ball.dx * timeSinceUpdate;
-            const nextY: number = game.ball.y + game.ball.dy * timeSinceUpdate;
-            updateBallPos(game, nextX, nextY, timeSinceUpdate);
+            updateBallPos(game, timeSinceUpdate);
             finishSteps(game);
             simulatedTime += TIME_STEP;
             timeSinceUpdate += TIME_STEP;
         }
-         
         updatePaddlePos(game.leftPad, true, game, req[1].keys);
         if (game.local) 
             updatePaddlePos(game.rightPad, false, game, req[1].keys);
-         
         lastTimestamp = req[1].timeStamp;
     }
     const last = sortedRequests.at(-1);
     if (last) {
         timeSinceUpdate = last[1].timeStamp - latestReply.timestamp;
-        const nextX: number = game.ball.x + game.ball.dx * timeSinceUpdate;
-        const nextY: number = game.ball.y + game.ball.dy * timeSinceUpdate;
-        updateBallPos(game, nextX, nextY, timeSinceUpdate);
+        updateBallPos(game, timeSinceUpdate);
         finishSteps(game);
     }
     return false;
