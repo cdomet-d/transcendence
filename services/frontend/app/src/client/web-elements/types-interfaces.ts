@@ -370,7 +370,6 @@ export interface Dictionary {
 		paddle_size: string;
 		paddle_speed: string;
 		paddle_horizontal: string;
-		opponent: string;
 		start: string;
 		local: string;
 		remote: string;
@@ -378,6 +377,10 @@ export interface Dictionary {
 		farm: string;
 		forest: string;
 		under_water: string;
+		opponent: string;
+		opponent_name: string;
+		choose_back: string;
+		searchbar: string;
 	};
 	error: {
 		username_error: string;

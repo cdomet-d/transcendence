@@ -82,7 +82,9 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 	});
 
 	serv.post('/logout', async (request, reply) => {
-		/* const url = `http://users:2626/${userID}`;
+/* 		const token = request.cookies.token;
+		const userID = request.cookies.userID;
+		 const url = `http://users:2626/${userID}`;
 		let response: Response;
 		try {
 			response = await fetch(url, {
@@ -96,8 +98,8 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			//TODO handle error
 			throw new Error('User service is unreachable.');
-		}*/
-		reply.clearCookie('token', { 
+		} */
+ 		reply.clearCookie('token', { 
 			httpOnly: true,
 			secure: true,
 			sameSite: 'strict',

@@ -44,8 +44,7 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "tournament": "Tournament",
         "leaderboard": "Leaderboard",
         "home": "Home",
-        "pong_tournament": "Pong Tournament",
-		"choose_lobby": "Choose lobby"
+        "pong_tournament": "Pong Tournament"
     },
     "profile": {
         "joined": "Joined",
@@ -74,12 +73,14 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "background": "Background",
         "farm": "Farm",
         "forest": "Forest",
-        "under_water": "Under Water"
+        "under_water": "Under Water",
+        "searchbar": "Searchbar",
+        "choose_back": "Choose background"
+
     },
     "error": {
         "username_error": "Invalid username or password.",
-        "password_error": "Password must be at least 8 characters.",
-        "page404": "Page not found"
+        "password_error": "Password must be at least 8 characters."
     },
     "lobby": {
         "local": "Local 1v1",
@@ -138,9 +139,7 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "tournament": "Tournoi",
         "leaderboard": "Classement",
         "home": "Accueil",
-        "pong_tournament": "Tournoi de Pong",
-		"choose_lobby": "Choisi un lobby"
-
+        "pong_tournament": "Tournoi de Pong"
     },
     "profile": {
         "joined": "Rejoint le",
@@ -169,12 +168,14 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "background": "Arrière-plan",
         "farm": "Ferme",
         "forest": "Forêt",
-        "under_water": "Sous l''eau"
+        "under_water": "Sous l''eau",
+        "searchbar": "Barre de recherche"
+        "choose_back": "Choisi ton fond"
+
     },
     "error": {
         "username_error": "Nom d''utilisateur ou mot de passe invalide.",
-        "password_error": "Le mot de passe doit contenir au moins 8 caractères.",
-        "page404": "Page introuvable"
+        "password_error": "Le mot de passe doit contenir au moins 8 caractères."
     },
     "lobby": {
         "local": "Local 1vs1",
@@ -233,9 +234,7 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "tournament": "Torneo",
         "leaderboard": "Clasificación",
         "home": "Inicio",
-        "pong_tournament": "Torneo de Pong",
-		"choose_lobby": "Elige lobby"
-
+        "pong_tournament": "Torneo de Pong"
     },
     "profile": {
         "joined": "Unido el",
@@ -265,11 +264,13 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "farm": "Granja",
         "forest": "Bosque",
         "under_water": "Bajo el agua"
+        "searchbar": "barra de búsqueda"
+        "choose_back": "Elige fondo"
+
     },
     "error": {
         "username_error": "Nombre de usuario o contraseña inválidos.",
-        "password_error": "La contraseña debe tener al menos 8 caracteres.",
-        "page404": "Página no encontrada"
+        "password_error": "La contraseña debe tener al menos 8 caracteres."
     },
     "lobby": {
         "local": "Local 1vs1",
@@ -287,7 +288,7 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "pick_language": "Elegir idioma",
         "en": "Inglés",
         "fr": "Francés",
-        "es": "Español"
+        "es": "Espagnol"
     }
 }'
 );

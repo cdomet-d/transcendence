@@ -221,11 +221,12 @@ export async function renderSettings() {
 }
 
 //TODO language lobby
-export function renderLobbyMenu(dic: Dictionary) {
+export function renderLobbyMenu() {
     console.log('renderLobbyMenu');
+    console.log(JSON.stringify(currentDictionary.titles.choose_lobby));
     prepareLayout(document.body.layoutInstance, 'lobbyMenu');
     document.body.layoutInstance?.appendAndCache(
-        createHeading('1', dic.titles.choose_lobby),
+        createHeading('1', currentDictionary.titles.choose_lobby),
         createMenu(lobbyQuickmatchMenu(currentDictionary), 'horizontal', true),
         createMenu(lobbyTournamentMenu(currentDictionary), 'vertical', true),
     );
@@ -234,7 +235,7 @@ export function renderLobbyMenu(dic: Dictionary) {
         el.classList.remove('t2');
         el.classList.add('f-l');
     });
-    updatePageTitle('Choose Lobby');
+    updatePageTitle('Choose lobby');
 }
 
 //TODO: for each lobby: set 'owner' with currently registered user to avoid owner

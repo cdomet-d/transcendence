@@ -65,7 +65,10 @@ export const defaultDictionary: Dictionary = {
 		background: "Background",
 		farm: "Farm",
 		forest: "Forest",
-		under_water: "Under Water"
+		under_water: "Under Water",
+		opponent_name: "Opponent Nickname",
+		choose_back: "Select background",
+		searchbar: "Searchbar"
 	},
 	error: {
 		username_error: "Invalid username or password.",
@@ -121,7 +124,7 @@ export async function setLanguage(lang: string): Promise<void> {
 }
 
 export async  function initLanguage() {
-	const savedLang = localStorage.getItem('preferred_language') || 'en';
+	const savedLang = localStorage.getItem('preferred_language') || 'fr';
 	if (savedLang !== 'en')
 		await setLanguage(savedLang);
 }

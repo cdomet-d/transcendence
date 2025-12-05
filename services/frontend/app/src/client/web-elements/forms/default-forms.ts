@@ -1,6 +1,7 @@
 import type { FormDetails, UserData } from '../types-interfaces.js';
 import type { Dictionary } from '../types-interfaces.js';
 import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
+import { currentDictionary } from './language.js';
 
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually post and which are patch, to be handled in the server.
 
@@ -15,7 +16,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
         fields: [
             {
                 id: 'upload',
-                labelContent: 'Avatar uploader',
+                labelContent: dic.forms.avatar_uploader,
                 pattern: '',
                 placeholder: '',
                 type: 'file',
@@ -119,8 +120,7 @@ export function search(dic: Dictionary): FormDetails {
         fields: [
             {
                 id: 'searchbar',
-                //TODO: language ?
-                labelContent: 'Searchbar',
+                labelContent: currentDictionary.gameCustom.searchbar,
                 pattern: searchbarPattern,
                 placeholder: dic.forms.search_placeholder,
                 type: 'text',
@@ -172,7 +172,7 @@ export function localPong(dic: Dictionary): FormDetails {
             },
             {
                 id: 'opponent',
-                labelContent: 'Opponent Nickname',
+                labelContent: dic.gameCustom.opponent_name,
                 pattern: usernamePattern,
                 placeholder: dic.gameCustom.opponent,
                 type: 'text',
