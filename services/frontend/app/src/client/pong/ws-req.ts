@@ -5,7 +5,6 @@ import { renderGame } from './game-render-utils.js';
 import { createVisualFeedback } from '../error.js';
 
 const START_DELAY = 500;
-const TIME_STEP: number = 1000 / 60;
 
 export function wsRequest(game: Game, ids: { gameID: string; userID: string }) {
 	const ws = new WebSocket('wss://localhost:8443/api/game/');
@@ -46,6 +45,6 @@ async function setUpGame(game: Game, ws: WebSocket, ballDir: number) {
     window.addEventListener('keydown', createKeyEvent(game.req.keys, game.horizontal, true));
     window.addEventListener('keyup', createKeyEvent(game.req.keys, game.horizontal, false));
 
-    await new Promise((res) => setTimeout(res, START_DELAY - TIME_STEP));
+    await new Promise((res) => setTimeout(res, START_DELAY));
     startGame(game, ws);
 }
