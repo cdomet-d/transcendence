@@ -37,7 +37,7 @@ export async function buildTinyProfile(
 			log.warn(`[BFF] buildTinyProfile: Data not found for userID ${targetUserID}`);
 			throw { code: 404, message: '[BFF] User not found.' };
 		}
-
+		
 		return {
 			userID: targetUserID,
 			username: data.username,
@@ -46,7 +46,7 @@ export async function buildTinyProfile(
 			profileColor: data.profileColor,
 			since: data.since,
 			status: data.status,
-			winstreak: data.winstreak,
+			winStreak: data.winStreak,
 			lang: data.lang,
 			relation: relation,
 		};
@@ -165,14 +165,10 @@ export async function fetchUserData(
 	return body.userData;
 }
 
-//TODO handle error and catch in route
-export async function fetchProfileView(
-	log: any,
-	userID: string,
-	targetUserID: string,
-	token: string
-): Promise<ProfileView> {
-	if (Number(targetUserID) === Number(userID)) return 'self';
+export async function fetchProfileView(log: any, userID: string, targetUserID: string, token: string): Promise<ProfileView> {
+
+	if (targetUserID === userID)
+		return ('self');
 
 	let response: Response;
 	const friendsUrl = `http://friends:1616/friendship?userA=${userID}&userB=${targetUserID}`;
@@ -516,7 +512,6 @@ async function fetchUsernames(
 }
 
 //error handled
-//TODO: problem for game history here are dashboard
 export async function processMatches(log: any, userID: string, token: string): Promise<Matches[]> {
 	try {
 		const rawMatches = await fetchMatches(log, userID, token);

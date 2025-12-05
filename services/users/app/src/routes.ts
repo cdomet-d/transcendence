@@ -10,7 +10,7 @@ export interface userData {
 	profileColor: string,
 	status: boolean,
 	username: string,
-	winstreak: string,
+	winStreak: string,
 	since: string
 }
 
@@ -53,7 +53,12 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { userID } = request.params as { userID: string };
 
 			const query = `
-				SELECT * FROM userProfile WHERE userID = ?
+				SELECT
+				p.*,
+				s.winStreak
+				FROM userProfile p
+				LEFT JOIN userStats s ON p.userID = s.userID
+				WHERE p.userID = ?
 			`;
 
 			const userProfile = await serv.dbUsers.get<userData>(query, [userID]);
@@ -302,6 +307,61 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	serv.get('/username', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const username = request.body as { username: string };
+
+			if (username) {
+				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
+				const response = await serv.dbUsers.get(sql, [username]);
+
+				if (!response) {
+					return (reply.code(404).send({
+						success: false,
+						message: 'User not found'
+					}));
+				}
+
+				return (reply.code(200).send({
+					success: true,
+					message: "user found!",
+					response
+				}));
+			}
+
+			return (reply.code(400).send({
+				success: false,
+				message: 'A query parameter (e.g., ?userID=...) is required.'
+			}));
+		} catch (error) {
+			serv.log.error(`Error fetching user profile: ${error}`);
+			throw (error);
+		}
+	});
+
 	serv.post('/usernames', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
@@ -345,7 +405,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(error);
-			throw(error);
+			throw (error);
 		}
 	});
 
@@ -470,7 +530,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				message: 'User profile updated successfully!',
 			});
 		} catch (error) {
-			if ( error && typeof error === 'object' && 'code' in error && (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE')
+			if (error && typeof error === 'object' && 'code' in error && (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE')
 				return (reply.code(409).send({ success: false, message: 'This username is already taken.' }));
 			serv.log.error(`Error fetching user profile: ${error}`);
 			throw error;

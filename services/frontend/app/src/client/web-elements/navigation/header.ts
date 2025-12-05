@@ -9,6 +9,7 @@ import { NotifBox } from '../notifications/notifications-wrapper.js';
 import { router } from '../../main.js';
 import { Searchbar } from '../forms/search.js';
 import { userStatus } from '../../main.js';
+import { currentDictionary } from '../forms/language.js';
 
 /**
  * Custom element for the main page header.
@@ -26,14 +27,14 @@ export class PageHeader extends HTMLElement {
 	#loginHandler: () => void;
 	#logoutHandler: () => void;
 
-	constructor() {
-		super();
-		this.#home = createMenu(homeLink, 'horizontal', false);
-		this.#searchbar = createForm('search-form');
-		this.#mainNav = createMenu(main, 'horizontal', false);
-		this.#notif = createNotificationBox();
-		this.#logout = createButton(logOut, false);
-		this.#login = createButton(logIn, false);
+    constructor() {
+        super();
+        this.#home = createMenu(homeLink(currentDictionary), 'horizontal', false);
+        this.#searchbar = createForm('search-form');
+        this.#mainNav = createMenu(main(currentDictionary), 'horizontal', false);
+        this.#notif = createNotificationBox();
+        this.#logout = createButton(logOut(currentDictionary), false);
+        this.#login = createButton(logIn(currentDictionary), false);
 
 		this.#loginHandler = this.#loginImplementation.bind(this);
 		this.#logoutHandler = this.#logoutImplementation.bind(this);

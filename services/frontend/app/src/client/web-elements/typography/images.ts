@@ -106,15 +106,16 @@ export class NoResults extends HTMLDivElement {
 		this.#theme = theme;
 	}
 
-	connectedCallback() {
-		const img = createIcon(this.#noResultsImg);
-		const p = document.createElement('p');
-		p.innerText = "There's nothing here :<";
-		this.append(p, img);
-		p.classList.add('text-center', 'f-s', `${this.#theme}`, 'f-bold');
-		img.classList.add('breathe', 'justify-self-center');
-		this.render();
-	}
+    //TODO 404 for language
+    connectedCallback() {
+        const img = createIcon(this.#noResultsImg);
+        const p = document.createElement('p');
+        p.innerText = "There's nothing here :<";
+        this.append(p, img);
+        p.classList.add('text-center', 'f-s', `${this.#theme}`, 'f-bold');
+        img.classList.add('breathe', 'justify-self-center');
+        this.render();
+    }
 
 	render() {
 		this.className = 'w-full box-border grid';

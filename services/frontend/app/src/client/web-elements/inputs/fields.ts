@@ -54,17 +54,18 @@ export class CustomInput extends HTMLInputElement {
 	 * @param event - The input event.
 	 */
 
-	#typePassword(el: HTMLInputElement): string[] {
-		const val = el.value;
-		let feedback: string[] = [];
-		if (!/[A-Z]/.test(val)) feedback.push('missing an uppercase letter');
-		if (!/[a-z]/.test(val)) feedback.push('missing an lowercase letter');
-		if (!/[0-9]/.test(val)) feedback.push('missing an number');
-		if (!/[!@#$%^&*()\-_=+{};:,<.>]/.test(val)) feedback.push('missing a special character');
-		if (val.length < 12 || val.length > 64)
-			feedback.push(`Password should be 12-64 characters long, is: ${val.length}`);
-		return feedback;
-	}
+    //TODO language
+    #typePassword(el: HTMLInputElement): string[] {
+        const val = el.value;
+        let feedback: string[] = [];
+        if (!/[A-Z]/.test(val)) feedback.push('missing an uppercase letter');
+        if (!/[a-z]/.test(val)) feedback.push('missing an lowercase letter');
+        if (!/[0-9]/.test(val)) feedback.push('missing an number');
+        if (!/[!@#$%^&*()\-_=+{};:,<.>]/.test(val)) feedback.push('missing a special character');
+        if (val.length < 12 || val.length > 64)
+            feedback.push(`Password should be 12-64 characters long, is: ${val.length}`);
+        return feedback;
+    }
 
 	#typeText(el: HTMLInputElement): string[] {
 		let min: number;

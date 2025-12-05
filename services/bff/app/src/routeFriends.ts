@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import type { JwtPayload } from './bff.interface.js';
-import { fetchUserID } from './bffUserProfile.service.js';
+import { fetchUserID, fetchFriendships } from './bffUserProfile.service.js';
 import { createFriendRequest, deleteFriendRequest, acceptFriendRequest } from './bffFriends.service.js';
 import { type NatsConnection, StringCodec } from 'nats';
 
@@ -10,10 +10,8 @@ declare module 'fastify' {
 	}
 }
 
-//TODO test all routes (clc a cause du JWT)
 export async function bffFriendRoutes(serv: FastifyInstance) {
 
-	//TESTED (without JWT)
 	serv.post('/relation', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
@@ -200,5 +198,55 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			serv.log.error(`[BFF] Error deleting friend request: ${error}`);
 			return reply.code(503).send({ message: '[BFF] A backend service is currently unavailable.' });
 		}
+	});
+
+	serv.get('/relation', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else
+						return reply.code(401).send({ message: 'Unknown error' });
+				}
+			}
+
+			const userID = request.user.userID;
+
+			const response = await fetchFriendships(serv.log, userID, 'pending', token);
+
+			return (reply
+				.code(200)
+				.send({
+					success: true,
+					body: JSON.stringify(response)
+				}));
+
+
+		} catch (error) {
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number, message: string };
+				if (customError.code === 404) return (reply.code(404).send({ message: 'User profile data not found.' }));
+				if (customError.code === 401) return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+				if (customError.code === 400) return reply.code(400).send({ code: error.code, message: 'Unauthaurized' });
+
+				serv.log.error(`[BFF] Error building user profile view: ${error}`);
+				throw (error);
+			}
+		}
+
 	});
 }

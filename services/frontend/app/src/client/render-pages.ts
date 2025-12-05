@@ -34,7 +34,7 @@ import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
 import { createLink } from './web-elements/navigation/buttons-helpers.js';
 import type { NavigationLinks } from './web-elements/navigation/links.js';
-import { defaultDictionary } from './web-elements/forms/language.js';
+import { currentDictionary } from './web-elements/forms/language.js'
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -98,36 +98,37 @@ export function renderNotFound() {
 }
 
 export function renderHome() {
-	console.log('RenderHome');
-	prepareLayout(document.body.layoutInstance, 'home');
-	document.body.layoutInstance!.appendAndCache(
-		createHeading('0', 'PONG!'),
-		createMenu(main, 'vertical', true),
-	);
-	updatePageTitle('Home');
+    console.log('RenderHome');
+    prepareLayout(document.body.layoutInstance, 'home');
+    document.body.layoutInstance!.appendAndCache(
+        createHeading('0', 'PONG!'),
+        createMenu(main(currentDictionary), 'vertical', true),
+    );
+    updatePageTitle('Home');
 }
 
 export function renderAuth() {
-	prepareLayout(document.body.layoutInstance, 'auth');
-	const wrapper = createWrapper('authsettings');
-
-	const authOptions: TabData[] = [
-		{
-			id: 'login-tab',
-			content: 'Login',
-			default: true,
-			panelContent: createForm('login-form', loginForm(defaultDictionary)),
-		},
-		{
-			id: 'registration-tab',
-			content: 'Register',
-			default: false,
-			panelContent: createForm('registration-form', registrationForm(defaultDictionary)),
-		},
-	];
-	wrapper.append(createTabs(authOptions));
-	document.body.layoutInstance!.appendAndCache(wrapper);
-	updatePageTitle('Login | Register');
+    prepareLayout(document.body.layoutInstance, 'auth');
+    const wrapper = createWrapper('authsettings');
+    
+    //TODO language
+    const authOptions: TabData[] = [
+        {
+            id: 'login-tab',
+            content: 'Login',
+            default: true,
+            panelContent: createForm('login-form', loginForm(currentDictionary)),
+        },
+        {
+            id: 'registration-tab',
+            content: 'Register',
+            default: false,
+            panelContent: createForm('registration-form', registrationForm(currentDictionary)),
+        },
+    ];
+    wrapper.append(createTabs(authOptions));
+    document.body.layoutInstance!.appendAndCache(wrapper);
+    updatePageTitle('Login | Register');
 }
 
 export async function renderLeaderboard() {
@@ -167,7 +168,6 @@ export async function renderSelf() {
 		prepareLayout(document.body.layoutInstance, 'profile');
 		const raw = await fetch(url);
 		if (!raw.ok) {
-			console.error('error', raw.status);
 			if (raw.status === 404) return renderNotFound();
 			else throw await exceptionFromResponse(raw);
 		}
@@ -220,7 +220,7 @@ export async function renderSettings() {
 		}
 		prepareLayout(document.body.layoutInstance, 'userSettings');
 		const user = userDataFromAPIRes(raw);
-		const form = userSettingsForm(defaultDictionary);
+		const form = userSettingsForm(currentDictionary);
 		document.body.layoutInstance?.appendAndCache(createForm('settings-form', form, user));
 	} catch (error) {
 		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
@@ -228,13 +228,14 @@ export async function renderSettings() {
 	updatePageTitle(status.username + 'Settings');
 }
 
+//TODO language lobby
 export function renderLobbyMenu() {
 	console.log('renderLobbyMenu');
 	prepareLayout(document.body.layoutInstance, 'lobbyMenu');
 	document.body.layoutInstance?.appendAndCache(
 		createHeading('1', 'Choose Lobby'),
-		createMenu(lobbyQuickmatchMenu, 'horizontal', true),
-		createMenu(lobbyTournamentMenu, 'vertical', true),
+		createMenu(lobbyQuickmatchMenu(currentDictionary), 'horizontal', true),
+		createMenu(lobbyTournamentMenu(currentDictionary), 'vertical', true),
 	);
 	const quickMen = document.body.layoutInstance?.components.get('quickMatchMenu') as Menu;
 	quickMen?.cache.forEach((el) => {
@@ -249,7 +250,7 @@ export function renderLobbyMenu() {
 export function renderQuickLocalLobby() {
 	prepareLayout(document.body.layoutInstance, 'quickLobby');
 	document.body.layoutInstance?.appendAndCache(
-		createForm('local-pong-settings', localPong(defaultDictionary)),
+		createForm('local-pong-settings', localPong(currentDictionary)),
 	);
 	wsConnect('create', 'quickmatch', 'localForm');
 }

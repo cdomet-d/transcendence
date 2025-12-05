@@ -2,6 +2,8 @@
 /*                                   Images                                   */
 /* -------------------------------------------------------------------------- */
 
+import type { StringLiteral } from "typescript";
+
 /** Size options for Avatar components.
  * @remarks
  * - `iicon`: Extra small, icon size
@@ -193,16 +195,16 @@ export interface UserData {
 export type GameType = '1 vs 1' | 'tournament';
 
 export interface friendNotif {
-	type: 'FRIEND_REQUEST';
-	senderUsername: string;
-	receiverID: number; //will be string eventually
+	type: 'FRIEND_REQUEST',
+	senderUsername: string,
+	receiverID: number //will be string eventually
 }
 
 export interface gameNotif {
-	type: 'GAME_INVITE';
-	receiverName: string;
-	receiverID: number; //will be string eventually
-	gameType: GameType;
+	type: 'GAME_INVITE',
+	receiverName: string,
+	receiverID: number, //will be string eventually
+	gameType: GameType
 }
 
 /* -------------------------------------------------------------------------- */
@@ -312,22 +314,27 @@ export interface PongOptions {
 /* -------------------------------------------------------------------------- */
 
 export interface Dictionary {
-	common: { submit: string; cancel: string; search: string; delete: string };
+	buttons: {
+		submit: string;
+		cancel: string;
+		search: string;
+		delete: string;
+		decline: string;
+		play: string;
+		leaderboard: string;
+		profile: string;
+		login: string;
+		logout: string;
+		start_game: string;
+		start_tournament: string;
+		delete_account: string;
+	};
 	forms: {
 		username: string;
 		password: string;
 		biography: string;
 		avatar: string;
 		search_placeholder: string;
-	};
-	game: {
-		ball_speed: string;
-		paddle_size: string;
-		paddle_speed: string;
-		opponent: string;
-		start: string;
-		local: string;
-		remote: string;
 	};
 	titles: {
 		settings: string;
@@ -336,5 +343,57 @@ export interface Dictionary {
 		local_pong: string;
 		remote_pong: string;
 		tournament: string;
+		leaderboard: string;
+		home: string;
+		pong_tournament: string;
 	};
+	profile: {
+		joined: string;
+		friends: string;
+		game_history: string;
+		statistics: string;
+		date: string;
+		opponent: string;
+		outcome: string;
+		score: string;
+		duration: string;
+		tournament: string;
+	};
+	notifs: {
+		notif_placeholder: string;
+	};
+	gameCustom: {
+		ball_speed: string;
+		paddle_size: string;
+		paddle_speed: string;
+		paddle_horizontal: string;
+		opponent: string;
+		start: string;
+		local: string;
+		remote: string;
+		background: string;
+		farm: string;
+		forest: string;
+		under_water: string;
+	};
+	error: {
+		username_error: string;
+		password_error: string;
+	};
+	lobby: {
+		local: string;
+		remote: string;
+		tournament: string;
+	};
+	placeholders: {
+		enter_username: string;
+		enter_password: string;
+		enter_biography: string,
+		upload_file: string;
+	};
+	settings: {
+		pick_color: string;
+		pick_language: string;
+	}
 }
+

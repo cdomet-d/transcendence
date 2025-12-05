@@ -8,7 +8,7 @@ import { UserInline } from '../users/profile.js';
 import type { UserData } from '../types-interfaces.js';
 import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
-import { defaultDictionary } from './language.js';
+import { currentDictionary } from './language.js'
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -26,13 +26,13 @@ export class Searchbar extends BaseForm {
 	#navHandler: (ev: KeyboardEvent) => void;
 	#blurHandler: (ev: FocusEvent) => void;
 
-	/* -------------- constructors and associated default functions ------------- */
-	constructor() {
-		super();
-		super.details = search(defaultDictionary);
-		this.#results = document.createElement('ul');
-		this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
-		this.#currentFocus = -1;
+    /* -------------- constructors and associated default functions ------------- */
+    constructor() {
+        super();
+        super.details = search(currentDictionary);
+        this.#results = document.createElement('ul');
+        this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
+        this.#currentFocus = -1;
 
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
 		this.#navHandler = this.#navigationImplementation.bind(this);

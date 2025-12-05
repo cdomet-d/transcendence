@@ -9,12 +9,7 @@ import { userColorsMenu, languageMenu } from '../navigation/default-menus.js';
 import type { Avatar } from '../typography/images.js';
 import type { DropdownMenu } from '../navigation/menus.js';
 import type { UserData } from '../types-interfaces.js';
-import {
-	createVisualFeedback,
-	errorMessageFromException,
-	exceptionFromResponse,
-} from '../../error.js';
-import { CriticalActionForm } from './auth.js';
+//import { currentDictionary } from './language.js';
 // import imageCompression from 'browser-image-compression';
 
 const MAX_FILE = 2 * 1024 * 1024;
@@ -34,20 +29,20 @@ export class UserSettingsForm extends BaseForm {
 	/*                                   Default                                  */
 	/* -------------------------------------------------------------------------- */
 
-	/**
-	 * Initializes the user settings form with user data, avatar, color and
-	 * language dropdowns, and account deletion form.
-	 */
-	constructor() {
-		super();
-		this.#user = user;
-		this.submitHandler = this.submitHandlerImplementation.bind(this);
-		this.#previewAvatar = this.#previewAvatarImplementation.bind(this);
-		this.#accountDelete = createForm('delete-account-form', deleteAccount);
-		this.#avatar = createAvatar(this.#user.avatar);
-		this.#colors = createDropdown(userColorsMenu, 'Pick color', 'dynamic');
-		this.#languages = createDropdown(languageMenu, 'Pick language', 'static');
-	}
+    /**
+     * Initializes the user settings form with user data, avatar, color and
+     * language dropdowns, and account deletion form.
+     */
+    constructor() {
+        super();
+        this.#user = user;
+        this.submitHandler = this.submitHandlerImplementation.bind(this);
+        this.#previewAvatar = this.#previewAvatarImplementation.bind(this);
+        this.#accountDelete = createForm('delete-account-form', deleteAccount/*( currentDictionary )*/);
+        this.#avatar = createAvatar(this.#user.avatar);
+        this.#colors = createDropdown(userColorsMenu, 'Pick color', 'dynamic');
+        this.#languages = createDropdown(languageMenu, 'Pick language', 'static');
+    }
 
 	override connectedCallback(): void {
 		super.connectedCallback();
