@@ -277,11 +277,11 @@ export function renderGame(
 
     const layout = document.body.layoutInstance;
     // TODO: set pong-court theme from game-manager object
-    court.theme = farm;
-    if (layout) layout.theme = farmAssets;
+    court.theme = defaultTheme;
+    if (layout) layout.theme = [];
     document.body.layoutInstance?.appendAndCache(ui, court);
 
-    // pong({ userID: 1, gameID: "1", remote: false }, court.ctx, ui);
+    // pong({ userID: "1", gameID: "1", remote: false }, court.ctx, ui);
     if (gameRequest === undefined) {
         console.log('GameRequest =>', gameRequest);
         // TODO Show explicit error in UI

@@ -43,27 +43,27 @@ export async function natsSubscription(serv: FastifyInstance) {
 	// serv.gameRegistry.addGame(new Game(gameobj, serv.nc, serv.log)); //TODO: for testing
 };
 
-/* import type { user } from '../classes/game-interfaces.js';
-const player1: user = {
-	userID: 1,
-	username: "cha",
-}
+// import type { user } from '../classes/game-interfaces.js';
+// const player1: user = {
+// 	userID: "1",
+// 	username: "cha",
+// }
 
-const player2: user = {
-	userID: 2,
-	username: "sweet",
-}
+// const player2: user = {
+// 	userID: "2",
+// 	username: "sweet",
+// }
 
-const gameobj: gameInfo = {
-	lobbyID: 1,
-	gameID: "1",
-	tournamentID: "99",
-	remote: false,
-	users: [player1, player2],
-	score: [0, 0],
-	winnerID: 0,
-	loserID: 0,
-	duration: 0,
-	longuestPass: 0,
-	startTime: ""
-} */
+// const gameobj: gameInfo = {
+// 	lobbyID: "1",
+// 	gameID: "1",
+// 	tournamentID: "99",
+// 	remote: false,
+// 	users: [player1, player2],
+// 	score: [0, 0],
+// 	winnerID: "0",
+// 	loserID: "0",
+// 	duration: 0,
+// 	longuestPass: 0,
+// 	startTime: ""
+// } 
