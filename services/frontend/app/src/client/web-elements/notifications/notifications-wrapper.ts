@@ -38,14 +38,17 @@ export class NotifBox extends HTMLDivElement {
         this.#ws = null;
     }
 
-    connectedCallback() {
+    async connectedCallback() {
         this.addEventListener('click', this.handleClick);
         window.addEventListener('resize', this.computePanelPos);
         window.addEventListener('scroll', this.computePanelPos);
+        this.render();
         if (this.#ws === null) {
+            const status = await userStatus();
+            if (status.auth === false) return;
+			await this.fetchPendingFriendRequests();
             this.notifWsRequest();
         }
-        this.render();
     }
 
     disconnectedCallback() {
