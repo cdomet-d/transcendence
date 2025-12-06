@@ -137,11 +137,11 @@ export const languageMenu: ButtonData[] = [
 ];
 
 export const backgroundMenu: ButtonData[] = [
-	{ id: 'farm', ariaLabel: 'farm', content: 'Adorable Farm', img: null, type: 'button' },
-	{ id: 'forest', ariaLabel: 'forest', content: 'Enchanted Forest', img: null, type: 'button' },
+	{ id: 'farm', ariaLabel: 'Farm pong theme', content: 'Adorable Farm', img: null, type: 'button' },
+	{ id: 'forest', ariaLabel: 'Forest pong theme', content: 'Enchanted Forest', img: null, type: 'button' },
 	{
 		id: 'underwater',
-		ariaLabel: 'underwater',
+		ariaLabel: 'Ocean pong theme',
 		content: 'Magical Underwater',
 		img: null,
 		type: 'button',

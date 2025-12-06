@@ -57,7 +57,7 @@ if (!customElements.get('notif-toggle')) {
  */
 export class NotifPanel extends HTMLDivElement {
 	#content: HTMLDivElement;
-	#currentFocus: number;
+	// #currentFocus: number;
 	#notificationList: HTMLElement[];
 
 	/** Observed attributes trigger UI updates when changed. */
@@ -71,7 +71,8 @@ export class NotifPanel extends HTMLDivElement {
 		this.className = 'hidden z-1 notif-panel-pos w-lg';
 		this.#content = document.createElement('div');
 		this.append(this.#content);
-		this.#notificationList = []
+		this.#notificationList = [];
+		// this.
 	}
 
 	/** Adds a default message when the list has no notifications. */
@@ -110,17 +111,17 @@ export class NotifPanel extends HTMLDivElement {
 		}
 	}
 
-	/**
-	 * Used by the `'keydown'` handler to calculate where the user is in the menu's option, remaining within the bounds of the options.
-	 * @param {number} delta - the incrementing step; it's worth `-1` on `ArrowUp` and `1` on `ArrowDown`
-	 */
-	#moveFocus(delta: number) {
-		this.#currentFocus =
-			(this.#currentFocus + delta + this.#listboxOptions.length) %
-			this.#listboxOptions.length;
-		const focusedOption = this.#listboxOptions[this.#currentFocus];
-		if (focusedOption) focusedOption.focus();
-	}
+	// /**
+	//  * Used by the `'keydown'` handler to calculate where the user is in the menu's option, remaining within the bounds of the options.
+	//  * @param {number} delta - the incrementing step; it's worth `-1` on `ArrowUp` and `1` on `ArrowDown`
+	//  */
+	// #moveFocus(delta: number) {
+	// 	this.#currentFocus =
+	// 		(this.#currentFocus + delta + this.#listboxOptions.length) %
+	// 		this.#listboxOptions.length;
+	// 	const focusedOption = this.#listboxOptions[this.#currentFocus];
+	// 	if (focusedOption) focusedOption.focus();
+	// }
 
 	/** Responds to observed attribute changes to toggle visibility and clear old markers. */
 	attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
