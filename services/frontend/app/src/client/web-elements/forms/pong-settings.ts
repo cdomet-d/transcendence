@@ -23,14 +23,14 @@ import { currentDictionary } from './language.js';
 export class LocalPongSettings extends BaseForm {
 	#backgroundSelector: DropdownMenu;
 
-    /* -------------------------------------------------------------------------- */
-    /*                                   Default                                  */
-    /* -------------------------------------------------------------------------- */
-    constructor() {
-        super();
-        this.#backgroundSelector = createDropdown(backgroundMenu, currentDictionary.gameCustom.choose_back, 'static');
-        this.submitHandler = this.submitHandlerImplementation.bind(this);
-    }
+	/* -------------------------------------------------------------------------- */
+	/*                                   Default                                  */
+	/* -------------------------------------------------------------------------- */
+	constructor() {
+		super();
+		this.#backgroundSelector = createDropdown(backgroundMenu, currentDictionary.gameCustom.choose_back, 'static');
+		this.submitHandler = this.submitHandlerImplementation.bind(this);
+	}
 
 	/**
 	 * Renders the local pong settings form.

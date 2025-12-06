@@ -60,83 +60,102 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 }
 
 export function registrationForm(dic: Dictionary): FormDetails {
-    return {
-        action: 'https://localhost:8443/api/auth/register',
-        heading: dic.titles.register,
-        ariaLabel: 'Create an account',
-        id: 'account-create',
-        method: 'POST',
-        fields: [
-            {
-                id: 'username',
-                labelContent: dic.forms.username,
-                pattern: usernamePattern,
-                placeholder: 'Enter your username!',
-                type: 'text',
-                required: true,
-            },
-            {
-                id: 'password',
-                labelContent: dic.forms.password,
-                pattern: passwordPattern,
-                placeholder: 'Enter your password!',
-                type: 'password',
-                required: false,
-            },
-        ],
-        button: { id: 'submit', type: 'submit', content: dic.buttons.submit, img: null, ariaLabel: '' },
-    }
-};
+	console.log('IN REGISTREATION FORM', JSON.stringify(dic));
+	return {
+		action: 'https://localhost:8443/api/auth/register',
+		heading: dic.titles.register,
+		ariaLabel: 'Create an account',
+		id: 'account-create',
+		method: 'POST',
+		fields: [
+			{
+				id: 'username',
+				labelContent: dic.forms.username,
+				pattern: usernamePattern,
+				placeholder: dic.placeholders.enter_username,
+				type: 'text',
+				required: true,
+			},
+			{
+				id: 'password',
+				labelContent: dic.forms.password,
+				pattern: passwordPattern,
+				placeholder: dic.placeholders.enter_password,
+				type: 'password',
+				required: false,
+			},
+		],
+		button: {
+			id: 'submit',
+			type: 'submit',
+			content: dic.buttons.submit,
+			img: null,
+			ariaLabel: '',
+		},
+	};
+}
 
 export function loginForm(dic: Dictionary): FormDetails {
-    return {
-        action: 'https://localhost:8443/api/auth/login',
-        heading: dic.titles.login,
-        ariaLabel: 'Log into an account',
-        id: 'account-login',
-        method: 'POST',
-        fields: [
-            {
-                id: 'username',
-                labelContent: dic.forms.username,
-                pattern: usernamePattern,
-                placeholder: 'Enter your username!',
-                type: 'text',
-                required: true,
-            },
-            {
-                id: 'password',
-                labelContent: dic.forms.password,
-                pattern: passwordPattern,
-                placeholder: 'Enter your password!',
-                type: 'password',
-                required: false,
-            },
-        ],
-        button: { id: 'submit', type: 'submit', content: dic.buttons.submit, img: null, ariaLabel: '' },
-    }
-};
+	return {
+		action: 'https://localhost:8443/api/auth/login',
+		heading: dic.titles.login,
+		ariaLabel: 'Log into an account',
+		id: 'account-login',
+		method: 'POST',
+		fields: [
+			{
+				id: 'username',
+				labelContent: dic.forms.username,
+				pattern: usernamePattern,
+				placeholder: dic.placeholders.enter_username,
+				type: 'text',
+				required: true,
+			},
+			{
+				id: 'password',
+				labelContent: dic.forms.password,
+				pattern: passwordPattern,
+				placeholder: dic.placeholders.enter_password,
+				type: 'password',
+				required: false,
+			},
+		],
+		button: {
+			id: 'submit',
+			type: 'submit',
+			content: dic.buttons.submit,
+			img: null,
+			ariaLabel: '',
+		},
+	};
+}
 
 export function search(dic: Dictionary): FormDetails {
-    return {
-        action: 'https://localhost:8443/api/bff/search?name=',
-        heading: '',
-        ariaLabel: 'Search for a user',
-        id: 'searchform',
-        method: 'GET',
-        fields: [
-            {
-                id: 'searchbar',
-                labelContent: 'Searchbar',
-                pattern: searchbarPattern,
-                placeholder: dic.forms.search_placeholder,
-                type: 'text',
-                required: true,
-            },
-        ],
-        button: { id: 'submit', type: 'submit', content: dic.buttons.search, img: null, ariaLabel: '' },
-    }
-};
+	return {
+		action: 'https://localhost:8443/api/bff/search?name=',
+		heading: '',
+		ariaLabel: 'Search for a user',
+		id: 'searchform',
+		method: 'get',
+		fields: [
+			{
+				id: 'searchbar',
+				labelContent: 'Searchbar',
+				pattern: searchbarPattern,
+				placeholder: currentDictionary.gameCustom.searchbar,
+				type: 'text',
+				required: true,
+			},
+		],
+		button: {
+			id: 'submit',
+			type: 'submit',
+			content: dic.buttons.search,
+			img: null,
+			ariaLabel: '',
+		},
+	};
+}
 
 export function localPong(dic: Dictionary): FormDetails {
 	return {
@@ -322,22 +341,22 @@ export function pongTournament(dic: Dictionary): FormDetails {
 }
 
 export function deleteAccount(dic: Dictionary): FormDetails {
-    return {
-        action: 'https://localhost:8443/api/bff/account',
-        heading: '',
-        ariaLabel: 'Account deletion request',
-        id: 'account-deletion-request',
-        method: 'DELETE',
-        fields: [],
-        button: {
-            id: 'submit',
-            type: 'submit',
-            content: dic.buttons.delete_account,
-            img: null,
-            ariaLabel: '',
-            style: 'red',
-        },
-    }
+	return {
+		action: 'https://localhost:8443/api/bff/account',
+		heading: '',
+		ariaLabel: 'Account deletion request',
+		id: 'account-deletion-request',
+		method: 'delete',
+		fields: [],
+		button: {
+			id: 'submit',
+			type: 'submit',
+			content: dic.buttons.delete_account,
+			img: null,
+			ariaLabel: '',
+			style: 'red',
+		},
+	}
 };
 
 export const criticalChange: FormDetails = {

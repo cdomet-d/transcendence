@@ -20,21 +20,20 @@ export class UserProfile extends HTMLDivElement {
 	#winstreak: Winstreak;
 	#color: string;
 
-    /**
-     * Initializes the UserProfile element and its child components.
-     */
-    constructor() {
-        super();
-        this.#actionButtons = createSocialMenu(social(currentDictionary), 'horizontal');
-        this.#avatar = document.createElement('div', { is: 'user-avatar' }) as Avatar;
-        this.#biography = document.createElement('p', { is: 'user-bio' }) as Biography;
-        this.#joinedSince = document.createElement('span') as HTMLSpanElement;
-        this.#username = document.createElement('div', { is: 'username-container' }) as Username;
-        this.#winstreak = document.createElement('span', { is: 'winstreak-block' }) as Winstreak;
+	/**
+	 * Initializes the UserProfile element and its child components.
+	 */
+	constructor() {
+		super();
+		this.#avatar = document.createElement('div', { is: 'user-avatar' }) as Avatar;
+		this.#biography = document.createElement('p', { is: 'user-bio' }) as Biography;
+		this.#joinedSince = document.createElement('span') as HTMLSpanElement;
+		this.#username = document.createElement('div', { is: 'username-container' }) as Username;
+		this.#winstreak = document.createElement('span', { is: 'winstreak-block' }) as Winstreak;
 		this.#actionButtons = createSocialMenu(social(currentDictionary), 'horizontal');
-        this.#color = 'bg-4F9FFF';
-        this.className = `pad-s box-border brdr ${this.#color}`;
-    }
+		this.#color = 'bg-4F9FFF';
+		this.className = `pad-s box-border brdr ${this.#color}`;
+	}
 
 	/**
 	 * Sets the profile ID (container id attribute).

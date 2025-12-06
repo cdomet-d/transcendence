@@ -139,60 +139,60 @@ export const languageMenu: ButtonData[] = [
 ];
 
 export const backgroundMenu: ButtonData[] = [
-	{ id: 'farm', ariaLabel: 'farm', content: 'Adorable Farm', img: null, type: 'button' },
-	{ id: 'forest', ariaLabel: 'forest', content: 'Enchanted Forest', img: null, type: 'button' },
-	{
-		id: 'underwater',
-		ariaLabel: 'underwater',
-		content: 'Magical Underwater',
-		img: null,
-		type: 'button',
-	},
+    { id: 'farm', ariaLabel: 'farm', content: 'Adorable Farm', img: null, type: 'button' },
+    { id: 'forest', ariaLabel: 'forest', content: 'Enchanted Forest', img: null, type: 'button' },
+    {
+        id: 'underwater',
+        ariaLabel: 'underwater',
+        content: 'Magical Underwater',
+        img: null,
+        type: 'button',
+    },
 ];
 
 export const userColorsMenu: ButtonData[] = [
-	{
-		id: '',
-		ariaLabel: 'Hexcode selection for azure background.',
-		content: '4F9FFF',
-		img: null,
-		type: 'button',
-	},
-	{
-		id: '',
-		ariaLabel: 'Hexcode selection for purple background.',
-		content: '5200FF',
-		img: null,
-		type: 'button',
-	},
-	{
-		id: '',
-		ariaLabel: 'Hexcode selection for navy background.',
-		content: '000080',
-		img: null,
-		type: 'button',
-	},
-	{
-		id: '',
-		ariaLabel: 'Hexcode selection for green background.',
-		content: '98A869',
-		img: null,
-		type: 'button',
-	},
-	{
-		id: '',
-		ariaLabel: 'Hexcode selection for orange background.',
-		content: 'BE5103',
-		img: null,
-		type: 'button',
-	},
-	{
-		id: '',
-		ariaLabel: 'Hexcode selection for red background.',
-		content: 'CE4257',
-		img: null,
-		type: 'button',
-	},
+    {
+        id: '',
+        ariaLabel: 'Hexcode selection for azure background.',
+        content: '4F9FFF',
+        img: null,
+        type: 'button',
+    },
+    {
+        id: '',
+        ariaLabel: 'Hexcode selection for purple background.',
+        content: '5200FF',
+        img: null,
+        type: 'button',
+    },
+    {
+        id: '',
+        ariaLabel: 'Hexcode selection for navy background.',
+        content: '000080',
+        img: null,
+        type: 'button',
+    },
+    {
+        id: '',
+        ariaLabel: 'Hexcode selection for green background.',
+        content: '98A869',
+        img: null,
+        type: 'button',
+    },
+    {
+        id: '',
+        ariaLabel: 'Hexcode selection for orange background.',
+        content: 'BE5103',
+        img: null,
+        type: 'button',
+    },
+    {
+        id: '',
+        ariaLabel: 'Hexcode selection for red background.',
+        content: 'CE4257',
+        img: null,
+        type: 'button',
+    },
 ];
 
 export function profileTabs(dic: Dictionary): TabData[] {

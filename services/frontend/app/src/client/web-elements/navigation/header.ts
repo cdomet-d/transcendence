@@ -44,17 +44,11 @@ export class PageHeader extends HTMLElement {
 		router.loadRoute('/auth', true);
 	}
 
-    async #logoutImplementation() {
-/*         const userState = await userStatus();
-        if (!userState.auth) return ;
-        const userID = userState.userID */
-        
-        const url = `https://localhost:8443/api/auth/logout`;
-
-        await fetch(url, { method: 'POST', credentials: 'include' });
-        this.#notif.ws?.close();
-        router.loadRoute('/', true);
-    }
+	async #logoutImplementation() {
+		await fetch('https://localhost:8443/api/auth/logout', { method: 'POST', credentials: 'include' });
+		this.#notif.ws?.close();
+		router.loadRoute('/', true);
+	}
 
 	connectedCallback() {
 		this.append(this.#home, this.#searchbar, this.#mainNav, this.#notif);

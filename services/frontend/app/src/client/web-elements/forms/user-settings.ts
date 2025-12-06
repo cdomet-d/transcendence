@@ -48,7 +48,7 @@ export class UserSettingsForm extends BaseForm {
 		this.#previewAvatar = this.#previewAvatarImplementation.bind(this);
 		this.#accountDelete = createForm(
 			'delete-account-form',
-			deleteAccount (currentDictionary),
+			deleteAccount ( currentDictionary ),
 		);
 		this.#avatar = createAvatar(this.#user.avatar);
 		this.#colors = createDropdown(userColorsMenu, currentDictionary.settings.pick_color, 'dynamic');

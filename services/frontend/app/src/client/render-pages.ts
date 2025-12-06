@@ -264,7 +264,7 @@ export function renderLobbyMenu() {
 		el.classList.remove('t2');
 		el.classList.add('f-l');
 	});
-	updatePageTitle('Choose lobby');
+	updatePageTitle('Choose Lobby');
 }
 
 //TODO: for each lobby: set 'owner' with currently registered user to avoid owner
