@@ -169,7 +169,7 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "farm": "Ferme",
         "forest": "Forêt",
         "under_water": "Sous l''eau",
-        "searchbar": "Barre de recherche"
+        "searchbar": "Barre de recherche",
         "choose_back": "Choisi ton fond"
 
     },
@@ -263,8 +263,8 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "background": "Fondo",
         "farm": "Granja",
         "forest": "Bosque",
-        "under_water": "Bajo el agua"
-        "searchbar": "barra de búsqueda"
+        "under_water": "Bajo el agua",
+        "searchbar": "barra de búsqueda",
         "choose_back": "Elige fondo"
 
     },
@@ -291,4 +291,3 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "es": "Espagnol"
     }
 }'
-);

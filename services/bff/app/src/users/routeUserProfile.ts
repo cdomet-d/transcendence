@@ -46,9 +46,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 						'[BFF] Missing required query parameters: userA and userB are required.',
 				});
 			}
-			console.log("00000000000");
 			const combinedUserData = await buildTinyProfile(serv.log, userB, safeUsername, token);
-			console.log("4444444444444444");
 
 			if (!combinedUserData)
 				return reply.code(404).send({ message: 'User profile data not found.' });

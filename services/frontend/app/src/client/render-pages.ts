@@ -115,13 +115,13 @@ export function renderAuth() {
     const authOptions: TabData[] = [
         {
             id: 'login-tab',
-            content: 'Login',
+            content: currentDictionary.titles.login,
             default: true,
             panelContent: createForm('login-form', loginForm(currentDictionary)),
         },
         {
             id: 'registration-tab',
-            content: 'Register',
+            content: currentDictionary.titles.register,
             default: false,
             panelContent: createForm('registration-form', registrationForm(currentDictionary)),
         },
@@ -146,7 +146,7 @@ export async function renderLeaderboard() {
 
         const res = await rawRes.json();
         document.body.layoutInstance!.appendAndCache(
-            createHeading('2', 'Leaderboard'),
+            createHeading('2', currentDictionary.titles.leaderboard),
             createLeaderboard(userArrayFromAPIRes(res)),
         );
     } catch (error) {
