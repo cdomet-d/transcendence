@@ -61,12 +61,9 @@ export class Listbox extends HTMLUListElement {
 	}
 
 	collapse() {
-		if (this.hasAttribute('hidden')) return;
-		else {
-			console.log('collapsing')
-			this.classList.add('hidden');
-			this.setAttribute('hidden', '');
-		}
+		console.log('collapsing')
+		this.classList.add('hidden');
+		this.setAttribute('hidden', '');
 	}
 
 	/**

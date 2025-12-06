@@ -272,6 +272,7 @@ export class DropdownMenu extends HTMLDivElement {
 		if (!selected) return console.error('[LISTBOX] No selection');
 		this.#toggle.textContent = selected.textContent + ' \u25BE';
 		if (this.#dropdownStyle === 'dynamic') this.#updateBackground(`bg-${selected.textContent}`);
+		this.#listbox.collapse();
 	}
 
 	/**
@@ -303,10 +304,6 @@ export class DropdownMenu extends HTMLDivElement {
 		}
 	}
 
-	/**
-	 * Handles mouse navigation.
-	 * @param {MouseEvent} ev - the event send by `addEventListener`
-	 */
 	#navImplementation(ev: KeyboardEvent | MouseEvent) {
 		const actions: { [key: string]: () => void } = {
 			Enter: () => this.#listbox.expand(),
@@ -322,7 +319,7 @@ export class DropdownMenu extends HTMLDivElement {
 			if (ev.key == 'Escape') this.#toggle.focus();
 		} else if (ev instanceof MouseEvent) {
 			this.#listbox.hasAttribute('hidden') ? this.#listbox.expand() : this.#listbox.collapse();
-		} 
+		}
 		this.#updateToggle();
 	}
 }
