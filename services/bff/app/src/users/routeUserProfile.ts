@@ -336,11 +336,12 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				}
 			}
 
+			//TODO check why there is an error here
 			const username = request.params as { username: string };
 			const safeUsername = cleanInput(username);
 
 			const response = await fetch('http://users:2626/username', {
-				method: 'GET',
+				method: 'POST',
 				headers: {
 					'Cookie': `token=${token}`,
 					'Content-Type': 'application/json',
