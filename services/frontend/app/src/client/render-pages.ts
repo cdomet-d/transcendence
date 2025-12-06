@@ -316,24 +316,29 @@ export async function renderQuickRemoteLobby(
     wsConnect(action!, 'quickmatch', 'remoteForm');
 }
 
-export async function renderTournamentLobby() {
+export async function renderTournamentLobby(
+	param?: Match<Partial<Record<string, string | string[]>>>,
+    gameRequest?: gameRequest,
+    action?: string
+) {
+    const user: userStatusInfo = await userStatus();
+	if (!user.auth) {
+		redirectOnError('/auth', 'You must be registered to see this page')
+		return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+	}
 	try {
 		prepareLayout(document.body.layoutInstance, 'tournamentLobby');
 	} catch (error) {
 		console.error(errorMessageFromException(error));
 	}
 
-	document.body.layoutInstance?.appendAndCache(
-		createForm('remote-pong-settings', pongTournament(currentDictionary)),
-	);
-
-    const user: userStatusInfo = await userStatus();
-    if (!user.auth) {
-        redirectOnError('/auth', 'You must be registered to see this page')
-        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
-    }
-
-	wsConnect('create', 'tournament', 'tournamentForm');
+	const form = createForm('remote-pong-settings', pongTournament(currentDictionary));
+	document.body.layoutInstance?.appendAndCache(form);
+	if (action === undefined) {
+		action = 'create';
+		form.owner = user.username!;
+	}
+    wsConnect(action!, 'quickmatch', 'remoteForm');
 }
 
 export async function renderGame(
