@@ -14,7 +14,7 @@ declare module 'fastify' {
 
 export async function bffFriendRoutes(serv: FastifyInstance) {
 
-	serv.post('/relation', { schema: schema.relationPost }, async (request, reply) => {
+	serv.post('/relation', { schema: relationPost }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -90,7 +90,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.patch('/relation', { schema: schema.relationPatch }, async (request, reply) => {
+	serv.patch('/relation', { schema: relationPatch }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -152,7 +152,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.delete('/relation', { schema: schema.relationDelete }, async (request, reply) => {
+	serv.delete('/relation', { schema: relationDelete }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -210,7 +210,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/relation', { schema: schema.relationGet }, async (request, reply) => {
+	serv.get('/relation', { schema: relationGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });

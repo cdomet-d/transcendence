@@ -23,7 +23,7 @@ export const getFriendshipStatusSchema = {
 				status: { type: 'string', enum: ['friend', 'pending', 'stranger'] }
 			}
 		},
-		400: messageResponse
+		400: messageResponse,
 		401: messageResponse
 	}
 };

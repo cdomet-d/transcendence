@@ -12,11 +12,11 @@ export const postGameSchema = {
 		type: 'object',
 		properties: {
 			gameID: { type: 'string' },
-			tournamentID: { type: ['string', 'number'], nullable: true },
+			tournamentID: { type: ['string'], nullable: true },
 			localGame: { type: 'boolean' },
-			startTime: { type: ['string', 'number'] },
-			player1: { type: ['string', 'number'] },
-			player2: { type: ['string', 'number'] },
+			startTime: { type: ['string'] },
+			player1: { type: ['string'] },
+			player2: { type: ['string'] },
 			duration: { type: 'number' },
 			player1Score: { type: 'number' },
 			player2Score: { type: 'number' }
@@ -75,7 +75,7 @@ export const postTournamentSchema = {
 	body: {
 		type: 'object',
 		properties: {
-			tournamentID: { type: ['string', 'number'] },
+			tournamentID: { type: ['string'] },
 			nbPlayers: { type: 'number' },
 			tournamentStatus: { type: 'string' }
 		},
@@ -118,7 +118,7 @@ export const deleteTournamentSchema = {
 		type: 'object',
 		required: ['tournamentID'],
 		properties: {
-			tournamentID: { type: ['string', 'number'] }
+			tournamentID: { type: ['string'] }
 		}
 	},
 	response: {

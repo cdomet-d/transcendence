@@ -1,3 +1,11 @@
+const messageResponse = {
+	type: 'object',
+	properties: {
+		message: { type: 'string' },
+		code: { type: ['string', 'number'], nullable: true }
+	}
+};
+
 export const relationPost = {
 	body: {
 		type: 'object',
@@ -13,6 +21,9 @@ export const relationPost = {
 				message: { type: 'string' },
 			},
 		},
+		400: messageResponse,
+		401: messageResponse,
+		404: messageResponse
 	},
 };
 
@@ -31,6 +42,10 @@ export const relationPatch = {
 				message: { type: 'string' },
 			},
 		},
+		400: messageResponse,
+		401: messageResponse,
+		404: messageResponse,
+		503: messageResponse
 	},
 };
 
@@ -49,6 +64,10 @@ export const relationDelete = {
 				message: { type: 'string' },
 			},
 		},
+		400: messageResponse,
+		401: messageResponse,
+		404: messageResponse,
+		503: messageResponse
 	},
 };
 
@@ -58,9 +77,11 @@ export const relationGet = {
 			type: 'object',
 			properties: {
 				success: { type: 'boolean' },
-				// returning a stringified JSON as per your route logic
 				body: { type: 'string' },
 			},
 		},
+		400: messageResponse,
+		401: messageResponse,
+		404: messageResponse
 	},
 };

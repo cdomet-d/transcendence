@@ -97,7 +97,7 @@ export const getProfilesByIdsSchema = {
 		properties: {
 			userIDs: {
 				type: 'array',
-				items: { type: ['number', 'string'] },
+				items: { type: ['string'] },
 				minItems: 1
 			}
 		}
@@ -137,7 +137,7 @@ export const getUserByNameSchema = {
 				response: {
 					type: 'object',
 					properties: {
-						userID: { type: ['number', 'string'] },
+						userID: { type: ['string'] },
 						username: { type: 'string' }
 					}
 				}
@@ -166,7 +166,7 @@ export const getUserIDByUsernameSchema = {
 				response: {
 					type: 'object',
 					properties: {
-						userID: { type: ['number', 'string'] },
+						userID: { type: ['string'] },
 						username: { type: 'string' }
 					}
 				}
@@ -195,7 +195,7 @@ export const getUserByUsernameBodySchema = {
 				response: {
 					type: 'object',
 					properties: {
-						userID: { type: ['number', 'string'] },
+						userID: { type: ['string'] },
 						username: { type: 'string' }
 					}
 				}
@@ -227,7 +227,7 @@ export const getUsernamesByIdsSchema = {
 					items: {
 						type: 'object',
 						properties: {
-							userID: { type: 'number' },
+							userID: { type: 'string' },
 							username: { type: 'string' }
 						}
 					}
@@ -272,14 +272,13 @@ export const updateProfileSchema = {
 	},
 	body: {
 		type: 'object',
-		// Properties inferred from validStatKeys
 		properties: {
 			username: { type: 'string' },
 			avatar: { type: 'string', nullable: true },
 			biography: { type: 'string' },
 			profileColor: { type: 'string' },
 			lang: { type: 'string' },
-			activityStatus: { type: ['number', 'boolean'] }
+			activityStatus: { anyOf: [{ type: 'number' }, { type: 'boolean' }] }
 		},
 		additionalProperties: false
 	},
@@ -297,7 +296,7 @@ export const deleteProfileSchema = {
 		type: 'object',
 		required: ['userID'],
 		properties: {
-			userID: { type: ['string', 'number'] }
+			userID: { type: ['string'] }
 		}
 	},
 	response: {
@@ -335,13 +334,12 @@ export const updateStatsSchema = {
 		type: 'object',
 		required: ['player1', 'player2', 'player1Score', 'player2Score'],
 		properties: {
-			player1: { type: ['string', 'number'] },
-			player2: { type: ['string', 'number'] },
+			player1: { type: ['string'] },
+			player2: { type: ['string'] },
 			player1Score: { type: 'number' },
 			player2Score: { type: 'number' },
-			// Allow other game props just in case
 			gameID: { type: 'string' },
-			tournamentID: { type: ['string', 'number'], nullable: true }
+			tournamentID: { type: ['string'], nullable: true }
 		},
 		additionalProperties: true
 	},

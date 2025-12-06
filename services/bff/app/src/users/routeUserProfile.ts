@@ -9,7 +9,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	// userID -> userID of requested profile
 	// get big profile with username
 	//error handled
-	serv.get('/profile/:username', { schema: schema.profileGet }, async (request, reply) => {
+	serv.get('/profile/:username', { schema: profileGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -89,7 +89,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	});
 
 	//error handled
-	serv.get('/tiny-profile/:username', { schema: schema.tinyProfileGet }, async (request, reply) => {
+	serv.get('/tiny-profile/:username', { schema: tinyProfileGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -147,7 +147,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	});
 
 	//error handled
-	serv.get('/search', { schema: schema.searchGet }, async (request, reply) => {
+	serv.get('/search', { schema: searchGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -196,7 +196,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	});
 
 	//error handled
-	serv.get('/leaderboard', { schema: schema.leaderboardGet }, async (request, reply) => {
+	serv.get('/leaderboard', { schema: leaderboardGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -239,7 +239,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 	//error handled
 	//TODO : sanitize but will wait for PR to be merged first 
-	serv.patch('/settings', { schema: schema.settingsPatch }, async (request, reply) => {
+	serv.patch('/settings', { schema: settingsPatch }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -311,7 +311,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/:username', { schema: schema.usernameGet }, async (request, reply) => {
+	serv.get('/:username', { schema: usernameGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -336,8 +336,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				}
 			}
 
-			//TODO check why there is an error here
-			const username = request.params as { username: string };
+			const { username } = request.params as { username: string };
 			const safeUsername = cleanInput(username);
 
 			const response = await fetch('http://users:2626/username', {
