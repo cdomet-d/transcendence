@@ -109,9 +109,9 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 					if (data.formInstance === "1 vs 1") {
 						router.loadRoute("/quick-remote-lobby", true, undefined, "");
 					}
-					// else if (data.formInstance === "tournament") {
-					// 	router.loadRoute("/tournament-lobby", true, undefined, "");
-					// }
+					else if (data.formInstance === "tournament") {
+						router.loadRoute("/tournament-lobby", true, undefined, "");
+					}
 				}
 				return;
 			}

@@ -2,23 +2,24 @@ export interface lobbyRequestForm {
 	action: string,
 	format: string,
 	userID: string,
-	inviteeID?: string,
+	username: string,
+	inviteeID?: string,//TODO: what is it for?
 	lobbyID?: string
 }
 
 type GameType = '1 vs 1' | 'tournament';
 export interface gameNotif {
 	type: 'GAME_INVITE',
-	senderID: string,
-	receiverID: string, //will be string eventually
+	senderUsername: string,
+	receiverID: string,
     lobbyID: string,
 	gameType: GameType,
 }
 
 export interface lobbyInviteForm {
-        action: string,
-        format?: string,
-        inviteeID: string,
-        lobbyID?: string,
-        hostID?: string,
+	action: string,
+	format?: string,
+	inviteeID: string,
+	lobbyID?: string,
+	hostID?: string,
 }

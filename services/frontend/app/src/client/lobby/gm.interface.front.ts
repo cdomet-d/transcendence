@@ -17,6 +17,7 @@ export interface lobbyRequestForm {
         action: string,
         format: string,
         userID: string,
+        username: string,
         lobbyID?: string
     },
     formInstance?: string

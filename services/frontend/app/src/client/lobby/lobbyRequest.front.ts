@@ -11,7 +11,7 @@ async function createLobbyRequest(action: string, format: string, formInstance?:
 
 	const createLobbyForm: lobbyRequestForm = {
 		event: 'LOBBY_REQUEST',
-		payload: { action: action, format: format, userID: host.userID! },
+		payload: { action: action, format: format, userID: host.userID!, username: host.username! },
 		formInstance: formInstance,
 	};
 

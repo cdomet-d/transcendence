@@ -2,28 +2,28 @@ import type { userInfo, lobbyInfo } from '../gameManager/gameManager.interface.j
 export const wsClientsMap: Map<string, WebSocket> = new Map();
 export const lobbyMap: Map<string | undefined, lobbyInfo> = new Map();
 
-export function createLobby(hostID: string, format: string) {
-	const lobby: lobbyInfo = makeLobbyInfo(hostID, format);
+export function createLobby(host: userInfo, format: string) {
+	const lobby: lobbyInfo = makeLobbyInfo(host, format);
 	lobbyMap.set(lobby.lobbyID, lobby);
 	return lobby;
 }
 
 // add INVITEE in parameter and get all userInfo (invitee) from JWT payload
-function makeLobbyInfo(hostID: string, format: string): lobbyInfo {
+function makeLobbyInfo(host: userInfo, format: string): lobbyInfo {
 	const lobbyID = crypto.randomUUID().toString();
 
 	const lobby: lobbyInfo = {
 		lobbyID: lobbyID,
 		whitelist: {
 			lobbyId: lobbyID,
-			hostID: hostID,
+			hostID: host.userID!,
 			userIDs: new Map<string, userInfo>([
-				[hostID, { userID: hostID }], // TODO Make this a vector ? // 1. put invitee ID here on invite
+				[host.userID!, { userID: host.userID! }], // TODO Make this a vector ? // 1. put invitee ID here on invite
 			]),
 		},
 		joinable: true,
 		userList: new Map<string, userInfo>([
-			[hostID, { userID: hostID }],
+			[host.userID!, { userID: host.userID!, username: host.username! }],
 		]),
 		remote: true, // TODO set to false if local pong before START event
 		format: format,

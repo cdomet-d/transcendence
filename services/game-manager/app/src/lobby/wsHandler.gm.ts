@@ -29,6 +29,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				const lobbyPayload = payload as lobbyRequestForm;
 
 				userID = lobbyPayload.userID;
+				let username: string = lobbyPayload.username;
 				console.log('lobbyHost UID: ', userID);
 
 				if (!wsClientsMap.has(userID!) && lobbyPayload.action !== 'invite') {
@@ -36,7 +37,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				}
 
 				if (lobbyPayload.action === 'create') {
-					const newLobby: lobbyInfo = createLobby(userID!, lobbyPayload.format!);
+					const newLobby: lobbyInfo = createLobby({userID: userID!, username: username }, lobbyPayload.format!);
 					this.log.error(`FORM IN GM CREATE: ${formInstance}`);
 					wsSend(socket, JSON.stringify({ lobby: 'created', lobbyID: newLobby.lobbyID, formInstance: formInstance }))
 				}
@@ -63,10 +64,10 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 						return;
 					}
 					console.log('LOBBY ID:', lobbyID);
-
+					const hostUsername: string = lobbyMap.get(lobbyID)?.userList.get(invitePayload.hostID!)?.username!; //TODO: check if it exists ? normally it always should
 					const notif: gameNotif = {
 						type: 'GAME_INVITE',
-						senderID: userID!,
+						senderUsername: hostUsername,//TODO
 						receiverID: inviteeID,
 						lobbyID: lobbyID!,
 						gameType: formInstance === 'remoteForm' ? '1 vs 1' : 'tournament'
@@ -74,7 +75,6 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					console.log('inviteeID: ', inviteeID);
 					addUserToWhitelist(inviteeID, lobbyID!);
 					natsPublish(this, 'post.notif', JSON.stringify(notif));
-
 				} else if (invitePayload.action === 'decline') {
 					const inviteeID = invitePayload.inviteeID!;
 					removeUserFromWhitelist(inviteeID, invitePayload.lobbyID!);
@@ -83,7 +83,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					this.log.error(`IN JOIN + ${formInstance}`);
 					addUserToLobby(userID!, socket, invitePayload.lobbyID!);
 					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance }));
-
+					//TODO: send start to host
 				}
 			}
 		} catch (error) {

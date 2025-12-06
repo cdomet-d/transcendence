@@ -18,7 +18,7 @@ interface friendNotif {
 type GameType = '1 vs 1' | 'tournament';
 interface gameNotif {
 	type: 'GAME_INVITE',
-	receiverName: string,
+	senderUsername: string,
 	receiverID: string,
     lobbyID: string,
 	gameType: GameType,

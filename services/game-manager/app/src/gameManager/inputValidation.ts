@@ -21,9 +21,10 @@ const lobbyRequestPayloadSchema = {
 		action: { type: 'string' },
 		format: { type: 'string' },
 		userID: { type: 'string' },
+		username: { type: 'string'},
 		lobbyID: { type: 'string' }
 	},
-	required: ['action', 'format', 'userID'],
+	required: ['action', 'format', 'userID', 'username'],
 };
 
 const lobbyInvitePayloadSchema = {
