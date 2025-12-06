@@ -42,6 +42,7 @@ const lobbyInvitePayloadSchema = {
 const gameRequestPayloadSchema = {
 	type: 'object',
 	properties: {
+		hostID: {type: 'string'},
 		userList: {
 			type: 'array',
 			items: {
@@ -58,7 +59,7 @@ const gameRequestPayloadSchema = {
 		format: { type: 'string' },
 		nbPlayers: { type: 'number' }
 	},
-	required: ['userList', 'remote', 'format', 'nbPlayers'],
+	required: ['hostID', /*'userList', */'remote', 'format', 'nbPlayers'],
 };
 
 const pingPongPaylodSchema = {

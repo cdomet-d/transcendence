@@ -81,6 +81,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 
 				} else if (invitePayload.action === 'join') {
 					this.log.error(`IN JOIN + ${formInstance}`);
+					userID = invitePayload.inviteeID;
 					addUserToLobby(userID!, socket, invitePayload.lobbyID!);
 					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance }));
 					//TODO: send start to host

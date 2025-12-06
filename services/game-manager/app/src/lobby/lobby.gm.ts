@@ -1,4 +1,5 @@
 import type { userInfo, lobbyInfo } from '../gameManager/gameManager.interface.js';
+import type { WebSocket } from '@fastify/websocket';
 export const wsClientsMap: Map<string, WebSocket> = new Map();
 export const lobbyMap: Map<string | undefined, lobbyInfo> = new Map();
 

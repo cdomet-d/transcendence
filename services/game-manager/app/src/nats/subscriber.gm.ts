@@ -2,10 +2,11 @@ import { StringCodec } from 'nats';
 import { wsSend } from '../lobby/wsHandler.gm.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
 import { natsConnect } from './publisher.gm.js';
-import type { gameReply, gameRequest } from '../gameManager/gameManager.interface.js';
+import type { gameReply, gameRequest, userInfo } from '../gameManager/gameManager.interface.js';
 import { wsClientsMap } from '../lobby/lobby.gm.js';
 import { gameOver } from '../quickmatch/gameOver.js';
 import type { FastifyInstance } from 'fastify';
+import type { WebSocket } from '@fastify/websocket';
 
 export async function natsSubscribe(serv: FastifyInstance) {
 	const pregame = serv.nc.subscribe('game.reply');
@@ -18,10 +19,9 @@ export async function natsSubscribe(serv: FastifyInstance) {
 				console.log('EMPTY USERS');
 				return;
 			}
-			sendGameRequest(game.users[0]!.userID, game.users[1]!.userID, game, game.users[1]!.username);
-			sendGameRequest(game.users[1]!.userID, game.users[0]!.userID, game, game.users[0]!.username);
+			sendGameRequest(serv, game.users[0]!.userID, game.users[1]!, game);
+			sendGameRequest(serv, game.users[1]!.userID, game.users[0]!, game);
 		}
-
 	})();
 
 	const postgame = serv.nc.subscribe('game.over');
@@ -40,11 +40,16 @@ export async function natsSubscribe(serv: FastifyInstance) {
 	})();
 }
 
-function sendGameRequest(userID: string, opponentID: string, game: gameReply, opponentUsername?: string) {
-	if (userID === 'temporary') return; // TODO -1 will become 'temporary' 
+function sendGameRequest(serv: FastifyInstance, userID: string, opponent: userInfo, game: gameReply) {
+	if (userID === "temporary") return; // TODO -1 will become 'temporary' 
 
-	const socket = wsClientsMap.get(userID);
-
+	const socket: WebSocket | undefined = wsClientsMap.get(userID);
+	if (socket === undefined) {
+		serv.log.error(`SOCKET NOT FOUND FOR USER: ${userID}`);
+		console.log(userID);
+		return
+	}
+	let opponentUsername: string | undefined = opponent.username;
 	if (opponentUsername === undefined) {
 		// TODO get username from userID
 		// const opponentUsername = fetch DB ??;
@@ -52,9 +57,8 @@ function sendGameRequest(userID: string, opponentID: string, game: gameReply, op
 	const gameReq: gameRequest = {
 		opponent: opponentUsername!, // TODO send username of opponent to PONG depending on local/remote, user index etc. 
 		gameID: game.gameID,
-		remote: game.remote
-		// gameSettings
+		remote: game.remote,
 	}
-
+	serv.log.error("SENDING GAME REQUEST");
 	wsSend(socket, JSON.stringify(gameReq));
 }

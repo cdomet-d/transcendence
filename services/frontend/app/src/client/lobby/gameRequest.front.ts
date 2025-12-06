@@ -16,18 +16,19 @@ async function createGameRequest(format: string, formInstance: string, gameSetti
 	const gameRequestForm: gameRequestForm = {
 		event: 'GAME_REQUEST',
 		payload: {
+			hostID: host.userID!,
 			format: format,
 			remote: formInstance === 'localForm' ? false : true,
 			nbPlayers: format === 'quickmatch' ? 2 : 4,
-			userList: [
-				{ userID: host.userID, username: host.username },
-				localOpponent !== undefined
-					? { userID: 'temporary', username: localOpponent }
-					: { userID: 'userID', username: 'alex' }, // TODO add remote user once we have operational Notifications
+			// userList: [//TODO: unnecessary
+			// 	{ userID: host.userID, username: host.username },
+			// 	localOpponent !== undefined
+			// 		? { userID: 'temporary', username: localOpponent }
+			// 		: { userID: 'userID', username: 'alex' }, // TODO add remote user once we have operational Notifications
 
-				// { userID: 3, username: "cha" }, // TODO add more users for tournaments once we have operational Notifications
-				// { userID: 4, username: "coco" } // TODO add more users for tournaments once we have operational Notifications
-			],
+			// 	// { userID: 3, username: "cha" }, // TODO add more users for tournaments once we have operational Notifications
+			// 	// { userID: 4, username: "coco" } // TODO add more users for tournaments once we have operational Notifications
+			// ],
 		},
 	};
 

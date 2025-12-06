@@ -5,6 +5,7 @@ interface userInfo {
 }
 
 interface lobbyInfo {
+	hostID?: string,
 	lobbyID?: string,
 	whitelist?: whitelist,
 	joinable?: boolean,
