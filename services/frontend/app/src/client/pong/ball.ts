@@ -41,15 +41,15 @@ function sideWallCollision(game: Game, nextX: number): boolean {
 }
 
 function upperAndBottomWallCollision(game: Game, nextY: number): number {
-    if (nextY - game.ball.r <= 0) {
-        nextY = game.ball.r + 1;
-        game.ball.dy *= -1;
-    }
-    if (nextY + game.ball.r >= HEIGHT) {
-        nextY = HEIGHT - (game.ball.r + 1);
-        game.ball.dy *= -1;
-    }
-    return nextY;
+	if (nextY - game.ball.r <= 0) {
+		nextY = game.ball.r + 1;
+		game.ball.dy *= -1;
+	}
+	if (nextY + game.ball.r >= HEIGHT) {
+		nextY = HEIGHT - (game.ball.r + 1);
+		game.ball.dy *= -1;
+	}
+	return nextY;
 }
 
 export function paddleCollision(

@@ -9,15 +9,15 @@ import type { InputFieldsData } from '../types-interfaces.js';
  * @returns The specialized {@link InputGroup} div element.
  */
 export function createInputGroup(fieldData: InputFieldsData): InputGroup {
-    const el = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
-    el.info = fieldData;
-    return el;
+	const el = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
+	el.info = fieldData;
+	return el;
 }
 
 export function createTextAreaGroup(fieldData: InputFieldsData): TextAreaGroup {
-    const el = document.createElement('div', { is: 'textarea-and-label' }) as TextAreaGroup;
-    el.info = fieldData;
-    return el;
+	const el = document.createElement('div', { is: 'textarea-and-label' }) as TextAreaGroup;
+	el.info = fieldData;
+	return el;
 }
 
 /**
@@ -29,10 +29,10 @@ export function createTextAreaGroup(fieldData: InputFieldsData): TextAreaGroup {
  *
  */
 export function createRadioButton(btnName: string, btnId: string): RadioButton {
-    const el = document.createElement('div', { is: 'radio-button' }) as RadioButton;
-    el.inputId = btnId;
-    el.inputName = btnName;
-    return el;
+	const el = document.createElement('div', { is: 'radio-button' }) as RadioButton;
+	el.inputId = btnId;
+	el.inputName = btnName;
+	return el;
 }
 
 /**
@@ -44,8 +44,8 @@ export function createRadioButton(btnName: string, btnId: string): RadioButton {
  *
  */
 export function createCheckbox(btnName: string, btnId: string): Checkbox {
-    const el = document.createElement('div', { is: 'checkbox-input' }) as Checkbox;
-    el.inputId = btnId;
-    el.inputName = btnName;
-    return el;
+	const el = document.createElement('div', { is: 'checkbox-input' }) as Checkbox;
+	el.inputId = btnId;
+	el.inputName = btnName;
+	return el;
 }
