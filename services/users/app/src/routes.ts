@@ -20,7 +20,6 @@ export interface userData {
 	since: string
 }
 
-//TODO should this userID be string ?
 interface JwtPayload {
 	userID: string;
 	username: string;
@@ -657,7 +656,6 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//update all stats of a user
 	//Called in game-manager so no need for JWT verif
-	//TODO sanitize body
 	serv.patch('/stats', { schema: updateStatsSchema }, async (request, reply) => {
 		try {
 			const body = request.body as GameInput;

@@ -1,7 +1,6 @@
-//import { tournament } from '../default-values.js';
 import type { Dictionary } from '../types-interfaces.js';
 
-// TODO hardcoded this so the app renders instantly without waiting for a fetch for now, will do route calling in next branch
+// hardcoded this so the app renders instantly without waiting for a fetch for now, will do route calling in next branch
 export const defaultDictionary: Dictionary = {
 	buttons: {
 		submit: "Submit",
@@ -73,7 +72,18 @@ export const defaultDictionary: Dictionary = {
 	error: {
 		username_error: "Invalid username or password.",
 		password_error: "Password must be at least 8 characters.",
-		page404: "There's nothing here :<"
+		page404: "There's nothing here :<",
+		uppercase: "missing an uppercase letter",
+		lowercase: "missing an lowercase letter",
+		number: "missing an number",
+		special_char: "missing a special character",
+		pass_lenght: "Password should be 12-64 characters long, is",
+		forbidden: "Forbidden character",
+		username_lenght: "Username should be ",
+		username_lenght2: " -18 character long, is ",
+		file_heavy: "That file is too heavy: max is 2MB!",
+		file_extension: "Invalid extension: ",
+
 	},
 	lobby: {
 		local: "Local 1v1",
@@ -103,9 +113,10 @@ export async function setLanguage(lang: string): Promise<void> {
 		const response = await fetch(`https://localhost:8443/api/bff/dictionary/${lang}`);
 
 		//TODO handle error
-		if (!response.ok) 
+		if (!response.ok) {
+			console.log("ta grand mere");
 			throw new Error(`Failed to load language: ${lang}`);
-
+		}
 		const newDict = (await response.json()) as Dictionary;
 
 		currentDictionary = newDict;
@@ -127,5 +138,5 @@ export async  function initLanguage() {
 	console.log("In init language");
 	//const savedLang = localStorage.getItem('preferred_language') || 'fr';
 	//if (savedLang !== 'en')
-		await setLanguage("fr");
+	await setLanguage("fr");
 }

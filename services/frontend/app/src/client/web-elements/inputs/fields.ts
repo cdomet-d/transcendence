@@ -1,6 +1,7 @@
 import type { InputFieldsData } from '../types-interfaces.js';
 import { Checkbox } from './buttons.js';
 import { createCheckbox } from './helpers.js';
+import { defaultDictionary } from '../forms/language.js';
 
 const MAX_SIZE = 2 * 1024 * 1024; // 2MB
 
@@ -58,12 +59,12 @@ export class CustomInput extends HTMLInputElement {
     #typePassword(el: HTMLInputElement): string[] {
         const val = el.value;
         let feedback: string[] = [];
-        if (!/[A-Z]/.test(val)) feedback.push('missing an uppercase letter');
-        if (!/[a-z]/.test(val)) feedback.push('missing an lowercase letter');
-        if (!/[0-9]/.test(val)) feedback.push('missing an number');
-        if (!/[!@#$%^&*()\-_=+{};:,<.>]/.test(val)) feedback.push('missing a special character');
+        if (!/[A-Z]/.test(val)) feedback.push(defaultDictionary.error.uppercase);
+        if (!/[a-z]/.test(val)) feedback.push(defaultDictionary.error.lowercase);
+        if (!/[0-9]/.test(val)) feedback.push(defaultDictionary.error.number);
+        if (!/[!@#$%^&*()\-_=+{};:,<.>]/.test(val)) feedback.push(defaultDictionary.error.special_char);
         if (val.length < 12 || val.length > 64)
-            feedback.push(`Password should be 12-64 characters long, is: ${val.length}`);
+            feedback.push(defaultDictionary.error.pass_lenght, `${val.length}`);
         return feedback;
     }
 
@@ -73,10 +74,10 @@ export class CustomInput extends HTMLInputElement {
 		el.id === 'searchbar' ? (min = 0) : (min = 4);
 		const val = el.value;
 		let feedback: string[] = [];
-		if (!/[A-Za-z0-9]/.test(val)) feedback.push('Forbidden character');
+		if (!/[A-Za-z0-9]/.test(val)) feedback.push(defaultDictionary.error.forbidden);
 		if (val.length < min || val.length > 18)
 			feedback.push(
-				`Username should be ${min.toString()}-18 character long, is: ${val.length}`,
+				defaultDictionary.error.username_lenght, `${min.toString()}`, defaultDictionary.error.username_lenght2, `${val.length}`,
 			);
 		return feedback;
 	}
@@ -91,10 +92,10 @@ export class CustomInput extends HTMLInputElement {
 
 		if (file[0].size >= MAX_SIZE) {
 			el.setCustomValidity('too large');
-			feedback.push(`That file is too heavy: max is 2MB!`);
+			feedback.push(defaultDictionary.error.file_heavy);
 		} else if (!allowed.includes(file[0].type)) {
-			el.setCustomValidity('invalid extension');
-			feedback.push(`Invalid extension: ${file[0].type}`);
+			el.setCustomValidity(defaultDictionary.error.file_heavy);
+			feedback.push(defaultDictionary.error.file_heavy, `${file[0].type}`);
 		} else {
 			el.setCustomValidity('');
 		}

@@ -1,10 +1,9 @@
 import type { FormDetails, UserData } from '../types-interfaces.js';
 import type { Dictionary } from '../types-interfaces.js';
 import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
-
+import { currentDictionary } from './language.js';
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually POST and which are patch, to be handled in the server.
 
-//TODO language
 export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails {
 	return {
 		action: 'https://localhost:8443/api/bff/settings',
@@ -25,7 +24,6 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 				id: 'biography',
 				labelContent: dic.forms.biography,
 				pattern: '',
-				//TODO add placeholder
 				placeholder: user?.biography || '',
 				type: 'textarea',
 				required: false,
@@ -34,8 +32,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 				id: 'username',
 				labelContent: dic.forms.username,
 				pattern: usernamePattern,
-				//TODO add placeholder
-				placeholder: user?.username || 'Enter your new username!',
+				placeholder: user?.username || dic.placeholders.enter_username,
 				type: 'text',
 				required: false,
 			},
@@ -43,12 +40,11 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 				id: 'password',
 				labelContent: dic.forms.password,
 				pattern: passwordPattern,
-				placeholder: 'Enter your new password!',
+				placeholder: dic.placeholders.enter_password,
 				type: 'password',
 				required: false,
 			},
 		],
-		//TODO Language
 		button: {
 			id: 'submit',
 			type: 'submit',

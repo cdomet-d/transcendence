@@ -80,7 +80,17 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
     },
     "error": {
         "username_error": "Invalid username or password.",
-        "password_error": "Password must be at least 8 characters."
+        "password_error": "Password must be at least 8 characters.",
+        "uppercase": "missing an uppercase letter",
+		"lowercase": "missing an lowercase letter",
+		"number": "missing an number",
+		"special_char": "missing a special character",
+		"pass_lenght": "Password should be 12-64 characters long, is",
+		"forbidden": "Forbidden character",
+		"username_lenght": "Username should be ",
+		"username_lenght2": " -18 character long, is ",
+		"file_heavy": "That file is too heavy: max is 2MB!",
+		"file_extension": "Invalid extension: "
     },
     "lobby": {
         "local": "Local 1v1",
@@ -175,7 +185,17 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
     },
     "error": {
         "username_error": "Nom d''utilisateur ou mot de passe invalide.",
-        "password_error": "Le mot de passe doit contenir au moins 8 caractères."
+        "password_error": "Le mot de passe doit contenir au moins 8 caractères.",
+        "uppercase": "Il manque une majuscule",
+        "lowercase": "Il manque une minuscule",
+        "number": "Il manque un chiffre",
+        "special_char": "Il manque un caractère spécial",
+        "pass_lenght": "Le mot de passe doit contenir 12 à 64 caractères, il en fait ",
+        "forbidden": "Caractère interdit",
+        "username_lenght": "Le nom d''utilisateur doit faire ",
+        "username_lenght2": " -18 caractères, il en fait ",
+        "file_heavy": "Fichier trop volumineux : max 2 Mo !",
+        "file_extension": "Extension invalide : "
     },
     "lobby": {
         "local": "Local 1vs1",
@@ -270,7 +290,17 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
     },
     "error": {
         "username_error": "Nombre de usuario o contraseña inválidos.",
-        "password_error": "La contraseña debe tener al menos 8 caracteres."
+        "password_error": "La contraseña debe tener al menos 8 caracteres.",
+        "uppercase": "Falta una letra mayúscula",
+        "lowercase": "Falta una letra minúscula",
+        "number": "Falta un número",
+        "special_char": "Falta un carácter especial",
+        "pass_lenght": "La contraseña debe tener entre 12 y 64 caracteres, tiene ",
+        "forbidden": "Carácter prohibido",
+        "username_lenght": "El usuario debe tener ",
+        "username_lenght2": " -18 caracteres, tiene ",
+        "file_heavy": "El archivo es demasiado grande: ¡máx. 2MB!",
+        "file_extension": "Extensión no válida: "
     },
     "lobby": {
         "local": "Local 1vs1",
@@ -291,3 +321,4 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "es": "Espagnol"
     }
 }'
+)

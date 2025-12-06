@@ -384,6 +384,16 @@ export interface Dictionary {
 		username_error: string;
 		password_error: string;
 		page404: string;
+		uppercase: string;
+		lowercase: string;
+		number: string;
+		special_char: string;
+		pass_lenght: string;
+		forbidden: string;
+		username_lenght: string;
+		username_lenght2: string;
+		file_heavy: string;
+		file_extension: string;
 	};
 	lobby: {
 		local: string;

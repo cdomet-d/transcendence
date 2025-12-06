@@ -123,7 +123,6 @@ export function renderAuth() {
 	}
 	const wrapper = createWrapper('authsettings');
 
-	//TODO language
 	const authOptions: TabData[] = [
 		{
 			id: 'login-tab',
@@ -244,11 +243,7 @@ export async function renderSettings() {
 	updatePageTitle(status.username + 'Settings');
 }
 
-//TODO language lobby
 export function renderLobbyMenu() {
-	console.log('renderLobbyMenu');
-    console.log(JSON.stringify(currentDictionary.titles.choose_lobby));
-
 	try {
 		prepareLayout(document.body.layoutInstance, 'lobbyMenu');
 	} catch (error) {
