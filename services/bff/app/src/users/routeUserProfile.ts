@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import type { UserProfileView, JwtPayload } from './bff.interface.js';
+import type { UserProfileView, JwtPayload } from '../utils/bff.interface.js';
 import {
 	fetchLeaderboard,
 	searchBar,
@@ -11,7 +11,10 @@ import {
 	updateUserProfile,
 	updateUserProfileUsername,
 	refreshJWTForUsernameChange,
+	fetchFriendshipsPending
 } from './bffUserProfile.service.js';
+import { cleanInput } from '../utils/sanitizer.js';
+import { profileGet, tinyProfileGet, searchGet, leaderboardGet, settingsPatch, usernameGet } from './bff.usersSchemas.js';
 import jwt from 'jsonwebtoken';
 
 function validateBearerToken(serv: FastifyInstance, authorization?: string): boolean {
