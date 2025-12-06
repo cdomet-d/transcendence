@@ -217,7 +217,6 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
 }
 
 export async function renderSettings() {
-	console.log('renderSettings');
 	const status = await userStatus();
 	if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
 

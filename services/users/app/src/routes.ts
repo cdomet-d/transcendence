@@ -715,7 +715,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			const safeUserID = cleanInput(userID);
 
 			const newUsername = crypto.randomUUID().toString();
-			const query = `UPDATE userProfile SET username = ?, avatar = ?, biography = NULL WHERE userID = ?`;
+			const query = `UPDATE userProfile SET username = ?, biography = NULL WHERE userID = ?`;
 
 			const userStats = await serv.dbUsers.get<userStats>(query, [newUsername, safeUserID]);
 

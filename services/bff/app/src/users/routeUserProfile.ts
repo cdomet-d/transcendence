@@ -470,7 +470,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const userID = request.user.userID;
 			const safeUserID = cleanInput(userID);
 			
-			const responseAnonymizeUser = await AnonymizeUser(serv.log, safeUserID, token);
+			const responseAnonymizeUser = await AnonymizeUser(serv.log, userID, token);
 			const responseFriends = await deleteAllFriendship(serv.log, safeUserID, token);
 
 			return reply.code(501).send({ message: 'Not implemented' });
