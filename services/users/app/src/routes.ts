@@ -6,6 +6,7 @@ import {
 	getUserByNameSchema, getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, searchUsersSchema, updateStatsSchema, getUserIDByUsernameSchema,
 	getUserProfileSchema, getUserStatsSchema, getUsernamesByIdsSchema, createProfileSchema, deleteProfileSchema, updateProfileSchema
 } from './schemas.js';
+import { profile } from 'console';
 
 export interface userData {
 	avatar: string | null | undefined,
@@ -28,8 +29,6 @@ interface JwtPayload {
 }
 
 export async function userRoutes(serv: FastifyInstance) {
-	//USER PROFILE/${userID}/profile
-
 	//GET /<userID>
 	serv.get('/:userID', { schema: getUserProfileSchema }, async (request, reply) => {
 		try {
@@ -176,7 +175,8 @@ export async function userRoutes(serv: FastifyInstance) {
 
 
 			if (!query.name || query.name.length === 0)
-				return reply.code(200).send([]);
+				return reply.code(200).send({ success: true, profiles: [] });
+
 			const safename = cleanInput(query.name);
 
 			//ASC is the way sqlite3 sorts result 
@@ -196,7 +196,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			`;
 
 			const searchParam = `${safename}%`;
-			const profiles = await serv.dbUsers.all<userData[]>(sql, [safename]);
+			const profiles = await serv.dbUsers.all<userData[]>(sql, [searchParam]);
 
 			return reply.code(200).send({
 				success: true,

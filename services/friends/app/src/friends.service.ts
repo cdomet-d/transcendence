@@ -56,10 +56,8 @@ export async function friendshipExistsUsersID(db: Database, userA_ID: string, us
 	const params = [userA_ID, userB_ID, userB_ID, userA_ID];
 	const response = await db.get<any>(query, params);
 
-	if (!response) {
-		console.log('here');
+	if (!response)
 		return undefined;
-	}
 	const isAccepted = String(response.statusFriendship) === 'true' || String(response.statusFriendship) === '1';
 	if (isAccepted)
 		throw { code: 409, message: 'Friendship already accepted.' };

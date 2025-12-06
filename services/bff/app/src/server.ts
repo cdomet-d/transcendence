@@ -6,9 +6,9 @@ import fastifyJwt from '@fastify/jwt';
 import { initNatsConnection } from './utils/nats.js';
 import type { NatsConnection } from 'nats';
 
-import { bffFriendRoutes } from './routeFriends.js';
-import { bffAccessibilityRoutes } from './routeAccessibility.js';
-import { bffUsersRoutes } from './routeUserProfile.js';
+import { bffFriendRoutes } from './friends/routeFriends.js';
+import { bffAccessibilityRoutes } from './accessibility/routeAccessibility.js';
+import { bffUsersRoutes } from './users/routeUserProfile.js';
 
 (async () => {
 	try {

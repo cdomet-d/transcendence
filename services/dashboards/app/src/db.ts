@@ -14,7 +14,7 @@ async function dbConnector(fastify: FastifyInstance) {
 		});
 
 		fastify.log.info('Connected to the stats.db SQLite database');
-		fastify.decorate('dbUsers', db);
+		fastify.decorate('dbStats', db);
 
 	} catch (err) {
 		fastify.log.info('Connection to the stats.db SQLite database failed');

@@ -71,19 +71,14 @@ export const searchUsersSchema = {
 	},
 	response: {
 		200: {
-			oneOf: [
-				{
-					type: 'object',
-					properties: {
-						success: { type: 'boolean' },
-						profiles: { type: 'array', items: userProfileObject }
-					}
-				},
-				{
+			type: 'object',
+			properties: {
+				success: { type: 'boolean' },
+				profiles: {
 					type: 'array',
 					items: userProfileObject
 				}
-			]
+			}
 		},
 		401: messageResponse,
 		400: messageResponse

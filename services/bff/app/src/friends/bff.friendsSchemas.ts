@@ -23,7 +23,8 @@ export const relationPost = {
 		},
 		400: messageResponse,
 		401: messageResponse,
-		404: messageResponse
+		404: messageResponse,
+		503: messageResponse
 	},
 };
 

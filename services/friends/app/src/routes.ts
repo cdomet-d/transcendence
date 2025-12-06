@@ -6,7 +6,7 @@ import { cleanInput } from './sanitizer.js';
 type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
 
 interface JwtPayload {
-	userID: number;
+	userID: string;
 	username: string;
 	iat: number;
 	exp: number;
@@ -162,7 +162,7 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//create a pending friend request
-	serv.post('/relation',  { schema: postRelationSchema }, async(request, reply) => {
+	serv.post('/relation', { schema: postRelationSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -189,7 +189,8 @@ export async function routeFriend(serv: FastifyInstance) {
 
 			const { senderID: senderID } = request.body as { senderID: string };
 			const { friendID: friendID } = request.body as { friendID: string };
-			const safefsenderID = cleanInput(senderID);
+
+			const safesenderID = cleanInput(senderID);
 			const safefriendID = cleanInput(friendID);
 
 			const query = `
@@ -197,7 +198,7 @@ export async function routeFriend(serv: FastifyInstance) {
 				VALUES (?, ?, ?)
 			`;
 
-			const params = [safefsenderID, safefriendID, false];
+			const params = [safesenderID, safefriendID, false];
 
 			const response = await serv.dbFriends.run(query, params);
 			if (response.changes === 0)
@@ -205,7 +206,7 @@ export async function routeFriend(serv: FastifyInstance) {
 
 			return (reply.code(201).send({
 				success: true,
-				message: `[FRIENDS] Friend request sent to ${friendID}`
+				message: `[FRIENDS] Friend request sent to ${safefriendID}`
 			}));
 
 		} catch (error) {
@@ -246,17 +247,17 @@ export async function routeFriend(serv: FastifyInstance) {
 				}
 			}
 
-			const { senderRequestID: senderRequestID } = request.body as {senderRequestID: string;};
+
+			const { senderRequestID: senderRequestID } = request.body as { senderRequestID: string; };
 			const { friendID: friendID } = request.body as { friendID: string };
 
 			const safesenderRequestID = cleanInput(senderRequestID);
 			const safefriendID = cleanInput(friendID);
 
-
 			const friendshipID = await friendshipExistsUsersID(
 				serv.dbFriends,
-				senderRequestID,
-				friendID
+				safesenderRequestID,
+				safefriendID
 			);
 			if (!friendshipID) {
 				return reply.code(404).send({
@@ -268,7 +269,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			const query = `UPDATE friendship SET statusFriendship = true WHERE friendshipID = ? AND friendID = ?
 			`;
 
-			const params = [safefriendID, safesenderRequestID];
+			const params = [friendshipID, safesenderRequestID];
 
 			const response = await serv.dbFriends.run(query, params);
 			if (response.changes === 0) {
