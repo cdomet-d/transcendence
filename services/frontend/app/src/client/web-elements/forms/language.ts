@@ -136,7 +136,7 @@ export async function setLanguage(lang: string): Promise<void> {
 
 export async  function initLanguage() {
 	console.log("In init language");
-	//const savedLang = localStorage.getItem('preferred_language') || 'fr';
-	//if (savedLang !== 'en')
-	await setLanguage("fr");
+	const savedLang = localStorage.getItem('preferred_language') || 'fr';
+	if (savedLang !== 'en')
+		await setLanguage("fr");
 }
