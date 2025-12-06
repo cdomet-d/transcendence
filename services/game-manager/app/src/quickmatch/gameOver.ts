@@ -1,10 +1,13 @@
-import type { game } from '../manager.interface.js';
+import { lobbyMap } from '../lobby/lobby.gm.js';
+import type { game } from '../gameManager/gameManager.interface.js';
 
 export function gameOver(payload: string) {
 	const game: game = JSON.parse(payload);
 	postGameToDashboard(game);
 	patchGameToUsers(game);
 	// showWinnerScreen();
+	// TODO redirect all players to their lobby
+	const lobby = lobbyMap.get(game.lobbyID);
 }
 
 interface gameDashboardReqBody {
@@ -19,7 +22,6 @@ interface gameDashboardReqBody {
 	player2Score: number;
 }
 
-// FIXED IN CHARLOTTE'S BRANCH, WAIT FOR NEXT PR
 async function postGameToDashboard(game: game) {
 	const url = `http://dashboard:1515/game`;
 	const reqBody: gameDashboardReqBody = {
@@ -33,7 +35,7 @@ async function postGameToDashboard(game: game) {
 		player1Score: game.users![0]!.userID! === game.winnerID ? game.score[0] : game.score[1],
 		player2Score: game.users![1]!.userID! === game.winnerID ? game.score[0] : game.score[1],
 	}
-	console.log("REQ BODY DASHBOARD", JSON.stringify(reqBody));
+	console.log('REQ BODY DASHBOARD', JSON.stringify(reqBody));
 	try {
 		const response: Response = await fetch(url, {
 			method: 'POST',
@@ -70,7 +72,7 @@ async function patchGameToUsers(game: game) {
 		longuestPass: game.longuestPass,
 		duration: game.duration,
 	}
-	console.log("REQ BODY USERS", JSON.stringify(reqBody));
+	console.log('REQ BODY USERS', JSON.stringify(reqBody));
 
 	try {
 		const response: Response = await fetch(url, {
@@ -88,38 +90,3 @@ async function patchGameToUsers(game: game) {
 		throw new Error('Users service is unreachable.');
 	}
 }
-
-
-/* SAM */
-// interface game {
-// 	lobbyID: string,
-// 	gameID: string,
-// 	tournamentID?: string,
-// 	remote: boolean,
-// 	userList: userInfo[] | undefined | null,
-// 	score: string,
-// 	winnerID: number,
-// 	loserID: number,
-// }
-
-/* CHARLOTTE */
-// export interface gameInfo {
-//     gameID: number,
-//     tournamentID: number,
-//     remote: boolean,
-//     users: [user, user],
-//     score: [number, number],
-//     winnerID: number,
-//     loserID: number
-// }
-
-/* ALEX */
-// export interface Match {
-// 	gameID: number;
-// 	duration: number;
-// 	startTime: string;
-// 	player1: number;
-// 	player2: number;
-// 	player1Score: number;
-// 	player2Score: number;
-// }

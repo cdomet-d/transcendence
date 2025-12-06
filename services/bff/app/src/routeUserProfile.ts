@@ -1,4 +1,4 @@
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { UserProfileView, JwtPayload } from './bff.interface.js';
 import {
 	fetchLeaderboard,
@@ -424,8 +424,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			throw error;
 		}
 	});
-
-
 	//TODO : endpoint friendlist pending
 	// get-pending-relation
 }
