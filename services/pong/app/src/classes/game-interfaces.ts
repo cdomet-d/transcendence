@@ -75,7 +75,6 @@ export interface playerReq {
     req: reqObj,
 }
 
-
 /**************************** WS DATA OBJ ********************************/
 export interface idsObj {
 	gameID: string,

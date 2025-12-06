@@ -45,7 +45,9 @@ function sendRequest(game: Game, ws: WebSocket) {
     if (ws.OPEN)
         ws.send(JSON.stringify(game.req));
     game.addReq(game.req);
-    game.req.ID += 1; //TODO: overflow?
+    game.req.ID += 1;
+	if (game.req.ID === Number.MAX_SAFE_INTEGER)
+        game.req.ID = 0;
 }
 
 function interpolation(game: Game) {
@@ -75,6 +77,11 @@ function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean
 	game.leftPad = latestReply.leftPad;
 	if (game.local) game.rightPad = latestReply.rightPad;
 	game.ball = latestReply.ball;
+	if (latestReply.end === true) {
+        if (ws.OPEN)
+            ws.send('0');
+        return true;
+    }
 
     if (
         game.leftStep.x != 0 ||
@@ -91,11 +98,7 @@ function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean
         deadReckoning(game, latestReply);
         finishSteps(game);
     }
-    if (latestReply.end === true) {
-        if (ws.OPEN)
-            ws.send('0');
-        return true;
-    }
+   
     return false;
 }
 
