@@ -685,6 +685,49 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//TODO add schema
+	serv.patch('/anonymize', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const userID = request.user.userID;
+			const safeUserID = cleanInput(userID);
+
+			const newUsername = crypto.randomUUID().toString();
+			const query = `UPDATE userProfile SET username = ?, avatar = ?, biography = NULL WHERE userID = ?`;
+
+			const userStats = await serv.dbUsers.get<userStats>(query, [newUsername, safeUserID]);
+
+		} catch (error) {
+			serv.log.error(`[USERS] Error processing match stats: ${error}`);
+			if (error instanceof Error && error.message.includes('Stats not found')) {
+				return reply.code(404).send({ message: error.message });
+			}
+			return reply.code(500).send({ message: 'Internal Server Error' });
+		}
+	});
+
 	/* 	serv.get('/:userID/userData', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
