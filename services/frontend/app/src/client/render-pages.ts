@@ -27,8 +27,8 @@ import { PongUI } from './web-elements/game/game-ui.js';
 import { errorMessageFromException, exceptionFromResponse, redirectOnError } from './error.js';
 import { TournamentBrackets } from './web-elements/game/tournament.js';
 import type { Match } from 'path-to-regexp';
-import type { Dictionary, navigationLinksData, TabData } from './web-elements/types-interfaces.js';
-import { userStatus, router } from './main.js';
+import type { navigationLinksData, TabData } from './web-elements/types-interfaces.js';
+import { userStatus, router, type userStatusInfo } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
@@ -264,32 +264,53 @@ export function renderLobbyMenu() {
 
 //TODO: for each lobby: set 'owner' with currently registered user to avoid owner
 //  being able to add himself to the game (in the UI - even if it's handled in the pong server)
-export function renderQuickLocalLobby() {
+export async function renderQuickLocalLobby() {
 	try {
 		prepareLayout(document.body.layoutInstance, 'quickLobby');
 	} catch (error) {
 		console.error(errorMessageFromException(error));
 	}
-	document.body.layoutInstance?.appendAndCache(
-		createForm('local-pong-settings', localPong(currentDictionary)),
+	document.body.layoutInstance?.appendAndCache(createForm('local-pong-settings', localPong(currentDictionary)),
 	);
+
+    const user: userStatusInfo = await userStatus();
+    if (!user.auth) {
+        redirectOnError('/auth', 'You must be registered to see this page')
+        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+    }
+
 	wsConnect('create', 'quickmatch', 'localForm');
 }
 
-export function renderQuickRemoteLobby() {
+export async function renderQuickRemoteLobby(
+    param?: Match<Partial<Record<string, string | string[]>>>,
+    gameRequest?: gameRequest,
+    action?: string
+) {
+    
+    const user: userStatusInfo = await userStatus();
+    if (!user.auth) {
+        redirectOnError('/auth', 'You must be registered to see this page')
+        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+    }
+    
 	try {
 		prepareLayout(document.body.layoutInstance, 'quickLobby');
 	} catch (error) {
 		console.error(errorMessageFromException(error));
 	}
+    const form = createForm('remote-pong-settings', remotePong(currentDictionary))
+    document.body.layoutInstance?.appendAndCache(form);
 
-	document.body.layoutInstance?.appendAndCache(
-		createForm('remote-pong-settings', remotePong(currentDictionary)),
-	);
-	wsConnect('create', 'quickmatch', 'remoteForm');
+    if (action === undefined) {
+        action = 'create';
+        form.owner = user.username!;
+    }
+    
+    wsConnect(action!, 'quickmatch', 'remoteForm');
 }
 
-export function renderTournamentLobby() {
+export async function renderTournamentLobby() {
 	try {
 		prepareLayout(document.body.layoutInstance, 'tournamentLobby');
 	} catch (error) {
@@ -299,10 +320,17 @@ export function renderTournamentLobby() {
 	document.body.layoutInstance?.appendAndCache(
 		createForm('remote-pong-settings', pongTournament(currentDictionary)),
 	);
+
+    const user: userStatusInfo = await userStatus();
+    if (!user.auth) {
+        redirectOnError('/auth', 'You must be registered to see this page')
+        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+    }
+
 	wsConnect('create', 'tournament', 'tournamentForm');
 }
 
-export function renderGame(
+export async function renderGame(
 	param?: Match<Partial<Record<string, string | string[]>>>,
 	gameRequest?: gameRequest,
 ) {
@@ -320,22 +348,24 @@ export function renderGame(
 	const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
 	const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
 
-	//TODO: set playerNames from game-manager object
-	ui.player1.innerText = 'CrimeGoose';
-	ui.player2.innerText = 'WinnerWolf';
-
+    //TODO: set playerNames from game-manager object
+    const user: userStatusInfo = await userStatus();
+    if (!user.auth) {
+        redirectOnError('/auth', 'You must be registered to see this page')
+        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+    }
+    if (user.username === undefined) {
+        //TODO: why could it be undefined?
+        return;
+    }
+	
 	const layout = document.body.layoutInstance;
 	// TODO: set pong-court theme from game-manager object
-	court.theme = farm;
 	if (layout) layout.theme = farmAssets;
+    ui.player1.innerText = user.username;
+    ui.player2.innerText = gameRequest.opponent;
+	court.theme = farm;
 	document.body.layoutInstance?.appendAndCache(ui, court);
-
-	// pong({ userID: 1, gameID: "1", remote: false }, court.ctx, ui);
-	if (gameRequest === undefined) {
-		console.log('GameRequest =>', gameRequest);
-		// TODO Show explicit error in UI
-		return;
-	}
 	pong(gameRequest!, court.ctx, ui);
 }
 

@@ -1,5 +1,4 @@
 import dns from 'dns';
-import fs from 'fs';
 
 function getNginxIP(): string | null {
 	const ip: string | undefined = process.env.NGINXIP;
@@ -21,16 +20,16 @@ function checkProxy(address: string, hop: number): boolean {
 }
 
 const options = {
-    logger: {
-        transport: {
-            target: 'pino-pretty',
-            options: {
-                colorize: true,
-                translateTime: 'SYS:dd-mm-yyyy HH:MM:ss', // local date and time with timezone offset
-                singleLine: true,
-            },
-        },
-    },
+	logger: {
+		transport: {
+			target: 'pino-pretty',
+			options: {
+				colorize: true,
+				translateTime: 'SYS:dd-mm-yyyy HH:MM:ss', // local date and time with timezone offset
+				singleLine: true,
+			},
+		},
+	},
 	trustProxy: checkProxy,
 	//connectionTimeout
 	//forceCloseConnections

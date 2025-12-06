@@ -1,33 +1,11 @@
-import { redirectOnError } from '../error';
-import { userStatus, type userStatusInfo } from '../main';
+import { redirectOnError } from "../error";
+import { userStatus, type userStatusInfo } from "../main";
+import type { gameRequestForm } from "./gm.interface.front";
 
-interface lobbyInfo {
-	userList: userInfo[];
-	remote: boolean;
-	format: 'quickmatch' | 'tournament' | string;
-	nbPlayers: number;
-	// gameSettings: gameSettingsObj
-}
-
-interface userInfo {
-	userID?: string;
-	username?: string;
-	userSocket?: WebSocket;
-}
-
-interface gameRequestForm {
-	event: 'GAME_REQUEST';
-	payload: lobbyInfo;
-}
-
-async function createGameRequest(
-	format: string,
-	formInstance: string,
-	gameSettings: string,
-): Promise<string> {
-	const customSettings = JSON.parse(gameSettings);
-	const localOpponent: string | undefined = customSettings.opponent;
-	// console.log("FORM: ", formInstance); // will be useful at some point
+async function createGameRequest(format: string, formInstance: string, gameSettings: string): Promise<string> {
+    const customSettings = JSON.parse(gameSettings);
+    const localOpponent: string | undefined = customSettings.opponent;
+    // console.log("FORM: ", formInstance); // will be useful at some point
 
 	const host: userStatusInfo = await userStatus();
 	if (!host.auth) {
