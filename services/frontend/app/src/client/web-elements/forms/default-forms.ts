@@ -1,10 +1,9 @@
 import type { FormDetails, UserData } from '../types-interfaces.js';
 import type { Dictionary } from '../types-interfaces.js';
 import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
-
+import { currentDictionary } from './language.js';
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually POST and which are patch, to be handled in the server.
 
-//TODO language
 export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails {
 	return {
 		action: 'https://localhost:8443/api/bff/settings',
@@ -15,7 +14,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 		fields: [
 			{
 				id: 'upload',
-				labelContent: 'Avatar uploader',
+				labelContent: dic.forms.avatar_uploader,
 				pattern: '',
 				placeholder: '',
 				type: 'file',
@@ -23,7 +22,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 			},
 			{
 				id: 'biography',
-				labelContent: 'Biography',
+				labelContent: dic.forms.biography,
 				pattern: '',
 				placeholder: user?.biography || '',
 				type: 'textarea',
@@ -31,22 +30,21 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 			},
 			{
 				id: 'username',
-				labelContent: 'Username',
+				labelContent: dic.forms.username,
 				pattern: usernamePattern,
-				placeholder: user?.username || 'Enter your new username!',
+				placeholder: user?.username || dic.placeholders.enter_username,
 				type: 'text',
 				required: false,
 			},
 			{
 				id: 'password',
-				labelContent: 'Password',
+				labelContent: dic.forms.password,
 				pattern: passwordPattern,
-				placeholder: 'Enter your new password!',
+				placeholder: dic.placeholders.enter_password,
 				type: 'password',
 				required: false,
 			},
 		],
-		//TODO Language
 		button: {
 			id: 'submit',
 			type: 'submit',
@@ -70,7 +68,7 @@ export function registrationForm(dic: Dictionary): FormDetails {
 				id: 'username',
 				labelContent: dic.forms.username,
 				pattern: usernamePattern,
-				placeholder: 'Enter your username!',
+				placeholder: dic.placeholders.enter_username,
 				type: 'text',
 				required: true,
 			},
@@ -78,7 +76,7 @@ export function registrationForm(dic: Dictionary): FormDetails {
 				id: 'password',
 				labelContent: dic.forms.password,
 				pattern: passwordPattern,
-				placeholder: 'Enter your password!',
+				placeholder: dic.placeholders.enter_password,
 				type: 'password',
 				required: false,
 			},
@@ -105,7 +103,7 @@ export function loginForm(dic: Dictionary): FormDetails {
 				id: 'username',
 				labelContent: dic.forms.username,
 				pattern: usernamePattern,
-				placeholder: 'Enter your username!',
+				placeholder: dic.placeholders.enter_username,
 				type: 'text',
 				required: true,
 			},
@@ -113,7 +111,7 @@ export function loginForm(dic: Dictionary): FormDetails {
 				id: 'password',
 				labelContent: dic.forms.password,
 				pattern: passwordPattern,
-				placeholder: 'Enter your password!',
+				placeholder: dic.placeholders.enter_password,
 				type: 'password',
 				required: false,
 			},
@@ -140,7 +138,7 @@ export function search(dic: Dictionary): FormDetails {
 				id: 'searchbar',
 				labelContent: 'Searchbar',
 				pattern: searchbarPattern,
-				placeholder: dic.forms.search_placeholder,
+				placeholder: currentDictionary.gameCustom.searchbar,
 				type: 'text',
 				required: true,
 			},
@@ -196,7 +194,7 @@ export function localPong(dic: Dictionary): FormDetails {
 			},
 			{
 				id: 'opponent',
-				labelContent: 'Opponent Nickname',
+				labelContent: dic.gameCustom.opponent_name,
 				pattern: usernamePattern,
 				placeholder: dic.gameCustom.opponent,
 				type: 'text',
@@ -338,21 +336,23 @@ export function pongTournament(dic: Dictionary): FormDetails {
 	};
 }
 
-export const deleteAccount: FormDetails = {
-	action: 'https://localhost:8443/api/bff/account',
-	heading: '',
-	ariaLabel: 'Account deletion request',
-	id: 'account-deletion-request',
-	method: 'delete',
-	fields: [],
-	button: {
-		id: 'submit',
-		type: 'submit',
-		content: 'Delete account',
-		img: null,
-		ariaLabel: '',
-		style: 'red',
-	},
+export function deleteAccount(dic: Dictionary): FormDetails {
+	return {
+		action: 'https://localhost:8443/api/bff/account',
+		heading: '',
+		ariaLabel: 'Account deletion request',
+		id: 'account-deletion-request',
+		method: 'delete',
+		fields: [],
+		button: {
+			id: 'submit',
+			type: 'submit',
+			content: dic.buttons.delete_account,
+			img: null,
+			ariaLabel: '',
+			style: 'red',
+		},
+	}
 };
 
 export const criticalChange: FormDetails = {

@@ -54,8 +54,8 @@ async function startApp() {
 }
 
 startApp();
-
-/* initLanguage();
+/* 
+ initLanguage();
 document.body.layoutInstance = document.createElement('div', { is: 'custom-layout' }) as Layout;
 document.body.header = document.createElement('header', { is: 'page-header' }) as PageHeader;
 if (!document.body.layoutInstance || !document.body.header) {

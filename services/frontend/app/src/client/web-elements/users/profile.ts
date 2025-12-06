@@ -4,6 +4,7 @@ import { createSocialMenu } from '../navigation/menu-helpers.js';
 import { social } from '../navigation/default-menus.js';
 import { SocialMenu } from '../navigation/menus.js';
 import type { UserData, ImgData, ProfileView } from '../types-interfaces.js';
+import { currentDictionary } from '../forms/language.js';
 
 /**
  * Custom element representing a user profile.
@@ -29,7 +30,7 @@ export class UserProfile extends HTMLDivElement {
 		this.#joinedSince = document.createElement('span') as HTMLSpanElement;
 		this.#username = document.createElement('div', { is: 'username-container' }) as Username;
 		this.#winstreak = document.createElement('span', { is: 'winstreak-block' }) as Winstreak;
-		this.#actionButtons = createSocialMenu(social, 'horizontal');
+		this.#actionButtons = createSocialMenu(social(currentDictionary), 'horizontal');
 		this.#color = 'bg-4F9FFF';
 		this.className = `pad-s box-border brdr ${this.#color}`;
 	}

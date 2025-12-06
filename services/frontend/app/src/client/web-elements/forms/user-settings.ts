@@ -17,6 +17,7 @@ import {
 } from '../../error.js';
 import { router } from '../../main.js';
 //import { currentDictionary } from './language.js';
+import { currentDictionary } from './language.js';
 // import imageCompression from 'browser-image-compression';
 
 const MAX_FILE = 2 * 1024 * 1024;
@@ -47,11 +48,11 @@ export class UserSettingsForm extends BaseForm {
 		this.#previewAvatar = this.#previewAvatarImplementation.bind(this);
 		this.#accountDelete = createForm(
 			'delete-account-form',
-			deleteAccount /*( currentDictionary )*/,
+			deleteAccount ( currentDictionary ),
 		);
 		this.#avatar = createAvatar(this.#user.avatar);
-		this.#colors = createDropdown(userColorsMenu, 'Pick color', 'dynamic');
-		this.#languages = createDropdown(languageMenu, 'Pick language', 'static');
+		this.#colors = createDropdown(userColorsMenu, currentDictionary.settings.pick_color, 'dynamic');
+		this.#languages = createDropdown(languageMenu, currentDictionary.settings.pick_language, 'static');
 	}
 
 	override connectedCallback(): void {
@@ -105,7 +106,7 @@ export class UserSettingsForm extends BaseForm {
 
 		if (this.#user) {
 			if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
-				f.append('color', 'bg-' + colSelection.id);
+                f.append('color', 'bg-' + colSelection.id);
 			if (langSelection && langSelection.id !== this.#user.language)
 				f.append('language', langSelection.id);
 		}
