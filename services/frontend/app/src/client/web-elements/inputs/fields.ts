@@ -55,12 +55,12 @@ export class CustomInput extends HTMLInputElement {
 	 * @param event - The input event.
 	 */
 
-    //TODO language
+    //TODO language switch not working here 
     #typePassword(el: HTMLInputElement): string[] {
         const val = el.value;
         let feedback: string[] = [];
         if (!/[A-Z]/.test(val)) feedback.push(defaultDictionary.error.uppercase);
-        if (!/[a-z]/.test(val)) feedback.push(defaultDictionary.error.lowercase);
+        if (!/[a-z]/.test(val)) feedback.push(defaultDictionary.error.lowercase); 
         if (!/[0-9]/.test(val)) feedback.push(defaultDictionary.error.number);
         if (!/[!@#$%^&*()\-_=+{};:,<.>]/.test(val)) feedback.push(defaultDictionary.error.special_char);
         if (val.length < 12 || val.length > 64)
