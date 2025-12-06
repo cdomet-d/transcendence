@@ -6,7 +6,9 @@ import type {
 //error handled
 export async function buildTinyProfile(log: any, viewerUserID: string, targetUsername: string, token: string): Promise<userData> {
 	try {
+		console.log("HEEEEREEE");
 		const targetUserID = await fetchUserID(log, targetUsername, token);
+	console.log("333333333333333333");
 
 		if (!targetUserID) {
 			log.warn(`[BFF] buildTinyProfile: UserID not found for ${targetUsername}`);
@@ -189,6 +191,7 @@ export async function fetchProfileView(log: any, userID: string, targetUserID: s
 export async function fetchUserID(log: any, username: string, token: string): Promise<string | null> {
 	const url = `http://users:2626/userID/${username}`;
 
+	console.log("111111111111111111");
 	let response: Response;
 
 	try {
@@ -203,6 +206,7 @@ export async function fetchUserID(log: any, username: string, token: string): Pr
 		log.error(`[BFF] User service (userID) is unreachable: ${error}`);
 		throw new Error('User service is unreachable.');
 	}
+	console.log("22222222222222222222");
 
 	if (response.status === 400) {
 		log.warn(`[BFF] Auth service validation error`);

@@ -22,7 +22,7 @@ export interface userData {
 
 //TODO should this userID be string ?
 interface JwtPayload {
-	userID: number;
+	userID: string;
 	username: string;
 	iat: number;
 	exp: number;

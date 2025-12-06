@@ -208,7 +208,7 @@ export const getUsernamesByIdsSchema = {
 		properties: {
 			userIDs: {
 				type: 'array',
-				items: { type: 'number' }
+				items: { type: 'string' }
 			}
 		}
 	},
