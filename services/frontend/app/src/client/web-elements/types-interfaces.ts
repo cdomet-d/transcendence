@@ -2,8 +2,6 @@
 /*                                   Images                                   */
 /* -------------------------------------------------------------------------- */
 
-import type { StringLiteral } from "typescript";
-
 /** Size options for Avatar components.
  * @remarks
  * - `iicon`: Extra small, icon size
