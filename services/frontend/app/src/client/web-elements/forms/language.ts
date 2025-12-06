@@ -19,11 +19,11 @@ export const defaultDictionary: Dictionary = {
 		delete_account: "Delete account"
 	},
 	forms: {
-		username: "Username",
-		password: "Password",
-		biography: "Biography",
-		avatar: "Avatar",
-		search_placeholder: "Search..."
+		username: 'Username',
+		password: 'Password',
+		biography: 'Biography',
+		avatar: 'Avatar',
+		search_placeholder: 'Search...',
 	},
 	titles: {
 		settings: "Settings",
