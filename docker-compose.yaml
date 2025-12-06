@@ -51,7 +51,9 @@ services:
             - transcendence
         restart: unless-stopped
         environment:
+            - JWT_SECRET=${JWT_SECRET}
             - NGINXIP=nginx
+            - PORT=1515
         volumes:
             - ./services/dashboards/app:/usr/app
             - ./services/dashboards/data:/usr/data

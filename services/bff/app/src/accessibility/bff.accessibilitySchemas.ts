@@ -22,6 +22,8 @@ export const dictionaryGet = {
 		},
 		404: messageResponse,
 		502: messageResponse,
-		503: messageResponse
+		503: messageResponse,
+		401: messageResponse,
+		400: messageResponse
 	}
 };

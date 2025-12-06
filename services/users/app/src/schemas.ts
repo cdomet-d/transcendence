@@ -120,6 +120,35 @@ export const getProfilesByIdsSchema = {
 	}
 };
 
+export const getUserByNameSchema = {
+	params: {
+		type: 'object',
+		required: ['username'],
+		properties: {
+			username: { type: 'string' }
+		}
+	},
+	response: {
+		200: {
+			type: 'object',
+			properties: {
+				success: { type: 'boolean' },
+				message: { type: 'string' },
+				response: {
+					type: 'object',
+					properties: {
+						userID: { type: ['number', 'string'] },
+						username: { type: 'string' }
+					}
+				}
+			}
+		},
+		400: { type: 'object', properties: { success: { type: 'boolean' }, message: { type: 'string' }, code: { type: 'string' } } },
+		401: { type: 'object', properties: { success: { type: 'boolean' }, message: { type: 'string' } } },
+		404: { type: 'object', properties: { success: { type: 'boolean' }, message: { type: 'string' } } }
+	}
+};
+
 export const getUserIDByUsernameSchema = {
 	params: {
 		type: 'object',
@@ -149,7 +178,6 @@ export const getUserIDByUsernameSchema = {
 	}
 };
 
-// Warning: GET requests usually shouldn't have bodies, but this matches your code
 export const getUserByUsernameBodySchema = {
 	body: {
 		type: 'object',

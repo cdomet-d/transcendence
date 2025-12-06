@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { dictionaryGet } from './bff.accessibilitySchemas.js';
 import { cleanInput } from '../utils/sanitizer.js';
+import type { JwtPayload } from '../utils/bff.interface.js';
 
 async function fetchLanguagePack(log: any, langCode: string): Promise<Response> {
 	const url = `http://accessibility:1313/dictionary/${langCode}`;
@@ -15,8 +16,30 @@ async function fetchLanguagePack(log: any, langCode: string): Promise<Response> 
 
 export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 
-	serv.get('/dictionary/:lang', { schema: schema.dictionaryGet }, async (request, reply) => {
+	serv.get('/dictionary/:lang', { schema: dictionaryGet }, async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
 			const { lang } = request.params as { lang: string };
 			const safeLang = cleanInput(lang);
 
@@ -26,7 +49,7 @@ export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 				if (response.status === 404) {
 					return reply.code(404).send({ message: 'Language not supported.' });
 				}
-				return reply.code(502).send({ message: 'Accessibility service error.' });
+				throw (response.status);
 			}
 
 			const dictionary = await response.json();
@@ -34,7 +57,7 @@ export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[BFF] Error fetching dictionary: ${error}`);
-			return reply.code(503).send({ message: 'Service unavailable' });
+			throw (error);
 		}
 	});
 }

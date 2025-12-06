@@ -14,6 +14,14 @@ export interface Match {
 	opponentID: string;
 }
 
+interface JwtPayload {
+	userID: number;
+	username: string;
+	iat: number;
+	exp: number;
+}
+
+
 export interface Tournament {
 	tournamentID: string;
 	winnerID: string;

@@ -3,7 +3,7 @@ import { updateUserStats } from './dashboard.service.js'
 import type { GameInput, userStats } from '././dashboard.service.js';
 import { cleanInput } from './sanitizer.js';
 import {
-	getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, searchUsersSchema, updateStatsSchema, getUserIDByUsernameSchema,
+	getUserByNameSchema, getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, searchUsersSchema, updateStatsSchema, getUserIDByUsernameSchema,
 	getUserProfileSchema, getUserStatsSchema, getUsernamesByIdsSchema, createProfileSchema, deleteProfileSchema, updateProfileSchema
 } from './schemas.js';
 
@@ -263,7 +263,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//GET ?username=<username>
-	serv.get('/userID/:username', { schema: getProfilesByIdsSchema }, async (request, reply) => {
+	serv.get('/userID/:username', { schema: getUserByNameSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
