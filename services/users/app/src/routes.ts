@@ -2,8 +2,10 @@ import type { FastifyInstance } from 'fastify';
 import { updateUserStats } from './dashboard.service.js'
 import type { GameInput, userStats } from '././dashboard.service.js';
 import { cleanInput } from './sanitizer.js';
-import { getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, getUserIDByUsernameSchema, 
-getUserProfileSchema, getUserStatsSchema, getUsernamesByIdsSchema, createProfileSchema, deleteProfileSchema, updateProfileSchema } from './schemas.js';
+import {
+	getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, searchUsersSchema, updateStatsSchema, getUserIDByUsernameSchema,
+	getUserProfileSchema, getUserStatsSchema, getUsernamesByIdsSchema, createProfileSchema, deleteProfileSchema, updateProfileSchema
+} from './schemas.js';
 
 export interface userData {
 	avatar: string | null | undefined,
@@ -29,7 +31,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//USER PROFILE/${userID}/profile
 
 	//GET /<userID>
-	serv.get('/:userID', { schema : schema.getUserProfileSchema }, async (request, reply) => {
+	serv.get('/:userID', { schema: getUserProfileSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -87,7 +89,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//TODO sanitize
-	serv.get('/leaderboard', { schema : schema.getLeaderboardSchema }, async (request, reply) => {
+	serv.get('/leaderboard', { schema: getLeaderboardSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -146,7 +148,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/search', { schema : schema.searchUsersSchema }, async (request, reply) => {
+	serv.get('/search', { schema: searchUsersSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -208,7 +210,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//fetch users profiles
 	//TODO sanitize
-	serv.post('/profiles', { schema : schema.getProfilesByIdsSchema }, async (request, reply) => {
+	serv.post('/profiles', { schema: getProfilesByIdsSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -261,7 +263,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//GET ?username=<username>
-	serv.get('/userID/:username', { schema : schema.getProfilesByIdsSchema }, async (request, reply) => {
+	serv.get('/userID/:username', { schema: getProfilesByIdsSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -287,7 +289,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			}
 
 			const query = request.params as { username: string };
-			
+
 			if (query.username) {
 				const safeUsername = cleanInput(query.username);
 				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
@@ -317,7 +319,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/username', { schema : schema.getUserByUsernameBodySchema }, async (request, reply) => {
+	serv.post('/username', { schema: getUserByUsernameBodySchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -342,10 +344,9 @@ export async function userRoutes(serv: FastifyInstance) {
 				}
 			}
 
-			const username = request.body as { username: string };
-			
+			const { username } = request.body as { username: string };
+
 			if (username) {
-				//TODO check why error 
 				const safeUsername = cleanInput(username);
 				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
 				const response = await serv.dbUsers.get(sql, [safeUsername]);
@@ -375,7 +376,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//TODO sanitize
-	serv.post('/usernames', { schema : schema.getUsernamesByIdsSchema }, async (request, reply) => {
+	serv.post('/usernames', { schema: getUsernamesByIdsSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -424,7 +425,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//create profile and stats
 	//Called by auth so no need for JWT verif
-	serv.post('/:userID', { schema : schema.createProfileSchema }, async (request, reply) => {
+	serv.post('/:userID', { schema: createProfileSchema }, async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 			const { username } = request.body as { username: string };
@@ -479,7 +480,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//update user profile
 	//TODO sanitize body
-	serv.patch('/:userID', { schema : schema.updateProfileSchema }, async (request, reply) => {
+	serv.patch('/:userID', { schema: updateProfileSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -556,7 +557,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//delete profile and stats
-	serv.delete('/:userID', { schema : schema.deleteProfileSchema }, async (request, reply) => {
+	serv.delete('/:userID', { schema: deleteProfileSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -605,7 +606,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//USER STATS
 	//get all user's stats with userID
-	serv.get('/stats/:userID', { schema : schema.getUserStatsSchema }, async (request, reply) => {
+	serv.get('/stats/:userID', { schema: getUserStatsSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -655,7 +656,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//update all stats of a user
 	//Called in game-manager so no need for JWT verif
 	//TODO sanitize body
-	serv.patch('/stats', { schema : schema.updateStatsSchema }, async (request, reply) => {
+	serv.patch('/stats', { schema: updateStatsSchema }, async (request, reply) => {
 		try {
 			const body = request.body as GameInput;
 

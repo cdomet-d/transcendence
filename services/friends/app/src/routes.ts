@@ -14,7 +14,7 @@ interface JwtPayload {
 
 export async function routeFriend(serv: FastifyInstance) {
 	//GET friendship?userA=1&userB=2
-	serv.get('/friendship', { schema: schema.getFriendshipStatusSchema }, async (request, reply) => {
+	serv.get('/friendship', { schema: getFriendshipStatusSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -78,7 +78,7 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//GET friendlist?userID=1
-	serv.get('/friendlist', { schema: schema.getFriendListSchema }, async (request, reply) => {
+	serv.get('/friendlist', { schema: getFriendListSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -120,7 +120,7 @@ export async function routeFriend(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/friendlistpending', { schema: schema.getFriendshipPending }, async (request, reply) => {
+	serv.get('/friendlistpending', { schema: getPendingListSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -162,7 +162,7 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//create a pending friend request
-	serv.post('/relation', async { schema: schema.postRelationSchema }, (request, reply) => {
+	serv.post('/relation',  { schema: postRelationSchema }, async(request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -221,7 +221,7 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//accept a friend request
-	serv.patch('/relation', { schema: schema.patchRelationSchema }, async (request, reply) => {
+	serv.patch('/relation', { schema: patchRelationSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -298,7 +298,7 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//Delete a relation between users
-	serv.delete('/relation', { schema: schema.deleteRelationSchema }, async (request, reply) => {
+	serv.delete('/relation', { schema: deleteRelationSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -347,7 +347,7 @@ export async function routeFriend(serv: FastifyInstance) {
 	});
 
 	//delete all friendship a user is a part of
-	serv.delete('/', { schema: schema.deleteAllRelationsSchema }, async (request, reply) => {
+	serv.delete('/', { schema: deleteAllRelationsSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });

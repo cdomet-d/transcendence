@@ -7,19 +7,14 @@ const messageResponse = {
 	}
 };
 
-/* -------------------------------------------------------------------------- */
-/* GAME                                    */
-/* -------------------------------------------------------------------------- */
-
 export const postGameSchema = {
 	body: {
 		type: 'object',
-		// At least one property is required by your logic, but schema usually lists valid props
 		properties: {
 			gameID: { type: 'string' },
 			tournamentID: { type: ['string', 'number'], nullable: true },
 			localGame: { type: 'boolean' },
-			startTime: { type: ['string', 'number'] }, // timestamp or ISO string
+			startTime: { type: ['string', 'number'] },
 			player1: { type: ['string', 'number'] },
 			player2: { type: ['string', 'number'] },
 			duration: { type: 'number' },
@@ -31,7 +26,8 @@ export const postGameSchema = {
 	response: {
 		201: messageResponse,
 		400: messageResponse,
-		409: messageResponse
+		409: messageResponse,
+		401: messageResponse
 	}
 };
 
@@ -48,10 +44,11 @@ export const getGamesSchema = {
 			type: 'array',
 			items: {
 				type: 'object',
-				additionalProperties: true // Game object structure from DB
+				additionalProperties: true 
 			}
 		},
-		400: messageResponse
+		400: messageResponse,
+		401: messageResponse
 	}
 };
 
@@ -69,13 +66,10 @@ export const deleteGameSchema = {
 			description: 'No Content'
 		},
 		400: messageResponse,
+		401: messageResponse,
 		404: messageResponse
 	}
 };
-
-/* -------------------------------------------------------------------------- */
-/* TOURNAMENT                                 */
-/* -------------------------------------------------------------------------- */
 
 export const postTournamentSchema = {
 	body: {
@@ -90,7 +84,8 @@ export const postTournamentSchema = {
 	response: {
 		201: messageResponse,
 		400: messageResponse,
-		409: messageResponse
+		409: messageResponse,
+		401: messageResponse
 	}
 };
 
@@ -113,7 +108,8 @@ export const patchTournamentSchema = {
 	response: {
 		200: messageResponse,
 		400: messageResponse,
-		404: messageResponse
+		404: messageResponse,
+		401: messageResponse
 	}
 };
 
@@ -122,7 +118,6 @@ export const deleteTournamentSchema = {
 		type: 'object',
 		required: ['tournamentID'],
 		properties: {
-			// Code parses it as number, but URL params are strings until coerced
 			tournamentID: { type: ['string', 'number'] }
 		}
 	},

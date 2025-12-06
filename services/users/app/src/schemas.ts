@@ -39,7 +39,9 @@ export const getUserProfileSchema = {
 				userData: userProfileObject
 			}
 		},
-		404: messageResponse
+		404: messageResponse,
+		401: messageResponse,
+		400: messageResponse
 	}
 };
 
@@ -54,7 +56,9 @@ export const getLeaderboardSchema = {
 					items: userProfileObject
 				}
 			}
-		}
+		},
+		401: messageResponse,
+		400: messageResponse
 	}
 };
 
@@ -80,7 +84,9 @@ export const searchUsersSchema = {
 					items: userProfileObject
 				}
 			]
-		}
+		},
+		401: messageResponse,
+		400: messageResponse
 	}
 };
 
@@ -108,7 +114,9 @@ export const getProfilesByIdsSchema = {
 				}
 			}
 		},
-		400: messageResponse
+		400: messageResponse,
+		401: messageResponse,
+		404: messageResponse
 	}
 };
 
@@ -136,7 +144,8 @@ export const getUserIDByUsernameSchema = {
 			}
 		},
 		404: messageResponse,
-		400: messageResponse
+		400: messageResponse,
+		401: messageResponse
 	}
 };
 
@@ -165,7 +174,8 @@ export const getUserByUsernameBodySchema = {
 			}
 		},
 		404: messageResponse,
-		400: messageResponse
+		400: messageResponse,
+		401: messageResponse
 	}
 };
 
@@ -195,7 +205,10 @@ export const getUsernamesByIdsSchema = {
 					}
 				}
 			}
-		}
+		},
+		401: messageResponse,
+		400: messageResponse
+
 	}
 };
 
@@ -216,7 +229,8 @@ export const createProfileSchema = {
 	},
 	response: {
 		201: messageResponse,
-		409: messageResponse
+		409: messageResponse,
+		401: messageResponse
 	}
 };
 
@@ -245,7 +259,8 @@ export const updateProfileSchema = {
 		200: messageResponse,
 		400: messageResponse,
 		404: messageResponse,
-		409: messageResponse
+		409: messageResponse,
+		401: messageResponse
 	}
 };
 
@@ -259,7 +274,9 @@ export const deleteProfileSchema = {
 	},
 	response: {
 		204: { type: 'null' },
-		404: messageResponse
+		404: messageResponse,
+		401: messageResponse,
+		400: messageResponse
 	}
 };
 
@@ -279,7 +296,9 @@ export const getUserStatsSchema = {
 				stats: { type: 'object', additionalProperties: true }
 			}
 		},
-		404: messageResponse
+		404: messageResponse,
+		401: messageResponse,
+		400: messageResponse
 	}
 };
 
@@ -302,6 +321,8 @@ export const updateStatsSchema = {
 		200: messageResponse,
 		400: messageResponse,
 		404: messageResponse,
-		500: messageResponse
+		500: messageResponse,
+		401: messageResponse
+
 	}
 };

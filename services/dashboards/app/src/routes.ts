@@ -26,7 +26,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	/* -------------------------------------------------------------------------- */
 
 	//post a game
-	serv.post('/game', { schema: schema.postGameSchema }, async (request, reply) => {
+	serv.post('/game', { schema: postGameSchema }, async (request, reply) => {
 		try {
 			const rawBody = request.body as { [key: string]: any };
 			const body = sanitizeBodyValues(rawBody);
@@ -81,7 +81,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//get all game of a player
-	serv.get('/games/:userID', { schema: schema.getGameHistory }, async (request, reply) => {
+	serv.get('/games/:userID', { schema: getGamesSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -121,7 +121,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//delete a game
-	serv.delete('/game/:gameID', { schema: schema.deleteGameSchema }, async (request, reply) => {
+	serv.delete('/game/:gameID', { schema: deleteGameSchema }, async (request, reply) => {
 		try {
 			const { gameID } = request.params as { gameID: string };
 			const safeGameID = cleanInput(gameID);
@@ -153,7 +153,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	/* -------------------------------------------------------------------------- */
 
 	//post a tournament
-	serv.post('/tournament', { schema: schema.postTournamentSchema }, async (request, reply) => {
+	serv.post('/tournament', { schema: postTournamentSchema }, async (request, reply) => {
 		try {
 			const rawBody = request.body as { [key: string]: any };
 			const body = sanitizeBodyValues(rawBody);
@@ -202,7 +202,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//patch a tournament stats
-	serv.patch('/tournament/:tournamentID', { schema: schema.patchTournamentSchema }, async (request, reply) => {
+	serv.patch('/tournament/:tournamentID', { schema: patchTournamentSchema }, async (request, reply) => {
 		try {
 			const { tournamentID } = request.params as { tournamentID: string };
 			const { winnerID } = request.body as { winnerID: string };
@@ -229,7 +229,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//delete a tournamement
-	serv.delete('/tournament/:tournamentID', { schema: schema.deleteTournamentSchema }, async (request, reply) => {
+	serv.delete('/tournament/:tournamentID', { schema: deleteTournamentSchema }, async (request, reply) => {
 		try {
 			const { tournamentID } = request.params as { tournamentID: string };
 			const safeTournamentID = cleanInput(tournamentID);

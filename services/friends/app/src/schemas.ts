@@ -24,6 +24,7 @@ export const getFriendshipStatusSchema = {
 			}
 		},
 		400: messageResponse
+		401: messageResponse
 	}
 };
 
@@ -43,7 +44,8 @@ export const getFriendListSchema = {
 				additionalProperties: true
 			}
 		},
-		400: messageResponse
+		400: messageResponse,
+		401: messageResponse
 	}
 };
 
@@ -63,7 +65,8 @@ export const getPendingListSchema = {
 				additionalProperties: true
 			}
 		},
-		400: messageResponse
+		400: messageResponse,
+		401: messageResponse
 	}
 };
 
@@ -80,7 +83,8 @@ export const postRelationSchema = {
 	response: {
 		201: messageResponse,
 		400: messageResponse,
-		409: messageResponse
+		409: messageResponse,
+		401: messageResponse
 	}
 };
 
@@ -98,7 +102,8 @@ export const patchRelationSchema = {
 		200: messageResponse,
 		400: messageResponse,
 		404: messageResponse,
-		409: messageResponse
+		409: messageResponse,
+		401: messageResponse
 	}
 };
 
@@ -117,7 +122,9 @@ export const deleteRelationSchema = {
 			type: 'null',
 			description: 'No Content'
 		},
-		404: messageResponse
+		404: messageResponse,
+		401: messageResponse,
+		400: messageResponse
 	}
 };
 
@@ -133,6 +140,8 @@ export const deleteAllRelationsSchema = {
 		204: {
 			type: 'null',
 			description: 'No Content'
-		}
+		},
+		401: messageResponse,
+		400: messageResponse
 	}
 };
