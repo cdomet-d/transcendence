@@ -282,7 +282,8 @@ export const updateProfileSchema = {
 		400: messageResponse,
 		404: messageResponse,
 		409: messageResponse,
-		401: messageResponse
+		401: messageResponse,
+		403: messageResponse
 	}
 };
 

@@ -87,7 +87,6 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO sanitize
 	serv.get('/leaderboard', { schema: getLeaderboardSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
@@ -209,7 +208,6 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//fetch users profiles
-	//TODO sanitize
 	serv.post('/profiles', { schema: getProfilesByIdsSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
@@ -375,7 +373,6 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO sanitize
 	serv.post('/usernames', { schema: getUsernamesByIdsSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
@@ -479,15 +476,15 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user profile
-	//TODO sanitize body
 	serv.patch('/:userID', { schema: updateProfileSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
+			let user;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
-					const user = serv.jwt.verify(token) as JwtPayload;
+					user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
 					request.user = user;
 				} catch (error) {
@@ -507,6 +504,11 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const { userID } = request.params as { userID: string };
 			const body = request.body as { [key: string]: any };
+
+			if (user?.userID !== userID) {
+				serv.log.warn(`User ${user?.userID} attempted to patch User ${userID}`);
+				return reply.code(403).send({ message: 'Forbidden: You can only update your own profile.' });
+			}
 
 			const safeUserID = cleanInput(userID);
 

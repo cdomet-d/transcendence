@@ -15,7 +15,7 @@ export interface Match {
 }
 
 interface JwtPayload {
-	userID: number;
+	userID: string;
 	username: string;
 	iat: number;
 	exp: number;

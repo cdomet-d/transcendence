@@ -1,9 +1,21 @@
 import type { FastifyInstance } from 'fastify';
 import type { UserProfileView, JwtPayload } from '../utils/bff.interface.js';
-import { fetchFriendshipsPending, fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches, updateAuthSettings, updateUserProfile } from './bffUserProfile.service.js';
+import { refreshJWTForUsernameChange, updateUserProfileUsername, fetchFriendshipsPending, fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches, updateAuthSettings, updateUserProfile } from './bffUserProfile.service.js';
 import { profileGet, tinyProfileGet, searchGet, leaderboardGet, settingsPatch, usernameGet } from './bff.usersSchemas.js';
 import { cleanInput, cleanBioInput, isUsernameSafe } from '../utils/sanitizer.js';
 import jwt from 'jsonwebtoken';
+
+function validateBearerToken(serv: FastifyInstance, authorization?: string): boolean {
+	if (!authorization) return false;
+	const tok = authorization.replace(/^Bearer\s+/i, '');
+	try {
+		jwt.verify(tok, process.env.JWT_SECRET!);
+		return true;
+	} catch (error) {
+		if (error instanceof Error) serv.log.error(error.message);
+		return false;
+	}
+}
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
 	//get's profile + stats + game + friendslist
@@ -252,8 +264,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	});
 
 	//error handled
-	//TODO : sanitize but will wait for PR to be merged first 
-	serv.patch('/settings', { schema: settingsPatch }, async (request, reply) => {
+	serv.patch('/settings', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -283,14 +294,16 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const userID = request.user.userID;
 			const body = request.body as any;
 
+			console.log(JSON.stringify(body));
+
 			const profileUpdates: any = {};
 			const profileUpdatesUsername: any = {};
 			const accountUpdates: any = {};
 
-			if (body.avatar) profileUpdates.avatar = body.avatar;
-			if (body.biography) profileUpdates.biography = body.biography;
-			if (body.color) profileUpdates.profileColor = body.color;
-			if (body.defaultLang) profileUpdates.lang = body.defaultLang;
+			if (body.avatar) profileUpdates.avatar = cleanInput(body.avatar);
+			if (body.biography) profileUpdates.biography = cleanInput(body.biography);
+			if (body.color) profileUpdates.profileColor = cleanInput(body.color);
+			if (body.defaultLang) profileUpdates.lang = cleanInput(body.defaultLang);
 
 			const updateTasks: Promise<void>[] = [];
 
@@ -300,9 +313,9 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				if (!validateBearerToken(serv, request.headers.authorization))
 					return reply.code(401).send({ message: 'Unauthorized' });
 
-				if (body.username) profileUpdatesUsername.username = body.username;
-				if (body.username) accountUpdates.username = body.username;
-				if (body.password) accountUpdates.password = body.password;
+				if (body.username) profileUpdatesUsername.username = cleanInput(body.username);
+				if (body.username) accountUpdates.username = cleanInput(body.username);
+				if (body.password) accountUpdates.password = cleanInput(body.password);
 
 				serv.log.warn(profileUpdatesUsername, accountUpdates);
 				if (Object.keys(accountUpdates).length > 0)

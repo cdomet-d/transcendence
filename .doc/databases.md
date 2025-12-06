@@ -715,13 +715,13 @@ WHERE userID = 101;
 
 [WIP] DOC NOT UP TO DATE YET (nginx conf not done yet)
 
-* sanitise input in back
-* GDPR: check profile photos and more
-* add schemas to route
 
-
+* do anonymization of account on delete
 * status in db on login logout
 
+* GDPR: check profile photos and more
+* sanitise input in back
+* add schemas to route
 * servir traduction ---> localisation library, language page
 * changer userID to string         ✅
 * move nats publisher to bff       ✅

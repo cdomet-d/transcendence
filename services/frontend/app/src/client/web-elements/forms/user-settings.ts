@@ -106,7 +106,7 @@ export class UserSettingsForm extends BaseForm {
 
 		if (this.#user) {
 			if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
-				f.append('color', 'bg-' + colSelection.id);
+                f.append('color', 'bg-' + colSelection.id);
 			if (langSelection && langSelection.id !== this.#user.language)
 				f.append('language', langSelection.id);
 		}

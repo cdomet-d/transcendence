@@ -1,8 +1,5 @@
-import { initNatsConnection } from './nats.js';
 import { options } from './serv.conf.js';
-import cookie from '@fastify/cookie';
 import Fastify from 'fastify';
-import fastifyJwt from '@fastify/jwt';
 import type { FastifyInstance } from 'fastify';
 import cookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
