@@ -3,6 +3,7 @@ import { createGameRequest } from './gameRequest.front.js';
 import { createLobbyRequest, joinLobbyRequest } from './lobbyRequest.front.js';
 import { type gameRequest } from '../pong/pong.js';
 import { redirectOnError } from '../error.js';
+// import { validateWSMessage } from './inputValidation.front.js';
 
 let wsInstance: WebSocket | null = null;
 
@@ -37,22 +38,21 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 
 		// TODO keep alive ws connection during whole tournament (until everyone leaves)
 		// TODO what happens if host leaves lobby, kick everyone ?
-
-		// reply Lobby Invite
-		if (action === 'join') {
-			if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-				wsInstance.send(await joinLobbyRequest(action, format, inviteeID!, lobbyID!, formInstance));
-			} else {
-				console.log(`Error: WebSocket is not open for ${action}`);
-			}
+	}
+	// reply Lobby Invite
+	if (action === 'join') {
+		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+			wsInstance.send(await joinLobbyRequest(action, format, inviteeID!, lobbyID!, formInstance));
+		} else {
+			console.log(`Error: WebSocket is not open for ${action}`);
 		}
+	}
 
-		if (action === 'decline') {
-			if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-				wsInstance.send(JSON.stringify({ event: "LOBBY_INVITE", payload: { action: action, inviteeID: inviteeID, lobbyID: lobbyID } }));
-			} else {
-				console.log(`Error: WebSocket is not open for ${action}`);
-			}
+	if (action === 'decline') {
+		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+			wsInstance.send(JSON.stringify({ event: "LOBBY_INVITE", payload: { action: action, inviteeID: inviteeID, lobbyID: lobbyID } }));
+		} else {
+			console.log(`Error: WebSocket is not open for ${action}`);
 		}
 	}
 
@@ -84,8 +84,12 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 
 	ws.onmessage = (message: MessageEvent) => {
 		try {
-			// handle Response for lobbyRequest
 			const data = JSON.parse(message.data);
+			// validateWSMessage(data);
+			// if (!validateWSMessage(data)) {
+			// 	console.error("Invalid WS message format:", validateWSMessage.errors);
+			// 	return;
+			// }
 
 			if (data.error) {
 				console.log("ERROR: ", data.error);

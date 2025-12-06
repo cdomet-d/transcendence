@@ -41,7 +41,7 @@ export async function natsSubscribe(serv: FastifyInstance) {
 }
 
 function sendGameRequest(userID: string, opponentID: string, game: gameReply, opponentUsername?: string) {
-	if (userID === 'temporary') return; // TODO -1 will become 'temporary' 
+	if (userID === 'temporary') return; 
 
 	const socket = wsClientsMap.get(userID);
 

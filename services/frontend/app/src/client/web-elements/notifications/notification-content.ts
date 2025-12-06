@@ -133,6 +133,7 @@ export class NotifContent extends HTMLDivElement {
 	}
 
 	#joinGame() {
+		console.log("CLICK");
 		wsConnect("join", "", this.#lobbyInfo?.formInstance!, this.#lobbyInfo?.lobbyID, "", this.#lobbyInfo?.inviteeID);
 	}
 

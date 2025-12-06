@@ -2,7 +2,7 @@ import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 import { processGameRequest } from '../gameManager/gameManager.js';
 import { wsClientsMap, addUserToLobby, createLobby, lobbyMap, removeUserFromLobby, addUserToWhitelist, removeUserFromWhitelist, findLobbyIDFromUserID } from './lobby.gm.js';
-import { validateData, validatePayload } from '../gameManager/inputValidation.js';
+import { validateData, validatePayload } from '../gameManager/inputValidation.gm.js';
 import type { lobbyInfo } from '../gameManager/gameManager.interface.js';
 import type { lobbyRequestForm, gameNotif, lobbyInviteForm } from './lobby.interface.js';
 import { natsPublish } from '../nats/publisher.gm.js';
@@ -76,14 +76,22 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					natsPublish(this, 'post.notif', JSON.stringify(notif));
 
 				} else if (invitePayload.action === 'decline') {
-					const inviteeID = invitePayload.inviteeID!;
-					removeUserFromWhitelist(inviteeID, invitePayload.lobbyID!);
+					removeUserFromWhitelist(invitePayload.inviteeID!, invitePayload.lobbyID!);
 
 				} else if (invitePayload.action === 'join') {
 					this.log.error(`IN JOIN + ${formInstance}`);
-					addUserToLobby(userID!, socket, invitePayload.lobbyID!);
-					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance }));
+					this.log.error(`${invitePayload.inviteeID}`);
 
+					const inviteeID = invitePayload.inviteeID!;
+					const alreadyInLobby = findLobbyIDFromUserID(inviteeID);
+					if (alreadyInLobby !== null) {
+						console.log(`I am ${inviteeID} and I was in lobbyID ${alreadyInLobby}`);
+						removeUserFromLobby(inviteeID, alreadyInLobby);
+					}
+					console.log(`ALREADY in lobbyID ${alreadyInLobby}`);
+
+					addUserToLobby(inviteeID, socket, invitePayload.lobbyID!);
+					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance }));
 				}
 			}
 		} catch (error) {
