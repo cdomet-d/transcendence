@@ -117,6 +117,7 @@ export class CustomButton extends HTMLButtonElement {
 			this.renderIconBtn();
 		}
 		this.#dynamicStyling();
+		if (this.#btn.action) this.dataset.action = this.#btn.action;
 		this.type = this.#btn.type;
 		this.ariaLabel = this.#btn.ariaLabel;
 		this.id = this.#btn.id;

@@ -25,7 +25,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 				id: 'biography',
 				labelContent: 'Biography',
 				pattern: '',
-				placeholder: user?.biography || '',
+				placeholder: user?.biography || 'Enter your new biography!',
 				type: 'textarea',
 				required: false,
 			},
@@ -294,6 +294,14 @@ export function pongTournament(dic: Dictionary): FormDetails {
 		id: 'pong-tournament-settings',
 		method: 'POST',
 		fields: [
+			{
+				id: 'horizontal',
+				labelContent: dic.gameCustom.paddle_horizontal,
+				pattern: '',
+				placeholder: '',
+				type: 'checkbox',
+				required: true,
+			},
 			{
 				id: 'ballspeed',
 				labelContent: dic.gameCustom.ball_speed,

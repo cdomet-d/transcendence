@@ -44,7 +44,7 @@ export abstract class BaseForm extends HTMLFormElement {
 		this.validationHandler = this.#validate.bind(this);
 		this.#formContent = new Map<string, HTMLElement>();
 		this.className =
-			'w-full h-full grid grid-auto-rows-auto form-gap place-items-center justify-center box-border relative';
+			'w-full h-full grid row-xl form-gap place-items-center justify-center box-border relative';
 	}
 
 	/** Called when the element is inserted into the DOM.

@@ -28,6 +28,7 @@ const notificationBtns: MenuData = {
 			img: null,
 			ariaLabel: 'Decline invitation',
 			style: 'red',
+			action: 'decline'
 		},
 		{
 			id: 'accept',
@@ -36,6 +37,7 @@ const notificationBtns: MenuData = {
 			img: null,
 			ariaLabel: 'Accept invitation',
 			style: 'green',
+			action: 'accept',
 		},
 	],
 };
@@ -60,6 +62,7 @@ export class NotifContent extends HTMLDivElement {
 
 	constructor() {
 		super();
+		this.setAttribute('tabindex', '0');
 		this.#message = document.createElement('span');
 		this.#menu = createMenu(notificationBtns, 'horizontal');
 
@@ -76,6 +79,11 @@ export class NotifContent extends HTMLDivElement {
 
 	set lobbyInfo(obj: GameInvite) {
 		this.#lobbyInfo = obj;
+	}
+
+	#disableButtons() {
+		this.#menu.cache.get('accept')?.setAttribute('disabled', '')
+		this.#menu.cache.get('decline')?.setAttribute('disabled', '')
 	}
 
 	createNotifMessage(profile: string, mess: string) {
@@ -96,7 +104,6 @@ export class NotifContent extends HTMLDivElement {
 	}
 
 	async #acceptRelation() {
-		console.log(this.#requesterUsername);
 		const url = 'https://localhost:8443/api/bff/relation';
 		const body = { username: `${this.#requesterUsername}` };
 		const jbody = JSON.stringify(body);
@@ -109,8 +116,7 @@ export class NotifContent extends HTMLDivElement {
 		try {
 			const raw = await fetch(url, req);
 			if (!raw.ok) throw await exceptionFromResponse(raw);
-			const res = await raw.json();
-			createVisualFeedback(res.message, 'success');
+			this.#disableButtons()
 		} catch (error) {
 			console.error('[ACCEPT RELATION]', errorMessageFromException(error));
 			createVisualFeedback(errorMessageFromException(error));
@@ -130,8 +136,7 @@ export class NotifContent extends HTMLDivElement {
 		try {
 			const raw = await fetch(url, req);
 			if (!raw.ok) throw await exceptionFromResponse(raw);
-			const res = await raw.json();
-			createVisualFeedback(res.message, 'success');
+			this.#disableButtons()
 		} catch (error) {
 			console.error('[DECLINE RELATION]', errorMessageFromException(error));
 			createVisualFeedback(errorMessageFromException(error));
@@ -166,7 +171,7 @@ export class NotifContent extends HTMLDivElement {
 	render() {
 		this.#menu.listbox.classList.add('row-s');
 		this.#message.className = 'inline-flex justify-center';
-		this.className = 'grid notif-cols gap-s';
+		this.className = 'grid notif-cols gap-s focus:thin focus:brdr focus-visible:thin focus-visible:brdr';
 	}
 }
 

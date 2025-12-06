@@ -12,10 +12,9 @@ import { lobbyQuickmatchMenu, lobbyTournamentMenu, main, goHomeData } from './we
 import { pong, type gameRequest } from './pong/pong.js';
 import { PongUI } from './web-elements/game/game-ui.js';
 import { errorMessageFromException, exceptionFromResponse, redirectOnError } from './error.js';
-import { TournamentBrackets } from './web-elements/game/tournament.js';
 import type { Match } from 'path-to-regexp';
 import type { TabData } from './web-elements/types-interfaces.js';
-import { userStatus, router, type userStatusInfo } from './main.js';
+import { router, type userStatusInfo } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
@@ -65,9 +64,11 @@ function createWrapper(id: string): HTMLDivElement {
 function toggleHeader(page: string) {
 	if (layoutPerPage[page] === 'full-screen') {
 		document.body.header?.classList.add('hidden');
+		document.body.layoutInstance?.classList.remove('mt-[50px]');
 		document.body.header?.setAttribute('hidden', '');
 	} else {
 		document.body.header?.classList.remove('hidden');
+		document.body.layoutInstance?.classList.add('mt-[50px]');
 		document.body.header?.removeAttribute('hidden');
 	}
 }
@@ -139,8 +140,9 @@ export async function renderLeaderboard() {
 		const rawRes = await fetch(url);
 		if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
 		const raw = await rawRes.json();
-
-		document.body.layoutInstance!.appendAndCache(createHeading('2', 'Leaderboard'), createLeaderboard(userArrayFromAPIRes(raw)));
+		const wrapper = createWrapper('learderboard');
+		wrapper.append(createHeading('2', 'Leaderboard'), createLeaderboard(userArrayFromAPIRes(raw)));
+		document.body.layoutInstance!.appendAndCache(wrapper);
 	} catch (error) {
 		console.error(errorMessageFromException(error));
 		redirectOnError('/', 'Error: ' + errorMessageFromException(error));
@@ -199,7 +201,9 @@ export async function renderSettings() {
 			if (raw.status === 404) return redirectOnError('/404', 'No such user');
 			else throw await exceptionFromResponse(raw);
 		}
-		document.body.layoutInstance?.appendAndCache(createForm('settings-form', userSettingsForm(currentDictionary), userDataFromAPIRes(raw)));
+		const data = await raw.json();
+		const user = userDataFromAPIRes(data);
+		document.body.layoutInstance?.appendAndCache(createForm('settings-form', userSettingsForm(currentDictionary, user), user));
 		updatePageTitle(status.username + 'Settings');
 	} catch (error) {
 		console.error(errorMessageFromException(error));
@@ -233,6 +237,8 @@ export async function renderQuickLocalLobby() {
 	const form = createForm('local-pong-settings', localPong(currentDictionary));
 	form.owner = status.username!;
 	document.body.layoutInstance?.appendAndCache(form);
+	form.classList.remove('h-full');
+	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
 	wsConnect('create', 'quickmatch', 'localForm');
 }
 
@@ -243,6 +249,8 @@ export async function renderQuickRemoteLobby() {
 	const form = createForm('remote-pong-settings', remotePong(currentDictionary));
 	form.owner = status.username!;
 	document.body.layoutInstance?.appendAndCache(form);
+	form.classList.remove('h-full');
+	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
 	wsConnect('create', 'quickmatch', 'remoteForm');
 }
 
@@ -252,7 +260,9 @@ export async function renderTournamentLobby() {
 
 	const form = createForm('remote-pong-settings', pongTournament(currentDictionary));
 	form.owner = status.username!;
-	document.body.layoutInstance?.appendAndCache();
+	document.body.layoutInstance?.appendAndCache(form);
+	form.classList.remove('h-full');
+	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
 	wsConnect('create', 'tournament', 'tournamentForm');
 }
 
@@ -272,7 +282,7 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 	// TODO: set pong-court theme from game-manager object
 	if (layout) layout.theme = farmAssets;
 	court.theme = farm;
-	
+
 	// TODO: set playerNames from game-manager object
 	ui.player1.innerText = 'CrimeGoose';
 	ui.player2.innerText = 'WinnerWolf';

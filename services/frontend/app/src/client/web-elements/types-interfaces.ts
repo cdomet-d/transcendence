@@ -143,6 +143,7 @@ export interface ButtonData {
 	img: ImgData | null;
 	ariaLabel: string;
 	style?: BtnStyles;
+	action?: string;
 }
 
 /* -------------------------------------------------------------------------- */

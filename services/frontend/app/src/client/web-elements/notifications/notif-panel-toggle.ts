@@ -37,8 +37,7 @@ export class NotifToggle extends HTMLDivElement {
 		notifIcon.id = 'notifToggle';
 		this.#alert.id = 'notifAlert';
 
-		this.#alert.className =
-			'hidden z-2 invalid thin brdr bg-red w-[8px] h-[8px] absolute top-[8px] right-[8px]';
+		this.#alert.className = 'hidden z-2 invalid thin brdr bg-red w-[8px] h-[8px] absolute top-[8px] right-[8px]';
 		this.className = 'relative cursor-pointer hover:scale-108 transform transition-transform';
 
 		this.append(notifIcon, this.#alert);
@@ -58,6 +57,8 @@ if (!customElements.get('notif-toggle')) {
  */
 export class NotifPanel extends HTMLDivElement {
 	#content: HTMLDivElement;
+	#currentFocus: number;
+	#notificationList: HTMLElement[];
 
 	/** Observed attributes trigger UI updates when changed. */
 	static get observedAttributes(): string[] {
@@ -70,6 +71,7 @@ export class NotifPanel extends HTMLDivElement {
 		this.className = 'hidden z-1 notif-panel-pos w-lg';
 		this.#content = document.createElement('div');
 		this.append(this.#content);
+		this.#notificationList = []
 	}
 
 	/** Adds a default message when the list has no notifications. */
@@ -90,10 +92,49 @@ export class NotifPanel extends HTMLDivElement {
 		notifDecor.className = 'h-[32px] w-[16px] absolute right-[-20px] top-[4px]';
 	}
 
+	hide() {
+		this.classList.add('hidden');
+		this.setAttribute('hidden', '')
+	}
+
 	/** Toggles the panel's visible state by switching its `selected` attribute. */
 	updateVisibility() {
-		if (this.hasAttribute('selected')) this.removeAttribute('selected');
-		else this.setAttribute('selected', '');
+		try {
+			if (this.hasAttribute('selected')) {
+				this.removeAttribute('selected');
+			} else {
+				this.setAttribute('selected', '');
+			}
+		} catch (error) {
+			console.error('Failed to toggle visibility:', error);
+		}
+	}
+
+	/**
+	 * Used by the `'keydown'` handler to calculate where the user is in the menu's option, remaining within the bounds of the options.
+	 * @param {number} delta - the incrementing step; it's worth `-1` on `ArrowUp` and `1` on `ArrowDown`
+	 */
+	#moveFocus(delta: number) {
+		this.#currentFocus =
+			(this.#currentFocus + delta + this.#listboxOptions.length) %
+			this.#listboxOptions.length;
+		const focusedOption = this.#listboxOptions[this.#currentFocus];
+		if (focusedOption) focusedOption.focus();
+	}
+
+	/** Responds to observed attribute changes to toggle visibility and clear old markers. */
+	attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
+		if (oldValue === newValue) return;
+
+		this.clearStaleNotifications();
+
+		if (name === 'selected') {
+			if (this.hasAttribute('selected')) {
+				this.classList.remove('hidden');
+				this.removeAttribute('hidden');
+				this.#notificationList[0].focus();
+			} else this.hide();
+		}
 	}
 
 	/**
@@ -127,21 +168,10 @@ export class NotifPanel extends HTMLDivElement {
 	 * @param {NotifContent} el - The notification element to add.
 	 */
 	newNotification(el: NotifContent) {
-		// this.clearStaleNotifications();
 		this.#content.querySelector('#default')?.remove();
 		this.#content.insertBefore(el, this.#content.firstChild);
 		el.setAttribute('unread', '');
-		console.log(el);
-	}
-
-	/** Responds to observed attribute changes to toggle visibility and clear old markers. */
-	attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-		if (oldValue === newValue) return;
-		console.log('attributechange');
-		this.clearStaleNotifications();
-		if (name === 'selected') {
-			this.classList.toggle('hidden');
-		}
+		this.#notificationList = Array.from(this.#content.children) as HTMLElement[];
 	}
 
 	/** Builds the popup layout and attaches the default message. */

@@ -298,9 +298,9 @@ export class DropdownMenu extends HTMLDivElement {
 		});
 		this.#listbox.role = 'listbox';
 		this.#listbox.setAttribute('hidden', '');
-		this.#listbox.className = 'hidden z-0';
+		this.#listbox.className = 'hidden';
 		this.#listboxOptions = Array.from(this.#listbox.children) as HTMLLIElement[];
-	}
+	}	
 
 	/* ------------------------ navigation implementation ----------------------- */
 
@@ -320,6 +320,7 @@ export class DropdownMenu extends HTMLDivElement {
 
 	/** Reveals the listbox popup and sets the focus back on either the first element or the current selection */
 	#expandOptions(isKeyboard: boolean) {
+		this.classList.add('z-5')
 		this.#listbox.classList.remove('hidden');
 		this.#toggle.ariaExpanded = 'true';
 		this.#listbox.removeAttribute('hidden');

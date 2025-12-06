@@ -67,7 +67,7 @@ export class Searchbar extends BaseForm {
 
 		this.classList.add('search-cols', 'search-gap');
 		this.#results.className =
-			'hidden absolute top-[64px] brdr bg min-h-fit w-full overflow-y-auto box-border z-1';
+			'hidden absolute top-[64px] brdr bg min-h-fit w-full overflow-y-auto box-border';
 	}
 
 	/**
@@ -176,6 +176,7 @@ export class Searchbar extends BaseForm {
 		this.clearResults();
 		this.#results.classList.add('hidden');
 		this.#results.setAttribute('hidden', '');
+		this.classList.remove('z-1')
 	}
 
 	/**
@@ -198,6 +199,7 @@ export class Searchbar extends BaseForm {
 		this.#results.removeAttribute('hidden');
 		if (res.length < 1) this.#results.append(createNoResult('light', 'ilarge'));
 		res.forEach((user) => this.addUser(user));
+		this.classList.add('z-1')
 	}
 }
 

@@ -117,7 +117,7 @@ export class NavigationLinks extends HTMLAnchorElement {
 		this.href = this.#info.href;
 		this.title = this.#info.title;
 		this.id = this.#info.id;
-		this.setAttribute('data-link', this.#info.datalink);
+		this.dataset.link = this.#info.datalink;
 	}
 }
 

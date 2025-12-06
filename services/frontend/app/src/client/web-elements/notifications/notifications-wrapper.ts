@@ -1,11 +1,6 @@
 import type { GameType, friendNotif, gameNotif } from '../types-interfaces.js';
 import { userStatus, type userStatusInfo } from '../../main.js';
-import {
-	createVisualFeedback,
-	errorMessageFromException,
-	exceptionFromResponse,
-	redirectOnError,
-} from '../../error.js';
+import { createVisualFeedback, errorMessageFromException, exceptionFromResponse, redirectOnError } from '../../error.js';
 import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
 import { NotifContent } from './notification-content.js';
 import { NotifToggle, NotifPanel } from './notif-panel-toggle.js';
@@ -28,18 +23,23 @@ export class NotifBox extends HTMLDivElement {
 	#toggle: NotifToggle;
 	#panel: NotifPanel;
 	#ws: WebSocket | null;
-
+	#blurHandler: (e: FocusEvent) => void;
+	#clickHandler: (e: Event) => void;
 	constructor() {
 		super();
 		this.#toggle = document.createElement('div', { is: 'notif-toggle' }) as NotifToggle;
 		this.#panel = document.createElement('div', { is: 'notif-panel' }) as NotifPanel;
 		this.computePanelPos = this.computePanelPos.bind(this);
-		this.handleClick = this.handleClick.bind(this);
+		this.#clickHandler = this.#clickImplementation.bind(this);
+		this.#blurHandler = this.#focusOutImplementation.bind(this);
 		this.#ws = null;
 	}
 
 	connectedCallback() {
-		this.addEventListener('click', this.handleClick);
+		this.setAttribute('tabindex', '0');
+		this.addEventListener('click', this.#clickHandler);
+		this.addEventListener('focusout', this.#blurHandler);
+		this.addEventListener('keydown', this.#clickHandler);
 		window.addEventListener('resize', this.computePanelPos);
 		window.addEventListener('scroll', this.computePanelPos);
 		if (this.#ws === null) {
@@ -49,9 +49,11 @@ export class NotifBox extends HTMLDivElement {
 	}
 
 	disconnectedCallback() {
+		this.removeEventListener('click', this.#clickHandler);
+		this.removeEventListener('focusout', this.#blurHandler);
+		this.removeEventListener('keydown', this.#clickHandler);
 		window.removeEventListener('resize', this.computePanelPos);
 		window.removeEventListener('scroll', this.computePanelPos);
-		this.removeEventListener('click', this.handleClick);
 	}
 
 	/** Renders the toggle and panel elements inside the main wrapper. */
@@ -71,17 +73,46 @@ export class NotifBox extends HTMLDivElement {
 		this.#panel.style.setProperty('--panel-top', `${pos.top}px`);
 	}
 
+	togglePanel() {
+		this.#panel.updateVisibility();
+	}
+
+	#handleKeyboardEvent(e: KeyboardEvent) {
+		const keyActions: Record<string, () => void> = {
+			Enter: () => this.#panel?.updateVisibility(),
+			Escape: () => this.#panel?.updateVisibility(),
+			Space: () => this.#panel?.updateVisibility(),
+		};
+		const action = keyActions[e.key];
+		if (action) action();
+	}
+
 	/**
 	 * Handles click events on the toggle icon, updating panel state and alert visibility.
 	 *
-	 * @param {MouseEvent} event - The triggered mouse event.
+	 * @param {MouseEvent} e - The triggered mouse event.
 	 */
-	handleClick(event: MouseEvent) {
-		const target = event.target as Element | null;
-		if (target && target.matches('#notifToggle')) {
+	#clickImplementation(e: Event) {
+		try {
+		const target = e.target as Element | null;
+		if (!target || !['notificationWrapper', 'notifToggle'].includes(target.id)) return;
+		if (e instanceof KeyboardEvent) this.#handleKeyboardEvent(e)
+		else this.#panel.updateVisibility();
+		this.#toggle.toggleAlert(this.#panel.checkUnreadNotification());
+		this.computePanelPos();
+		} catch (error) {
+			console.error('Could not handle notification click', error);
+		}
+	}
+
+	#focusOutImplementation(e?: FocusEvent) {
+		if (!e) {
 			this.#panel.updateVisibility();
-			this.#toggle.toggleAlert(this.#panel.checkUnreadNotification());
-			this.computePanelPos();
+		} else {
+			const newFocus = e.relatedTarget as HTMLElement | null;
+			if (!newFocus || !this.contains(newFocus)) {
+				this.#panel.hide();
+			}
 		}
 	}
 
@@ -150,10 +181,8 @@ export class NotifBox extends HTMLDivElement {
 				// console.log(`Received message: ${JSON.stringify(notif)}`);
 				if (typeof notif === 'string' && notif === 'ping') ws.send(JSON.stringify('pong'));
 				if (typeof notif === 'object') {
-					if (notif.type === 'FRIEND_REQUEST')
-						this.newFriendRequest(notif.senderUsername);
-					else if (notif.type === 'GAME_INVITE')
-						this.newGameInvitation(notif.receiverName, notif.gameType);
+					if (notif.type === 'FRIEND_REQUEST') this.newFriendRequest(notif.senderUsername);
+					else if (notif.type === 'GAME_INVITE') this.newGameInvitation(notif.receiverName, notif.gameType);
 				}
 			});
 		};
@@ -169,5 +198,4 @@ export class NotifBox extends HTMLDivElement {
 	}
 }
 
-if (!customElements.get('notif-container'))
-	customElements.define('notif-container', NotifBox, { extends: 'div' });
+if (!customElements.get('notif-container')) customElements.define('notif-container', NotifBox, { extends: 'div' });
