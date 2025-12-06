@@ -139,6 +139,9 @@ export class RemotePongSettings extends LocalPongSettings {
 		this.classList.add('sidebar-left');
 	}
 
+	set owner(o: string) {
+		this.#owner = o;
+	}
 	/* -------------------------------- listeners ------------------------------- */
 	async fetchGuests(guestUsername: string): Promise<UserData | null> {
 		const url = `https://localhost:8443/api/bff/tiny-profile/${guestUsername}`;

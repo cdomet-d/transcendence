@@ -39,7 +39,7 @@ export class Menu extends HTMLElement {
 	/**
 	 * Sets the menu's button elements.
 	 *
-	 * @param {ButtonData[] | navigationLinksData[]} list - Array of objects
+	 * @param {ButtonData[] | NavigationLinksData[]} list - Array of objects
 	 * containing the data for the menus items
 	 */
 	set menuContent(list: MenuData) {

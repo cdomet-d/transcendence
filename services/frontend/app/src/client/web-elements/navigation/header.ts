@@ -6,7 +6,7 @@ import { CustomButton } from './buttons.js';
 import { main, homeLink, logOut, logIn } from './default-menus.js';
 import { Menu } from './basemenu.js';
 import { NotifBox } from '../notifications/notifications-wrapper.js';
-import { router } from '../../main.js';
+import { router, type userStatusInfo } from '../../main.js';
 import { Searchbar } from '../forms/search.js';
 import { userStatus } from '../../main.js';
 import { currentDictionary } from '../forms/language.js';
@@ -62,7 +62,7 @@ export class PageHeader extends HTMLElement {
 		this.#logout.removeEventListener('click', this.#logoutHandler);
 	}
 
-	async getLogState(): Promise<void> {
+	async getLogState(): Promise<userStatusInfo> {
 		const log = await userStatus();
 		if (log.auth) {
 			if (this.contains(this.#login)) this.#login.remove();
@@ -78,6 +78,7 @@ export class PageHeader extends HTMLElement {
 				this.#login.classList.add('h-m', 'w-l');
 			}
 		}
+		return log;
 	}
 
 	render() {

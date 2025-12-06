@@ -52,7 +52,7 @@ export type MenuSize = 's' | 'm' | 'l';
  */
 export type DropdownBg = 'dynamic' | 'static';
 
-export interface navigationLinksData {
+export interface NavigationLinksData {
 	styleButton: boolean;
 	id: string;
 	datalink: string;
@@ -77,7 +77,7 @@ export interface TabData {
 export interface MenuData {
 	id?: string; //TODO: had to add "?" to stop having an error on notificationBtns in notifications.ts
 	buttons?: ButtonData[];
-	links?: navigationLinksData[];
+	links?: NavigationLinksData[];
 }
 
 /* -------------------------------------------------------------------------- */

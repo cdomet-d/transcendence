@@ -23,7 +23,6 @@ export const routes: routeInterface[] = [
 	{ path: '/quick-local-lobby', callback: page.renderQuickLocalLobby },
 	{ path: '/quick-remote-lobby', callback: page.renderQuickRemoteLobby },
 	{ path: '/tournament-lobby', callback: page.renderTournamentLobby },
-	{ path: '/bracket', callback: page.renderBracket },
 	{ path: '/game', callback: page.renderGame },
 ];
 

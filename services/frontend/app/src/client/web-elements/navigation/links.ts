@@ -1,8 +1,8 @@
-import type { navigationLinksData } from '../types-interfaces.js';
+import type { NavigationLinksData } from '../types-interfaces.js';
 import { createIcon } from '../typography/helpers.js';
 import { router } from '../../main.js';
 
-const emptyLink: navigationLinksData = {
+const emptyLink: NavigationLinksData = {
 	id: '',
 	datalink: '',
 	href: '',
@@ -12,7 +12,7 @@ const emptyLink: navigationLinksData = {
 };
 
 export class NavigationLinks extends HTMLAnchorElement {
-	#info: navigationLinksData;
+	#info: NavigationLinksData;
 	#animated: boolean;
 
 	#clickHandler: (ev: Event) => void;
@@ -24,7 +24,7 @@ export class NavigationLinks extends HTMLAnchorElement {
 		this.#clickHandler = this.#loadNewPage.bind(this);
 	}
 
-	set info(data: navigationLinksData) {
+	set info(data: NavigationLinksData) {
 		this.#info = data;
 	}
 

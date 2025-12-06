@@ -2,7 +2,7 @@ import { createLink } from '../navigation/buttons-helpers.js';
 import { createMenu } from '../navigation/menu-helpers.js';
 import { Menu } from '../navigation/basemenu.js';
 import type { MenuData } from '../types-interfaces.js';
-import type { navigationLinksData } from '../types-interfaces.js';
+import type { NavigationLinksData } from '../types-interfaces.js';
 import {
 	createVisualFeedback,
 	errorMessageFromException,
@@ -79,7 +79,7 @@ export class NotifContent extends HTMLDivElement {
 	}
 
 	createNotifMessage(profile: string, mess: string) {
-		const linkData: navigationLinksData = {
+		const linkData: NavigationLinksData = {
 			styleButton: false,
 			id: 'requester',
 			datalink: profile,
