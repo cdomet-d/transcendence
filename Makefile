@@ -10,10 +10,10 @@ test: stop
 clean: stop
 	@printf "$(BG)\n%-8s$(RE) %s\n" "[INFO]" "Removing stale log..."
 	@rm -rf ./.docker-log/
-	@rm -f ./services/*/data/*.db
 	@docker system prune -f
 
 fclean: clean
+	@rm -f ./services/*/data/*.db
 	@docker system prune -a -f
 
 run: stop all

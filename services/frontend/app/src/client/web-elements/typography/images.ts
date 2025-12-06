@@ -7,32 +7,32 @@ import type { Dictionary } from '../types-interfaces.js';
  * Extends the native HTMLImageElement.
  */
 export class Icon extends HTMLImageElement {
-    #data: ImgData;
+	#data: ImgData;
 
-    constructor() {
-        super();
-        this.#data = { src: '', alt: '', size: 'iicon', id: '' };
-    }
+	constructor() {
+		super();
+		this.#data = { src: '', alt: '', size: 'iicon', id: '' };
+	}
 
-    set metadata(data: ImgData) {
-        this.#data = data;
-        this.render();
-    }
+	set metadata(data: ImgData) {
+		this.#data = data;
+		this.render();
+	}
 
-    connectedCallback() {
-        this.render();
-    }
+	connectedCallback() {
+		this.render();
+	}
 
-    render() {
-        this.className = `${this.#data.size} isize`;
-        this.src = this.#data.src;
-        this.alt = this.#data.alt;
-        this.setAttribute('id', this.#data.id);
-    }
+	render() {
+		this.className = `${this.#data.size} isize`;
+		this.src = this.#data.src;
+		this.alt = this.#data.alt;
+		this.setAttribute('id', this.#data.id);
+	}
 }
 
 if (!customElements.get('custom-icon')) {
-    customElements.define('custom-icon', Icon, { extends: 'img' });
+	customElements.define('custom-icon', Icon, { extends: 'img' });
 }
 
 /**
@@ -45,67 +45,67 @@ if (!customElements.get('custom-icon')) {
  * @see {@link Size} for sizing.
  */
 export class Avatar extends HTMLDivElement {
-    #img: Icon;
-    #data: ImgData;
+	#img: Icon;
+	#data: ImgData;
 
-    constructor() {
-        super();
-        this.#data = {
-            src: '/public/assets/images/default-avatar.png',
-            id: 'default-avatar',
-            alt: "A pixel art blue blob with a neutral expression, the site's default avatar",
-            size: 'iicon',
-        };
-        this.#img = document.createElement('img', { is: 'custom-icon' }) as Icon;
-        this.#img.metadata = this.#data;
-        this.append(this.#img);
-    }
+	constructor() {
+		super();
+		this.#data = {
+			src: '/public/assets/images/default-avatar.png',
+			id: 'default-avatar',
+			alt: "A pixel art blue blob with a neutral expression, the site's default avatar",
+			size: 'iicon',
+		};
+		this.#img = document.createElement('img', { is: 'custom-icon' }) as Icon;
+		this.#img.metadata = this.#data;
+		this.append(this.#img);
+	}
 
-    set metadata(data: ImgData) {
-        this.#data = data;
-        this.render();
-    }
+	set metadata(data: ImgData) {
+		this.#data = data;
+		this.render();
+	}
 
-    connectedCallback() {
-        this.render();
-    }
+	connectedCallback() {
+		this.render();
+	}
 
-    render() {
-        this.id = 'avatar';
-        this.className = `${
-            this.#data.size
-        } avatar-wrapper flex justify-center overflow-hidden rounded-[100px] box-border`;
-        this.#img.metadata = this.#data;
-    }
+	render() {
+		this.id = 'avatar';
+		this.className = `${
+			this.#data.size
+		} avatar-wrapper flex justify-center overflow-hidden pad-s box-border brdr bg`;
+		this.#img.metadata = this.#data;
+	}
 }
 
 if (!customElements.get('user-avatar')) {
-    customElements.define('user-avatar', Avatar, { extends: 'div' });
+	customElements.define('user-avatar', Avatar, { extends: 'div' });
 }
 
 export class NoResults extends HTMLDivElement {
-    #noResultsImg: ImgData;
-    #theme: ColorTheme;
+	#noResultsImg: ImgData;
+	#theme: ColorTheme;
 
-    constructor() {
-        super();
-        this.#noResultsImg = {
-            alt: 'A crying blue pixel art blob',
-            id: 'no-results',
-            size: 'ilarge',
-            src: '/public/assets/images/no-result.png',
-        };
-        this.id = 'NoResults';
-        this.#theme = 'dark';
-    }
+	constructor() {
+		super();
+		this.#noResultsImg = {
+			alt: 'A crying blue pixel art blob',
+			id: 'no-results',
+			size: 'ilarge',
+			src: '/public/assets/images/no-result.png',
+		};
+		this.id = 'NoResults';
+		this.#theme = 'dark';
+	}
 
-    set size(size: Size) {
-        this.#noResultsImg.size = size;
-    }
+	set size(size: Size) {
+		this.#noResultsImg.size = size;
+	}
 
-    set theme(theme: ColorTheme) {
-        this.#theme = theme;
-    }
+	set theme(theme: ColorTheme) {
+		this.#theme = theme;
+	}
 
     //TODO 404 for language
     connectedCallback(dic: Dictionary) {
@@ -119,11 +119,11 @@ export class NoResults extends HTMLDivElement {
         this.render();
     }
 
-    render() {
-        this.className = 'w-full box-border grid';
-    }
+	render() {
+		this.className = 'w-full box-border grid';
+	}
 }
 
 if (!customElements.get('no-results')) {
-    customElements.define('no-results', NoResults, { extends: 'div' });
+	customElements.define('no-results', NoResults, { extends: 'div' });
 }

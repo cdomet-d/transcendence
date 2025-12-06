@@ -21,15 +21,16 @@ function checkProxy(address: string, hop: number): boolean {
 }
 
 const options = {
-  logger: {
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        colorize: true,
-        translateTime: 'yyyy-mm-dd HH:MM:ss' // local date and time with timezone offset
-      }
-	}
-  },
+    logger: {
+        transport: {
+            target: 'pino-pretty',
+            options: {
+                colorize: true,
+                translateTime: 'SYS:dd-mm-yyyy HH:MM:ss', // local date and time with timezone offset
+                singleLine: true,
+            },
+        },
+    },
 	trustProxy: checkProxy,
 	//connectionTimeout
 	//forceCloseConnections

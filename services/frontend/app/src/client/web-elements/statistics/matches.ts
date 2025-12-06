@@ -2,12 +2,12 @@ import type { NavigationLinks } from '../navigation/links.js';
 import type { MatchOutcome, navigationLinksData } from '../types-interfaces.js';
 
 const emptyMatch: MatchOutcome = {
-    date: '',
-    opponent: '',
-    outcome: '',
-    score: '',
-    duration: '',
-    tournament: true,
+	date: '',
+	opponent: '',
+	outcome: '',
+	score: '',
+	duration: '',
+	tournament: true,
 };
 
 /**
@@ -16,10 +16,10 @@ const emptyMatch: MatchOutcome = {
  * @returns {InlineMatch} The populated InlineMatch element.
  */
 export function createMatchOutcome(match: MatchOutcome, header: boolean): InlineMatch {
-    const el = document.createElement('div', { is: 'inline-match' }) as InlineMatch;
-    el.match = match;
-    header ? el.createHeader() : el.createSpans();
-    return el;
+	const el = document.createElement('div', { is: 'inline-match' }) as InlineMatch;
+	el.match = match;
+	header ? el.createHeader() : el.createSpans();
+	return el;
 }
 
 /**
@@ -29,9 +29,9 @@ export function createMatchOutcome(match: MatchOutcome, header: boolean): Inline
  * @returns {MatchHistory} A {@link MatchHistory} div element containing the match history.
  */
 export function createMatchHistory(matches: MatchOutcome[]): MatchHistory {
-    const el = document.createElement('div', { is: 'match-history' }) as MatchHistory;
-    el.setHistory(matches);
-    return el;
+	const el = document.createElement('div', { is: 'match-history' }) as MatchHistory;
+	el.setHistory(matches);
+	return el;
 }
 
 /**
@@ -40,93 +40,93 @@ export function createMatchHistory(matches: MatchOutcome[]): MatchHistory {
  * Extends HTMLDivElement.
  */
 export class InlineMatch extends HTMLDivElement {
-    #data: MatchOutcome;
+	#data: MatchOutcome;
 
-    /**
-     * Initializes the InlineMatch element with default data.
-     */
-    constructor() {
-        super();
-        this.#data = {
-            date: '',
-            opponent: '',
-            outcome: '',
-            score: '',
-            duration: '',
-            tournament: false,
-        };
-    }
+	/**
+	 * Initializes the InlineMatch element with default data.
+	 */
+	constructor() {
+		super();
+		this.#data = {
+			date: '',
+			opponent: '',
+			outcome: '',
+			score: '',
+			duration: '',
+			tournament: false,
+		};
+	}
 
-    /**
-     * Sets the match outcome data for this element.
-     * @param matchOutcome - The match outcome data.
-     */
-    set match(matchOutcome: MatchOutcome) {
-        this.#data = matchOutcome;
-    }
+	/**
+	 * Sets the match outcome data for this element.
+	 * @param matchOutcome - The match outcome data.
+	 */
+	set match(matchOutcome: MatchOutcome) {
+		this.#data = matchOutcome;
+	}
 
-    /**
-     * Creates and appends header spans for each match property.
-     * @returns {InlineMatch} The InlineMatch element with header spans.
-     */
-    createHeader(): InlineMatch {
-        for (const key in this.#data) {
-            const span = document.createElement('span');
-            this.append(span);
-            span.classList.add('f-bold', 'f-orange');
-            span.classList.add('text-center');
-            span.id = key;
-            span.textContent = key;
-        }
-        this.classList.add('bg-yellow', 'sticky', 'top-0', 'thin', 'brdr');
-        this.id = 'matchesheader';
-        return this;
-    }
+	/**
+	 * Creates and appends header spans for each match property.
+	 * @returns {InlineMatch} The InlineMatch element with header spans.
+	 */
+	createHeader(): InlineMatch {
+		for (const key in this.#data) {
+			const span = document.createElement('span');
+			this.append(span);
+			span.classList.add('f-bold', 'f-orange');
+			span.classList.add('text-center');
+			span.id = key;
+			span.textContent = key;
+		}
+		this.classList.add('bg-yellow', 'sticky', 'top-0', 'thin', 'brdr');
+		this.id = 'matchesheader';
+		return this;
+	}
 
-    //TODO: probably should add link to opponent profile
-    /**
-     * Creates and appends spans for each match property value.
-     * @returns {InlineMatch} The InlineMatch element with value spans.
-     */
-    createSpans(): InlineMatch {
-        for (const key in this.#data) {
-            let el;
-            if (key === 'opponent') {
-                const opponent = this.#data[key].toString();
-                const opp: navigationLinksData = {
-                    styleButton: false,
-                    id: 'opponent-link',
-                    datalink: opponent,
-                    href: `/user/${opponent}`,
-                    title: opponent,
-                    img: null,
-                };
+	//TODO: probably should add link to opponent profile
+	/**
+	 * Creates and appends spans for each match property value.
+	 * @returns {InlineMatch} The InlineMatch element with value spans.
+	 */
+	createSpans(): InlineMatch {
+		for (const key in this.#data) {
+			let el;
+			if (key === 'opponent') {
+				const opponent = this.#data[key].toString();
+				const opp: navigationLinksData = {
+					styleButton: false,
+					id: 'opponent-link',
+					datalink: opponent,
+					href: `/user/${opponent}`,
+					title: opponent,
+					img: null,
+				};
 
-                el = document.createElement('a', { is: 'nav-link' }) as NavigationLinks;
-                el.info = opp;
-            } else el = document.createElement('span');
-            this.append(el);
-            el.id = key;
-            el.textContent = this.#data[key as keyof MatchOutcome].toString();
-        }
-        this.id = 'match';
-        return this;
-    }
+				el = document.createElement('a', { is: 'nav-link' }) as NavigationLinks;
+				el.info = opp;
+			} else el = document.createElement('span');
+			this.append(el);
+			el.id = key;
+			el.textContent = this.#data[key as keyof MatchOutcome].toString();
+		}
+		this.id = 'match';
+		return this;
+	}
 
-    connectedCallback() {
-        this.render();
-    }
+	connectedCallback() {
+		this.render();
+	}
 
-    /**
-     * Renders the InlineMatch element with default styles.
-     */
-    render() {
-        this.classList.add('box-border', 'grid', 'grid-cols-6', 'h-m', 'text-center');
-    }
+	/**
+	 * Renders the InlineMatch element with default styles.
+	 */
+	render() {
+		this.classList.add('box-border', 'grid', 'grid-cols-6', 'h-m', 'text-center');
+	}
 }
 
 if (!customElements.get('inline-match')) {
-    customElements.define('inline-match', InlineMatch, { extends: 'div' });
+	customElements.define('inline-match', InlineMatch, { extends: 'div' });
 }
 
 /**
@@ -135,46 +135,46 @@ if (!customElements.get('inline-match')) {
  * Extends HTMLDivElement.
  */
 export class MatchHistory extends HTMLDivElement {
-    constructor() {
-        super();
-    }
+	constructor() {
+		super();
+	}
 
-    /**
-     * Populates the match history with a header and InlineMatch elements for each match.
-     * @param matches - Array of match outcome data.
-     */
-    setHistory(matches: MatchOutcome[]) {
-        const currentHistory = Array.from(this.children);
-        if (currentHistory.length < 1) {
-            this.append(createMatchOutcome(emptyMatch, true));
-        } else {
-            currentHistory.forEach((el) => {
-                if (el.id !== 'matchesheader') el.remove();
-            });
-        }
-        matches.forEach((el) => {
-            this.append(createMatchOutcome(el, false));
-        });
-    }
+	/**
+	 * Populates the match history with a header and InlineMatch elements for each match.
+	 * @param matches - Array of match outcome data.
+	 */
+	setHistory(matches: MatchOutcome[]) {
+		const currentHistory = Array.from(this.children);
+		if (currentHistory.length < 1) {
+			this.append(createMatchOutcome(emptyMatch, true));
+		} else {
+			currentHistory.forEach((el) => {
+				if (el.id !== 'matchesheader') el.remove();
+			});
+		}
+		matches.forEach((el) => {
+			this.append(createMatchOutcome(el, false));
+		});
+	}
 
-    connectedCallback() {
-        this.render();
-    }
+	connectedCallback() {
+		this.render();
+	}
 
-    render() {
-        this.id = 'match-history';
-        this.classList.add(
-            'grid',
-            'matches',
-            'grid-flow-rows',
-            'gap-xs',
-            'pad-s',
-            'h-full',
-            'w-full',
-        );
-    }
+	render() {
+		this.id = 'match-history';
+		this.classList.add(
+			'grid',
+			'matches',
+			'grid-flow-rows',
+			'gap-xs',
+			'pad-s',
+			'h-full',
+			'w-full',
+		);
+	}
 }
 
 if (!customElements.get('match-history')) {
-    customElements.define('match-history', MatchHistory, { extends: 'div' });
+	customElements.define('match-history', MatchHistory, { extends: 'div' });
 }
