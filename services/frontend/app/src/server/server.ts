@@ -11,47 +11,47 @@ import type { NatsConnection } from 'nats';
 import { Users } from './notifications/users-class.js';
 
 (async () => {
-    try {
-        const serv = await init();
-        await serv.listen({ port: 1212, host: '0.0.0.0' });
-    } catch (err) {
-        console.error(err);
-        process.exit(1);
-    }
+	try {
+		const serv = await init();
+		await serv.listen({ port: 1212, host: '0.0.0.0' });
+	} catch (err) {
+		console.error(err);
+		process.exit(1);
+	}
 })();
 
 export async function init(): Promise<FastifyInstance> {
-    const serv: FastifyInstance = Fastify(options);
-    serv.setNotFoundHandler(notFound);
+	const serv: FastifyInstance = Fastify(options);
+	serv.setNotFoundHandler(notFound);
 
 	//plugins
-    await addPlugins(serv);
+	await addPlugins(serv);
 
 	// decorations
-    serv.decorate("users", new Users());
-    const nc: NatsConnection = await initNatsConnection();
-	serv.decorate("nc", nc);
+	serv.decorate('users', new Users());
+	const nc: NatsConnection = await initNatsConnection();
+	serv.decorate('nc', nc);
 	await natsSubscription(serv);
 
 	//hooks
 	addHooks(serv);
 
-    await serv.ready();
-    return serv;
+	await serv.ready();
+	return serv;
 }
 
 function notFound(request: FastifyRequest, reply: FastifyReply) {
-    reply
-        .code(404)
-        .header('Content-Type', 'json')
-        .send({ error: 'Not Found', message: 'The requested page does not exist' });
+	reply
+		.code(404)
+		.header('Content-Type', 'json')
+		.send({ error: 'Not Found', message: 'The requested page does not exist' });
 }
 
 function addHooks(serv: FastifyInstance) {
 	serv.addHook('onClose', (instance, done) => {
-	  instance.nc.close();
-	  done()
-	})
+		instance.nc.close();
+		done();
+	});
 }
 
 async function addPlugins(serv: FastifyInstance) {
@@ -93,5 +93,5 @@ async function addPlugins(serv: FastifyInstance) {
             cookie /*, {
 					secret: "", //TODO: add secret ?
 				}*/,
-        );
+		);
 }

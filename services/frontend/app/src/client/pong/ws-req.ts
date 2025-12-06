@@ -10,9 +10,9 @@ const START_DELAY = 500;
 export function wsRequest(court: PongCourt ,game: Game, ids: { gameID: string; userID: string }) {
 	const ws = new WebSocket('wss://localhost:8443/api/game/');
 
-    ws.onerror = () => {
-        ws.close(1011, 'websocket error');
-    };
+	ws.onerror = () => {
+		ws.close(1011, 'websocket error');
+	};
 
     ws.onopen = () => {
         console.log('PONG webSocket connection established!');
@@ -43,11 +43,11 @@ export function wsRequest(court: PongCourt ,game: Game, ids: { gameID: string; u
 }
 
 async function setUpGame(game: Game, ws: WebSocket, ballDir: number) {
-    game.ball.dx *= ballDir;
-    addMessEvent(game, ws);
-    window.addEventListener('keydown', createKeyEvent(game.req.keys, game.horizontal, true));
-    window.addEventListener('keyup', createKeyEvent(game.req.keys, game.horizontal, false));
+	game.ball.dx *= ballDir;
+	addMessEvent(game, ws);
+	window.addEventListener('keydown', createKeyEvent(game.req.keys, game.horizontal, true));
+	window.addEventListener('keyup', createKeyEvent(game.req.keys, game.horizontal, false));
 
-    await new Promise((res) => setTimeout(res, START_DELAY));
-    startGame(game, ws);
+	await new Promise((res) => setTimeout(res, START_DELAY));
+	startGame(game, ws);
 }

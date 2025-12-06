@@ -5,28 +5,28 @@ import type { ImgData, MatchOutcome, Size, TabData, UserData } from '../types-in
 import { UserProfile, UserCardSocial, UserInline } from './profile.js';
 
 export function setAvatar(
-    size: Size,
-    el: UserProfile | UserCardSocial | UserInline,
-    av?: ImgData | null,
+	size: Size,
+	el: UserProfile | UserCardSocial | UserInline,
+	av?: ImgData | null,
 ) {
-    if (!av) av = defaultAvatar;
-    const avatar = { ...av };
-    avatar.size = size;
-    el.avatar = avatar;
+	if (!av) av = defaultAvatar;
+	const avatar = { ...av };
+	avatar.size = size;
+	el.avatar = avatar;
 }
 
 export function setUserProfileCommonValues(
-    user: UserData,
-    size: Size,
-    el: UserProfile | UserCardSocial | UserInline,
+	user: UserData,
+	size: Size,
+	el: UserProfile | UserCardSocial | UserInline,
 ) {
-    el.color = user.profileColor;
-    el.profileId = user.id;
-    el.profileView = user.relation;
-    el.status = user.status;
-    el.username = user.username;
-    el.winstreak = user.winstreak;
-    setAvatar(size, el, user.avatar);
+	el.color = user.profileColor;
+	el.profileId = user.id;
+	el.profileView = user.relation;
+	el.status = user.status;
+	el.username = user.username;
+	el.winstreak = user.winstreak;
+	setAvatar(size, el, user.avatar);
 }
 
 /**
@@ -37,9 +37,9 @@ export function setUserProfileCommonValues(
  * @returns A `UserCardSocial` element populated with user info and social buttons.
  */
 export function createUserCardSocial(user: UserData): UserCardSocial {
-    const el = document.createElement('div', { is: 'user-card-social' }) as UserCardSocial;
-    setUserProfileCommonValues(user, 'imedium', el);
-    return el;
+	const el = document.createElement('div', { is: 'user-card-social' }) as UserCardSocial;
+	setUserProfileCommonValues(user, 'imedium', el);
+	return el;
 }
 
 /**
@@ -50,9 +50,9 @@ export function createUserCardSocial(user: UserData): UserCardSocial {
  *
  */
 export function createUserInline(user: UserData): UserInline {
-    const el = document.createElement('div', { is: 'user-inline' }) as UserInline;
-    setUserProfileCommonValues(user, 'iicon', el);
-    return el;
+	const el = document.createElement('div', { is: 'user-inline' }) as UserInline;
+	setUserProfileCommonValues(user, 'ismall', el);
+	return el;
 }
 
 /**
@@ -62,31 +62,31 @@ export function createUserInline(user: UserData): UserInline {
  * @returns A `UserProfile` element populated with the user's details.
  */
 export function createUserProfile(user: UserData): UserProfile {
-    const el = document.createElement('div', { is: 'user-profile' }) as UserProfile;
-    setUserProfileCommonValues(user, 'ilarge', el);
-    el.biography = user.biography;
-    el.profileAge = user.since;
-    return el;
+	const el = document.createElement('div', { is: 'user-profile' }) as UserProfile;
+	setUserProfileCommonValues(user, 'ilarge', el);
+	el.biography = user.biography;
+	el.profileAge = user.since;
+	return el;
 }
 
 export function createFriendsPanel(users: UserData[]): TabData | null {
-    if (users.length < 1) return null;
-    const friends = {
-        id: 'friends',
-        content: 'Friends',
-        default: true,
-        panelContent: createUserMasonery(users),
-    };
-    return friends;
+	if (users.length < 1) return null;
+	const friends = {
+		id: 'friends',
+		content: 'Friends',
+		default: true,
+		panelContent: createUserMasonery(users),
+	};
+	return friends;
 }
 
 export function createMatchHistoryPanel(matches: MatchOutcome[]): TabData | null {
-    if (matches.length < 1) return null;
-    const history = {
-        id: 'history',
-        content: 'Game History',
-        default: false,
-        panelContent: createMatchHistory(matches),
-    };
-    return history;
+	if (matches.length < 1) return null;
+	const history = {
+		id: 'history',
+		content: 'Game History',
+		default: false,
+		panelContent: createMatchHistory(matches),
+	};
+	return history;
 }

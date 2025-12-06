@@ -11,14 +11,14 @@ interface lobbyInfo {
 }
 
 interface userInfo {
-    userID?: string;
-    username?: string;
-    userSocket?: WebSocket;
+	userID?: string;
+	username?: string;
+	userSocket?: WebSocket;
 }
 
 interface gameRequestForm {
-    event: 'GAME_REQUEST';
-    payload: lobbyInfo;
+	event: 'GAME_REQUEST';
+	payload: lobbyInfo;
 }
 
 async function createGameRequest(format: string, formInstance: string, gameSettings: string): Promise<string> {
@@ -26,11 +26,11 @@ async function createGameRequest(format: string, formInstance: string, gameSetti
     const localOpponent: string | undefined = customSettings.opponent;
     // console.log("FORM: ", formInstance); // will be useful at some point
 
-    const host: userStatusInfo = await userStatus();
-    if (!host.auth) {
-        redirectOnError('/auth', 'You must be registered to see this page')
-        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
-    }
+	const host: userStatusInfo = await userStatus();
+	if (!host.auth) {
+		redirectOnError('/auth', 'You must be registered to see this page');
+		return JSON.stringify({ event: 'BAD_USER_TOKEN' });
+	}
 
     const gameRequestForm: gameRequestForm = {
         event: 'GAME_REQUEST',
@@ -50,7 +50,7 @@ async function createGameRequest(format: string, formInstance: string, gameSetti
         },
     };
 
-    return JSON.stringify(gameRequestForm);
+	return JSON.stringify(gameRequestForm);
 }
 
 export { createGameRequest };

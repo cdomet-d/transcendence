@@ -18,10 +18,10 @@ export type Size = 'iicon' | 'ismall' | 'imedium' | 'ilarge' | 'ifs';
  * @property {string} src - Image source URL.
  */
 export interface ImgData {
-    id: string;
-    alt: string;
-    size: Size;
-    src: string;
+	id: string;
+	alt: string;
+	size: Size;
+	src: string;
 }
 
 export type BackgroundTheme = 'default' | 'farm' | 'ocean' | 'forest';
@@ -53,12 +53,12 @@ export type MenuSize = 's' | 'm' | 'l';
 export type DropdownBg = 'dynamic' | 'static';
 
 export interface navigationLinksData {
-    styleButton: boolean;
-    id: string;
-    datalink: string;
-    href: string;
-    title: string;
-    img: ImgData | null;
+	styleButton: boolean;
+	id: string;
+	datalink: string;
+	href: string;
+	title: string;
+	img: ImgData | null;
 }
 
 /** Metadata describing a tab component.
@@ -68,16 +68,16 @@ export interface navigationLinksData {
  * @property {UserData[] | MatchOutcome[]} panelContent - Array of data to populate tab panel.
  */
 export interface TabData {
-    content: string;
-    default: boolean;
-    id: string;
-    panelContent: HTMLElement | null;
+	content: string;
+	default: boolean;
+	id: string;
+	panelContent: HTMLElement | null;
 }
 
 export interface MenuData {
-    id?: string; //TODO: had to add "?" to stop having an error on notificationBtns in notifications.ts
-    buttons?: ButtonData[];
-    links?: navigationLinksData[];
+	id?: string; //TODO: had to add "?" to stop having an error on notificationBtns in notifications.ts
+	buttons?: ButtonData[];
+	links?: navigationLinksData[];
 }
 
 /* -------------------------------------------------------------------------- */
@@ -137,12 +137,12 @@ export type BtnStyles = 'green' | 'red';
  * @property {BtnStyles} [style] - Optional style modifier for button appearance - see {@link BtnStyles}.
  */
 export interface ButtonData {
-    type: BtnType;
-    id: string;
-    content: string | null;
-    img: ImgData | null;
-    ariaLabel: string;
-    style?: BtnStyles;
+	type: BtnType;
+	id: string;
+	content: string | null;
+	img: ImgData | null;
+	ariaLabel: string;
+	style?: BtnStyles;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -171,16 +171,16 @@ export type ProfileView = 'self' | 'friend' | 'pending' | 'stranger';
  * @property {string} winstreak - Current consecutive wins count.
  */
 export interface UserData {
-    avatar: ImgData;
-    biography: string;
-    id: string;
-    language: string;
-    profileColor: string;
-    relation: ProfileView;
-    since: string;
-    status: boolean;
-    username: string;
-    winstreak: string;
+	avatar: ImgData;
+	biography: string;
+	id: string;
+	language: string;
+	profileColor: string;
+	relation: ProfileView;
+	since: string;
+	status: boolean;
+	username: string;
+	winstreak: string;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -219,14 +219,14 @@ export interface gameNotif {
  * @property {string} method - HTTP method for form submission.
  */
 export interface FormDetails {
-    action: string;
-    ariaLabel: string;
-    button: ButtonData;
-    gameFormat?: 'remote-quickmatch' | 'local-quickmatch' | 'tournament' | undefined;
-    fields: InputFieldsData[];
-    heading: string;
-    id: string;
-    method: string;
+	action: string;
+	ariaLabel: string;
+	button: ButtonData;
+	gameFormat?: 'remote-quickmatch' | 'local-quickmatch' | 'tournament' | undefined;
+	fields: InputFieldsData[];
+	heading: string;
+	id: string;
+	method: string;
 }
 
 /** Metadata describing an HTML input field.
@@ -241,15 +241,15 @@ export interface FormDetails {
  * @property {string} [step] - Optional step value for increments.
  */
 export interface InputFieldsData {
-    id: string;
-    labelContent: string;
-    pattern: string;
-    placeholder: string;
-    required: boolean;
-    type: string;
-    max?: string;
-    min?: string;
-    step?: string;
+	id: string;
+	labelContent: string;
+	pattern: string;
+	placeholder: string;
+	required: boolean;
+	type: string;
+	max?: string;
+	min?: string;
+	step?: string;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -265,12 +265,12 @@ export interface InputFieldsData {
  * @property {boolean} tournament - If it was a tournament match.
  */
 export interface MatchOutcome {
-    date: string;
-    duration: string;
-    opponent: string;
-    outcome: string;
-    score: string;
-    tournament: boolean;
+	date: string;
+	duration: string;
+	opponent: string;
+	outcome: string;
+	score: string;
+	tournament: boolean;
 }
 
 /** Match participants data.
@@ -278,15 +278,15 @@ export interface MatchOutcome {
  * @property {UserData} player2 - Second player data.
  */
 export interface MatchParticipants {
-    player1: UserData;
-    player2: UserData;
+	player1: UserData;
+	player2: UserData;
 }
 
 export type CourtTheme = 'default' | 'farm' | 'ocean' | 'forest';
 
 export interface pongTheme {
-    color: string;
-    theme: CourtTheme;
+	color: string;
+	theme: CourtTheme;
 }
 
 /**
@@ -313,11 +313,20 @@ export interface PongOptions {
 /* -------------------------------------------------------------------------- */
 
 export interface Dictionary {
-	common: {
+	buttons: {
 		submit: string;
 		cancel: string;
 		search: string;
 		delete: string;
+		decline: string;
+		play: string;
+		leaderboard: string;
+		profile: string;
+		login: string;
+		logout: string;
+		start_game: string;
+		start_tournament: string;
+		delete_account: string;
 	};
 	forms: {
 		username: string;
@@ -326,16 +335,6 @@ export interface Dictionary {
 		avatar: string;
 		search_placeholder: string;
 	};
-	game: {
-		ball_speed: string;
-        horizontal: string;
-		paddle_size: string;
-		paddle_speed: string;
-		opponent: string;
-		start: string;
-        local: string;
-        remote: string;
-	};
 	titles: {
 		settings: string;
 		register: string;
@@ -343,6 +342,57 @@ export interface Dictionary {
 		local_pong: string;
 		remote_pong: string;
 		tournament: string;
+		leaderboard: string;
+		home: string;
+		pong_tournament: string;
 	};
+	profile: {
+		joined: string;
+		friends: string;
+		game_history: string;
+		statistics: string;
+		date: string;
+		opponent: string;
+		outcome: string;
+		score: string;
+		duration: string;
+		tournament: string;
+	};
+	notifs: {
+		notif_placeholder: string;
+	};
+	gameCustom: {
+		ball_speed: string;
+		paddle_size: string;
+		paddle_speed: string;
+		paddle_horizontal: string;
+		opponent: string;
+		start: string;
+		local: string;
+		remote: string;
+		background: string;
+		farm: string;
+		forest: string;
+		under_water: string;
+	};
+	error: {
+		username_error: string;
+		password_error: string;
+	};
+	lobby: {
+		local: string;
+		remote: string;
+		tournament: string;
+	};
+	placeholders: {
+		enter_username: string;
+		enter_password: string;
+		enter_biography: string,
+		upload_file: string;
+	};
+	settings: {
+		pick_color: string;
+		pick_language: string;
+	}
 }
 
