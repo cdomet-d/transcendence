@@ -113,7 +113,7 @@ async function evenScore(game: Game, player1: Player, player2: Player) {
 	game.ball.dx = ballSartingSpeed.x * game.ballDir;
 	game.ball.dy = ballSartingSpeed.y;
 	game.ballDir *= -1;
-	game.ball.maxSpeed = 0.80;
+	game.ball.maxSpeed = 0.75;
 	game.passStart = performance.now();
 	game.lastTick = performance.now();
 	sendToPlayers(game, player1, player2);

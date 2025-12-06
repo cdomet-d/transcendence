@@ -49,7 +49,7 @@ export class Game {
             y: HEIGHT / 2,
             dx: ballSartingSpeed.x,
             dy: ballSartingSpeed.y,
-            maxSpeed: 0.70,
+            maxSpeed: 0.65,
             r: 13,
         };
         const paddleSpeed: number = getPaddleSpeed(gameSettings.paddlespeed);

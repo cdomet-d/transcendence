@@ -9,12 +9,12 @@ export function getBallStartingSpeed(ballspeed: string): coordinates /*| null*/ 
 	//     return null
 	// }
 	if (level <= 0)
-		return {x: 0.3, y: 0.03};
+		return {x: 0.25, y: 0.03};
 	if (level === 1)
-		return {x: 0.45, y: 0.045};
+		return {x: 0.4, y: 0.045};
 	if (level >= 2)
-        return {x: 0.6, y: 0.06};
-	return {x: 0.3, y: 0.03};
+        return {x: 0.55, y: 0.06};
+	return {x: 0.25, y: 0.03};
 }
 
 export function getPaddleSpeed(paddlespeed: string): number {
