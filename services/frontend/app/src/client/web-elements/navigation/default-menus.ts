@@ -125,7 +125,7 @@ export function social(dic: Dictionary): MenuData {
                 datalink: '/user/settings',
                 id: 'settings',
                 href: '/user/settings',
-                title: dic.titles.settings,
+                title: 'Settings',
                 img: null,
             },
         ],

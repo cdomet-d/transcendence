@@ -3,7 +3,10 @@ export type ProfileCreationResult =
 	| { errorCode: 'conflict' }  // For 409
 	| { errorCode: 'user_not_found' }; // For 404
 
-export interface UserAuth {
-	userID: string,
-	username: string
+export interface JwtPayload {
+    userID: string;
+    username: string;
+    iat: number;
+    exp: number;
+	action?: boolean;
 }

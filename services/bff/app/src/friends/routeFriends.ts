@@ -17,7 +17,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 	serv.post('/relation', { schema: relationPost }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -32,7 +32,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
 							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -90,7 +90,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 	serv.patch('/relation', { schema: relationPatch }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -105,7 +105,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
 							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -151,7 +151,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 	serv.delete('/relation', { schema: relationDelete }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -166,7 +166,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
 							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else
 						return reply.code(401).send({ message: 'Unknown error' });
 				}

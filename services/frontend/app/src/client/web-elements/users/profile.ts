@@ -12,181 +12,181 @@ import { currentDictionary } from '../forms/language.js';
  * Extends HTMLDivElement.
  */
 export class UserProfile extends HTMLDivElement {
-    #actionButtons: SocialMenu;
-    #avatar: Avatar;
-    #biography: Biography;
-    #joinedSince: HTMLSpanElement;
-    #username: Username;
-    #winstreak: Winstreak;
-    #color: string;
+	#actionButtons: SocialMenu;
+	#avatar: Avatar;
+	#biography: Biography;
+	#joinedSince: HTMLSpanElement;
+	#username: Username;
+	#winstreak: Winstreak;
+	#color: string;
 
-    /**
-     * Initializes the UserProfile element and its child components.
-     */
-    constructor() {
-        super();
-        this.#actionButtons = createSocialMenu(social(currentDictionary), 'horizontal');
-        this.#avatar = document.createElement('div', { is: 'user-avatar' }) as Avatar;
-        this.#biography = document.createElement('p', { is: 'user-bio' }) as Biography;
-        this.#joinedSince = document.createElement('span') as HTMLSpanElement;
-        this.#username = document.createElement('div', { is: 'username-container' }) as Username;
-        this.#winstreak = document.createElement('span', { is: 'winstreak-block' }) as Winstreak;
-        this.#color = 'bg-4F9FFF';
-        this.className = `pad-s box-border brdr ${this.#color}`;
-    }
+	/**
+	 * Initializes the UserProfile element and its child components.
+	 */
+	constructor() {
+		super();
+		this.#avatar = document.createElement('div', { is: 'user-avatar' }) as Avatar;
+		this.#biography = document.createElement('p', { is: 'user-bio' }) as Biography;
+		this.#joinedSince = document.createElement('span') as HTMLSpanElement;
+		this.#username = document.createElement('div', { is: 'username-container' }) as Username;
+		this.#winstreak = document.createElement('span', { is: 'winstreak-block' }) as Winstreak;
+		this.#actionButtons = createSocialMenu(social(currentDictionary), 'horizontal');
+		this.#color = 'bg-4F9FFF';
+		this.className = `pad-s box-border brdr ${this.#color}`;
+	}
 
-    /**
-     * Sets the profile ID (container id attribute).
-     */
-    set profileId(userId: string) {
-        this.id = userId;
-    }
+	/**
+	 * Sets the profile ID (container id attribute).
+	 */
+	set profileId(userId: string) {
+		this.id = userId;
+	}
 
-    /**
-     * Sets the user's status (online/offline).
-     */
-    set status(status: boolean) {
-        if (status !== this.#username.status) {
-            // console.log('status');
-            this.#username.status = status;
-        }
-    }
+	/**
+	 * Sets the user's status (online/offline).
+	 */
+	set status(status: boolean) {
+		if (status !== this.#username.status) {
+			// console.log('status');
+			this.#username.status = status;
+		}
+	}
 
-    /**
-     * Sets the user's avatar image data.
-     */
-    set avatar(profilePic: ImgData) {
-        if (this.#avatar.metadata !== profilePic) {
-            this.#avatar.metadata = profilePic;
-            this.#avatar.classList.add('row-span-3', 'place-self-center');
-        }
-    }
+	/**
+	 * Sets the user's avatar image data.
+	 */
+	set avatar(profilePic: ImgData) {
+		if (this.#avatar.metadata !== profilePic) {
+			this.#avatar.metadata = profilePic;
+			this.#avatar.classList.add('row-span-3', 'place-self-center');
+		}
+	}
 
-    /**
-     * Sets the user's biography text.
-     */
-    set biography(bio: string) {
-        if (bio !== this.#biography.content) {
-            this.#biography.content = bio;
-            this.#biography.classList.add('row-span-2');
-        }
-    }
+	/**
+	 * Sets the user's biography text.
+	 */
+	set biography(bio: string) {
+		if (bio !== this.#biography.content) {
+			this.#biography.content = bio;
+			this.#biography.classList.add('row-span-2');
+		}
+	}
 
-    /**
-     * Sets the user's winstreak value.
-     */
-    set winstreak(val: string) {
-        if (val !== this.#winstreak.winstreakValue) {
-            this.#winstreak.winstreakValue = val;
-        }
-    }
+	/**
+	 * Sets the user's winstreak value.
+	 */
+	set winstreak(val: string) {
+		if (val !== this.#winstreak.winstreakValue) {
+			this.#winstreak.winstreakValue = val;
+		}
+	}
 
-    /**
-     * Sets the profile view type for the action menu.
-     */
-    set profileView(v: ProfileView) {
-        if (this.#actionButtons.view !== v) {
-            this.#actionButtons.view = v;
-        }
-    }
+	/**
+	 * Sets the profile view type for the action menu.
+	 */
+	set profileView(v: ProfileView) {
+		if (this.#actionButtons.view !== v) {
+			this.#actionButtons.view = v;
+		}
+	}
 
-    /**
-     * Sets the user's profile age (days since joined).
-     */
-    //TODO joined for language
-    set profileAge(val: string) {
-        if (this.#joinedSince.textContent !== `Joined ${val} days ago`) {
-            this.#joinedSince.textContent = `Joined ${val} days ago`;
-        }
-    }
+	/**
+	 * Sets the user's profile age (days since joined).
+	 */
+	//TODO joined for language
+	set profileAge(val: string) {
+		if (this.#joinedSince.textContent !== `Joined ${val} days ago`) {
+			this.#joinedSince.textContent = `Joined ${val} days ago`;
+		}
+	}
 
-    /**
-     * Sets the user's username.
-     */
-    set username(name: string) {
-        if (this.#username.name !== name) {
-            this.#username.name = name;
-            this.#actionButtons.owner = name;
-        }
-    }
+	/**
+	 * Sets the user's username.
+	 */
+	set username(name: string) {
+		if (this.#username.name !== name) {
+			this.#username.name = name;
+			this.#actionButtons.owner = name;
+		}
+	}
 
-    /**
-     * Sets the profile color and updates the class.
-     */
-    set color(newColor: string) {
-        if (this.#color !== newColor) {
-            this.classList.remove(this.#color);
-            this.#color = newColor;
-            this.classList.add(this.#color);
-        }
-    }
+	/**
+	 * Sets the profile color and updates the class.
+	 */
+	set color(newColor: string) {
+		if (this.#color !== newColor) {
+			this.classList.remove(this.#color);
+			this.#color = newColor;
+			this.classList.add(this.#color);
+		}
+	}
 
-    /**
-     * Sets all user information at once from a UserData object.
-     */
-    set userInfo(user: UserData) {
-        this.avatar = user.avatar;
-        this.biography = user.biography;
-        this.color = user.profileColor;
-        this.profileAge = user.since;
-        this.profileId = user.id;
-        this.profileView = user.relation;
-        this.status = user.status;
-        this.username = user.username;
-        this.winstreak = user.winstreak;
-    }
+	/**
+	 * Sets all user information at once from a UserData object.
+	 */
+	set userInfo(user: UserData) {
+		this.username = user.username;
+		this.avatar = user.avatar;
+		this.biography = user.biography;
+		this.color = user.profileColor;
+		this.profileAge = user.since;
+		this.profileId = user.id;
+		this.profileView = user.relation;
+		this.status = user.status;
+		this.winstreak = user.winstreak;
+	}
 
-    get getAvatar() {
-        return this.#avatar;
-    }
+	get getAvatar() {
+		return this.#avatar;
+	}
 
-    get getBiography() {
-        return this.#biography;
-    }
+	get getBiography() {
+		return this.#biography;
+	}
 
-    get getWinstreak() {
-        return this.#winstreak;
-    }
+	get getWinstreak() {
+		return this.#winstreak;
+	}
 
-    get getProfileAge() {
-        return this.#joinedSince;
-    }
+	get getProfileAge() {
+		return this.#joinedSince;
+	}
 
-    get getUsername() {
-        return this.#username;
-    }
+	get getUsername() {
+		return this.#username;
+	}
 
-    get getColor() {
-        return this.#color;
-    }
+	get getColor() {
+		return this.#color;
+	}
 
-    get getActionMenu() {
-        return this.#actionButtons;
-    }
+	get getActionMenu() {
+		return this.#actionButtons;
+	}
 
-    connectedCallback() {
-        this.render();
-    }
+	connectedCallback() {
+		this.render();
+	}
 
-    render() {
-        this.append(
-            this.#avatar,
-            this.#username,
-            this.#joinedSince,
-            this.#biography,
-            this.#actionButtons,
-            this.#winstreak,
-        );
-        this.#username.customizeStyle('f-yellow', 'f-m', 'f-bold', false);
-        this.#joinedSince.classList.add('place-self-center', 'dark');
-        this.#biography.classList.add('row-span-2');
-        this.#avatar.classList.add('row-span-3', 'place-self-center');
-        this.classList.add('grid', 'gap-s', 'user-profile-header-grid');
-    }
+	render() {
+		this.append(
+			this.#avatar,
+			this.#username,
+			this.#joinedSince,
+			this.#biography,
+			this.#actionButtons,
+			this.#winstreak,
+		);
+		this.#username.customizeStyle('f-yellow', 'f-m', 'f-bold', false);
+		this.#joinedSince.classList.add('place-self-center', 'dark');
+		this.#biography.classList.add('row-span-2');
+		this.#avatar.classList.add('row-span-3', 'place-self-center');
+		this.classList.add('grid', 'gap-s', 'user-profile-header-grid');
+	}
 }
 
 if (!customElements.get('user-profile')) {
-    customElements.define('user-profile', UserProfile, { extends: 'div' });
+	customElements.define('user-profile', UserProfile, { extends: 'div' });
 }
 
 /**
@@ -199,19 +199,27 @@ if (!customElements.get('user-profile')) {
  * @remark You should use {@link createUserCardSocial} which encapsulates creation logic.
  */
 export class UserCardSocial extends UserProfile {
-    constructor() {
-        super();
-    }
+	constructor() {
+		super();
+	}
 
-    override render() {
-        this.append(super.getAvatar, super.getUsername, super.getActionMenu);
-        super.getActionMenu.updateView();
-        super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
-        this.classList.add('grid', 'gap-s', 'place-items-center', 'wrap-anywhere', 'w-full', 'h-[248px]',  'text-center');
-    }
+	override render() {
+		this.append(super.getAvatar, super.getUsername, super.getActionMenu);
+		super.getActionMenu.updateView();
+		super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
+		this.classList.add(
+			'grid',
+			'gap-s',
+			'place-items-center',
+			'wrap-anywhere',
+			'w-full',
+			'h-[248px]',
+			'text-center',
+		);
+	}
 }
 if (!customElements.get('user-card-social')) {
-    customElements.define('user-card-social', UserCardSocial, { extends: 'div' });
+	customElements.define('user-card-social', UserCardSocial, { extends: 'div' });
 }
 
 /**
@@ -225,29 +233,24 @@ if (!customElements.get('user-card-social')) {
  * @remark You should use {@link createUserInline} which encapsulates creation logic.
  */
 export class UserInline extends UserProfile {
-    constructor() {
-        super();
-    }
+	constructor() {
+		super();
+	}
 
-    override connectedCallback() {
-        super.connectedCallback();
-        this.render();
-    }
+	override connectedCallback() {
+		super.connectedCallback();
+		this.render();
+	}
 
-    override render() {
-        this.append(super.getAvatar, super.getUsername, super.getWinstreak);
-        super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
-        this.classList.add(
-            'cursor-pointer',
-            'gap-s',
-            'flex',
-            'flex-initial',
-            'pad-xs',
-            `${super.getColor}`,
-        );
-    }
+	override render() {
+		this.append(super.getAvatar, super.getUsername, super.getWinstreak);
+		super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
+		super.getAvatar.classList.remove('pad-s');
+		super.getAvatar.classList.add('pad-xs');
+		this.className = `pad-xs cursor-pointer gap-xs grid uinline-grid ${super.getColor} brdr`;
+	}
 }
 
 if (!customElements.get('user-inline')) {
-    customElements.define('user-inline', UserInline, { extends: 'div' });
+	customElements.define('user-inline', UserInline, { extends: 'div' });
 }

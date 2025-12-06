@@ -2,27 +2,29 @@ import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 
 interface Params {
-  userID: string;
+	userID: string;
 }
 
-export function notifHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest<{ Params: Params }>) {
+export function notifHandler(
+	this: FastifyInstance,
+	socket: WebSocket,
+	req: FastifyRequest<{ Params: Params }>,
+) {
 	this.log.info('NOTIF webSocket connection established');
 	const userID: string = req.params.userID;
 	//TODO: if nan
 	this.users.addUserSocket(userID, socket);
 
 	const interval = setInterval(() => {
-		if (socket.readyState === socket.OPEN)
-			socket.send(JSON.stringify("ping"));
-		else
-			clearInterval(interval);
+		if (socket.readyState === socket.OPEN) socket.send(JSON.stringify('ping'));
+		else clearInterval(interval);
 	}, 30000);
 
-    socket.onclose = (event) => {
+	socket.onclose = (event) => {
 		this.users.deleteUserSocket(userID, socket);
-    }
+	};
 
-    socket.onerror = (event) => {
+	socket.onerror = (event) => {
 		this.log.error(event.message);
 		socket.close(1011, event.message);
 	};
