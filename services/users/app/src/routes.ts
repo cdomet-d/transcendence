@@ -663,63 +663,6 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-    serv.get('/username/:username', async (request, reply) => {
-        try {
-            const token = request.cookies.token;
-            if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
-
-            if (token) {
-                try {
-                    const user = serv.jwt.verify(token) as JwtPayload;
-                    if (typeof user !== 'object') throw new Error('Invalid token detected');
-                    request.user = user;
-                } catch (error) {
-                    if (error instanceof Error && 'code' in error) {
-                        if (
-                            error.code === 'FST_JWT_BAD_REQUEST' ||
-                            error.code === 'ERR_ASSERTION' ||
-                            error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-                        )
-                            return reply.code(400).send({ code: error.code, message: error.message });
-                        return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-                    } else {
-                        return reply.code(401).send({ message: 'Unknown error' });
-                    }
-                }
-            }
-
-            const { username } = request.params as { username: string };
-			request.server.log.error(`USERNAME: ${username}`)
-
-            if (username) {
-                const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
-                const response = await serv.dbUsers.get(sql, [username]);
-
-                if (!response) {
-                    return (reply.code(404).send({
-                        success: false,
-                        message: 'User not found'
-                    }));
-                }
-
-                return (reply.code(200).send({
-                    success: true,
-                    message: "user found!",
-                    username: response.username,
-                    userID: response.userID,
-                }));
-            }
-
-            return (reply.code(400).send({
-                success: false,
-                message: 'A query parameter (e.g., ?userID=...) is required.'
-            }));
-        } catch (error) {
-            serv.log.error(`Error fetching user profile: ${error}`);
-            throw (error);
-        }
-    });
-
 	/* 	serv.get('/:userID/userData', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };

@@ -368,7 +368,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/username/:username', async (request, reply) => {
+	serv.get('/:username', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -393,13 +393,14 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				}
 			}
 
-			const { username } = request.params as { username: string };
+			const username = request.params as { username: string };
 
-			const response = await fetch(`http://users:2626/username/${username.toString()}`, {
+			const response = await fetch('http://users:2626/username', {
 				method: 'GET',
 				headers: {
 					'Cookie': `token=${token}`,
 					'Content-Type': 'application/json',
+					body: JSON.stringify(username)
 				}
 			});
 
@@ -415,8 +416,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				console.log("[BFF] Invalid query")
 				reply.code(400).send({ code: response.status, message: '[BFF] Invalid query' });
 			}
-			const body = (await response.json()) as { username: string, userID: string };
-			reply.code(200).send(body);
+
+			reply.code(200).send({response});
 
 		} catch (error) {
 			serv.log.error(`[BFF] Failed to update settings: ${error}`);
