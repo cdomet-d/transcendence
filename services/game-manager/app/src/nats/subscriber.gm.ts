@@ -13,9 +13,9 @@ export async function natsSubscribe(serv: FastifyInstance) {
 		for await (const msg of pregame) {
 			const sc = StringCodec();
 			const game: gameReply = JSON.parse(sc.decode(msg.data));
-			console.log("USERS:", game.users);
+			console.log('USERS:', game.users);
 			if (game.users === null || game.users === undefined) {
-				console.log("EMPTY USERS");
+				console.log('EMPTY USERS');
 				return;
 			}
 			sendGameRequest(game.users[0]!.userID, game.users[1]!.userID, game, game.users[1]!.username);
@@ -29,7 +29,7 @@ export async function natsSubscribe(serv: FastifyInstance) {
 		for await (const msg of postgame) {
 			const sc = StringCodec();
 			const payload = sc.decode(msg.data);
-			console.log(`GM received following in "game.over" :\n`, JSON.stringify(payload));
+			console.log(`GM received following in 'game.over' :\n`, JSON.stringify(payload));
 
 			//if (tournamentID ==! -1)
 			//	tournamentState(serv, payload);
@@ -41,7 +41,7 @@ export async function natsSubscribe(serv: FastifyInstance) {
 }
 
 function sendGameRequest(userID: string, opponentID: string, game: gameReply, opponentUsername?: string) {
-	if (userID === "temporary") return; // TODO -1 will become 'temporary' 
+	if (userID === 'temporary') return; // TODO -1 will become 'temporary' 
 
 	const socket = wsClientsMap.get(userID);
 

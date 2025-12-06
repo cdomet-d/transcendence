@@ -4,10 +4,9 @@ import type { WebSocket } from '@fastify/websocket';
 
 export async function initNatsConnection(): Promise<NatsConnection> {
 	let token: string | undefined = process.env.NATS_SERVER_TOKEN;
-	if (!token)
-		throw new Error("NATS token undefined");
-	const nc = await connect({ servers: "nats://nats-server:4222", token: token });
-	return (nc);
+	if (!token) throw new Error('NATS token undefined');
+	const nc = await connect({ servers: 'nats://nats-server:4222', token: token });
+	return nc;
 }
 
 interface friendNotif {
@@ -33,17 +32,14 @@ export async function natsSubscription(serv: FastifyInstance) {
 	(async () => {
 		for await (const msg of sub) {
 			const notif: friendNotif | gameNotif = JSON.parse(sc.decode(msg.data));
-			serv.log.error(`Received message: ${JSON.stringify(notif)}`);
-			
-			const receiverWS: Array<WebSocket> | undefined = serv.users.getUserSockets(notif.receiverID)
+			const receiverWS: Array<WebSocket> | undefined = serv.users.getUserSockets(notif.receiverID);
 			if (receiverWS === undefined) {
 				//TODO: le faire remonter au client
-				serv.log.error("receiver not found")
+				serv.log.error('receiver not found');
 				return;
 			}
 			for (const socket of receiverWS) {
-				if (socket.OPEN)
-					socket.send(JSON.stringify(notif));
+				if (socket.OPEN) socket.send(JSON.stringify(notif));
 			}
 		}
 	})();

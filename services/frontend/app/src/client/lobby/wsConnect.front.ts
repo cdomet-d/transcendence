@@ -18,7 +18,14 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	const ws: WebSocket = openWsConnection();
 
 	ws.onopen = async () => {
-		console.log("Lobby WebSocket connection established!")
+		console.log('Lobby WebSocket connection established!')
+
+		const interval = setInterval(() => {
+			if (ws.readyState === ws.OPEN) {
+				ws.send(JSON.stringify({ event: "NOTIF", payload: { notif: "ping" } }));
+			} else clearInterval(interval);
+		}, 30000);
+
 		// send Lobby Request
 		if (action === 'create') {
 			if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
@@ -34,7 +41,6 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		// reply Lobby Invite
 		if (action === 'join') {
 			if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-				console.log("OUAI :", formInstance);
 				wsInstance.send(await joinLobbyRequest(action, format, inviteeID!, lobbyID!, formInstance));
 			} else {
 				console.log(`Error: WebSocket is not open for ${action}`);
@@ -80,10 +86,13 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		try {
 			// handle Response for lobbyRequest
 			const data = JSON.parse(message.data);
-			// TODO catch error message from GM
 
 			if (data.error) {
 				console.log("ERROR: ", data.error);
+				return;
+			}
+
+			if (data.event === "NOTIF" && data.notif === "pong") {
 				return;
 			}
 
@@ -92,13 +101,16 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 
 				// TODO send host to front as soon as lobby 'created'
 				// send lobbyID to Form
-				console.log("FORM INSTANCE FRONT: ", data.formInstance);
 				// updateGameForm(data.formInstance);
 				// TODO tell front when everybody there
 
 				if (data.lobby === "joined") {
-					// if (data.formInstance === 'remoteForm') {
-						router.loadRoute('/quick-remote-lobby', true, undefined, "");
+					// console.log("FORM INSTANCE OUAI", data.formInstance);
+					if (data.formInstance === "1 vs 1") {
+						router.loadRoute("/quick-remote-lobby", true, undefined, "");
+					}
+					// else if (data.formInstance === "tournament") {
+					// 	router.loadRoute("/tournament-lobby", true, undefined, "");
 					// }
 				}
 				return;

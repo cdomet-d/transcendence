@@ -1,7 +1,7 @@
-import { fetch } from "undici";
-import type { tournament } from "../gameManager/gameManager.interface.js";
-import { startGame } from "../quickmatch/createGame.js";
-import type { FastifyInstance } from "fastify";
+import { fetch } from 'undici';
+import type { tournament } from '../gameManager/gameManager.interface.js';
+import { startGame } from '../quickmatch/createGame.js';
+import type { FastifyInstance } from 'fastify';
 
 export const tournamentMap: Map<string, tournament> = new Map();
 

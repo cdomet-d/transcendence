@@ -6,7 +6,7 @@ let nc: NatsConnection;
 export async function natsConnect(): Promise<NatsConnection> {
 	if (!nc) {
 		let token = process.env.NATS_SERVER_TOKEN;
-		nc = await connect({ servers: "nats://nats-server:4222", token: token ?? "" });
+		nc = await connect({ servers: 'nats://nats-server:4222', token: token ?? '' });
 	}
 	return nc;
 };

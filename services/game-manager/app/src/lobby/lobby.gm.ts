@@ -1,4 +1,4 @@
-import type { userInfo, lobbyInfo } from "../gameManager/gameManager.interface.js";
+import type { userInfo, lobbyInfo } from '../gameManager/gameManager.interface.js';
 export const wsClientsMap: Map<string, WebSocket> = new Map();
 export const lobbyMap: Map<string | undefined, lobbyInfo> = new Map();
 
@@ -27,7 +27,7 @@ function makeLobbyInfo(hostID: string, format: string): lobbyInfo {
 		]),
 		remote: true, // TODO set to false if local pong before START event
 		format: format,
-		nbPlayers: format === "quickmatch" ? 2 : 4
+		nbPlayers: format === 'quickmatch' ? 2 : 4
 	}
 
 	return lobby;
@@ -76,7 +76,7 @@ export function removeUserFromLobby(userID: string, lobbyID: string) {
 export function printPlayersInLobby(lobbyID: string) {
 	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) {
-		console.log("AAAH PAS DE LOBBY");
+		console.log('AAAH PAS DE LOBBY');
 		return;
 	}
 	lobby?.userList.forEach(user => {

@@ -1,16 +1,40 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { UserProfileView, JwtPayload } from './bff.interface.js';
-import { fetchLeaderboard, searchBar, buildTinyProfile, fetchUserStats, fetchFriendships, processMatches, updateAuthSettings, updateUserProfile } from './bffUserProfile.service.js';
+import {
+	fetchLeaderboard,
+	searchBar,
+	buildTinyProfile,
+	fetchUserStats,
+	fetchFriendships,
+	processMatches,
+	updateAuthSettings,
+	updateUserProfile,
+	updateUserProfileUsername,
+	refreshJWTForUsernameChange,
+} from './bffUserProfile.service.js';
+import jwt from 'jsonwebtoken';
+
+function validateBearerToken(serv: FastifyInstance, authorization?: string): boolean {
+	if (!authorization) return false;
+	const tok = authorization.replace(/^Bearer\s+/i, '');
+	try {
+		jwt.verify(tok, process.env.JWT_SECRET!);
+		return true;
+	} catch (error) {
+		if (error instanceof Error) serv.log.error(error.message);
+		return false;
+	}
+}
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
-	//get's profile + stats + game + friendslist
-	// userID -> userID of requested profile
-	// get big profile with username
-	//error handled
+	/* get's profile + stats + game + friendslist
+	 * userID -> userID of requested profile
+	 * get big profile with username
+	 * error handled */
 	serv.get('/profile/:username', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -24,8 +48,10 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 							error.code === 'ERR_ASSERTION' ||
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
-							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+							return reply
+								.code(400)
+								.send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -54,7 +80,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				fetchFriendships(serv.log, combinedUserData.userID, 'pending', token),
 				processMatches(serv.log, combinedUserData.userID, token),
 			]);
-
 			if (!userData || !userStats)
 				return reply
 					.code(404)
@@ -69,16 +94,18 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			};
 
 			return reply.code(200).send(responseData);
-
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
-				const customError = error as { code: number, message: string };
-				if (customError.code === 404) return (reply.code(404).send({ message: 'User profile data not found.' }));
-				if (customError.code === 401) return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
-				if (customError.code === 400) return reply.code(400).send({ code: error.code, message: 'Unauthaurized' });
+				const customError = error as { code: number; message: string };
+				if (customError.code === 404)
+					return reply.code(404).send({ message: 'User profile data not found.' });
+				if (customError.code === 401)
+					return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
+				if (customError.code === 400)
+					return reply.code(400).send({ code: error.code, message: 'Unauthorized' });
 
 				serv.log.error(`[BFF] Error building user profile view: ${error}`);
-				throw (error);
+				throw error;
 			}
 		}
 	});
@@ -87,7 +114,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	serv.get('/tiny-profile/:username', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -101,8 +128,10 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 							error.code === 'ERR_ASSERTION' ||
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
-							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+							return reply
+								.code(400)
+								.send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -124,14 +153,16 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			if (!tinyProfile)
 				return reply.code(404).send({ message: 'User profile data not found.' });
 
-			return (reply.code(200).send(tinyProfile));
-
+			return reply.code(200).send(tinyProfile);
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
-				const customError = error as { code: number, message: string };
-				if (customError.code === 404) return (reply.code(404).send({ message: 'User profile data not found.' }));
-				if (customError.code === 400) return (reply.code(400).send({ message: 'Unauthorized' }));
-				if (customError.code === 401) return (reply.code(401).send({ message: 'Unauthorized' }));
+				const customError = error as { code: number; message: string };
+				if (customError.code === 404)
+					return reply.code(404).send({ message: 'User profile data not found.' });
+				if (customError.code === 400)
+					return reply.code(400).send({ message: 'Unauthorized' });
+				if (customError.code === 401)
+					return reply.code(401).send({ message: 'Unauthorized' });
 
 				serv.log.error(`[BFF] Error building tiny profile: ${error}`);
 				throw error;
@@ -143,7 +174,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	serv.get('/search', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -157,8 +188,10 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 							error.code === 'ERR_ASSERTION' ||
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
-							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+							return reply
+								.code(400)
+								.send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -166,22 +199,21 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			}
 
 			const query = request.query as { name?: string };
-			if (!query.name || query.name.trim() === '')
-				return reply.code(200).send([]);
+			if (!query.name || query.name.trim() === '') return reply.code(200).send([]);
 
 			const profiles = await searchBar(serv.log, query.name, token);
-			return (reply.code(200).send(profiles));
-
+			return reply.code(200).send(profiles);
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
-				const customError = error as { code: number, message: string };
+				const customError = error as { code: number; message: string };
 
-				if (customError.code === 400) return (reply.code(400).send({ message: 'Unauthorized' }));
-				if (customError.code === 401) return (reply.code(401).send({ message: 'Unauthorized' }));
+				if (customError.code === 400)
+					return reply.code(400).send({ message: 'Unauthorized' });
+				if (customError.code === 401)
+					return reply.code(401).send({ message: 'Unauthorized' });
 			}
 			serv.log.error(`[BFF] Error searching users: ${error}`);
-			throw (error);
-
+			throw error;
 		}
 	});
 
@@ -189,7 +221,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	serv.get('/leaderboard', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -203,8 +235,10 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 							error.code === 'ERR_ASSERTION' ||
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
-							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+							return reply
+								.code(400)
+								.send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -212,18 +246,18 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			}
 
 			const leaderboard = await fetchLeaderboard(serv.log, token);
-			return (reply.code(200).send(leaderboard));
-
+			return reply.code(200).send(leaderboard);
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
-				const customError = error as { code: number, message: string };
+				const customError = error as { code: number; message: string };
 
-				if (customError.code === 400) return (reply.code(400).send({ message: 'Unauthorized' }));
-				if (customError.code === 401) return (reply.code(401).send({ message: 'Unauthorized' }));
+				if (customError.code === 400)
+					return reply.code(400).send({ message: 'Unauthorized' });
+				if (customError.code === 401)
+					return reply.code(401).send({ message: 'Unauthorized' });
 			}
 			serv.log.error(`[BFF] Error searching leaderboard: ${error}`);
-			throw (error);
-
+			throw error;
 		}
 	});
 
@@ -231,7 +265,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	serv.patch('/settings', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
@@ -245,8 +279,10 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 							error.code === 'ERR_ASSERTION' ||
 							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
 						)
-							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+							return reply
+								.code(400)
+								.send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}
@@ -257,40 +293,72 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const body = request.body as any;
 
 			const profileUpdates: any = {};
+			const profileUpdatesUsername: any = {};
 			const accountUpdates: any = {};
 
 			if (body.avatar) profileUpdates.avatar = body.avatar;
 			if (body.biography) profileUpdates.biography = body.biography;
-			if (body.profileColor) profileUpdates.profileColor = body.profileColor;
+			if (body.color) profileUpdates.profileColor = body.color;
 			if (body.defaultLang) profileUpdates.lang = body.defaultLang;
-			if (body.username) profileUpdates.username = body.username;
-
-			if (body.password) accountUpdates.password = body.password;
-			if (body.username) accountUpdates.username = body.username;
 
 			const updateTasks: Promise<void>[] = [];
 
+			if (body.username || body.password) {
+				serv.log.info('pw/username change detected');
+
+				if (!validateBearerToken(serv, request.headers.authorization))
+					return reply.code(401).send({ message: 'Unauthorized' });
+
+				if (body.username) profileUpdatesUsername.username = body.username;
+				if (body.username) accountUpdates.username = body.username;
+				if (body.password) accountUpdates.password = body.password;
+
+				serv.log.warn(profileUpdatesUsername, accountUpdates);
+				if (Object.keys(accountUpdates).length > 0)
+					updateTasks.push(updateAuthSettings(serv.log, userID, accountUpdates, token));
+				serv.log.warn(`UPDATE TASKS: ${updateTasks}`);
+				if (Object.keys(profileUpdatesUsername).length > 0)
+					updateTasks.push(
+						updateUserProfileUsername(serv.log, userID, profileUpdatesUsername, token)
+					);
+			}
+
 			if (Object.keys(profileUpdates).length > 0)
 				updateTasks.push(updateUserProfile(serv.log, userID, profileUpdates, token));
-
-			if (Object.keys(accountUpdates).length > 0)
-				updateTasks.push(updateAuthSettings(serv.log, userID, accountUpdates, token));
-
 			if (updateTasks.length === 0)
 				return reply.code(200).send({ message: '[BFF] No settings to update.' });
 
 			try {
 				await Promise.all(updateTasks);
+				if (accountUpdates.username) {
+					await refreshJWTForUsernameChange(
+						request.headers.authorization,
+						request.user.userID,
+						accountUpdates.username,
+						reply
+					);
+				}
 				return reply.code(200).send({ message: '[BFF] Settings updated successfully.' });
-
 			} catch (error) {
 				if (typeof error === 'object' && error !== null && 'code' in error) {
-					const customError = error as { code: number, message: string };
+					const customError = error as { code: number; message: string };
 
-					if (customError.code === 409) return reply.code(409).send({ message: customError.message || '[BFF] Conflict error. Username taken' });
-					if (customError.code === 404) return reply.code(404).send({ message: customError.message || '[BFF] User/account not found.' });
-					if (customError.code === 400) return reply.code(400).send({ message: customError.message || '[BFF] Bad Request.' });
-					if (customError.code === 401) return reply.code(401).send({ message: customError.message || '[BFF] Unauthorized' });
+					if (customError.code === 409)
+						return reply.code(409).send({
+							message: customError.message || '[BFF] Conflict error. Username taken',
+						});
+					if (customError.code === 404)
+						return reply.code(404).send({
+							message: customError.message || '[BFF] User/account not found.',
+						});
+					if (customError.code === 400)
+						return reply
+							.code(400)
+							.send({ message: customError.message || '[BFF] Bad Request.' });
+					if (customError.code === 401)
+						return reply
+							.code(401)
+							.send({ message: customError.message || '[BFF] Unauthorized' });
 				}
 				throw error;
 			}
@@ -299,11 +367,9 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			throw error;
 		}
 	});
-	
 
 	serv.get('/username/:username', async (request, reply) => {
 		try {
-			request.server.log.error("1");
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
@@ -326,11 +392,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 					}
 				}
 			}
-			request.server.log.error("2");
 
 			const { username } = request.params as { username: string };
-			request.server.log.error(`USERNAME: ${username}`)
-			request.server.log.error("3");
 
 			const response = await fetch(`http://users:2626/username/${username.toString()}`, {
 				method: 'GET',
@@ -339,7 +402,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 					'Content-Type': 'application/json',
 				}
 			});
-			request.server.log.error("4");
 
 			if (response.status === 401) {
 				console.log("[BFF] Unauthaurized")
@@ -353,13 +415,10 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				console.log("[BFF] Invalid query")
 				reply.code(400).send({ code: response.status, message: '[BFF] Invalid query' });
 			}
-			request.server.log.error("5");
 			const body = (await response.json()) as { username: string, userID: string };
 			reply.code(200).send(body);
 
 		} catch (error) {
-			request.server.log.error("6");
-
 			serv.log.error(`[BFF] Failed to update settings: ${error}`);
 			throw error;
 		}

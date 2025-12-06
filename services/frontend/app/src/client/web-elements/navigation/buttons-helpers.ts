@@ -11,15 +11,15 @@ import { NavigationLinks } from './links.js';
  *
  */
 export function createButton(btn: ButtonData, animated?: boolean): CustomButton {
-    const el = document.createElement('button', { is: 'custom-button' }) as CustomButton;
-    el.btn = btn;
-    if (animated) el.animation = animated;
-    return el;
+	const el = document.createElement('button', { is: 'custom-button' }) as CustomButton;
+	el.btn = btn;
+	if (animated) el.animation = animated;
+	return el;
 }
 
 export function createLink(link: navigationLinksData, animated?: boolean) {
-    const el = document.createElement('a', { is: 'nav-link' }) as NavigationLinks;
-    el.info = link;
-    if (animated) el.animation = animated;
-    return el;
+	const el = document.createElement('a', { is: 'nav-link' }) as NavigationLinks;
+	el.info = link;
+	if (animated) el.animation = animated;
+	return el;
 }

@@ -10,9 +10,9 @@ import type { TabData, UserData } from '../types-interfaces.js';
  *
  */
 export function createTabs(list: TabData[]): TabContainer {
-    const el = document.createElement('div', { is: 'tab-container' }) as TabContainer;
-    el.tabList = list;
-    return el;
+	const el = document.createElement('div', { is: 'tab-container' }) as TabContainer;
+	el.tabList = list;
+	return el;
 }
 
 /**
@@ -22,7 +22,7 @@ export function createTabs(list: TabData[]): TabContainer {
  * @returns {UserMasonery} A {@link UserMasonery} div element containing the user masonry.
  */
 export function createUserMasonery(users: UserData[]): UserMasonery {
-    const el = document.createElement('div', { is: 'user-masonery' }) as UserMasonery;
-    el.setUsers(users);
-    return el;
+	const el = document.createElement('div', { is: 'user-masonery' }) as UserMasonery;
+	el.setUsers(users);
+	return el;
 }

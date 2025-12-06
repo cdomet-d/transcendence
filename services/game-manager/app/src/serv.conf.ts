@@ -25,9 +25,10 @@ const options = {
 			target: 'pino-pretty',
 			options: {
 				colorize: true,
-				translateTime: 'yyyy-mm-dd HH:MM:ss' // local date and time with timezone offset
-			}
-		}
+				translateTime: 'SYS:dd-mm-yyyy HH:MM:ss', // local date and time with timezone offset
+				singleLine: true,
+			},
+		},
 	},
 	trustProxy: checkProxy,
 	//connectionTimeout

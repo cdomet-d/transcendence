@@ -10,7 +10,7 @@ interface lobbyInfo {
 	joinable?: boolean,
 	userList: Map<string, userInfo>,
 	remote: boolean,
-	format: "quickmatch" | "tournament" | string,
+	format: 'quickmatch' | 'tournament' | string,
 	nbPlayers: number
 	// gameSettings?: string
 }

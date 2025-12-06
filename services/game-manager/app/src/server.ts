@@ -29,7 +29,7 @@ export async function init(): Promise<FastifyInstance> {
 
     // decorations
 	const nc: NatsConnection = await natsConnect();
-	serv.decorate("nc", nc);
+	serv.decorate('nc', nc);
 	await natsSubscribe(serv);
 
 	//hooks

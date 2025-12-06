@@ -35,7 +35,7 @@ async function postGameToDashboard(game: game) {
 		player1Score: game.users![0]!.userID! === game.winnerID ? game.score[0] : game.score[1],
 		player2Score: game.users![1]!.userID! === game.winnerID ? game.score[0] : game.score[1],
 	}
-	console.log("REQ BODY DASHBOARD", JSON.stringify(reqBody));
+	console.log('REQ BODY DASHBOARD', JSON.stringify(reqBody));
 	try {
 		const response: Response = await fetch(url, {
 			method: 'POST',
@@ -72,7 +72,7 @@ async function patchGameToUsers(game: game) {
 		longuestPass: game.longuestPass,
 		duration: game.duration,
 	}
-	console.log("REQ BODY USERS", JSON.stringify(reqBody));
+	console.log('REQ BODY USERS', JSON.stringify(reqBody));
 
 	try {
 		const response: Response = await fetch(url, {
