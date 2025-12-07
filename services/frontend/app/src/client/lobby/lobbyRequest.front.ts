@@ -30,7 +30,6 @@ async function joinLobbyRequest(action: string, format: string, inviteeID: strin
         },
         formInstance: formInstance
     };
-
 	return JSON.stringify(joinLobbyForm);
 }
 

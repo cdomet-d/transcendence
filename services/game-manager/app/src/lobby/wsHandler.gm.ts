@@ -85,11 +85,9 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					const inviteeID = invitePayload.inviteeID!;
 					const alreadyInLobby = findLobbyIDFromUserID(inviteeID);
 					if (alreadyInLobby !== null) {
-						console.log(`I am ${inviteeID} and I was in lobbyID ${alreadyInLobby}`);
 						removeUserFromLobby(inviteeID, alreadyInLobby);
+						console.log(`I am ${inviteeID} and I was removed from lobby: ${alreadyInLobby}`);
 					}
-					console.log(`ALREADY in lobbyID ${alreadyInLobby}`);
-
 					addUserToLobby(inviteeID, socket, invitePayload.lobbyID!);
 					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance }));
 				}

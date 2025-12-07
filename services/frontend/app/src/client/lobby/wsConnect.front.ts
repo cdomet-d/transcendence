@@ -38,6 +38,15 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 
 		// TODO keep alive ws connection during whole tournament (until everyone leaves)
 		// TODO what happens if host leaves lobby, kick everyone ?
+
+		if (action === 'join') {
+			if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+				wsInstance.send(await joinLobbyRequest(action, format, inviteeID!, lobbyID!, formInstance));
+			} else {
+				console.log(`Error: WebSocket is not open for ${action}`);
+			}
+			return;
+		}
 	}
 	// reply Lobby Invite
 	if (action === 'join') {
@@ -113,9 +122,9 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 					if (data.formInstance === "1 vs 1") {
 						router.loadRoute("/quick-remote-lobby", true, undefined, "");
 					}
-					// else if (data.formInstance === "tournament") {
-					// 	router.loadRoute("/tournament-lobby", true, undefined, "");
-					// }
+					else if (data.formInstance === "tournament") {
+						router.loadRoute("/tournament-lobby", true, undefined, "");
+					}
 				}
 				return;
 			}
