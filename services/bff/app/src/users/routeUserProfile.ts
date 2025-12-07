@@ -278,6 +278,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//TODO add schemas
 	//error handled
 	serv.patch('/settings', async (request, reply) => {
 		try {
@@ -470,6 +471,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const userID = request.user.userID;
 
 			try {
+				if (!validateBearerToken(serv, request.headers.authorization))
+					return reply.code(401).send({ message: 'Unauthorized' });
 				await AnonymizeUser(serv.log, userID, token);
 
 				try {
