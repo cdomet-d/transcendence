@@ -14,7 +14,7 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 		console.log("Lobby not found");
 		return;
 	}
-    const usersArray: userInfo[] = Array.from(lobbyMap.get(lobbyID!)!.userList!.values());//Array.from(lobbyInfo.userList.values());
+    const usersArray: userInfo[] = Array.from(lobbyMap.get(lobbyID!)!.whitelist!.userIDs.values());//Array.from(lobbyInfo.userList.values());
 
 	const game: game = {
 		lobbyID: lobbyInfo.lobbyID!,
