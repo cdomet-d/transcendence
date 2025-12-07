@@ -19,7 +19,7 @@ export interface gameNotif {
 export interface lobbyInviteForm {
 	action: string,
 	format?: string,
-	inviteeID: string,
+	invitee: {userID: string, username?: string},
 	lobbyID?: string,
 	hostID?: string,
 }

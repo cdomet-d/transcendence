@@ -32,11 +32,19 @@ const lobbyInvitePayloadSchema = {
 	properties: {
 		action: { type: 'string' },
 		format: { type: 'string' },
-		inviteeID: { type: 'string' },
+		invitee: { 
+			type: 'object',
+			properties: {
+				userID: { type: 'string'},
+				username: { type: 'string'}
+			},
+			required: ['userID'],
+			additionalProperties: false,
+		},
 		lobbyID: { type: 'string' },
 		hostID: { type: 'string' }
 	},
-	required: ['action', 'inviteeID'],
+	required: ['action', 'invitee'],
 };
 
 const gameRequestPayloadSchema = {

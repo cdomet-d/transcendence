@@ -3,7 +3,7 @@ export interface lobbyInviteForm {
     payload: {
         action: string,
         format?: string,
-        inviteeID: string,
+        invitee: {userID: string, username?: string},
         lobbyID?: string,
         hostID?: string,
     },
