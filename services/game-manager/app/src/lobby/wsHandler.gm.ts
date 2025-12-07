@@ -82,6 +82,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 
 				} else if (invitePayload.action === 'join') {
 					this.log.error(`IN JOIN + ${formInstance}`);
+					//TODO: check if lobby still exists otherwise send error "tournament doesn't exist anymore"
 					userID = invitePayload.invitee.userID;
 					addUserToLobby(userID!, socket, invitePayload.lobbyID!);
 					const whiteList: whitelist = lobbyMap.get(invitePayload.lobbyID!)?.whitelist!;
