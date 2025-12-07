@@ -17,7 +17,7 @@ const reqObjSchema = {
         timeStamp: { type: 'number' },
         keys: {
             type: 'object',
-            additionalProperties: { type: 'boolean' },
+            additionalProperties: { type: 'boolean' },//TODO: necessary ?
             required: ['w', 's', 'a', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'],
             properties: {
                 w: { type: 'boolean' },
