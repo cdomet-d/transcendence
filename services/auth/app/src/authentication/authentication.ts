@@ -166,6 +166,51 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	serv.patch('/anonymize', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const userID = request.user.userID;
+			const newUsername = `DeletedUser_${crypto.randomUUID().slice(0, 8)}`;
+
+			const query = `UPDATE account SET username = ? WHERE userID = ?`;
+
+			const result = await serv.dbAuth.run(query, [newUsername, userID]);
+			if (result.changes === 0)
+				return reply.code(404).send({ message: '[AUTH] Account not found' });
+
+			return reply.code(200).send({ success: true, message: '[AUTH] Account anonymized' });
+
+		} catch (error) {
+			serv.log.error(`[AUTH] Error processing anonymization: ${error}`);
+			if (error instanceof Error && error.message.includes('Stats not found')) {
+				return reply.code(404).send({ message: error.message });
+			}
+			return reply.code(500).send({ message: '[AUTH] Internal Server Error' });
+		}
+	});
+
 	serv.patch('/:userID', async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };

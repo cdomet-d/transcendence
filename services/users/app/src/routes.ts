@@ -689,8 +689,9 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.patch('/anonymize', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
-
+			if (!token) {
+				return reply.code(401).send({ message: 'Unauthorized' });
+			}
 			if (token) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
@@ -698,12 +699,12 @@ export async function userRoutes(serv: FastifyInstance) {
 					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
-						if (
-							error.code === 'FST_JWT_BAD_REQUEST' ||
-							error.code === 'ERR_ASSERTION' ||
-							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-						)
+						// @ts-ignore
+						if (['FST_JWT_BAD_REQUEST', 'ERR_ASSERTION', 'FST_JWT_BAD_COOKIE_REQUEST'].includes(error.code)) {
+							// @ts-ignore
 							return reply.code(400).send({ code: error.code, message: error.message });
+						}
+						// @ts-ignore
 						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
@@ -714,14 +715,24 @@ export async function userRoutes(serv: FastifyInstance) {
 			const userID = request.user.userID;
 			const safeUserID = cleanInput(userID);
 
-			const newUsername = crypto.randomUUID().toString();
-			const query = `UPDATE userProfile SET username = ?, biography = NULL WHERE userID = ?`;
+			const newUsername = `DeletedUser_${crypto.randomUUID().slice(0, 8)}`;
+			const placeholderAvatar = '/public/default_avatar.png';
 
-			const userStats = await serv.dbUsers.get<userStats>(query, [newUsername, safeUserID]);
+			const query = `UPDATE userProfile SET username = ?, avatar = ?, biography = NULL WHERE userID = ?`;
+
+			const result = await serv.dbUsers.run(query, [newUsername, placeholderAvatar, safeUserID]);
+
+			if (result.changes === 0) {
+				return reply.code(404).send({ message: 'User not found' });
+			}
+
+			return reply.code(200).send({ success: true, message: 'User anonymized' });
 
 		} catch (error) {
-			serv.log.error(`[USERS] Error processing match stats: ${error}`);
+			serv.log.error(`[USERS] Error processing anonymization: ${error}`);
+			// @ts-ignore
 			if (error instanceof Error && error.message.includes('Stats not found')) {
+				// @ts-ignore
 				return reply.code(404).send({ message: error.message });
 			}
 			return reply.code(500).send({ message: 'Internal Server Error' });
