@@ -17,6 +17,8 @@ function openWsConnection() {
 
 async function wsConnect(action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string, invitee?: {userID: string, username?: string}, form?: RemotePongSettings | LocalPongSettings) {
 	const ws: WebSocket = openWsConnection();
+	if (form)
+		form.socket = ws;
 
 	ws.onopen = async () => {
 		console.log('Lobby WebSocket connection established!')

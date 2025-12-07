@@ -24,6 +24,7 @@ export class LocalPongSettings extends BaseForm {
 	#backgroundSelector: DropdownMenu;
 	#format: string;
 	#formInstance: string;
+	#ws: WebSocket | null;
 
 	/* -------------------------------------------------------------------------- */
 	/*                                   Default                                  */
@@ -34,6 +35,7 @@ export class LocalPongSettings extends BaseForm {
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
 		this.#format = "";
 		this.#formInstance = "";
+		this.#ws = null;
 	}
 
 	/**
@@ -46,6 +48,13 @@ export class LocalPongSettings extends BaseForm {
 		this.renderFields();
 		this.renderButtons();
 		this.classList.add('sidebar-left');
+	}
+
+	override disconnectedCallback() {
+		super.disconnectedCallback()
+		const route: string = window.location.pathname;
+		if (this.#ws && route !== "/game")//TODO: if brackets or winner/loser screen have routes, add them here
+			this.#ws.close();
 	}
 
 	/* -------------------------------------------------------------------------- */
@@ -67,6 +76,11 @@ export class LocalPongSettings extends BaseForm {
 
 	set formInstance(formInstance: string) {
 		this.#formInstance = formInstance;
+	}
+
+	set socket(ws: WebSocket) {
+		if (this.#ws === null)
+			this.#ws = ws;
 	}
 
 	/* -------------------------------------------------------------------------- */
