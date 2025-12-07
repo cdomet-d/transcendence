@@ -86,6 +86,7 @@ export function removeUserFromLobby(userID: string, lobbyID: string) {
 
 	lobby.userList.delete(userID);
 	lobby.whitelist!.userIDs.delete(userID);
+	sendUpdatedWhiteList(lobbyID);
 	wsClientsMap.delete(userID);
 }
 
