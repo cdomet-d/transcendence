@@ -50,9 +50,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 			}
 
 			if (data.event === 'LOBBY_INVITE') {
-
 				const invitePayload = payload as lobbyInviteForm;
-
 
 				if (invitePayload.action === 'invite') {
 					const hostID = invitePayload.hostID;
@@ -77,10 +75,11 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					console.log('inviteeID: ', inviteeID);
 					addUserToWhitelist(inviteeID, lobbyID!);
 					natsPublish(this, 'post.notif', JSON.stringify(notif));
-
 				} else if (invitePayload.action === 'decline') {
+					console.log("DECLINED");
 					removeUserFromWhitelist(invitePayload.inviteeID!, invitePayload.lobbyID!);
-
+					socket.close('declined');
+					// TODO tell front user declined (remove from user list in lobby)
 				} else if (invitePayload.action === 'join') {
 					this.log.error(`IN JOIN + ${formInstance}`);
 					this.log.error(`${invitePayload.inviteeID}`);
@@ -100,7 +99,12 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 		}
 	});
 
-	socket.on('close', () => {
+	socket.on('close', (message: string) => {
+		if (message === 'declined') {
+			console.log("Declined invite");
+			return;
+		}
+
 		if (userID !== null) {
 			let lobbyID: string | null = findLobbyIDFromUserID(userID);
 			if (lobbyID !== null)

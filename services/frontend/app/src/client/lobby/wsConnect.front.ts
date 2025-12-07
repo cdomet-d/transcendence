@@ -3,11 +3,10 @@ import { createGameRequest } from './gameRequest.front.js';
 import { createLobbyRequest, joinLobbyRequest } from './lobbyRequest.front.js';
 import { type gameRequest } from '../pong/pong.js';
 import { redirectOnError } from '../error.js';
-// import { validateWSMessage } from './inputValidation.front.js';
 
 let wsInstance: WebSocket | null = null;
 
-function openWsConnection() {
+async function openWsConnection() {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 		return wsInstance;
 	}
@@ -16,7 +15,7 @@ function openWsConnection() {
 }
 
 async function wsConnect(action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string, inviteeID?: string) {
-	const ws: WebSocket = openWsConnection();
+	const ws: WebSocket = await openWsConnection();
 
 	ws.onopen = async () => {
 		console.log('Lobby WebSocket connection established!')
@@ -47,7 +46,19 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 			}
 			return;
 		}
+
+		if (action === 'decline') {
+			if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+				wsInstance.send(JSON.stringify({ event: "LOBBY_INVITE", payload: { action: action, inviteeID: inviteeID, lobbyID: lobbyID } }));
+			} else {
+				console.log(`Error: WebSocket is not open for ${action}`);
+			}
+			return;
+		}
+		return;
 	}
+
+	// TODO waitForSocketToBeOpened() to avoid duplicate actions ?
 	// reply Lobby Invite
 	if (action === 'join') {
 		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
@@ -55,32 +66,35 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		} else {
 			console.log(`Error: WebSocket is not open for ${action}`);
 		}
+		return;
 	}
-
+	
 	if (action === 'decline') {
 		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 			wsInstance.send(JSON.stringify({ event: "LOBBY_INVITE", payload: { action: action, inviteeID: inviteeID, lobbyID: lobbyID } }));
 		} else {
 			console.log(`Error: WebSocket is not open for ${action}`);
 		}
+		return;
 	}
-
+	
 	if (action === 'game') {
 		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 			wsInstance.send(await createGameRequest(format, formInstance, gameSettings!));
 		} else {
 			console.log(`Error: WebSocket is not open for ${action}`);
 		}
+		return;
 	}
-
+	
 	if (action === 'invite') {
 		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-
+			
 			const host: userStatusInfo = await userStatus();
 			if (!host.auth || !host.userID) {
-				redirectOnError('/auth', 'You must be registered to see this page')
+				redirectOnError('/auth', 'You must be registered to see this page');
 			}
-
+			
 			// TODO prevent non-host from inviting people
 			// get lobby from ID, check if host, allow invite if yes, else wsSend some error code
 			console.log(`Form Instance ${formInstance}`);
@@ -89,16 +103,12 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		} else {
 			console.log(`Error: WebSocket is not open for ${action}`);
 		}
+		return;
 	}
-
+	
 	ws.onmessage = (message: MessageEvent) => {
 		try {
 			const data = JSON.parse(message.data);
-			// validateWSMessage(data);
-			// if (!validateWSMessage(data)) {
-			// 	console.error("Invalid WS message format:", validateWSMessage.errors);
-			// 	return;
-			// }
 
 			if (data.error) {
 				console.log("ERROR: ", data.error);
@@ -109,7 +119,7 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 				return;
 			}
 
-			if (data.lobby) {
+			if (data.lobby && data.lobbyID) {
 				console.log(`${data.lobby} lobby ${data.lobbyID} successfully!`);
 
 				// TODO send host to front as soon as lobby 'created'
@@ -129,10 +139,12 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 			}
 
 			// handle Response for gameRequest
-			const gameRequest: gameRequest = data;
-			// verify gameRequest content before rendering PONG
-			console.log("IN WS CONNECT GameRequest =>", gameRequest);
-			router.loadRoute('/game', true, gameRequest); // TODO give usernames in gameRequest
+			if (data.opponent && data.gameID && data.remote /* && data.gameSettings */) {
+				const gameRequest: gameRequest = data;
+				console.log("IN WS CONNECT GameRequest =>", gameRequest);
+				router.loadRoute('/game', true, gameRequest); // TODO give usernames in gameRequest
+				return;
+			}
 		} catch (error) {
 			console.error("Error: Failed to parse WS message", error);
 		}
