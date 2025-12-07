@@ -19,8 +19,8 @@ export async function natsSubscribe(serv: FastifyInstance) {
 				console.log('EMPTY USERS');
 				return;
 			}
-			sendGameRequest(serv, game.users[0]!.userID, game.users[1]!, game);
-			sendGameRequest(serv, game.users[1]!.userID, game.users[0]!, game);
+			sendGameRequest(serv, game.users[0]!.userID, game.users[1]!.username, game);
+			sendGameRequest(serv, game.users[1]!.userID, game.users[0]!.username, game);
 		}
 	})();
 
@@ -40,22 +40,16 @@ export async function natsSubscribe(serv: FastifyInstance) {
 	})();
 }
 
-function sendGameRequest(serv: FastifyInstance, userID: string, opponent: userInfo, game: gameReply) {
+function sendGameRequest(serv: FastifyInstance, userID: string, opponentUsername: string, game: gameReply) {
 	if (userID === "temporary") return; // TODO -1 will become 'temporary' 
 
 	const socket: WebSocket | undefined = wsClientsMap.get(userID);
 	if (socket === undefined) {
-		serv.log.error(`SOCKET NOT FOUND FOR USER: ${userID}`);
-		console.log(userID);
+		serv.log.error(`socket not found for user: ${userID}`);
 		return
 	}
-	let opponentUsername: string | undefined = opponent.username;
-	if (opponentUsername === undefined) {
-		// TODO get username from userID
-		// const opponentUsername = fetch DB ??;
-	}
 	const gameReq: gameRequest = {
-		opponent: opponentUsername!, // TODO send username of opponent to PONG depending on local/remote, user index etc. 
+		opponent: opponentUsername, 
 		gameID: game.gameID,
 		remote: game.remote,
 	}
