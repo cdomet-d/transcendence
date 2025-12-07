@@ -121,7 +121,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					p.userID,
 					p.lang,
 					p.profileColor,
-					p.activityStatus,
+					p.status,
 					p.userRole,
 					p.username,
 					s.winStreak,
@@ -433,8 +433,8 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const queryProfile = `
 				INSERT INTO userProfile
-				(userID, username, activityStatus, profileColor, userRole, since, lang)
-				VALUES (?, ?, 1, "bg-000080", 1, ?, "en")
+				(userID, username, status, profileColor, userRole, since, lang)
+				VALUES (?, ?, 0, "bg-000080", 1, ?, "en")
 			`;
 			const paramsProfile = [
 				safeuserID,
@@ -478,8 +478,10 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user profile
-	serv.patch('/:userID', { schema: updateProfileSchema }, async (request, reply) => {
+	serv.patch('/:userID', /* { schema: updateProfileSchema }, */ async (request, reply) => {
 		try {
+			console.log("IN PAAAAAATCH");
+
 			const token = request.cookies.token;
 			let user;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -520,7 +522,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				'biography',
 				'profileColor',
 				'lang',
-				'activityStatus',
+				'status',
 			];
 
 			const keysToUpdate = Object.keys(body).filter((key) => validStatKeys.includes(key));
@@ -612,6 +614,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//get all user's stats with userID
 	serv.get('/stats/:userID', { schema: getUserStatsSchema }, async (request, reply) => {
 		try {
+
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
@@ -748,7 +751,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					p.avatar,
 					p.biography,
 					p.profileColor,
-					p.activityStatus,
+					p.status,
 					s.winStreak
 				FROM
 					userProfile p

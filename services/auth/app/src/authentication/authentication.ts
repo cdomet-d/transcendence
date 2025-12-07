@@ -4,6 +4,7 @@ import {
 	setCookie,
 	validateBearerToken,
 	verifyPasswordMatch,
+	updateStatus
 } from './auth.service.js';
 import * as bcrypt from 'bcrypt';
 import type { FastifyInstance } from 'fastify';
@@ -37,12 +38,23 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			const tokenPayload = { userID: account.userID, username: username };
 			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
 			setCookie(reply, token);
+			await updateStatus(serv.log, account.userID, false, token);
 			return reply.code(200).send({ token: token });
 		} catch (error) {
 			serv.log.error(`[AUTH] An unexpected error occurred while login: ${error}`);
 			throw error;
 		}
 	});
+
+	serv.post('/logout', async (request, reply) => {
+		const token = request.cookies.token;
+		clearCookie(reply);
+		if (token === undefined) return;
+		const userID = request.user.userID;
+		await updateStatus(serv.log, userID, true, token);
+		return reply.code(200).send({ message: 'Success' });
+	});
+
 
 	serv.post('/regen-jwt', { schema: schema.regen }, async (request, reply) => {
 		try {
@@ -58,11 +70,6 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			serv.log.error(`[AUTH] An unexpected error occurred while login: ${error}`);
 			throw error;
 		}
-	});
-
-	serv.post('/logout', async (request, reply) => {
-		clearCookie(reply);
-		return reply.code(200).send({ message: 'Success' });
 	});
 
 	serv.post('/verify', { schema: schema.verify }, async (request, reply) => {

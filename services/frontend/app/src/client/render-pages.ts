@@ -199,6 +199,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
 
 		try {
 			const raw = await fetch(url);
+			
 			console.error(raw.status);
 			if (!raw.ok) {
 				console.error('error', raw.status);

@@ -5,7 +5,7 @@ CREATE TABLE userProfile (
   avatar TEXT,
   biography TEXT,
   profileColor TEXT,
-  activityStatus BOOLEAN,
+  status BOOLEAN,
   userRole INTEGER,
   since TEXT,
   lang TEXT

@@ -174,12 +174,12 @@ This table has the following column :
 * avatar &rarr; text
 * biography &rarr; text
 * profileColor &rarr; text
-* activityStatus &rarr; boolean 
+* status &rarr; boolean 
 * lastConnexion &rarr; datetime
 
 userID will match between different table and database and if a general ID for a user.
 
-activityStatus will be used to keep track of whether the user if offline, online or playing. The following value and meaning will be :
+status will be used to keep track of whether the user if offline, online or playing. The following value and meaning will be :
 
 | Value  | Meaning |
 | ------ |:-------:|
@@ -362,12 +362,12 @@ averageMatchDuration will be in seconds.
         curl -X POST \
         -H "Content-Type: application/json" \
         -d '{"newStatus": "<newStatus>"}' \
-        http://localhost:2626/users/updateActivityStatus/<userID>
+        http://localhost:2626/users/updatestatus/<userID>
         
         curl -X POST \
         -H "Content-Type: application/json" \
         -d '{"newStatus": <newStatus>}' \  
-        http://localhost:2626/users/updateActivityStatus/<userID>
+        http://localhost:2626/users/updatestatus/<userID>
     * update lastConnexion
         
         ```

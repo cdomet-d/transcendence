@@ -273,7 +273,7 @@ export const updateProfileSchema = {
 			biography: { type: 'string' },
 			profileColor: { type: 'string' },
 			lang: { type: 'string' },
-			activityStatus: { anyOf: [{ type: 'number' }, { type: 'boolean' }] }
+			status: { anyOf: [{ type: 'number' }, { type: 'boolean' }] }
 		},
 		additionalProperties: false
 	},

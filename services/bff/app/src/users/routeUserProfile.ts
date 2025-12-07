@@ -102,7 +102,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				matches: recentMatches || [],
 			};
 
-			console.log(JSON.stringify(responseData.pending));
+			console.log(JSON.stringify(responseData.userData));
 			return reply.code(200).send(responseData);
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
