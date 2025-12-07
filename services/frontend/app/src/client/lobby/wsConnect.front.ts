@@ -49,24 +49,22 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 
 		// reply Lobby Invite
 		if (action === 'join') {
-			if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+			if (wsInstance && wsInstance.readyState === WebSocket.OPEN)
 				wsInstance.send(await joinLobbyRequest(action, format, invitee!, lobbyID!, formInstance));
-			} else {
+			else
 				console.log(`Error: WebSocket is not open for ${action}`);
-			}
 		}
 		decline(action, invitee!, lobbyID!);
 	}
 
-	if (action === 'invitee')
+	if (action === 'invitee' && ws.OPEN)//TODO: ws OPEN necessary ?
 		setMessEvent(ws, form);
 
 	if (action === 'game') {
-		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+		if (wsInstance && wsInstance.readyState === WebSocket.OPEN)
 			wsInstance.send(await createGameRequest(format, formInstance, gameSettings!));
-		} else {
+		else
 			console.log(`Error: WebSocket is not open for ${action}`);
-		}
 	}
 
 	if (action === 'invite') {
@@ -87,6 +85,19 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		}
 	}
 
+	if (action === 'create') {
+		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+			wsInstance.send(await createLobbyRequest(action, format, formInstance));
+		} else {
+			console.log(`Error: WebSocket is not open for ${action}`);
+		}
+	}
+	if (action === 'join') {
+		if (wsInstance && wsInstance.readyState === WebSocket.OPEN)
+			wsInstance.send(await joinLobbyRequest(action, format, invitee!, lobbyID!, formInstance));
+		else
+			console.log(`Error: WebSocket is not open for ${action}`);
+	}
 	decline(action, invitee!, lobbyID!);
 
 	ws.onerror = (err: any) => {

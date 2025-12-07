@@ -37,6 +37,9 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				}
 
 				if (lobbyPayload.action === 'create') {
+					let lobbyID: string | null = findLobbyIDFromUserID(userID);
+					if (lobbyID !== null)
+						removeUserFromLobby(userID, lobbyID);
 					const newLobby: lobbyInfo = createLobby({userID: userID!, username: username, userSocket: socket }, lobbyPayload.format!);
 					this.log.error(`FORM IN GM CREATE: ${formInstance}`);
 					wsSend(socket, JSON.stringify({ lobby: 'created', lobbyID: newLobby.lobbyID, formInstance: formInstance }))
@@ -85,11 +88,14 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					this.log.error(`IN JOIN + ${formInstance}`);
 					//TODO: check if lobby still exists otherwise send error "tournament doesn't exist anymore"
 					userID = invitePayload.invitee.userID;
-					addUserToLobby(userID!, socket, invitePayload.lobbyID!);
+					let lobbyID: string | null = findLobbyIDFromUserID(userID);
+					if (lobbyID !== null)
+						removeUserFromLobby(userID, lobbyID);
 
+					addUserToLobby(userID!, socket, invitePayload.lobbyID!);
 					const whiteListUsernames: string[] = getWhiteListUsernames(invitePayload.lobbyID!)
 					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance, whiteListUsernames: whiteListUsernames }));
-					//TODO: send start to host
+					//TODO: send start to host once everyone has joined
 				}
 			}
 		} catch (error) {
@@ -102,6 +108,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 			let lobbyID: string | null = findLobbyIDFromUserID(userID);
 			if (lobbyID !== null)
 				removeUserFromLobby(userID, lobbyID);
+			wsClientsMap.delete(userID);
 		}
 	});
 }

@@ -83,11 +83,18 @@ export function addUserToLobby(userID: string, socket: WebSocket, lobbyID: strin
 export function removeUserFromLobby(userID: string, lobbyID: string) {
 	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) return;
-
+	if (userID === lobby.hostID!) {
+		for (const user of lobby.userList) {
+			const userLobbyID: string | null = findLobbyIDFromUserID(user[1].userID!)
+			if ((user[1].userID! !== userID) && (userLobbyID === lobby.lobbyID!))//TODO: is condition correct ?
+				user[1].userSocket!.close()
+		}
+		lobbyMap.delete(lobbyID);
+		return;
+	}
 	lobby.userList.delete(userID);
 	lobby.whitelist!.userIDs.delete(userID);
 	sendUpdatedWhiteList(lobbyID);
-	wsClientsMap.delete(userID);
 }
 
 export function printPlayersInLobby(lobbyID: string) {
