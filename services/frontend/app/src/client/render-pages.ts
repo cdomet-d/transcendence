@@ -64,7 +64,7 @@ function createWrapper(id: string): HTMLDivElement {
 function toggleHeader(page: string) {
 	if (layoutPerPage[page] === 'full-screen') {
 		document.body.header?.classList.add('hidden');
-		document.body.header?.setAttribute('hidden', '');
+		document.body.header?.setAttribute('hidden', 'true');
 	} else {
 		document.body.header?.classList.remove('hidden');
 		document.body.header?.removeAttribute('hidden');

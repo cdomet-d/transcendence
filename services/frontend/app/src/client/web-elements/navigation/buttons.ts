@@ -77,6 +77,7 @@ export class CustomButton extends HTMLButtonElement {
 		let index: number = 0;
 		for (const char of this.#btn.content!) {
 			const letterSpan = document.createElement('span');
+			letterSpan.setAttribute('aria-hidden', '');
 			letterSpan.textContent = char;
 			letterSpan.style.animationDelay = `${index}s`;
 			letterSpan.classList.add('f-brown', 'f-bold', 'whitepre');
@@ -90,6 +91,7 @@ export class CustomButton extends HTMLButtonElement {
 	renderIconBtn() {
 		if (this.#btn.img) {
 			const icon = createIcon(this.#btn.img);
+			icon.setAttribute('aria-hidden', '');
 			this.append(icon);
 		}
 	}

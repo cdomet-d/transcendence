@@ -26,6 +26,11 @@ export class Listbox extends HTMLUListElement {
 	 */
 	arrayFromChildren() {
 		this.#options = Array.from(this.children) as HTMLLIElement[];
+		this.#options.forEach((option) => {
+			option.role = 'option';
+			option.tabIndex = -1;
+			option.ariaSelected = 'false';
+		});
 	}
 
 	connectedCallback() {
@@ -53,6 +58,7 @@ export class Listbox extends HTMLUListElement {
 	expand() {
 		this.classList.remove('hidden');
 		this.removeAttribute('hidden');
+		this.setAttribute('aria-expanded', 'true');
 		if (this.#currentFocus === -1) this.#moveFocus(1);
 		else if (this.#currentFocus !== -1) {
 			const focusedOption = this.#options[this.#currentFocus];
@@ -61,7 +67,6 @@ export class Listbox extends HTMLUListElement {
 	}
 
 	collapse() {
-		console.log('collapsing')
 		this.classList.add('hidden');
 		this.setAttribute('hidden', '');
 	}
@@ -87,7 +92,7 @@ export class Listbox extends HTMLUListElement {
 		this.#currentFocus = (this.#currentFocus + delta + this.#options.length) % this.#options.length;
 		const focusedOption = this.#options[this.#currentFocus];
 		if (focusedOption) {
-			console.log('Focused option:', focusedOption)
+			console.log('Focused option:', focusedOption);
 			focusedOption.focus();
 		}
 	}

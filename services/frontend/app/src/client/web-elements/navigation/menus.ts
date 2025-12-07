@@ -185,7 +185,6 @@ export class DropdownMenu extends HTMLDivElement {
 	}
 
 	disconnectedCallback() {
-		// this.removeEventListener('keydown', this.#keynavHandler);
 		this.removeEventListener('click', this.#navHandler);
 		this.removeEventListener('keydown', this.#navHandler);
 		this.removeEventListener('focusout', this.#focusHandler);
@@ -253,11 +252,7 @@ export class DropdownMenu extends HTMLDivElement {
 				el.className =
 					'brdr pad-xs flex justify-center items-center cursor-pointer \
 					input-emphasis h-m';
-				el.role = 'option';
-				el.ariaSelected = 'false';
-				el.ariaHidden = 'true';
 				el.ariaLabel = option.ariaLabel;
-				el.setAttribute('tabindex', '-1');
 				if (this.#dropdownStyle === 'static') el.classList.add('bg');
 				else el.classList.add(`bg-${option.content}`, 'f-yellow');
 			}
@@ -270,9 +265,11 @@ export class DropdownMenu extends HTMLDivElement {
 	#updateToggle() {
 		const selected = this.selectedElement;
 		if (!selected) return console.error('[LISTBOX] No selection');
-		this.#toggle.textContent = selected.textContent + ' \u25BE';
-		if (this.#dropdownStyle === 'dynamic') this.#updateBackground(`bg-${selected.textContent}`);
-		this.#listbox.collapse();
+		else if (this.#toggle.textContent !== selected.textContent + ' \u25BE') {
+			this.#toggle.textContent = selected.textContent + ' \u25BE';
+			if (this.#dropdownStyle === 'dynamic') this.#updateBackground(`bg-${selected.textContent}`);
+			this.#listbox.collapse();
+		}
 	}
 
 	/**
@@ -304,23 +301,29 @@ export class DropdownMenu extends HTMLDivElement {
 		}
 	}
 
-	#navImplementation(ev: KeyboardEvent | MouseEvent) {
-		const actions: { [key: string]: () => void } = {
-			Enter: () => this.#listbox.expand(),
-			Escape: () => this.#listbox.collapse(),
+	#handleKeyboardEvent(e: KeyboardEvent) {
+		const keyActions: Record<string, () => void> = {
+			Enter: () => this.#listbox?.expand(),
+			Escape: () => this.#listbox?.collapse(),
+			Space: () => this.#listbox?.expand(),
 		};
+		const action = keyActions[e.key];
+		if (action) action();
+	}
 
-		// const target = ev.target as HTMLElement;
-		console.log('keyboard', ev instanceof KeyboardEvent)
-		console.log('mouse', ev instanceof MouseEvent)
-		if (ev instanceof KeyboardEvent && actions[ev.key]) {
-			ev.preventDefault();
-			actions[ev.key]();
-			if (ev.key == 'Escape') this.#toggle.focus();
-		} else if (ev instanceof MouseEvent) {
-			this.#listbox.hasAttribute('hidden') ? this.#listbox.expand() : this.#listbox.collapse();
+	#navImplementation(e: Event) {
+		try {
+			const target = e.target as Element | null;
+			if (!target || !this.contains(target)) return;
+			console.log(target);
+			if (e instanceof KeyboardEvent) this.#handleKeyboardEvent(e);
+			else {
+				this.#listbox.hasAttribute('hidden') ? this.#listbox.expand() : this.#listbox.collapse();
+			}
+			this.#updateToggle();
+		} catch (error) {
+			console.error('Could not handle dropdown interaction', error);
 		}
-		this.#updateToggle();
 	}
 }
 

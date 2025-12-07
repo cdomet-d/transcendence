@@ -60,6 +60,7 @@ export class NavigationLinks extends HTMLAnchorElement {
 	#renderIconLink() {
 		if (this.#info.img) {
 			const icon = createIcon(this.#info.img);
+			icon.setAttribute('aria-hidden', 'true');
 			this.append(icon);
 		}
 	}
@@ -72,6 +73,7 @@ export class NavigationLinks extends HTMLAnchorElement {
 			letterSpan.textContent = char;
 			letterSpan.style.animationDelay = `${index}s`;
 			letterSpan.classList.add('f-brown', 'f-bold', 'whitepre');
+			letterSpan.setAttribute('aria-hidden', 'true');
 			this.append(letterSpan);
 			index += 0.1;
 		}
@@ -79,14 +81,7 @@ export class NavigationLinks extends HTMLAnchorElement {
 	}
 
 	styleButton() {
-		this.classList.add(
-			'brdr',
-			'input-emphasis',
-			'whitenowrap',
-			'button',
-			'bg-yellow',
-			'w-full',
-		);
+		this.classList.add('brdr', 'input-emphasis', 'whitenowrap', 'button', 'bg-yellow', 'w-full');
 	}
 
 	#dynamicRender() {

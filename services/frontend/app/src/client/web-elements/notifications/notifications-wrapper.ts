@@ -28,6 +28,9 @@ export class NotifBox extends HTMLDivElement {
 	constructor() {
 		super();
 		this.role = 'combobox';
+		this.setAttribute('aria-haspopup', 'menu');
+		this.setAttribute('aria-expanded', 'false');
+		this.setAttribute('aria-controls', 'notificationPanel');
 		this.#toggle = document.createElement('div', { is: 'notif-toggle' }) as NotifToggle;
 		this.#panel = document.createElement('ul', { is: 'notif-panel' }) as NotifPanel;
 		this.computePanelPos = this.computePanelPos.bind(this);
@@ -37,6 +40,7 @@ export class NotifBox extends HTMLDivElement {
 	}
 
 	connectedCallback() {
+		this.setAttribute('aria-controls', this.#panel.id);
 		this.setAttribute('tabindex', '0');
 		this.addEventListener('click', this.#clickHandler);
 		this.addEventListener('focusout', this.#blurHandler);
@@ -60,7 +64,6 @@ export class NotifBox extends HTMLDivElement {
 	/** Renders the toggle and panel elements inside the main wrapper. */
 	render() {
 		this.append(this.#toggle, this.#panel);
-
 		this.id = 'notificationWrapper';
 		this.className = 'relative box-border flex items-start';
 	}
@@ -92,7 +95,6 @@ export class NotifBox extends HTMLDivElement {
 	#clickImplementation(e: Event) {
 		try {
 			const target = e.target as Element | null;
-			console.log(target);
 			if (!target || !this.contains(target)) return;
 			if (e instanceof KeyboardEvent) this.#handleKeyboardEvent(e);
 			else {
