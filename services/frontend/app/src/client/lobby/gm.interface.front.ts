@@ -1,3 +1,5 @@
+import type { PongOptions } from "../web-elements/types-interfaces";
+
 export interface lobbyInviteForm {
     event: 'LOBBY_INVITE',
     payload: {
@@ -31,6 +33,7 @@ export interface gameRequestForm {
         remote: boolean;
         format: 'quickmatch' | 'tournament' | string;
         nbPlayers: number;
+        gameSettings: PongOptions;
     };
 }
 

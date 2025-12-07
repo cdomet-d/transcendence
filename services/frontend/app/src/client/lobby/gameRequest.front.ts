@@ -1,10 +1,10 @@
 import { redirectOnError } from "../error";
 import { userStatus, type userStatusInfo } from "../main";
+import type { PongOptions } from "../web-elements/types-interfaces";
 import type { gameRequestForm } from "./gm.interface.front";
 
 async function createGameRequest(format: string, formInstance: string, gameSettings: string): Promise<string> {
-    const customSettings = JSON.parse(gameSettings);
-    const localOpponent: string | undefined = customSettings.opponent;
+    const customSettings: PongOptions = JSON.parse(gameSettings);
     // console.log("FORM: ", formInstance); // will be useful at some point
 
 	const host: userStatusInfo = await userStatus();
@@ -20,15 +20,7 @@ async function createGameRequest(format: string, formInstance: string, gameSetti
 			format: format,
 			remote: formInstance === 'localForm' ? false : true,
 			nbPlayers: format === 'quickmatch' ? 2 : 4,
-			// userList: [//TODO: unnecessary
-			// 	{ userID: host.userID, username: host.username },
-			// 	localOpponent !== undefined
-			// 		? { userID: 'temporary', username: localOpponent }
-			// 		: { userID: 'userID', username: 'alex' }, // TODO add remote user once we have operational Notifications
-
-			// 	// { userID: 3, username: "cha" }, // TODO add more users for tournaments once we have operational Notifications
-			// 	// { userID: 4, username: "coco" } // TODO add more users for tournaments once we have operational Notifications
-			// ],
+			gameSettings: customSettings
 		},
 	};
 

@@ -65,7 +65,19 @@ const gameRequestPayloadSchema = {
 		},
 		remote: { type: 'boolean' },
 		format: { type: 'string' },
-		nbPlayers: { type: 'number' }
+		nbPlayers: { type: 'number' },
+		gameSettings: {
+			type: 'object',
+			properties: {
+				background: { type: 'string'},
+				ballspeed: { type: 'string'},
+				horizontal: { type: 'string'},
+				paddlesize: { type: 'string'},
+				paddlespeed: { type: 'string'},
+				opponent: { type: 'string'},
+			},
+			//TODO: required
+		}
 	},
 	required: ['hostID', /*'userList', */'remote', 'format', 'nbPlayers'],
 };
