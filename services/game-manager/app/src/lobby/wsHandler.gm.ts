@@ -52,21 +52,24 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 			if (data.event === 'LOBBY_INVITE') {
 
 				const invitePayload = payload as lobbyInviteForm;
-				const hostID = invitePayload.hostID;
-				console.log('HOST ID:', hostID);
+
 
 				if (invitePayload.action === 'invite') {
+					const hostID = invitePayload.hostID;
+					console.log('HOST ID:', hostID);
 					const inviteeID = invitePayload.inviteeID!;
 					const lobbyID: string | null = findLobbyIDFromUserID(invitePayload.hostID!);
 					if (lobbyID === null) {
 						wsSend(socket, JSON.stringify({ error: 'lobby not found' }));
 						return;
 					}
+					
 					console.log('LOBBY ID:', lobbyID);
+					console.log('user ID:', userID);
 
 					const notif: gameNotif = {
 						type: 'GAME_INVITE',
-						senderID: userID!,
+						senderID: hostID!, // hostID no?
 						receiverID: inviteeID,
 						lobbyID: lobbyID!,
 						gameType: formInstance === 'remoteForm' ? '1 vs 1' : 'tournament'

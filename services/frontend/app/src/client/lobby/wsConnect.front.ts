@@ -118,7 +118,6 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 				// TODO tell front when everybody there
 
 				if (data.lobby === "joined") {
-					// console.log("FORM INSTANCE OUAI", data.formInstance);
 					if (data.formInstance === "1 vs 1") {
 						router.loadRoute("/quick-remote-lobby", true, undefined, "");
 					}
