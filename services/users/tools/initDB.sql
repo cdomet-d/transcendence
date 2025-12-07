@@ -6,7 +6,6 @@ CREATE TABLE userProfile (
   biography TEXT,
   profileColor TEXT,
   activityStatus BOOLEAN,
-  lastConnection DATETIME,
   userRole INTEGER,
   since TEXT,
   lang TEXT

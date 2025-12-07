@@ -1,3 +1,4 @@
+import { currentDictionary } from '../forms/language';
 import { NotifContent } from './notification-content';
 
 /**
@@ -72,13 +73,13 @@ export class NotifPanel extends HTMLDivElement {
 		this.append(this.#content);
 	}
 
-	/** Adds a default message when the list has no notifications. */
-	addDefault() {
-		const defaultContent = document.createElement('p');
-		defaultContent.innerText = 'No new notifications :<';
-		defaultContent.id = 'default';
-		this.#content.append(defaultContent);
-	}
+    /** Adds a default message when the list has no notifications. */
+    addDefault() {
+        const defaultContent = document.createElement('p');
+        defaultContent.innerText = currentDictionary.notifs.notif_placeholder/* 'No new notifications :<' */;
+        defaultContent.id = 'default';
+        this.#content.append(defaultContent);
+    }
 
 	/** Creates panel structure with background and decorative elements. */
 	#createPopupContent() {

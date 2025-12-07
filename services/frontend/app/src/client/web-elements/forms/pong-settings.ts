@@ -10,6 +10,7 @@ import { createVisualFeedback, exceptionFromResponse } from '../../error.js';
 import { userDataFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
+import { currentDictionary } from './language.js';
 
 /**
  * A form allowing user to create a local pong game.
@@ -27,7 +28,7 @@ export class LocalPongSettings extends BaseForm {
 	/* -------------------------------------------------------------------------- */
 	constructor() {
 		super();
-		this.#backgroundSelector = createDropdown(backgroundMenu, 'Select background', 'static');
+		this.#backgroundSelector = createDropdown(backgroundMenu, currentDictionary.gameCustom.choose_back, 'static');
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
 	}
 
