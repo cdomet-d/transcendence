@@ -1,3 +1,5 @@
+import { kMaxLength } from "buffer";
+
 const messageResponse = {
 	type: 'object',
 	properties: {
@@ -346,5 +348,25 @@ export const updateStatsSchema = {
 		500: messageResponse,
 		401: messageResponse
 
+	}
+};
+
+export const anonymizeUserSchema = {
+	body: {
+		type: 'object',
+		additionalProperties: true
+	},
+	response: {
+		200: {
+			type: 'object',
+			properties: {
+				success: { type: 'boolean' },
+				message: { type: 'string' }
+			}
+		},
+		400: messageResponse,
+		401: messageResponse,
+		404: messageResponse,
+		500: messageResponse
 	}
 };

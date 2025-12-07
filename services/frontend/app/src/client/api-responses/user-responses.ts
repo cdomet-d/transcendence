@@ -79,7 +79,6 @@ export async function buildUserProfile(response: Response): Promise<ProfilePage>
 	if (!response.ok) throw await exceptionFromResponse(response);
 	
 	const rawProfile = await response.json();
-	console.log("IN RENDER PROFILE", JSON.stringify(rawProfile));
 	const userProfileElem = document.createElement('div', { is: 'profile-page' }) as ProfilePage;
 
 	document.body.layoutInstance?.appendAndCache(userProfileElem);

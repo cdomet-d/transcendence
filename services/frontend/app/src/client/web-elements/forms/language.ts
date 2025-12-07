@@ -112,10 +112,8 @@ export async function setLanguage(lang: string): Promise<void> {
 	try {
 		const response = await fetch(`https://localhost:8443/api/bff/dictionary/${lang}`);
 
-		//TODO handle error
 		if (!response.ok) {
-			console.log("ta grand mere");
-			throw new Error(`Failed to load language: ${lang}`);
+
 		}
 		const newDict = (await response.json()) as Dictionary;
 
@@ -127,7 +125,6 @@ export async function setLanguage(lang: string): Promise<void> {
 		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang } }));
 
 		console.log(`[LANG] Switched to ${lang}`);
-		console.log(JSON.stringify(currentDictionary));
 
 	} catch (error) {
 		console.error('[LANG] Error loading language pack:', error);
@@ -135,7 +132,6 @@ export async function setLanguage(lang: string): Promise<void> {
 }
 
 export async  function initLanguage() {
-	console.log("In init language");
 	const savedLang = localStorage.getItem('preferred_language') || 'fr';
 	if (savedLang !== 'en')
 		await setLanguage("fr");

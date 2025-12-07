@@ -17,7 +17,7 @@ import {
 	AnonymizeAccount
 } from './bffUserProfile.service.js';
 import { cleanInput } from '../utils/sanitizer.js';
-import { profileGet, tinyProfileGet, searchGet, leaderboardGet, settingsPatch, usernameGet } from './bff.usersSchemas.js';
+import { settingsPatchSchema, profileGet, tinyProfileGet, searchGet, leaderboardGet, usernameGet } from './bff.usersSchemas.js';
 import jwt from 'jsonwebtoken';
 
 function validateBearerToken(serv: FastifyInstance, authorization?: string): boolean {
@@ -278,9 +278,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO add schemas
 	//error handled
-	serv.patch('/settings', async (request, reply) => {
+	serv.patch('/settings', {schema: settingsPatchSchema}, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -329,7 +328,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 				if (body.username) profileUpdatesUsername.username = cleanInput(body.username);
 				if (body.username) accountUpdates.username = cleanInput(body.username);
-				if (body.password) accountUpdates.password = cleanInput(body.password);
+				if (body.password) accountUpdates.password = body.password;
 
 				serv.log.warn(profileUpdatesUsername, accountUpdates);
 				if (Object.keys(accountUpdates).length > 0)

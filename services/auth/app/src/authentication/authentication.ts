@@ -11,7 +11,6 @@ import type { FastifyInstance } from 'fastify';
 import type { JwtPayload } from './auth.interfaces.js';
 import * as schema from './schemas.js';
 
-//TODO update user status on login and logout
 export async function authenticationRoutes(serv: FastifyInstance) {
 	serv.get('/status', async (request, reply) => {
 		const token = request.cookies.token;
@@ -152,23 +151,6 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 						message: '[AUTH] User not created and matching account not deleted',
 					});
 			}
-			throw error;
-		}
-	});
-
-	//TODO delete users/friends
-	serv.delete('/:userID', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: string };
-
-			const query = `DELETE FROM account WHERE userID = ?`;
-
-			const result = await serv.dbAuth.run(query, [userID]);
-			if (!result.changes)
-				return reply.code(404).send({ message: '[AUTH] Account not found' });
-			return reply.code(204).send();
-		} catch (error) {
-			serv.log.error(`[AUTH] Error deleting account: ${error}`);
 			throw error;
 		}
 	});

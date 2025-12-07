@@ -3,7 +3,7 @@ import { updateUserStats } from './dashboard.service.js'
 import type { GameInput, userStats } from '././dashboard.service.js';
 import { cleanInput } from './sanitizer.js';
 import {
-	getUserByNameSchema, getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, searchUsersSchema, updateStatsSchema, getUserIDByUsernameSchema,
+	anonymizeUserSchema, getUserByNameSchema, getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, searchUsersSchema, updateStatsSchema, getUserIDByUsernameSchema,
 	getUserProfileSchema, getUserStatsSchema, getUsernamesByIdsSchema, createProfileSchema, deleteProfileSchema, updateProfileSchema
 } from './schemas.js';
 import { profile } from 'console';
@@ -691,8 +691,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO add schema
-	serv.patch('/anonymize', async (request, reply) => {
+	serv.patch('/anonymize', {schema: anonymizeUserSchema}, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -741,108 +740,4 @@ export async function userRoutes(serv: FastifyInstance) {
 			throw error;
 		}
 	});
-
-	/* 	serv.get('/:userID/userData', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: string };
-
-			const query = `
-				SELECT
-					p.avatar,
-					p.biography,
-					p.profileColor,
-					p.status,
-					s.winStreak
-				FROM
-					userProfile p
-				JOIN
-					userStats s ON p.userID = s.userID
-				WHERE
-					p.userID = ?
-			`;            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-
-			const userData = await serv.dbUsers.get(query, [userID]);
-			if (!userData) {
-				return (reply.code(404).send({
-					success: false,
-					message: 'User data not found.'
-				}));
-			}
-
-			return (reply.code(200).send({ success: true, userData }));
-		} catch (error) {
-			serv.log.error(`[USERS] Error fetching user data win streak: ${error}`);
-			throw (error);
-		}
-	});
-
-	serv.post('/userDataBatch', async (request, reply) => {
-		try {
-			const { userIDs } = request.body as { userIDs: number[] };
-
-			if (!userIDs || userIDs.length === 0)
-				return (reply.code(200).send([]));
-
-			const placeholders = userIDs.map(() => '?').join(',');
-
-			const query = `
-				SELECT
-					p.userID,
-					p.username,
-					p.avatar,
-					p.biography,
-					p.profileColor,
-					s.winStreak
-				FROM
-					userProfile p
-				JOIN
-					userStats s ON p.userID = s.userID
-				WHERE
-					p.userID IN (${placeholders})
-			`;
-
-			const usersData = await serv.dbUsers.all(query, userIDs);
-			return (reply.code(200).send({ success: true, usersData }));
-
-		} catch (error) {
-			serv.log.error(`[USERS] Error fetching user data batch: ${error}`);
-			throw (error);
-		}
-	}); */
-
-	// ROUTE NOT USED BUT KEEPING JUST IN CASE MIGHT BE DELETED LATER
-	/*
-	
-	serv.post('/api/games/responses', async (request, reply) => {
-		try {
-			const { winnerID, loserID, duration, winnerScore } = request.body as any;
-
-			const winnerActions = [
-				{ action: 'increment', field: 'totalMatch', value: 1 },
-				{ action: 'increment', field: 'totalWins', value: 1 },
-				{ action: 'setIfGreater', field: 'longestMatch', value: duration },
-				{ action: 'setIfLess', field: 'shortestMatch', value: duration },
-				{ action: 'setIfGreater', field: 'longuestPass', value: winnerScore }
-			];
-
-			const loserActions = [
-				{ action: 'increment', field: 'totalMatch', value: 1 },
-				{ action: 'setIfGreater', field: 'longestMatch', value: duration },
-				{ action: 'setIfLess', field: 'shortestMatch', value: duration }
-			];
-
-			await Promise.all([
-				updateUserStats(winnerID, winnerActions),
-				incrementWinStreak(winnerID),
-
-				updateUserStats(loserID, loserActions),
-				resetWinStreak(loserID)
-			]);
-
-			return reply.code(200).send({ message: 'Game responses processed.' });
-		} catch (error) {
-			serv.log.error(`[BFF] Error processing game responses: ${error}`);
-			return reply.code(503).send({ message: 'A backend service is unavailable.' });
-		}
-	});*/
 }

@@ -1,7 +1,6 @@
 export const auth = {
 	body: {
 		type: 'object',
-		// TODO: password is not required for temporary users
 		required: ['username', 'password'],
 		properties: {
 			username: { type: 'string', minLength: 4, maxLength: 18, pattern: '^[a-zA-Z0-9_-]+$' },
