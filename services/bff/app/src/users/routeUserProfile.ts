@@ -471,36 +471,22 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 
 			try {
-				const responseUser = await AnonymizeUser(serv.log, userID, token);
-				
-				const responseFriends = await deleteAllFriendship(serv.log, userID, token);
-				
-				const responseAuth = await AnonymizeAccount(serv.log, userID, token);
+				await AnonymizeUser(serv.log, userID, token);
 
-				//if (!responseUser.ok) {
-				//	const err = await responseUser.json() as { message: string };
-				//	throw new Error(`[USERS] Profile anonymization failed: ${err.message}`);
-				//}
+				try {
+					await deleteAllFriendship(serv.log, userID, token);
+				} catch (e) {
+					serv.log.warn('[BFF] Friends deletion failed, continuing to Auth deletion.');
+				}
 
-				//if (!responseFriends.ok)
-				//	serv.log.warn('[BFF] Friends deletion failed, continuing to Auth deletion.');
-
-
-				//if (!responseAuth.ok) {
-				//	const err = await responseAuth.json() as { message: string };
-				//	throw new Error(`[AUTH] Account anonymization failed: ${err.message}`);
-				//}
+				await AnonymizeAccount(serv.log, userID, token);
 
 				reply.clearCookie('token');
-				return reply.code(200).send({ success: true, message: 'Account deleted' });
+				return (reply.code(200).send({ success: true, message: 'Account deleted' }));
 			} catch (error) {
 				if (typeof error === 'object' && error !== null && 'code' in error) {
 					const customError = error as { code: number; message: string };
 
-					if (customError.code === 409)
-						return reply.code(409).send({
-							message: customError.message || '[BFF] Conflict error. Username taken',
-						});
 					if (customError.code === 404)
 						return reply.code(404).send({
 							message: customError.message || '[BFF] User/account not found.',
