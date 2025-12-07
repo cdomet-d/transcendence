@@ -35,7 +35,7 @@ import type { Menu } from './web-elements/navigation/basemenu.js';
 import { createLink } from './web-elements/navigation/buttons-helpers.js';
 import type { NavigationLinks } from './web-elements/navigation/links.js';
 import { currentDictionary } from './web-elements/forms/language.js';
-import type { RemotePongSettings } from './web-elements/forms/pong-settings.js';
+import type { LocalPongSettings, RemotePongSettings } from './web-elements/forms/pong-settings.js';
 
 //TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
@@ -282,10 +282,12 @@ export async function renderQuickLocalLobby() {
 	} catch (error) {
 		console.error(errorMessageFromException(error));
 	}
-	document.body.layoutInstance?.appendAndCache(createForm('local-pong-settings', localPong(currentDictionary)),
-	);
+	const form: LocalPongSettings = createForm('local-pong-settings', localPong(currentDictionary));
+	form.format = 'quickmatch';
+	form.formInstance = 'localForm';
+	document.body.layoutInstance?.appendAndCache(form);
 
-	wsConnect('create', 'quickmatch', 'localForm');//TODO: add form
+	wsConnect('create', 'quickmatch', 'localForm', undefined, undefined, undefined, form);
 }
 
 export async function renderQuickRemoteLobby(
@@ -306,6 +308,8 @@ export async function renderQuickRemoteLobby(
 		console.error(errorMessageFromException(error));
 	}
     const form: RemotePongSettings = createForm('remote-pong-settings', remotePong(currentDictionary))
+	form.format = 'quickmatch';
+	form.formInstance = 'remoteForm';
     document.body.layoutInstance?.appendAndCache(form);
 
 	if (action === "invitee")
@@ -336,6 +340,8 @@ export async function renderTournamentLobby(
 	}
 
 	const form: RemotePongSettings = createForm('remote-pong-settings', pongTournament(currentDictionary));
+	form.format = 'tournament';
+	form.formInstance = 'remoteForm';
 	document.body.layoutInstance?.appendAndCache(form);
 
 	if (action === "invitee")

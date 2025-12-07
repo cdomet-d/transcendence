@@ -22,6 +22,8 @@ import { userStatus } from '../../main.js';
  */
 export class LocalPongSettings extends BaseForm {
 	#backgroundSelector: DropdownMenu;
+	#format: string;
+	#formInstance: string;
 
 	/* -------------------------------------------------------------------------- */
 	/*                                   Default                                  */
@@ -30,6 +32,8 @@ export class LocalPongSettings extends BaseForm {
 		super();
 		this.#backgroundSelector = createDropdown(backgroundMenu, 'Select background', 'static');
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
+		this.#format = "";
+		this.#formInstance = "";
 	}
 
 	/**
@@ -55,6 +59,17 @@ export class LocalPongSettings extends BaseForm {
 	}
 
 	/* -------------------------------------------------------------------------- */
+	/*                                   Setters                                  */
+	/* -------------------------------------------------------------------------- */
+	set format(format: string) {
+		this.#format = format;
+	}
+
+	set formInstance(formInstance: string) {
+		this.#formInstance = formInstance;
+	}
+
+	/* -------------------------------------------------------------------------- */
 	/*                               Event listeners                              */
 	/* -------------------------------------------------------------------------- */
 
@@ -73,7 +88,7 @@ export class LocalPongSettings extends BaseForm {
 		console.log(f);
 		// await this.fetchAndRedirect(this.details.action, req);
 
-		wsConnect('game', 'quickmatch', 'remoteForm', '', req.body);//TODO: form needs to change depending what lobby it is
+		wsConnect('game', this.#format, this.#formInstance, '', req.body);
 	}
 }
 
