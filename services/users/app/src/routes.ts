@@ -17,7 +17,9 @@ export interface userData {
 	status: boolean,
 	username: string,
 	winStreak: string,
-	since: string
+	since: string,
+	totalWins: string;
+	totalLosses: string
 }
 
 interface JwtPayload {
@@ -57,15 +59,16 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { userID } = request.params as { userID: string };
 			const safeUserID = cleanInput(userID);
 
-
 			const query = `
-				SELECT
+			SELECT
 				p.*,
-				s.winStreak
-				FROM userProfile p
-				LEFT JOIN userStats s ON p.userID = s.userID
-				WHERE p.userID = ?
-			`;
+				s.winStreak,
+				s.totalLosses,
+				s.totalWins
+			FROM userProfile p
+			LEFT JOIN userStats s ON p.userID = s.userID
+			WHERE p.userID = ?
+		`;
 
 			const userProfile = await serv.dbUsers.get<userData>(query, [safeUserID]);
 			if (!userProfile) {
@@ -444,9 +447,9 @@ export async function userRoutes(serv: FastifyInstance) {
 				throw new Error('Database Error: Profile INSERT failed (0 changes).');
 
 			const queryStats = `
-				INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins,
+				INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins, totalLosses,
 				winStreak, averageMatchDuration, longuestPass)
-				VALUES (?, 0, 0, 0, 0, 0, 0, 0)
+				VALUES (?, 0, 0, 0, 0, 0, 0, 0, 0)
 			`;
 
 			const createStats = await serv.dbUsers.run(queryStats, [safeuserID]);
