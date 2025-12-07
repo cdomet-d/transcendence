@@ -277,8 +277,8 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 	const layout = document.body.layoutInstance;
 
 	// TODO: set pong-court theme from game-manager object
-	if (layout) layout.theme = farmAssets;
-	court.theme = farm;
+	if (layout) layout.theme = oceanAssets;
+	court.theme = ocean;
 
 	// TODO: set playerNames from game-manager object
 	ui.player1.innerText = 'CrimeGoose';
