@@ -373,7 +373,8 @@ export async function routeFriend(serv: FastifyInstance) {
 				}
 			}
 
-			const { userID } = request.params as { userID: string };
+			console.log("zebbbiiiiiiiiiiiiiiiii");
+			const userID = request.user.userID;
 			const safeUserID = cleanInput(userID);
 
 			const query = `

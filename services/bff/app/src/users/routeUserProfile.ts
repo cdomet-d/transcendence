@@ -445,7 +445,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	serv.delete('/account', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
 			if (token) {
 				try {
@@ -454,10 +454,13 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
-						if (['FST_JWT_BAD_REQUEST', 'ERR_ASSERTION', 'FST_JWT_BAD_COOKIE_REQUEST'].includes(error.code)) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
 							return reply.code(400).send({ code: error.code, message: error.message });
-						}
-						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
 					}

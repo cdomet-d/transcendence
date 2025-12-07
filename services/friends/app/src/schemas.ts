@@ -129,13 +129,6 @@ export const deleteRelationSchema = {
 };
 
 export const deleteAllRelationsSchema = {
-	params: {
-		type: 'object',
-		required: ['userID'],
-		properties: {
-			userID: { type: 'string' }
-		}
-	},
 	response: {
 		204: {
 			type: 'null',
