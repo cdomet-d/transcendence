@@ -469,7 +469,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			}
 			const userID = request.user.userID;
 
-
 			try {
 				await AnonymizeUser(serv.log, userID, token);
 

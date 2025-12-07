@@ -56,7 +56,6 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 }
 
 export function registrationForm(dic: Dictionary): FormDetails {
-	console.log('IN REGISTREATION FORM', JSON.stringify(dic));
 	return {
 		action: 'https://localhost:8443/api/auth/register',
 		heading: dic.titles.register,
