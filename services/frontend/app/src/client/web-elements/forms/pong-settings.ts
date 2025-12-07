@@ -24,6 +24,7 @@ export class LocalPongSettings extends BaseForm {
 	#backgroundSelector: DropdownMenu;
 	#format: string;
 	#formInstance: string;
+	_guestLimit: number; // underscore is a convention in js to say protected
 	#ws: WebSocket | null;
 
 	/* -------------------------------------------------------------------------- */
@@ -36,6 +37,7 @@ export class LocalPongSettings extends BaseForm {
 		this.#format = "";
 		this.#formInstance = "";
 		this.#ws = null;
+		this._guestLimit = 0;
 	}
 
 	/**
@@ -72,6 +74,10 @@ export class LocalPongSettings extends BaseForm {
 	/* -------------------------------------------------------------------------- */
 	set format(format: string) {
 		this.#format = format;
+		if (format === 'tournament')
+			this._guestLimit = 4;
+		else
+			this._guestLimit = 2;
 	}
 
 	set formInstance(formInstance: string) {
@@ -204,7 +210,7 @@ export class RemotePongSettings extends LocalPongSettings {
 			ev.stopImmediatePropagation();
 			// TODO: keep lobby owner from adding themselves to the lobby;
 			//  && target.title !== this.#owner
-			if (this.#guests.size < 4) {//TODO: should be 2 if its a quickmatch
+			if (this.#guests.size < this._guestLimit) {
 				try {
 					const user = await this.fetchGuests(target.title);
 					if (user) this.#guests.set(user.username, user);
