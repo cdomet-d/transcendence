@@ -130,10 +130,7 @@ export const deleteRelationSchema = {
 
 export const deleteAllRelationsSchema = {
 	response: {
-		204: {
-			type: 'null',
-			description: 'No Content'
-		},
+		200: messageResponse,
 		401: messageResponse,
 		400: messageResponse
 	}

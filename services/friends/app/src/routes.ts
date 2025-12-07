@@ -373,7 +373,6 @@ export async function routeFriend(serv: FastifyInstance) {
 				}
 			}
 
-			console.log("zebbbiiiiiiiiiiiiiiiii");
 			const userID = request.user.userID;
 			const safeUserID = cleanInput(userID);
 
@@ -384,7 +383,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			`;
 			await serv.dbFriends.run(query, [safeUserID, safeUserID]);
 
-			return reply.code(204).send();
+			return reply.code(200).send();
 		} catch (error) {
 			serv.log.error(`[FRIENDS] Error deleting all friendships: ${error}`);
 			throw error;

@@ -207,7 +207,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			if (error instanceof Error && error.message.includes('Stats not found')) {
 				return reply.code(404).send({ message: error.message });
 			}
-			return reply.code(500).send({ message: '[AUTH] Internal Server Error' });
+			throw error;
 		}
 	});
 

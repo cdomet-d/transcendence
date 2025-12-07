@@ -681,7 +681,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			if (error instanceof Error && error.message.includes('Stats not found')) {
 				return reply.code(404).send({ message: error.message });
 			}
-			return reply.code(500).send({ message: 'Internal Server Error' });
+			throw error;
 		}
 	});
 
@@ -689,9 +689,8 @@ export async function userRoutes(serv: FastifyInstance) {
 	serv.patch('/anonymize', async (request, reply) => {
 		try {
 			const token = request.cookies.token;
-			if (!token) {
-				return reply.code(401).send({ message: 'Unauthorized' });
-			}
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
+
 			if (token) {
 				try {
 					const user = serv.jwt.verify(token) as JwtPayload;
@@ -699,12 +698,12 @@ export async function userRoutes(serv: FastifyInstance) {
 					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
-						// @ts-ignore
-						if (['FST_JWT_BAD_REQUEST', 'ERR_ASSERTION', 'FST_JWT_BAD_COOKIE_REQUEST'].includes(error.code)) {
-							// @ts-ignore
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
 							return reply.code(400).send({ code: error.code, message: error.message });
-						}
-						// @ts-ignore
 						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
 					} else {
 						return reply.code(401).send({ message: 'Unknown error' });
@@ -730,12 +729,10 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[USERS] Error processing anonymization: ${error}`);
-			// @ts-ignore
 			if (error instanceof Error && error.message.includes('Stats not found')) {
-				// @ts-ignore
 				return reply.code(404).send({ message: error.message });
 			}
-			return reply.code(500).send({ message: 'Internal Server Error' });
+			throw error;
 		}
 	});
 

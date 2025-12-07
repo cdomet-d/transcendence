@@ -13,7 +13,8 @@ import {
 	refreshJWTForUsernameChange,
 	fetchFriendshipsPending,
 	deleteAllFriendship,
-	AnonymizeUser
+	AnonymizeUser,
+	AnonymizeAccount
 } from './bffUserProfile.service.js';
 import { cleanInput } from '../utils/sanitizer.js';
 import { profileGet, tinyProfileGet, searchGet, leaderboardGet, settingsPatch, usernameGet } from './bff.usersSchemas.js';
@@ -466,56 +467,59 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 					}
 				}
 			}
+			const userID = request.user.userID;
 
-			const responseUser = await fetch('http://users:2626/anonymize', {
-				method: 'PATCH',
-				headers: {
-					Cookie: `token=${token}`,
-					'Authorization': `Bearer ${token}`,
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({})
-			});
 
-			if (!responseUser.ok) {
-				const err = await responseUser.json() as { message: string };
-				throw new Error(`[USERS] Profile anonymization failed: ${err.message}`);
+			try {
+				const responseUser = await AnonymizeUser(serv.log, userID, token);
+				
+				const responseFriends = await deleteAllFriendship(serv.log, userID, token);
+				
+				const responseAuth = await AnonymizeAccount(serv.log, userID, token);
+
+				//if (!responseUser.ok) {
+				//	const err = await responseUser.json() as { message: string };
+				//	throw new Error(`[USERS] Profile anonymization failed: ${err.message}`);
+				//}
+
+				//if (!responseFriends.ok)
+				//	serv.log.warn('[BFF] Friends deletion failed, continuing to Auth deletion.');
+
+
+				//if (!responseAuth.ok) {
+				//	const err = await responseAuth.json() as { message: string };
+				//	throw new Error(`[AUTH] Account anonymization failed: ${err.message}`);
+				//}
+
+				reply.clearCookie('token');
+				return reply.code(200).send({ success: true, message: 'Account deleted' });
+			} catch (error) {
+				if (typeof error === 'object' && error !== null && 'code' in error) {
+					const customError = error as { code: number; message: string };
+
+					if (customError.code === 409)
+						return reply.code(409).send({
+							message: customError.message || '[BFF] Conflict error. Username taken',
+						});
+					if (customError.code === 404)
+						return reply.code(404).send({
+							message: customError.message || '[BFF] User/account not found.',
+						});
+					if (customError.code === 400)
+						return reply
+							.code(400)
+							.send({ message: customError.message || '[BFF] Bad Request.' });
+					if (customError.code === 401)
+						return reply
+							.code(401)
+							.send({ message: customError.message || '[BFF] Unauthorized' });
+				}
+				throw error;
 			}
-
-			const responseFriends = await fetch('http://friends:1616/', {
-				method: 'DELETE',
-				headers: {
-					Cookie: `token=${token}`,
-					'Authorization': `Bearer ${token}`,
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({})
-			});
-
-			if (!responseFriends.ok)
-				serv.log.warn('[BFF] Friends deletion failed, continuing to Auth deletion.');
-
-			const responseAuth = await fetch('http://auth:3939/anonymize', {
-				method: 'PATCH',
-				headers: {
-					Cookie: `token=${token}`,
-					'Authorization': `Bearer ${token}`,
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({})
-			});
-
-			if (!responseAuth.ok) {
-				const err = await responseAuth.json() as { message: string };
-				throw new Error(`[AUTH] Account anonymization failed: ${err.message}`);
-			}
-
-			reply.clearCookie('token');
-			return reply.code(200).send({ success: true, message: 'Account deleted' });
 
 		} catch (error) {
-			serv.log.error(`[BFF] Failed to delete user: ${error}`);
-			return reply.code(500).send({ message: 'Failed to process account deletion. Please try again.' });
+			serv.log.error(`[BFF] Failed to delete account: ${error}`);
+			throw error;
 		}
 	});
 }

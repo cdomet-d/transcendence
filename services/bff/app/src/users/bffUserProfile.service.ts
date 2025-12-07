@@ -913,18 +913,14 @@ export async function deleteAllFriendship(log: any, userID: string, token: strin
 			method: 'DELETE',
 			headers: {
 				Cookie: `token=${token}`,
-				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${token}`,
+				'Content-Type': 'application/json'
 			},
+			body: JSON.stringify({})
 		});
 	} catch (error) {
 		log.error(`[BFF] Friends service is unreachable: ${error}`);
 		throw new Error('Friends service is unreachable.');
-	}
-
-	if (response.status === 409) {
-		log.warn(`[BFF] Username taken in auth service change for user: ${userID}`);
-		const errorBody = (await response.json()) as { message: string };
-		throw { code: 409, message: errorBody.message || '[BFF] Username taken' };
 	}
 
 	if (response.status === 400) {
@@ -952,7 +948,6 @@ export async function deleteAllFriendship(log: any, userID: string, token: strin
 }
 
 //TODO change error message
-//TODO error handling
 export async function AnonymizeUser(log: any, userID: string, token: string) {
 	const url = `http://users:2626/anonymize`;
 
@@ -962,18 +957,58 @@ export async function AnonymizeUser(log: any, userID: string, token: string) {
 			method: 'PATCH',
 			headers: {
 				Cookie: `token=${token}`,
-				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${token}`,
+				'Content-Type': 'application/json'
 			},
+			body: JSON.stringify({})
 		});
 	} catch (error) {
 		log.error(`[BFF] Friends service is unreachable: ${error}`);
 		throw new Error('Friends service is unreachable.');
 	}
 
-	if (response.status === 409) {
-		log.warn(`[BFF] Username taken in auth service change for user: ${userID}`);
+	if (response.status === 400) {
+		log.warn(`[BFF] Friends service validation error for user ${userID}`);
 		const errorBody = (await response.json()) as { message: string };
-		throw { code: 409, message: errorBody.message || '[BFF] Username taken' };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not change settings.' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Friends service validation error for user ${userID}`);
+		const errorBody = (await response.json()) as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not change settings.' };
+	}
+
+	if (response.status === 404) {
+		log.warn(`[BFF] Account not found for update: ${userID}`);
+		const errorBody = (await response.json()) as { message: string };
+		throw { code: 404, message: errorBody.message || '[BFF] User not found.' };
+	}
+
+	if (!response.ok) {
+		log.error(`[BFF] Friends service failed with status ${response.status}`);
+		throw new Error('Friends service failed.');
+	}
+}
+
+
+export async function AnonymizeAccount(log: any, userID: string, token: string) {
+	const url = `http://auth:3939/anonymize`;
+
+	let response: Response;
+	try {
+		response = await fetch(url, {
+			method: 'PATCH',
+			headers: {
+				Cookie: `token=${token}`,
+				'Authorization': `Bearer ${token}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({})
+		});
+	} catch (error) {
+		log.error(`[BFF] Friends service is unreachable: ${error}`);
+		throw new Error('Friends service is unreachable.');
 	}
 
 	if (response.status === 400) {
