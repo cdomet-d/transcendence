@@ -4,8 +4,8 @@ import { createHeading, createNoResult } from './web-elements/typography/helpers
 import { createLeaderboard } from './web-elements/statistics/leaderboard.js';
 import { createMenu } from './web-elements/navigation/menu-helpers.js';
 import { createTabs } from './web-elements/navigation/tabs-helpers.js';
-import { farm, ocean, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
-import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
+import { farm, ocean, defaultTheme, forest, PongCourt } from './web-elements/game/pong-court.js';
+import { farmAssets, forestAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
 import { userSettingsForm, localPong, remotePong, pongTournament } from './web-elements/forms/default-forms.js';
 import { lobbyQuickmatchMenu, lobbyTournamentMenu, main, goHomeData } from './web-elements/navigation/default-menus.js';
 import { pong, type gameRequest } from './pong/pong.js';
@@ -277,8 +277,8 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 	const layout = document.body.layoutInstance;
 
 	// TODO: set pong-court theme from game-manager object
-	if (layout) layout.theme = oceanAssets;
-	court.theme = ocean;
+	if (layout) layout.theme = forestAssets;
+	court.theme = forest;
 
 	// TODO: set playerNames from game-manager object
 	ui.player1.innerText = 'CrimeGoose';
