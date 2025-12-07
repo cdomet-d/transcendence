@@ -1,5 +1,6 @@
 import type { userInfo, lobbyInfo, whitelist } from '../gameManager/gameManager.interface.js';
 import type { WebSocket } from '@fastify/websocket';
+import { wsSend } from './wsHandler.gm.js';
 export const wsClientsMap: Map<string, WebSocket> = new Map();
 export const lobbyMap: Map<string | undefined, lobbyInfo> = new Map();
 
@@ -24,7 +25,7 @@ function makeLobbyInfo(host: userInfo, format: string): lobbyInfo {
 		},
 		joinable: true,
 		userList: new Map<string, userInfo>([
-			[host.userID!, { userID: host.userID!, username: host.username! }],//TODO: need username ?
+			[host.userID!, { userID: host.userID!, username: host.username!, userSocket: host.userSocket! }],//TODO: need username ?
 		]),
 		remote: true, // TODO set to false if local pong before START event
 		format: format,
@@ -45,16 +46,18 @@ export function addUserToWhitelist(user: userInfo, lobbyID: string) {
 	}
 }
 
+export function removeUserFromWhitelist(userID: string, lobbyID: string) {
+	const lobby = lobbyMap.get(lobbyID);
+	if (!lobby) return;
+	lobby.whitelist!.userIDs.delete(userID);
+	sendUpdatedWhiteList(lobbyID);
+}
+
 function sendUpdatedWhiteList(lobbyID: string) {
-	if (lobbyMap.get(lobbyID)!.nbPlayers === 2) return;
 	const whiteListUsernames: string[] = getWhiteListUsernames(lobbyID);
 	const lobbyUserList: Map<string, userInfo> = lobbyMap.get(lobbyID)?.userList!;
 	for (const user of lobbyUserList) {
-		if (user[1].userSocket && user[1].userSocket.OPEN) {
-			user[1].userSocket!.send(JSON.stringify({ lobby: 'whiteListUpdate', whiteListUsernames: whiteListUsernames}));
-		}
-		else
-			console.log("SOCKET NOT FOUND");
+		wsSend(user[1].userSocket!, JSON.stringify({ lobby: 'whiteListUpdate', whiteListUsernames: whiteListUsernames}))
 	}
 }
 
@@ -62,13 +65,6 @@ export function getWhiteListUsernames(lobbyID: string): string[] {
 	const whiteList: whitelist = lobbyMap.get(lobbyID)?.whitelist!;
 	const whiteListUsernames: string[] = Array.from(whiteList.userIDs.values()).map(user => user.username!)
 	return whiteListUsernames;
-}
-
-export function removeUserFromWhitelist(userID: string, lobbyID: string) {
-	const lobby = lobbyMap.get(lobbyID);
-	if (!lobby) return;
-
-	lobby.whitelist!.userIDs.delete(userID);
 }
 
 export function addUserToLobby(userID: string, socket: WebSocket, lobbyID: string) {

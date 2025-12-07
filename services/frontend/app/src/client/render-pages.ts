@@ -313,7 +313,7 @@ export async function renderQuickRemoteLobby(
     document.body.layoutInstance?.appendAndCache(form);
 
 	if (action === "invitee")
-		form.displayGuestsForInvitee(whiteListUsernames!);
+		form.displayUpdatedGuests(whiteListUsernames!);
     if (action === undefined) {
         action = 'create';
         form.owner = user.username!;
@@ -345,7 +345,7 @@ export async function renderTournamentLobby(
 	document.body.layoutInstance?.appendAndCache(form);
 
 	if (action === "invitee")
-		form.displayGuestsForInvitee(whiteListUsernames!);
+		form.displayUpdatedGuests(whiteListUsernames!);
 	if (action === undefined) {
 		action = 'create';
 		form.owner = user.username!;

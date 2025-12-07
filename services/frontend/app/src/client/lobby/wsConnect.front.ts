@@ -5,6 +5,11 @@ import { type gameRequest } from '../pong/pong.js';
 import { redirectOnError } from '../error.js';
 import type { LocalPongSettings, RemotePongSettings } from '../web-elements/forms/pong-settings.js';
 
+interface inviteeObj {
+	userID: string, 
+	username?: string
+}
+
 let wsInstance: WebSocket | null = null;
 
 function openWsConnection() {
@@ -15,13 +20,14 @@ function openWsConnection() {
 	return wsInstance;
 }
 
-async function wsConnect(action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string, invitee?: {userID: string, username?: string}, form?: RemotePongSettings | LocalPongSettings) {
+async function wsConnect(action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string, invitee?: inviteeObj, form?: RemotePongSettings | LocalPongSettings) {
 	const ws: WebSocket = openWsConnection();
 	if (form)
 		form.socket = ws;
 
 	ws.onopen = async () => {
 		console.log('Lobby WebSocket connection established!')
+		setMessEvent(ws, form);
 
 		const interval = setInterval(() => {
 			if (ws.readyState === ws.OPEN) {
@@ -49,15 +55,11 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 				console.log(`Error: WebSocket is not open for ${action}`);
 			}
 		}
-
-		if (action === 'decline') {
-			if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-				wsInstance.send(JSON.stringify({ event: "LOBBY_INVITE", payload: { action: action, invitee: invitee, lobbyID: lobbyID } }));
-			} else {
-				console.log(`Error: WebSocket is not open for ${action}`);
-			}
-		}
+		decline(action, invitee!, lobbyID!);
 	}
+
+	if (action === 'invitee')
+		setMessEvent(ws, form);
 
 	if (action === 'game') {
 		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
@@ -85,20 +87,31 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		}
 	}
 
+	decline(action, invitee!, lobbyID!);
+
+	ws.onerror = (err: any) => {
+		console.log('Error:', err);
+		return;
+	};
+
+	ws.onclose = () => {
+		wsInstance = null;
+		console.log('Lobby WebSocket connection closed!');
+		// TODO KICK USER OUT OF LOBBY_MAP AND GM WS_CLIENT_MAP // 'delete' action ? Handle in GM?
+		// TODO: Check wether deconnection was expected or not
+	};
+}
+
+function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettings) {
 	ws.onmessage = (message: MessageEvent) => {
 		try {
 			// handle Response for lobbyRequest
 			const data = JSON.parse(message.data);
-
 			if (data.error) {
 				console.log("ERROR: ", data.error);
 				return;
 			}
-
-			if (data.event === "NOTIF" && data.notif === "pong") {
-				return;
-			}
-
+			if (data.event === "NOTIF" && data.notif === "pong") return;
 			if (data.lobby) {
 				console.log(`${data.lobby} lobby ${data.lobbyID} successfully!`);
 
@@ -118,7 +131,9 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 					}
 				}
 				if (data.lobby === "whiteListUpdate") {
-					form?.displayGuestsForInvitee(data.whiteListUsernames);
+					if (form === undefined)
+						console.log("FORM UNDEFINED");
+					form?.displayUpdatedGuests(data.whiteListUsernames);
 				}
 				return;
 			}
@@ -132,17 +147,16 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 			console.error("Error: Failed to parse WS message", error);
 		}
 	}
+}
 
-	ws.onerror = (err: any) => {
-		console.log('Error:', err);
-		return;
-	};
-
-	ws.onclose = () => {
-		console.log('Lobby WebSocket connection closed!');
-		// TODO KICK USER OUT OF LOBBY_MAP AND GM WS_CLIENT_MAP // 'delete' action ? Handle in GM?
-		// TODO: Check wether deconnection was expected or not
-	};
+function decline(action: string, invitee: inviteeObj, lobbyID: string) {
+	if (action === 'decline') {
+		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+			wsInstance.send(JSON.stringify({ event: "LOBBY_INVITE", payload: { action: action, invitee: invitee, lobbyID: lobbyID } }));
+		} else {
+			console.log(`Error: WebSocket is not open for ${action}`);
+		}
+	}
 }
 
 export { wsConnect };

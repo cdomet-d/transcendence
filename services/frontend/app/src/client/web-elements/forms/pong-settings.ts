@@ -259,7 +259,8 @@ export class RemotePongSettings extends LocalPongSettings {
 		}
 	}
 
-	public async displayGuestsForInvitee(whiteListUsernames: string[]) {
+	public async displayUpdatedGuests(whiteListUsernames: string[]) {
+		this.#guests.clear();
 		for (const username of whiteListUsernames) {
 			const user = await this.fetchGuests(username);
 			if (user) this.#guests.set(user.username, user);

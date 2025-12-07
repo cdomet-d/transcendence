@@ -37,7 +37,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				}
 
 				if (lobbyPayload.action === 'create') {
-					const newLobby: lobbyInfo = createLobby({userID: userID!, username: username }, lobbyPayload.format!);
+					const newLobby: lobbyInfo = createLobby({userID: userID!, username: username, userSocket: socket }, lobbyPayload.format!);
 					this.log.error(`FORM IN GM CREATE: ${formInstance}`);
 					wsSend(socket, JSON.stringify({ lobby: 'created', lobbyID: newLobby.lobbyID, formInstance: formInstance }))
 				}
@@ -79,7 +79,8 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				} else if (invitePayload.action === 'decline') {
 					const inviteeID = invitePayload.invitee.userID!;
 					removeUserFromWhitelist(inviteeID, invitePayload.lobbyID!);
-
+					if (findLobbyIDFromUserID(inviteeID) === null)
+						socket.close();
 				} else if (invitePayload.action === 'join') {
 					this.log.error(`IN JOIN + ${formInstance}`);
 					//TODO: check if lobby still exists otherwise send error "tournament doesn't exist anymore"
