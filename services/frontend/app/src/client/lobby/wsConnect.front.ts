@@ -112,8 +112,11 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 						//fill lobby with data.whiteListUsers;
 					}
 					else if (data.formInstance === "tournament") {
-						router.loadRoute("/tournament-lobby", true, undefined, "");
+						router.loadRoute("/tournament-lobby", true, undefined, "invitee", data.whiteListUsernames);
 					}
+				}
+				if (data.lobby === "whiteListUpdate") {
+					form?.displayGuestsForInvitee(data.whiteListUsernames);
 				}
 				return;
 			}

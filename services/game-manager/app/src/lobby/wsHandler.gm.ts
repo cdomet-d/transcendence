@@ -1,7 +1,7 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 import { processGameRequest } from '../gameManager/gameManager.js';
-import { wsClientsMap, addUserToLobby, createLobby, lobbyMap, removeUserFromLobby, addUserToWhitelist, removeUserFromWhitelist, findLobbyIDFromUserID } from './lobby.gm.js';
+import { wsClientsMap, addUserToLobby, createLobby, lobbyMap, removeUserFromLobby, addUserToWhitelist, removeUserFromWhitelist, findLobbyIDFromUserID, getWhiteListUsernames } from './lobby.gm.js';
 import { validateData, validatePayload } from '../gameManager/inputValidation.js';
 import type { lobbyInfo, userInfo, whitelist } from '../gameManager/gameManager.interface.js';
 import type { lobbyRequestForm, gameNotif, lobbyInviteForm } from './lobby.interface.js';
@@ -38,7 +38,6 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 
 				if (lobbyPayload.action === 'create') {
 					const newLobby: lobbyInfo = createLobby({userID: userID!, username: username }, lobbyPayload.format!);
-
 					this.log.error(`FORM IN GM CREATE: ${formInstance}`);
 					wsSend(socket, JSON.stringify({ lobby: 'created', lobbyID: newLobby.lobbyID, formInstance: formInstance }))
 				}
@@ -58,13 +57,14 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				console.log('HOST ID:', hostID);
 
 				if (invitePayload.action === 'invite') {
+					this.log.error("IN INVITE")
 					const inviteeID = invitePayload.invitee.userID!;
 					const lobbyID: string | null = findLobbyIDFromUserID(invitePayload.hostID!);
 					if (lobbyID === null) {
 						wsSend(socket, JSON.stringify({ error: 'lobby not found' }));
 						return;
 					}
-					console.log('LOBBY ID:', lobbyID);
+					// console.log('LOBBY ID:', lobbyID);
 					const hostUsername: string = lobbyMap.get(lobbyID)?.userList.get(invitePayload.hostID!)?.username!; //TODO: check if it exists ? normally it always should
 					const notif: gameNotif = {
 						type: 'GAME_INVITE',
@@ -73,7 +73,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 						lobbyID: lobbyID!,
 						gameType: formInstance === 'remoteForm' ? '1 vs 1' : 'tournament'
 					};
-					console.log('inviteeID: ', inviteeID);
+					// console.log('inviteeID: ', inviteeID);
 					addUserToWhitelist(invitePayload.invitee, lobbyID!);
 					natsPublish(this, 'post.notif', JSON.stringify(notif));
 				} else if (invitePayload.action === 'decline') {
@@ -85,8 +85,8 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					//TODO: check if lobby still exists otherwise send error "tournament doesn't exist anymore"
 					userID = invitePayload.invitee.userID;
 					addUserToLobby(userID!, socket, invitePayload.lobbyID!);
-					const whiteList: whitelist = lobbyMap.get(invitePayload.lobbyID!)?.whitelist!;
-					const whiteListUsernames: string[] = Array.from(whiteList.userIDs.values()).map(user => user.username!)
+
+					const whiteListUsernames: string[] = getWhiteListUsernames(invitePayload.lobbyID!)
 					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance, whiteListUsernames: whiteListUsernames }));
 					//TODO: send start to host
 				}

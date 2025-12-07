@@ -321,7 +321,8 @@ export async function renderQuickRemoteLobby(
 export async function renderTournamentLobby(
 	param?: Match<Partial<Record<string, string | string[]>>>,
     gameRequest?: gameRequest,
-    action?: string
+    action?: string,
+	whiteListUsernames?: string[],
 ) {
     const user: userStatusInfo = await userStatus();
 	if (!user.auth) {
@@ -336,11 +337,14 @@ export async function renderTournamentLobby(
 
 	const form: RemotePongSettings = createForm('remote-pong-settings', pongTournament(currentDictionary));
 	document.body.layoutInstance?.appendAndCache(form);
+
+	if (action === "invitee")
+		form.displayGuestsForInvitee(whiteListUsernames!);
 	if (action === undefined) {
 		action = 'create';
 		form.owner = user.username!;
 	}
-    wsConnect(action!, 'tournament', 'remoteForm');//TODO: add form
+    wsConnect(action!, 'tournament', 'remoteForm', undefined, undefined, undefined, form);
 }
 
 export async function renderGame(

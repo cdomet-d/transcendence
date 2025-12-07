@@ -1,4 +1,4 @@
-import type { userInfo, lobbyInfo } from '../gameManager/gameManager.interface.js';
+import type { userInfo, lobbyInfo, whitelist } from '../gameManager/gameManager.interface.js';
 import type { WebSocket } from '@fastify/websocket';
 export const wsClientsMap: Map<string, WebSocket> = new Map();
 export const lobbyMap: Map<string | undefined, lobbyInfo> = new Map();
@@ -41,7 +41,27 @@ export function addUserToWhitelist(user: userInfo, lobbyID: string) {
 
 	if (lobby.whitelist?.userIDs.has(user.userID!) === false) {
 		lobby.whitelist?.userIDs.set(user.userID!, { userID: user.userID!, username: user.username! });
+		sendUpdatedWhiteList(lobbyID);
 	}
+}
+
+function sendUpdatedWhiteList(lobbyID: string) {
+	if (lobbyMap.get(lobbyID)!.nbPlayers === 2) return;
+	const whiteListUsernames: string[] = getWhiteListUsernames(lobbyID);
+	const lobbyUserList: Map<string, userInfo> = lobbyMap.get(lobbyID)?.userList!;
+	for (const user of lobbyUserList) {
+		if (user[1].userSocket && user[1].userSocket.OPEN) {
+			user[1].userSocket!.send(JSON.stringify({ lobby: 'whiteListUpdate', whiteListUsernames: whiteListUsernames}));
+		}
+		else
+			console.log("SOCKET NOT FOUND");
+	}
+}
+
+export function getWhiteListUsernames(lobbyID: string): string[] {
+	const whiteList: whitelist = lobbyMap.get(lobbyID)?.whitelist!;
+	const whiteListUsernames: string[] = Array.from(whiteList.userIDs.values()).map(user => user.username!)
+	return whiteListUsernames;
 }
 
 export function removeUserFromWhitelist(userID: string, lobbyID: string) {
@@ -56,7 +76,7 @@ export function addUserToLobby(userID: string, socket: WebSocket, lobbyID: strin
 	if (!lobby) return;
 
 	if (!lobby.userList.has(userID)) {
-		lobby.userList.set(userID, { userID: userID });
+		lobby.userList.set(userID, { userID: userID, userSocket: socket });
 	}
 
 	if (!wsClientsMap.has(userID)) {

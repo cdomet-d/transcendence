@@ -73,7 +73,7 @@ export class LocalPongSettings extends BaseForm {
 		console.log(f);
 		// await this.fetchAndRedirect(this.details.action, req);
 
-		wsConnect('game', 'quickmatch', 'remoteForm', '', req.body);//TODO: form needs to change 
+		wsConnect('game', 'quickmatch', 'remoteForm', '', req.body);//TODO: form needs to change depending what lobby it is
 	}
 }
 
@@ -175,7 +175,7 @@ export class RemotePongSettings extends LocalPongSettings {
 			ev.stopImmediatePropagation();
 			// TODO: keep lobby owner from adding themselves to the lobby;
 			//  && target.title !== this.#owner
-			if (this.#guests.size < 4) {
+			if (this.#guests.size < 4) {//TODO: should be 2 if its a quickmatch
 				try {
 					const user = await this.fetchGuests(target.title);
 					if (user) this.#guests.set(user.username, user);
