@@ -63,7 +63,7 @@ export function createUserInline(user: UserData): UserInline {
  */
 export function createUserProfile(user: UserData): UserProfile {
 	const el = document.createElement('div', { is: 'user-profile' }) as UserProfile;
-	setUserProfileCommonValues(user, 'ilarge', el);
+	setUserProfileCommonValues(user, 'ixl', el);
 	el.biography = user.biography;
 	el.profileAge = user.since;
 	return el;

@@ -66,7 +66,6 @@ export class PageHeader extends HTMLElement {
 	}
 
 	attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-		console.log(name, oldValue, newValue);
 		if (oldValue === newValue) return;
 		const children = Array.from(this.children);
 		if (name === 'hidden' && !oldValue) {

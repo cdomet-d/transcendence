@@ -171,14 +171,19 @@
 		--image-cont-size: 4.43rem;
 	}
 
-	.ilarge {
+	.ixl {
 		--image-size: 6.36rem;
 		--image-cont-size: 8.36rem;
 	}
 
-	.ifs {
+	.i2xl {
 		--image-size: 16.36rem;
 		--image-cont-size: 18.36rem;
+	}
+
+	.i3xl {
+		--image-size: 24.36rem;
+		--image-cont-size: 26.36rem;
 	}
 
 	.thin {

@@ -197,7 +197,7 @@ export class Searchbar extends BaseForm {
 		this.clearResults();
 		this.#results.classList.remove('hidden');
 		this.#results.removeAttribute('hidden');
-		if (res.length < 1) this.#results.append(createNoResult('light', 'ilarge'));
+		if (res.length < 1) this.#results.append(createNoResult('light', 'ixl'));
 		res.forEach((user) => this.addUser(user));
 		this.classList.add('z-1')
 	}

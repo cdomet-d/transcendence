@@ -202,7 +202,7 @@ export class RemotePongSettings extends LocalPongSettings {
 		if (this.#guestWrapper.firstChild) this.#clearGuests();
 
 		if (this.#guests.size < 1) {
-			const el = createNoResult('light', 'ilarge');
+			const el = createNoResult('light', 'ixl');
 			this.#guestWrapper.append(el);
 			el.classList.add('col-span-2');
 		} else {

@@ -106,20 +106,6 @@ export const social: MenuData = {
 
 	links: [
 		{
-			//TODO: autofill pongsettings form and lauch a 2 persons match
-			styleButton: true,
-			datalink: '/lobby',
-			id: 'challenge',
-			href: '/lobby',
-			title: '',
-			img: {
-				alt: 'two overlapping pixel art ping pong paddles',
-				id: 'challengeIcon',
-				size: 'ismall',
-				src: '/public/assets/images/challenge.png',
-			},
-		},
-		{
 			styleButton: true,
 			datalink: '/user/settings',
 			id: 'settings',
@@ -197,7 +183,6 @@ export function profileTabs(dict: Dictionary): TabData[] {
 	return [
 		{ id: 'friends', content: dict.profile.friends, default: true, panelContent: null },
 		{ id: 'history', content: 'Game history', default: false, panelContent: null },
-		{ id: 'stats', content: 'Statistics', default: false, panelContent: null },
 	];
 }
 

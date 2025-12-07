@@ -22,7 +22,7 @@ function setStatus(n: number): boolean {
 }
 
 function setAvatar(a: string): ImgData {
-	let uAvatar: ImgData = { src: '', alt: '', id: 'user-profile-picture', size: 'ilarge' };
+	let uAvatar: ImgData = { src: '', alt: '', id: 'user-profile-picture', size: 'ixl' };
 	if (!a || a === 'avatar1.png') uAvatar = defaultAvatar;
 	else uAvatar.src = a;
 	return uAvatar;

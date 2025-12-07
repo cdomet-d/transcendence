@@ -48,7 +48,7 @@ export const defaultDictionary: Dictionary = {
 		duration: "Duration",
 		tournament: "Tournament"
 	},
-	notifs: {
+	noti2xl: {
 		notif_placeholder: "No new notifications"
 	},
 	gameCustom: {

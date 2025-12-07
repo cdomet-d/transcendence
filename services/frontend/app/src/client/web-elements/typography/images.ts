@@ -91,7 +91,7 @@ export class NoResults extends HTMLDivElement {
 		this.#noResultsImg = {
 			alt: 'A crying blue pixel art blob',
 			id: 'no-results',
-			size: 'ilarge',
+			size: 'ixl',
 			src: '/public/assets/images/no-result.png',
 		};
 		this.id = 'NoResults';

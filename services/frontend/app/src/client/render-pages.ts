@@ -1,4 +1,3 @@
-import { tournament } from './web-elements/default-values.js';
 import { buildUserProfile, userArrayFromAPIRes, userDataFromAPIRes } from './api-responses/user-responses.js';
 import { createForm } from './web-elements/forms/helpers.js';
 import { createHeading, createNoResult } from './web-elements/typography/helpers.js';
@@ -54,7 +53,7 @@ function updatePageTitle(newPage: string) {
 	document.title = `🌻 BigT - ${newPage} 🌻`;
 }
 
-function createWrapper(id: string): HTMLDivElement {
+export function createWrapper(id: string): HTMLDivElement {
 	const el = document.createElement('div');
 	el.id = id;
 	el.className = 'bg content-h brdr overflow-y-auto overflow-x-hidden justify-start';
@@ -93,7 +92,7 @@ export async function renderNotFound() {
 	document.body.header?.classList.add('hidden');
 	document.body.header?.setAttribute('hidden', '');
 	const goHome = createLink(goHomeData, false) as NavigationLinks;
-	document.body.layoutInstance!.appendAndCache(createNoResult('dark', 'ifs'), goHome);
+	document.body.layoutInstance!.appendAndCache(createNoResult('dark', 'i2xl'), goHome);
 	goHome.classList.remove('w-full');
 	goHome.classList.add('w-1/4', 'place-self-center');
 	updatePageTitle('Not Found');

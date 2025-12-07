@@ -7,9 +7,9 @@
  * - `iicon`: Extra small, icon size
  * - `ismall`: Small size
  * - `imedium`: Medium size
- * - `ilarge`: Large size
+ * - `ixl`: Large size
  */
-export type Size = 'iicon' | 'ismall' | 'imedium' | 'ilarge' | 'ifs';
+export type Size = 'iicon' | 'ismall' | 'imedium' | 'ixl' | 'i2xl' | 'i3xl';
 
 /** Image metadata for assets.
  * @property {string} alt - Alt text for accessibility.
@@ -358,7 +358,7 @@ export interface Dictionary {
 		duration: string;
 		tournament: string;
 	};
-	notifs: {
+	noti2xl: {
 		notif_placeholder: string;
 	};
 	gameCustom: {
