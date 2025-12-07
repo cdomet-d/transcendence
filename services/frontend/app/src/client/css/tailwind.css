@@ -205,6 +205,17 @@
 		left: var(--panel-left, 0);
 		top: var(--panel-top, 0);
 	}
+
+	*:focus,
+	*:focus-visible {
+		box-shadow: var(--n-inner-border-w) var(--n-inner-border-w) var(--border),
+			var(--n-inner-border-w) var(--inner-border-w) var(--border),
+			var(--inner-border-w) var(--n-inner-border-w) var(--border),
+			var(--inner-border-w) var(--inner-border-w) var(--border),
+			var(--n-border-w) 0 0 0 var(--border), var(--border-w) 0 0 0 var(--border),
+			0 var(--n-border-w) 0 0 var(--border), 0 var(--border-w) 0 0 var(--border),
+			4px 4px 10px rgba(0, 0, 0, 0.599);
+	}
 }
 
 @layer base {

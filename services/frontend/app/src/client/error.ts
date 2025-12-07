@@ -13,9 +13,7 @@ export class UIFeedback extends HTMLSpanElement {
 	}
 
 	set type(type: Feedback) {
-		type === 'error'
-			? this.classList.add('bg-red', 'invalid')
-			: this.classList.add('bg-green', 'valid');
+		type === 'error' ? this.classList.add('bg-red', 'invalid') : this.classList.add('bg-green', 'valid');
 	}
 
 	connectedCallback() {

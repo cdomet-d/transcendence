@@ -50,7 +50,7 @@ const notificationBtns: MenuData = {
  * The element is rendered as a grid with text and action buttons.
  */
 
-export class NotifContent extends HTMLDivElement {
+export class NotifContent extends HTMLLIElement {
 	#acceptHandler: (e: Event) => void;
 	#declineHandler: (e: Event) => void;
 
@@ -171,10 +171,10 @@ export class NotifContent extends HTMLDivElement {
 	render() {
 		this.#menu.listbox.classList.add('row-s');
 		this.#message.className = 'inline-flex justify-center';
-		this.className = 'grid notif-cols gap-s focus:thin focus:brdr focus-visible:thin focus-visible:brdr';
+		this.className = 'grid notif-cols gap-s pad-xs';
 	}
 }
 
 if (!customElements.get('notif-content')) {
-	customElements.define('notif-content', NotifContent, { extends: 'div' });
+	customElements.define('notif-content', NotifContent, { extends: 'li' });
 }

@@ -27,8 +27,9 @@ export class NotifBox extends HTMLDivElement {
 	#clickHandler: (e: Event) => void;
 	constructor() {
 		super();
+		this.role = 'combobox';
 		this.#toggle = document.createElement('div', { is: 'notif-toggle' }) as NotifToggle;
-		this.#panel = document.createElement('div', { is: 'notif-panel' }) as NotifPanel;
+		this.#panel = document.createElement('ul', { is: 'notif-panel' }) as NotifPanel;
 		this.computePanelPos = this.computePanelPos.bind(this);
 		this.#clickHandler = this.#clickImplementation.bind(this);
 		this.#blurHandler = this.#focusOutImplementation.bind(this);
@@ -73,15 +74,11 @@ export class NotifBox extends HTMLDivElement {
 		this.#panel.style.setProperty('--panel-top', `${pos.top}px`);
 	}
 
-	togglePanel() {
-		this.#panel.updateVisibility();
-	}
-
 	#handleKeyboardEvent(e: KeyboardEvent) {
 		const keyActions: Record<string, () => void> = {
-			Enter: () => this.#panel?.updateVisibility(),
-			Escape: () => this.#panel?.updateVisibility(),
-			Space: () => this.#panel?.updateVisibility(),
+			Enter: () => this.#panel?.expand(),
+			Escape: () => this.#panel?.collapse(),
+			Space: () => this.#panel?.expand(),
 		};
 		const action = keyActions[e.key];
 		if (action) action();
@@ -94,12 +91,15 @@ export class NotifBox extends HTMLDivElement {
 	 */
 	#clickImplementation(e: Event) {
 		try {
-		const target = e.target as Element | null;
-		if (!target || !['notificationWrapper', 'notifToggle'].includes(target.id)) return;
-		if (e instanceof KeyboardEvent) this.#handleKeyboardEvent(e)
-		else this.#panel.updateVisibility();
-		this.#toggle.toggleAlert(this.#panel.checkUnreadNotification());
-		this.computePanelPos();
+			const target = e.target as Element | null;
+			console.log(target);
+			if (!target || !this.contains(target)) return;
+			if (e instanceof KeyboardEvent) this.#handleKeyboardEvent(e);
+			else {
+				this.#panel.hasAttribute('hidden') ? this.#panel.expand() : this.#panel.collapse();
+			}
+			this.#toggle.toggleAlert(this.#panel.checkUnreadNotification());
+			this.computePanelPos();
 		} catch (error) {
 			console.error('Could not handle notification click', error);
 		}
@@ -107,11 +107,11 @@ export class NotifBox extends HTMLDivElement {
 
 	#focusOutImplementation(e?: FocusEvent) {
 		if (!e) {
-			this.#panel.updateVisibility();
+			this.#panel.collapse();
 		} else {
 			const newFocus = e.relatedTarget as HTMLElement | null;
 			if (!newFocus || !this.contains(newFocus)) {
-				this.#panel.hide();
+				this.#panel.collapse();
 			}
 		}
 	}
@@ -122,7 +122,7 @@ export class NotifBox extends HTMLDivElement {
 	 * @param {string} username - The username who sent the friend request.
 	 */
 	newFriendRequest(username: string) {
-		const notif = document.createElement('div', { is: 'notif-content' }) as NotifContent;
+		const notif = document.createElement('li', { is: 'notif-content' }) as NotifContent;
 		notif.createNotifMessage(username, 'sent you a friend request!');
 		notif.id = 'relation';
 		notif.requesterUsername = username;
@@ -137,7 +137,7 @@ export class NotifBox extends HTMLDivElement {
 	 * @param {GameType} game - The type of game the user is invited to.
 	 */
 	newGameInvitation(username: string, game: GameType) {
-		const notif = document.createElement('div', { is: 'notif-content' }) as NotifContent;
+		const notif = document.createElement('li', { is: 'notif-content' }) as NotifContent;
 		notif.createNotifMessage(username, `challenged you to a ${game}!`);
 		notif.id = 'game';
 		// notif.lobbyInfo = GAMEINFO FROM SOMEWHERE I GUESS

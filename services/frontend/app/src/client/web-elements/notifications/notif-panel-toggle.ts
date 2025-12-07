@@ -1,4 +1,5 @@
 import { NotifContent } from './notification-content';
+import { Listbox } from '../navigation/listbox';
 
 /**
  * Represents a clickable notification icon toggle.
@@ -55,87 +56,34 @@ if (!customElements.get('notif-toggle')) {
  * Manages the display, addition, and clearing of notification elements.
  * Observes the `selected` attribute to toggle visibility.
  */
-export class NotifPanel extends HTMLDivElement {
-	#content: HTMLDivElement;
-	// #currentFocus: number;
-	#notificationList: HTMLElement[];
-
-	/** Observed attributes trigger UI updates when changed. */
-	static get observedAttributes(): string[] {
-		return ['selected'];
-	}
-
+export class NotifPanel extends Listbox {
 	constructor() {
 		super();
 		this.id = 'notifPopup';
-		this.className = 'hidden z-1 notif-panel-pos w-lg';
-		this.#content = document.createElement('div');
-		this.append(this.#content);
-		this.#notificationList = [];
-		// this.
+		this.className = 'fixed z-1 notif-panel-pos w-lg box-border bg brdr pad-xs grid';
+	}
+
+	/** Builds the popup layout and attaches the default message. */
+	override connectedCallback() {
+		super.connectedCallback();
+		this.#createPopupContent();
+		this.addDefault();
 	}
 
 	/** Adds a default message when the list has no notifications. */
 	addDefault() {
-		const defaultContent = document.createElement('p');
+		const defaultContent = document.createElement('li');
 		defaultContent.innerText = 'No new notifications :<';
 		defaultContent.id = 'default';
-		this.#content.append(defaultContent);
+		this.append(defaultContent);
 	}
 
 	/** Creates panel structure with background and decorative elements. */
 	#createPopupContent() {
-		this.#content.className = 'box-border bg brdr pad-xs relative grid';
-
 		const notifDecor = document.createElement('img');
 		notifDecor.src = '/public/assets/images/notification-bubble.png';
-		this.#content.append(notifDecor);
+		this.append(notifDecor);
 		notifDecor.className = 'h-[32px] w-[16px] absolute right-[-20px] top-[4px]';
-	}
-
-	hide() {
-		this.classList.add('hidden');
-		this.setAttribute('hidden', '')
-	}
-
-	/** Toggles the panel's visible state by switching its `selected` attribute. */
-	updateVisibility() {
-		try {
-			if (this.hasAttribute('selected')) {
-				this.removeAttribute('selected');
-			} else {
-				this.setAttribute('selected', '');
-			}
-		} catch (error) {
-			console.error('Failed to toggle visibility:', error);
-		}
-	}
-
-	// /**
-	//  * Used by the `'keydown'` handler to calculate where the user is in the menu's option, remaining within the bounds of the options.
-	//  * @param {number} delta - the incrementing step; it's worth `-1` on `ArrowUp` and `1` on `ArrowDown`
-	//  */
-	// #moveFocus(delta: number) {
-	// 	this.#currentFocus =
-	// 		(this.#currentFocus + delta + this.#listboxOptions.length) %
-	// 		this.#listboxOptions.length;
-	// 	const focusedOption = this.#listboxOptions[this.#currentFocus];
-	// 	if (focusedOption) focusedOption.focus();
-	// }
-
-	/** Responds to observed attribute changes to toggle visibility and clear old markers. */
-	attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
-		if (oldValue === newValue) return;
-
-		this.clearStaleNotifications();
-
-		if (name === 'selected') {
-			if (this.hasAttribute('selected')) {
-				this.classList.remove('hidden');
-				this.removeAttribute('hidden');
-				this.#notificationList[0].focus();
-			} else this.hide();
-		}
 	}
 
 	/**
@@ -145,7 +93,7 @@ export class NotifPanel extends HTMLDivElement {
 	 */
 	checkUnreadNotification(): boolean {
 		let hasUnread = false;
-		const list = Array.from(this.#content.children);
+		const list = Array.from(this.children);
 		list.forEach((item) => {
 			if (item.hasAttribute('unread')) {
 				hasUnread = true;
@@ -157,8 +105,8 @@ export class NotifPanel extends HTMLDivElement {
 
 	/** Removes 'unread' status from all notifications in the panel. */
 	clearStaleNotifications() {
-		const list = Array.from(this.#content.children);
-		list.forEach((item) => {
+		super.arrayFromChildren();
+		super.options.forEach((item) => {
 			if (item.hasAttribute('unread')) item.removeAttribute('unread');
 		});
 	}
@@ -169,19 +117,13 @@ export class NotifPanel extends HTMLDivElement {
 	 * @param {NotifContent} el - The notification element to add.
 	 */
 	newNotification(el: NotifContent) {
-		this.#content.querySelector('#default')?.remove();
-		this.#content.insertBefore(el, this.#content.firstChild);
+		this.querySelector('#default')?.remove();
+		this.insertBefore(el, this.firstChild);
 		el.setAttribute('unread', '');
-		this.#notificationList = Array.from(this.#content.children) as HTMLElement[];
-	}
-
-	/** Builds the popup layout and attaches the default message. */
-	connectedCallback() {
-		this.#createPopupContent();
-		this.addDefault();
+		super.arrayFromChildren();
 	}
 }
 
 if (!customElements.get('notif-panel')) {
-	customElements.define('notif-panel', NotifPanel, { extends: 'div' });
+	customElements.define('notif-panel', NotifPanel, { extends: 'ul' });
 }
