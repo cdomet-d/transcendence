@@ -4,11 +4,12 @@ import { createWrapper } from '../../render-pages';
 import { goHomeData } from '../navigation/default-menus';
 import { Popup } from '../layouts/popup';
 import type { NavigationLinks } from '../navigation/links';
-import type { ImgData } from '../types-interfaces';
+import type { ImgData, MatchParticipants } from '../types-interfaces';
+import { TournamentBrackets } from './tournament';
 
-export function endGame(img: ImgData, id: string) {
+export function endGame(img: ImgData, id: string, mess: string) {
 	const popup = document.createElement('dialog', { is: 'custom-popup' }) as Popup;
-	const title = createHeading('1', 'You lost...');
+	const title = createHeading('1', mess);
 	const image = createIcon(img);
 	const wrapper = createWrapper(id);
 	const goHome = createLink(goHomeData, false) as NavigationLinks;
@@ -21,3 +22,13 @@ export function endGame(img: ImgData, id: string) {
 	image.classList.add('place-self-center');
 }
 
+export function createBracket(tournament: MatchParticipants[]) {
+	const popup = document.createElement('dialog', { is: 'custom-popup' }) as Popup;
+
+	const bracket = document.createElement('div', {
+		is: 'tournament-bracket',
+	}) as TournamentBrackets;
+	if (bracket) bracket.players = tournament;
+	popup.append(bracket)
+	document.body.layoutInstance?.appendAndCache(popup);
+}

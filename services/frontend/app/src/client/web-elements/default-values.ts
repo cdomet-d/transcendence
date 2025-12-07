@@ -8,9 +8,16 @@ export const searchbarPattern: string = '^[A-Za-z0-9]{0,18}$';
 
 export const looseImage: types.ImgData = {
 	src: '/public/assets/images/pong-loose-screen.gif',
-	id: 'looseScreen',
+	id: 'looseGif',
 	size: 'i3xl',
 	alt: ' An image of small blob getting rained on in pixel-art style',
+};
+
+export const winImage: types.ImgData = {
+	src: '/public/assets/images/pong-win-screen.gif',
+	id: 'winGif',
+	size: 'i3xl',
+	alt: ' An image of small blob dancing in stars in pixel-art style',
 };
 
 export const defaultAvatar: types.ImgData = {
