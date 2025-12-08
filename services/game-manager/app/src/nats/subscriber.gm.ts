@@ -2,11 +2,11 @@ import { StringCodec } from 'nats';
 import { wsSend } from '../lobby/wsHandler.gm.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
 import { natsConnect } from './publisher.gm.js';
-import type { gameReply, gameRequest, userInfo } from '../gameManager/gameManager.interface.js';
+import type { gameRequest, gameReply } from '../gameManager/gameManager.interface.js';
 import { wsClientsMap } from '../lobby/lobby.gm.js';
 import { gameOver } from '../quickmatch/gameOver.js';
+import type { WebSocket } from '@fastify/websocket'
 import type { FastifyInstance } from 'fastify';
-import type { WebSocket } from '@fastify/websocket';
 
 export async function natsSubscribe(serv: FastifyInstance) {
 	const pregame = serv.nc.subscribe('game.reply');
@@ -41,7 +41,7 @@ export async function natsSubscribe(serv: FastifyInstance) {
 }
 
 function sendGameRequest(serv: FastifyInstance, userID: string, opponentUsername: string, game: gameReply) {
-	if (userID === 'temporary') return;
+	if (userID === "temporary") return;
 
 	const socket: WebSocket | undefined = wsClientsMap.get(userID);
 	if (socket === undefined) {
@@ -52,6 +52,7 @@ function sendGameRequest(serv: FastifyInstance, userID: string, opponentUsername
 		opponent: opponentUsername, 
 		gameID: game.gameID,
 		remote: game.remote,
+		gameSettings: game.gameSettings,
 	}
 	serv.log.error("SENDING GAME REQUEST");
 	wsSend(socket, JSON.stringify(gameReq));

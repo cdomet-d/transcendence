@@ -3,8 +3,10 @@ import { Game, HEIGHT, WIDTH } from "../classes/game-class.js";
 import { updateBallPos } from './ball.js';
 import { movePaddle, updatePaddlePos } from './paddle.js';
 import { Player } from "../classes/player-class.js";
+import { coordinates } from '../classes/game-interfaces.js';
+import { getBallStartingSpeed } from '../classes/game-settings.js';
 
-const SERVER_TICK: number = 1000 / 50;
+const SERVER_TICK: number = 1000 / 60;
 const TIME_STEP: number = 1000 / 60;
 
 export async function gameLoop(game: Game, player1: Player, player2: Player) {
@@ -107,10 +109,11 @@ async function evenScore(game: Game, player1: Player, player2: Player) {
 	game.cleanTimeoutIDs();
 	game.lastBall = true;
 	await new Promise(res => game.addTimoutID(setTimeout(res, 1500)));
-	game.ball.dx = 0.3 * game.ballDir;
-	game.ball.dy = 0.03;
+	const ballSartingSpeed: coordinates = getBallStartingSpeed(game.infos.gameSettings.ballspeed);
+	game.ball.dx = ballSartingSpeed.x * game.ballDir;
+	game.ball.dy = ballSartingSpeed.y;
 	game.ballDir *= -1;
-	game.ball.maxSpeed = 0.80;
+	game.ball.maxSpeed = 0.75;
 	game.passStart = performance.now();
 	game.lastTick = performance.now();
 	sendToPlayers(game, player1, player2);

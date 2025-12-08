@@ -57,7 +57,7 @@ export const defaultDictionary: Dictionary = {
 		ball_speed: "Starting Ball Speed",
 		paddle_size: "Paddle Size",
 		paddle_speed: "Paddle Speed",
-		paddle_horizontal: "Horizontal Movement",
+		paddle_horizontal: "Horizontal",
 		opponent: "Opponent",
 		start: "Start Game",
 		local: "Local",

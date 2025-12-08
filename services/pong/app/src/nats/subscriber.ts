@@ -2,7 +2,7 @@ import { connect, StringCodec, type NatsConnection } from 'nats';
 import { natsPublish } from './publisher.js'
 import { Game } from '../classes/game-class.js';
 import type { FastifyInstance } from 'fastify';
-import type { gameInfo } from '../classes/game-interfaces.js';
+import type { gameInfo, gameReply } from '../classes/game-interfaces.js';
 
 export async function initNatsConnection(): Promise<NatsConnection> {
 	let token: string | undefined = process.env.NATS_SERVER_TOKEN;
@@ -29,13 +29,13 @@ export async function natsSubscription(serv: FastifyInstance) {
 			serv.gameRegistry.addGame(new Game(gameInfo, serv.nc, serv.log));
 
 			if (msg.reply) {
-				const game = {
+				const gameReply: gameReply = {
 					gameID: gameInfo.gameID,
 					users: gameInfo.users,
-					remote: gameInfo.remote
-					// gameSettings
+					remote: gameInfo.remote,
+					gameSettings: gameInfo.gameSettings,
 				}
-				natsPublish(serv.nc, msg.reply, JSON.stringify(game));
+				natsPublish(serv.nc, msg.reply, JSON.stringify(gameReply));
 			}
 		}
 	})();
