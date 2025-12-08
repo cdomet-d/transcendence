@@ -1,8 +1,10 @@
 import type { FastifyInstance } from 'fastify';
-import type { JwtPayload } from './bff.interface.js';
-import { fetchUserID, fetchFriendships } from './bffUserProfile.service.js';
+import type { JwtPayload } from '../utils/bff.interface.js';
+import { fetchUserID, fetchFriendships } from '../users/bffUserProfile.service.js';
 import { createFriendRequest, deleteFriendRequest, acceptFriendRequest } from './bffFriends.service.js';
 import { type NatsConnection, StringCodec } from 'nats';
+import { relationPost, relationDelete, relationGet, relationPatch } from './bff.friendsSchemas.js';
+import { cleanInput } from '../utils/sanitizer.js';
 
 declare module 'fastify' {
 	interface FastifyInstance {
@@ -12,7 +14,7 @@ declare module 'fastify' {
 
 export async function bffFriendRoutes(serv: FastifyInstance) {
 
-	serv.post('/relation', async (request, reply) => {
+	serv.post('/relation', { schema: relationPost }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -41,20 +43,21 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			const senderUsername = request.user.username;
 
 			const { username: friendUsername } = request.body as { username: string };
+			const safeFriendUsername = cleanInput(friendUsername);
 
-			if (!friendUsername)
+			if (!safeFriendUsername)
 				return reply
 					.code(400)
 					.send({ message: '[BFF] Missing friend username in request body.' });
 
-			if (senderUsername === friendUsername)
+			if (senderUsername === safeFriendUsername)
 				return reply
 					.code(400)
 					.send({ message: '[BFF] You cannot send a friend request to yourself.' });
 
-			const friendUserID = await fetchUserID(serv.log, friendUsername, token);
+			const friendUserID = await fetchUserID(serv.log, safeFriendUsername, token);
 			if (!friendUserID)
-				return reply.code(404).send({ message: `[BFF] User '${friendUsername}' not found.` });
+				return reply.code(404).send({ message: `[BFF] User '${safeFriendUsername}' not found.` });
 
 			await createFriendRequest(serv.log, senderID, friendUserID, token);
 			try {
@@ -77,14 +80,14 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
 				const customError = error as { code: number; message: string };
-				return reply.code(customError.code).send({ message: customError.message });
+				return reply.code(customError.code as any).send({ message: customError.message });
 			}
 			serv.log.error(`[BFF] Error sending friend request: ${error}`);
 			return reply.code(503).send({ message: '[BFF] A backend service is currently unavailable.' });
 		}
 	});
 
-	serv.patch('/relation', async (request, reply) => {
+	serv.patch('/relation', { schema: relationPatch }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -114,28 +117,29 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 
 			const { username: senderRequestUsername } = request.body as { username: string };
 
-			if (!senderRequestUsername)
+			const safeSenderRequestUsername = cleanInput(senderRequestUsername);
+			if (!safeSenderRequestUsername)
 				return reply
 					.code(400)
 					.send({ message: '[BFF] Missing friend username in request body.' });
 
-			if (senderRequestUsername === receiverUsername)
+			if (safeSenderRequestUsername === receiverUsername)
 				return reply
 					.code(400)
 					.send({ message: '[BFF] You cannot accept a friend request to yourself.' });
 
-			const senderRequestUserID = await fetchUserID(serv.log, senderRequestUsername, token);
+			const senderRequestUserID = await fetchUserID(serv.log, safeSenderRequestUsername, token);
 			if (!senderRequestUserID)
 				return reply
 					.code(404)
-					.send({ message: `[BFF] User '${senderRequestUsername}' not found.` });
+					.send({ message: `[BFF] User '${safeSenderRequestUsername}' not found.` });
 
 			await acceptFriendRequest(serv.log, receiverID, senderRequestUserID, token);
 			return reply.code(200).send({ message: '[BFF] Friend request accepted.' });
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
 				const customError = error as { code: number; message: string };
-				return reply.code(customError.code).send({ message: customError.message });
+				return reply.code(customError.code as any).send({ message: customError.message });
 			}
 			serv.log.error(`[BFF] Error accepting friend request: ${error}`);
 			return reply
@@ -144,7 +148,7 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.delete('/relation', async (request, reply) => {
+	serv.delete('/relation', { schema: relationDelete }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -171,19 +175,21 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 			const removerID = request.user.userID;
 			const removerUsername = request.user.username;
 
+			//const { username: friendUsername } = request.body as { username: string };
 			const { username: friendUsername } = request.body as { username: string };
 
-			if (!friendUsername)
+			const safeFriendUsername = cleanInput(friendUsername);
+			if (!safeFriendUsername)
 				return reply
 					.code(400)
 					.send({ message: '[BFF] Missing friend username in request body.' });
 
-			if (friendUsername === removerUsername)
+			if (safeFriendUsername === removerUsername)
 				return reply.code(400).send({ message: '[BFF] You cannot delete a friendship with yourself.' });
 
-			const friendUserID = await fetchUserID(serv.log, friendUsername, token);
+			const friendUserID = await fetchUserID(serv.log, safeFriendUsername, token);
 			if (!friendUserID)
-				return reply.code(404).send({ message: `[BFF] User '${friendUsername}' not found.` });
+				return reply.code(404).send({ message: `[BFF] User '${safeFriendUsername}' not found.` });
 
 			await deleteFriendRequest(serv.log, removerID, friendUserID, token);
 			return (reply
@@ -193,14 +199,14 @@ export async function bffFriendRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
 				const customError = error as { code: number; message: string };
-				return reply.code(customError.code).send({ message: customError.message });
+				return reply.code(customError.code as any).send({ message: customError.message });
 			}
 			serv.log.error(`[BFF] Error deleting friend request: ${error}`);
 			return reply.code(503).send({ message: '[BFF] A backend service is currently unavailable.' });
 		}
 	});
 
-	serv.get('/relation', async (request, reply) => {
+	serv.get('/relation', { schema: relationGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });

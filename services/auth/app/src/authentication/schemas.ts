@@ -1,11 +1,10 @@
 export const auth = {
 	body: {
 		type: 'object',
-		// TODO: password is not required for temporary users
 		required: ['username', 'password'],
 		properties: {
-			username: { type: 'string' },
-			password: { type: 'string' },
+			username: { type: 'string', minLength: 4, maxLength: 18, pattern: '^[a-zA-Z0-9_-]+$' },
+			password: { type: 'string', minLength: 12, maxLength: 64 }
 		},
 	},
 };
@@ -15,7 +14,7 @@ export const verify = {
 		type: 'object',
 		required: ['password'],
 		properties: {
-			password: { type: 'string' },
+			password: { type: 'string', maxLength: 64 }
 		},
 	},
 };
@@ -32,8 +31,8 @@ export const regen = {
 		type: 'object',
 		required: ['username', 'userID'],
 		properties: {
-			username: { type: 'string' },
-			userID: { type: 'string' },
+			username: { type: 'string', minLength: 4, maxLength: 18, pattern: '^[a-zA-Z0-9_-]+$' },
+			password: { type: 'string', minLength: 12, maxLength: 64 }
 		},
 	},
 };

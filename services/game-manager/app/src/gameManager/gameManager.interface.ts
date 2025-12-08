@@ -4,21 +4,31 @@ interface userInfo {
 	userSocket?: WebSocket
 }
 
+interface PongOptions {
+    background?: string;
+    ballspeed: string;
+    horizontal?: string;
+    paddlesize: string;
+    paddlespeed: string;
+    opponent?: string;
+}
+
 interface lobbyInfo {
+	hostID?: string,
 	lobbyID?: string,
 	whitelist?: whitelist,
 	joinable?: boolean,
 	userList: Map<string, userInfo>,
 	remote: boolean,
-	format: "quickmatch" | "tournament" | string,
-	nbPlayers: number
-	// gameSettings?: string
+	format: 'quickmatch' | 'tournament' | string,
+	nbPlayers: number,
+	gameSettings?: PongOptions
 }
 
 interface whitelist {
 	lobbyId: string,
 	hostID: string,
-	userIDs: string[]
+	userIDs: Map<string, userInfo>
 }
 
 interface game {
@@ -42,11 +52,23 @@ interface tournament {
 	nbPlayers: number
 }
 
-interface gameRequest {
-	username: string,
+// NATS
+interface user {
 	userID: string,
+	username: string,
+}
+
+interface gameReply {
 	gameID: string,
+	users: user[],
 	remote: boolean
 }
 
-export type { userInfo, lobbyInfo, whitelist, tournament, game, gameRequest };
+// PONG
+interface gameRequest {
+	opponent: string,
+	gameID: string,
+	remote: boolean,
+}
+
+export type { userInfo, lobbyInfo, whitelist, tournament, game, gameRequest, user, gameReply };

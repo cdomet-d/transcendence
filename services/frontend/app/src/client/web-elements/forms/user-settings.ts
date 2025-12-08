@@ -10,6 +10,8 @@ import { userColorsMenu, languageMenu } from '../navigation/default-menus.js';
 import type { Avatar } from '../typography/images.js';
 import type { DropdownMenu } from '../navigation/menus.js';
 import type { UserData } from '../types-interfaces.js';
+import { downloadData } from './default-forms.js';
+import { DowloadDataForm } from './downloadData-form.js';
 import {
 	exceptionFromResponse,
 	errorMessageFromException,
@@ -17,6 +19,7 @@ import {
 } from '../../error.js';
 import { router } from '../../main.js';
 //import { currentDictionary } from './language.js';
+import { currentDictionary } from './language.js';
 // import imageCompression from 'browser-image-compression';
 
 const MAX_FILE = 2 * 1024 * 1024;
@@ -27,6 +30,7 @@ const MAX_FILE = 2 * 1024 * 1024;
 export class UserSettingsForm extends BaseForm {
 	#user: UserData;
 	#accountDelete: DeleteAccountForm;
+	#dataDownload: DowloadDataForm;
 	#colors: DropdownMenu;
 	#languages: DropdownMenu;
 	#avatar: Avatar;
@@ -47,11 +51,15 @@ export class UserSettingsForm extends BaseForm {
 		this.#previewAvatar = this.#previewAvatarImplementation.bind(this);
 		this.#accountDelete = createForm(
 			'delete-account-form',
-			deleteAccount /*( currentDictionary )*/,
+			deleteAccount(currentDictionary),
+		);
+		this.#dataDownload = createForm(
+			'download-data-request',
+			downloadData(currentDictionary),
 		);
 		this.#avatar = createAvatar(this.#user.avatar);
-		this.#colors = createDropdown(userColorsMenu, 'Pick color', 'dynamic');
-		this.#languages = createDropdown(languageMenu, 'Pick language', 'static');
+		this.#colors = createDropdown(userColorsMenu, currentDictionary.settings.pick_color, 'dynamic');
+		this.#languages = createDropdown(languageMenu, currentDictionary.settings.pick_language, 'static');
 	}
 
 	override connectedCallback(): void {
@@ -150,6 +158,7 @@ export class UserSettingsForm extends BaseForm {
 		this.renderDropdowns();
 		super.renderButtons();
 		this.append(this.#accountDelete);
+		this.append(this.#dataDownload);
 		this.#avatar.classList.add('row-span-2', 'col-start-1', 'row-start-1');
 		super.contentMap.get('title')?.classList.add('row-span-2', 'col-start-2', 'row-start-1');
 		super.contentMap.get('upload')?.classList.add('row-start-3', 'col-start-1');
@@ -158,6 +167,7 @@ export class UserSettingsForm extends BaseForm {
 		super.contentMap.get('password')?.classList.add('row-start-5', 'col-start-1');
 		super.contentMap.get('submit')?.classList.add('row-start-6', 'col-start-2');
 		this.#accountDelete.classList.add('row-start-7', 'col-start-1');
+		this.#dataDownload.classList.add('row-start-7', 'col-start-2');
 		this.classList.add('sidebar-left');
 	}
 
@@ -178,9 +188,14 @@ export class UserSettingsForm extends BaseForm {
 	 * Sets the user data for the form.
 	 * @param details - The user data object.
 	 */
+	//TODO change the setter to get the actual username
 	set user(details: UserData) {
 		this.#user = details;
 		this.#avatar.metadata = details.avatar;
+
+		if (this.#dataDownload) {
+			this.#dataDownload.user = details;
+		}
 	}
 
 	/* -------------------------------------------------------------------------- */

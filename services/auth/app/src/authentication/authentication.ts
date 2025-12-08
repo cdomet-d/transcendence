@@ -4,13 +4,13 @@ import {
 	setCookie,
 	validateBearerToken,
 	verifyPasswordMatch,
+	updateStatus
 } from './auth.service.js';
 import * as bcrypt from 'bcrypt';
 import type { FastifyInstance } from 'fastify';
 import type { JwtPayload } from './auth.interfaces.js';
 import * as schema from './schemas.js';
 
-//TODO update user status on login and logout
 export async function authenticationRoutes(serv: FastifyInstance) {
 	serv.get('/status', async (request, reply) => {
 		const token = request.cookies.token;
@@ -30,19 +30,31 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			const { username, password } = request.body as { username: string; password: string };
 			const account = await verifyPasswordMatch(serv, username, password);
 
-			if (account === 404 || typeof account !== 'object')
-				return reply.code(404).send({ message: '[AUTH] Account not found.' });
 			if (account === 401)
 				return reply.code(401).send({ message: '[AUTH] Invalid credentials.' });
+
+			if (account === 404 || typeof account !== 'object')
+				return reply.code(404).send({ message: '[AUTH] Account not found.' });
 			const tokenPayload = { userID: account.userID, username: username };
 			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
 			setCookie(reply, token);
+			await updateStatus(serv.log, account.userID, false, token);
 			return reply.code(200).send({ token: token });
 		} catch (error) {
 			serv.log.error(`[AUTH] An unexpected error occurred while login: ${error}`);
 			throw error;
 		}
 	});
+
+	serv.post('/logout', async (request, reply) => {
+		const token = request.cookies.token;
+		clearCookie(reply);
+		if (token === undefined) return;
+		const user: JwtPayload = await request.jwtVerify();
+		await updateStatus(serv.log, user.userID, true, token);
+		return reply.code(200).send({ message: 'Success' });
+	});
+
 
 	serv.post('/regen-jwt', { schema: schema.regen }, async (request, reply) => {
 		try {
@@ -58,11 +70,6 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			serv.log.error(`[AUTH] An unexpected error occurred while login: ${error}`);
 			throw error;
 		}
-	});
-
-	serv.post('/logout', async (request, reply) => {
-		clearCookie(reply);
-		return reply.code(200).send({ message: 'Success' });
 	});
 
 	serv.post('/verify', { schema: schema.verify }, async (request, reply) => {
@@ -149,19 +156,47 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO delete users/friends
-	serv.delete('/:userID', async (request, reply) => {
+	serv.patch('/anonymize', async (request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
 
-			const query = `DELETE FROM account WHERE userID = ?`;
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
 
-			const result = await serv.dbAuth.run(query, [userID]);
-			if (!result.changes)
+			const userID = request.user.userID;
+			const newUsername = `DeletedUser_${crypto.randomUUID().slice(0, 8)}`;
+
+			const query = `UPDATE account SET username = ? WHERE userID = ?`;
+
+			const result = await serv.dbAuth.run(query, [newUsername, userID]);
+			if (result.changes === 0)
 				return reply.code(404).send({ message: '[AUTH] Account not found' });
-			return reply.code(204).send();
+
+			return reply.code(200).send({ success: true, message: '[AUTH] Account anonymized' });
+
 		} catch (error) {
-			serv.log.error(`[AUTH] Error deleting account: ${error}`);
+			serv.log.error(`[AUTH] Error processing anonymization: ${error}`);
+			if (error instanceof Error && error.message.includes('Stats not found')) {
+				return reply.code(404).send({ message: error.message });
+			}
 			throw error;
 		}
 	});

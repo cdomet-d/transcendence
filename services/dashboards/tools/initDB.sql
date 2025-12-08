@@ -14,7 +14,7 @@ CREATE TABLE game (
 CREATE TABLE tournament (
     ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     tournamentID TEXT UNIQUE,
-    nbPlayers INTEGER NOT NULL CHECK(nbPlayers = 4 OR nbPlayers = 8), -- Enforces 4 or 8 players
+    nbPlayers INTEGER NOT NULL CHECK(nbPlayers = 4), -- Enforces 4
     tournamentStatus INTEGER NOT NULL DEFAULT 0, -- 0: Pending, 1: In Progress, 2: Completed
     winnerID INTEGER, -- The ID of the winning player, NULL until completed
     creationTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP

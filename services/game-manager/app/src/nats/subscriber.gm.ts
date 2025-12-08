@@ -2,60 +2,57 @@ import { StringCodec } from 'nats';
 import { wsSend } from '../lobby/wsHandler.gm.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
 import { natsConnect } from './publisher.gm.js';
-import type { game, gameRequest } from '../manager.interface.js';
+import type { gameReply, gameRequest, userInfo } from '../gameManager/gameManager.interface.js';
 import { wsClientsMap } from '../lobby/lobby.gm.js';
 import { gameOver } from '../quickmatch/gameOver.js';
+import type { FastifyInstance } from 'fastify';
+import type { WebSocket } from '@fastify/websocket';
 
-interface user {
-	userID: string,
-	username: string,
-}
-
-export async function natsSubscribe() {
-	const nc = await natsConnect();
-
-	const pregame = nc.subscribe('game.reply'); // where PONG answers "game.request"
+export async function natsSubscribe(serv: FastifyInstance) {
+	const pregame = serv.nc.subscribe('game.reply');
 	(async () => {
 		for await (const msg of pregame) {
 			const sc = StringCodec();
-			const game: { gameID: string, users: user[], remote: boolean } = JSON.parse(sc.decode(msg.data));
-			// console.log(`GM received in "game.reply" : `, payload);
-			console.log("USERS:", game.users);
+			const game: gameReply = JSON.parse(sc.decode(msg.data));
+			console.log('USERS:', game.users);
 			if (game.users === null || game.users === undefined) {
-				console.log("EMPTY USERS");
+				console.log('EMPTY USERS');
 				return;
 			}
-			for (let i = 0; i < game.users.length; i++) {
-				const userID = game.users[i]!.userID;
-				if (userID === "temporary") break;
-				const socket = wsClientsMap.get(userID);
-
-				const gameReq: gameRequest = {
-					username: game.users[i]!.username,
-					userID: userID,
-					// opponent: game.users.username // TODO send username of opponent to PONG depending on local/remote, user index etc. 
-					gameID: game.gameID,
-					remote: game.remote
-					// gameSettings
-				}
-
-				wsSend(socket, JSON.stringify(gameReq));
-			}
+			sendGameRequest(serv, game.users[0]!.userID, game.users[1]!.username, game);
+			sendGameRequest(serv, game.users[1]!.userID, game.users[0]!.username, game);
 		}
 	})();
 
-	const postgame = nc.subscribe('game.over'); // where PONG sends game that just finished
+	const postgame = serv.nc.subscribe('game.over');
 	(async () => {
 		for await (const msg of postgame) {
 			const sc = StringCodec();
 			const payload = sc.decode(msg.data);
-			console.log(`GM received following in "game.over" :\n`, JSON.stringify(payload));
+			console.log(`GM received following in 'game.over' :\n`, JSON.stringify(payload));
 
 			//if (tournamentID ==! -1)
-			//	tournamentState(payload);
+			//	tournamentState(serv, payload);
 			// else {
 			gameOver(payload);
 			// }
 		}
 	})();
+}
+
+function sendGameRequest(serv: FastifyInstance, userID: string, opponentUsername: string, game: gameReply) {
+	if (userID === "temporary") return; // TODO -1 will become 'temporary' 
+
+	const socket: WebSocket | undefined = wsClientsMap.get(userID);
+	if (socket === undefined) {
+		serv.log.error(`socket not found for user: ${userID}`);
+		return
+	}
+	const gameReq: gameRequest = {
+		opponent: opponentUsername, 
+		gameID: game.gameID,
+		remote: game.remote,
+	}
+	serv.log.error("SENDING GAME REQUEST");
+	wsSend(socket, JSON.stringify(gameReq));
 }

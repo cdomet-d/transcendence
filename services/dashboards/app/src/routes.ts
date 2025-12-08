@@ -1,20 +1,30 @@
 import type { FastifyInstance } from 'fastify';
 import { getGameHistory } from './dashboard.service.js';
+import { cleanInput, sanitizeBodyValues } from './sanitizer.js';
+import { postGameSchema, getGamesSchema, deleteGameSchema, deleteTournamentSchema, patchTournamentSchema, postTournamentSchema } from './schemas.js';
 
 export interface Match {
-	gameID: number;
+	gameID: string;
 	duration: number;
 	startTime: string;
-	player1: number;
-	player2: number;
+	player1: string;
+	player2: string;
 	player1Score: number;
 	player2Score: number;
-	opponentID: number;
+	opponentID: string;
 }
 
+interface JwtPayload {
+	userID: string;
+	username: string;
+	iat: number;
+	exp: number;
+}
+
+
 export interface Tournament {
-	tournamentID: number;
-	winnerID: number;
+	tournamentID: string;
+	winnerID: string;
 }
 
 export async function dashboardRoutes(serv: FastifyInstance) {
@@ -24,9 +34,10 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	/* -------------------------------------------------------------------------- */
 
 	//post a game
-	serv.post('/game', async (request, reply) => {
+	serv.post('/game', { schema: postGameSchema }, async (request, reply) => {
 		try {
-			const body = request.body as { [key: string]: any };
+			const rawBody = request.body as { [key: string]: any };
+			const body = sanitizeBodyValues(rawBody);
 
 			const validKeys = [
 				'gameID',
@@ -77,15 +88,38 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO : add JWT verif
 	//get all game of a player
-	serv.get('/games/:userID', async (request, reply) => {
+	serv.get('/games/:userID', { schema: getGamesSchema }, async (request, reply) => {
 		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
 			const { userID } = request.params as { userID: string };
-			if (!userID)
+			const safeUserID = cleanInput(userID);
+			if (!safeUserID)
 				return (reply.code(400).send({ message: '[DASHBOARD] userID query parameter is required.' }));
 
-			const games = await getGameHistory(serv.dbStats, userID);
+			const games = await getGameHistory(serv.dbStats, safeUserID);
 			return (reply.code(200).send(games));
 
 		} catch (error) {
@@ -95,18 +129,19 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//delete a game
-	serv.delete('/game/:gameID', async (request, reply) => {
+	serv.delete('/game/:gameID', { schema: deleteGameSchema }, async (request, reply) => {
 		try {
 			const { gameID } = request.params as { gameID: string };
+			const safeGameID = cleanInput(gameID);
 
-			if (!gameID)
+			if (!safeGameID)
 				return (reply.code(400).send({ message: '[DASHBOARD] gameID query parameter is required.' }));
 
 			const query = `
 				DELETE FROM game WHERE gameID = ?
 			`;
 
-			const response = await serv.dbStats.run(query, [gameID]);
+			const response = await serv.dbStats.run(query, [safeGameID]);
 			if (response.changes === 0)
 				return (reply.code(404).send({ message: 'Game not found.' }));
 
@@ -126,10 +161,10 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	/* -------------------------------------------------------------------------- */
 
 	//post a tournament
-	serv.post('/tournament', async (request, reply) => {
+	serv.post('/tournament', { schema: postTournamentSchema }, async (request, reply) => {
 		try {
-
-			const body = request.body as { [key: string]: any };
+			const rawBody = request.body as { [key: string]: any };
+			const body = sanitizeBodyValues(rawBody);
 
 			const validKeys = [
 				'tournamentID',
@@ -175,16 +210,19 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//patch a tournament stats
-	serv.patch('/tournament/:tournamentID', async (request, reply) => {
+	serv.patch('/tournament/:tournamentID', { schema: patchTournamentSchema }, async (request, reply) => {
 		try {
 			const { tournamentID } = request.params as { tournamentID: string };
-			const { winnerID } = request.body as { winnerID: number };
+			const { winnerID } = request.body as { winnerID: string };
 
-			if (winnerID === undefined)
-				return (reply.code(400).send({ message: '[DASHBOARD] winnerID is required.' }));
+			const safeTournamentID = cleanInput(tournamentID);
+			const safeWinnerID = cleanInput(winnerID);;
+			
+			if (safeWinnerID === undefined || safeWinnerID === null)
+			return (reply.code(400).send({ message: '[DASHBOARD] winnerID is required.' }));
 
 			const query = `UPDATE tournament SET winnerID = ? WHERE tournamentID = ?`;
-			const params = [winnerID, tournamentID];
+			const params = [safeWinnerID, safeTournamentID];
 
 			const response = await serv.dbStats.run(query, params);
 			if (response.changes === 0)
@@ -199,15 +237,16 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//delete a tournamement
-	serv.delete('/tournament/:tournamentID', async (request, reply) => {
+	serv.delete('/tournament/:tournamentID', { schema: deleteTournamentSchema }, async (request, reply) => {
 		try {
-			const { tournamentID } = request.params as { tournamentID: number };
+			const { tournamentID } = request.params as { tournamentID: string };
+			const safeTournamentID = cleanInput(tournamentID);
 
 			const query = `
 				DELETE FROM tournament WHERE tournamentID = ?
 			`;
 
-			const response = await serv.dbStats.run(query, [tournamentID]);
+			const response = await serv.dbStats.run(query, [safeTournamentID]);
 			if (!response.changes) {
 				serv.log.error('[DASHBOARD] Tournament deletion query succeeded but did not delete a row.');
 				return (reply.code(404).send({ message: '[DASHBOARD] Tournament not found.' }));
@@ -220,6 +259,4 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			throw (error);
 		}
 	});
-
-	//TODO delete a player from a game ? GRPD
 }
