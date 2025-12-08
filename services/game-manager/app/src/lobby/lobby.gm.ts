@@ -15,6 +15,7 @@ function makeLobbyInfo(host: userInfo, format: string): lobbyInfo {
 	const lobbyID = crypto.randomUUID().toString();
 
 	const lobby: lobbyInfo = {
+		hostID: host.userID!,
 		lobbyID: lobbyID,
 		whitelist: {
 			lobbyId: lobbyID,
@@ -85,8 +86,7 @@ export function removeUserFromLobby(userID: string, lobbyID: string) {
 	if (!lobby) return;
 	if (userID === lobby.hostID!) {
 		for (const user of lobby.userList) {
-			const userLobbyID: string | null = findLobbyIDFromUserID(user[1].userID!)
-			if ((user[1].userID! !== userID) && (userLobbyID === lobby.lobbyID!))//TODO: is condition correct ?
+			if (user[1].userID! !== userID)
 				user[1].userSocket!.close()
 		}
 		lobbyMap.delete(lobbyID);
