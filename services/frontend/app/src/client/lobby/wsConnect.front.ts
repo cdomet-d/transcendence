@@ -27,6 +27,7 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 
 	ws.onopen = async () => {
 		console.log('Lobby WebSocket connection established!')
+
 		setMessEvent(ws, form);
 
 		const interval = setInterval(() => {
@@ -35,82 +36,29 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 			} else clearInterval(interval);
 		}, 30000);
 
-		// send Lobby Request
-		if (action === 'create') {
-			if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-				wsInstance.send(await createLobbyRequest(action, format, formInstance));
-			} else {
-				console.log(`Error: WebSocket is not open for ${action}`);
-			}
-		}
-
 		// TODO keep alive ws connection during whole tournament (until everyone leaves)
 		// TODO what happens if host leaves lobby, kick everyone ?
-
-		// reply Lobby Invite
-		if (action === 'join') {
-			if (wsInstance && wsInstance.readyState === WebSocket.OPEN)
-				wsInstance.send(await joinLobbyRequest(action, format, invitee!, lobbyID!, formInstance));
-			else
-				console.log(`Error: WebSocket is not open for ${action}`);
-		}
-		decline(action, invitee!, lobbyID!);
+		executeAction(action, format, formInstance, lobbyID, gameSettings, invitee);
 	}
 
 	if (action === 'invitee' && ws.OPEN)//TODO: ws OPEN necessary ?
 		setMessEvent(ws, form);
 
-	if (action === 'game') {
-		if (wsInstance && wsInstance.readyState === WebSocket.OPEN)
-			wsInstance.send(await createGameRequest(format, formInstance, gameSettings!));
-		else
-			console.log(`Error: WebSocket is not open for ${action}`);
-	}
-
-	if (action === 'invite') {
-		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-
-			const host: userStatusInfo = await userStatus();
-			if (!host.auth || !host.userID) {
-				redirectOnError('/auth', 'You must be registered to see this page')
-			}
-
-			// TODO prevent non-host from inviting people
-			// get lobby from ID, check if host, allow invite if yes, else wsSend some error code
-			console.log(`Form Instance ${formInstance}`);
-			const _formInstance = formInstance === 'remote-pong-settings' ? 'remoteForm' : 'tournamentForm';
-			wsInstance.send(JSON.stringify({ event: "LOBBY_INVITE", payload: { action: action, invitee: invitee, hostID: host.userID }, formInstance: _formInstance }));
-		} else {
-			console.log(`Error: WebSocket is not open for ${action}`);
-		}
-	}
-
-	if (action === 'create') {
-		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
-			wsInstance.send(await createLobbyRequest(action, format, formInstance));
-		} else {
-			console.log(`Error: WebSocket is not open for ${action}`);
-		}
-	}
-	if (action === 'join') {
-		if (wsInstance && wsInstance.readyState === WebSocket.OPEN)
-			wsInstance.send(await joinLobbyRequest(action, format, invitee!, lobbyID!, formInstance));
-		else
-			console.log(`Error: WebSocket is not open for ${action}`);
-	}
-	decline(action, invitee!, lobbyID!);
+	executeAction(action, format, formInstance, lobbyID, gameSettings, invitee);
 
 	ws.onerror = (err: any) => {
 		console.log('Error:', err);
 		return;
 	};
 
-	ws.onclose = () => {
+	ws.onclose = (event) => {
 		wsInstance = null;
 		console.log('Lobby WebSocket connection closed!');
-		const currentRoute = window.location.pathname;
-		if (currentRoute.includes("lobby"))
-			router.loadRoute('/lobby-menu', true);
+		if (event.code === 4001) {
+			const currentRoute = window.location.pathname;
+			if (currentRoute.includes("-lobby"))
+				router.loadRoute('/lobby-menu', true);
+		}
 		// TODO KICK USER OUT OF LOBBY_MAP AND GM WS_CLIENT_MAP // 'delete' action ? Handle in GM?
 		// TODO: Check wether deconnection was expected or not
 	};
@@ -163,14 +111,62 @@ function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettin
 	}
 }
 
-function decline(action: string, invitee: inviteeObj, lobbyID: string) {
+async function executeAction(action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string, invitee?: inviteeObj) {
+	// send Lobby Request
+	if (action === 'create') {
+		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+			wsInstance.send(await createLobbyRequest(action, format, formInstance));
+		} else {
+			console.log(`Error: WebSocket is not open for ${action}`);
+		}
+		return;
+	}
+	
+	if (action === 'game') {
+		if (wsInstance && wsInstance.readyState === WebSocket.OPEN)
+			wsInstance.send(await createGameRequest(format, formInstance, gameSettings!));
+		else
+			console.log(`Error: WebSocket is not open for ${action}`);
+		return;
+	}
+
+	if (action === 'invite') {
+		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
+
+			const host: userStatusInfo = await userStatus();
+			if (!host.auth || !host.userID) {
+				redirectOnError('/auth', 'You must be registered to see this page')
+			}
+
+			// TODO prevent non-host from inviting people
+			// get lobby from ID, check if host, allow invite if yes, else wsSend some error code
+			console.log(`Form Instance ${formInstance}`);
+			const _formInstance = formInstance === 'remote-pong-settings' ? 'remoteForm' : 'tournamentForm';
+			wsInstance.send(JSON.stringify({ event: "LOBBY_INVITE", payload: { action: action, invitee: invitee, hostID: host.userID }, formInstance: _formInstance }));
+		} else {
+			console.log(`Error: WebSocket is not open for ${action}`);
+		}
+		return;
+	}
+
+	// reply Lobby Invite
+	if (action === 'join') {
+		if (wsInstance && wsInstance.readyState === WebSocket.OPEN)
+			wsInstance.send(await joinLobbyRequest(action, format, invitee!, lobbyID!, formInstance));
+		else
+			console.log(`Error: WebSocket is not open for ${action}`);
+		return;
+	}
+
 	if (action === 'decline') {
 		if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 			wsInstance.send(JSON.stringify({ event: "LOBBY_INVITE", payload: { action: action, invitee: invitee, lobbyID: lobbyID } }));
 		} else {
 			console.log(`Error: WebSocket is not open for ${action}`);
 		}
+		return;
 	}
+
 }
 
 export { wsConnect };

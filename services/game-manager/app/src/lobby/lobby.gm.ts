@@ -26,9 +26,9 @@ function makeLobbyInfo(host: userInfo, format: string): lobbyInfo {
 		},
 		joinable: true,
 		userList: new Map<string, userInfo>([
-			[host.userID!, { userID: host.userID!, username: host.username!, userSocket: host.userSocket! }],//TODO: need username ?
+			[host.userID!, { userID: host.userID!, username: host.username!, userSocket: host.userSocket! }],
 		]),
-		remote: true, // TODO set to false if local pong before START event
+		remote: true, // TODO set to false if local pong before START event //TODO: is it used ?
 		format: format,
 		nbPlayers: format === 'quickmatch' ? 2 : 4
 	}
@@ -87,7 +87,7 @@ export function removeUserFromLobby(userID: string, lobbyID: string) {
 	if (userID === lobby.hostID!) {
 		for (const user of lobby.userList) {
 			if (user[1].userID! !== userID)
-				user[1].userSocket!.close()
+				user[1].userSocket!.close(4001, "Lobby was closed by host")
 		}
 		lobbyMap.delete(lobbyID);
 		return;

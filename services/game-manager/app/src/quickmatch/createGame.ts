@@ -10,6 +10,7 @@ export function createGameObj(lobbyInfo: lobbyInfo, lobbyID: string) {
 	}
 
     const usersArray: userInfo[] = Array.from(lobbyMap.get(lobbyID)!.whitelist!.userIDs.values());
+	//TODO: fill userList with usernames and use it instead of whiteList to fill usersArray ? this is only for better logic, whiteList has all usernames
 	if (lobbyInfo.remote === false)
 		usersArray.push({userID: "temporary", username: lobbyInfo.gameSettings!.opponent!})
 	const game: game = {

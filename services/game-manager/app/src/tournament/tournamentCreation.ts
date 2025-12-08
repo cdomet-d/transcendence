@@ -18,6 +18,7 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: string, lobbyI
 	// const nBgames = lobbyInfo.userList.size; // if 8 players tournament
 
     const usersArray: userInfo[] = Array.from(lobbyMap.get(lobbyID)!.whitelist!.userIDs.values());
+	//TODO: fill userList with usernames and use it instead of whiteList to fill usersArray ? this is only for better logic, whiteList has all usernames
 
     if (usersArray.length < 4) { // magic number I know
         console.log('Error: Not enough players for tournament!');
