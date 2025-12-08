@@ -22,6 +22,7 @@ export const routes: routeInterface[] = [
 	{ path: '/tournament-lobby', callback: page.renderTournamentLobby },
 	{ path: '/bracket', callback: page.renderBracket },
 	{ path: '/game', callback: page.renderGame },
+	{ path: '/privacy', callback: page.renderPrivacy },
 ];
 
 export async function DOMReady(): Promise<void> {
