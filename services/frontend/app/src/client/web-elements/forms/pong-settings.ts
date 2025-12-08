@@ -11,6 +11,7 @@ import { userDataFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 import { currentDictionary } from './language.js';
+import { userStatus } from '../../main.js';
 
 /**
  * A form allowing user to create a local pong game.
