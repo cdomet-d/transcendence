@@ -12,7 +12,6 @@ export interface lobbyInviteForm {
     formInstance?: string
 }
 
-
 export interface lobbyRequestForm {
     event: 'LOBBY_REQUEST',
     payload: {

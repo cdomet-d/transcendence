@@ -15,8 +15,6 @@ export function createTournament(payload: lobbyInfo, lobbyID: string): tournamen
 }
 
 export function createBracket(lobbyInfo: lobbyInfo, tournamentID: string, lobbyID: string): game[] | undefined {
-	// const nBgames = lobbyInfo.userList.size; // if 8 players tournament
-
     const usersArray: userInfo[] = Array.from(lobbyMap.get(lobbyID)!.whitelist!.userIDs.values());
 	//TODO: fill userList with usernames and use it instead of whiteList to fill usersArray ? this is only for better logic, whiteList has all usernames
 

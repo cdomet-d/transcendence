@@ -5,17 +5,17 @@ import { startTournament } from '../tournament/tournamentStart.js';
 import type { game, lobbyInfo, tournament } from './gameManager.interface.js';
 import { findLobbyIDFromUserID } from '../lobby/lobby.gm.js';
 
-export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo) {
+export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo): undefined{
 	const lobbyID: string | null = findLobbyIDFromUserID(lobbyInfo.hostID!);
 	if (lobbyID === null) {
 		console.log("Lobby not found");
-		return;
+		return undefined;
 	}
 	if (lobbyInfo.format === 'tournament') {
 		const tournament: tournament | undefined = createTournament(lobbyInfo, lobbyID);
 		if (tournament === undefined) {
 			console.log('Error: Could not create tournament');
-			return;
+			return undefined;
 		}
 		lobbyInfo.joinable = false;
 		startTournament(serv, tournament);
@@ -23,7 +23,7 @@ export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo) 
 		const quickmatch: game | undefined = createGameObj(lobbyInfo, lobbyID);
 		if (quickmatch === undefined) {
 			console.log('Error: Something went wrong!');
-			return;
+			return undefined;
 		}
 		lobbyInfo.joinable = false;
 		startGame(serv, quickmatch);

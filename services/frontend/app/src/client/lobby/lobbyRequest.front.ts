@@ -5,7 +5,7 @@ import type { inviteeObj, lobbyInviteForm, lobbyRequestForm } from "./gm.interfa
 async function createLobbyRequest(action: string, format: string, formInstance?: string): Promise<string> {
 	const host: userStatusInfo = await userStatus();
 	if (!host.auth) {
-		redirectOnError('/auth', 'You must be registered to see this page')
+		redirectOnError('/auth', 'You must be registered to see this page');
 		return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 	}
 
@@ -14,12 +14,30 @@ async function createLobbyRequest(action: string, format: string, formInstance?:
 		payload: { action: action, format: format, userID: host.userID!, username: host.username! },
 		formInstance: formInstance,
 	};
-
+	
 	return JSON.stringify(createLobbyForm);
 }
 
-async function joinLobbyRequest(action: string, format: string, invitee: { userID: string, username?: string }, lobbyID: string, formInstance: string) {
+async function inviteToLobbyRequest(action: string, invitee: inviteeObj, formInstance: string) {
+	const host: userStatusInfo = await userStatus();
+	if (!host.auth || !host.userID) {
+		redirectOnError('/auth', 'You must be registered to see this page');
+		return JSON.stringify({ event: 'BAD_USER_TOKEN' });
+	}
 
+	const inviteToLobbyForm: lobbyInviteForm = {
+		event: 'LOBBY_INVITE',
+		payload: {
+			action: action,
+			invitee: invitee,
+			hostID: host.userID,
+		},
+		formInstance: formInstance === 'remote-pong-settings' ? 'remoteForm' : 'tournamentForm'
+	};
+	return JSON.stringify(inviteToLobbyForm);
+}
+
+function joinLobbyRequest(action: string, format: string, invitee: { userID: string, username?: string }, lobbyID: string, formInstance: string) {
 	const joinLobbyForm: lobbyInviteForm = {
 		event: 'LOBBY_INVITE',
 		payload: {
@@ -33,8 +51,7 @@ async function joinLobbyRequest(action: string, format: string, invitee: { userI
 	return JSON.stringify(joinLobbyForm);
 }
 
-async function declineLobbyRequest(action: string, invitee: inviteeObj, lobbyID: string) {
-
+function declineLobbyRequest(action: string, invitee: inviteeObj, lobbyID: string) {
 	const declineLobbyForm: lobbyInviteForm = {
 		event: 'LOBBY_INVITE',
 		payload: {
@@ -44,20 +61,6 @@ async function declineLobbyRequest(action: string, invitee: inviteeObj, lobbyID:
 		}
 	};
 	return JSON.stringify(declineLobbyForm);
-}
-
-function inviteToLobbyRequest(action: string, invitee: inviteeObj, hostID: string, formInstance: string) {
-
-	const inviteToLobbyForm: lobbyInviteForm = {
-		event: 'LOBBY_INVITE',
-		payload: {
-			action: action,
-			invitee: invitee,
-			hostID: hostID,
-		},
-		formInstance: formInstance === 'remote-pong-settings' ? 'remoteForm' : 'tournamentForm'
-	};
-	return JSON.stringify(inviteToLobbyForm);
 }
 
 export { createLobbyRequest, joinLobbyRequest, declineLobbyRequest, inviteToLobbyRequest };

@@ -1,3 +1,4 @@
+import { createVisualFeedback, redirectOnError } from '../error.js';
 import { router } from '../main.js';
 import { type gameRequest } from '../pong/pong.js';
 import type { LocalPongSettings, RemotePongSettings } from '../web-elements/forms/pong-settings.js';
@@ -63,6 +64,14 @@ function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettin
 		try {
 			const data = JSON.parse(message.data);
 			if (data.error) {
+				const error = data.error;
+				if (error === 'not enough players') {
+					createVisualFeedback('You do not have enough players in your lobby to start playing!', 'error');
+				} else if (error === 'lobby not found') {
+					createVisualFeedback('Your lobby is malfunctionning! Please create a new one!', 'error');
+				} else if (error === 'lobby does not exist') {
+					redirectOnError('/home', 'The lobby you are trying to join does not exist anymore!');
+				}
 				console.log("ERROR: ", data.error);
 				return;
 			}

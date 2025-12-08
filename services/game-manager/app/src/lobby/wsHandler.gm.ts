@@ -49,7 +49,9 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 
 			if (data.event === 'GAME_REQUEST') {
 				const gamePayload = payload as lobbyInfo;
-				processGameRequest(this, gamePayload);
+				if (processGameRequest(this, gamePayload) === undefined) {
+					wsSend(socket, JSON.stringify({ error: 'not enough players',}));
+				}
 				return;
 			}
 
@@ -83,6 +85,11 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				} else if (invitePayload.action === 'join') {
 					this.log.error(`IN JOIN + ${formInstance}`);
 					//TODO: check if lobby still exists otherwise send error "tournament doesn't exist anymore"
+					const lobbyExists: string | null = findLobbyIDFromUserID(invitePayload.hostID!);
+					if (lobbyExists === null) {
+						wsSend(socket, JSON.stringify({ error: 'lobby does not exist' }));
+						return;
+					}
 					userID = invitePayload.invitee.userID;
 					let lobbyID: string | null = findLobbyIDFromUserID(userID);
 					if (lobbyID !== null)
