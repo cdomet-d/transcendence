@@ -1,6 +1,12 @@
 import type { FastifyInstance } from 'fastify';
 import { updateUserStats } from './dashboard.service.js'
 import type { GameInput, userStats } from '././dashboard.service.js';
+import { cleanInput } from './sanitizer.js';
+import {
+	getUserByNameSchema, getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, searchUsersSchema, updateStatsSchema, getUserIDByUsernameSchema,
+	getUserProfileSchema, getUserStatsSchema, getUsernamesByIdsSchema, createProfileSchema, deleteProfileSchema, updateProfileSchema
+} from './schemas.js';
+import { profile } from 'console';
 
 export interface userData {
 	avatar: string | null | undefined,
@@ -15,17 +21,15 @@ export interface userData {
 }
 
 interface JwtPayload {
-	userID: number;
+	userID: string;
 	username: string;
 	iat: number;
 	exp: number;
 }
 
 export async function userRoutes(serv: FastifyInstance) {
-	//USER PROFILE/${userID}/profile
-
 	//GET /<userID>
-	serv.get('/:userID', async (request, reply) => {
+	serv.get('/:userID', { schema: getUserProfileSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -51,6 +55,8 @@ export async function userRoutes(serv: FastifyInstance) {
 			}
 
 			const { userID } = request.params as { userID: string };
+			const safeUserID = cleanInput(userID);
+
 
 			const query = `
 				SELECT
@@ -61,7 +67,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				WHERE p.userID = ?
 			`;
 
-			const userProfile = await serv.dbUsers.get<userData>(query, [userID]);
+			const userProfile = await serv.dbUsers.get<userData>(query, [safeUserID]);
 			if (!userProfile) {
 				return (reply.code(404).send({
 					success: false,
@@ -80,7 +86,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/leaderboard', async (request, reply) => {
+	serv.get('/leaderboard', { schema: getLeaderboardSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -113,7 +119,6 @@ export async function userRoutes(serv: FastifyInstance) {
 					p.lang,
 					p.profileColor,
 					p.activityStatus,
-					p.lastConnection,
 					p.userRole,
 					p.username,
 					s.winStreak,
@@ -140,7 +145,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/search', async (request, reply) => {
+	serv.get('/search', { schema: searchUsersSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -166,8 +171,11 @@ export async function userRoutes(serv: FastifyInstance) {
 			}
 			const query = request.query as { name?: string };
 
+
 			if (!query.name || query.name.length === 0)
-				return reply.code(200).send([]);
+				return reply.code(200).send({ success: true, profiles: [] });
+
+			const safename = cleanInput(query.name);
 
 			//ASC is the way sqlite3 sorts result 
 			const sql = `
@@ -185,7 +193,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				LIMIT 5
 			`;
 
-			const searchParam = `${query.name}%`;
+			const searchParam = `${safename}%`;
 			const profiles = await serv.dbUsers.all<userData[]>(sql, [searchParam]);
 
 			return reply.code(200).send({
@@ -199,7 +207,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//fetch users profiles
-	serv.post('/profiles', async (request, reply) => {
+	serv.post('/profiles', { schema: getProfilesByIdsSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -252,7 +260,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//GET ?username=<username>
-	serv.get('/userID/:username', async (request, reply) => {
+	serv.get('/userID/:username', { schema: getUserByNameSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -280,8 +288,9 @@ export async function userRoutes(serv: FastifyInstance) {
 			const query = request.params as { username: string };
 
 			if (query.username) {
+				const safeUsername = cleanInput(query.username);
 				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
-				const response = await serv.dbUsers.get(sql, [query.username]);
+				const response = await serv.dbUsers.get(sql, [safeUsername]);
 
 				if (!response) {
 					return (reply.code(404).send({
@@ -307,7 +316,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/username', async (request, reply) => {
+	serv.post('/username', { schema: getUserByUsernameBodySchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -332,11 +341,12 @@ export async function userRoutes(serv: FastifyInstance) {
 				}
 			}
 
-			const username = request.body as { username: string };
+			const { username } = request.body as { username: string };
 
 			if (username) {
+				const safeUsername = cleanInput(username);
 				const sql = `SELECT userID, username FROM userProfile WHERE username = ?`;
-				const response = await serv.dbUsers.get(sql, [username]);
+				const response = await serv.dbUsers.get(sql, [safeUsername]);
 
 				if (!response) {
 					return (reply.code(404).send({
@@ -362,7 +372,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.post('/usernames', async (request, reply) => {
+	serv.post('/usernames', { schema: getUsernamesByIdsSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -387,7 +397,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				}
 			}
 
-			const { userIDs } = request.body as { userIDs: number[] };
+			const { userIDs } = request.body as { userIDs: string[] };
 
 			if (!userIDs || userIDs.length === 0)
 				return (reply.code(200).send({ success: true, usersNames: [] }));
@@ -411,20 +421,21 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//create profile and stats
 	//Called by auth so no need for JWT verif
-	serv.post('/:userID', async (request, reply) => {
+	serv.post('/:userID', { schema: createProfileSchema }, async (request, reply) => {
 		try {
 			const { userID } = request.params as { userID: string };
 			const { username } = request.body as { username: string };
+			const safeuserID = cleanInput(userID);
+			const safeUsername = cleanInput(username);
 
 			const queryProfile = `
 				INSERT INTO userProfile
-				(userID, username, activityStatus, lastConnection, profileColor, userRole, since, lang)
-				VALUES (?, ?, 1, ?, "bg-000080", 1, ?, "en")
+				(userID, username, activityStatus, profileColor, userRole, since, lang)
+				VALUES (?, ?, 1, "bg-000080", 1, ?, "en")
 			`;
 			const paramsProfile = [
-				userID,
-				username,
-				new Date().toISOString(),
+				safeuserID,
+				safeUsername,
 				new Date().toISOString(),
 			];
 
@@ -438,7 +449,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				VALUES (?, 0, 0, 0, 0, 0, 0, 0)
 			`;
 
-			const createStats = await serv.dbUsers.run(queryStats, [userID]);
+			const createStats = await serv.dbUsers.run(queryStats, [safeuserID]);
 			if (createStats.changes === 0)
 				throw new Error('Database Error: Stats INSERT failed (0 changes).');
 
@@ -464,14 +475,15 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user profile
-	serv.patch('/:userID', async (request, reply) => {
+	serv.patch('/:userID', { schema: updateProfileSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
+			let user;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			if (token) {
 				try {
-					const user = serv.jwt.verify(token) as JwtPayload;
+					user = serv.jwt.verify(token) as JwtPayload;
 					if (typeof user !== 'object') throw new Error('Invalid token detected');
 					request.user = user;
 				} catch (error) {
@@ -492,12 +504,20 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { userID } = request.params as { userID: string };
 			const body = request.body as { [key: string]: any };
 
+			if (user?.userID !== userID) {
+				serv.log.warn(`User ${user?.userID} attempted to patch User ${userID}`);
+				return reply.code(403).send({ message: 'Forbidden: You can only update your own profile.' });
+			}
+
+			const safeUserID = cleanInput(userID);
+
 			const validStatKeys = [
 				'username',
 				'avatar',
 				'biography',
 				'profileColor',
 				'lang',
+				'activityStatus',
 			];
 
 			const keysToUpdate = Object.keys(body).filter((key) => validStatKeys.includes(key));
@@ -511,7 +531,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const setClauses = keysToUpdate.map((key) => `${key} = ?`).join(', ');
 			const params = keysToUpdate.map((key) => body[key]);
-			params.push(userID);
+			params.push(safeUserID);
 
 			const query = `
 				UPDATE userProfile SET ${setClauses} WHERE userID = ?
@@ -538,55 +558,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//delete profile and stats
-	serv.delete('/:userID', async (request, reply) => {
-		try {
-			const token = request.cookies.token;
-			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
-
-			if (token) {
-				try {
-					const user = serv.jwt.verify(token) as JwtPayload;
-					if (typeof user !== 'object') throw new Error('Invalid token detected');
-					request.user = user;
-				} catch (error) {
-					if (error instanceof Error && 'code' in error) {
-						if (
-							error.code === 'FST_JWT_BAD_REQUEST' ||
-							error.code === 'ERR_ASSERTION' ||
-							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-						)
-							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
-					} else {
-						return reply.code(401).send({ message: 'Unknown error' });
-					}
-				}
-			}
-
-			const { userID } = request.params as { userID: number };
-
-			const query = `
-				DELETE FROM userProfile WHERE userID = ?;
-				DELETE FROM userStats WHERE userID = ?;
-			`;
-
-			const response = await serv.dbUsers.run(query, [userID, userID]);
-			if (!response.changes)
-				return reply
-					.code(404)
-					.send({ success: false, message: 'User profile/stats not found.' });
-			return reply
-				.code(204)
-				.send({ success: true, message: 'User profile and stats deleted !' });
-		} catch (error) {
-			serv.log.error(`Error deleting user profile: ${error}`);
-			throw error;
-		}
-	});
-
-	//USER STATS
-	//get all user's stats with userID
-	serv.get('/stats/:userID', async (request, reply) => {
+	serv.delete('/:userID', { schema: deleteProfileSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -612,12 +584,62 @@ export async function userRoutes(serv: FastifyInstance) {
 			}
 
 			const { userID } = request.params as { userID: string };
+			const safeUserID = cleanInput(userID);
+
+			const query = `
+				DELETE FROM userProfile WHERE userID = ?;
+				DELETE FROM userStats WHERE userID = ?;
+			`;
+
+			const response = await serv.dbUsers.run(query, [safeUserID, safeUserID]);
+			if (!response.changes)
+				return reply
+					.code(404)
+					.send({ success: false, message: 'User profile/stats not found.' });
+			return reply
+				.code(204)
+				.send({ success: true, message: 'User profile and stats deleted !' });
+		} catch (error) {
+			serv.log.error(`Error deleting user profile: ${error}`);
+			throw error;
+		}
+	});
+
+	//USER STATS
+	//get all user's stats with userID
+	serv.get('/stats/:userID', { schema: getUserStatsSchema }, async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const { userID } = request.params as { userID: string };
+			const safeUserID = cleanInput(userID);
 
 			const query = `
 				SELECT * FROM userStats WHERE userID = ?
 			`;
 
-			const userStats = await serv.dbUsers.get<userStats>(query, [userID]);
+			const userStats = await serv.dbUsers.get<userStats>(query, [safeUserID]);
 			if (!userStats)
 				return reply.code(404).send({ success: false, message: 'User profile not found' });
 
@@ -634,7 +656,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//update all stats of a user
 	//Called in game-manager so no need for JWT verif
-	serv.patch('/stats', async (request, reply) => {
+	serv.patch('/stats', { schema: updateStatsSchema }, async (request, reply) => {
 		try {
 			const body = request.body as GameInput;
 
@@ -659,7 +681,58 @@ export async function userRoutes(serv: FastifyInstance) {
 			if (error instanceof Error && error.message.includes('Stats not found')) {
 				return reply.code(404).send({ message: error.message });
 			}
-			return reply.code(500).send({ message: 'Internal Server Error' });
+			throw error;
+		}
+	});
+
+	//TODO add schema
+	serv.patch('/anonymize', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+
+			const userID = request.user.userID;
+			const safeUserID = cleanInput(userID);
+
+			const newUsername = `DeletedUser_${crypto.randomUUID().slice(0, 8)}`;
+			const placeholderAvatar = '/public/default_avatar.png';
+
+			const query = `UPDATE userProfile SET username = ?, avatar = ?, biography = NULL WHERE userID = ?`;
+
+			const result = await serv.dbUsers.run(query, [newUsername, placeholderAvatar, safeUserID]);
+
+			if (result.changes === 0) {
+				return reply.code(404).send({ message: 'User not found' });
+			}
+
+			return reply.code(200).send({ success: true, message: 'User anonymized' });
+
+		} catch (error) {
+			serv.log.error(`[USERS] Error processing anonymization: ${error}`);
+			if (error instanceof Error && error.message.includes('Stats not found')) {
+				return reply.code(404).send({ message: error.message });
+			}
+			throw error;
 		}
 	});
 
