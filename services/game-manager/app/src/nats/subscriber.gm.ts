@@ -28,14 +28,14 @@ export async function natsSubscribe(serv: FastifyInstance) {
 	(async () => {
 		for await (const msg of postgame) {
 			const sc = StringCodec();
-			const payload = sc.decode(msg.data);
+			const payload = JSON.parse(sc.decode(msg.data));
 			console.log(`GM received following in 'game.over' :\n`, JSON.stringify(payload));
 
-			//if (tournamentID ==! -1)
-			//	tournamentState(serv, payload);
-			// else {
-			gameOver(payload);
-			// }
+			if (payload.tournamentID !== '-1') {
+				tournamentState(serv, payload);
+			} else {
+				gameOver(payload);
+			}
 		}
 	})();
 }

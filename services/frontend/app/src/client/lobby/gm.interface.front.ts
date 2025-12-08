@@ -42,3 +42,9 @@ interface userInfo {
     username?: string;
     userSocket?: WebSocket;
 }
+
+
+export interface inviteeObj {
+	userID: string, 
+	username?: string
+}
