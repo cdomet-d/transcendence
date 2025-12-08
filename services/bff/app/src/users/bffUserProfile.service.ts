@@ -38,6 +38,8 @@ export async function buildTinyProfile(
 			since: data.since,
 			status: data.status,
 			winStreak: data.winStreak,
+			totalLosses: data.totalLosses,
+			totalWins: data.totalWins,
 			lang: data.lang,
 			relation: relation,
 		};

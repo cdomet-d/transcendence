@@ -24,10 +24,9 @@ export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 			const response = await fetchLanguagePack(serv.log, safeLang);
 
 			if (!response.ok) {
-				if (response.status === 404) {
-					return reply.code(404).send({ message: 'Language not supported.' });
-				}
-				throw (response.status);
+				if (response.status === 404)
+					throw { code: 404, message: 'Dictionary not found' };
+				throw { code: response.status, message: 'Error fetching dictionary' };
 			}
 
 			const dictionary = await response.json();
@@ -35,6 +34,11 @@ export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[BFF] Error fetching dictionary: ${error}`);
+			if (typeof error === 'object' && error !== null && 'code' in error) {
+				const customError = error as { code: number; message: string };
+				if (customError.code === 404)
+					return reply.code(404).send({ message: '[BFF] Error fetching dictionary' });
+			}
 			throw (error);
 		}
 	});

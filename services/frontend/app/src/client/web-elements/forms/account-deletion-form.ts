@@ -59,7 +59,6 @@ export class DeleteAccountForm extends BaseForm {
 			localStorage.removeItem('criticalChange');
 
 			router.loadRoute('/auth', true);
-
 			createVisualFeedback('Account permanently deleted', 'success');
 
 		} catch (error) {
