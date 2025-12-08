@@ -108,6 +108,9 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	ws.onclose = () => {
 		wsInstance = null;
 		console.log('Lobby WebSocket connection closed!');
+		const currentRoute = window.location.pathname;
+		if (currentRoute.includes("lobby"))
+			router.loadRoute('/lobby-menu', true);
 		// TODO KICK USER OUT OF LOBBY_MAP AND GM WS_CLIENT_MAP // 'delete' action ? Handle in GM?
 		// TODO: Check wether deconnection was expected or not
 	};
