@@ -1,6 +1,6 @@
 import type { FormDetails, UserData } from '../types-interfaces.js';
 import type { Dictionary } from '../types-interfaces.js';
-import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
+import { usernamePattern, passwordPattern, searchbarPattern, user } from '../default-values.js';
 import { currentDictionary, defaultDictionary } from './language.js';
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually POST and which are patch, to be handled in the server.
 
@@ -355,6 +355,8 @@ export function deleteAccount(dic: Dictionary): FormDetails {
 };
 
 export function downloadData(dic: Dictionary, username: string): FormDetails {
+		console.log("USERNAME IN FUNCTION: ", JSON.stringify(username));
+	
 	return {
 		action: `https://localhost:8443/api/bff/profile/${username}`,
 		heading: '',
@@ -370,7 +372,6 @@ export function downloadData(dic: Dictionary, username: string): FormDetails {
 			content: "Download personal data",
 			img: null,
 			ariaLabel: '',
-			style: 'red',
 		},
 	}
 };

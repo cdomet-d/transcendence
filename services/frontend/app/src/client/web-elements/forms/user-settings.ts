@@ -30,7 +30,6 @@ const MAX_FILE = 2 * 1024 * 1024;
 export class UserSettingsForm extends BaseForm {
 	#user: UserData;
 	#accountDelete: DeleteAccountForm;
-	//TODO add field here
 	#dataDownload: DowloadDataForm;
 	#colors: DropdownMenu;
 	#languages: DropdownMenu;
@@ -56,7 +55,7 @@ export class UserSettingsForm extends BaseForm {
 		);
 		this.#dataDownload = createForm(
 			'download-data-request',
-			downloadData(currentDictionary, user.username),
+			downloadData(currentDictionary),
 		);
 		this.#avatar = createAvatar(this.#user.avatar);
 		this.#colors = createDropdown(userColorsMenu, currentDictionary.settings.pick_color, 'dynamic');
@@ -159,6 +158,7 @@ export class UserSettingsForm extends BaseForm {
 		this.renderDropdowns();
 		super.renderButtons();
 		this.append(this.#accountDelete);
+		this.append(this.#dataDownload);
 		this.#avatar.classList.add('row-span-2', 'col-start-1', 'row-start-1');
 		super.contentMap.get('title')?.classList.add('row-span-2', 'col-start-2', 'row-start-1');
 		super.contentMap.get('upload')?.classList.add('row-start-3', 'col-start-1');
@@ -167,6 +167,7 @@ export class UserSettingsForm extends BaseForm {
 		super.contentMap.get('password')?.classList.add('row-start-5', 'col-start-1');
 		super.contentMap.get('submit')?.classList.add('row-start-6', 'col-start-2');
 		this.#accountDelete.classList.add('row-start-7', 'col-start-1');
+		this.#dataDownload.classList.add('row-start-7', 'col-start-2');
 		this.classList.add('sidebar-left');
 	}
 
@@ -187,6 +188,7 @@ export class UserSettingsForm extends BaseForm {
 	 * Sets the user data for the form.
 	 * @param details - The user data object.
 	 */
+	//TODO change the setter to get the actual username
 	set user(details: UserData) {
 		this.#user = details;
 		this.#avatar.metadata = details.avatar;
