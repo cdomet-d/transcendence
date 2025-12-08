@@ -30,10 +30,11 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			const { username, password } = request.body as { username: string; password: string };
 			const account = await verifyPasswordMatch(serv, username, password);
 
-			if (account === 404 || typeof account !== 'object')
-				return reply.code(404).send({ message: '[AUTH] Account not found.' });
 			if (account === 401)
 				return reply.code(401).send({ message: '[AUTH] Invalid credentials.' });
+
+			if (account === 404 || typeof account !== 'object')
+				return reply.code(404).send({ message: '[AUTH] Account not found.' });
 			const tokenPayload = { userID: account.userID, username: username };
 			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
 			setCookie(reply, token);

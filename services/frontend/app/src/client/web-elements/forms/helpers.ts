@@ -5,6 +5,7 @@ import { Searchbar } from './search.js';
 import { UserSettingsForm } from './user-settings.js';
 import { RegistrationForm, LoginForm, CriticalActionForm } from './auth.js';
 import { DeleteAccountForm } from './account-deletion-form.js';
+import { DowloadDataForm } from './downloadData-form.js';
 
 /**
  * Merges with the existing HTMLElementTag map.
@@ -22,6 +23,7 @@ interface HTMLElementTagMap {
 	'search-form': Searchbar;
 	'settings-form': UserSettingsForm;
 	'delete-account-form': DeleteAccountForm;
+	'download-data-request': DowloadDataForm; 
 }
 
 /**
