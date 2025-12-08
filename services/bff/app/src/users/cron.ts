@@ -3,10 +3,9 @@ import type { FastifyInstance } from 'fastify';
 import { AnonymizeUser, AnonymizeAccount, deleteAllFriendship } from './bffUserProfile.service.js';
 
 const TWO_YEARS_MS = 2 * 365 * 24 * 60 * 60 * 1000;
-//0 3 * * *
 
 export function startRetentionPolicyJob(serv: FastifyInstance) {
-	cron.schedule('* * * * *', async () => {
+	cron.schedule('0 3 * * *', async () => {
 		serv.log.error('[CRON] Starting daily retention policy check...');
 		try {
 			const response = await fetch('http://users:2626/inactive', {

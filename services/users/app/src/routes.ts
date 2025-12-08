@@ -432,17 +432,16 @@ export async function userRoutes(serv: FastifyInstance) {
 			const safeuserID = cleanInput(userID);
 			const safeUsername = cleanInput(username);
 
-			//TODO put back new date for last connexion
 			const queryProfile = `
 				INSERT INTO userProfile
 				(userID, username, status, profileColor, userRole, since, lang, lastConnexion)
-				VALUES (?, ?, 0, "bg-000080", 1, ?, "en", "2015-12-08T14:28:22.389Z")
+				VALUES (?, ?, 0, "bg-000080", 1, ?, "en", ?)
 			`;
 			const paramsProfile = [
 				safeuserID,
 				safeUsername,
 				new Date().toISOString(),
-				//new Date().toISOString(),
+				new Date().toISOString(),
 			];
 
 			const createProfile = await serv.dbUsers.run(queryProfile, paramsProfile);
@@ -482,7 +481,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 	//TODO fix schema
 	//update user profile
-	serv.patch('/:userID', /* { schema: updateProfileSchema }, */ async (request, reply) => {
+	serv.patch('/:userID', { schema: updateProfileSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			let user;
