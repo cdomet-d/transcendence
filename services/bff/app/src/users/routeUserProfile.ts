@@ -11,7 +11,10 @@ import {
 	updateUserProfile,
 	updateUserProfileUsername,
 	refreshJWTForUsernameChange,
-	fetchFriendshipsPending
+	fetchFriendshipsPending,
+	deleteAllFriendship,
+	AnonymizeUser,
+	AnonymizeAccount
 } from './bffUserProfile.service.js';
 import { cleanInput } from '../utils/sanitizer.js';
 import { profileGet, tinyProfileGet, searchGet, leaderboardGet, settingsPatch, usernameGet } from './bff.usersSchemas.js';
@@ -275,6 +278,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//TODO add schemas
 	//error handled
 	serv.patch('/settings', async (request, reply) => {
 		try {
@@ -305,8 +309,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 			const userID = request.user.userID;
 			const body = request.body as any;
-
-			console.log(JSON.stringify(body));
 
 			const profileUpdates: any = {};
 			const profileUpdatesUsername: any = {};
@@ -438,6 +440,73 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[BFF] Failed to update settings: ${error}`);
+			throw error;
+		}
+	});
+
+	serv.delete('/account', async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
+
+			if (token) {
+				try {
+					const user = serv.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+					request.user = user;
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+			}
+			const userID = request.user.userID;
+
+			try {
+				if (!validateBearerToken(serv, request.headers.authorization))
+					return reply.code(401).send({ message: 'Unauthorized' });
+				await AnonymizeUser(serv.log, userID, token);
+
+				try {
+					await deleteAllFriendship(serv.log, userID, token);
+				} catch (e) {
+					serv.log.warn('[BFF] Friends deletion failed, continuing to Auth deletion.');
+				}
+
+				await AnonymizeAccount(serv.log, userID, token);
+
+				reply.clearCookie('token');
+				return (reply.code(200).send({ success: true, message: 'Account deleted' }));
+			} catch (error) {
+				if (typeof error === 'object' && error !== null && 'code' in error) {
+					const customError = error as { code: number; message: string };
+
+					if (customError.code === 404)
+						return reply.code(404).send({
+							message: customError.message || '[BFF] User/account not found.',
+						});
+					if (customError.code === 400)
+						return reply
+							.code(400)
+							.send({ message: customError.message || '[BFF] Bad Request.' });
+					if (customError.code === 401)
+						return reply
+							.code(401)
+							.send({ message: customError.message || '[BFF] Unauthorized' });
+				}
+				throw error;
+			}
+
+		} catch (error) {
+			serv.log.error(`[BFF] Failed to delete account: ${error}`);
 			throw error;
 		}
 	});

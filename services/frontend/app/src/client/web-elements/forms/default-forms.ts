@@ -1,7 +1,7 @@
 import type { FormDetails, UserData } from '../types-interfaces.js';
 import type { Dictionary } from '../types-interfaces.js';
 import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
-import { currentDictionary } from './language.js';
+import { currentDictionary, defaultDictionary } from './language.js';
 //TODO: HTML froms don't support patch must come up with a way to identify which POST are actually POST and which are patch, to be handled in the server.
 
 export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails {
@@ -56,7 +56,6 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 }
 
 export function registrationForm(dic: Dictionary): FormDetails {
-	console.log('IN REGISTREATION FORM', JSON.stringify(dic));
 	return {
 		action: 'https://localhost:8443/api/auth/register',
 		heading: dic.titles.register,
@@ -366,7 +365,7 @@ export const criticalChange: FormDetails = {
 			id: 'password',
 			labelContent: 'Password',
 			pattern: passwordPattern,
-			placeholder: 'Enter your password!',
+			placeholder: defaultDictionary.placeholders.enter_password,
 			type: 'password',
 			required: true,
 		},
