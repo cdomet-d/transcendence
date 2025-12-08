@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-        "dev": "nodemon -q",
+    "dev": "nodemon -q",
     "start": "tsc && node dist/server.js"
   },
   "author": "",
@@ -13,6 +13,7 @@
   "dependencies": {
     "@types/node": "^24.3.1",
     "fastify": "^5.5.0",
+    "node-cron": "^4.2.1",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "typescript": "^5.9.2"
@@ -20,6 +21,7 @@
   "devDependencies": {
     "@fastify/cookie": "^11.0.2",
     "@fastify/jwt": "^10.0.0",
+    "@types/node-cron": "^3.0.11",
     "nodemon": "^3.1.10",
     "pino-pretty": "^13.1.2"
   }

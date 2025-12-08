@@ -431,16 +431,17 @@ export async function userRoutes(serv: FastifyInstance) {
 			const safeuserID = cleanInput(userID);
 			const safeUsername = cleanInput(username);
 
+			//TODO put back new date for last connexion
 			const queryProfile = `
 				INSERT INTO userProfile
 				(userID, username, status, profileColor, userRole, since, lang, lastConnexion)
-				VALUES (?, ?, 0, "bg-000080", 1, ?, "en", ?)
+				VALUES (?, ?, 0, "bg-000080", 1, ?, "en", "2015-12-08T14:28:22.389Z")
 			`;
 			const paramsProfile = [
 				safeuserID,
 				safeUsername,
 				new Date().toISOString(),
-				new Date().toISOString(),
+				//new Date().toISOString(),
 			];
 
 			const createProfile = await serv.dbUsers.run(queryProfile, paramsProfile);
@@ -692,7 +693,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.patch('/anonymize', {schema: anonymizeUserSchema}, async (request, reply) => {
+	serv.patch('/anonymize', { schema: anonymizeUserSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -741,4 +742,28 @@ export async function userRoutes(serv: FastifyInstance) {
 			throw error;
 		}
 	});
+
+	//TODO schema
+	serv.get('/inactive', async (request, reply) => {
+		console.log("IN INACTIVEEEEEEEEEEEE");
+		try {
+			const query = `
+                SELECT userID 
+                FROM userProfile 
+                WHERE lastConnexion < date('now', '-2 years')
+            `;
+
+			const rows = await serv.dbUsers.all(query);
+
+			const userIDs = rows.map((row: any) => row.userID);
+			console.log(JSON.stringify(userIDs));
+
+			return reply.code(200).send({ userIDs });
+
+		} catch (error) {
+			serv.log.error(`[USERS] Error fetching inactive users: ${error}`);
+			return reply.code(500).send({ message: 'Internal Server Error' });
+		}
+	});
 }
+

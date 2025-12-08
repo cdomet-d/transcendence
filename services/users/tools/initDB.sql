@@ -9,7 +9,7 @@ CREATE TABLE userProfile (
   userRole INTEGER,
   since TEXT,
   lang TEXT,
-  lastConnexion TEXT
+  lastConnexion DATETIME
 );
 
 CREATE TABLE userStats (
