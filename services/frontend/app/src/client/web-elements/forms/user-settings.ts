@@ -31,7 +31,7 @@ export class UserSettingsForm extends BaseForm {
 	#user: UserData;
 	#accountDelete: DeleteAccountForm;
 	//TODO add field here
-	#dataDownload: DowloadDataForm; 
+	#dataDownload: DowloadDataForm;
 	#colors: DropdownMenu;
 	#languages: DropdownMenu;
 	#avatar: Avatar;
@@ -52,11 +52,11 @@ export class UserSettingsForm extends BaseForm {
 		this.#previewAvatar = this.#previewAvatarImplementation.bind(this);
 		this.#accountDelete = createForm(
 			'delete-account-form',
-			deleteAccount ( currentDictionary ),
+			deleteAccount(currentDictionary),
 		);
 		this.#dataDownload = createForm(
 			'download-data-request',
-			downloadData ( currentDictionary, user.username),
+			downloadData(currentDictionary, user.username),
 		);
 		this.#avatar = createAvatar(this.#user.avatar);
 		this.#colors = createDropdown(userColorsMenu, currentDictionary.settings.pick_color, 'dynamic');
@@ -114,7 +114,7 @@ export class UserSettingsForm extends BaseForm {
 
 		if (this.#user) {
 			if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
-                f.append('color', 'bg-' + colSelection.id);
+				f.append('color', 'bg-' + colSelection.id);
 			if (langSelection && langSelection.id !== this.#user.language)
 				f.append('language', langSelection.id);
 		}
