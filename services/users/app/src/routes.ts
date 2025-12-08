@@ -433,12 +433,13 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const queryProfile = `
 				INSERT INTO userProfile
-				(userID, username, status, profileColor, userRole, since, lang)
-				VALUES (?, ?, 0, "bg-000080", 1, ?, "en")
+				(userID, username, status, profileColor, userRole, since, lang, lastConnexion)
+				VALUES (?, ?, 0, "bg-000080", 1, ?, "en", ?)
 			`;
 			const paramsProfile = [
 				safeuserID,
 				safeUsername,
+				new Date().toISOString(),
 				new Date().toISOString(),
 			];
 
@@ -477,11 +478,10 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
+	//TODO fix schema
 	//update user profile
 	serv.patch('/:userID', /* { schema: updateProfileSchema }, */ async (request, reply) => {
 		try {
-			console.log("IN PAAAAAATCH");
-
 			const token = request.cookies.token;
 			let user;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -523,6 +523,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				'profileColor',
 				'lang',
 				'status',
+				'lastConnexion'
 			];
 
 			const keysToUpdate = Object.keys(body).filter((key) => validStatKeys.includes(key));

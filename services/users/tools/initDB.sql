@@ -8,7 +8,8 @@ CREATE TABLE userProfile (
   status BOOLEAN,
   userRole INTEGER,
   since TEXT,
-  lang TEXT
+  lang TEXT,
+  lastConnexion TEXT
 );
 
 CREATE TABLE userStats (
