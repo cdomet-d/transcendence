@@ -92,21 +92,21 @@ export function validateBearerToken(serv: FastifyInstance, authorization?: strin
 	}
 }
 
-export function clearCookie(reply: FastifyReply) {
-	reply.clearCookie('token', {
+export function setCookie(reply: FastifyReply, token: string) {
+	reply.setCookie('token', token, {
 		httpOnly: true,
 		secure: true,
-		sameSite: 'strict',
+		sameSite: 'none',
 		path: '/',
 		maxAge: 60 * 60 * 1000,
 	});
 }
 
-export function setCookie(reply: FastifyReply, token: string) {
-	reply.setCookie('token', token, {
+export function clearCookie(reply: FastifyReply) {
+	reply.clearCookie('token', {
 		httpOnly: true,
 		secure: true,
-		sameSite: 'strict',
+		sameSite: 'none',
 		path: '/',
 		maxAge: 60 * 60 * 1000,
 	});

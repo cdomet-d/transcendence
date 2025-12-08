@@ -14,13 +14,17 @@ import * as schema from './schemas.js';
 export async function authenticationRoutes(serv: FastifyInstance) {
 	serv.get('/status', async (request, reply) => {
 		const token = request.cookies.token;
-		if (!token) return reply.code(401).send({ message: 'Unauthorized' });
+		if (!token) {
+			serv.log.error('Unauthorized: Token not found')
+			return reply.code(401).send({ message: 'Unauthorized - token not found' });
+		}
 		if (token) {
 			try {
 				const user: JwtPayload = await request.jwtVerify();
 				return reply.code(200).send({ username: user.username, userID: user.userID });
 			} catch (error) {
-				return reply.code(401).send({ message: 'Unauthorized' });
+				serv.log.error('Unauthorized: invalid token')
+				return reply.code(401).send({ message: 'Unauthorized - invalid token' });
 			}
 		}
 	});
@@ -37,6 +41,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			const tokenPayload = { userID: account.userID, username: username };
 			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
 			setCookie(reply, token);
+			serv.log.warn(reply.cookies);
 			return reply.code(200).send({ token: token });
 		} catch (error) {
 			serv.log.error(`[AUTH] An unexpected error occurred while login: ${error}`);

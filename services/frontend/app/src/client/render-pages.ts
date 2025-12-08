@@ -12,8 +12,8 @@ import { pong, type gameRequest } from './pong/pong.js';
 import { PongUI } from './web-elements/game/game-ui.js';
 import { errorMessageFromException, exceptionFromResponse, redirectOnError } from './error.js';
 import type { Match } from 'path-to-regexp';
-import type { navigationLinksData, TabData } from './web-elements/types-interfaces.js';
-import { userStatus, router, type userStatusInfo } from './main.js';
+import type { TabData } from './web-elements/types-interfaces.js';
+import { router, type userStatusInfo } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
@@ -72,16 +72,16 @@ function toggleHeader(page: string) {
 
 async function prepareLayout(curLayout: Layout | undefined, page: string): Promise<userStatusInfo | null> {
 	if (!layoutPerPage[page]) {
-		return redirectOnError('/404', `Requested page (${page}) is undefined`), null;
+		return redirectOnError('/404', `Redirected: Requested page (${page}) is undefined`), null;
 	}
 	if (!curLayout) return redirectOnError('/404', 'Failed to load DOM'), null;
 
 	const user = await document.body.header?.getLogState();
-	if (!user) return redirectOnError('/', 'Failed to recover user'), null;
+	if (!user) return redirectOnError('/', 'Redirected: Failed to recover user'), null;
 	curLayout.clearAll();
 
 	if (!user.auth && requireAuth[page]) {
-		return redirectOnError('/auth', 'You must be registered to see this page!'), null;
+		return redirectOnError('/auth', 'Redirected: You must be registered to see this page!'), null;
 	}
 	toggleHeader(page);
 	return user;
@@ -270,16 +270,15 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 	console.log('GameRequest =>', gameRequest);
 	const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
 	const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
-	const layout = document.body.layoutInstance;
 
 	// TODO: set pong-court theme from game-manager object
-	if (layout) layout.theme = forestAssets;
 	court.theme = forest;
 
-    ui.player1.innerText = user.username;
+    ui.player1.innerText = status.username!;
     ui.player2.innerText = gameRequest.opponent;
 
 	const layout = document.body.layoutInstance;
+	if (layout) layout.theme = forestAssets;
 	document.body.layoutInstance?.appendAndCache(ui, court);
 	pong(gameRequest!, court.ctx, ui);
 }
