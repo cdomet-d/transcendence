@@ -200,9 +200,8 @@ export interface friendNotif {
 
 export interface gameNotif {
 	type: 'GAME_INVITE',
-	receiverName: string,
+	senderUsername: string,
 	receiverID: string,
-    owner: string,
     lobbyID: string,
 	gameType?: GameType
 }
@@ -307,6 +306,7 @@ export interface PongOptions {
 	horizontal?: string;
 	paddlesize: string;
 	paddlespeed: string;
+	opponent?: string;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -335,6 +335,7 @@ export interface Dictionary {
 		biography: string;
 		avatar: string;
 		search_placeholder: string;
+		avatar_uploader: string;
 	};
 	titles: {
 		settings: string;
@@ -346,6 +347,8 @@ export interface Dictionary {
 		leaderboard: string;
 		home: string;
 		pong_tournament: string;
+		choose_lobby: string;
+
 	};
 	profile: {
 		joined: string;
@@ -367,7 +370,6 @@ export interface Dictionary {
 		paddle_size: string;
 		paddle_speed: string;
 		paddle_horizontal: string;
-		opponent: string;
 		start: string;
 		local: string;
 		remote: string;
@@ -375,10 +377,25 @@ export interface Dictionary {
 		farm: string;
 		forest: string;
 		under_water: string;
+		opponent: string;
+		opponent_name: string;
+		choose_back: string;
+		searchbar: string;
 	};
 	error: {
 		username_error: string;
 		password_error: string;
+		page404: string;
+		uppercase: string;
+		lowercase: string;
+		number: string;
+		special_char: string;
+		pass_lenght: string;
+		forbidden: string;
+		username_lenght: string;
+		username_lenght2: string;
+		file_heavy: string;
+		file_extension: string;
 	};
 	lobby: {
 		local: string;
@@ -394,6 +411,9 @@ export interface Dictionary {
 	settings: {
 		pick_color: string;
 		pick_language: string;
+		en: string;
+		fr: string;
+		es: string;
 	}
 }
 

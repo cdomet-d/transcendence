@@ -1,9 +1,9 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 import { processGameRequest } from '../gameManager/gameManager.js';
-import { wsClientsMap, addUserToLobby, createLobby, lobbyMap, removeUserFromLobby, addUserToWhitelist, removeUserFromWhitelist, findLobbyIDFromUserID } from './lobby.gm.js';
+import { wsClientsMap, addUserToLobby, createLobby, lobbyMap, removeUserFromLobby, addUserToWhitelist, removeUserFromWhitelist, findLobbyIDFromUserID, getWhiteListUsernames } from './lobby.gm.js';
 import { validateData, validatePayload } from '../gameManager/inputValidation.gm.js';
-import type { lobbyInfo } from '../gameManager/gameManager.interface.js';
+import type { lobbyInfo, userInfo, whitelist } from '../gameManager/gameManager.interface.js';
 import type { lobbyRequestForm, gameNotif, lobbyInviteForm } from './lobby.interface.js';
 import { natsPublish } from '../nats/publisher.gm.js';
 
@@ -29,6 +29,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				const lobbyPayload = payload as lobbyRequestForm;
 
 				userID = lobbyPayload.userID;
+				let username: string = lobbyPayload.username;
 				console.log('lobbyHost UID: ', userID);
 
 				if (!wsClientsMap.has(userID!) && lobbyPayload.action !== 'invite') {
@@ -36,7 +37,10 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				}
 
 				if (lobbyPayload.action === 'create') {
-					const newLobby: lobbyInfo = createLobby(userID!, lobbyPayload.format!);
+					let lobbyID: string | null = findLobbyIDFromUserID(userID);
+					if (lobbyID !== null)
+						removeUserFromLobby(userID, lobbyID);
+					const newLobby: lobbyInfo = createLobby({userID: userID!, username: username, userSocket: socket }, lobbyPayload.format!);
 					this.log.error(`FORM IN GM CREATE: ${formInstance}`);
 					wsSend(socket, JSON.stringify({ lobby: 'created', lobbyID: newLobby.lobbyID, formInstance: formInstance }))
 				}
@@ -53,45 +57,41 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				const invitePayload = payload as lobbyInviteForm;
 
 				if (invitePayload.action === 'invite') {
-					const hostID = invitePayload.hostID;
-					console.log('HOST ID:', hostID);
-					const inviteeID = invitePayload.inviteeID!;
+					// this.log.error("IN INVITE")
+					const inviteeID = invitePayload.invitee.userID!;
 					const lobbyID: string | null = findLobbyIDFromUserID(invitePayload.hostID!);
 					if (lobbyID === null) {
 						wsSend(socket, JSON.stringify({ error: 'lobby not found' }));
 						return;
 					}
-					
-					console.log('LOBBY ID:', lobbyID);
-					console.log('user ID:', userID);
-
+					const hostUsername: string = lobbyMap.get(lobbyID)?.userList.get(invitePayload.hostID!)?.username!;
 					const notif: gameNotif = {
 						type: 'GAME_INVITE',
-						senderID: hostID!, // hostID no?
+						senderUsername: hostUsername,//TODO
 						receiverID: inviteeID,
 						lobbyID: lobbyID!,
 						gameType: formInstance === 'remoteForm' ? '1 vs 1' : 'tournament'
 					};
-					console.log('inviteeID: ', inviteeID);
-					addUserToWhitelist(inviteeID, lobbyID!);
+					// console.log('inviteeID: ', inviteeID);
+					addUserToWhitelist(invitePayload.invitee, lobbyID!);
 					natsPublish(this, 'post.notif', JSON.stringify(notif));
 				} else if (invitePayload.action === 'decline') {
-					console.log("DECLINED");
-					removeUserFromWhitelist(invitePayload.inviteeID!, invitePayload.lobbyID!);
-					socket.close('declined');
-					// TODO tell front user declined (remove from user list in lobby)
+					const inviteeID = invitePayload.invitee.userID!;
+					removeUserFromWhitelist(inviteeID, invitePayload.lobbyID!);
+					if (findLobbyIDFromUserID(inviteeID) === null)
+						socket.close();
 				} else if (invitePayload.action === 'join') {
 					this.log.error(`IN JOIN + ${formInstance}`);
-					this.log.error(`${invitePayload.inviteeID}`);
+					//TODO: check if lobby still exists otherwise send error "tournament doesn't exist anymore"
+					userID = invitePayload.invitee.userID;
+					let lobbyID: string | null = findLobbyIDFromUserID(userID);
+					if (lobbyID !== null)
+						removeUserFromLobby(userID, lobbyID);
 
-					const inviteeID = invitePayload.inviteeID!;
-					const alreadyInLobby = findLobbyIDFromUserID(inviteeID);
-					if (alreadyInLobby !== null) {
-						removeUserFromLobby(inviteeID, alreadyInLobby);
-						console.log(`I am ${inviteeID} and I was removed from lobby: ${alreadyInLobby}`);
-					}
-					addUserToLobby(inviteeID, socket, invitePayload.lobbyID!);
-					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance }));
+					addUserToLobby(userID!, socket, invitePayload.lobbyID!);
+					const whiteListUsernames: string[] = getWhiteListUsernames(invitePayload.lobbyID!)
+					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance, whiteListUsernames: whiteListUsernames }));
+					//TODO: send start to host once everyone has joined
 				}
 			}
 		} catch (error) {
@@ -99,16 +99,12 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 		}
 	});
 
-	socket.on('close', (message: string) => {
-		if (message === 'declined') {
-			console.log("Declined invite");
-			return;
-		}
-
+	socket.on('close', () => {
 		if (userID !== null) {
 			let lobbyID: string | null = findLobbyIDFromUserID(userID);
 			if (lobbyID !== null)
 				removeUserFromLobby(userID, lobbyID);
+			wsClientsMap.delete(userID);
 		}
 	});
 }

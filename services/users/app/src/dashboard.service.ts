@@ -15,6 +15,7 @@ export interface userStats {
 	shortestMatch: number;
 	totalMatch: number;
 	totalWins: number;
+	totalLosses: number;
 	winStreak: number;
 	averageMatchDuration: number;
 	longuestPass: number;
@@ -24,6 +25,7 @@ export interface userStats {
 function calculateStats(current: userStats, isWinner: boolean, duration: number, matchLongestPass: number): userStats {
 	const newTotalMatches = current.totalMatch + 1;
 	const newTotalWins = current.totalWins + (isWinner ? 1 : 0);
+	const newTotalLosses = current.totalLosses + (isWinner ? 0 : 1)
 
 	const newWinStreak = isWinner ? (current.winStreak + 1) : 0;
 
@@ -46,6 +48,7 @@ function calculateStats(current: userStats, isWinner: boolean, duration: number,
 		shortestMatch: newShortestMatch,
 		totalMatch: newTotalMatches,
 		totalWins: newTotalWins,
+		totalLosses: newTotalLosses,
 		winStreak: newWinStreak,
 		averageMatchDuration: newAverageDuration,
 		longuestPass: newLongestPass
@@ -72,6 +75,7 @@ export async function updateUserStats(serv: FastifyInstance, userID: string, isW
 			shortestMatch = ?,
 			totalMatch = ?,
 			totalWins = ?,
+			totalLosses = ?,
 			winStreak = ?,
 			averageMatchDuration = ?,
 			longuestPass = ?
@@ -83,6 +87,7 @@ export async function updateUserStats(serv: FastifyInstance, userID: string, isW
 		newStats.shortestMatch,
 		newStats.totalMatch,
 		newStats.totalWins,
+		newStats.totalLosses,
 		newStats.winStreak,
 		newStats.averageMatchDuration,
 		newStats.longuestPass,

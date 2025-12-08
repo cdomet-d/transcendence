@@ -18,7 +18,7 @@ interface friendNotif {
 type GameType = '1 vs 1' | 'tournament';
 interface gameNotif {
 	type: 'GAME_INVITE',
-	receiverName: string,
+	senderUsername: string,
 	receiverID: string,
     lobbyID: string,
 	gameType: GameType,
@@ -32,9 +32,9 @@ export async function natsSubscription(serv: FastifyInstance) {
 	(async () => {
 		for await (const msg of sub) {
 			const notif: friendNotif | gameNotif = JSON.parse(sc.decode(msg.data));
+			serv.log.info(`RECEIVED NOTIF: ${JSON.stringify(notif)}`)
 			const receiverWS: Array<WebSocket> | undefined = serv.users.getUserSockets(notif.receiverID);
 			if (receiverWS === undefined) {
-				//TODO: le faire remonter au client
 				serv.log.error('receiver not found');
 				return;
 			}
