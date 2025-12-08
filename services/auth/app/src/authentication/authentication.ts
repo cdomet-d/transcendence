@@ -49,8 +49,8 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 		const token = request.cookies.token;
 		clearCookie(reply);
 		if (token === undefined) return;
-		const userID = request.user.userID;
-		await updateStatus(serv.log, userID, true, token);
+		const user: JwtPayload = await request.jwtVerify();
+		await updateStatus(serv.log, user.userID, true, token);
 		return reply.code(200).send({ message: 'Success' });
 	});
 

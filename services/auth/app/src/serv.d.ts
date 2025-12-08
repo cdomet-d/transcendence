@@ -9,10 +9,4 @@ declare module 'fastify' {
     export interface FastifyRequest {
         user: JwtPayload;
     }
-    export interface FastifyRequest {
-        user: {
-            userID: string;
-            username: string;
-        };
-    }
 }
