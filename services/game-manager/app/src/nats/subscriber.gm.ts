@@ -2,21 +2,11 @@ import { StringCodec } from 'nats';
 import { wsSend } from '../lobby/wsHandler.gm.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
 import { natsConnect } from './publisher.gm.js';
-import type { game, gameRequest, PongOptions } from '../manager.interface.js';
+import type { gameRequest, gameReply } from '../gameManager/gameManager.interface.js';
 import { wsClientsMap } from '../lobby/lobby.gm.js';
 import { gameOver } from '../quickmatch/gameOver.js';
-
-interface user {
-	userID: string,
-	username?: string,
-}
-
-interface gameReply {
-	gameID: string,
-	users: [user, user],
-	remote: boolean,
-	gameSettings: PongOptions,
-}
+import type { WebSocket } from '@fastify/websocket'
+import type { FastifyInstance } from 'fastify';
 
 export async function natsSubscribe(serv: FastifyInstance) {
 	const pregame = serv.nc.subscribe('game.reply');
@@ -29,10 +19,9 @@ export async function natsSubscribe(serv: FastifyInstance) {
 				console.log('EMPTY USERS');
 				return;
 			}
-			sendGameRequest(game.users[0].userID, game.users[1], game);
-			sendGameRequest(game.users[1].userID, game.users[0], game);
+			sendGameRequest(serv, game.users[0]!.userID, game.users[1]!.username, game);
+			sendGameRequest(serv, game.users[1]!.userID, game.users[0]!.username, game);
 		}
-
 	})();
 
 	const postgame = serv.nc.subscribe('game.over');
@@ -51,21 +40,20 @@ export async function natsSubscribe(serv: FastifyInstance) {
 	})();
 }
 
-function sendGameRequest(userID: string, opponent: user, game: gameReply) {
-	if (userID === "temporary") return; // TODO -1 will become 'temporary' 
+function sendGameRequest(serv: FastifyInstance, userID: string, opponentUsername: string, game: gameReply) {
+	if (userID === "temporary") return; 
 
-	const socket = wsClientsMap.get(userID);
-	let opponentUsername: string | undefined = opponent.username;
-	if (opponentUsername === undefined) {
-		// TODO get username from userID
-		// const opponentUsername = fetch DB ??;
+	const socket: WebSocket | undefined = wsClientsMap.get(userID);
+	if (socket === undefined) {
+		serv.log.error(`socket not found for user: ${userID}`);
+		return
 	}
 	const gameReq: gameRequest = {
-		opponent: opponentUsername!, // TODO send username of opponent to PONG depending on local/remote, user index etc. 
+		opponent: opponentUsername, 
 		gameID: game.gameID,
 		remote: game.remote,
 		gameSettings: game.gameSettings,
 	}
-
+	serv.log.error("SENDING GAME REQUEST");
 	wsSend(socket, JSON.stringify(gameReq));
 }

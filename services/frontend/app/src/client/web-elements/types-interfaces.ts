@@ -200,9 +200,8 @@ export interface friendNotif {
 
 export interface gameNotif {
 	type: 'GAME_INVITE',
-	receiverName: string,
+	senderUsername: string,
 	receiverID: string,
-    owner: string,
     lobbyID: string,
 	gameType?: GameType
 }
@@ -302,12 +301,12 @@ export interface pongTheme {
  * **NB**: background is handled in `renderGame` -> it's just needed for the UI.
  */
 export interface PongOptions {
-    background?: string;
-    ballspeed: string;
-    horizontal?: string;
-    paddlesize: string;
-    paddlespeed: string;
-    opponent?: string;
+	background?: string;
+	ballspeed: string;
+	horizontal?: string;
+	paddlesize: string;
+	paddlespeed: string;
+	opponent?: string;
 }
 
 /* -------------------------------------------------------------------------- */

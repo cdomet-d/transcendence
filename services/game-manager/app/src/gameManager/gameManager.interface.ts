@@ -14,13 +14,14 @@ interface PongOptions {
 }
 
 interface lobbyInfo {
+	hostID?: string,
 	lobbyID?: string,
 	whitelist?: whitelist,
 	joinable?: boolean,
 	userList: Map<string, userInfo>,
 	remote: boolean,
 	format: 'quickmatch' | 'tournament' | string,
-	nbPlayers: number
+	nbPlayers: number,
 	gameSettings?: PongOptions
 }
 
@@ -60,8 +61,9 @@ interface user {
 
 interface gameReply {
 	gameID: string,
-	users: user[],
-	remote: boolean
+	users: [user, user],
+	remote: boolean,
+	gameSettings: PongOptions,
 }
 
 // PONG
