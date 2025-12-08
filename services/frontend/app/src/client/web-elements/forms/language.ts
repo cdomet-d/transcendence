@@ -1,7 +1,6 @@
-//import { tournament } from '../default-values.js';
 import type { Dictionary } from '../types-interfaces.js';
 
-// TODO hardcoded this so the app renders instantly without waiting for a fetch for now, will do route calling in next branch
+// hardcoded this so the app renders instantly without waiting for a fetch for now, will do route calling in next branch
 export const defaultDictionary: Dictionary = {
 	buttons: {
 		submit: "Submit",
@@ -19,11 +18,12 @@ export const defaultDictionary: Dictionary = {
 		delete_account: "Delete account"
 	},
 	forms: {
-		username: 'Username',
-		password: 'Password',
-		biography: 'Biography',
-		avatar: 'Avatar',
-		search_placeholder: 'Search...',
+		username: "Username",
+		password: "Password",
+		biography: "Biography",
+		avatar: "Avatar",
+		search_placeholder: "Search...",
+		avatar_uploader: "Avatar uploader"
 	},
 	titles: {
 		settings: "Settings",
@@ -34,7 +34,8 @@ export const defaultDictionary: Dictionary = {
 		tournament: "Tournament",
 		leaderboard: "Leaderboard",
 		home: "Home",
-		pong_tournament: "Pong Tournament"
+		pong_tournament: "Pong Tournament",
+		choose_lobby: "Choose Lobby"
 	},
 	profile: {
 		joined: "Joined",
@@ -63,11 +64,26 @@ export const defaultDictionary: Dictionary = {
 		background: "Background",
 		farm: "Farm",
 		forest: "Forest",
-		under_water: "Under Water"
+		under_water: "Under Water",
+		opponent_name: "Opponent Nickname",
+		choose_back: "Select background",
+		searchbar: "Searchbar"
 	},
 	error: {
 		username_error: "Invalid username or password.",
-		password_error: "Password must be at least 8 characters."
+		password_error: "Password must be at least 8 characters.",
+		page404: "There's nothing here :<",
+		uppercase: "missing an uppercase letter",
+		lowercase: "missing an lowercase letter",
+		number: "missing an number",
+		special_char: "missing a special character",
+		pass_lenght: "Password should be 12-64 characters long, is",
+		forbidden: "Forbidden character",
+		username_lenght: "Username should be ",
+		username_lenght2: " -18 character long, is ",
+		file_heavy: "That file is too heavy: max is 2MB!",
+		file_extension: "Invalid extension: ",
+
 	},
 	lobby: {
 		local: "Local 1v1",
@@ -82,7 +98,10 @@ export const defaultDictionary: Dictionary = {
 	},
 	settings: {
 		pick_color: "Pick color",
-		pick_language: "Pick language"
+		pick_language: "Pick language",
+		en: "English",
+		fr: "French",
+		es: "Spanish"
 	}
 };
 
@@ -93,10 +112,9 @@ export async function setLanguage(lang: string): Promise<void> {
 	try {
 		const response = await fetch(`https://localhost:8443/api/bff/dictionary/${lang}`);
 
-		//TODO handle error
-		if (!response.ok) 
-			throw new Error(`Failed to load language: ${lang}`);
+		if (!response.ok) {
 
+		}
 		const newDict = (await response.json()) as Dictionary;
 
 		currentDictionary = newDict;
@@ -107,15 +125,15 @@ export async function setLanguage(lang: string): Promise<void> {
 		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang } }));
 
 		console.log(`[LANG] Switched to ${lang}`);
-		console.log(JSON.stringify(currentDictionary));
 
 	} catch (error) {
 		console.error('[LANG] Error loading language pack:', error);
+		throw(error);
 	}
 }
 
 export async  function initLanguage() {
-	const savedLang = localStorage.getItem('preferred_language') || 'en';
+	const savedLang = localStorage.getItem('preferred_language') || 'fr';
 	if (savedLang !== 'en')
-		await setLanguage(savedLang);
-}``
+		await setLanguage("fr");
+}

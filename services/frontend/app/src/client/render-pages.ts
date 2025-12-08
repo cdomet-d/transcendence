@@ -26,7 +26,7 @@ import { pong, type gameRequest } from './pong/pong.js';
 import { PongUI } from './web-elements/game/game-ui.js';
 import { errorMessageFromException, exceptionFromResponse, redirectOnError } from './error.js';
 import { TournamentBrackets } from './web-elements/game/tournament.js';
-import { type Match } from 'path-to-regexp';
+import type { Match } from 'path-to-regexp';
 import type { navigationLinksData, pongTheme, TabData, ImgData } from './web-elements/types-interfaces.js';
 import { userStatus, router, type userStatusInfo } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
@@ -123,17 +123,16 @@ export function renderAuth() {
 	}
 	const wrapper = createWrapper('authsettings');
 
-	//TODO language
 	const authOptions: TabData[] = [
 		{
 			id: 'login-tab',
-			content: 'Login',
+			content: currentDictionary.titles.login,
 			default: true,
 			panelContent: createForm('login-form', loginForm(currentDictionary)),
 		},
 		{
 			id: 'registration-tab',
-			content: 'Register',
+			content: currentDictionary.titles.register,
 			default: false,
 			panelContent: createForm('registration-form', registrationForm(currentDictionary)),
 		},
@@ -162,7 +161,7 @@ export async function renderLeaderboard() {
 		const raw = await rawRes.json();
 
 		document.body.layoutInstance!.appendAndCache(
-			createHeading('2', 'Leaderboard'),
+			createHeading('2', currentDictionary.titles.leaderboard),
 			createLeaderboard(userArrayFromAPIRes(raw)),
 		);
 	} catch (error) {
@@ -173,10 +172,8 @@ export async function renderLeaderboard() {
 }
 
 export async function renderSelf() {
-	console.log('renderSelf');
-
-	const status = await userStatus();
-	if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
+    const status = await userStatus();
+    if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
 
 	const url = `https://localhost:8443/api/bff/profile/${status.username}`;
 
@@ -202,7 +199,6 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
 
 		try {
 			const raw = await fetch(url);
-			console.error(raw.status);
 			if (!raw.ok) {
 				console.error('error', raw.status);
 				if (raw.status === 404) return renderNotFound();
@@ -220,7 +216,6 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
 }
 
 export async function renderSettings() {
-	console.log('renderSettings');
 	const status = await userStatus();
 	if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
 
@@ -246,17 +241,14 @@ export async function renderSettings() {
 	updatePageTitle(status.username + 'Settings');
 }
 
-//TODO language lobby
 export function renderLobbyMenu() {
-	console.log('renderLobbyMenu');
-
 	try {
 		prepareLayout(document.body.layoutInstance, 'lobbyMenu');
 	} catch (error) {
 		console.error(errorMessageFromException(error));
 	}
 	document.body.layoutInstance?.appendAndCache(
-		createHeading('1', 'Choose Lobby'),
+		createHeading('1', currentDictionary.titles.choose_lobby),
 		createMenu(lobbyQuickmatchMenu(currentDictionary), 'horizontal', true),
 		createMenu(lobbyTournamentMenu(currentDictionary), 'vertical', true),
 	);
@@ -270,32 +262,53 @@ export function renderLobbyMenu() {
 
 //TODO: for each lobby: set 'owner' with currently registered user to avoid owner
 //  being able to add himself to the game (in the UI - even if it's handled in the pong server)
-export function renderQuickLocalLobby() {
+export async function renderQuickLocalLobby() {
 	try {
 		prepareLayout(document.body.layoutInstance, 'quickLobby');
 	} catch (error) {
 		console.error(errorMessageFromException(error));
 	}
-	document.body.layoutInstance?.appendAndCache(
-		createForm('local-pong-settings', localPong(currentDictionary)),
+	document.body.layoutInstance?.appendAndCache(createForm('local-pong-settings', localPong(currentDictionary)),
 	);
+
+    const user: userStatusInfo = await userStatus();
+    if (!user.auth) {
+        redirectOnError('/auth', 'You must be registered to see this page')
+        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+    }
+
 	wsConnect('create', 'quickmatch', 'localForm');
 }
 
-export function renderQuickRemoteLobby() {
+export async function renderQuickRemoteLobby(
+    param?: Match<Partial<Record<string, string | string[]>>>,
+    gameRequest?: gameRequest,
+    action?: string
+) {
+    
+    const user: userStatusInfo = await userStatus();
+    if (!user.auth) {
+        redirectOnError('/auth', 'You must be registered to see this page')
+        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+    }
+    
 	try {
 		prepareLayout(document.body.layoutInstance, 'quickLobby');
 	} catch (error) {
 		console.error(errorMessageFromException(error));
 	}
+    const form = createForm('remote-pong-settings', remotePong(currentDictionary))
+    document.body.layoutInstance?.appendAndCache(form);
 
-	document.body.layoutInstance?.appendAndCache(
-		createForm('remote-pong-settings', remotePong(currentDictionary)),
-	);
-	wsConnect('create', 'quickmatch', 'remoteForm');
+    if (action === undefined) {
+        action = 'create';
+        form.owner = user.username!;
+    }
+    
+    wsConnect(action!, 'quickmatch', 'remoteForm');
 }
 
-export function renderTournamentLobby() {
+export async function renderTournamentLobby() {
 	try {
 		prepareLayout(document.body.layoutInstance, 'tournamentLobby');
 	} catch (error) {
@@ -305,12 +318,19 @@ export function renderTournamentLobby() {
 	document.body.layoutInstance?.appendAndCache(
 		createForm('remote-pong-settings', pongTournament(currentDictionary)),
 	);
+
+    const user: userStatusInfo = await userStatus();
+    if (!user.auth) {
+        redirectOnError('/auth', 'You must be registered to see this page')
+        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+    }
+
 	wsConnect('create', 'tournament', 'tournamentForm');
 }
 
 export async function renderGame(
-    param?: Match<Partial<Record<string, string | string[]>>>,
-    gameRequest?: gameRequest,
+	param?: Match<Partial<Record<string, string | string[]>>>,
+	gameRequest?: gameRequest,
 ) {
 	console.log('renderGame');
 

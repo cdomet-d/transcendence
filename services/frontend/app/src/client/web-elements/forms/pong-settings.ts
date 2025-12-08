@@ -10,6 +10,7 @@ import { createVisualFeedback, exceptionFromResponse } from '../../error.js';
 import { userDataFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
+import { currentDictionary } from './language.js';
 
 /**
  * A form allowing user to create a local pong game.
@@ -27,7 +28,7 @@ export class LocalPongSettings extends BaseForm {
 	/* -------------------------------------------------------------------------- */
 	constructor() {
 		super();
-		this.#backgroundSelector = createDropdown(backgroundMenu, 'Select background', 'static');
+		this.#backgroundSelector = createDropdown(backgroundMenu, currentDictionary.gameCustom.choose_back, 'static');
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
 	}
 
@@ -106,12 +107,13 @@ export class RemotePongSettings extends LocalPongSettings {
 	constructor() {
 		super();
 
-		this.#searchbar = createForm('search-form');
-		this.#guestWrapper = document.createElement('div');
-		this.#guests = new Map<string, UserData>();
-		this.#inviteHandler = this.#inviteImplementation.bind(this);
-		this.#owner = '';
-	}
+        this.#searchbar = createForm('search-form');
+        this.#guestWrapper = document.createElement('div');
+        this.#guests = new Map<string, UserData>();
+        this.#inviteHandler = this.#inviteImplementation.bind(this);
+        this.#owner = '';
+        super.contentMap.get('submit')?.setAttribute('disabled', '');
+    }
 
 	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
 		console.log('Fetch&Redirect');
@@ -139,6 +141,13 @@ export class RemotePongSettings extends LocalPongSettings {
 		this.classList.add('sidebar-left');
 	}
 
+    startGame() {
+        super.contentMap.get('submit')?.removeAttribute('disabled');
+    }
+
+    set owner(o: string) {
+        this.#owner = o;
+    }
 	/* -------------------------------- listeners ------------------------------- */
 	async fetchGuests(guestUsername: string): Promise<UserData | null> {
 		const url = `https://localhost:8443/api/bff/tiny-profile/${guestUsername}`;
@@ -167,9 +176,11 @@ export class RemotePongSettings extends LocalPongSettings {
 					if (user) this.#guests.set(user.username, user);
 					/**
 					 * HERE @ElSamsam && @cmsweeting
+					 * // TODO ask Charlotte how to send WS invite in front (and also ws.send invite to gm)
 					 * When the lobby's owner adds a guest to the lobby, I fetch the associated data and store it in the guest Map to render it later.
 					 * You can add whatever you need websocket wise HERE and send `user.username` to add the user to the lobby server-side.
 					 */
+					wsConnect("invite", "", this.details.id, "", "", user!.id);//TODO: check user exists
 					this.#displayGuests();
 				} catch (error) {
 					console.log(error);

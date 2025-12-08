@@ -1,9 +1,10 @@
-import type { game, lobbyInfo, userInfo } from "../manager.interface.js";
-import { natsPublish } from "../nats/publisher.gm.js";
+import type { FastifyInstance } from 'fastify';
+import type { game, lobbyInfo, userInfo } from '../gameManager/gameManager.interface.js';
+import { natsPublish } from '../nats/publisher.gm.js';
 
 export function createGameObj(lobbyInfo: lobbyInfo) {
 	if (!lobbyInfo) {
-		console.log("Error: lobbyInfo is empty!");
+		console.log('Error: lobbyInfo is empty!');
 		return undefined;
 	}
 
@@ -11,13 +12,13 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 
 	const game: game = {
 		lobbyID: lobbyInfo.lobbyID!,
-		tournamentID: "-1",
+		tournamentID: '-1',
 		gameID: crypto.randomUUID().toString(),
 		remote: lobbyInfo.remote,
 		users: usersArray,
 		score: [0, 0],
-		winnerID: "",
-		loserID: "", 
+		winnerID: '',
+		loserID: '', 
 		duration: 0, 
 		longuestPass: 0,
 		startTime: "",
@@ -27,6 +28,6 @@ export function createGameObj(lobbyInfo: lobbyInfo) {
 	return game;
 }
 
-export function startGame(game: game) {
-	natsPublish("game.request", JSON.stringify(game), "game.reply");
+export function startGame(serv: FastifyInstance, game: game) {
+	natsPublish(serv, 'game.request', JSON.stringify(game), 'game.reply');
 }

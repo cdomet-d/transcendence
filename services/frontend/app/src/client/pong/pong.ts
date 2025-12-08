@@ -8,7 +8,7 @@ import type { PongOptions } from '../web-elements/types-interfaces.js';
 import type { PongCourt } from '../web-elements/game/pong-court.js';
 
 export interface gameRequest {
-    opponent: string,
+    opponent: string;
     gameID: string;
     remote: boolean;
 	gameSettings: PongOptions;

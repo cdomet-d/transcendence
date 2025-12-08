@@ -19,7 +19,7 @@ interface lobbyInfo {
 	joinable?: boolean,
 	userList: Map<string, userInfo>,
 	remote: boolean,
-	format: "quickmatch" | "tournament" | string,
+	format: 'quickmatch' | 'tournament' | string,
 	nbPlayers: number
 	gameSettings?: PongOptions
 }
@@ -52,6 +52,19 @@ interface tournament {
 	nbPlayers: number
 }
 
+// NATS
+interface user {
+	userID: string,
+	username: string,
+}
+
+interface gameReply {
+	gameID: string,
+	users: user[],
+	remote: boolean
+}
+
+// PONG
 interface gameRequest {
 	opponent: string,
 	gameID: string,
@@ -59,4 +72,4 @@ interface gameRequest {
 	gameSettings: PongOptions,
 }
 
-export type { userInfo, lobbyInfo, whitelist, tournament, game, gameRequest, PongOptions };
+export type { userInfo, lobbyInfo, whitelist, tournament, game, gameRequest, user, gameReply, PongOptions };

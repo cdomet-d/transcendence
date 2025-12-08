@@ -1,11 +1,11 @@
-import type { game, lobbyInfo, tournament, userInfo } from '../manager.interface.js';
+import type { game, lobbyInfo, tournament, userInfo } from '../gameManager/gameManager.interface.js';
 
 export function createTournament(payload: lobbyInfo): tournament | undefined {
 	const tournamentID = crypto.randomUUID().toString();
 
 	const games: game[] | undefined = createBracket(payload, tournamentID);
 	if (games === undefined) {
-		console.log("Error: Could not create tournament bracket!")
+		console.log('Error: Could not create tournament bracket!')
 		return undefined;
 	}
 
@@ -19,7 +19,7 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: string): game[
     const usersArray: userInfo[] = Array.from(lobbyInfo.userList.values());
 
     if (usersArray.length < 4) { // magic number I know
-        console.log("Error: Not enough players for tournament!");
+        console.log('Error: Not enough players for tournament!');
         return undefined;
     }
 	

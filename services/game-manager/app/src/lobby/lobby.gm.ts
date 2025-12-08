@@ -1,4 +1,4 @@
-import type { userInfo, lobbyInfo } from "../manager.interface.js";
+import type { userInfo, lobbyInfo } from '../gameManager/gameManager.interface.js';
 export const wsClientsMap: Map<string, WebSocket> = new Map();
 export const lobbyMap: Map<string | undefined, lobbyInfo> = new Map();
 
@@ -27,10 +27,28 @@ function makeLobbyInfo(hostID: string, format: string): lobbyInfo {
         ]),
 		remote: true, // TODO set remote or local HERE just before START event
 		format: format,
-		nbPlayers: format === "quickmatch" ? 2 : 4
+		nbPlayers: format === 'quickmatch' ? 2 : 4
 	}
 
 	return lobby;
+}
+
+export function addUserToWhitelist(userID: string, lobbyID: string) {
+	const lobby = lobbyMap.get(lobbyID);
+	if (!lobby) return;
+
+	if (lobby.whitelist?.userIDs.size === 4) return; // send `whitelist full` to front?
+
+	if (lobby.whitelist?.userIDs.has(userID)) {
+		lobby.whitelist?.userIDs.set(userID, { userID });
+	}
+}
+
+export function removeUserFromWhitelist(userID: string, lobbyID: string) {
+	const lobby = lobbyMap.get(lobbyID);
+	if (!lobby) return;
+
+	lobby.whitelist!.userIDs.delete(userID);
 }
 
 export function addUserToLobby(userID: string, socket: WebSocket, lobbyID: string) {
@@ -38,7 +56,7 @@ export function addUserToLobby(userID: string, socket: WebSocket, lobbyID: strin
 	if (!lobby) return;
 
 	if (!lobby.userList.has(userID)) {
-		lobby.userList.set(userID, { userID }); // add username (and socket?) too
+		lobby.userList.set(userID, { userID });
 	}
 
 	if (!wsClientsMap.has(userID)) {
@@ -55,13 +73,25 @@ export function removeUserFromLobby(userID: string, lobbyID: string) {
 	wsClientsMap.delete(userID);
 }
 
-// export function printPlayersInLobby(lobbyID: string) {
-// 	const lobby = lobbyMap.get(lobbyID);
-// 	if (!lobby) {
-// 		console.log(`Lobby #${lobbyID} not found`);
-// 		return;
-// 	}
-// 	lobby?.userList.forEach(user => {
-// 		console.log(`User #${user.userID} is in Lobby #${lobbyID}`);
-// 	});
-// }
+export function printPlayersInLobby(lobbyID: string) {
+	const lobby = lobbyMap.get(lobbyID);
+	if (!lobby) {
+		console.log('AAAH PAS DE LOBBY');
+		return;
+	}
+	lobby?.userList.forEach(user => {
+		console.log(`User #${user.userID} is in Lobby #${lobbyID}`);
+	});
+}
+
+export function findLobbyIDFromUserID(userID: string): string | null {
+	let lobbyID: string | null = null; 
+	
+	for (const [_, lobbyInfo] of lobbyMap.entries()) {
+		if (lobbyInfo.userList.has(userID!)) {
+			lobbyID = lobbyInfo.lobbyID!;
+			break;
+		}
+	}
+	return lobbyID;
+}

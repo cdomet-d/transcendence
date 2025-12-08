@@ -37,6 +37,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "fastify.d.ts"],
   "exclude": ["node_modules"]
 }
