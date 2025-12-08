@@ -9,6 +9,7 @@ import {
 import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
 import { NotifContent } from './notification-content.js';
 import { NotifToggle, NotifPanel } from './notif-panel-toggle.js';
+import { router } from '../../main.js';
 
 //TODO: Make notifications tab-focusable
 //TODO: Buttons are actually a form

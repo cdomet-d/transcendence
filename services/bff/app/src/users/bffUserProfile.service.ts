@@ -1,8 +1,43 @@
 import type { FastifyReply } from 'fastify';
 import type {
 	UsernameResponse, FriendshipStatus, Friendship, ProfileView, userStats, StatsResponse, Matches, RawMatches,
-	userData, UserIDResponse, UserProfileUpdates
+	userData, UserIDResponse, UserProfileUpdates, UserProfileView
 } from "../utils/bff.interface.js";
+
+
+export async function fetchFullUserProfile(
+	log: any,
+	requesterID: string,
+	targetUsername: string,
+	token: string
+): Promise<UserProfileView> {
+
+	const combinedUserData = await buildTinyProfile(log, requesterID, targetUsername, token);
+
+	if (!combinedUserData)
+		throw { code: 404, message: 'User profile data not found.' };
+
+	const [userData, userStats, friends, pending, recentMatches] = await Promise.all([
+		combinedUserData,
+		fetchUserStats(log, combinedUserData.userID, token),
+		fetchFriendships(log, combinedUserData.userID, 'friend', token),
+		fetchFriendshipsPending(log, combinedUserData.userID, 'pending', token),
+		processMatches(log, combinedUserData.userID, token),
+	]);
+
+	if (!userData || !userStats)
+		throw { code: 404, message: '[BFF] Failed to retrieve essential user data.' };
+
+	const responseData: UserProfileView = {
+		userData: userData,
+		userStats: userStats,
+		friends: friends || [],
+		pending: pending || [],
+		matches: recentMatches || [],
+	};
+
+	return (responseData);
+}
 
 //error handled
 export async function buildTinyProfile(

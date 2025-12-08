@@ -80,7 +80,6 @@ export const leaderboardGet = {
 	}
 };
 
-//TODO all fields are not mandatory
 export const settingsPatchSchema = {
 	body: {
 		type: 'object',
@@ -94,7 +93,7 @@ export const settingsPatchSchema = {
 			password: {
 				anyOf: [
 					{ type: 'string', maxLength: 0 },
-					{ type: 'string', minLength: 15, maxLength: 64 }
+					{ type: 'string', minLength: 12, maxLength: 64 }
 				]
 			},
 			biography: { type: 'string', maxLength: 500 },
