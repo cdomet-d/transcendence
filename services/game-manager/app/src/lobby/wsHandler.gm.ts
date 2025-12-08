@@ -68,7 +68,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 						return;
 					}
 					// console.log('LOBBY ID:', lobbyID);
-					const hostUsername: string = lobbyMap.get(lobbyID)?.userList.get(invitePayload.hostID!)?.username!; //TODO: check if it exists ? normally it always should
+					const hostUsername: string = lobbyMap.get(lobbyID)?.userList.get(invitePayload.hostID!)?.username!;
 					const notif: gameNotif = {
 						type: 'GAME_INVITE',
 						senderUsername: hostUsername,//TODO
