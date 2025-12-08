@@ -48,7 +48,8 @@ export class NotifBox extends HTMLDivElement {
             const status = await userStatus();
             if (status.auth === false) return;
 			await this.fetchPendingFriendRequests();
-            this.notifWsRequest();//TODO: if refresh game invite notifs are lost. add them to db ?
+			await this.fetchGameInvites();
+            this.notifWsRequest();
         }
     }
 
@@ -136,6 +137,24 @@ export class NotifBox extends HTMLDivElement {
 		}
 	}
 
+	async fetchGameInvites() {
+		const status = await userStatus();
+		if (!status.auth) redirectOnError('/auth', 'You must be registered to see this page');
+		const url = `https://localhost:8443/api/lobby/notification/${status.userID!}`;
+		try {
+			const rawRes = await fetch(url);
+			if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
+			const res = await rawRes.json();
+			for (const notif of res.notifs) {
+				console.log("got notif");
+				this.newGameInvitation(notif);
+			}
+		} catch (error) {
+			console.error('[NOTIFICATIONS]', errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(error));
+		}
+	}
+
 	async notifWsRequest() {
 		const userStatusInfo: userStatusInfo = await userStatus();
 		if (userStatusInfo.auth === false || userStatusInfo.userID === undefined) return;
@@ -151,7 +170,7 @@ export class NotifBox extends HTMLDivElement {
 			this.#ws = ws;
 			ws.addEventListener('message', (event) => {
 				const notif: friendNotif | gameNotif | string = JSON.parse(event.data);
-				// console.log(`Received message: ${JSON.stringify(notif)}`);
+				console.log(`Received message: ${JSON.stringify(notif)}`);
 				if (typeof notif === 'string' && notif === 'ping') ws.send(JSON.stringify('pong'));
 				if (typeof notif === 'object') {
 					if (notif.type === 'FRIEND_REQUEST')

@@ -118,6 +118,7 @@ services:
         restart: unless-stopped
         volumes:
             - ./services/game-manager/app:/usr/app
+            - ./services/game-manager/data:/usr/data
     monitoring:
         build:
             context: ./services/monitoring
@@ -191,6 +192,7 @@ services:
             - ./services/users/app:/usr/app
             - ./services/users/data:/usr/data
 
+#TODO: these aren't used unless I forgot how volumes work
 volumes:
     friendsDB:
         driver: local
@@ -220,5 +222,11 @@ volumes:
         driver: local
         driver_opts:
             device: services/dashboards/data
+            o: bind
+            type: none
+    gameManagerDB:
+        driver: local
+        driver_opts:
+            device: services/game-manager/data
             o: bind
             type: none
