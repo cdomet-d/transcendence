@@ -15,7 +15,8 @@ export const defaultDictionary: Dictionary = {
 		logout: "Log out",
 		start_game: "Start game",
 		start_tournament: "Start tournament",
-		delete_account: "Delete account"
+		delete_account: "Delete account",
+		download_data: "Download personal data"
 	},
 	forms: {
 		username: "Username",

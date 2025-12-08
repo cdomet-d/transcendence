@@ -365,7 +365,6 @@ export function downloadData(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			//TODO add in dictionnary
 			//content: dic.buttons.download_data,
 			content: "Download personal data",
 			img: null,
