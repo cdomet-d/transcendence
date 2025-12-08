@@ -18,19 +18,10 @@ export class DowloadDataForm extends BaseForm {
 	override async submitHandlerImplementation(ev: SubmitEvent): Promise<void> {
 		ev.preventDefault();
 
-		// [FIX] Ensure we have a username before attempting download
-		if (!this.#user || !this.#user.username) {
-			console.error("User data missing for download");
-			createVisualFeedback("User data not available", "error");
-			return;
-		}
-
 		try {
 			await CriticalActionForm.show();
 
-			// [FIX] Dynamically construct URL to ensure it uses the current username
-			// This prevents 404 errors caused by stale URLs generated during initialization
-			const actionUrl = `https://localhost:8443/api/bff/profile/${this.#user.username}`;
+			const actionUrl = `https://localhost:8443/api/bff/data`;
 
 			const req: RequestInit = {
 				method: 'GET',
@@ -69,12 +60,10 @@ export class DowloadDataForm extends BaseForm {
 			const response = await fetch(url, req);
 			if (!response.ok) throw await exceptionFromResponse(response);
 
-			// [FIX] Actually download the file (convert response to Blob)
 			const blob = await response.blob();
 			const downloadUrl = window.URL.createObjectURL(blob);
 			const a = document.createElement('a');
 			a.href = downloadUrl;
-			// Use the username in the filename if available, fallback to 'export'
 			a.download = `user_data_${this.#user?.username || 'export'}.json`;
 			document.body.appendChild(a);
 			a.click();
@@ -92,9 +81,7 @@ export class DowloadDataForm extends BaseForm {
 
 	set user(details: UserData) {
 		this.#user = details;
-		// [FIX] Handle potential undefined username safely for the form details
-		const safeUsername = details?.username || '';
-		this.details = downloadData(currentDictionary, safeUsername);
+		this.details = downloadData(currentDictionary);
 	}
 }
 

@@ -192,6 +192,10 @@ export class UserSettingsForm extends BaseForm {
 	set user(details: UserData) {
 		this.#user = details;
 		this.#avatar.metadata = details.avatar;
+
+		if (this.#dataDownload) {
+			this.#dataDownload.user = details;
+		}
 	}
 
 	/* -------------------------------------------------------------------------- */
