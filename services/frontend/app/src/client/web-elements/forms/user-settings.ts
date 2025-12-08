@@ -10,6 +10,8 @@ import { userColorsMenu, languageMenu } from '../navigation/default-menus.js';
 import type { Avatar } from '../typography/images.js';
 import type { DropdownMenu } from '../navigation/menus.js';
 import type { UserData } from '../types-interfaces.js';
+import { downloadData } from './default-forms.js';
+import { DowloadDataForm } from './downloadData-form.js';
 import {
 	exceptionFromResponse,
 	errorMessageFromException,
@@ -28,6 +30,8 @@ const MAX_FILE = 2 * 1024 * 1024;
 export class UserSettingsForm extends BaseForm {
 	#user: UserData;
 	#accountDelete: DeleteAccountForm;
+	//TODO add field here
+	#dataDownload: DowloadDataForm; 
 	#colors: DropdownMenu;
 	#languages: DropdownMenu;
 	#avatar: Avatar;
@@ -49,6 +53,10 @@ export class UserSettingsForm extends BaseForm {
 		this.#accountDelete = createForm(
 			'delete-account-form',
 			deleteAccount ( currentDictionary ),
+		);
+		this.#dataDownload = createForm(
+			'download-data-request',
+			downloadData ( currentDictionary, user.username),
 		);
 		this.#avatar = createAvatar(this.#user.avatar);
 		this.#colors = createDropdown(userColorsMenu, currentDictionary.settings.pick_color, 'dynamic');

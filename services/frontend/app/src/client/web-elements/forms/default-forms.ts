@@ -354,6 +354,27 @@ export function deleteAccount(dic: Dictionary): FormDetails {
 	}
 };
 
+export function downloadData(dic: Dictionary, username: string): FormDetails {
+	return {
+		action: `https://localhost:8443/api/bff/profile/${username}`,
+		heading: '',
+		ariaLabel: 'Download personal data request',
+		id: 'download-data-request',
+		method: 'get',
+		fields: [],
+		button: {
+			id: 'submit',
+			type: 'submit',
+			//TODO add in dictionnary
+			//content: dic.buttons.download_data,
+			content: "Download personal data",
+			img: null,
+			ariaLabel: '',
+			style: 'red',
+		},
+	}
+};
+
 export const criticalChange: FormDetails = {
 	action: 'https://localhost:8443/api/auth/verify',
 	heading: 'Password Required',

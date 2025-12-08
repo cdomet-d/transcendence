@@ -80,7 +80,6 @@ export const leaderboardGet = {
 	}
 };
 
-//TODO all fields are not mandatory
 export const settingsPatchSchema = {
 	body: {
 		type: 'object',
