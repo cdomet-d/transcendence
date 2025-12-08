@@ -373,8 +373,15 @@ export async function routeFriend(serv: FastifyInstance) {
 				}
 			}
 
-			const userID = request.user.userID;
+			let userID = request.user.userID;
 			const safeUserID = cleanInput(userID);
+			if (request.user.role === 'admin') {
+				const body = request.body as { userID?: string };
+				if (body && body.userID) {
+					userID = body.userID;
+					serv.log.info(`[USERS] Admin override: Anonymizing user ${userID}`);
+				}
+			}
 
 			const query = `
 				DELETE FROM friendship 
