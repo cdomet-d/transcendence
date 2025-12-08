@@ -46,14 +46,6 @@ function addHooks(serv: FastifyInstance) {
 	})
 }
 
-//add hook
-// function addHooks(serv: FastifyInstance) {
-//     serv.addHook('onClose', (instance, done) => {
-//       instance.nc.close();
-//       done()
-//     })
-// } //TODO
-
 function addPlugins(serv: FastifyInstance) {
     serv.register(websocket, {
         errorHandler: function (
