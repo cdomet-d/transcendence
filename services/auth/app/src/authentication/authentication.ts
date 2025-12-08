@@ -4,13 +4,13 @@ import {
 	setCookie,
 	validateBearerToken,
 	verifyPasswordMatch,
+	updateStatus
 } from './auth.service.js';
 import * as bcrypt from 'bcrypt';
 import type { FastifyInstance } from 'fastify';
 import type { JwtPayload } from './auth.interfaces.js';
 import * as schema from './schemas.js';
 
-//TODO update user status on login and logout
 export async function authenticationRoutes(serv: FastifyInstance) {
 	serv.get('/status', async (request, reply) => {
 		const token = request.cookies.token;
@@ -37,12 +37,23 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			const tokenPayload = { userID: account.userID, username: username };
 			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
 			setCookie(reply, token);
+			await updateStatus(serv.log, account.userID, false, token);
 			return reply.code(200).send({ token: token });
 		} catch (error) {
 			serv.log.error(`[AUTH] An unexpected error occurred while login: ${error}`);
 			throw error;
 		}
 	});
+
+	serv.post('/logout', async (request, reply) => {
+		const token = request.cookies.token;
+		clearCookie(reply);
+		if (token === undefined) return;
+		const user: JwtPayload = await request.jwtVerify();
+		await updateStatus(serv.log, user.userID, true, token);
+		return reply.code(200).send({ message: 'Success' });
+	});
+
 
 	serv.post('/regen-jwt', { schema: schema.regen }, async (request, reply) => {
 		try {
@@ -58,11 +69,6 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			serv.log.error(`[AUTH] An unexpected error occurred while login: ${error}`);
 			throw error;
 		}
-	});
-
-	serv.post('/logout', async (request, reply) => {
-		clearCookie(reply);
-		return reply.code(200).send({ message: 'Success' });
 	});
 
 	serv.post('/verify', { schema: schema.verify }, async (request, reply) => {
@@ -145,23 +151,6 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 						message: '[AUTH] User not created and matching account not deleted',
 					});
 			}
-			throw error;
-		}
-	});
-
-	//TODO delete users/friends
-	serv.delete('/:userID', async (request, reply) => {
-		try {
-			const { userID } = request.params as { userID: string };
-
-			const query = `DELETE FROM account WHERE userID = ?`;
-
-			const result = await serv.dbAuth.run(query, [userID]);
-			if (!result.changes)
-				return reply.code(404).send({ message: '[AUTH] Account not found' });
-			return reply.code(204).send();
-		} catch (error) {
-			serv.log.error(`[AUTH] Error deleting account: ${error}`);
 			throw error;
 		}
 	});

@@ -31,7 +31,7 @@ export async function createUserProfile(
 			const errorBody = (await response.json()) as { message: string };
 			if (errorBody.message) message = errorBody.message;
 			return { errorCode: 'conflict' };
-		} catch (error) {}
+		} catch (error) { }
 		return { errorCode: 'conflict' };
 	}
 
@@ -42,6 +42,19 @@ export async function createUserProfile(
 
 	const data = await response.json();
 	return { errorCode: 'success', data: data };
+}
+
+export async function updateStatus(log: any, userID: string, status: boolean, token: string) {
+	const url = `http://nginx:80/api/users/${userID}`;
+
+	let response: Response;
+	try {
+		response = await fetch(url, {
+			method: 'PATCH',
+			headers: { 'Content-Type': 'application/json', Cookie: `token=${token}` },
+			body: JSON.stringify({ status: status }),
+		});
+	} catch (err) { }
 }
 
 export async function checkUsernameUnique(db: Database, username: string): Promise<boolean> {
