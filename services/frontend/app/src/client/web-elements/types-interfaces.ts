@@ -328,6 +328,7 @@ export interface Dictionary {
 		start_game: string;
 		start_tournament: string;
 		delete_account: string;
+		download_data: string;
 	};
 	forms: {
 		username: string;
