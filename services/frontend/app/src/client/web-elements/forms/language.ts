@@ -129,6 +129,7 @@ export async function setLanguage(lang: string): Promise<void> {
 
 	} catch (error) {
 		console.error('[LANG] Error loading language pack:', error);
+		throw(error);
 	}
 }
 

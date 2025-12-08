@@ -1,7 +1,7 @@
 /******************************** NATS DATA OBJ ***********************************/
 export interface user {
     userID: string,
-    username?: string,
+    username: string,
 }
 
 export interface gameInfo {

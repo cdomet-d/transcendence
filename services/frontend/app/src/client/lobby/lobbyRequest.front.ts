@@ -11,21 +11,21 @@ async function createLobbyRequest(action: string, format: string, formInstance?:
 
 	const createLobbyForm: lobbyRequestForm = {
 		event: 'LOBBY_REQUEST',
-		payload: { action: action, format: format, userID: host.userID! },
+		payload: { action: action, format: format, userID: host.userID!, username: host.username! },
 		formInstance: formInstance,
 	};
 
 	return JSON.stringify(createLobbyForm);
 }
 
-async function joinLobbyRequest(action: string, format: string, inviteeID: string, lobbyID: string, formInstance: string) {
+async function joinLobbyRequest(action: string, format: string, invitee: {userID: string, username?: string}, lobbyID: string, formInstance: string) {
 
     const joinLobbyForm: lobbyInviteForm = {
         event: 'LOBBY_INVITE',
         payload: {
             action: action,
             format: format,
-            inviteeID: inviteeID,
+            invitee: invitee,
             lobbyID: lobbyID,
         },
         formInstance: formInstance

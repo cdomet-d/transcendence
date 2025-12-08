@@ -200,9 +200,8 @@ export interface friendNotif {
 
 export interface gameNotif {
 	type: 'GAME_INVITE',
-	receiverName: string,
+	senderUsername: string,
 	receiverID: string,
-    owner: string,
     lobbyID: string,
 	gameType?: GameType
 }
@@ -307,6 +306,7 @@ export interface PongOptions {
 	horizontal?: string;
 	paddlesize: string;
 	paddlespeed: string;
+	opponent?: string;
 }
 
 /* -------------------------------------------------------------------------- */

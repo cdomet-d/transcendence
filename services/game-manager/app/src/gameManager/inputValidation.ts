@@ -21,9 +21,10 @@ const lobbyRequestPayloadSchema = {
 		action: { type: 'string' },
 		format: { type: 'string' },
 		userID: { type: 'string' },
+		username: { type: 'string'},
 		lobbyID: { type: 'string' }
 	},
-	required: ['action', 'format', 'userID'],
+	required: ['action', 'format', 'userID', 'username'],
 };
 
 const lobbyInvitePayloadSchema = {
@@ -31,16 +32,25 @@ const lobbyInvitePayloadSchema = {
 	properties: {
 		action: { type: 'string' },
 		format: { type: 'string' },
-		inviteeID: { type: 'string' },
+		invitee: { 
+			type: 'object',
+			properties: {
+				userID: { type: 'string'},
+				username: { type: 'string'}
+			},
+			required: ['userID'],
+			additionalProperties: false,
+		},
 		lobbyID: { type: 'string' },
 		hostID: { type: 'string' }
 	},
-	required: ['action', 'inviteeID'],
+	required: ['action', 'invitee'],
 };
 
 const gameRequestPayloadSchema = {
 	type: 'object',
 	properties: {
+		hostID: {type: 'string'},
 		userList: {
 			type: 'array',
 			items: {
@@ -55,9 +65,21 @@ const gameRequestPayloadSchema = {
 		},
 		remote: { type: 'boolean' },
 		format: { type: 'string' },
-		nbPlayers: { type: 'number' }
+		nbPlayers: { type: 'number' },
+		gameSettings: {
+			type: 'object',
+			properties: {
+				background: { type: 'string'},
+				ballspeed: { type: 'string'},
+				horizontal: { type: 'string'},
+				paddlesize: { type: 'string'},
+				paddlespeed: { type: 'string'},
+				opponent: { type: 'string'},
+			},
+			//TODO: required
+		}
 	},
-	required: ['userList', 'remote', 'format', 'nbPlayers'],
+	required: ['hostID', /*'userList', */'remote', 'format', 'nbPlayers'],
 };
 
 const pingPongPaylodSchema = {
