@@ -292,6 +292,14 @@ export function pongTournament(dic: Dictionary): FormDetails {
 		method: 'POST',
 		fields: [
 			{
+				id: 'horizontal',
+				labelContent: dic.gameCustom.paddle_horizontal,
+				pattern: '',
+				placeholder: '',
+				type: 'checkbox',
+				required: true,
+			},
+			{
 				id: 'ballspeed',
 				labelContent: dic.gameCustom.ball_speed,
 				max: '2',
