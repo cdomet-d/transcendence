@@ -13,7 +13,7 @@ import type { NatsConnection } from 'nats';
 
 (async () => {
     try {
-        const serv = await init();
+        const serv: FastifyInstance = await init();
         await runServ(serv);
     } catch (err) {
         console.error('server', err);

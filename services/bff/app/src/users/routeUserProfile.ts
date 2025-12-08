@@ -1,5 +1,5 @@
-import type { FastifyInstance } from 'fastify';
-import type { UserProfileView, JwtPayload } from './bff.interface.js';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { UserProfileView, JwtPayload } from '../utils/bff.interface.js';
 import {
 	fetchLeaderboard,
 	searchBar,
@@ -11,7 +11,10 @@ import {
 	updateUserProfile,
 	updateUserProfileUsername,
 	refreshJWTForUsernameChange,
+	fetchFriendshipsPending
 } from './bffUserProfile.service.js';
+import { cleanInput } from '../utils/sanitizer.js';
+import { profileGet, tinyProfileGet, searchGet, leaderboardGet, settingsPatch, usernameGet } from './bff.usersSchemas.js';
 import jwt from 'jsonwebtoken';
 
 function validateBearerToken(serv: FastifyInstance, authorization?: string): boolean {
@@ -27,11 +30,11 @@ function validateBearerToken(serv: FastifyInstance, authorization?: string): boo
 }
 
 export async function bffUsersRoutes(serv: FastifyInstance) {
-	/* get's profile + stats + game + friendslist
-	 * userID -> userID of requested profile
-	 * get big profile with username
-	 * error handled */
-	serv.get('/profile/:username', async (request, reply) => {
+	//get's profile + stats + game + friendslist
+	// userID -> userID of requested profile
+	// get big profile with username
+	//error handled
+	serv.get('/profile/:username', { schema: profileGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -61,6 +64,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const userB = request.user.userID;
 			const { username } = request.params as { username: string };
 
+			const safeUsername = cleanInput(username);
+
 			if (userB === undefined) {
 				serv.log.error('[BFF] Parameter missing');
 				return reply.code(400).send({
@@ -68,7 +73,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 						'[BFF] Missing required query parameters: userA and userB are required.',
 				});
 			}
-			const combinedUserData = await buildTinyProfile(serv.log, userB, username, token);
+			const combinedUserData = await buildTinyProfile(serv.log, userB, safeUsername, token);
 
 			if (!combinedUserData)
 				return reply.code(404).send({ message: 'User profile data not found.' });
@@ -77,13 +82,14 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				combinedUserData,
 				fetchUserStats(serv.log, combinedUserData.userID, token),
 				fetchFriendships(serv.log, combinedUserData.userID, 'friend', token),
-				fetchFriendships(serv.log, combinedUserData.userID, 'pending', token),
+				fetchFriendshipsPending(serv.log, combinedUserData.userID, 'pending', token),
 				processMatches(serv.log, combinedUserData.userID, token),
 			]);
 			if (!userData || !userStats)
 				return reply
 					.code(404)
 					.send({ message: '[BFF] Failed to retrieve essential user data.' });
+
 
 			const responseData: UserProfileView = {
 				userData: userData,
@@ -93,6 +99,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				matches: recentMatches || [],
 			};
 
+			console.log(JSON.stringify(responseData.pending));
 			return reply.code(200).send(responseData);
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
@@ -111,7 +118,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	});
 
 	//error handled
-	serv.get('/tiny-profile/:username', async (request, reply) => {
+	serv.get('/tiny-profile/:username', { schema: tinyProfileGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -141,12 +148,14 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const { username: targetUsername } = request.params as { username: string };
 			const { userID: viewerUserID } = request.user as { userID: string };
 
+			const safeTargetUsername = cleanInput(targetUsername);
+
 			if (!viewerUserID) return reply.code(401).send({ message: 'Unauthorized.' });
 
 			const tinyProfile = await buildTinyProfile(
 				serv.log,
 				viewerUserID,
-				targetUsername,
+				safeTargetUsername,
 				token
 			);
 
@@ -171,7 +180,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	});
 
 	//error handled
-	serv.get('/search', async (request, reply) => {
+	serv.get('/search', { schema: searchGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -199,10 +208,15 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			}
 
 			const query = request.query as { name?: string };
-			if (!query.name || query.name.trim() === '') return reply.code(200).send([]);
+			const safeName = cleanInput(query.name || '').trim();
+			if (!safeName || safeName.length === 0)
+				return reply.code(200).send([]);
+			if (!query.name || query.name.trim() === '')
+				return reply.code(200).send([]);
 
-			const profiles = await searchBar(serv.log, query.name, token);
-			return reply.code(200).send(profiles);
+			const profiles = await searchBar(serv.log, safeName, token);
+			return (reply.code(200).send(profiles));
+
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
 				const customError = error as { code: number; message: string };
@@ -218,7 +232,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 	});
 
 	//error handled
-	serv.get('/leaderboard', async (request, reply) => {
+	serv.get('/leaderboard', { schema: leaderboardGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -292,14 +306,16 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const userID = request.user.userID;
 			const body = request.body as any;
 
+			console.log(JSON.stringify(body));
+
 			const profileUpdates: any = {};
 			const profileUpdatesUsername: any = {};
 			const accountUpdates: any = {};
 
-			if (body.avatar) profileUpdates.avatar = body.avatar;
-			if (body.biography) profileUpdates.biography = body.biography;
-			if (body.color) profileUpdates.profileColor = body.color;
-			if (body.defaultLang) profileUpdates.lang = body.defaultLang;
+			if (body.avatar) profileUpdates.avatar = cleanInput(body.avatar);
+			if (body.biography) profileUpdates.biography = cleanInput(body.biography);
+			if (body.color) profileUpdates.profileColor = cleanInput(body.color);
+			if (body.defaultLang) profileUpdates.lang = cleanInput(body.defaultLang);
 
 			const updateTasks: Promise<void>[] = [];
 
@@ -309,9 +325,9 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				if (!validateBearerToken(serv, request.headers.authorization))
 					return reply.code(401).send({ message: 'Unauthorized' });
 
-				if (body.username) profileUpdatesUsername.username = body.username;
-				if (body.username) accountUpdates.username = body.username;
-				if (body.password) accountUpdates.password = body.password;
+				if (body.username) profileUpdatesUsername.username = cleanInput(body.username);
+				if (body.username) accountUpdates.username = cleanInput(body.username);
+				if (body.password) accountUpdates.password = cleanInput(body.password);
 
 				serv.log.warn(profileUpdatesUsername, accountUpdates);
 				if (Object.keys(accountUpdates).length > 0)
@@ -368,7 +384,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.get('/:username', async (request, reply) => {
+	serv.get('/:username', { schema: usernameGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthaurized' });
@@ -393,14 +409,15 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				}
 			}
 
-			const username = request.params as { username: string };
+			const { username } = request.params as { username: string };
+			const safeUsername = cleanInput(username);
 
 			const response = await fetch('http://users:2626/username', {
-				method: 'GET',
+				method: 'POST',
 				headers: {
 					'Cookie': `token=${token}`,
 					'Content-Type': 'application/json',
-					body: JSON.stringify(username)
+					body: JSON.stringify(safeUsername)
 				}
 			});
 
@@ -417,15 +434,11 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				reply.code(400).send({ code: response.status, message: '[BFF] Invalid query' });
 			}
 
-			reply.code(200).send({response});
+			reply.code(200).send({ response });
 
 		} catch (error) {
 			serv.log.error(`[BFF] Failed to update settings: ${error}`);
 			throw error;
 		}
 	});
-
-
-	//TODO : endpoint friendlist pending
-	// get-pending-relation
 }

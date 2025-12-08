@@ -1,4 +1,4 @@
-import { initNatsConnection } from './nats.js';
+import { initNatsConnection } from './utils/nats.js';
 import { options } from './serv.conf.js';
 import cookie from '@fastify/cookie';
 import Fastify from 'fastify';
@@ -6,9 +6,9 @@ import fastifyJwt from '@fastify/jwt';
 import type { FastifyInstance } from 'fastify';
 import type { NatsConnection } from 'nats';
 
-import { bffFriendRoutes } from './routeFriends.js';
-import { bffAccessibilityRoutes } from './routeAccessibility.js';
-import { bffUsersRoutes } from './routeUserProfile.js';
+import { bffFriendRoutes } from './friends/routeFriends.js';
+import { bffAccessibilityRoutes } from './accessibility/routeAccessibility.js';
+import { bffUsersRoutes } from './users/routeUserProfile.js';
 
 (async () => {
 	try {

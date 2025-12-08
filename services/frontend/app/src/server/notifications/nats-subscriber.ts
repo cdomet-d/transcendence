@@ -10,17 +10,18 @@ export async function initNatsConnection(): Promise<NatsConnection> {
 }
 
 interface friendNotif {
-	type: 'FRIEND_REQUEST';
-	senderUsername: string;
-	receiverID: string; //will be string eventually
+	type: 'FRIEND_REQUEST',
+	senderUsername: string,
+	receiverID: string
 }
 
 type GameType = '1 vs 1' | 'tournament';
 interface gameNotif {
-	type: 'GAME_INVITE';
-	receiverName: string;
-	receiverID: string; //will be string eventually
-	gameType: GameType;
+	type: 'GAME_INVITE',
+	receiverName: string,
+	receiverID: string,
+    lobbyID: string,
+	gameType: GameType,
 }
 
 export async function natsSubscription(serv: FastifyInstance) {
@@ -31,11 +32,7 @@ export async function natsSubscription(serv: FastifyInstance) {
 	(async () => {
 		for await (const msg of sub) {
 			const notif: friendNotif | gameNotif = JSON.parse(sc.decode(msg.data));
-			// serv.log.error(`Received message: ${JSON.stringify(notif)}`);
-
-			const receiverWS: Array<WebSocket> | undefined = serv.users.getUserSockets(
-				notif.receiverID,
-			);
+			const receiverWS: Array<WebSocket> | undefined = serv.users.getUserSockets(notif.receiverID);
 			if (receiverWS === undefined) {
 				//TODO: le faire remonter au client
 				serv.log.error('receiver not found');

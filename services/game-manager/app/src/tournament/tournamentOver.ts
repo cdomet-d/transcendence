@@ -1,9 +1,14 @@
-import { fetch, Agent } from 'undici';
-import type { tournament } from '../manager.interface.js';
+import { fetch } from 'undici'; // TODO remove this right ?
+import { lobbyMap } from '../lobby/lobby.gm.js';
+import type { tournament } from '../gameManager/gameManager.interface.js';
 
 export function tournamentOver(tournament: tournament) {
 	patchTournamentToDashboard(tournament);
 	// showTournamentWinnerScreen();
+
+	// redirect all users still present in tournament to their original lobby
+	const lobby = lobbyMap.get(tournament.bracket[0]!.lobbyID); // bracket[0] bad ?
+	// renderTournamentLobby();
 }
 
 async function patchTournamentToDashboard(tournament: tournament) {

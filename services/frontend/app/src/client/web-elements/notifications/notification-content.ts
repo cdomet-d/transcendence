@@ -3,19 +3,13 @@ import { createMenu } from '../navigation/menu-helpers.js';
 import { Menu } from '../navigation/basemenu.js';
 import type { MenuData } from '../types-interfaces.js';
 import type { NavigationLinksData } from '../types-interfaces.js';
-import {
-	createVisualFeedback,
-	errorMessageFromException,
-	exceptionFromResponse,
-} from '../../error.js';
+import { createVisualFeedback, errorMessageFromException, exceptionFromResponse } from '../../error.js';
+import { wsConnect } from '../../lobby/wsConnect.front.js';
 
 interface GameInvite {
-	action: string;
-	format: string;
-	formInstance: string;
 	lobbyID: string;
 	inviteeID: string;
-	gameSettings: string;
+	formInstance: string;
 }
 
 const notificationBtns: MenuData = {
@@ -143,9 +137,13 @@ export class NotifContent extends HTMLLIElement {
 		}
 	}
 
-	#joinGame() {}
+	#joinGame() {
+		wsConnect("join", "", this.#lobbyInfo?.formInstance!, this.#lobbyInfo?.lobbyID, "", this.#lobbyInfo?.inviteeID);
+	}
 
-	#declineGame() {}
+	#declineGame() {
+		wsConnect("decline", "", "", this.#lobbyInfo?.lobbyID, "", this.#lobbyInfo?.inviteeID);
+	}
 
 	#acceptImplementation(e: Event) {
 		this.id === 'relation' ? this.#acceptRelation() : this.#joinGame();

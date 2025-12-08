@@ -1,33 +1,32 @@
-import { tournamentMap } from "./tournamentStart.js";
-import type { game, tournament, userInfo } from "../manager.interface.js";
-import { startGame } from "../quickmatch/createGame.js";
-import { gameOver } from "../quickmatch/gameOver.js";
-import { tournamentOver } from "./tournamentOver.js";
+import { tournamentMap } from './tournamentStart.js';
+import type { game, tournament, userInfo } from '../gameManager/gameManager.interface.js';
+import { startGame } from '../quickmatch/createGame.js';
+import { gameOver } from '../quickmatch/gameOver.js';
+import { tournamentOver } from './tournamentOver.js';
+import type { FastifyInstance } from 'fastify';
 
-// const nextPlayersMap: Map<number, { player1?: userInfo, player2?: userInfo }> = new Map();
 const nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }> = new Map();
 
-export async function tournamentState(payload: string) {
+export async function tournamentState(serv: FastifyInstance, payload: string) {
 	const game: game = JSON.parse(payload);
 
 	const tournamentObj = tournamentMap.get(game.tournamentID!);
 	if (!tournamentObj) {
 		console.log(`${tournamentObj}`)
-		console.log("Error: Could not make tournamentObj! ");
+		console.log('Error: Could not make tournamentObj!');
 		return;
 	}
 
 	const index = tournamentObj.bracket.findIndex((obj) => obj.gameID === game.gameID);
 	if (index === -1) {
-		console.log("Error: game not found in tournament bracket!");
+		console.log('Error: game not found in tournament bracket!');
 		return;
 	}
 
 	gameOver(game.gameID);
 
 	const nextGame = getNextGameInBracket(tournamentObj);
-	if (nextGame === undefined) { // tournament is over
-		// handle end of tournament
+	if (nextGame === undefined) {
 		tournamentObj.winnerID = game.winnerID;
 		tournamentOver(tournamentObj);
 		return;
@@ -43,7 +42,7 @@ export async function tournamentState(payload: string) {
 	}
 
 	const username: string = getUsernameFromID(game.winnerID, game);
-	if (index % 2 === 0) { // game index in tournament
+	if (index % 2 === 0) {
 		nextPlayers.player1 = { userID: game.winnerID, username: username };
 	} else {
 		nextPlayers.player2 = { userID: game.winnerID, username: username };
@@ -52,7 +51,7 @@ export async function tournamentState(payload: string) {
 	if (nextPlayers.player1 && nextPlayers.player2) {
 		tournamentObj.bracket[index] = game; // update local tournamentObj
 		nextGame.users = [nextPlayers.player1, nextPlayers.player2];
-		startGame(nextGame);
+		startGame(serv, nextGame);
 		nextPlayersMap.delete(nextGameID);
 	}
 }
@@ -64,14 +63,15 @@ function getUsernameFromID(userID: string, game: game): string {
 		else
 			return game.users[1]?.username!;
 	}
-	return "Error: Couldn't find username from userID in gameObj!";
+	return 'Error: Could not find username from userID in gameObj!';
 }
 
 function getNextGameInBracket(tournament: tournament): game | undefined {
-	tournament.bracket.forEach((GameObj) => {
-		if (GameObj.users === null) {
-			return GameObj;
+	tournament.bracket.forEach((gameObj) => {
+		if (gameObj.users === null) {
+			return gameObj;
 		}
 	});
+	// TODO Find better way to verify if tournament is over?
 	return undefined;
 }

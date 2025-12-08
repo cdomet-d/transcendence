@@ -12,8 +12,8 @@ import { pong, type gameRequest } from './pong/pong.js';
 import { PongUI } from './web-elements/game/game-ui.js';
 import { errorMessageFromException, exceptionFromResponse, redirectOnError } from './error.js';
 import type { Match } from 'path-to-regexp';
-import type { TabData } from './web-elements/types-interfaces.js';
-import { router, type userStatusInfo } from './main.js';
+import type { navigationLinksData, TabData } from './web-elements/types-interfaces.js';
+import { userStatus, router, type userStatusInfo } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
@@ -108,17 +108,16 @@ export async function renderAuth() {
 	if (!(await prepareLayout(document.body.layoutInstance, 'auth'))) return;
 	const wrapper = createWrapper('authsettings');
 
-	//TODO language
 	const authOptions: TabData[] = [
 		{
 			id: 'login-tab',
-			content: 'Login',
+			content: currentDictionary.titles.login,
 			default: true,
 			panelContent: createForm('login-form', loginForm(currentDictionary)),
 		},
 		{
 			id: 'registration-tab',
-			content: 'Register',
+			content: currentDictionary.titles.register,
 			default: false,
 			panelContent: createForm('registration-form', registrationForm(currentDictionary)),
 		},
@@ -138,7 +137,7 @@ export async function renderLeaderboard() {
 		if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
 		const raw = await rawRes.json();
 		const wrapper = createWrapper('learderboard');
-		wrapper.append(createHeading('2', 'Leaderboard'), createLeaderboard(userArrayFromAPIRes(raw)));
+		wrapper.append(createHeading('2', currentDictionary.titles.leaderboard), createLeaderboard(userArrayFromAPIRes(raw)));
 		document.body.layoutInstance!.appendAndCache(wrapper);
 	} catch (error) {
 		console.error(errorMessageFromException(error));
@@ -208,12 +207,10 @@ export async function renderSettings() {
 	}
 }
 
-//TODO language lobby
 export async function renderLobbyMenu() {
 	if (!(await prepareLayout(document.body.layoutInstance, 'lobbyMenu'))) return;
-
 	document.body.layoutInstance?.appendAndCache(
-		createHeading('1', 'Choose Lobby'),
+		createHeading('1', currentDictionary.titles.choose_lobby),
 		createMenu(lobbyQuickmatchMenu(currentDictionary), 'horizontal', true),
 		createMenu(lobbyTournamentMenu(currentDictionary), 'vertical', true),
 	);
@@ -229,7 +226,7 @@ export async function renderLobbyMenu() {
 //  being able to add himself to the game (in the UI - even if it's handled in the pong server)
 export async function renderQuickLocalLobby() {
 	const status = await prepareLayout(document.body.layoutInstance, 'quickLobby');
-	if (!status) return;
+	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN'});
 
 	const form = createForm('local-pong-settings', localPong(currentDictionary));
 	form.owner = status.username!;
@@ -241,7 +238,7 @@ export async function renderQuickLocalLobby() {
 
 export async function renderQuickRemoteLobby() {
 	const status = await prepareLayout(document.body.layoutInstance, 'quickLobby');
-	if (!status) return;
+	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN'});
 
 	const form = createForm('remote-pong-settings', remotePong(currentDictionary));
 	form.owner = status.username!;
@@ -253,7 +250,7 @@ export async function renderQuickRemoteLobby() {
 
 export async function renderTournamentLobby() {
 	const status = await prepareLayout(document.body.layoutInstance, 'tournamentLobby');
-	if (!status) return;
+	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN'});
 
 	const form = createForm('remote-pong-settings', pongTournament(currentDictionary));
 	form.owner = status.username!;
@@ -265,13 +262,12 @@ export async function renderTournamentLobby() {
 
 export async function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest) {
 	const status = await prepareLayout(document.body.layoutInstance, 'game');
-	if (!status) return;
+	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN'});
 	if (!gameRequest) {
-		console.log('GameRequest =>', gameRequest);
+		console.error('GameRequest =>', gameRequest);
 		return redirectOnError('/', "Uh-oh! You can't be there - go join a lobby or something !");
 	}
-
-	console.log(gameRequest);
+	console.log('GameRequest =>', gameRequest);
 	const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
 	const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
 	const layout = document.body.layoutInstance;
@@ -280,10 +276,10 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 	if (layout) layout.theme = forestAssets;
 	court.theme = forest;
 
-	// TODO: set playerNames from game-manager object
-	ui.player1.innerText = 'CrimeGoose';
-	ui.player2.innerText = 'WinnerWolf';
+    ui.player1.innerText = user.username;
+    ui.player2.innerText = gameRequest.opponent;
 
+	const layout = document.body.layoutInstance;
 	document.body.layoutInstance?.appendAndCache(ui, court);
 	pong(gameRequest!, court.ctx, ui);
 }

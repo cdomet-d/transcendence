@@ -5,10 +5,7 @@ import type { gameRequest } from './pong/pong.js';
 
 export interface routeInterface {
 	path: string;
-	callback: (
-		param?: Match<Partial<Record<string, string | string[]>>>,
-		gameRequest?: gameRequest,
-	) => void;
+	callback: (param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string) => void;
 }
 
 export const routes: routeInterface[] = [
@@ -70,7 +67,7 @@ export class Router {
 	/** Parses the defined route array to check if the current URL is defined as a route.
 	 * Calls `renderNotFount()` if the route was not found, and the route's callback otherwise.
 	 */
-	loadRoute(path: string, updateHistory: boolean, gameRequest?: gameRequest) {
+	loadRoute(path: string, updateHistory: boolean, gameRequest?: gameRequest, action?: string) {
 		this.#stepBefore = this.currentPath;
 		this.sanitisePath(path);
 
@@ -87,11 +84,11 @@ export class Router {
 				}
 			}
 		}
-		if (updateHistory && path !== window.location.pathname) this.updateURL(path);
-		if (!matchedRoute) {
-			renderNotFound();
-			return;
-		}
-		matchedRoute.callback(res ? res : undefined, gameRequest);
-	}
+        if (updateHistory && path !== window.location.pathname) this.updateURL(path);
+        if (!matchedRoute) {
+            renderNotFound();
+            return;
+        }
+        matchedRoute.callback(res ? res : undefined, gameRequest, action);
+    }
 }

@@ -1,3 +1,4 @@
+import { currentDictionary } from '../forms/language';
 import { NotifContent } from './notification-content';
 import { Listbox } from '../navigation/listbox';
 
@@ -70,13 +71,13 @@ export class NotifPanel extends Listbox {
 		this.addDefault();
 	}
 
-	/** Adds a default message when the list has no notifications. */
-	addDefault() {
-		const defaultContent = document.createElement('li');
-		defaultContent.innerText = 'No new notifications :<';
-		defaultContent.id = 'default';
-		this.append(defaultContent);
-	}
+    /** Adds a default message when the list has no notifications. */
+    addDefault() {
+        const defaultContent = document.createElement('li');
+        defaultContent.innerText = currentDictionary.notifs.notif_placeholder/* 'No new notifications :<' */;
+        defaultContent.id = 'default';
+        this.append(defaultContent);
+    }
 
 	/** Creates panel structure with background and decorative elements. */
 	#createPopupContent() {
