@@ -80,15 +80,24 @@ export const leaderboardGet = {
 	}
 };
 
-
+//TODO all fields are not mandatory
 export const settingsPatchSchema = {
 	body: {
 		type: 'object',
 		properties: {
-			username: { type: 'string', minLength: 3, maxLength: 18 },
-			password: { type: 'string', minLength: 15, maxLength: 64 },
+			username: {
+				anyOf: [
+					{ type: 'string', maxLength: 0 },
+					{ type: 'string', minLength: 3, maxLength: 18 }
+				]
+			},
+			password: {
+				anyOf: [
+					{ type: 'string', maxLength: 0 },
+					{ type: 'string', minLength: 15, maxLength: 64 }
+				]
+			},
 			biography: { type: 'string', maxLength: 500 },
-
 			avatar: { type: 'string' },
 			color: { type: 'string' },
 			defaultLang: { type: 'string', enum: ['en', 'fr', 'es'] }
@@ -99,7 +108,7 @@ export const settingsPatchSchema = {
 		400: messageResponse,
 		401: messageResponse,
 		404: messageResponse,
-		409: messageResponse 
+		409: messageResponse
 	}
 };
 

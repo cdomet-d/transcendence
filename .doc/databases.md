@@ -734,3 +734,6 @@ WHERE userID = 101;
 * servir les users pour search bar ✅
 * servir le profile                ✅
 * servir userCard                  ✅
+* Donner la possibilités aux utilisateurs de télécharger leur données aux formats JSON. Ca inclut leur profile, match history.
+* Page dedicated to GDPR stating what the site stores as PII
+* On supprimer les datas des utilisateurs qui ne se sont pas connectés depuis X temps (standards 2-3 ans)
