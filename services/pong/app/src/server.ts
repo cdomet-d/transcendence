@@ -61,6 +61,12 @@ function addPlugins(serv: FastifyInstance) {
             serv.log.error(error);
             socket.close(1011, error.message);
         },
+        preClose: (done) => {
+            const serverWS = serv.websocketServer;
+            for (const socket of serverWS.clients)
+                socket.close(1001, 'WS server is going offline');
+            serverWS.close(done);
+        },
         options: {},
     });
     serv.register(wsRoute);

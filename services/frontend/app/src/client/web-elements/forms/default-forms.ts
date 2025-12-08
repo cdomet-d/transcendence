@@ -164,7 +164,7 @@ export function localPong(dic: Dictionary): FormDetails {
 			{
 				id: 'ballspeed',
 				labelContent: dic.gameCustom.ball_speed,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -174,7 +174,7 @@ export function localPong(dic: Dictionary): FormDetails {
 			},
 			{
 				id: 'horizontal',
-				labelContent: dic.gameCustom.paddle_speed,
+				labelContent: dic.gameCustom.paddle_horizontal,
 				pattern: '',
 				placeholder: '',
 				type: 'checkbox',
@@ -183,7 +183,7 @@ export function localPong(dic: Dictionary): FormDetails {
 			{
 				id: 'paddlesize',
 				labelContent: dic.gameCustom.paddle_size,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -202,7 +202,7 @@ export function localPong(dic: Dictionary): FormDetails {
 			{
 				id: 'paddlespeed',
 				labelContent: dic.gameCustom.paddle_speed,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -241,7 +241,7 @@ export function remotePong(dic: Dictionary): FormDetails {
 			{
 				id: 'ballspeed',
 				labelContent: dic.gameCustom.ball_speed,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -252,7 +252,7 @@ export function remotePong(dic: Dictionary): FormDetails {
 			{
 				id: 'paddlesize',
 				labelContent: dic.gameCustom.paddle_size,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -263,7 +263,7 @@ export function remotePong(dic: Dictionary): FormDetails {
 			{
 				id: 'paddlespeed',
 				labelContent: dic.gameCustom.paddle_speed,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -292,9 +292,17 @@ export function pongTournament(dic: Dictionary): FormDetails {
 		method: 'POST',
 		fields: [
 			{
+				id: 'horizontal',
+				labelContent: dic.gameCustom.paddle_horizontal,
+				pattern: '',
+				placeholder: '',
+				type: 'checkbox',
+				required: true,
+			},
+			{
 				id: 'ballspeed',
 				labelContent: dic.gameCustom.ball_speed,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -305,7 +313,7 @@ export function pongTournament(dic: Dictionary): FormDetails {
 			{
 				id: 'paddlesize',
 				labelContent: dic.gameCustom.paddle_size,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -316,7 +324,7 @@ export function pongTournament(dic: Dictionary): FormDetails {
 			{
 				id: 'paddlespeed',
 				labelContent: dic.gameCustom.paddle_speed,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',

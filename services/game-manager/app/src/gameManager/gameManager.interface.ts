@@ -42,7 +42,8 @@ interface game {
 	loserID: string,
 	duration: number,
 	longuestPass: number,
-	startTime: string,
+    startTime: string,
+	gameSettings: PongOptions
 }
 
 interface tournament {
@@ -60,8 +61,9 @@ interface user {
 
 interface gameReply {
 	gameID: string,
-	users: user[],
-	remote: boolean
+	users: [user, user],
+	remote: boolean,
+	gameSettings: PongOptions,
 }
 
 // PONG
@@ -69,6 +71,7 @@ interface gameRequest {
 	opponent: string,
 	gameID: string,
 	remote: boolean,
+	gameSettings: PongOptions,
 }
 
-export type { userInfo, lobbyInfo, whitelist, tournament, game, gameRequest, user, gameReply };
+export type { userInfo, lobbyInfo, whitelist, tournament, game, gameRequest, user, gameReply, PongOptions };
