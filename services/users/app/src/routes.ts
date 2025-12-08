@@ -479,7 +479,6 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO fix schema
 	//update user profile
 	serv.patch('/:userID', { schema: updateProfileSchema }, async (request, reply) => {
 		try {
@@ -699,7 +698,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
 			try {
-				const user = serv.jwt.verify(token) as any; // Using 'any' to access custom fields like 'role'
+				const user = serv.jwt.verify(token) as any;
 				if (typeof user !== 'object') throw new Error('Invalid token detected');
 				request.user = user;
 			} catch (error) {
@@ -737,15 +736,14 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO schema
+	//TODO schema ?
 	serv.get('/inactive', async (request, reply) => {
-		console.log("IN INACTIVEEEEEEEEEEEE");
 		try {
 			const query = `
-                SELECT userID 
-                FROM userProfile 
-                WHERE lastConnexion < date('now', '-2 years')
-            `;
+				SELECT userID 
+				FROM userProfile 
+				WHERE lastConnexion < date('now', '-2 years')
+			`;
 
 			const rows = await serv.dbUsers.all(query);
 
