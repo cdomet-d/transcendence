@@ -6,6 +6,9 @@ import { errorMessageFromException, redirectOnError } from './error.js';
 import { initLanguage } from './web-elements/forms/language.js';
 
 export const router = new Router(routes);
+export const origin = process.env.HOST;
+
+console.log(`${origin}`)
 
 declare global {
 	interface HTMLElement {
@@ -26,8 +29,8 @@ if (window) {
 
 export async function userStatus(): Promise<userStatusInfo> {
 	try {
-		console.log(`https://z1r2p3:8443/api/auth/status`);
-		const isLogged: Response = await fetch(`https://z1r2p3:8443/api/auth/status`, { credentials: 'include' });
+		console.log(`https://${origin}:8443/api/auth/status`);
+		const isLogged: Response = await fetch(`https://${origin}:8443/api/auth/status`, { credentials: 'include' });
 		const data = await isLogged.json();
 		if (isLogged.ok) return { auth: true, username: data.username, userID: data.userID };
 		else {

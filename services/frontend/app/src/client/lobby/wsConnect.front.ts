@@ -3,6 +3,7 @@ import { createGameRequest } from './gameRequest.front.js';
 import { createLobbyRequest, joinLobbyRequest } from './lobbyRequest.front.js';
 import { type gameRequest } from '../pong/pong.js';
 import { redirectOnError } from '../error.js';
+import { origin } from '../main.js'
 
 let wsInstance: WebSocket | null = null;
 
@@ -10,7 +11,7 @@ function openWsConnection() {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 		return wsInstance;
 	}
-	wsInstance = new WebSocket(`wss://z1r2p3:8443/api/lobby/`);
+	wsInstance = new WebSocket(`wss://${origin}:8443/api/lobby/`);
 	return wsInstance;
 }
 

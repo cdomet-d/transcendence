@@ -13,6 +13,9 @@ async function make() {
 		sourcemap: true,
 		platform: 'browser',
 		target: ['esnext'],
+		define: {
+			'process.env.HOST': process.env.HOST,
+		}
 	})
 
 	const servCtx = await context({
@@ -24,7 +27,10 @@ async function make() {
 		platform: 'node',
 		target: ['node20'],
 		packages: 'external',
-		format: 'esm'
+		format: 'esm', 
+		define: {
+			'process.env.HOST': process.env.HOST,
+		}
 	})
 	if (isWatch) {
 		console.log('Watching for changes...')

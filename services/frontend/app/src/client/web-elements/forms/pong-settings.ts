@@ -11,7 +11,7 @@ import { userDataFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 import { currentDictionary } from './language.js';
-
+import { origin } from '../../main.js';
 /**
  * A form allowing user to create a local pong game.
  *
@@ -150,7 +150,7 @@ export class RemotePongSettings extends LocalPongSettings {
 	}
 	/* -------------------------------- listeners ------------------------------- */
 	async fetchGuests(guestUsername: string): Promise<UserData | null> {
-		const url = `https://z1r2p3:8443/api/bff/tiny-profile/${guestUsername}`;
+		const url = `https://${origin}:8443/api/bff/tiny-profile/${guestUsername}`;
 		try {
 			const rawResp = await fetch(url);
 			console.log(rawResp.ok);

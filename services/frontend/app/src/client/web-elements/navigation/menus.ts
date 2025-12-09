@@ -4,6 +4,7 @@ import type { CustomButton } from './buttons.js';
 import { Menu } from './basemenu.js';
 import { errorMessageFromException, createVisualFeedback, exceptionFromResponse } from '../../error.js';
 import { Listbox } from './listbox.js';
+import { origin } from '../../main.js';
 
 interface Relation {
 	username: string;
@@ -54,7 +55,7 @@ export class SocialMenu extends Menu {
 
 	async #APIRemoveFriendImplementation() {
 		console.log('RemoveFriends');
-		const url = `https://z1r2p3:8443/api/bff/relation`;
+		const url = `https://${origin}:8443/api/bff/relation`;
 		const req: RequestInit = {
 			method: 'delete',
 			headers: { 'Content-Type': 'application/json' },
@@ -73,7 +74,7 @@ export class SocialMenu extends Menu {
 
 	async #APIAddFriendImplementation() {
 		console.log('AddFriends');
-		const url = `https://z1r2p3:8443/api/bff/relation`;
+		const url = `https://${origin}:8443/api/bff/relation`;
 		const req: RequestInit = {
 			method: 'post',
 			headers: { 'Content-Type': 'application/json' },

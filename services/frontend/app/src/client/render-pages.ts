@@ -20,6 +20,7 @@ import type { Menu } from './web-elements/navigation/basemenu.js';
 import { createLink } from './web-elements/navigation/buttons-helpers.js';
 import type { NavigationLinks } from './web-elements/navigation/links.js';
 import { currentDictionary } from './web-elements/forms/language.js';
+import { origin } from './main.js'
 
 const layoutPerPage: { [key: string]: string } = {
 	bracket: 'full-screen',
@@ -130,7 +131,7 @@ export async function renderAuth() {
 export async function renderLeaderboard() {
 	if (!(await prepareLayout(document.body.layoutInstance, 'leaderboard'))) return;
 
-	const url = `https://z1r2p3:8443/api/bff/leaderboard`;
+	const url = `https://${origin}:8443/api/bff/leaderboard`;
 
 	try {
 		const rawRes = await fetch(url, { credentials: 'include' });
@@ -151,7 +152,7 @@ export async function renderSelf() {
 	const status = await prepareLayout(document.body.layoutInstance, 'profile');
 	if (!status) return;
 
-	const url = `https://z1r2p3:8443/api/bff/profile/${status.username}`;
+	const url = `https://${origin}:8443/api/bff/profile/${status.username}`;
 	try {
 		const raw = await fetch(url, { credentials: 'include' });
 		console.log(`raw.status: ${raw.status} | raw.ok: ${raw.ok}`)
@@ -171,7 +172,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
 	if (!(await prepareLayout(document.body.layoutInstance, 'profile'))) return;
 	if (!param || !param.params.login || typeof param.params.login !== 'string') return redirectOnError('/404', 'No such user');
 	const login = param.params.login;
-	const url = `https://z1r2p3:8443/api/bff/profile/${login}`;
+	const url = `https://${origin}:8443/api/bff/profile/${login}`;
 
 	try {
 		const raw = await fetch(url, { credentials: 'include' });
@@ -192,7 +193,7 @@ export async function renderSettings() {
 	const status = await prepareLayout(document.body.layoutInstance, 'settings');
 	if (!status) return;
 
-	const url = `https://z1r2p3:8443/api/bff/tiny-profile/${status.username}`;
+	const url = `https://${origin}:8443/api/bff/tiny-profile/${status.username}`;
 	try {
 		const raw = await fetch(url, { credentials: 'include' });
 		if (!raw.ok) {

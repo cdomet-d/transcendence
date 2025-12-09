@@ -10,6 +10,7 @@ import { router, type userStatusInfo } from '../../main.js';
 import { Searchbar } from '../forms/search.js';
 import { userStatus } from '../../main.js';
 import { currentDictionary } from '../forms/language.js';
+import { origin } from '../../main.js';
 
 /**
  * Custom element for the main page header.
@@ -48,7 +49,7 @@ export class PageHeader extends HTMLElement {
 	}
 
 	async #logoutImplementation() {
-		await fetch(`https://z1r2p3:8443/api/auth/logout`, { method: 'POST', credentials: 'include' });
+		await fetch(`https://${origin}:8443/api/auth/logout`, { method: 'POST', credentials: 'include' });
 		this.#notif.ws?.close();
 		router.loadRoute('/', true);
 	}

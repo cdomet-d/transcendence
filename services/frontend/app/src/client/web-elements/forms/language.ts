@@ -1,4 +1,5 @@
 import type { Dictionary } from '../types-interfaces.js';
+import { origin } from '../../main.js'
 
 // hardcoded this so the app renders instantly without waiting for a fetch for now, will do route calling in next branch
 export const defaultDictionary: Dictionary = {
@@ -110,7 +111,7 @@ export let currentLanguage: string = 'en';
 
 export async function setLanguage(lang: string): Promise<void> {
 	try {
-		const response = await fetch(`https://z1r2p3:8443/api/bff/dictionary/${lang}`);
+		const response = await fetch(`https://${origin}:8443/api/bff/dictionary/${lang}`);
 
 		//TODO handle error
 		if (!response.ok) {
