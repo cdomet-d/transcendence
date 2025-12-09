@@ -5,7 +5,7 @@ import { startTournament } from '../tournament/tournamentStart.js';
 import type { game, lobbyInfo, tournament } from './gameManager.interface.js';
 import { findLobbyIDFromUserID } from '../lobby/lobby.gm.js';
 
-export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo): undefined{
+export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo): undefined {
 	const lobbyID: string | null = findLobbyIDFromUserID(lobbyInfo.hostID!);
 	if (lobbyID === null) {
 		console.log("Lobby not found");

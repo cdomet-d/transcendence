@@ -83,19 +83,17 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					if (findLobbyIDFromUserID(inviteeID) === null)
 						socket.close();
 				} else if (invitePayload.action === 'join') {
-					this.log.error(`IN JOIN + ${formInstance}`);
-					//TODO: check if lobby still exists otherwise send error "tournament doesn't exist anymore"
-					const lobbyExists: string | null = findLobbyIDFromUserID(invitePayload.hostID!);
-					if (lobbyExists === null) {
+					if (!lobbyMap.has(invitePayload.lobbyID!)) {
 						wsSend(socket, JSON.stringify({ error: 'lobby does not exist' }));
 						return;
 					}
-					userID = invitePayload.invitee.userID;
-					let lobbyID: string | null = findLobbyIDFromUserID(userID);
-					if (lobbyID !== null)
-						removeUserFromLobby(userID, lobbyID);
 
-					addUserToLobby(userID!, socket, invitePayload.lobbyID!);
+					userID = invitePayload.invitee.userID;
+					const oldLobbyID: string | null = findLobbyIDFromUserID(userID);
+					if (oldLobbyID !== null)
+						removeUserFromLobby(userID, oldLobbyID);
+
+					addUserToLobby(userID!, invitePayload.invitee.username!, socket, invitePayload.lobbyID!);
 					const whiteListUsernames: string[] = getWhiteListUsernames(invitePayload.lobbyID!)
 					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance, whiteListUsernames: whiteListUsernames }));
 					//TODO: send start to host once everyone has joined
@@ -107,6 +105,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 	});
 
 	socket.on('close', () => {
+		console.log("CLOSE userID:", userID);
 		if (userID !== null) {
 			let lobbyID: string | null = findLobbyIDFromUserID(userID);
 			if (lobbyID !== null)

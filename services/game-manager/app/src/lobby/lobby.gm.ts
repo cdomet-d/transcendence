@@ -72,7 +72,7 @@ export function getWhiteListUsernames(lobbyID: string): string[] {
 	return whiteListUsernames;
 }
 
-export function addUserToLobby(userID: string, socket: WebSocket, lobbyID: string) {
+export function addUserToLobby(userID: string, username: string, socket: WebSocket, lobbyID: string) {
 	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) return;
 
@@ -83,7 +83,7 @@ export function addUserToLobby(userID: string, socket: WebSocket, lobbyID: strin
 	}
 
 	if (!lobby.userList.has(userID)) {
-		lobby.userList.set(userID, { userID: userID, userSocket: socket });
+		lobby.userList.set(userID, { userID: userID, username: username, userSocket: socket });
 	}
 
 	if (!wsClientsMap.has(userID)) {
