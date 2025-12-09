@@ -5,7 +5,7 @@ import type { ballObj, coordinates, repObj } from './classes/game-interfaces.js'
 const TIME_STEP: number = 1000 / 60;
 
 export function deadReckoning(game: Game, latestReply: repObj | undefined) {
-    let timeSinceUpdate: number = TIME_STEP;
+    let timeSinceUpdate: number = TIME_STEP; //performance.now() - game.lastFrameTime;
     let ball: ballObj = { ...game.ball };
     if (latestReply !== undefined) {
         timeSinceUpdate = performance.now() - latestReply.timestamp;
@@ -30,14 +30,14 @@ export function updateBallPos(game: Game, timeSinceUpdate: number) {
 }
 
 function sideWallCollision(game: Game, nextX: number): boolean {
-    if (nextX - game.ball.r >= WIDTH + 20 || nextX + game.ball.r <= -20) {
-        game.ball.x = WIDTH / 2;
-        game.ball.y = HEIGHT / 2;
-        game.ball.dx = 0;
-        game.ball.dy = 0;
-        return true;
-    }
-    return false;
+	if (nextX - game.ball.r >= WIDTH + 20 || nextX + game.ball.r <= -20) {
+		game.ball.x = WIDTH / 2;
+		game.ball.y = HEIGHT / 2;
+		game.ball.dx = 0;
+		game.ball.dy = 0;
+		return true;
+	}
+	return false;
 }
 
 function upperAndBottomWallCollision(game: Game, nextY: number): number {

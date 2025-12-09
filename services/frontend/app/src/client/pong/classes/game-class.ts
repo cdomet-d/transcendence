@@ -1,6 +1,7 @@
 export const HEIGHT = 558.9;
 export const WIDTH = 1000;
 import type { PongUI } from '../../web-elements/game/game-ui.js';
+import type { PongOptions } from '../../web-elements/types-interfaces.js';
 import type {
 	reqObj,
 	ballObj,
@@ -9,6 +10,7 @@ import type {
 	repObj,
 	paddleObj,
 } from './game-interfaces.js';
+import { getBallStartingSpeed, getPaddleHeight, getPaddleSpeed } from './game-settings.js';
 
 export type requestMap = Map<number, reqObj>;
 type replyTab = Array<repObj>;
@@ -34,22 +36,31 @@ export class Game {
 	#score: [number, number];
 
     /*                            CONSTRUCTORS                               */
-    constructor(ctx: CanvasRenderingContext2D, remote: boolean, horizontal: boolean, ui: PongUI) {
+    constructor(ctx: CanvasRenderingContext2D, remote: boolean, gameSettings: PongOptions, ui: PongUI) {
         this.#ctx = ctx;
         this.#ui = ui;
         if (remote) this.#local = false;
         else this.#local = true;
-        this.#horizontal = horizontal;
+        this.#horizontal = gameSettings.horizontal === undefined ? false : true;
         this.#score = [0, 0];
+        const ballSartingSpeed: coordinates = getBallStartingSpeed(gameSettings.ballspeed);
         this.#ball = {
             x: WIDTH / 2,
             y: HEIGHT / 2,
-            dx: 0.50, //custom
-            dy: 0.03, //custom
-            maxSpeed: 0.90,
+            dx: ballSartingSpeed.x,
+            dy: ballSartingSpeed.y,
+            maxSpeed: 0.65,
             r: 13,
         };
-        this.#paddleSpec = { speed: 0.50, w: 20, h: HEIGHT / 5, halfW: 20 / 2, halfH: HEIGHT / 10 }; //custom
+        const paddleSpeed: number = getPaddleSpeed(gameSettings.paddlespeed);
+        const paddleHeight: number = getPaddleHeight(gameSettings.paddlesize);
+        this.#paddleSpec = { 
+            speed: paddleSpeed, 
+            w: 20, 
+            h: paddleHeight, 
+            halfW: 20 / 2, 
+            halfH: paddleHeight / 2, 
+        };
         this.#leftPaddle = { x: 25, y: HEIGHT / 2 - this.#paddleSpec.halfH };
         this.#rightPaddle = {
             x: WIDTH - (this.#paddleSpec.w + 25),

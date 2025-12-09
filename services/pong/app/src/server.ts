@@ -13,7 +13,7 @@ import type { NatsConnection } from 'nats';
 
 (async () => {
     try {
-        const serv = await init();
+        const serv: FastifyInstance = await init();
         await runServ(serv);
     } catch (err) {
         console.error('server', err);
@@ -60,6 +60,12 @@ function addPlugins(serv: FastifyInstance) {
         ) {
             serv.log.error(error);
             socket.close(1011, error.message);
+        },
+        preClose: (done) => {
+            const serverWS = serv.websocketServer;
+            for (const socket of serverWS.clients)
+                socket.close(1001, 'WS server is going offline');
+            serverWS.close(done);
         },
         options: {},
     });

@@ -6,7 +6,7 @@ import { endGame, gameLoop } from './game-loop.js';
  
 const START_DELAY = 500;
 const SERVER_TICK: number = 1000 / 60;
-const MAX_TIME: number = /*3500;/*/ 90000; // 1min30
+const MAX_TIME: number = 180000; // 3min
 
 export async function setUpGame(game: Game) {
 	if (!game.players[0] || !game.players[1])
@@ -18,8 +18,9 @@ export async function setUpGame(game: Game) {
 	setMessEvent(player1, 1, game);
 	setMessEvent(player2, 2, game);
 
-	player1.socket.send(1);
-	if (!game.local)
+	if (player1.socket.OPEN)
+		player1.socket.send(1);
+	if (!game.local && player2.socket.OPEN)
 		player2.socket.send(-1);
 
 	// start game
@@ -42,7 +43,7 @@ function setMessEvent(player: Player, playerNbr: number, game: Game) {
 		}
 		catch (err: any) {
 			game.infos.score = [-1, -1];
-			player.socket.close();
+			player.socket.close(1003, err.message);
 			game.log.error(err.message);
 		};
 	})

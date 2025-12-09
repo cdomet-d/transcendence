@@ -1,11 +1,12 @@
-import type { game, lobbyInfo, tournament, userInfo } from '../manager.interface.js';
+import type { game, lobbyInfo, tournament, userInfo } from '../gameManager/gameManager.interface.js';
+import { lobbyMap } from '../lobby/lobby.gm.js';
 
-export function createTournament(payload: lobbyInfo): tournament | undefined {
+export function createTournament(payload: lobbyInfo, lobbyID: string): tournament | undefined {
 	const tournamentID = crypto.randomUUID().toString();
 
-	const games: game[] | undefined = createBracket(payload, tournamentID);
+	const games: game[] | undefined = createBracket(payload, tournamentID, lobbyID);
 	if (games === undefined) {
-		console.log("Error: Could not create tournament bracket!")
+		console.log('Error: Could not create tournament bracket!')
 		return undefined;
 	}
 
@@ -13,16 +14,17 @@ export function createTournament(payload: lobbyInfo): tournament | undefined {
 	return tournamentObj;
 }
 
-export function createBracket(lobbyInfo: lobbyInfo, tournamentID: string): game[] | undefined {
+export function createBracket(lobbyInfo: lobbyInfo, tournamentID: string, lobbyID: string): game[] | undefined {
 	// const nBgames = lobbyInfo.userList.size; // if 8 players tournament
 
-    const usersArray: userInfo[] = Array.from(lobbyInfo.userList.values());
+    const usersArray: userInfo[] = Array.from(lobbyMap.get(lobbyID)!.whitelist!.userIDs.values());
+	//TODO: fill userList with usernames and use it instead of whiteList to fill usersArray ? this is only for better logic, whiteList has all usernames
 
     if (usersArray.length < 4) { // magic number I know
-        console.log("Error: Not enough players for tournament!");
+        console.log('Error: Not enough players for tournament!');
         return undefined;
     }
-	
+
     const shuffledUsers: userInfo[] = fisherYatesShuffle(usersArray);
 
     const opponents: userInfo[][] = [
@@ -33,13 +35,13 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: string): game[
 	const games: game[] = [
 		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
 			tournamentID: tournamentID, remote: true, users: opponents[0], 
-			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "" },
+			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "", gameSettings: lobbyInfo.gameSettings! },
 		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
 			tournamentID: tournamentID, remote: true, users: opponents[1], 
-			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "" },
+			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "", gameSettings: lobbyInfo.gameSettings! },
 		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
 			tournamentID: tournamentID, remote: true, users: null, 
-			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "" },
+			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "", gameSettings: lobbyInfo.gameSettings! },
 	];
 
 	return games;

@@ -174,12 +174,12 @@ This table has the following column :
 * avatar &rarr; text
 * biography &rarr; text
 * profileColor &rarr; text
-* activityStatus &rarr; boolean 
+* status &rarr; boolean 
 * lastConnexion &rarr; datetime
 
 userID will match between different table and database and if a general ID for a user.
 
-activityStatus will be used to keep track of whether the user if offline, online or playing. The following value and meaning will be :
+status will be used to keep track of whether the user if offline, online or playing. The following value and meaning will be :
 
 | Value  | Meaning |
 | ------ |:-------:|
@@ -362,12 +362,12 @@ averageMatchDuration will be in seconds.
         curl -X POST \
         -H "Content-Type: application/json" \
         -d '{"newStatus": "<newStatus>"}' \
-        http://localhost:2626/users/updateActivityStatus/<userID>
+        http://localhost:2626/users/updatestatus/<userID>
         
         curl -X POST \
         -H "Content-Type: application/json" \
         -d '{"newStatus": <newStatus>}' \  
-        http://localhost:2626/users/updateActivityStatus/<userID>
+        http://localhost:2626/users/updatestatus/<userID>
     * update lastConnexion
         
         ```
@@ -715,13 +715,14 @@ WHERE userID = 101;
 
 [WIP] DOC NOT UP TO DATE YET (nginx conf not done yet)
 
+
+* do anonymization of account on delete
 * status in db on login logout
-* sanitise input in back
+
 * GDPR: check profile photos and more
+* sanitise input in back
 * add schemas to route
-
 * servir traduction ---> localisation library, language page
-
 * changer userID to string         ✅
 * move nats publisher to bff       ✅
 * gestion erreur dans le bff       ✅
@@ -733,3 +734,6 @@ WHERE userID = 101;
 * servir les users pour search bar ✅
 * servir le profile                ✅
 * servir userCard                  ✅
+* Donner la possibilités aux utilisateurs de télécharger leur données aux formats JSON. Ca inclut leur profile, match history.
+* Page dedicated to GDPR stating what the site stores as PII
+* On supprimer les datas des utilisateurs qui ne se sont pas connectés depuis X temps (standards 2-3 ans)

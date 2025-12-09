@@ -47,10 +47,11 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 
 function sendRequest(game: Game, ws: WebSocket) {
     game.req.timeStamp = performance.now();
-    ws.send(JSON.stringify(game.req));
+    if (ws.OPEN)
+        ws.send(JSON.stringify(game.req));
     game.addReq(game.req);
-    game.req.ID += 1; //TODO: overflow?
-    if (game.req.ID === Number.MAX_SAFE_INTEGER)
+    game.req.ID += 1;
+	if (game.req.ID === Number.MAX_SAFE_INTEGER)
         game.req.ID = 0;
 }
 

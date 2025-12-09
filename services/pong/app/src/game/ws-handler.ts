@@ -8,7 +8,7 @@ import { natsSubscription } from '../nats/subscriber.js';
 import { StringCodec } from 'nats';
 import { Player } from '../classes/player-class.js';
 
-const MAX_TIME: number = 90000; // 1min30
+const MAX_TIME: number = 180000; // 3min
 const MAX_SCORE: number = 5;
 
 export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): Promise< void > {
@@ -65,8 +65,7 @@ export function waitForMessage(serv: FastifyInstance, socket: WebSocket): Promis
 					reject("Invalid ids");
 				resolve(ids);
 			} catch (err: any) {
-				socket.send(err.message);
-				socket.close();
+				socket.close(1003, err.message);
 				serv.log.error(err.message);
 			}
 		});

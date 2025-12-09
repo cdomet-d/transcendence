@@ -3,34 +3,37 @@ import { Game, WIDTH, HEIGHT } from './classes/game-class.js';
 import { addMessEvent, createKeyEvent } from './game-events.js';
 import { renderGame } from './game-render-utils.js';
 import { createVisualFeedback } from '../error.js';
+import type { PongCourt } from '../web-elements/game/pong-court.js';
 
 const START_DELAY = 500;
 
-export function wsRequest(game: Game, ids: { gameID: string; userID: string }) {
+export function wsRequest(court: PongCourt ,game: Game, ids: { gameID: string; userID: string }) {
 	const ws = new WebSocket('wss://localhost:8443/api/game/');
 
 	ws.onerror = () => {
 		ws.close(1011, 'websocket error');
 	};
 
-	ws.onopen = () => {
-		console.log('PONG webSocket connection established!');
-		ws.addEventListener(
-			'message',
-			(event) => {
-				const signal: number = JSON.parse(event.data);
-				if (signal === 1 || signal === -1) setUpGame(game, ws, signal);
-			},
-			{ once: true },
-		);
-		ws.send(JSON.stringify(ids));
-	};
+    ws.onopen = () => {
+        console.log('PONG webSocket connection established!');
+        court.socket = ws;
+        ws.addEventListener(
+            'message',
+            (event) => {
+                const signal: number = JSON.parse(event.data);
+                if (signal === 1 || signal === -1) setUpGame(game, ws, signal);
+            },
+            { once: true },
+        );
+        if (ws.OPEN)
+            ws.send(JSON.stringify(ids));
+    };
 
 	ws.onclose = (event) => {
 		console.log('PONG webSocket connection closed!');
 		// console.log('EVENT received:  ', event.reason);
 		if (event.code === 1003 || event.code === 1011) {
-			createVisualFeedback(event.reason); //TODO: fix
+			createVisualFeedback(`${event.code}: ${event.reason}`); //TODO: fix
 			return;
 		}
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);

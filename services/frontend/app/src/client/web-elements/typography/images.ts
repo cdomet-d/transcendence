@@ -1,5 +1,6 @@
 import type { ImgData, Size, ColorTheme } from '../types-interfaces.js';
 import { createIcon } from './helpers.js';
+import { defaultDictionary } from '../forms/language.js';
 
 /**
  * Custom image element representing an icon.
@@ -71,9 +72,8 @@ export class Avatar extends HTMLDivElement {
 
 	render() {
 		this.id = 'avatar';
-		this.className = `${
-			this.#data.size
-		} avatar-wrapper flex justify-center overflow-hidden pad-s box-border brdr bg`;
+		this.className = `${this.#data.size
+			} avatar-wrapper flex justify-center overflow-hidden pad-s box-border brdr bg`;
 		this.#img.metadata = this.#data;
 	}
 }
@@ -106,16 +106,17 @@ export class NoResults extends HTMLDivElement {
 		this.#theme = theme;
 	}
 
-    //TODO 404 for language
-    connectedCallback() {
-        const img = createIcon(this.#noResultsImg);
-        const p = document.createElement('p');
-        p.innerText = "There's nothing here :<";
-        this.append(p, img);
-        p.classList.add('text-center', 'f-s', `${this.#theme}`, 'f-bold');
-        img.classList.add('breathe', 'justify-self-center');
-        this.render();
-    }
+	//TODO 404 for language
+	connectedCallback() {
+		const img = createIcon(this.#noResultsImg);
+		const p = document.createElement('p');
+		const error404 = defaultDictionary.error.page404;
+		p.innerText = error404;
+		this.append(p, img);
+		p.classList.add('text-center', 'f-s', `${this.#theme}`, 'f-bold');
+		img.classList.add('breathe', 'justify-self-center');
+		this.render();
+	}
 
 	render() {
 		this.className = 'w-full box-border grid';

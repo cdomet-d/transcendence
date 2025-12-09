@@ -1,25 +1,33 @@
 import { renderGame } from './game-render-utils.js';
 import { Game } from './classes/game-class.js';
 import { wsRequest } from './ws-req.js';
-import { router } from '../main.js';
+import { router, userStatus, type userStatusInfo } from '../main.js';
 import type { PongUI } from '../web-elements/game/game-ui.js';
+import { redirectOnError } from '../error.js';
+import type { PongOptions } from '../web-elements/types-interfaces.js';
+import type { PongCourt } from '../web-elements/game/pong-court.js';
 
 export interface gameRequest {
-	userID: string;
-	gameID: string;
-	remote: boolean;
+    opponent: string;
+    gameID: string;
+    remote: boolean;
+	gameSettings: PongOptions;
 }
 
-export function pong(gameReq: gameRequest, ctx: CanvasRenderingContext2D | null, ui: PongUI) {
-	console.log('game request obj: ', gameReq);
+export async function pong(gameReq: gameRequest, court: PongCourt, ui: PongUI) {
+    console.log('game request obj: ', gameReq);
 
-	if (!ctx) {
-		console.log('error: context not supported');
-		router.loadRoute('/404', true);
-		return;
-	}
-	const game: Game = new Game(ctx, gameReq.remote, true, ui);
-	// UI has the player names defined + has a default score of 0 for each player
-	renderGame(game);
-	wsRequest(game, { gameID: gameReq.gameID, userID: gameReq.userID });
+    if (!court.ctx) {
+        console.log('error: context not supported');
+        router.loadRoute('/404', true);
+        return;
+    }
+    const game: Game = new Game(court.ctx, gameReq.remote, gameReq.gameSettings, ui);
+    renderGame(game);
+    const user: userStatusInfo = await userStatus();
+    if (!user.auth || user.userID === undefined) {
+        redirectOnError('/auth', 'You must be registered to see this page')
+        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+    }
+    wsRequest(court, game, { gameID: gameReq.gameID, userID: user.userID! });
 }

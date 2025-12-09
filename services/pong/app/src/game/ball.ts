@@ -2,6 +2,7 @@ import { Game, HEIGHT, WIDTH } from "../classes/game-class.js";
 import type { Player } from "../classes/player-class.js";
 import { raycast, updateVelocity } from "./collision-utils.js";
 import type { coordinates } from "../classes/game-interfaces.js";
+import { getBallStartingSpeed } from "../classes/game-settings.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 const MAX_SCORE: number = 5;
@@ -47,8 +48,9 @@ function sideWallCollision(game: Game, player1: Player, player2: Player, nextX: 
 		game.ball.dx = 0;
 		game.ball.dy = 0;
 		game.addTimoutID(setTimeout(() => {
-			game.ball.dx = 0.50 * game.ballDir;
-			game.ball.dy = 0.03;
+			const ballSartingSpeed: coordinates = getBallStartingSpeed(game.infos.gameSettings.ballspeed);
+			game.ball.dx = ballSartingSpeed.x * game.ballDir;
+			game.ball.dy = ballSartingSpeed.y;
 			game.ballDir *= -1;
 			game.passStart = performance.now();
 		}, 1500));

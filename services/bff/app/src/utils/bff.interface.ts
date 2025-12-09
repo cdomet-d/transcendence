@@ -18,7 +18,9 @@ export interface userData {
 	status: boolean,
 	username: string,
 	winStreak: string,
-	since: string
+	since: string,
+	totalWins: string,
+	totalLosses: string,
 }
 
 export interface UserIDResponse {

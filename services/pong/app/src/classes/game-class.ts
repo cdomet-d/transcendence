@@ -1,8 +1,9 @@
 import { Player } from './player-class.js';
 import type { WebSocket } from '@fastify/websocket';
 import { NatsConnection } from 'nats';
-import type { reqObj, playerReq, gameInfo, ballObj, paddleSpec } from './game-interfaces.js';
+import type { reqObj, playerReq, gameInfo, ballObj, paddleSpec, coordinates } from './game-interfaces.js';
 import { FastifyBaseLogger } from 'fastify';
+import { getBallStartingSpeed, getPaddleHeight, getPaddleSpeed } from './game-settings.js';
 
 export const HEIGHT = 558.9;
 export const WIDTH = 1000;
@@ -35,21 +36,24 @@ export class Game {
 		this.#nc = nc;
 		this.#log = log
 		this.#players = new Array();
+		const ballSartingSpeed: coordinates = getBallStartingSpeed(this.#gameInfo.gameSettings.ballspeed);
 		this.#ball = {
 			x: WIDTH / 2, 
 			y: HEIGHT / 2, 
-			dx: 0.50, 
-			dy: 0.03,
-			maxSpeed: 0.90,
+			dx: ballSartingSpeed.x,
+            dy: ballSartingSpeed.y,
+			maxSpeed: 0.65,
 			r: 13
 		};
+		const paddleSpeed: number = getPaddleSpeed(this.#gameInfo.gameSettings.paddlespeed);
+		const paddleHeight: number = getPaddleHeight(this.#gameInfo.gameSettings.paddlesize);
 		this.#paddleSpec = {
-			speed: 0.50,
+			speed: paddleSpeed,
 			w: 20, 
-			h: HEIGHT / 5, 
+			h: paddleHeight, 
 			halfW: 20 / 2, 
-			halfH: HEIGHT / 10
-		}; //custom
+			halfH: paddleHeight / 2,
+		};
 		this.#ballDir = -1;
 		this.#reqHistory = new Array();
 		this.#lastTick = 0;
@@ -185,7 +189,7 @@ export class Game {
 
 	public deletePlayers() {
 		this.#players.forEach((player: Player) => {
-			if (player.socket.readyState === 1) //TODO: ou 0 ?
+			if (player.socket.OPEN || player.socket.CONNECTING)
 				player.socket.close();
 		})
 		this.#players.splice(0, this.#players.length);
