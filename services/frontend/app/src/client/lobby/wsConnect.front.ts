@@ -93,9 +93,11 @@ function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettin
 					}
 				}
 				if (data.lobby === "whiteListUpdate") {
-					if (form === undefined)
+					if (form === undefined) {
 						console.log("FORM UNDEFINED");
-					form?.displayUpdatedGuests(data.whiteListUsernames);
+						return;
+					}
+					form!.displayUpdatedGuests(data.whiteListUsernames);
 				}
 				return;
 			}
