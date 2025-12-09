@@ -2,6 +2,7 @@ import { createVisualFeedback, redirectOnError } from '../error.js';
 import { router } from '../main.js';
 import { type gameRequest } from '../pong/pong.js';
 import type { LocalPongSettings, RemotePongSettings } from '../web-elements/forms/pong-settings.js';
+import { origin } from '../main.js'
 import type { inviteeObj } from './gm.interface.front.js';
 import { executeAction } from './wsAction.front.js';
 
@@ -11,7 +12,7 @@ function openWsConnection() {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 		return wsInstance;
 	}
-	wsInstance = new WebSocket('wss://localhost:8443/api/lobby/');
+	wsInstance = new WebSocket(`wss://${origin}:8443/api/lobby/`);
 	return wsInstance;
 }
 

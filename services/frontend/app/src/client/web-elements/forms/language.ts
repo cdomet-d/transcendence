@@ -1,4 +1,5 @@
 import type { Dictionary } from '../types-interfaces.js';
+import { origin } from '../../main.js'
 
 // hardcoded this so the app renders instantly without waiting for a fetch for now, will do route calling in next branch
 export const defaultDictionary: Dictionary = {
@@ -50,7 +51,7 @@ export const defaultDictionary: Dictionary = {
 		duration: "Duration",
 		tournament: "Tournament"
 	},
-	notifs: {
+	noti2xl: {
 		notif_placeholder: "No new notifications"
 	},
 	gameCustom: {
@@ -111,7 +112,7 @@ export let currentLanguage: string = 'en';
 
 export async function setLanguage(lang: string): Promise<void> {
 	try {
-		const response = await fetch(`https://localhost:8443/api/bff/dictionary/${lang}`);
+		const response = await fetch(`https://${origin}:8443/api/bff/dictionary/${lang}`);
 
 		if (!response.ok) {
 

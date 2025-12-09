@@ -1,34 +1,19 @@
-import { tournament } from './web-elements/default-values.js';
-import {
-	buildUserProfile,
-	userArrayFromAPIRes,
-	userDataFromAPIRes,
-} from './api-responses/user-responses.js';
+import { buildUserProfile, userArrayFromAPIRes, userDataFromAPIRes } from './api-responses/user-responses.js';
 import { createForm } from './web-elements/forms/helpers.js';
 import { createHeading, createNoResult } from './web-elements/typography/helpers.js';
 import { createLeaderboard } from './web-elements/statistics/leaderboard.js';
 import { createMenu } from './web-elements/navigation/menu-helpers.js';
 import { createTabs } from './web-elements/navigation/tabs-helpers.js';
-import { farm, ocean, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
-import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
-import {
-	userSettingsForm,
-	localPong,
-	remotePong,
-	pongTournament,
-} from './web-elements/forms/default-forms.js';
-import {
-	lobbyQuickmatchMenu,
-	lobbyTournamentMenu,
-	main,
-} from './web-elements/navigation/default-menus.js';
+import { farm, ocean, defaultTheme, forest, PongCourt } from './web-elements/game/pong-court.js';
+import { farmAssets, forestAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
+import { userSettingsForm, localPong, remotePong, pongTournament } from './web-elements/forms/default-forms.js';
+import { lobbyQuickmatchMenu, lobbyTournamentMenu, main, goHomeData } from './web-elements/navigation/default-menus.js';
 import { pong, type gameRequest } from './pong/pong.js';
 import { PongUI } from './web-elements/game/game-ui.js';
 import { errorMessageFromException, exceptionFromResponse, redirectOnError } from './error.js';
-import { TournamentBrackets } from './web-elements/game/tournament.js';
 import type { Match } from 'path-to-regexp';
-import type { navigationLinksData, pongTheme, TabData, ImgData } from './web-elements/types-interfaces.js';
-import { userStatus, router, type userStatusInfo } from './main.js';
+import type { pongTheme, TabData, ImgData } from './web-elements/types-interfaces.js';
+import { router, type userStatusInfo, origin } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
@@ -38,10 +23,8 @@ import { currentDictionary } from './web-elements/forms/language.js';
 import type { LocalPongSettings, RemotePongSettings } from './web-elements/forms/pong-settings.js';
 import { createPrivacy } from './web-elements/users/privacy.js';
 
-//TODO: dynamic layout: fullscreen if the user is not logged in, header if he is ?
 const layoutPerPage: { [key: string]: string } = {
 	bracket: 'full-screen',
-	central: 'page-w-header',
 	error: 'full-screen',
 	game: 'page-w-header',
 	home: 'full-screen',
@@ -51,78 +34,80 @@ const layoutPerPage: { [key: string]: string } = {
 	lobbyMenu: 'page-w-header',
 	profile: 'page-w-header',
 	auth: 'full-screen',
-	userSettings: 'page-w-header',
+	settings: 'page-w-header',
+};
+
+const requireAuth: { [key: string]: boolean } = {
+	bracket: true,
+	error: false,
+	game: true,
+	home: false,
+	leaderboard: true,
+	quickLobby: true,
+	tournamentLobby: true,
+	lobbyMenu: true,
+	profile: true,
+	auth: false,
+	settings: true,
 };
 
 function updatePageTitle(newPage: string) {
 	document.title = `🌻 BigT - ${newPage} 🌻`;
 }
 
-function createWrapper(id: string): HTMLDivElement {
+export function createWrapper(id: string): HTMLDivElement {
 	const el = document.createElement('div');
 	el.id = id;
 	el.className = 'bg content-h brdr overflow-y-auto overflow-x-hidden justify-start';
 	return el;
 }
 
-async function prepareLayout(curLayout: Layout | undefined, page: string) {
-	if (!layoutPerPage[page]) throw new Error('Requested page is undefined');
-	if (!curLayout)
-		throw new Error("Something is wrong with the document's layout - page cannot be charged");
-
-	curLayout.clearAll();
-	document.body.header?.getLogState();
+function toggleHeader(page: string) {
 	if (layoutPerPage[page] === 'full-screen') {
 		document.body.header?.classList.add('hidden');
-		document.body.header?.setAttribute('hidden', '');
+		document.body.header?.setAttribute('hidden', 'true');
 	} else {
 		document.body.header?.classList.remove('hidden');
 		document.body.header?.removeAttribute('hidden');
 	}
 }
 
-export function renderNotFound() {
-	console.log('renderNotFound');
-	const goHomeData: navigationLinksData = {
-		styleButton: true,
-		id: 'backHome',
-		title: 'Go home',
-		datalink: 'home',
-		href: '/',
-		img: null,
-	};
-	try {
-		prepareLayout(document.body.layoutInstance, 'error');
-	} catch (error) {
-		console.error(errorMessageFromException(error));
+async function prepareLayout(curLayout: Layout | undefined, page: string): Promise<userStatusInfo | null> {
+	if (!layoutPerPage[page]) {
+		return redirectOnError('/404', `Redirected: Requested page (${page}) is undefined`), null;
 	}
+	if (!curLayout) return redirectOnError('/404', 'Failed to load DOM'), null;
+
+	const user = await document.body.header?.getLogState();
+	if (!user) return redirectOnError('/404', 'Redirected: Failed to recover user'), null;
+	curLayout.clearAll();
+
+	if (!user.auth && requireAuth[page]) {
+		return redirectOnError('/auth', 'Redirected: You must be registered to see this page!'), null;
+	}
+	toggleHeader(page);
+	return user;
+}
+
+export async function renderNotFound() {
+	if (document.body.layoutInstance) document.body.layoutInstance.clearAll();
+	document.body.header?.classList.add('hidden');
+	document.body.header?.setAttribute('hidden', '');
 	const goHome = createLink(goHomeData, false) as NavigationLinks;
-	document.body.layoutInstance!.appendAndCache(createNoResult('dark', 'ifs'), goHome);
+	document.body.layoutInstance!.appendAndCache(createNoResult('dark', 'i2xl'), goHome);
 	goHome.classList.remove('w-full');
 	goHome.classList.add('w-1/4', 'place-self-center');
 	updatePageTitle('Not Found');
 }
 
-export function renderHome() {
-	console.log('RenderHome');
-	try {
-		prepareLayout(document.body.layoutInstance, 'home');
-	} catch (error) {
-		console.error(errorMessageFromException(error));
-	}
-	document.body.layoutInstance!.appendAndCache(
-		createHeading('0', 'PONG!'),
-		createMenu(main(currentDictionary), 'vertical', true),
-	);
+export async function renderHome() {
+	if (!(await prepareLayout(document.body.layoutInstance, 'home'))) return;
+	document.body.layoutInstance!.appendAndCache(createHeading('0', 'PONG!'), createMenu(main(currentDictionary), 'vertical', true));
 	updatePageTitle('Home');
 }
 
-export function renderAuth() {
-	try {
-		prepareLayout(document.body.layoutInstance, 'auth');
-	} catch (error) {
-		console.error(errorMessageFromException(error));
-	}
+export async function renderAuth() {
+	if (!(await prepareLayout(document.body.layoutInstance, 'auth'))) return;
 	const wrapper = createWrapper('authsettings');
 
 	const authOptions: TabData[] = [
@@ -145,110 +130,89 @@ export function renderAuth() {
 }
 
 export async function renderLeaderboard() {
-	console.log('renderLeaderboard');
-	try {
-		prepareLayout(document.body.layoutInstance, 'leaderboard');
-	} catch (error) {
-		console.error(errorMessageFromException(error));
-	}
+	if (!(await prepareLayout(document.body.layoutInstance, 'leaderboard'))) return;
 
-	const url = 'https://localhost:8443/api/bff/leaderboard';
+	const url = `https://${origin}:8443/api/bff/leaderboard`;
 
-	//TODO: crashes if user is not registered
 	try {
-		const rawRes = await fetch(url);
-		if (rawRes.status === 401)
-			return redirectOnError('/auth', 'You must be registered to see this page');
+		const rawRes = await fetch(url, { credentials: 'include' });
 		if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
 		const raw = await rawRes.json();
-
-		document.body.layoutInstance!.appendAndCache(
-			createHeading('2', currentDictionary.titles.leaderboard),
-			createLeaderboard(userArrayFromAPIRes(raw)),
-		);
+		const wrapper = createWrapper('learderboard');
+		wrapper.append(createHeading('2', currentDictionary.titles.leaderboard), createLeaderboard(userArrayFromAPIRes(raw)));
+		document.body.layoutInstance!.appendAndCache(wrapper);
 	} catch (error) {
-		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
+		console.error(errorMessageFromException(error));
+		redirectOnError('/', 'Error: ' + errorMessageFromException(error));
 	}
 
 	updatePageTitle('Leaderboard');
 }
 
 export async function renderSelf() {
-	const status = await userStatus();
-	if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
+	const status = await prepareLayout(document.body.layoutInstance, 'profile');
+	if (!status) return;
 
-	const url = `https://localhost:8443/api/bff/profile/${status.username}`;
-
+	const url = `https://${origin}:8443/api/bff/profile/${status.username}`;
 	try {
-		prepareLayout(document.body.layoutInstance, 'profile');
-		const raw = await fetch(url);
+		const raw = await fetch(url, { credentials: 'include' });
+		console.log(`raw.status: ${raw.status} | raw.ok: ${raw.ok}`);
 		if (!raw.ok) {
-			if (raw.status === 404) return renderNotFound();
+			if (raw.status === 404) return redirectOnError('/404', 'No such user');
 			else throw await exceptionFromResponse(raw);
 		}
 		buildUserProfile(raw);
 		updatePageTitle(status.username!);
 	} catch (error) {
+		console.error(errorMessageFromException(error));
 		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
 	}
 }
 
 export async function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
-	console.log('renderProfile');
-	if (param && param.params.login && typeof param.params.login === 'string') {
-		const login = param.params.login;
-		const url = `https://localhost:8443/api/bff/profile/${login}`;
+	if (!(await prepareLayout(document.body.layoutInstance, 'profile'))) return;
+	if (!param || !param.params.login || typeof param.params.login !== 'string') return redirectOnError('/404', 'No such user');
+	const login = param.params.login;
+	const url = `https://${origin}:8443/api/bff/profile/${login}`;
 
-		try {
-			const raw = await fetch(url);
-			if (!raw.ok) {
-				console.error('error', raw.status);
-				if (raw.status === 404) return renderNotFound();
-				else if (raw.status === 401)
-					return redirectOnError('/auth', 'You must be registered to see this page');
-				else throw await exceptionFromResponse(raw);
-			}
-			prepareLayout(document.body.layoutInstance, 'profile');
-			buildUserProfile(raw);
-			updatePageTitle(login);
-		} catch (error) {
-			redirectOnError(router.stepBefore, errorMessageFromException(error));
+	try {
+		const raw = await fetch(url, { credentials: 'include' });
+		console.log(`raw.status: ${raw.status} | raw.ok: ${raw.ok}`);
+		if (!raw.ok) {
+			if (raw.status === 404) return redirectOnError('/404', 'No such user');
+			else throw await exceptionFromResponse(raw);
 		}
-	} else return renderNotFound();
+		buildUserProfile(raw);
+		updatePageTitle(login);
+	} catch (error) {
+		console.error(errorMessageFromException(error));
+		redirectOnError(router.stepBefore, errorMessageFromException(error));
+	}
 }
 
 export async function renderSettings() {
-	const status = await userStatus();
-	if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
+	const status = await prepareLayout(document.body.layoutInstance, 'settings');
+	if (!status) return;
 
-	const url = `https://localhost:8443/api/bff/tiny-profile/${status.username}`;
-
+	const url = `https://${origin}:8443/api/bff/tiny-profile/${status.username}`;
 	try {
-		const raw = await fetch(url);
+		const raw = await fetch(url, { credentials: 'include' });
 		if (!raw.ok) {
-			console.error('error', raw.status);
-			if (raw.status === 404) return renderNotFound();
-			else if (raw.status === 401)
-				return redirectOnError('/auth', 'You must be registered to see this page');
+			if (raw.status === 404) return redirectOnError('/404', 'No such user');
 			else throw await exceptionFromResponse(raw);
 		}
-
-		prepareLayout(document.body.layoutInstance, 'userSettings');
-		const user = userDataFromAPIRes(raw);
-		const form = userSettingsForm(currentDictionary);
-		document.body.layoutInstance?.appendAndCache(createForm('settings-form', form, user));
-	} catch (error) {
-		redirectOnError(router.stepBefore, errorMessageFromException(error));
-	}
-	updatePageTitle(status.username + 'Settings');
-}
-
-export function renderLobbyMenu() {
-	try {
-		prepareLayout(document.body.layoutInstance, 'lobbyMenu');
+		const data = await raw.json();
+		const user = userDataFromAPIRes(data);
+		document.body.layoutInstance?.appendAndCache(createForm('settings-form', userSettingsForm(currentDictionary, user), user));
+		updatePageTitle(status.username + 'Settings');
 	} catch (error) {
 		console.error(errorMessageFromException(error));
+		redirectOnError(router.stepBefore, errorMessageFromException(error));
 	}
+}
+
+export async function renderLobbyMenu() {
+	if (!(await prepareLayout(document.body.layoutInstance, 'lobbyMenu'))) return;
 	document.body.layoutInstance?.appendAndCache(
 		createHeading('1', currentDictionary.titles.choose_lobby),
 		createMenu(lobbyQuickmatchMenu(currentDictionary), 'horizontal', true),
@@ -265,152 +229,85 @@ export function renderLobbyMenu() {
 //TODO: for each lobby: set 'owner' with currently registered user to avoid owner
 //  being able to add himself to the game (in the UI - even if it's handled in the pong server)
 export async function renderQuickLocalLobby() {
-	const user: userStatusInfo = await userStatus();
-	if (!user.auth) {
-		redirectOnError('/auth', 'You must be registered to see this page')
-		return JSON.stringify({ event: 'BAD_USER_TOKEN' });
-	}
-	try {
-		prepareLayout(document.body.layoutInstance, 'quickLobby');
-	} catch (error) {
-		console.error(errorMessageFromException(error));
-	}
+	const status = await prepareLayout(document.body.layoutInstance, 'quickLobby');
+	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
+
 	const form: LocalPongSettings = createForm('local-pong-settings', localPong(currentDictionary));
+	document.body.layoutInstance?.appendAndCache(form);
+	form.owner = status.username!;
 	form.format = 'quickmatch';
 	form.formInstance = 'localForm';
-	document.body.layoutInstance?.appendAndCache(form);
-
+	form.classList.remove('h-full');
+	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
 	wsConnect('create', 'quickmatch', 'localForm', undefined, undefined, undefined, form);
 }
 
-export async function renderQuickRemoteLobby(
-	param?: Match<Partial<Record<string, string | string[]>>>,
-	gameRequest?: gameRequest,
-	action?: string,
-	whiteListUsernames?: string[],
-) {
-	const user: userStatusInfo = await userStatus();
-	if (!user.auth) {
-		redirectOnError('/auth', 'You must be registered to see this page')
-		return JSON.stringify({ event: 'BAD_USER_TOKEN' });
-	}
+export async function renderQuickRemoteLobby(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[]) {
+	const status = await prepareLayout(document.body.layoutInstance, 'quickLobby');
+	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 
-	try {
-		prepareLayout(document.body.layoutInstance, 'quickLobby');
-	} catch (error) {
-		console.error(errorMessageFromException(error));
-	}
-	const form: RemotePongSettings = createForm('remote-pong-settings', remotePong(currentDictionary))
+	const form: RemotePongSettings = createForm('remote-pong-settings', remotePong(currentDictionary));
 	form.format = 'quickmatch';
 	form.formInstance = 'remoteForm';
 	document.body.layoutInstance?.appendAndCache(form);
 
-	if (action === "invitee")
-		form.displayUpdatedGuests(whiteListUsernames!);
+	if (action === 'invitee') form.displayUpdatedGuests(whiteListUsernames!);
 	if (action === undefined) {
 		action = 'create';
-		form.owner = user.username!;
+		form.owner = status.username!;
 	}
 
 	wsConnect(action!, 'quickmatch', 'remoteForm', undefined, undefined, undefined, form);
 }
 
-export async function renderTournamentLobby(
-	param?: Match<Partial<Record<string, string | string[]>>>,
-	gameRequest?: gameRequest,
-	action?: string,
-	whiteListUsernames?: string[],
-) {
-	const user: userStatusInfo = await userStatus();
-	if (!user.auth) {
-		redirectOnError('/auth', 'You must be registered to see this page')
-		return JSON.stringify({ event: 'BAD_USER_TOKEN' });
-	}
-	try {
-		prepareLayout(document.body.layoutInstance, 'tournamentLobby');
-	} catch (error) {
-		console.error(errorMessageFromException(error));
-	}
+export async function renderTournamentLobby(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[]) {
+	const status = await prepareLayout(document.body.layoutInstance, 'tournamentLobby');
+	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 
-	const form: RemotePongSettings = createForm('remote-pong-settings', pongTournament(currentDictionary));
+	const form: LocalPongSettings = createForm('remote-pong-settings', pongTournament(currentDictionary));
+	document.body.layoutInstance?.appendAndCache(form);
+	form.owner = status.username!;
 	form.format = 'tournament';
 	form.formInstance = 'remoteForm';
-	document.body.layoutInstance?.appendAndCache(form);
+	form.classList.remove('h-full');
+	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
 
-	if (action === "invitee")
-		form.displayUpdatedGuests(whiteListUsernames!);
+	if (action === 'invitee') form.displayUpdatedGuests(whiteListUsernames!);
 	if (action === undefined) {
 		action = 'create';
-		form.owner = user.username!;
+		form.owner = status.username!;
 	}
 	wsConnect(action!, 'tournament', 'remoteForm', undefined, undefined, undefined, form);
 }
-
-export async function renderGame(
-	param?: Match<Partial<Record<string, string | string[]>>>,
-	gameRequest?: gameRequest,
-	action?: string,
-	whiteListUsernames?: string[],
-	lobbyWS?: WebSocket
-) {
-	console.log('renderGame');
-
-	const user: userStatusInfo = await userStatus();
-	if (!user.auth || user.username === undefined) {
-		redirectOnError('/auth', 'You must be registered to see this page')
-		return JSON.stringify({ event: 'BAD_USER_TOKEN'});
-	}
-	if (!gameRequest)
+export async function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[], lobbyWS?: WebSocket) {
+	const status = await prepareLayout(document.body.layoutInstance, 'game');
+	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
+	if (!gameRequest) {
+		console.error('GameRequest =>', gameRequest);
 		return redirectOnError('/', "Uh-oh! You can't be there - go join a lobby or something !");
-
-	try {
-		prepareLayout(document.body.layoutInstance, 'game');
-	} catch (error) {
-		console.error(errorMessageFromException(error));
 	}
-
 	const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
-	court.lobbySocket = lobbyWS!;
 	const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
-    ui.player1.innerText = user.username;
-    ui.player2.innerText = gameRequest.opponent;
 
-    const layout = document.body.layoutInstance;
-    const background: [pongTheme, ImgData[]] = getGameBackground(gameRequest.gameSettings.background)
-    court.theme = background[0];
-    if (layout) layout.theme = background[1];
-    document.body.layoutInstance?.appendAndCache(ui, court);
-
-    // pong({ userID: 1, gameID: "1", remote: false }, court.ctx, ui);
-    pong(gameRequest!, court, ui);
+	ui.player1.innerText = status.username!;
+	ui.player2.innerText = gameRequest.opponent;
+	const layout = document.body.layoutInstance;
+	const background: [pongTheme, ImgData[]] = getGameBackground(gameRequest.gameSettings.background);
+	court.theme = background[0];
+	court.lobbySocket = lobbyWS!;
+	if (layout) layout.theme = background[1];
+	document.body.layoutInstance?.appendAndCache(ui, court);
+	pong(gameRequest!, court, ui);
 }
 
 function getGameBackground(background?: string): [pongTheme, ImgData[]] {
-    if (background === "Adorable Farm")
-        return [farm, farmAssets];
-    if (background === "Magical Underwater")
-        return [ocean, oceanAssets];
-    // if (background === "Enchanted Forest")
-    //     return [] //TODO
-    return [defaultTheme, []];
+	if (background === 'Adorable Farm') return [farm, farmAssets];
+	if (background === 'Magical Underwater') return [ocean, oceanAssets];
+	// if (background === "Enchanted Forest")
+	//     return [] //TODO
+	return [defaultTheme, []];
 }
 
-export function renderBracket() {
-	console.log('renderBracket');
-	try {
-		prepareLayout(document.body.layoutInstance, 'bracket');
-	} catch (error) {
-		console.error(errorMessageFromException(error));
-	}
-
-	const bracket = document.createElement('div', {
-		is: 'tournament-bracket',
-	}) as TournamentBrackets;
-	if (bracket) bracket.players = tournament;
-	document.body.layoutInstance?.appendAndCache(bracket);
-}
-
-//TODO add language
 export async function renderPrivacy() {
 	console.log('renderPrivacy');
 	try {
@@ -420,13 +317,10 @@ export async function renderPrivacy() {
 	}
 
 	try {
-		document.body.layoutInstance!.appendAndCache(
-			createHeading('2', "Your privacy"),
-			createPrivacy(),
-		);
+		document.body.layoutInstance!.appendAndCache(createHeading('2', 'Your privacy'), createPrivacy());
 	} catch (error) {
 		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
 	}
 
-	updatePageTitle('Leaderboard');
+	updatePageTitle('Privacy');
 }

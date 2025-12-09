@@ -11,7 +11,6 @@ export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo):
 		console.log("Error: Lobby not found in processGameRequest");
 		return false;
 	}
-	
 	if (lobbyInfo.format === 'tournament') {
 		const tournament: tournament | undefined = createTournament(lobbyInfo, lobbyID);
 		if (tournament === undefined) {

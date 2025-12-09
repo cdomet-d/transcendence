@@ -10,7 +10,7 @@ export const user: UserData = {
 	avatar: {
 		alt: 'pp',
 		id: 'user-avatar',
-		size: 'ilarge',
+		size: 'ixl',
 		src: '/public/assets/images/magenta-avatar.png',
 	},
 	biography: '',

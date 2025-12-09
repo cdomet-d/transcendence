@@ -48,9 +48,10 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 
 			if (data.event === 'GAME_REQUEST') {
 				const gamePayload = payload as lobbyInfo;
+
 				if (processGameRequest(this, gamePayload) === false) {
-					console.log("ICI");
-					wsSend(socket, JSON.stringify({ error: 'not enough players'}));
+					console.log("Error: bad processGameRequest!");
+					wsSend(socket, JSON.stringify({ error: 'not enough players' }));
 				}
 				return;
 			}

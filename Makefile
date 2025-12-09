@@ -21,7 +21,7 @@ run: stop all
 
 stop:
 	@docker compose stop
-	@docker compose down
+	@docker compose down --remove-orphans
 
 log:
 	@mkdir -p ./.docker-log/

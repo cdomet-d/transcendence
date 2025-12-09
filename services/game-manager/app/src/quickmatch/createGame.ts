@@ -3,7 +3,7 @@ import type { game, lobbyInfo, user, userInfo } from '../gameManager/gameManager
 import { natsPublish } from '../nats/publisher.gm.js';
 import { lobbyMap } from '../lobby/lobby.gm.js';
 
-export function createGameObj(lobbyInfo: lobbyInfo, lobbyID: string) {
+export function createGameObj(lobbyInfo: lobbyInfo, lobbyID: string): game | undefined {
 	if (!lobbyInfo) {
 		console.log('Error: lobbyInfo is empty!');
 		return undefined;
@@ -14,11 +14,16 @@ export function createGameObj(lobbyInfo: lobbyInfo, lobbyID: string) {
 		{userID: usersArray[0]!.userID!, username: usersArray[0]!.username! }
 	];
 
+	if (usersArray.length !== lobbyInfo.nbPlayers && lobbyInfo.remote === true) {
+		return undefined;
+	}
+
 	if (lobbyInfo.remote === false)	{
 		users[1] = { userID: "temporary", username: lobbyInfo.gameSettings!.opponent! };
 	} else {
 		users[1] = { userID: usersArray[1]!.userID!, username: usersArray[1]!.username!};
 	}
+
 
 	const game: game = {
 		lobbyID: lobbyInfo.lobbyID!,

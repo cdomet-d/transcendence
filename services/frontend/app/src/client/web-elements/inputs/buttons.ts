@@ -42,8 +42,6 @@ export class RadioButton extends HTMLDivElement {
 	connectedCallback() {
 		this.render();
 
-		// Make the outer div focusable
-		this.setAttribute('tabindex', '0');
 		this.setAttribute('tabindex', '0');
 		this.addEventListener('keydown', this.#toggleInputHandler);
 		this.addEventListener('focus', this.#moveFocusHandler);

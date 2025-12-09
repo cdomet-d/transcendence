@@ -6,10 +6,11 @@ import { CustomButton } from './buttons.js';
 import { main, homeLink, logOut, logIn } from './default-menus.js';
 import { Menu } from './basemenu.js';
 import { NotifBox } from '../notifications/notifications-wrapper.js';
-import { router } from '../../main.js';
+import { router, type userStatusInfo } from '../../main.js';
 import { Searchbar } from '../forms/search.js';
 import { userStatus } from '../../main.js';
 import { currentDictionary } from '../forms/language.js';
+import { origin } from '../../main.js';
 
 /**
  * Custom element for the main page header.
@@ -27,14 +28,17 @@ export class PageHeader extends HTMLElement {
 	#loginHandler: () => void;
 	#logoutHandler: () => void;
 
-    constructor() {
-        super();
-        this.#home = createMenu(homeLink(currentDictionary), 'horizontal', false);
-        this.#searchbar = createForm('search-form');
-        this.#mainNav = createMenu(main(currentDictionary), 'horizontal', false);
-        this.#notif = createNotificationBox();
-        this.#logout = createButton(logOut(currentDictionary), false);
-        this.#login = createButton(logIn(currentDictionary), false);
+	static get observedAttributes() {
+		return ['hidden'];
+	}
+	constructor() {
+		super();
+		this.#home = createMenu(homeLink(currentDictionary), 'horizontal', false);
+		this.#searchbar = createForm('search-form');
+		this.#mainNav = createMenu(main(currentDictionary), 'horizontal', false);
+		this.#notif = createNotificationBox();
+		this.#logout = createButton(logOut(currentDictionary), false);
+		this.#login = createButton(logIn(currentDictionary), false);
 
 		this.#loginHandler = this.#loginImplementation.bind(this);
 		this.#logoutHandler = this.#logoutImplementation.bind(this);
@@ -45,7 +49,7 @@ export class PageHeader extends HTMLElement {
 	}
 
 	async #logoutImplementation() {
-		await fetch('https://localhost:8443/api/auth/logout', { method: 'POST', credentials: 'include' });
+		await fetch(`https://${origin}:8443/api/auth/logout`, { method: 'POST', credentials: 'include' });
 		this.#notif.ws?.close();
 		router.loadRoute('/', true);
 	}
@@ -62,37 +66,42 @@ export class PageHeader extends HTMLElement {
 		this.#logout.removeEventListener('click', this.#logoutHandler);
 	}
 
-    async getLogState(): Promise<void> {
-        const log = await userStatus();
-        if (log.auth) {
-            if (this.contains(this.#login)) this.#login.remove();
-            if (!this.contains(this.#logout)) {
-                this.append(this.#logout);
-                this.#logout.classList.add('h-m', 'w-l');
-            }
-        } else {
-            if (this.contains(this.#logout)) this.#logout.remove();
-            if (!this.contains(this.#login)) {
-                this.append(this.#login);
-                this.#login.classList.add('h-m', 'w-l');
-            }
-        }
-    }
+	attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+		if (oldValue === newValue) return;
+		const children = Array.from(this.children);
+		if (name === 'hidden' && !oldValue) {
+			children.forEach((element) => {
+				element.setAttribute('tabindex', '-1');
+			});
+		} else if (name === 'hidden' && !newValue) {
+			children.forEach((element) => {
+				element.removeAttribute('tabindex');
+			});
+			this.#notif.setAttribute('tabindex', '0');
+		}
+	}
+
+	async getLogState(): Promise<userStatusInfo> {
+		const log = await userStatus();
+		if (log.auth) {
+			if (this.contains(this.#login)) this.#login.remove();
+			if (!this.contains(this.#logout)) {
+				this.append(this.#logout);
+				this.#logout.classList.add('h-m', 'w-l');
+			}
+			await this.#notif.fetchPendingFriendRequests();
+		} else {
+			if (this.contains(this.#logout)) this.#logout.remove();
+			if (!this.contains(this.#login)) {
+				this.append(this.#login);
+				this.#login.classList.add('h-m', 'w-l');
+			}
+		}
+		return log;
+	}
 
 	render() {
-		this.classList.add(
-			'box-border',
-			'w-screen',
-			'grid',
-			'header',
-			'grid-cols-5',
-			'gap-m',
-			'absolute',
-			'top-0',
-			'left-0',
-			'justify-between',
-			'z-1',
-		);
+		this.classList.add('box-border', 'w-screen', 'grid', 'header', 'grid-cols-5', 'gap-m', 'absolute', 'top-0', 'left-0', 'justify-between', 'z-1');
 		this.#mainNav.classList.add('place-self-stretch');
 	}
 

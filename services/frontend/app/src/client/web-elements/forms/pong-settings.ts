@@ -11,6 +11,7 @@ import { userDataFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 import { currentDictionary } from './language.js';
+import { origin } from '../../main.js';
 import { userStatus } from '../../main.js';
 
 /**
@@ -143,13 +144,13 @@ export class RemotePongSettings extends LocalPongSettings {
 	constructor() {
 		super();
 
-        this.#searchbar = createForm('search-form');
-        this.#guestWrapper = document.createElement('div');
-        this.#guests = new Map<string, UserData>();
-        this.#inviteHandler = this.#inviteImplementation.bind(this);
-        this.#owner = '';
-        super.contentMap.get('submit')?.setAttribute('disabled', '');
-    }
+		this.#searchbar = createForm('search-form');
+		this.#guestWrapper = document.createElement('div');
+		this.#guests = new Map<string, UserData>();
+		this.#inviteHandler = this.#inviteImplementation.bind(this);
+		this.#owner = '';
+		super.contentMap.get('submit')?.setAttribute('disabled', '');
+	}
 
 	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
 		console.log('Fetch&Redirect');
@@ -182,16 +183,16 @@ export class RemotePongSettings extends LocalPongSettings {
 		this.classList.add('sidebar-left');
 	}
 
-    startGame() {
-        super.contentMap.get('submit')?.removeAttribute('disabled');
-    }
+	startGame() {
+		super.contentMap.get('submit')?.removeAttribute('disabled');
+	}
 
-    set owner(o: string) {
-        this.#owner = o;
-    }
+	set owner(o: string) {
+		this.#owner = o;
+	}
 	/* -------------------------------- listeners ------------------------------- */
 	async fetchGuests(guestUsername: string): Promise<UserData | null> {
-		const url = `https://localhost:8443/api/bff/tiny-profile/${guestUsername}`;
+		const url = `https://${origin}:8443/api/bff/tiny-profile/${guestUsername}`;
 		try {
 			const rawResp = await fetch(url);
 			console.log(rawResp.ok);
@@ -215,15 +216,14 @@ export class RemotePongSettings extends LocalPongSettings {
 				try {
 					const user = await this.fetchGuests(target.title);
 					if (user) this.#guests.set(user.username, user);
-					wsConnect("invite", "", this.details.id, "", "", {userID: user!.id, username: user!.username});//TODO: check user exists?
+					wsConnect('invite', '', this.details.id, '', '', {userID: user!.id, username: user!.username}); //TODO: check user exists?
 					this.#displayGuests();
 				} catch (error) {
 					console.log(error);
 				}
 			} else {
 				console.log('too many guests');
-				if (target.title === this.#owner)
-					createVisualFeedback("You can't invite yourself, dummy");
+				if (target.title === this.#owner) createVisualFeedback("You can't invite yourself, dummy");
 				else createVisualFeedback("You can't invite any more people!");
 			}
 		}
@@ -245,7 +245,7 @@ export class RemotePongSettings extends LocalPongSettings {
 		if (this.#guestWrapper.firstChild) this.#clearGuests();
 
 		if (this.#guests.size < 1) {
-			const el = createNoResult('light', 'ilarge');
+			const el = createNoResult('light', 'ixl');
 			this.#guestWrapper.append(el);
 			el.classList.add('col-span-2');
 		} else {

@@ -16,17 +16,17 @@ export function createTournament(payload: lobbyInfo, lobbyID: string): tournamen
 
 export function createBracket(lobbyInfo: lobbyInfo, tournamentID: string, lobbyID: string): game[] | undefined {
 	const usersArray: userInfo[] = Array.from(lobbyMap.get(lobbyID)!.userList.values());
+	
+	if (usersArray.length !== lobbyInfo.nbPlayers) {
+		return undefined;
+	}
+
 	const users: user[] = [
 		{userID: usersArray[0]!.userID!, username: usersArray[0]!.username! },
 		{userID: usersArray[1]!.userID!, username: usersArray[1]!.username! },
 		{userID: usersArray[2]!.userID!, username: usersArray[2]!.username! },
 		{userID: usersArray[3]!.userID!, username: usersArray[3]!.username! },
 	];
-
-    if (usersArray.length < 4) { // magic number I know
-        console.log('Error: Not enough players for tournament!');
-        return undefined;
-    }
 
     const shuffledUsers: userInfo[] = fisherYatesShuffle(users);
 
