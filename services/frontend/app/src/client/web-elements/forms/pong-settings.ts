@@ -188,8 +188,8 @@ export class RemotePongSettings extends LocalPongSettings {
 	}
 
 	disableSearchBar() {
-		this.#searchbar.contentMap.get('submit')?.setAttribute('disabled', "");
-	}
+		this.#searchbar.contentMap.get('searchbar')?.setAttribute('disabled', "");
+	}//TODO: fix that
 
 	set owner(o: string) {
 		this.#owner = o;
