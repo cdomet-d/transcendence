@@ -234,7 +234,6 @@ export async function renderQuickLocalLobby() {
 
 	const form: LocalPongSettings = createForm('local-pong-settings', localPong(currentDictionary));
 	document.body.layoutInstance?.appendAndCache(form);
-	form.owner = status.username!;
 	form.format = 'quickmatch';
 	form.formInstance = 'localForm';
 	form.classList.remove('h-full');
@@ -251,7 +250,10 @@ export async function renderQuickRemoteLobby(param?: Match<Partial<Record<string
 	form.formInstance = 'remoteForm';
 	document.body.layoutInstance?.appendAndCache(form);
 
-	if (action === 'invitee') form.displayUpdatedGuests(whiteListUsernames!);
+	if (action === 'invitee') {
+		form.disableSearchBar();
+		form.displayUpdatedGuests(whiteListUsernames!);
+	}
 	if (action === undefined) {
 		action = 'create';
 		form.owner = status.username!;
@@ -264,7 +266,7 @@ export async function renderTournamentLobby(param?: Match<Partial<Record<string,
 	const status = await prepareLayout(document.body.layoutInstance, 'tournamentLobby');
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 
-	const form: LocalPongSettings = createForm('remote-pong-settings', pongTournament(currentDictionary));
+	const form: RemotePongSettings = createForm('remote-pong-settings', pongTournament(currentDictionary));
 	document.body.layoutInstance?.appendAndCache(form);
 	form.owner = status.username!;
 	form.format = 'tournament';
@@ -272,7 +274,10 @@ export async function renderTournamentLobby(param?: Match<Partial<Record<string,
 	form.classList.remove('h-full');
 	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
 
-	if (action === 'invitee') form.displayUpdatedGuests(whiteListUsernames!);
+	if (action === 'invitee') {
+		form.disableSearchBar();
+		form.displayUpdatedGuests(whiteListUsernames!);
+	} 
 	if (action === undefined) {
 		action = 'create';
 		form.owner = status.username!;
