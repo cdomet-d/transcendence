@@ -4,6 +4,7 @@ import { createLobbyRequest, joinLobbyRequest } from './lobbyRequest.front.js';
 import { type gameRequest } from '../pong/pong.js';
 import { redirectOnError } from '../error.js';
 import type { LocalPongSettings, RemotePongSettings } from '../web-elements/forms/pong-settings.js';
+import { origin } from '../main.js'
 
 interface inviteeObj {
 	userID: string, 
@@ -16,7 +17,7 @@ function openWsConnection() {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 		return wsInstance;
 	}
-	wsInstance = new WebSocket('wss://localhost:8443/api/lobby/');
+	wsInstance = new WebSocket(`wss://${origin}:8443/api/lobby/`);
 	return wsInstance;
 }
 

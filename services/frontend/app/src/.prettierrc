@@ -3,7 +3,7 @@
 	"useTabs": true,
 	"singleQuote": true,
 	"semi": true,
-	"printWidth": 100,
+	"printWidth": 200,
 	"objectWrap": "collapse",
 	"trailingComma": "all",
 	"bracketSpacing": true,

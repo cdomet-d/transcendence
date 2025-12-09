@@ -39,7 +39,7 @@ export class Menu extends HTMLElement {
 	/**
 	 * Sets the menu's button elements.
 	 *
-	 * @param {ButtonData[] | navigationLinksData[]} list - Array of objects
+	 * @param {ButtonData[] | NavigationLinksData[]} list - Array of objects
 	 * containing the data for the menus items
 	 */
 	set menuContent(list: MenuData) {
@@ -92,6 +92,7 @@ export class Menu extends HTMLElement {
 			const el = createButton(button, this.#animated);
 			el.role = 'menuitem';
 			el.id = button.id;
+			el.setAttribute('aria-label', button.id);
 			this.#menuLinks.append(el);
 			this.#cache.set(el.id, el);
 		});
@@ -102,6 +103,7 @@ export class Menu extends HTMLElement {
 		this.#linkInfo.links.forEach((link) => {
 			const el = createLink(link, this.#animated);
 			el.role = 'menuitem';
+			el.setAttribute('aria-label', link.id);
 			this.#menuLinks.append(el);
 			this.#cache.set(el.id, el);
 		});

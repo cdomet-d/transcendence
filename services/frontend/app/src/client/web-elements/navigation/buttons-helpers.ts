@@ -1,5 +1,5 @@
 import { CustomButton } from './buttons.js';
-import type { ButtonData, navigationLinksData } from '../types-interfaces.js';
+import type { ButtonData, NavigationLinksData } from '../types-interfaces.js';
 import { NavigationLinks } from './links.js';
 
 /**
@@ -17,7 +17,7 @@ export function createButton(btn: ButtonData, animated?: boolean): CustomButton 
 	return el;
 }
 
-export function createLink(link: navigationLinksData, animated?: boolean) {
+export function createLink(link: NavigationLinksData, animated?: boolean) {
 	const el = document.createElement('a', { is: 'nav-link' }) as NavigationLinks;
 	el.info = link;
 	if (animated) el.animation = animated;

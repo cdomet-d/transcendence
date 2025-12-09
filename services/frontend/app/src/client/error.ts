@@ -13,9 +13,7 @@ export class UIFeedback extends HTMLSpanElement {
 	}
 
 	set type(type: Feedback) {
-		type === 'error'
-			? this.classList.add('bg-red', 'invalid')
-			: this.classList.add('bg-green', 'valid');
+		type === 'error' ? this.classList.add('bg-red', 'invalid') : this.classList.add('bg-green', 'valid');
 	}
 
 	connectedCallback() {
@@ -32,7 +30,7 @@ if (!customElements.get('ui-feedback')) {
 
 export function errorMessageFromException(error: unknown): string {
 	let mess = 'Something went wrong';
-	if (error && error instanceof Error) mess = error.message;
+	if (error && error instanceof Error) mess = error.cause + error.message;
 	return mess;
 }
 

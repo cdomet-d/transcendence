@@ -3,24 +3,9 @@ import type { ImgData } from '../types-interfaces';
 export const farmAssets: ImgData[] = [
 	{ id: 'fence', src: '/public/assets/images/farm-scene/fence.png', alt: 'ahah', size: 'iicon' },
 	{ id: 'cow', src: '/public/assets/images/farm-scene/cow.gif', alt: 'ahah', size: 'iicon' },
-	{
-		id: 'fgrass',
-		src: '/public/assets/images/farm-scene/fgrass.png',
-		alt: 'ahah',
-		size: 'iicon',
-	},
-	{
-		id: 'cloud_r',
-		src: '/public/assets/images/farm-scene/cloud-r.png',
-		alt: 'ahah',
-		size: 'iicon',
-	},
-	{
-		id: 'cloud_l',
-		src: '/public/assets/images/farm-scene/cloud-l.png',
-		alt: 'ahah',
-		size: 'iicon',
-	},
+	{ id: 'fgrass', src: '/public/assets/images/farm-scene/fgrass.png', alt: 'ahah', size: 'iicon' },
+	{ id: 'cloud_r', src: '/public/assets/images/farm-scene/cloud-r.png', alt: 'ahah', size: 'iicon' },
+	{ id: 'cloud_l', src: '/public/assets/images/farm-scene/cloud-l.png', alt: 'ahah', size: 'iicon' },
 	{ id: 'sky', src: '/public/assets/images/farm-scene/sky.png', alt: 'ahah', size: 'iicon' },
 ];
 
@@ -28,37 +13,19 @@ export const oceanAssets: ImgData[] = [
 	{ id: 'tuna', src: '/public/assets/images/ocean-scene/tuna.png', alt: 'ahah', size: 'iicon' },
 	{ id: 'coral', src: '/public/assets/images/ocean-scene/coral.png', alt: 'ahah', size: 'iicon' },
 	{ id: 'algae', src: '/public/assets/images/ocean-scene/algae.png', alt: 'ahah', size: 'iicon' },
-	{
-		id: 'algae1',
-		src: '/public/assets/images/ocean-scene/algae1.png',
-		alt: 'ahah',
-		size: 'iicon',
-	},
-	{
-		id: 'algae2',
-		src: '/public/assets/images/ocean-scene/algae2.png',
-		alt: 'ahah',
-		size: 'iicon',
-	},
+	{ id: 'algae1', src: '/public/assets/images/ocean-scene/algae1.png', alt: 'ahah', size: 'iicon' },
+	{ id: 'algae2', src: '/public/assets/images/ocean-scene/algae2.png', alt: 'ahah', size: 'iicon' },
 	{ id: 'sand', src: '/public/assets/images/ocean-scene/sand.png', alt: 'ahah', size: 'iicon' },
-	{
-		id: 'moutains',
-		src: '/public/assets/images/ocean-scene/moutains.png',
-		alt: 'ahah',
-		size: 'iicon',
-	},
-	{
-		id: 'ocean-bg',
-		src: '/public/assets/images/ocean-scene/ocean-bg.png',
-		alt: 'ahah',
-		size: 'iicon',
-	},
-	{
-		id: 'sunrays',
-		src: '/public/assets/images/ocean-scene/sunrays.png',
-		alt: 'ahah',
-		size: 'iicon',
-	},
+	{ id: 'moutains', src: '/public/assets/images/ocean-scene/moutains.png', alt: 'ahah', size: 'iicon' },
+	{ id: 'ocean-bg', src: '/public/assets/images/ocean-scene/ocean-bg.png', alt: 'ahah', size: 'iicon' },
+	{ id: 'sunrays', src: '/public/assets/images/ocean-scene/sunrays.png', alt: 'ahah', size: 'iicon' },
+];
+
+export const forestAssets: ImgData[] = [
+	{ id: 'bushes', src: '/public/assets/images/forest-scene/bushes.png', alt: 'ahah', size: 'iicon' },
+	{ id: 'trees', src: '/public/assets/images/forest-scene/trees.png', alt: 'ahah', size: 'iicon' },
+	{ id: 'bg_tree', src: '/public/assets/images/forest-scene/bg-tree.png', alt: 'ahah', size: 'iicon' },
+	{ id: 'sunset', src: '/public/assets/images/forest-scene/sunset.png', alt: 'ahah', size: 'iicon' },
 ];
 
 export class Layout extends HTMLElement {

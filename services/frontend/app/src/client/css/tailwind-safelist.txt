@@ -66,3 +66,15 @@ fgrass
 cloud_r
 cloud_l
 sky
+
+bush_top_right
+bush_top_left
+bush_mid_right
+bush_mid_left
+bushes_base
+tree_top_right
+tree_mid_right
+tree_top_left
+tree_mid_left
+tree_base
+forest-bg

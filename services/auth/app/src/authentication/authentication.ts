@@ -14,13 +14,17 @@ import * as schema from './schemas.js';
 export async function authenticationRoutes(serv: FastifyInstance) {
 	serv.get('/status', async (request, reply) => {
 		const token = request.cookies.token;
-		if (!token) return reply.code(401).send({ message: 'Unauthorized' });
+		if (!token) {
+			serv.log.error('Unauthorized: Token not found');
+			return reply.code(401).send({ message: 'Unauthorized - token not found' });
+		}
 		if (token) {
 			try {
 				const user: JwtPayload = await request.jwtVerify();
 				return reply.code(200).send({ username: user.username, userID: user.userID });
 			} catch (error) {
-				return reply.code(401).send({ message: 'Unauthorized' });
+				serv.log.error('Unauthorized: invalid token');
+				return reply.code(401).send({ message: 'Unauthorized - invalid token' });
 			}
 		}
 	});
@@ -60,8 +64,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 		try {
 			const { username, userID } = request.body as { username: string; userID: string };
 
-			if (!validateBearerToken(serv, request.headers.authorization))
-				return reply.code(401).send({ message: '[AUTH] Unauthorized.' });
+			if (!validateBearerToken(serv, request.headers.authorization)) return reply.code(401).send({ message: '[AUTH] Unauthorized.' });
 			clearCookie(reply);
 			const tokenPayload = { userID: userID, username: username };
 			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
@@ -78,10 +81,8 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			serv.log.warn(`[/verify]: ${request.user.username}`);
 			const account = await verifyPasswordMatch(serv, request.user.username, password);
 
-			if (account === 404)
-				return reply.code(404).send({ message: '[AUTH] Account not found.' });
-			if (account === 401)
-				return reply.code(401).send({ message: '[AUTH] Invalid credentials.' });
+			if (account === 404) return reply.code(404).send({ message: '[AUTH] Account not found.' });
+			if (account === 401) return reply.code(401).send({ message: '[AUTH] Invalid credentials.' });
 			if (typeof account === 'object') {
 				const tokenPayload = {
 					userID: account.userID,
@@ -92,9 +93,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 				return reply.code(200).send({ token: token });
 			}
 		} catch (error) {
-			serv.log.error(
-				`[AUTH] An unexpected error occurred while verifying password: ${error}`
-			);
+			serv.log.error(`[AUTH] An unexpected error occurred while verifying password: ${error}`);
 			throw error;
 		}
 	});
@@ -104,8 +103,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 		try {
 			const { username, password } = request.body as { username: string; password: string };
 
-			if (!username || !password)
-				return reply.code(400).send({ message: '[AUTH] Missing username or password.' });
+			if (!username || !password) return reply.code(400).send({ message: '[AUTH] Missing username or password.' });
 
 			const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -120,27 +118,21 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			const params = [newAccountId, hashedPassword, username];
 			const account = await serv.dbAuth.run(query, params);
 
-			if (account.changes === 0 || !account.lastID)
-				throw new Error('[AUTH] Failed to create account record.');
+			if (account.changes === 0 || !account.lastID) throw new Error('[AUTH] Failed to create account record.');
 
 			const usersResponse = createUserProfile(serv.log, newAccountId, username);
-			if ((await usersResponse).errorCode === `conflict`)
-				return reply.code(409).send({ message: 'UserID taken' });
+			if ((await usersResponse).errorCode === `conflict`) return reply.code(409).send({ message: 'UserID taken' });
 
 			const tokenPayload = { userID: newAccountId, username: username };
 			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
 			switch ((await usersResponse).errorCode) {
 				case 'success':
 					setCookie(reply, token);
-					return reply
-						.code(201)
-						.send({ message: '[AUTH] Account and profile created successfully!' });
+					return reply.code(201).send({ message: '[AUTH] Account and profile created successfully!' });
 				case 'conflict':
 					throw new Error('[AUTH] Profile already existed for a newly created account.');
 				case 'user_not_found':
-					throw new Error(
-						`[AUTH] User service could not find newly created userID: ${newAccountId}`
-					);
+					throw new Error(`[AUTH] User service could not find newly created userID: ${newAccountId}`);
 			}
 		} catch (error) {
 			serv.log.error(`[AUTH] Error during registration: ${error}`);
@@ -222,8 +214,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 				dbUpdates.hashedPassword = hashedPassword;
 			}
 
-			if (body.defaultLang && body.defaultLang !== '')
-				dbUpdates.defaultLang = body.defaultLang;
+			if (body.defaultLang && body.defaultLang !== '') dbUpdates.defaultLang = body.defaultLang;
 
 			const keysToUpdate = Object.keys(dbUpdates);
 			if (keysToUpdate.length === 0) {
@@ -255,16 +246,8 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 				message: '[AUTH] Account updated successfully!',
 			});
 		} catch (error) {
-			if (
-				error &&
-				typeof error === 'object' &&
-				'code' in error &&
-				((error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' ||
-					(error as { code: string }).code === 'SQLITE_CONSTRAINT')
-			)
-				return reply
-					.code(409)
-					.send({ success: false, message: '[AUTH] This username is already taken.' });
+			if (error && typeof error === 'object' && 'code' in error && ((error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE' || (error as { code: string }).code === 'SQLITE_CONSTRAINT'))
+				return reply.code(409).send({ success: false, message: '[AUTH] This username is already taken.' });
 			serv.log.error(`[AUTH] Error updating account: ${error}`);
 			throw error;
 		}

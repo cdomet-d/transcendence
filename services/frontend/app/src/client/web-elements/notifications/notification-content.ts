@@ -2,9 +2,10 @@ import { createLink } from '../navigation/buttons-helpers.js';
 import { createMenu } from '../navigation/menu-helpers.js';
 import { Menu } from '../navigation/basemenu.js';
 import type { MenuData } from '../types-interfaces.js';
-import type { navigationLinksData } from '../types-interfaces.js';
+import type { NavigationLinksData } from '../types-interfaces.js';
 import { createVisualFeedback, errorMessageFromException, exceptionFromResponse } from '../../error.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
+import { origin } from '../../main.js';
 
 interface GameInvite {
 	lobbyID: string;
@@ -22,6 +23,7 @@ const notificationBtns: MenuData = {
 			img: null,
 			ariaLabel: 'Decline invitation',
 			style: 'red',
+			action: 'decline'
 		},
 		{
 			id: 'accept',
@@ -30,6 +32,7 @@ const notificationBtns: MenuData = {
 			img: null,
 			ariaLabel: 'Accept invitation',
 			style: 'green',
+			action: 'accept',
 		},
 	],
 };
@@ -42,7 +45,7 @@ const notificationBtns: MenuData = {
  * The element is rendered as a grid with text and action buttons.
  */
 
-export class NotifContent extends HTMLDivElement {
+export class NotifContent extends HTMLLIElement {
 	#acceptHandler: (e: Event) => void;
 	#declineHandler: (e: Event) => void;
 
@@ -54,6 +57,7 @@ export class NotifContent extends HTMLDivElement {
 
 	constructor() {
 		super();
+		this.setAttribute('tabindex', '0');
 		this.#message = document.createElement('span');
 		this.#menu = createMenu(notificationBtns, 'horizontal');
 
@@ -72,8 +76,13 @@ export class NotifContent extends HTMLDivElement {
 		this.#lobbyInfo = obj;
 	}
 
+	#disableButtons() {
+		this.#menu.cache.get('accept')?.setAttribute('disabled', '')
+		this.#menu.cache.get('decline')?.setAttribute('disabled', '')
+	}
+
 	createNotifMessage(profile: string, mess: string) {
-		const linkData: navigationLinksData = {
+		const linkData: NavigationLinksData = {
 			styleButton: false,
 			id: 'requester',
 			datalink: profile,
@@ -90,8 +99,7 @@ export class NotifContent extends HTMLDivElement {
 	}
 
 	async #acceptRelation() {
-		console.log(this.#requesterUsername);
-		const url = 'https://localhost:8443/api/bff/relation';
+		const url = `https://${origin}:8443/api/bff/relation`;
 		const body = { username: `${this.#requesterUsername}` };
 		const jbody = JSON.stringify(body);
 		const req: RequestInit = {
@@ -103,8 +111,7 @@ export class NotifContent extends HTMLDivElement {
 		try {
 			const raw = await fetch(url, req);
 			if (!raw.ok) throw await exceptionFromResponse(raw);
-			const res = await raw.json();
-			createVisualFeedback(res.message, 'success');
+			this.#disableButtons()
 		} catch (error) {
 			console.error('[ACCEPT RELATION]', errorMessageFromException(error));
 			createVisualFeedback(errorMessageFromException(error));
@@ -112,7 +119,7 @@ export class NotifContent extends HTMLDivElement {
 	}
 
 	async #declineRelation() {
-		const url = 'https://localhost:8443/api/bff/relation';
+		const url = `https://${origin}:8443/api/bff/relation`;
 		const body = { username: `${this.#requesterUsername}` };
 		const jbody = JSON.stringify(body);
 		const req: RequestInit = {
@@ -124,8 +131,7 @@ export class NotifContent extends HTMLDivElement {
 		try {
 			const raw = await fetch(url, req);
 			if (!raw.ok) throw await exceptionFromResponse(raw);
-			const res = await raw.json();
-			createVisualFeedback(res.message, 'success');
+			this.#disableButtons()
 		} catch (error) {
 			console.error('[DECLINE RELATION]', errorMessageFromException(error));
 			createVisualFeedback(errorMessageFromException(error));
@@ -164,10 +170,10 @@ export class NotifContent extends HTMLDivElement {
 	render() {
 		this.#menu.listbox.classList.add('row-s');
 		this.#message.className = 'inline-flex justify-center';
-		this.className = 'grid notif-cols gap-s';
+		this.className = 'grid notif-cols gap-s pad-xs';
 	}
 }
 
 if (!customElements.get('notif-content')) {
-	customElements.define('notif-content', NotifContent, { extends: 'div' });
+	customElements.define('notif-content', NotifContent, { extends: 'li' });
 }

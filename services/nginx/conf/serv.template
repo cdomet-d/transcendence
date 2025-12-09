@@ -1,0 +1,12 @@
+map $http_origin $cors_origin {
+    default \"\";
+	^https:\/\/(localhost|$PUBLIC_IP):8443\/?$ $http_origin;
+}
+
+server {
+    listen 0.0.0.0:443 ssl;
+    listen 0.0.0.0:80;
+	server_name localhost ${PUBLIC_IP};
+
+	include /etc/nginx/conf.d/routes.conf;
+}
