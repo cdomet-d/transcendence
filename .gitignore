@@ -1,13 +1,13 @@
 _logs/
-.env
 .notes/
 .secrets/
 .vscode/
 *.db
-*.pem
-*.txt
+*.env
 *.log
 *.logs
+*.pem
+*.txt
 dist/
 node_modules/
 package-lock.json
