@@ -52,7 +52,7 @@ export async function updateStatus(log: any, userID: string, status: boolean, to
 		response = await fetch(url, {
 			method: 'PATCH',
 			headers: { 'Content-Type': 'application/json', Cookie: `token=${token}` },
-			body: JSON.stringify({ status: status }),
+			body: JSON.stringify({ status: status, lastConnexion: new Date().toISOString() }),
 		});
 	} catch (err) { }
 }

@@ -9,4 +9,5 @@ export interface JwtPayload {
     iat: number;
     exp: number;
 	action?: boolean;
+	role?: string;
 }

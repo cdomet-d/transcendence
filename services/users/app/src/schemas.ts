@@ -260,13 +260,6 @@ export const createProfileSchema = {
 };
 
 export const updateProfileSchema = {
-	params: {
-		type: 'object',
-		required: ['userID'],
-		properties: {
-			userID: { type: 'string' }
-		}
-	},
 	body: {
 		type: 'object',
 		properties: {
@@ -275,7 +268,8 @@ export const updateProfileSchema = {
 			biography: { type: 'string' },
 			profileColor: { type: 'string' },
 			lang: { type: 'string' },
-			status: { anyOf: [{ type: 'number' }, { type: 'boolean' }] }
+			status: { anyOf: [{ type: 'number' }, { type: 'boolean' }] },
+			lastConnexion: { type: 'string' }
 		},
 		additionalProperties: false
 	},
