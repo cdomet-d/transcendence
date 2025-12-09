@@ -5,6 +5,13 @@ interface Params {
 	userID: string;
 }
 
+interface JwtPayload {
+	userID: string;
+	username: string;
+	iat: number;
+	exp: number;
+}
+
 export async function addNotifToDB(serv: FastifyInstance, notif: gameNotif) {
     try {
         const queryNotif: string = `
@@ -46,6 +53,28 @@ export async function sendInviteNotifs(request: FastifyRequest<{ Params: Params 
         const userID: string = request.params.userID;
         if (!userID)
             return reply.code(400).send({ error: "Missing userID" });
+        const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
+
+			if (token) {
+				try {
+					const user = request.server.jwt.verify(token) as JwtPayload;
+					if (typeof user !== 'object') throw new Error('Invalid token detected');
+				} catch (error) {
+					if (error instanceof Error && 'code' in error) {
+						if (
+							error.code === 'FST_JWT_BAD_REQUEST' ||
+							error.code === 'ERR_ASSERTION' ||
+							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
+						)
+							return reply.code(400).send({ code: error.code, message: error.message });
+						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
+					} else {
+						return reply.code(401).send({ message: 'Unknown error' });
+					}
+				}
+		}
+
         const sql = `
             SELECT * FROM gameInviteNotifs WHERE receiverID = ?
         `;
