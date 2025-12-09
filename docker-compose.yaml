@@ -114,11 +114,13 @@ services:
             - PORT=2121
             - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
             - NGINXIP=nginx
+            - JWT_SECRET=${JWT_SECRET}
         networks:
             - transcendence
         restart: unless-stopped
         volumes:
             - ./services/game-manager/app:/usr/app
+            - ./services/game-manager/data:/usr/data
     monitoring:
         build:
             context: ./services/monitoring
@@ -148,7 +150,7 @@ services:
             context: ./services/nginx/
             dockerfile: Dockerfile
         container_name: nginx
-        env_file: ./services/nginx/.nginx.env
+        env_file: ./services/nginx/nginx.env
         image: nginx:0.0.1
         networks:
             - transcendence
@@ -190,6 +192,7 @@ services:
             - ./services/users/app:/usr/app
             - ./services/users/data:/usr/data
 
+#TODO: these aren't used unless I forgot how volumes work
 volumes:
     friendsDB:
         driver: local
@@ -219,5 +222,11 @@ volumes:
         driver: local
         driver_opts:
             device: services/dashboards/data
+            o: bind
+            type: none
+    gameManagerDB:
+        driver: local
+        driver_opts:
+            device: services/game-manager/data
             o: bind
             type: none

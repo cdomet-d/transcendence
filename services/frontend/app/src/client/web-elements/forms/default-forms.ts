@@ -364,7 +364,7 @@ export function deleteAccount(dic: Dictionary): FormDetails {
 
 export function downloadData(dic: Dictionary): FormDetails {
 	return {
-		action: `https://localhost:8443/api/bff/data`,
+		action: `https://${origin}:8443/api/bff/data`,
 		heading: '',
 		ariaLabel: 'Download personal data request',
 		id: 'download-data-request',

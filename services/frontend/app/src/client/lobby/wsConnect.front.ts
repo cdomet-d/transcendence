@@ -107,7 +107,7 @@ function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettin
 			const gameRequest: gameRequest = data;
 			// verify gameRequest content before rendering PONG
 			console.log("IN WS CONNECT GameRequest =>", gameRequest);
-			router.loadRoute('/game', true, gameRequest); // TODO give usernames in gameRequest
+			router.loadRoute('/game', true, gameRequest, undefined, undefined, ws); // TODO give usernames in gameRequest
 		} catch (error) {
 			console.error("Error: Failed to parse WS message", error);
 		}
