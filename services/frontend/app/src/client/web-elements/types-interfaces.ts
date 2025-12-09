@@ -412,9 +412,6 @@ export interface Dictionary {
 	settings: {
 		pick_color: string;
 		pick_language: string;
-		en: string;
-		fr: string;
-		es: string;
 	}
 }
 

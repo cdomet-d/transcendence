@@ -515,6 +515,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			}
 
 			const safeUserID = cleanInput(userID);
+			console.log("USER BODY: ", JSON.stringify(body));
 
 			const validStatKeys = [
 				'username',

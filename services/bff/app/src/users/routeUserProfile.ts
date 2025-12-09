@@ -70,7 +70,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const safeUsername = cleanInput(username);
 
 			const responseData = await fetchFullUserProfile(serv.log, requesterID, safeUsername, token);
-
 			return reply.code(200).send(responseData);
 
 		} catch (error) {
@@ -322,6 +321,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const userID = request.user.userID;
 			const body = request.body as any;
 
+			console.log("IN SETTINGS", JSON.stringify(body));
+
 			const profileUpdates: any = {};
 			const profileUpdatesUsername: any = {};
 			const accountUpdates: any = {};
@@ -329,7 +330,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			if (body.avatar) profileUpdates.avatar = cleanInput(body.avatar);
 			if (body.biography) profileUpdates.biography = cleanInput(body.biography);
 			if (body.color) profileUpdates.profileColor = cleanInput(body.color);
-			if (body.defaultLang) profileUpdates.lang = cleanInput(body.defaultLang);
+			if (body.language) profileUpdates.lang = cleanInput(body.language);
 
 			const updateTasks: Promise<void>[] = [];
 

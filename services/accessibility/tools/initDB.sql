@@ -10,7 +10,7 @@ DELETE FROM language_packs;
 
 -- 1. English (en)
 INSERT INTO language_packs (language_code, pack_json) VALUES (
-    'en',
+    'English',
     '{
     "buttons": {
         "submit": "Submit",
@@ -106,17 +106,14 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
     },
     "settings": {
         "pick_color": "Pick color",
-        "pick_language": "Pick language",
-        "en": "English",
-        "fr": "French",
-        "es": "Spanish"
+        "pick_language": "Pick language"
     }
 }'
 );
 
 -- 2. French (fr)
 INSERT INTO language_packs (language_code, pack_json) VALUES (
-    'fr',
+    'French',
     '{
     "buttons": {
         "submit": "Valider",
@@ -212,17 +209,14 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
     },
     "settings": {
         "pick_color": "Choisir une couleur",
-        "pick_language": "Choisir la langue",
-        "en": "Anglais",
-        "fr": "Français",
-        "es": "Espagnol"
+        "pick_language": "Choisir la langue"
     }
 }'
 );
 
 -- 3. Spanish (es)
 INSERT INTO language_packs (language_code, pack_json) VALUES (
-    'es',
+    'Espanol',
     '{
     "buttons": {
         "submit": "Enviar",
@@ -318,10 +312,7 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
     },
     "settings": {
         "pick_color": "Elegir color",
-        "pick_language": "Elegir idioma",
-        "en": "Inglés",
-        "fr": "Francés",
-        "es": "Espagnol"
+        "pick_language": "Elegir idioma"
     }
 }'
 )

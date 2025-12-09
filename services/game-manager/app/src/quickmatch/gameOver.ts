@@ -2,7 +2,12 @@ import { lobbyMap } from '../lobby/lobby.gm.js';
 import type { game } from '../gameManager/gameManager.interface.js';
 
 export function gameOver(payload: string) {
-	const game: game = JSON.parse(payload);
+	//const game: game = JSON.parse(payload);
+	let game: game;
+	if (typeof payload === 'string')
+		game = JSON.parse(payload);
+	else 
+		game = payload;
 	postGameToDashboard(game);
 	patchGameToUsers(game);
 	// showWinnerScreen();

@@ -39,6 +39,10 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const rawBody = request.body as { [key: string]: any };
 			const body = sanitizeBodyValues(rawBody);
 
+			if (body.duration !== undefined) {
+				body.duration = Math.trunc(Number(body.duration));
+			}
+
 			const validKeys = [
 				'gameID',
 				'tournamentID',
@@ -55,6 +59,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			if (keysToInsert.length === 0)
 				return (reply.code(400).send({ message: '[DASHBOARD] No valid fields provided for update.' }));
 
+			console.log("STATS: ", JSON.stringify(body));
 			const columns = keysToInsert.join(', ');
 
 			const placeholders = keysToInsert.map(() => '?').join(', ');
@@ -217,9 +222,9 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 
 			const safeTournamentID = cleanInput(tournamentID);
 			const safeWinnerID = cleanInput(winnerID);;
-			
+
 			if (safeWinnerID === undefined || safeWinnerID === null)
-			return (reply.code(400).send({ message: '[DASHBOARD] winnerID is required.' }));
+				return (reply.code(400).send({ message: '[DASHBOARD] winnerID is required.' }));
 
 			const query = `UPDATE tournament SET winnerID = ? WHERE tournamentID = ?`;
 			const params = [safeWinnerID, safeTournamentID];

@@ -100,19 +100,15 @@ export const defaultDictionary: Dictionary = {
 	settings: {
 		pick_color: "Pick color",
 		pick_language: "Pick language",
-		en: "English",
-		fr: "French",
-		es: "Spanish"
 	}
 };
 
 export let currentDictionary: Dictionary = defaultDictionary;
-export let currentLanguage: string = 'en';
+export let currentLanguage: string = 'English';
 
 export async function setLanguage(lang: string): Promise<void> {
 	try {
 		const response = await fetch(`https://localhost:8443/api/bff/dictionary/${lang}`);
-
 		if (!response.ok) {
 
 		}
@@ -120,8 +116,11 @@ export async function setLanguage(lang: string): Promise<void> {
 
 		currentDictionary = newDict;
 		currentLanguage = lang;
+		console.log("LANGUAGE SET: ", JSON.stringify(lang));
+		console.log("NEW DICTONARY: ", JSON.stringify(newDict));
 
 		localStorage.setItem('preferred_language', lang);
+		console.log("LANGUAGE IN STORAGE: ", JSON.stringify(localStorage.getItem('preferred_language')));
 
 		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang } }));
 
@@ -134,7 +133,8 @@ export async function setLanguage(lang: string): Promise<void> {
 }
 
 export async  function initLanguage() {
-	const savedLang = localStorage.getItem('preferred_language') || 'fr';
-	if (savedLang !== 'en')
-		await setLanguage("fr");
+	const savedLang = localStorage.getItem('preferred_language') || "English";
+	console.log("SAVED LANG :", JSON.stringify(localStorage.getItem('preferred_language')));
+	if (savedLang !== "English")
+		await setLanguage(savedLang);
 }

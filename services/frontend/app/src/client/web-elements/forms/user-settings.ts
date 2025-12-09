@@ -18,8 +18,7 @@ import {
 	createVisualFeedback,
 } from '../../error.js';
 import { router } from '../../main.js';
-//import { currentDictionary } from './language.js';
-import { currentDictionary } from './language.js';
+import { currentDictionary, setLanguage } from './language.js';
 // import imageCompression from 'browser-image-compression';
 
 const MAX_FILE = 2 * 1024 * 1024;
@@ -81,24 +80,51 @@ export class UserSettingsForm extends BaseForm {
 		return jsonBody;
 	}
 
-	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
-		try {
-			let token = localStorage.getItem('criticalChange');
-			if (token) {
-				const objToken = JSON.parse(token);
-				token = objToken.token;
-				req.headers = {
-					Authorization: `Bearer ${token}`,
-					'Content-Type': 'application/json',
-				};
-			}
-			const rawRes = await fetch(url, req);
-			if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
-			router.loadRoute('/me', true);
-		} catch (error) {
-			createVisualFeedback(errorMessageFromException(error));
-		}
-	}
+    override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
+        try {
+            let token = localStorage.getItem('criticalChange');
+            if (token) {
+                const objToken = JSON.parse(token);
+                token = objToken.token;
+                req.headers = {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                };
+            }
+            const rawRes = await fetch(url, req);
+            if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
+            
+            // [FIX] Update language based on request body
+            if (req.body && typeof req.body === 'string') {
+                try {
+                    const bodyObj = JSON.parse(req.body);
+					console.log()
+                    if (bodyObj.language) {
+                        // Map full names to codes if necessary
+                        const langMap: { [key: string]: string } = {
+                            'English': 'English',
+                            'Français': 'Français',
+                            'Espanol': 'Espanol',
+                        };
+                        const newLangCode = langMap[bodyObj.language] || bodyObj.language;
+
+                        console.log("Updating language to:", newLangCode);
+                        
+                        // [CRITICAL] Await this so dictionary loads BEFORE redirect
+                        await setLanguage(newLangCode);
+                    }
+                } catch (e) {
+                    console.error("Failed to parse request body for language update", e);
+                }
+            }
+
+            // [FIX] REMOVED the line: setLanguage(user.language); 
+            // That line was resetting the language to the OLD value stored in the default 'user' object.
+            router.loadRoute('/me', true);
+        } catch (error) {
+            createVisualFeedback(errorMessageFromException(error));
+        }
+    }
 
 	/**
 	 * Handles the submit event for the form.

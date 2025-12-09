@@ -134,7 +134,7 @@ export function social(dic: Dictionary): MenuData {
 
 export const languageMenu: ButtonData[] = [
     { id: 'English', ariaLabel: 'English', content: 'English', img: null, type: 'button' },
-    { id: 'Spanish', ariaLabel: 'Spanish', content: 'Español', img: null, type: 'button' },
+    { id: 'Spanish', ariaLabel: 'Spanish', content: 'Espanol', img: null, type: 'button' },
     { id: 'French', ariaLabel: 'Francais', content: 'French', img: null, type: 'button' },
 ];
 

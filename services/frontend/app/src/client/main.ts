@@ -38,29 +38,20 @@ export async function userStatus(): Promise<userStatusInfo> {
 
 
 async function startApp() {
-    try {
-        await initLanguage();
-    } catch (e) {
-        console.warn("Language failed to load, falling back to English", e);
-    }
+	try {
+		console.log("IN MAIN.TS");
+		await initLanguage();
+	} catch (e) {
+		console.warn("Language failed to load, falling back to English", e);
+	}
 
-    document.body.layoutInstance = document.createElement('main', { is: 'custom-layout' }) as Layout;
-    document.body.header = document.createElement('header', { is: 'page-header' }) as PageHeader;
-    if (!document.body.layoutInstance || !document.body.header)
-        throw new Error('Error initializing HTML Layouts - page cannot be charged.');
+	document.body.layoutInstance = document.createElement('main', { is: 'custom-layout' }) as Layout;
+	document.body.header = document.createElement('header', { is: 'page-header' }) as PageHeader;
+	if (!document.body.layoutInstance || !document.body.header)
+		throw new Error('Error initializing HTML Layouts - page cannot be charged.');
 
-    document.body.append(document.body.header, document.body.layoutInstance);
-    router.loadRoute(router.currentPath, true);
+	document.body.append(document.body.header, document.body.layoutInstance);
+	router.loadRoute(router.currentPath, true);
 }
 
 startApp();
-/* 
- initLanguage();
-document.body.layoutInstance = document.createElement('div', { is: 'custom-layout' }) as Layout;
-document.body.header = document.createElement('header', { is: 'page-header' }) as PageHeader;
-if (!document.body.layoutInstance || !document.body.header) {
-	throw new Error('Error initializing HTML Layouts - page cannot be charged.');
-}
-
-document.body.append(document.body.header, document.body.layoutInstance);
-router.loadRoute(router.currentPath, true); */

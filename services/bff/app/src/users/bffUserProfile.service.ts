@@ -525,7 +525,6 @@ export async function fetchFriendshipsPending(log: any, userID: string, status: 
 	return profiles.filter((p): p is userData => p !== null);
 }
 
-
 //error handled
 async function fetchMatches(log: any, userID: string, token: string): Promise<RawMatches[]> {
 	const url = `http://dashboard:1515/games/${userID}`;
@@ -755,7 +754,7 @@ export async function updateUserProfile(
 	token: string
 ): Promise<void> {
 	const url = `http://users:2626/${userID}`;
-
+	console.log("UPDATE USER PROFILE IN BFF");
 	let response: Response;
 	try {
 		response = await fetch(url, {
