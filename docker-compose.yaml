@@ -85,7 +85,7 @@ services:
         environment:
             - NGINXIP=nginx
             - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-            - HOST="z1r2p3"
+            - HOST="localhost"
         volumes:
             - ./services/frontend/app:/app
     bff:
