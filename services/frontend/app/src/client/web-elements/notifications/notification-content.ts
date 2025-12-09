@@ -139,11 +139,11 @@ export class NotifContent extends HTMLLIElement {
 	}
 
 	#joinGame() {
-		wsConnect("join", "", this.#lobbyInfo?.formInstance!, this.#lobbyInfo?.lobbyID, "", this.#lobbyInfo?.inviteeID);
+		wsConnect("join", "", this.#lobbyInfo?.formInstance!, this.#lobbyInfo?.lobbyID, "", {userID: this.#lobbyInfo!.inviteeID});
 	}
 
 	#declineGame() {
-		wsConnect("decline", "", "", this.#lobbyInfo?.lobbyID, "", this.#lobbyInfo?.inviteeID);
+		wsConnect("decline", "", "", this.#lobbyInfo?.lobbyID, "", {userID: this.#lobbyInfo!.inviteeID});
 	}
 
 	#acceptImplementation(e: Event) {

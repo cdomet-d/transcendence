@@ -3,7 +3,7 @@ import { updateUserStats } from './dashboard.service.js'
 import type { GameInput, userStats } from '././dashboard.service.js';
 import { cleanInput } from './sanitizer.js';
 import {
-	getUserByNameSchema, getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, searchUsersSchema, updateStatsSchema, getUserIDByUsernameSchema,
+	anonymizeUserSchema, getUserByNameSchema, getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, searchUsersSchema, updateStatsSchema, getUserIDByUsernameSchema,
 	getUserProfileSchema, getUserStatsSchema, getUsernamesByIdsSchema, createProfileSchema, deleteProfileSchema, updateProfileSchema
 } from './schemas.js';
 import { profile } from 'console';
@@ -17,7 +17,9 @@ export interface userData {
 	status: boolean,
 	username: string,
 	winStreak: string,
-	since: string
+	since: string,
+	totalWins: string;
+	totalLosses: string
 }
 
 interface JwtPayload {
@@ -25,6 +27,7 @@ interface JwtPayload {
 	username: string;
 	iat: number;
 	exp: number;
+	role: string;
 }
 
 export async function userRoutes(serv: FastifyInstance) {
@@ -57,15 +60,16 @@ export async function userRoutes(serv: FastifyInstance) {
 			const { userID } = request.params as { userID: string };
 			const safeUserID = cleanInput(userID);
 
-
 			const query = `
-				SELECT
+			SELECT
 				p.*,
-				s.winStreak
-				FROM userProfile p
-				LEFT JOIN userStats s ON p.userID = s.userID
-				WHERE p.userID = ?
-			`;
+				s.winStreak,
+				s.totalLosses,
+				s.totalWins
+			FROM userProfile p
+			LEFT JOIN userStats s ON p.userID = s.userID
+			WHERE p.userID = ?
+		`;
 
 			const userProfile = await serv.dbUsers.get<userData>(query, [safeUserID]);
 			if (!userProfile) {
@@ -118,7 +122,7 @@ export async function userRoutes(serv: FastifyInstance) {
 					p.userID,
 					p.lang,
 					p.profileColor,
-					p.activityStatus,
+					p.status,
 					p.userRole,
 					p.username,
 					s.winStreak,
@@ -430,12 +434,13 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const queryProfile = `
 				INSERT INTO userProfile
-				(userID, username, activityStatus, profileColor, userRole, since, lang)
-				VALUES (?, ?, 1, "bg-000080", 1, ?, "en")
+				(userID, username, status, profileColor, userRole, since, lang, lastConnexion)
+				VALUES (?, ?, 0, "bg-000080", 1, ?, "en", ?)
 			`;
 			const paramsProfile = [
 				safeuserID,
 				safeUsername,
+				new Date().toISOString(),
 				new Date().toISOString(),
 			];
 
@@ -444,9 +449,9 @@ export async function userRoutes(serv: FastifyInstance) {
 				throw new Error('Database Error: Profile INSERT failed (0 changes).');
 
 			const queryStats = `
-				INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins,
+				INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins, totalLosses,
 				winStreak, averageMatchDuration, longuestPass)
-				VALUES (?, 0, 0, 0, 0, 0, 0, 0)
+				VALUES (?, 0, 0, 0, 0, 0, 0, 0, 0)
 			`;
 
 			const createStats = await serv.dbUsers.run(queryStats, [safeuserID]);
@@ -517,7 +522,8 @@ export async function userRoutes(serv: FastifyInstance) {
 				'biography',
 				'profileColor',
 				'lang',
-				'activityStatus',
+				'status',
+				'lastConnexion'
 			];
 
 			const keysToUpdate = Object.keys(body).filter((key) => validStatKeys.includes(key));
@@ -609,6 +615,7 @@ export async function userRoutes(serv: FastifyInstance) {
 	//get all user's stats with userID
 	serv.get('/stats/:userID', { schema: getUserStatsSchema }, async (request, reply) => {
 		try {
+
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
@@ -681,111 +688,74 @@ export async function userRoutes(serv: FastifyInstance) {
 			if (error instanceof Error && error.message.includes('Stats not found')) {
 				return reply.code(404).send({ message: error.message });
 			}
+			throw error;
+		}
+	});
+
+	serv.patch('/anonymize', { schema: anonymizeUserSchema }, async (request, reply) => {
+		try {
+			const token = request.cookies.token;
+			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
+
+			try {
+				const user = serv.jwt.verify(token) as any;
+				if (typeof user !== 'object') throw new Error('Invalid token detected');
+				request.user = user;
+			} catch (error) {
+				return reply.code(401).send({ message: 'Unauthorized' });
+			}
+
+			let targetUserID = request.user.userID;
+
+			if (request.user.role === 'admin') {
+				const body = request.body as { userID?: string };
+				if (body && body.userID) {
+					targetUserID = body.userID;
+					serv.log.info(`[USERS] Admin override: Anonymizing user ${targetUserID}`);
+				}
+			}
+
+			const safeUserID = targetUserID;
+
+			const newUsername = `DeletedUser_${crypto.randomUUID().slice(0, 8)}`;
+			const placeholderAvatar = '/public/default_avatar.png';
+
+			const query = `UPDATE userProfile SET username = ?, avatar = ?, biography = NULL WHERE userID = ?`;
+
+			const result = await serv.dbUsers.run(query, [newUsername, placeholderAvatar, safeUserID]);
+
+			if (result.changes === 0) {
+				return reply.code(404).send({ message: 'User not found' });
+			}
+
+			return reply.code(200).send({ success: true, message: 'User anonymized' });
+
+		} catch (error) {
+			serv.log.error(`[USERS] Error processing anonymization: ${error}`);
 			return reply.code(500).send({ message: 'Internal Server Error' });
 		}
 	});
 
-	/* 	serv.get('/:userID/userData', async (request, reply) => {
+	//TODO schema ?
+	serv.get('/inactive', async (request, reply) => {
 		try {
-			const { userID } = request.params as { userID: string };
-
 			const query = `
-				SELECT
-					p.avatar,
-					p.biography,
-					p.profileColor,
-					p.activityStatus,
-					s.winStreak
-				FROM
-					userProfile p
-				JOIN
-					userStats s ON p.userID = s.userID
-				WHERE
-					p.userID = ?
-			`;            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-
-			const userData = await serv.dbUsers.get(query, [userID]);
-			if (!userData) {
-				return (reply.code(404).send({
-					success: false,
-					message: 'User data not found.'
-				}));
-			}
-
-			return (reply.code(200).send({ success: true, userData }));
-		} catch (error) {
-			serv.log.error(`[USERS] Error fetching user data win streak: ${error}`);
-			throw (error);
-		}
-	});
-
-	serv.post('/userDataBatch', async (request, reply) => {
-		try {
-			const { userIDs } = request.body as { userIDs: number[] };
-
-			if (!userIDs || userIDs.length === 0)
-				return (reply.code(200).send([]));
-
-			const placeholders = userIDs.map(() => '?').join(',');
-
-			const query = `
-				SELECT
-					p.userID,
-					p.username,
-					p.avatar,
-					p.biography,
-					p.profileColor,
-					s.winStreak
-				FROM
-					userProfile p
-				JOIN
-					userStats s ON p.userID = s.userID
-				WHERE
-					p.userID IN (${placeholders})
+				SELECT userID 
+				FROM userProfile 
+				WHERE lastConnexion < date('now', '-2 years')
 			`;
 
-			const usersData = await serv.dbUsers.all(query, userIDs);
-			return (reply.code(200).send({ success: true, usersData }));
+			const rows = await serv.dbUsers.all(query);
+
+			const userIDs = rows.map((row: any) => row.userID);
+			console.log(JSON.stringify(userIDs));
+
+			return reply.code(200).send({ userIDs });
 
 		} catch (error) {
-			serv.log.error(`[USERS] Error fetching user data batch: ${error}`);
-			throw (error);
+			serv.log.error(`[USERS] Error fetching inactive users: ${error}`);
+			return reply.code(500).send({ message: 'Internal Server Error' });
 		}
-	}); */
-
-	// ROUTE NOT USED BUT KEEPING JUST IN CASE MIGHT BE DELETED LATER
-	/*
-	
-	serv.post('/api/games/responses', async (request, reply) => {
-		try {
-			const { winnerID, loserID, duration, winnerScore } = request.body as any;
-
-			const winnerActions = [
-				{ action: 'increment', field: 'totalMatch', value: 1 },
-				{ action: 'increment', field: 'totalWins', value: 1 },
-				{ action: 'setIfGreater', field: 'longestMatch', value: duration },
-				{ action: 'setIfLess', field: 'shortestMatch', value: duration },
-				{ action: 'setIfGreater', field: 'longuestPass', value: winnerScore }
-			];
-
-			const loserActions = [
-				{ action: 'increment', field: 'totalMatch', value: 1 },
-				{ action: 'setIfGreater', field: 'longestMatch', value: duration },
-				{ action: 'setIfLess', field: 'shortestMatch', value: duration }
-			];
-
-			await Promise.all([
-				updateUserStats(winnerID, winnerActions),
-				incrementWinStreak(winnerID),
-
-				updateUserStats(loserID, loserActions),
-				resetWinStreak(loserID)
-			]);
-
-			return reply.code(200).send({ message: 'Game responses processed.' });
-		} catch (error) {
-			serv.log.error(`[BFF] Error processing game responses: ${error}`);
-			return reply.code(503).send({ message: 'A backend service is unavailable.' });
-		}
-	});*/
+	});
 }
+

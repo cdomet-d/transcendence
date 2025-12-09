@@ -1,13 +1,18 @@
 import { BaseForm } from './baseform.js';
 import { CriticalActionForm } from './auth.js';
 import { exceptionFromResponse, createVisualFeedback, errorMessageFromException } from '../../error.js';
-import { router } from '../../main.js';
+import type { UserData } from '../types-interfaces.js';
+import { currentDictionary } from './language.js';
+import { downloadData } from './default-forms.js';
+import { user } from '../default-values.js';
 
-export class DeleteAccountForm extends BaseForm {
+export class DowloadDataForm extends BaseForm {
+	#user: UserData;
 
 	constructor() {
 		super();
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
+		this.#user = user;
 	}
 
 	override async submitHandlerImplementation(ev: SubmitEvent): Promise<void> {
@@ -16,18 +21,19 @@ export class DeleteAccountForm extends BaseForm {
 		try {
 			await CriticalActionForm.show();
 
+			const actionUrl = `https://localhost:8443/api/bff/data`;
+
 			const req: RequestInit = {
-				method: this.details.method || 'DELETE',
+				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({})
 			};
 
-			await this.fetchAndRedirect(this.details.action, req);
+			await this.fetchAndRedirect(actionUrl, req);
 
 		} catch (error) {
-			console.log('Account deletion flow stopped:', error);
+			console.log('Downloading stopped:', error);
 		}
 	}
 
@@ -49,25 +55,36 @@ export class DeleteAccountForm extends BaseForm {
 				console.error('Error parsing critical token', e);
 			}
 		}
-		if (!req.body)
-			req.body = JSON.stringify({});
 
 		try {
 			const response = await fetch(url, req);
 			if (!response.ok) throw await exceptionFromResponse(response);
 
-			localStorage.removeItem('criticalChange');
+			const blob = await response.blob();
+			const downloadUrl = window.URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.href = downloadUrl;
+			a.download = `user_data_${this.#user?.username || 'export'}.json`;
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+			window.URL.revokeObjectURL(downloadUrl);
 
-			router.loadRoute('/auth', true);
-			createVisualFeedback('Account permanently deleted', 'success');
+			localStorage.removeItem('criticalChange');
+			createVisualFeedback('Data downloaded!', 'success');
 
 		} catch (error) {
-			console.error('[DELETE ACCOUNT]', error);
+			console.error('[DOWNLOAD DATA ERROR]', error);
 			createVisualFeedback(errorMessageFromException(error));
 		}
 	}
+
+	set user(details: UserData) {
+		this.#user = details;
+		this.details = downloadData(currentDictionary);
+	}
 }
 
-if (!customElements.get('delete-account-form')) {
-	customElements.define('delete-account-form', DeleteAccountForm, { extends: 'form' });
+if (!customElements.get('download-data-request')) {
+	customElements.define('download-data-request', DowloadDataForm, { extends: 'form' });
 }

@@ -12,15 +12,16 @@ import { pong, type gameRequest } from './pong/pong.js';
 import { PongUI } from './web-elements/game/game-ui.js';
 import { errorMessageFromException, exceptionFromResponse, redirectOnError } from './error.js';
 import type { Match } from 'path-to-regexp';
-import type { TabData } from './web-elements/types-interfaces.js';
-import { router, type userStatusInfo } from './main.js';
+import type { navigationLinksData, pongTheme, TabData, ImgData } from './web-elements/types-interfaces.js';
+import { userStatus, router, type userStatusInfo } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
 import { createLink } from './web-elements/navigation/buttons-helpers.js';
 import type { NavigationLinks } from './web-elements/navigation/links.js';
 import { currentDictionary } from './web-elements/forms/language.js';
-import { origin } from './main.js'
+import type { LocalPongSettings, RemotePongSettings } from './web-elements/forms/pong-settings.js';
+import { createPrivacy } from './web-elements/users/privacy.js';
 
 const layoutPerPage: { [key: string]: string } = {
 	bracket: 'full-screen',
@@ -236,22 +237,39 @@ export async function renderQuickLocalLobby() {
 	document.body.layoutInstance?.appendAndCache(form);
 	form.classList.remove('h-full');
 	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
-	wsConnect('create', 'quickmatch', 'localForm');
+	wsConnect('create', 'quickmatch', 'localForm', undefined, undefined, undefined, form);
 }
 
-export async function renderQuickRemoteLobby() {
+export async function renderQuickRemoteLobby(
+	param?: Match<Partial<Record<string, string | string[]>>>,
+	gameRequest?: gameRequest,
+	action?: string,
+	whiteListUsernames?: string[],
+) {
 	const status = await prepareLayout(document.body.layoutInstance, 'quickLobby');
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN'});
 
-	const form = createForm('remote-pong-settings', remotePong(currentDictionary));
-	form.owner = status.username!;
+	const form: RemotePongSettings = createForm('remote-pong-settings', remotePong(currentDictionary))
+	form.format = 'quickmatch';
+	form.formInstance = 'remoteForm';
 	document.body.layoutInstance?.appendAndCache(form);
-	form.classList.remove('h-full');
-	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
-	wsConnect('create', 'quickmatch', 'remoteForm');
+
+	if (action === "invitee")
+		form.displayUpdatedGuests(whiteListUsernames!);
+	if (action === undefined) {
+		action = 'create';
+		form.owner = status.username!;
+	}
+
+	wsConnect(action!, 'quickmatch', 'remoteForm', undefined, undefined, undefined, form);
 }
 
-export async function renderTournamentLobby() {
+export async function renderTournamentLobby(
+	param?: Match<Partial<Record<string, string | string[]>>>,
+	gameRequest?: gameRequest,
+	action?: string,
+	whiteListUsernames?: string[],
+) {
 	const status = await prepareLayout(document.body.layoutInstance, 'tournamentLobby');
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN'});
 
@@ -260,7 +278,24 @@ export async function renderTournamentLobby() {
 	document.body.layoutInstance?.appendAndCache(form);
 	form.classList.remove('h-full');
 	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
-	wsConnect('create', 'tournament', 'tournamentForm');
+
+	if (action === "invitee")
+		form.displayUpdatedGuests(whiteListUsernames!);
+	if (action === undefined) {
+		action = 'create';
+		form.owner = status.username!;
+	}
+	wsConnect(action!, 'tournament', 'remoteForm', undefined, undefined, undefined, form);
+}
+
+function getGameBackground(background?: string): [pongTheme, ImgData[]] {
+    if (background === "Adorable Farm")
+        return [farm, farmAssets];
+    if (background === "Magical Underwater")
+        return [ocean, oceanAssets];
+    // if (background === "Enchanted Forest")
+    //     return [] //TODO
+    return [defaultTheme, []];
 }
 
 export async function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest) {
@@ -270,18 +305,15 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 		console.error('GameRequest =>', gameRequest);
 		return redirectOnError('/', "Uh-oh! You can't be there - go join a lobby or something !");
 	}
-	console.log('GameRequest =>', gameRequest);
 	const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
 	const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
 
-	// TODO: set pong-court theme from game-manager object
-	court.theme = forest;
-
     ui.player1.innerText = status.username!;
     ui.player2.innerText = gameRequest.opponent;
-
 	const layout = document.body.layoutInstance;
-	if (layout) layout.theme = forestAssets;
-	document.body.layoutInstance?.appendAndCache(ui, court);
-	pong(gameRequest!, court.ctx, ui);
+	const background: [pongTheme, ImgData[]] = getGameBackground(gameRequest.gameSettings.background)
+    court.theme = background[0];
+    if (layout) layout.theme = background[1];
+    document.body.layoutInstance?.appendAndCache(ui, court);
+	pong(gameRequest!, court, ui);
 }

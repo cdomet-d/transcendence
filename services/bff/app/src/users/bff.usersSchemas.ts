@@ -80,18 +80,27 @@ export const leaderboardGet = {
 	}
 };
 
-export const settingsPatch = {
+export const settingsPatchSchema = {
 	body: {
 		type: 'object',
 		properties: {
+			username: {
+				anyOf: [
+					{ type: 'string', maxLength: 0 },
+					{ type: 'string', minLength: 3, maxLength: 18 }
+				]
+			},
+			password: {
+				anyOf: [
+					{ type: 'string', maxLength: 0 },
+					{ type: 'string', minLength: 12, maxLength: 64 }
+				]
+			},
+			biography: { type: 'string', maxLength: 500 },
 			avatar: { type: 'string' },
-			biography: { type: 'string' },
-			profileColor: { type: 'string' },
-			defaultLang: { type: 'string' },
-			username: { type: 'string' },
-			password: { type: 'string' }
-		},
-		additionalProperties: false
+			color: { type: 'string' },
+			defaultLang: { type: 'string', enum: ['en', 'fr', 'es'] }
+		}
 	},
 	response: {
 		200: messageResponse,

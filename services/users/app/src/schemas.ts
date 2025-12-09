@@ -1,3 +1,5 @@
+import { kMaxLength } from "buffer";
+
 const messageResponse = {
 	type: 'object',
 	properties: {
@@ -258,13 +260,6 @@ export const createProfileSchema = {
 };
 
 export const updateProfileSchema = {
-	params: {
-		type: 'object',
-		required: ['userID'],
-		properties: {
-			userID: { type: 'string' }
-		}
-	},
 	body: {
 		type: 'object',
 		properties: {
@@ -273,7 +268,8 @@ export const updateProfileSchema = {
 			biography: { type: 'string' },
 			profileColor: { type: 'string' },
 			lang: { type: 'string' },
-			activityStatus: { anyOf: [{ type: 'number' }, { type: 'boolean' }] }
+			status: { anyOf: [{ type: 'number' }, { type: 'boolean' }] },
+			lastConnexion: { type: 'string' }
 		},
 		additionalProperties: false
 	},
@@ -346,5 +342,25 @@ export const updateStatsSchema = {
 		500: messageResponse,
 		401: messageResponse
 
+	}
+};
+
+export const anonymizeUserSchema = {
+	body: {
+		type: 'object',
+		additionalProperties: true
+	},
+	response: {
+		200: {
+			type: 'object',
+			properties: {
+				success: { type: 'boolean' },
+				message: { type: 'string' }
+			}
+		},
+		400: messageResponse,
+		401: messageResponse,
+		404: messageResponse,
+		500: messageResponse
 	}
 };

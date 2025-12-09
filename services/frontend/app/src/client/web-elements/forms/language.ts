@@ -16,7 +16,8 @@ export const defaultDictionary: Dictionary = {
 		logout: "Log out",
 		start_game: "Start game",
 		start_tournament: "Start tournament",
-		delete_account: "Delete account"
+		delete_account: "Delete account",
+		download_data: "Download personal data"
 	},
 	forms: {
 		username: "Username",
@@ -57,7 +58,7 @@ export const defaultDictionary: Dictionary = {
 		ball_speed: "Starting Ball Speed",
 		paddle_size: "Paddle Size",
 		paddle_speed: "Paddle Speed",
-		paddle_horizontal: "Horizontal Movement",
+		paddle_horizontal: "Horizontal",
 		opponent: "Opponent",
 		start: "Start Game",
 		local: "Local",
@@ -113,10 +114,8 @@ export async function setLanguage(lang: string): Promise<void> {
 	try {
 		const response = await fetch(`https://${origin}:8443/api/bff/dictionary/${lang}`);
 
-		//TODO handle error
 		if (!response.ok) {
-			console.log("ta grand mere");
-			throw new Error(`Failed to load language: ${lang}`);
+
 		}
 		const newDict = (await response.json()) as Dictionary;
 
@@ -128,15 +127,14 @@ export async function setLanguage(lang: string): Promise<void> {
 		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang } }));
 
 		console.log(`[LANG] Switched to ${lang}`);
-		console.log(JSON.stringify(currentDictionary));
 
 	} catch (error) {
 		console.error('[LANG] Error loading language pack:', error);
+		throw(error);
 	}
 }
 
 export async  function initLanguage() {
-	console.log("In init language");
 	const savedLang = localStorage.getItem('preferred_language') || 'fr';
 	if (savedLang !== 'en')
 		await setLanguage("fr");

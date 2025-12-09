@@ -23,6 +23,8 @@ interface gameDashboardReqBody {
 }
 
 async function postGameToDashboard(game: game) {
+	if (game.score[0] === -1 && game.score[1] === -1)
+		return;
 	const url = `http://dashboard:1515/game`;
 	const reqBody: gameDashboardReqBody = {
 		gameID: game.gameID,
@@ -35,7 +37,6 @@ async function postGameToDashboard(game: game) {
 		player1Score: game.users![0]!.userID! === game.winnerID ? game.score[0] : game.score[1],
 		player2Score: game.users![1]!.userID! === game.winnerID ? game.score[0] : game.score[1],
 	}
-	console.log('REQ BODY DASHBOARD', JSON.stringify(reqBody));
 	try {
 		const response: Response = await fetch(url, {
 			method: 'POST',
@@ -63,6 +64,8 @@ interface usersReqBody {
 }
 
 async function patchGameToUsers(game: game) {
+	if (game.score[0] === -1 && game.score[1] === -1)
+		return;
 	const url = `http://users:2626/stats`;
 	const reqBody: usersReqBody = {
 		player1: game.users![0]!.userID!,
@@ -72,8 +75,6 @@ async function patchGameToUsers(game: game) {
 		longuestPass: game.longuestPass,
 		duration: game.duration,
 	}
-	console.log('REQ BODY USERS', JSON.stringify(reqBody));
-
 	try {
 		const response: Response = await fetch(url, {
 			method: 'PATCH',

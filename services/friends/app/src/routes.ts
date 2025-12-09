@@ -373,8 +373,15 @@ export async function routeFriend(serv: FastifyInstance) {
 				}
 			}
 
-			const { userID } = request.params as { userID: string };
+			let userID = request.user.userID;
 			const safeUserID = cleanInput(userID);
+			if (request.user.role === 'admin') {
+				const body = request.body as { userID?: string };
+				if (body && body.userID) {
+					userID = body.userID;
+					serv.log.info(`[USERS] Admin override: Anonymizing user ${userID}`);
+				}
+			}
 
 			const query = `
 				DELETE FROM friendship 
@@ -383,7 +390,7 @@ export async function routeFriend(serv: FastifyInstance) {
 			`;
 			await serv.dbFriends.run(query, [safeUserID, safeUserID]);
 
-			return reply.code(204).send();
+			return reply.code(200).send();
 		} catch (error) {
 			serv.log.error(`[FRIENDS] Error deleting all friendships: ${error}`);
 			throw error;

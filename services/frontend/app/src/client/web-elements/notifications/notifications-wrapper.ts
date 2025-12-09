@@ -1,4 +1,4 @@
-import type { GameType, friendNotif, gameNotif } from '../types-interfaces.js';
+import type { friendNotif, gameNotif } from '../types-interfaces.js';
 import { userStatus, type userStatusInfo } from '../../main.js';
 import { createVisualFeedback, errorMessageFromException, exceptionFromResponse, redirectOnError } from '../../error.js';
 import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
@@ -141,7 +141,7 @@ export class NotifBox extends HTMLDivElement {
 	 */
 	newGameInvitation(gameNotif: gameNotif) {
 		const notif = document.createElement('li', { is: 'notif-content' }) as NotifContent;
-		notif.createNotifMessage(gameNotif.receiverName, `challenged you to a ${gameNotif.gameType}!`);
+		notif.createNotifMessage(gameNotif.senderUsername, `challenged you to a ${gameNotif.gameType}!`);
 		notif.id = 'game';
 		notif.lobbyInfo = { lobbyID: gameNotif.lobbyID, inviteeID: gameNotif.receiverID, formInstance: gameNotif.gameType! };
 		this.#panel.newNotification(notif);

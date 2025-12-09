@@ -1,7 +1,7 @@
 import type { FormDetails, UserData } from '../types-interfaces.js';
 import type { Dictionary } from '../types-interfaces.js';
 import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
-import { currentDictionary } from './language.js';
+import { currentDictionary, defaultDictionary } from './language.js';
 import { origin } from '../../main.js';
 
 export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails {
@@ -164,7 +164,7 @@ export function localPong(dic: Dictionary): FormDetails {
 			{
 				id: 'ballspeed',
 				labelContent: dic.gameCustom.ball_speed,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -183,7 +183,7 @@ export function localPong(dic: Dictionary): FormDetails {
 			{
 				id: 'paddlesize',
 				labelContent: dic.gameCustom.paddle_size,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -202,7 +202,7 @@ export function localPong(dic: Dictionary): FormDetails {
 			{
 				id: 'paddlespeed',
 				labelContent: dic.gameCustom.paddle_speed,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -241,7 +241,7 @@ export function remotePong(dic: Dictionary): FormDetails {
 			{
 				id: 'ballspeed',
 				labelContent: dic.gameCustom.ball_speed,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -252,7 +252,7 @@ export function remotePong(dic: Dictionary): FormDetails {
 			{
 				id: 'paddlesize',
 				labelContent: dic.gameCustom.paddle_size,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -263,7 +263,7 @@ export function remotePong(dic: Dictionary): FormDetails {
 			{
 				id: 'paddlespeed',
 				labelContent: dic.gameCustom.paddle_speed,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -302,7 +302,7 @@ export function pongTournament(dic: Dictionary): FormDetails {
 			{
 				id: 'ballspeed',
 				labelContent: dic.gameCustom.ball_speed,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -313,7 +313,7 @@ export function pongTournament(dic: Dictionary): FormDetails {
 			{
 				id: 'paddlesize',
 				labelContent: dic.gameCustom.paddle_size,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -324,7 +324,7 @@ export function pongTournament(dic: Dictionary): FormDetails {
 			{
 				id: 'paddlespeed',
 				labelContent: dic.gameCustom.paddle_speed,
-				max: '5',
+				max: '2',
 				min: '0',
 				pattern: '',
 				placeholder: '',
@@ -362,6 +362,25 @@ export function deleteAccount(dic: Dictionary): FormDetails {
 	}
 };
 
+export function downloadData(dic: Dictionary): FormDetails {
+	return {
+		action: `https://localhost:8443/api/bff/data`,
+		heading: '',
+		ariaLabel: 'Download personal data request',
+		id: 'download-data-request',
+		method: 'get',
+		fields: [],
+		button: {
+			id: 'submit',
+			type: 'submit',
+			//content: dic.buttons.download_data,
+			content: "Download personal data",
+			img: null,
+			ariaLabel: '',
+		},
+	}
+};
+
 export const criticalChange: FormDetails = {
 	action: `https://${origin}:8443/api/auth/verify`,
 	heading: 'Password Required',
@@ -373,7 +392,7 @@ export const criticalChange: FormDetails = {
 			id: 'password',
 			labelContent: 'Password',
 			pattern: passwordPattern,
-			placeholder: 'Enter your password!',
+			placeholder: defaultDictionary.placeholders.enter_password,
 			type: 'password',
 			required: true,
 		},

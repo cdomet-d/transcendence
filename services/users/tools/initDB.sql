@@ -5,10 +5,11 @@ CREATE TABLE userProfile (
   avatar TEXT,
   biography TEXT,
   profileColor TEXT,
-  activityStatus BOOLEAN,
+  status BOOLEAN,
   userRole INTEGER,
   since TEXT,
-  lang TEXT
+  lang TEXT,
+  lastConnexion DATETIME
 );
 
 CREATE TABLE userStats (
@@ -18,6 +19,7 @@ CREATE TABLE userStats (
   shortestMatch INTEGER,
   totalMatch INTEGER,
   totalWins INTEGER,
+  totalLosses INTEGER,
   winStreak INTEGER,
   averageMatchDuration INTEGER, --time in secondes
   longuestPass INTEGER --time in secondes

@@ -1,6 +1,7 @@
 export const HEIGHT = 558.9;
 export const WIDTH = 1000;
 import type { PongUI } from '../../web-elements/game/game-ui.js';
+import type { PongOptions } from '../../web-elements/types-interfaces.js';
 import type {
 	reqObj,
 	ballObj,
@@ -9,6 +10,7 @@ import type {
 	repObj,
 	paddleObj,
 } from './game-interfaces.js';
+import { getBallStartingSpeed, getPaddleHeight, getPaddleSpeed } from './game-settings.js';
 
 type requestMap = Map<number, reqObj>;
 type replyTab = Array<repObj>;
@@ -33,50 +35,59 @@ export class Game {
 	#rightStep: coordinates;
 	#score: [number, number];
 
-	/*                            CONSTRUCTORS                               */
-	constructor(ctx: CanvasRenderingContext2D, remote: boolean, horizontal: boolean, ui: PongUI) {
-		this.#ctx = ctx;
-		this.#ui = ui;
-		if (remote) this.#local = false;
-		else this.#local = true;
-		this.#horizontal = horizontal;
-		this.#score = [0, 0];
-		this.#ball = {
-			x: WIDTH / 2,
-			y: HEIGHT / 2,
-			dx: 0.3, //custom
-			dy: 0.03, //custom
-			maxSpeed: 0.7,
-			r: 13,
-		};
-		this.#paddleSpec = { speed: 0.42, w: 20, h: HEIGHT / 5, halfW: 20 / 2, halfH: HEIGHT / 10 }; //custom
-		this.#leftPaddle = { x: 25, y: HEIGHT / 2 - this.#paddleSpec.halfH };
-		this.#rightPaddle = {
-			x: WIDTH - (this.#paddleSpec.w + 25),
-			y: HEIGHT / 2 - this.#paddleSpec.halfH,
-		};
-		this.#frameId = 0;
-		this.#delta = 0;
-		this.#lastFrameTime = 0;
-		this.#req = {
-			ID: 0,
-			keys: {
-				w: false,
-				s: false,
-				a: false,
-				d: false,
-				ArrowUp: false,
-				ArrowDown: false,
-				ArrowLeft: false,
-				ArrowRight: false,
-			},
-			timeStamp: 0,
-		};
-		this.#reqHistory = new Map();
-		this.#replyHistory = new Array();
-		this.#leftStep = { x: 0, y: 0 };
-		this.#rightStep = { x: 0, y: 0 };
-	}
+    /*                            CONSTRUCTORS                               */
+    constructor(ctx: CanvasRenderingContext2D, remote: boolean, gameSettings: PongOptions, ui: PongUI) {
+        this.#ctx = ctx;
+        this.#ui = ui;
+        if (remote) this.#local = false;
+        else this.#local = true;
+        this.#horizontal = gameSettings.horizontal === undefined ? false : true;
+        this.#score = [0, 0];
+        const ballSartingSpeed: coordinates = getBallStartingSpeed(gameSettings.ballspeed);
+        this.#ball = {
+            x: WIDTH / 2,
+            y: HEIGHT / 2,
+            dx: ballSartingSpeed.x,
+            dy: ballSartingSpeed.y,
+            maxSpeed: 0.65,
+            r: 13,
+        };
+        const paddleSpeed: number = getPaddleSpeed(gameSettings.paddlespeed);
+        const paddleHeight: number = getPaddleHeight(gameSettings.paddlesize);
+        this.#paddleSpec = { 
+            speed: paddleSpeed, 
+            w: 20, 
+            h: paddleHeight, 
+            halfW: 20 / 2, 
+            halfH: paddleHeight / 2, 
+        };
+        this.#leftPaddle = { x: 25, y: HEIGHT / 2 - this.#paddleSpec.halfH };
+        this.#rightPaddle = {
+            x: WIDTH - (this.#paddleSpec.w + 25),
+            y: HEIGHT / 2 - this.#paddleSpec.halfH,
+        };
+        this.#frameId = 0;
+        this.#delta = 0;
+        this.#lastFrameTime = 0;
+        this.#req = {
+            ID: 0,
+            keys: {
+                w: false,
+                s: false,
+                a: false,
+                d: false,
+                ArrowUp: false,
+                ArrowDown: false,
+                ArrowLeft: false,
+                ArrowRight: false,
+            },
+            timeStamp: 0,
+        };
+        this.#reqHistory = new Map();
+        this.#replyHistory = new Array();
+        this.#leftStep = { x: 0, y: 0 };
+        this.#rightStep = { x: 0, y: 0 };
+    }
 
 	/*                              GETTERS                                  */
 	get ball(): ballObj {

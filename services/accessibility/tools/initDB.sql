@@ -25,7 +25,8 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "logout": "Log out",
         "start_game": "Start game",
         "start_tournament": "Start tournament",
-        "delete_account": "Delete account"
+        "delete_account": "Delete account",
+        "download_data": "Download personal data"
     },
     "forms": {
         "username": "Username",
@@ -130,7 +131,8 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "logout": "Déconnexion",
         "start_game": "Lancer la partie",
         "start_tournament": "Lancer le tournoi",
-        "delete_account": "Supprimer le compte"
+        "delete_account": "Supprimer le compte",
+        "download_data": "Télécharger vos données"
     },
     "forms": {
         "username": "Nom d''utilisateur",
@@ -235,7 +237,8 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "logout": "Cerrar sesión",
         "start_game": "Empezar partida",
         "start_tournament": "Empezar torneo",
-        "delete_account": "Eliminar cuenta"
+        "delete_account": "Eliminar cuenta",
+        "download_data": "descargar datos"
     },
     "forms": {
         "username": "Nombre de usuario",

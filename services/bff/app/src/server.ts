@@ -5,7 +5,7 @@ import Fastify from 'fastify';
 import fastifyJwt from '@fastify/jwt';
 import type { FastifyInstance } from 'fastify';
 import type { NatsConnection } from 'nats';
-
+import { startRetentionPolicyJob } from './users/cron.js';
 import { bffFriendRoutes } from './friends/routeFriends.js';
 import { bffAccessibilityRoutes } from './accessibility/routeAccessibility.js';
 import { bffUsersRoutes } from './users/routeUserProfile.js';
@@ -13,6 +13,7 @@ import { bffUsersRoutes } from './users/routeUserProfile.js';
 (async () => {
 	try {
 		const serv = await init();
+		startRetentionPolicyJob(serv);
 		await runServ(serv);
 	} catch (err) {
 		console.error('server', err);

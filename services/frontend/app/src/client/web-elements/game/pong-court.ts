@@ -7,21 +7,27 @@ export const forest: pongTheme = { color: '#1c4f19ff', theme: 'forest' };
 export const defaultTheme: pongTheme = { color: '#2267A3', theme: 'default' };
 
 export class PongCourt extends HTMLDivElement {
-	#canva: HTMLCanvasElement;
-	#theme: pongTheme;
+    #canva: HTMLCanvasElement;
+    #theme: pongTheme;
+    #ws: WebSocket | null;
 
-	constructor() {
-		super();
-		this.#canva = document.createElement('canvas');
-		this.#canva.width = WIDTH;
-		this.#canva.height = HEIGHT;
-		this.#theme = defaultTheme;
-		this.id = 'pongcourt';
-	}
+    constructor() {
+        super();
+        this.#canva = document.createElement('canvas');
+        this.#canva.width = WIDTH;
+        this.#canva.height = HEIGHT;
+        this.#theme = defaultTheme;
+        this.id = 'pongcourt';
+        this.#ws = null;
+    }
 
-	set theme(theme: pongTheme) {
-		this.#theme = theme;
-	}
+    set theme(theme: pongTheme) {
+        this.#theme = theme;
+    }
+
+    set socket(socket: WebSocket) {
+        this.#ws = socket;
+    }
 
 	get canva(): HTMLCanvasElement {
 		return this.#canva;
@@ -31,10 +37,15 @@ export class PongCourt extends HTMLDivElement {
 		return this.#canva.getContext('2d');
 	}
 
-	connectedCallback() {
-		this.append(this.#canva);
-		this.render();
-	}
+    connectedCallback() {
+        this.append(this.#canva);
+        this.render();
+    }
+
+    disconnectedCallback() {
+        if (this.#ws !== null)
+            this.#ws.close();
+    }
 
 	render() {
 		this.#canva.className = 'w-full h-full z-50';

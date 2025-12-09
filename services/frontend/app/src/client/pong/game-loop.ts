@@ -4,7 +4,7 @@ import type { repObj } from './classes/game-interfaces.js';
 import { movePaddle, updatePaddlePos } from './paddle.js';
 import { deadReckoning } from './ball.js';
 
-const SERVER_TICK: number = 1000 / 50;
+const SERVER_TICK: number = 1000 / 60;
 const TIME_STEP: number = 1000 / 60;
 const MAX_UPDATES_PER_FRAME = 8;
 
@@ -41,10 +41,13 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 }
 
 function sendRequest(game: Game, ws: WebSocket) {
-	game.req.timeStamp = performance.now();
-	ws.send(JSON.stringify(game.req));
-	game.addReq(game.req);
-	game.req.ID += 1; //TODO: overflow?
+    game.req.timeStamp = performance.now();
+    if (ws.OPEN)
+        ws.send(JSON.stringify(game.req));
+    game.addReq(game.req);
+    game.req.ID += 1;
+	if (game.req.ID === Number.MAX_SAFE_INTEGER)
+        game.req.ID = 0;
 }
 
 function interpolation(game: Game) {
@@ -74,27 +77,29 @@ function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean
 	game.leftPad = latestReply.leftPad;
 	if (game.local) game.rightPad = latestReply.rightPad;
 	game.ball = latestReply.ball;
-
-	if (
-		game.leftStep.x != 0 ||
-		game.leftStep.y != 0 ||
-		game.rightStep.x != 0 ||
-		game.rightStep.y != 0
-	) {
-		deadReckoning(game, undefined);
-		finishSteps(game);
-	}
-	for (let i = id + 1; game.reqHistory.has(i); i++) {
-		updatePaddlePos(game.leftPad, true, game, game.reqHistory.get(i)!.keys);
-		if (game.local) updatePaddlePos(game.rightPad, false, game, game.reqHistory.get(i)!.keys);
-		deadReckoning(game, latestReply);
-		finishSteps(game);
-	}
 	if (latestReply.end === true) {
-		ws.send('0');
-		return true;
-	}
-	return false;
+        if (ws.OPEN)
+            ws.send('0');
+        return true;
+    }
+
+    if (
+        game.leftStep.x != 0 ||
+        game.leftStep.y != 0 ||
+        game.rightStep.x != 0 ||
+        game.rightStep.y != 0
+    ) {
+        deadReckoning(game, undefined);
+        finishSteps(game);
+    }
+    for (let i = id + 1; game.reqHistory.has(i); i++) {
+        updatePaddlePos(game.leftPad, true, game, game.reqHistory.get(i)!.keys);
+        if (game.local) updatePaddlePos(game.rightPad, false, game, game.reqHistory.get(i)!.keys);
+        deadReckoning(game, latestReply);
+        finishSteps(game);
+    }
+   
+    return false;
 }
 
 function finishSteps(game: Game) {

@@ -1,8 +1,43 @@
 import type { FastifyReply } from 'fastify';
 import type {
 	UsernameResponse, FriendshipStatus, Friendship, ProfileView, userStats, StatsResponse, Matches, RawMatches,
-	userData, UserIDResponse, UserProfileUpdates
+	userData, UserIDResponse, UserProfileUpdates, UserProfileView
 } from "../utils/bff.interface.js";
+
+
+export async function fetchFullUserProfile(
+	log: any,
+	requesterID: string,
+	targetUsername: string,
+	token: string
+): Promise<UserProfileView> {
+
+	const combinedUserData = await buildTinyProfile(log, requesterID, targetUsername, token);
+
+	if (!combinedUserData)
+		throw { code: 404, message: 'User profile data not found.' };
+
+	const [userData, userStats, friends, pending, recentMatches] = await Promise.all([
+		combinedUserData,
+		fetchUserStats(log, combinedUserData.userID, token),
+		fetchFriendships(log, combinedUserData.userID, 'friend', token),
+		fetchFriendshipsPending(log, combinedUserData.userID, 'pending', token),
+		processMatches(log, combinedUserData.userID, token),
+	]);
+
+	if (!userData || !userStats)
+		throw { code: 404, message: '[BFF] Failed to retrieve essential user data.' };
+
+	const responseData: UserProfileView = {
+		userData: userData,
+		userStats: userStats,
+		friends: friends || [],
+		pending: pending || [],
+		matches: recentMatches || [],
+	};
+
+	return (responseData);
+}
 
 //error handled
 export async function buildTinyProfile(
@@ -38,6 +73,8 @@ export async function buildTinyProfile(
 			since: data.since,
 			status: data.status,
 			winStreak: data.winStreak,
+			totalLosses: data.totalLosses,
+			totalWins: data.totalWins,
 			lang: data.lang,
 			relation: relation,
 		};
@@ -900,4 +937,127 @@ export async function refreshJWTForUsernameChange(
 		path: '/',
 		maxAge: 60 * 60 * 1000,
 	});
+}
+
+export async function deleteAllFriendship(log: any, userID: string, token: string) {
+	const url = `http://friends:1616/`;
+
+	let response: Response;
+	try {
+		response = await fetch(url, {
+			method: 'DELETE',
+			headers: {
+				Cookie: `token=${token}`,
+				'Authorization': `Bearer ${token}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({})
+		});
+	} catch (error) {
+		log.error(`[BFF] Friends service is unreachable: ${error}`);
+		throw new Error('Friends service is unreachable.');
+	}
+
+	if (response.status === 400) {
+		log.warn(`[BFF] Friends service validation error for user ${userID}`);
+		const errorBody = (await response.json()) as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not delete friendlist.' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Friends service validation error for user ${userID}`);
+		const errorBody = (await response.json()) as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not delete friendlist.' };
+	}
+
+	if (!response.ok) {
+		log.error(`[BFF] Friends service failed with status ${response.status}`);
+		throw new Error('Friends service failed.');
+	}
+}
+
+export async function AnonymizeUser(log: any, userID: string, token: string) {
+	const url = `http://users:2626/anonymize`;
+
+	let response: Response;
+	try {
+		response = await fetch(url, {
+			method: 'PATCH',
+			headers: {
+				Cookie: `token=${token}`,
+				'Authorization': `Bearer ${token}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({userID})
+		});
+	} catch (error) {
+		log.error(`[BFF] DUser service is unreachable: ${error}`);
+		throw new Error('Friends service is unreachable.');
+	}
+
+	if (response.status === 400) {
+		log.warn(`[BFF] User service validation error for user ${userID}`);
+		const errorBody = (await response.json()) as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not delete profile.' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] User service validation error for user ${userID}`);
+		const errorBody = (await response.json()) as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not delete profile.' };
+	}
+
+	if (response.status === 404) {
+		log.warn(`[BFF] User not found for update: ${userID}`);
+		const errorBody = (await response.json()) as { message: string };
+		throw { code: 404, message: errorBody.message || '[BFF] User not found.' };
+	}
+
+	if (!response.ok) {
+		log.error(`[BFF] User service failed with status ${response.status}`);
+		throw new Error('User service failed.');
+	}
+}
+
+export async function AnonymizeAccount(log: any, userID: string, token: string) {
+	const url = `http://auth:3939/anonymize`;
+
+	let response: Response;
+	try {
+		response = await fetch(url, {
+			method: 'PATCH',
+			headers: {
+				Cookie: `token=${token}`,
+				'Authorization': `Bearer ${token}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({userID})
+		});
+	} catch (error) {
+		log.error(`[BFF] Auth service is unreachable: ${error}`);
+		throw new Error('Auth service is unreachable.');
+	}
+
+	if (response.status === 400) {
+		log.warn(`[BFF] Auth service validation error for user ${userID}`);
+		const errorBody = (await response.json()) as { message: string };
+		throw { code: 400, message: errorBody.message || '[BFF] Could not delete account.' };
+	}
+
+	if (response.status === 401) {
+		log.warn(`[BFF] Auth service validation error for user ${userID}`);
+		const errorBody = (await response.json()) as { message: string };
+		throw { code: 401, message: errorBody.message || '[BFF] Could not delete account.' };
+	}
+
+	if (response.status === 404) {
+		log.warn(`[BFF] Account not found for update: ${userID}`);
+		const errorBody = (await response.json()) as { message: string };
+		throw { code: 404, message: errorBody.message || '[BFF] Account not found.' };
+	}
+
+	if (!response.ok) {
+		log.error(`[BFF] Auth service failed with status ${response.status}`);
+		throw new Error('Auth service failed.');
+	}
 }

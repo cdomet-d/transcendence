@@ -6,12 +6,14 @@ import { createUserInline } from '../users/profile-helpers.js';
 import { DropdownMenu } from '../navigation/menus.js';
 import type { Searchbar } from './search.js';
 import type { UserData } from '../types-interfaces.js';
-import { createVisualFeedback, exceptionFromResponse } from '../../error.js';
+import { createVisualFeedback, exceptionFromResponse, redirectOnError } from '../../error.js';
 import { userDataFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 import { currentDictionary } from './language.js';
 import { origin } from '../../main.js';
+import { userStatus } from '../../main.js';
+
 /**
  * A form allowing user to create a local pong game.
  *
@@ -22,6 +24,10 @@ import { origin } from '../../main.js';
  */
 export class LocalPongSettings extends BaseForm {
 	#backgroundSelector: DropdownMenu;
+	#format: string;
+	#formInstance: string;
+	_guestLimit: number; // underscore is a convention in js to say protected
+	#ws: WebSocket | null;
 
 	/* -------------------------------------------------------------------------- */
 	/*                                   Default                                  */
@@ -30,6 +36,10 @@ export class LocalPongSettings extends BaseForm {
 		super();
 		this.#backgroundSelector = createDropdown(backgroundMenu, currentDictionary.gameCustom.choose_back, 'static');
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
+		this.#format = "";
+		this.#formInstance = "";
+		this.#ws = null;
+		this._guestLimit = 0;
 	}
 
 	/**
@@ -44,6 +54,13 @@ export class LocalPongSettings extends BaseForm {
 		this.classList.add('sidebar-left');
 	}
 
+	override disconnectedCallback() {
+		super.disconnectedCallback()
+		const newRoute: string = window.location.pathname;
+		if (this.#ws && newRoute !== "/game" && !newRoute.includes("-lobby"))//TODO: if brackets or winner/loser screen have routes, add them here
+			this.#ws.close();
+	}
+
 	/* -------------------------------------------------------------------------- */
 	/*                                   Getters                                  */
 	/* -------------------------------------------------------------------------- */
@@ -52,6 +69,26 @@ export class LocalPongSettings extends BaseForm {
 	 */
 	get dropdownMenu() {
 		return this.#backgroundSelector;
+	}
+
+	/* -------------------------------------------------------------------------- */
+	/*                                   Setters                                  */
+	/* -------------------------------------------------------------------------- */
+	set format(format: string) {
+		this.#format = format;
+		if (format === 'tournament')
+			this._guestLimit = 4;
+		else
+			this._guestLimit = 2;
+	}
+
+	set formInstance(formInstance: string) {
+		this.#formInstance = formInstance;
+	}
+
+	set socket(ws: WebSocket) {
+		if (this.#ws === null)
+			this.#ws = ws;
 	}
 
 	/* -------------------------------------------------------------------------- */
@@ -73,7 +110,7 @@ export class LocalPongSettings extends BaseForm {
 		console.log(f);
 		// await this.fetchAndRedirect(this.details.action, req);
 
-		wsConnect('game', 'quickmatch', 'localForm', '', req.body);
+		wsConnect('game', this.#format, this.#formInstance, '', req.body);
 	}
 }
 
@@ -119,9 +156,14 @@ export class RemotePongSettings extends LocalPongSettings {
 		console.log('Fetch&Redirect');
 	}
 
-	override connectedCallback() {
+	override async connectedCallback() {
 		super.connectedCallback();
 		this.#searchbar.addEventListener('click', this.#inviteHandler, { capture: true });
+		const status = await userStatus();
+		if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');//TODO: maybe not necessary since it is checked in "renderlobbies"
+		const user = await this.fetchGuests(status.username!);
+		if (user) this.#guests.set(user.username, user);
+		this.#displayGuests();
 	}
 
 	override disconnectedCallback(): void {
@@ -170,17 +212,16 @@ export class RemotePongSettings extends LocalPongSettings {
 			ev.stopImmediatePropagation();
 			// TODO: keep lobby owner from adding themselves to the lobby;
 			//  && target.title !== this.#owner
-			if (this.#guests.size < 4) {
+			if (this.#guests.size < this._guestLimit) {
 				try {
 					const user = await this.fetchGuests(target.title);
 					if (user) this.#guests.set(user.username, user);
 					/**
 					 * HERE @ElSamsam && @cmsweeting
-					 * // TODO ask Charlotte how to send WS invite in front (and also ws.send invite to gm)
 					 * When the lobby's owner adds a guest to the lobby, I fetch the associated data and store it in the guest Map to render it later.
 					 * You can add whatever you need websocket wise HERE and send `user.username` to add the user to the lobby server-side.
 					 */
-					wsConnect('invite', '', this.details.id, '', '', user!.id); //TODO: check user exists
+					wsConnect('invite', '', this.details.id, '', '', {userID: user!.id, username: user!.username}); //TODO: check user exists?
 					this.#displayGuests();
 				} catch (error) {
 					console.log(error);
@@ -217,6 +258,15 @@ export class RemotePongSettings extends LocalPongSettings {
 				this.#guestWrapper.append(createUserInline(user));
 			});
 		}
+	}
+
+	public async displayUpdatedGuests(whiteListUsernames: string[]) {
+		this.#guests.clear();
+		for (const username of whiteListUsernames) {
+			const user = await this.fetchGuests(username);
+			if (user) this.#guests.set(user.username, user);
+		}
+		this.#displayGuests();
 	}
 
 	/* --------------------------------- styling -------------------------------- */

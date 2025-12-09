@@ -1,7 +1,8 @@
 import { Game, HEIGHT, WIDTH } from "../classes/game-class.js";
 import type { Player } from "../classes/player-class.js";
-import { distBallPad, raycast, updateVelocity } from "./collision-utils.js";
+import { raycast, updateVelocity } from "./collision-utils.js";
 import type { coordinates } from "../classes/game-interfaces.js";
+import { getBallStartingSpeed } from "../classes/game-settings.js";
 
 const TIME_STEP: number = 1000 / 60; // 60FPS
 const MAX_SCORE: number = 5;
@@ -46,12 +47,11 @@ function sideWallCollision(game: Game, player1: Player, player2: Player, nextX: 
 		game.ball.y = HEIGHT / 2;
 		game.ball.dx = 0;
 		game.ball.dy = 0;
-		game.deleteReq();
 		game.addTimoutID(setTimeout(() => {
-			game.ball.dx = 0.3 * game.ballDir;
-			game.ball.dy = 0.03;
+			const ballSartingSpeed: coordinates = getBallStartingSpeed(game.infos.gameSettings.ballspeed);
+			game.ball.dx = ballSartingSpeed.x * game.ballDir;
+			game.ball.dy = ballSartingSpeed.y;
 			game.ballDir *= -1;
-			game.lastTick = performance.now();
 			game.passStart = performance.now();
 		}, 1500));
 		return true;
@@ -84,8 +84,5 @@ export function paddleCollision(game: Game, paddle: coordinates, nextX: number, 
 	game.ball.x += game.ball.dx * TIME_STEP * t + 1 * n.x;
 	game.ball.y += game.ball.dy * TIME_STEP * t + 1 * n.y;
 	updateVelocity(game, paddle, n.x);
-	// const remainingStep: number = 1 - t;
-	// game.ball.x += game.ball.dx * TIME_STEP * remainingStep;
-	// game.ball.y += game.ball.dy * TIME_STEP * remainingStep;
 	return true;
 }
