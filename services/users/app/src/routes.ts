@@ -27,6 +27,7 @@ interface JwtPayload {
 	username: string;
 	iat: number;
 	exp: number;
+	role: string;
 }
 
 export async function userRoutes(serv: FastifyInstance) {
@@ -433,12 +434,13 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const queryProfile = `
 				INSERT INTO userProfile
-				(userID, username, status, profileColor, userRole, since, lang)
-				VALUES (?, ?, 0, "bg-000080", 1, ?, "en")
+				(userID, username, status, profileColor, userRole, since, lang, lastConnexion)
+				VALUES (?, ?, 0, "bg-000080", 1, ?, "en", ?)
 			`;
 			const paramsProfile = [
 				safeuserID,
 				safeUsername,
+				new Date().toISOString(),
 				new Date().toISOString(),
 			];
 
@@ -478,10 +480,8 @@ export async function userRoutes(serv: FastifyInstance) {
 	});
 
 	//update user profile
-	serv.patch('/:userID', /* { schema: updateProfileSchema }, */ async (request, reply) => {
+	serv.patch('/:userID', { schema: updateProfileSchema }, async (request, reply) => {
 		try {
-			console.log("IN PAAAAAATCH");
-
 			const token = request.cookies.token;
 			let user;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
@@ -523,6 +523,7 @@ export async function userRoutes(serv: FastifyInstance) {
 				'profileColor',
 				'lang',
 				'status',
+				'lastConnexion'
 			];
 
 			const keysToUpdate = Object.keys(body).filter((key) => validStatKeys.includes(key));
@@ -691,33 +692,30 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	serv.patch('/anonymize', {schema: anonymizeUserSchema}, async (request, reply) => {
+	serv.patch('/anonymize', { schema: anonymizeUserSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
 			if (!token) return reply.code(401).send({ message: 'Unauthorized' });
 
-			if (token) {
-				try {
-					const user = serv.jwt.verify(token) as JwtPayload;
-					if (typeof user !== 'object') throw new Error('Invalid token detected');
-					request.user = user;
-				} catch (error) {
-					if (error instanceof Error && 'code' in error) {
-						if (
-							error.code === 'FST_JWT_BAD_REQUEST' ||
-							error.code === 'ERR_ASSERTION' ||
-							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-						)
-							return reply.code(400).send({ code: error.code, message: error.message });
-						return reply.code(401).send({ code: error.code, message: 'Unauthorized' });
-					} else {
-						return reply.code(401).send({ message: 'Unknown error' });
-					}
+			try {
+				const user = serv.jwt.verify(token) as any;
+				if (typeof user !== 'object') throw new Error('Invalid token detected');
+				request.user = user;
+			} catch (error) {
+				return reply.code(401).send({ message: 'Unauthorized' });
+			}
+
+			let targetUserID = request.user.userID;
+
+			if (request.user.role === 'admin') {
+				const body = request.body as { userID?: string };
+				if (body && body.userID) {
+					targetUserID = body.userID;
+					serv.log.info(`[USERS] Admin override: Anonymizing user ${targetUserID}`);
 				}
 			}
 
-			const userID = request.user.userID;
-			const safeUserID = cleanInput(userID);
+			const safeUserID = targetUserID;
 
 			const newUsername = `DeletedUser_${crypto.randomUUID().slice(0, 8)}`;
 			const placeholderAvatar = '/public/default_avatar.png';
@@ -734,10 +732,30 @@ export async function userRoutes(serv: FastifyInstance) {
 
 		} catch (error) {
 			serv.log.error(`[USERS] Error processing anonymization: ${error}`);
-			if (error instanceof Error && error.message.includes('Stats not found')) {
-				return reply.code(404).send({ message: error.message });
-			}
-			throw error;
+			return reply.code(500).send({ message: 'Internal Server Error' });
+		}
+	});
+
+	//TODO schema ?
+	serv.get('/inactive', async (request, reply) => {
+		try {
+			const query = `
+				SELECT userID 
+				FROM userProfile 
+				WHERE lastConnexion < date('now', '-2 years')
+			`;
+
+			const rows = await serv.dbUsers.all(query);
+
+			const userIDs = rows.map((row: any) => row.userID);
+			console.log(JSON.stringify(userIDs));
+
+			return reply.code(200).send({ userIDs });
+
+		} catch (error) {
+			serv.log.error(`[USERS] Error fetching inactive users: ${error}`);
+			return reply.code(500).send({ message: 'Internal Server Error' });
 		}
 	});
 }
+
