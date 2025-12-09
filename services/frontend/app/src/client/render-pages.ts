@@ -77,11 +77,11 @@ async function prepareLayout(curLayout: Layout | undefined, page: string): Promi
 	if (!curLayout) return redirectOnError('/404', 'Failed to load DOM'), null;
 
 	const user = await document.body.header?.getLogState();
-	if (!user) return redirectOnError('/', 'Redirected: Failed to recover user'), null;
+	if (!user) return redirectOnError('/404', 'Redirected: Failed to recover user'), null;
 	curLayout.clearAll();
 
 	if (!user.auth && requireAuth[page]) {
-		return redirectOnError('/auth', 'Redirected: You must be registered to see this page!'), null;
+		return redirectOnError('/404', 'Redirected: You must be registered to see this page!'), null;
 	}
 	toggleHeader(page);
 	return user;
@@ -133,7 +133,7 @@ export async function renderLeaderboard() {
 	const url = 'https://localhost:8443/api/bff/leaderboard';
 
 	try {
-		const rawRes = await fetch(url);
+		const rawRes = await fetch(url, { credentials: 'include' });
 		if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
 		const raw = await rawRes.json();
 		const wrapper = createWrapper('learderboard');
@@ -153,7 +153,7 @@ export async function renderSelf() {
 
 	const url = `https://localhost:8443/api/bff/profile/${status.username}`;
 	try {
-		const raw = await fetch(url);
+		const raw = await fetch(url, { credentials: 'include' });
 		if (!raw.ok) {
 			if (raw.status === 404) return redirectOnError('/404', 'No such user');
 			else throw await exceptionFromResponse(raw);
@@ -173,7 +173,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
 	const url = `https://localhost:8443/api/bff/profile/${login}`;
 
 	try {
-		const raw = await fetch(url);
+		const raw = await fetch(url, { credentials: 'include' });
 		if (!raw.ok) {
 			if (raw.status === 404) return redirectOnError('/404', 'No such user');
 			else throw await exceptionFromResponse(raw);
@@ -192,7 +192,7 @@ export async function renderSettings() {
 
 	const url = `https://localhost:8443/api/bff/tiny-profile/${status.username}`;
 	try {
-		const raw = await fetch(url);
+		const raw = await fetch(url, { credentials: 'include' });
 		if (!raw.ok) {
 			if (raw.status === 404) return redirectOnError('/404', 'No such user');
 			else throw await exceptionFromResponse(raw);

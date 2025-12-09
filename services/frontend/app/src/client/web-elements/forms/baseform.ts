@@ -117,6 +117,7 @@ export abstract class BaseForm extends HTMLFormElement {
 		const req: RequestInit = {
 			method: this.#formData.method,
 			headers: { 'Content-Type': 'application/json' },
+			credentials: 'include',
 		};
 		return req;
 	}

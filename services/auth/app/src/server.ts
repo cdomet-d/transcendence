@@ -34,6 +34,19 @@ const authPlugin = fp(async (serv: FastifyInstance) => {
 	});
 });
 
+const removeCORS = fp(async (serv: FastifyInstance) => {
+	serv.addHook('preHandler', (request, reply, done) => {
+		reply.removeHeader('access-control-allow-origin');
+		reply.removeHeader('access-control-allow-credentials');
+		reply.removeHeader('access-control-allow-headers');
+		reply.removeHeader('access-control-expose-headers');
+		reply.removeHeader('access-control-allow-methods');
+		reply.removeHeader('access-control-max-age');
+		reply.removeHeader('vary');
+		done();
+	});
+});
+
 //init server
 export async function init(): Promise<FastifyInstance> {
 	const serv: FastifyInstance = Fastify(options);
@@ -48,7 +61,8 @@ async function addPlugins(serv: FastifyInstance) {
 	serv.register(dbConnector);
 	await serv.register(cookie);
 	await serv.register(fastifyJwt, { secret: process.env.JWT_SECRET!, cookie: { cookieName: 'token', signed: false } });
-	await serv.register(cors, { origin: false, credentials: true, exposedHeaders: ['Set-Cookie'] });
+	await serv.register(cors, { origin: true, credentials: true, exposedHeaders: ['Set-Cookie'] });
+	await serv.register(removeCORS);
 	await serv.register(authPlugin);
 	await serv.register(authenticationRoutes);
 }

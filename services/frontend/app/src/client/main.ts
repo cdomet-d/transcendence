@@ -30,11 +30,10 @@ export async function userStatus(): Promise<userStatusInfo> {
 		const data = await isLogged.json();
 		if (isLogged.ok) return { auth: true, username: data.username, userID: data.userID };
 		else {
-			console.log('THIS IS FAILING');
 			return { auth: false };
 		}
 	} catch (error) {
-		redirectOnError('/', errorMessageFromException(`[USER STATUS FAILED]` + error));
+		redirectOnError('/404', errorMessageFromException(`[USER STATUS FAILED]` + error));
 		return { auth: false };
 	}
 }
