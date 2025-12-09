@@ -156,7 +156,7 @@ export async function renderSelf() {
 	const url = `https://${origin}:8443/api/bff/profile/${status.username}`;
 	try {
 		const raw = await fetch(url, { credentials: 'include' });
-		console.log(`raw.status: ${raw.status} | raw.ok: ${raw.ok}`)
+		console.log(`raw.status: ${raw.status} | raw.ok: ${raw.ok}`);
 		if (!raw.ok) {
 			if (raw.status === 404) return redirectOnError('/404', 'No such user');
 			else throw await exceptionFromResponse(raw);
@@ -177,7 +177,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
 
 	try {
 		const raw = await fetch(url, { credentials: 'include' });
-		console.log(`raw.status: ${raw.status} | raw.ok: ${raw.ok}`)
+		console.log(`raw.status: ${raw.status} | raw.ok: ${raw.ok}`);
 		if (!raw.ok) {
 			if (raw.status === 404) return redirectOnError('/404', 'No such user');
 			else throw await exceptionFromResponse(raw);
@@ -230,32 +230,28 @@ export async function renderLobbyMenu() {
 //  being able to add himself to the game (in the UI - even if it's handled in the pong server)
 export async function renderQuickLocalLobby() {
 	const status = await prepareLayout(document.body.layoutInstance, 'quickLobby');
-	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 
-	const form = createForm('local-pong-settings', localPong(currentDictionary));
-	form.owner = status.username!;
+	const form: LocalPongSettings = createForm('local-pong-settings', localPong(currentDictionary));
 	document.body.layoutInstance?.appendAndCache(form);
+	form.owner = status.username!;
+	form.format = 'quickmatch';
+	form.formInstance = 'localForm';
 	form.classList.remove('h-full');
 	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
 	wsConnect('create', 'quickmatch', 'localForm', undefined, undefined, undefined, form);
 }
 
-export async function renderQuickRemoteLobby(
-	param?: Match<Partial<Record<string, string | string[]>>>,
-	gameRequest?: gameRequest,
-	action?: string,
-	whiteListUsernames?: string[],
-) {
+export async function renderQuickRemoteLobby(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[]) {
 	const status = await prepareLayout(document.body.layoutInstance, 'quickLobby');
-	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 
-	const form: RemotePongSettings = createForm('remote-pong-settings', remotePong(currentDictionary))
+	const form: RemotePongSettings = createForm('remote-pong-settings', remotePong(currentDictionary));
 	form.format = 'quickmatch';
 	form.formInstance = 'remoteForm';
 	document.body.layoutInstance?.appendAndCache(form);
 
-	if (action === "invitee")
-		form.displayUpdatedGuests(whiteListUsernames!);
+	if (action === 'invitee') form.displayUpdatedGuests(whiteListUsernames!);
 	if (action === undefined) {
 		action = 'create';
 		form.owner = status.username!;
@@ -264,59 +260,52 @@ export async function renderQuickRemoteLobby(
 	wsConnect(action!, 'quickmatch', 'remoteForm', undefined, undefined, undefined, form);
 }
 
-export async function renderTournamentLobby(
-	param?: Match<Partial<Record<string, string | string[]>>>,
-	gameRequest?: gameRequest,
-	action?: string,
-	whiteListUsernames?: string[],
-) {
+export async function renderTournamentLobby(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[]) {
 	const status = await prepareLayout(document.body.layoutInstance, 'tournamentLobby');
-	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 
 	const form: LocalPongSettings = createForm('remote-pong-settings', pongTournament(currentDictionary));
-	form.owner = status.username!;
 	document.body.layoutInstance?.appendAndCache(form);
+	form.owner = status.username!;
+	form.format = 'tournament';
+	form.formInstance = 'remoteForm';
 	form.classList.remove('h-full');
 	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
 
-	if (action === "invitee")
-		form.displayUpdatedGuests(whiteListUsernames!);
+	if (action === 'invitee') form.displayUpdatedGuests(whiteListUsernames!);
 	if (action === undefined) {
 		action = 'create';
 		form.owner = status.username!;
 	}
 	wsConnect(action!, 'tournament', 'remoteForm', undefined, undefined, undefined, form);
 }
-export async function renderGame(param?: Match<Partial<Record<string, string | string[]>>>,	gameRequest?: gameRequest, 
-action?: string,	whiteListUsernames?: string[],	lobbyWS?: WebSocket) {
+export async function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[], lobbyWS?: WebSocket) {
 	const status = await prepareLayout(document.body.layoutInstance, 'game');
-	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 	if (!gameRequest) {
 		console.error('GameRequest =>', gameRequest);
 		return redirectOnError('/', "Uh-oh! You can't be there - go join a lobby or something !");
 	}
 	const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
 	const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
-	
-    ui.player1.innerText = status.username!;
-    ui.player2.innerText = gameRequest.opponent;
+
+	ui.player1.innerText = status.username!;
+	ui.player2.innerText = gameRequest.opponent;
 	const layout = document.body.layoutInstance;
-	const background: [pongTheme, ImgData[]] = getGameBackground(gameRequest.gameSettings.background)
-    court.theme = background[0];
+	const background: [pongTheme, ImgData[]] = getGameBackground(gameRequest.gameSettings.background);
+	court.theme = background[0];
 	court.lobbySocket = lobbyWS!;
-    if (layout) layout.theme = background[1];
-    document.body.layoutInstance?.appendAndCache(ui, court);
+	if (layout) layout.theme = background[1];
+	document.body.layoutInstance?.appendAndCache(ui, court);
 	pong(gameRequest!, court, ui);
 }
 
 function getGameBackground(background?: string): [pongTheme, ImgData[]] {
-    if (background === "Adorable Farm")
-        return [farm, farmAssets];
-    if (background === "Magical Underwater")
-        return [ocean, oceanAssets];
-    // if (background === "Enchanted Forest")
-    //     return [] //TODO
-    return [defaultTheme, []];
+	if (background === 'Adorable Farm') return [farm, farmAssets];
+	if (background === 'Magical Underwater') return [ocean, oceanAssets];
+	// if (background === "Enchanted Forest")
+	//     return [] //TODO
+	return [defaultTheme, []];
 }
 
 export async function renderPrivacy() {
@@ -328,10 +317,7 @@ export async function renderPrivacy() {
 	}
 
 	try {
-		document.body.layoutInstance!.appendAndCache(
-			createHeading('2', "Your privacy"),
-			createPrivacy(),
-		);
+		document.body.layoutInstance!.appendAndCache(createHeading('2', 'Your privacy'), createPrivacy());
 	} catch (error) {
 		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
 	}

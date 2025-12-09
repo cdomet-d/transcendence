@@ -173,7 +173,7 @@ export class NotifBox extends HTMLDivElement {
 	async fetchGameInvites() {
 		const status = await userStatus();
 		if (!status.auth) redirectOnError('/auth', 'You must be registered to see this page');
-		const url = `https://localhost:8443/api/lobby/notification/${status.userID!}`;
+		const url = `https://${origin}:8443/api/lobby/notification/${status.userID!}`;
 		try {
 			const rawRes = await fetch(url);
 			if (!rawRes.ok) {
