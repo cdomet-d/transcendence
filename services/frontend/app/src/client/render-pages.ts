@@ -303,8 +303,7 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 function getGameBackground(background?: string): [pongTheme, ImgData[]] {
 	if (background === 'Adorable Farm') return [farm, farmAssets];
 	if (background === 'Magical Underwater') return [ocean, oceanAssets];
-	// if (background === "Enchanted Forest")
-	//     return [] //TODO
+	if (background === "Enchanted Forest") return [forest, forestAssets];
 	return [defaultTheme, []];
 }
 
