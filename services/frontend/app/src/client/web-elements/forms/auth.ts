@@ -82,6 +82,7 @@ export class CriticalActionForm extends BaseForm {
 
 	override async fetchAndRedirect(url: string, req: RequestInit) {
 		try {
+			console.log(url);
 			const response = await fetch(url, req);
 			if (!response.ok) throw await exceptionFromResponse(response);
 			const critical = await response.json();

@@ -83,7 +83,7 @@ async function prepareLayout(curLayout: Layout | undefined, page: string): Promi
 	curLayout.clearAll();
 
 	if (!user.auth && requireAuth[page]) {
-		return redirectOnError('/404', 'Redirected: You must be registered to see this page!'), null;
+		return redirectOnError('/auth', 'Redirected: You must be registered to see this page!'), null;
 	}
 	toggleHeader(page);
 	return user;
