@@ -23,17 +23,18 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
         game.delta += timestamp - game.lastFrameTime;
         game.lastFrameTime = timestamp;
         let updates: number = 0;
+        let currentTime: number = performance.now();
         while (game.delta >= TIME_STEP && updates < MAX_UPDATES_PER_FRAME) {
-            sendRequest(game, ws);
+            sendRequest(game, ws, currentTime);
             updatePaddlePos(game.leftPad, true, game, game.req.keys);
             if (game.local) 
                 updatePaddlePos(game.rightPad, false, game, game.req.keys);
             else 
-                interpolation(game);
+                interpolation(game, currentTime);
             deadReckoning(game, latestReply);
-            latestReply.timestamp -= TIME_STEP;
             finishSteps(game);
             game.delta -= TIME_STEP;
+            currentTime += TIME_STEP;
             updates++;
         }
         if (updates === MAX_UPDATES_PER_FRAME) 
@@ -45,8 +46,8 @@ function FrameRequestCallback(game: Game, ws: WebSocket) {
 	};
 }
 
-function sendRequest(game: Game, ws: WebSocket) {
-    game.req.timeStamp = performance.now();
+function sendRequest(game: Game, ws: WebSocket, currentTime: number) {
+    game.req.timeStamp = currentTime;//performance.now();
     if (ws.OPEN)
         ws.send(JSON.stringify(game.req));
     game.addReq(game.req);
@@ -55,8 +56,8 @@ function sendRequest(game: Game, ws: WebSocket) {
         game.req.ID = 0;
 }
 
-function interpolation(game: Game) {
-	const renderTime: number = performance.now() - SERVER_TICK;
+function interpolation(game: Game, currentTime: number) {
+	const renderTime: number = /*performance.now()*/currentTime - SERVER_TICK;
 	const updates: [repObj, repObj] | null = game.getReplies(renderTime);
 
 	if (updates) {
