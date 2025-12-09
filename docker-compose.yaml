@@ -113,6 +113,7 @@ services:
             - PORT=2121
             - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
             - NGINXIP=nginx
+            - JWT_SECRET=${JWT_SECRET}
         networks:
             - transcendence
         restart: unless-stopped
