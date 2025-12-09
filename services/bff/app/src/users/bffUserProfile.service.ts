@@ -988,7 +988,7 @@ export async function AnonymizeUser(log: any, userID: string, token: string) {
 				'Authorization': `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({})
+			body: JSON.stringify({userID})
 		});
 	} catch (error) {
 		log.error(`[BFF] DUser service is unreachable: ${error}`);
@@ -1031,7 +1031,7 @@ export async function AnonymizeAccount(log: any, userID: string, token: string) 
 				'Authorization': `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({})
+			body: JSON.stringify({userID})
 		});
 	} catch (error) {
 		log.error(`[BFF] Auth service is unreachable: ${error}`);
