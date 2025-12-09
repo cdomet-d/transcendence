@@ -9,27 +9,22 @@ export function createGameObj(lobbyInfo: lobbyInfo, lobbyID: string) {
 		return undefined;
 	}
 
-	console.log("BEFORE ARRAY");
-
 	const usersArray: userInfo[] = Array.from(lobbyMap.get(lobbyID)!.userList.values());
 	const users: user[] = [
-		{userID: usersArray[0]!.userID!, username: usersArray[0]!.username! },
-		{userID: lobbyInfo.remote === true ? usersArray[1]!.userID! : "temporary", username: lobbyInfo.remote === true ? usersArray[1]!.username! : lobbyInfo.gameSettings!.opponent! }
+		{userID: usersArray[0]!.userID!, username: usersArray[0]!.username! }
 	];
 
-	console.log("BEFORE TEMP");
-
-	if (lobbyInfo.remote === false)
+	if (lobbyInfo.remote === false)	{
 		users[1] = { userID: "temporary", username: lobbyInfo.gameSettings!.opponent! };
-
-	console.log("AFTER TEMP");
+	} else {
+		users[1] = { userID: usersArray[1]!.userID!, username: usersArray[1]!.username!};
+	}
 
 	const game: game = {
 		lobbyID: lobbyInfo.lobbyID!,
 		tournamentID: '-1',
 		gameID: crypto.randomUUID().toString(),
 		remote: lobbyInfo.remote,
-		// users: usersArray,
 		users: users,
 		score: [0, 0],
 		winnerID: '',

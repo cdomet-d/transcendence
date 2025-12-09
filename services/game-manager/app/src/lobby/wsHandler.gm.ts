@@ -40,7 +40,6 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					if (lobbyID !== null)
 						removeUserFromLobby(userID, lobbyID);
 					const newLobby: lobbyInfo = createLobby({userID: userID!, username: username, userSocket: socket }, lobbyPayload.format!);
-					this.log.error(`FORM IN GM CREATE: ${formInstance}`);
 					wsSend(socket, JSON.stringify({ lobby: 'created', lobbyID: newLobby.lobbyID, formInstance: formInstance }))
 				}
 				return;
@@ -48,7 +47,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 
 			if (data.event === 'GAME_REQUEST') {
 				const gamePayload = payload as lobbyInfo;
-				if (processGameRequest(this, gamePayload) === undefined) {
+				if (processGameRequest(this, gamePayload) === false) {
 					console.log("ICI");
 					wsSend(socket, JSON.stringify({ error: 'not enough players'}));
 				}
