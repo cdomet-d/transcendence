@@ -287,6 +287,27 @@ export async function renderTournamentLobby(
 	}
 	wsConnect(action!, 'tournament', 'remoteForm', undefined, undefined, undefined, form);
 }
+export async function renderGame(param?: Match<Partial<Record<string, string | string[]>>>,	gameRequest?: gameRequest, 
+action?: string,	whiteListUsernames?: string[],	lobbyWS?: WebSocket) {
+	const status = await prepareLayout(document.body.layoutInstance, 'game');
+	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+	if (!gameRequest) {
+		console.error('GameRequest =>', gameRequest);
+		return redirectOnError('/', "Uh-oh! You can't be there - go join a lobby or something !");
+	}
+	const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
+	const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
+	
+    ui.player1.innerText = status.username!;
+    ui.player2.innerText = gameRequest.opponent;
+	const layout = document.body.layoutInstance;
+	const background: [pongTheme, ImgData[]] = getGameBackground(gameRequest.gameSettings.background)
+    court.theme = background[0];
+	court.lobbySocket = lobbyWS!;
+    if (layout) layout.theme = background[1];
+    document.body.layoutInstance?.appendAndCache(ui, court);
+	pong(gameRequest!, court, ui);
+}
 
 function getGameBackground(background?: string): [pongTheme, ImgData[]] {
     if (background === "Adorable Farm")
@@ -296,26 +317,6 @@ function getGameBackground(background?: string): [pongTheme, ImgData[]] {
     // if (background === "Enchanted Forest")
     //     return [] //TODO
     return [defaultTheme, []];
-}
-
-export async function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest) {
-	const status = await prepareLayout(document.body.layoutInstance, 'game');
-	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN'});
-	if (!gameRequest) {
-		console.error('GameRequest =>', gameRequest);
-		return redirectOnError('/', "Uh-oh! You can't be there - go join a lobby or something !");
-	}
-	const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
-	const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
-
-    ui.player1.innerText = status.username!;
-    ui.player2.innerText = gameRequest.opponent;
-	const layout = document.body.layoutInstance;
-	const background: [pongTheme, ImgData[]] = getGameBackground(gameRequest.gameSettings.background)
-    court.theme = background[0];
-    if (layout) layout.theme = background[1];
-    document.body.layoutInstance?.appendAndCache(ui, court);
-	pong(gameRequest!, court, ui);
 }
 
 export async function renderPrivacy() {
@@ -335,5 +336,5 @@ export async function renderPrivacy() {
 		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
 	}
 
-	updatePageTitle('Leaderboard');
+	updatePageTitle('Privacy');
 }

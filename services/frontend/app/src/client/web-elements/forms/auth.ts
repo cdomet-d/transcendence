@@ -42,6 +42,8 @@ export class LoginForm extends BaseForm {
 		try {
 			const response = await fetch(url, req);
 			if (!response.ok) throw await exceptionFromResponse(response);
+			await document.body.header?.notif.fetchPendingFriendRequests();
+			await document.body.header?.notif.fetchGameInvites();
 			document.body.header?.notif.notifWsRequest();
 			router.loadRoute('/me', true);
 		} catch (error) {

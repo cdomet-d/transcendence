@@ -17,7 +17,7 @@ export function wsRequest(court: PongCourt ,game: Game, ids: { gameID: string; u
 
     ws.onopen = () => {
         console.log('PONG webSocket connection established!');
-        court.socket = ws;
+        court.pongSocket = ws;
         ws.addEventListener(
             'message',
             (event) => {
