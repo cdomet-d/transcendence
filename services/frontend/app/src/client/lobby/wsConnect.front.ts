@@ -108,7 +108,7 @@ function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettin
 			// handle Response for gameRequest
 			if (data.opponent && data.gameID && (data.remote === true || data.remote === false) && data.gameSettings) {
 				const gameRequest: gameRequest = data;
-				router.loadRoute('/game', true, gameRequest);
+				router.loadRoute('/game', true, gameRequest, undefined, undefined, ws);
 				return;
 			}
 		} catch (error) {

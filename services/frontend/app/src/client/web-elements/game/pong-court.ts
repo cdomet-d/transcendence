@@ -8,7 +8,8 @@ export const defaultTheme: pongTheme = { color: '#2267A3', theme: 'default' };
 export class PongCourt extends HTMLDivElement {
     #canva: HTMLCanvasElement;
     #theme: pongTheme;
-    #ws: WebSocket | null;
+    #pongWS: WebSocket | null;
+    #lobbyWS: WebSocket | null;
 
     constructor() {
         super();
@@ -17,15 +18,20 @@ export class PongCourt extends HTMLDivElement {
         this.#canva.height = HEIGHT;
         this.#theme = defaultTheme;
         this.id = 'pongcourt';
-        this.#ws = null;
+        this.#pongWS = null;
+        this.#lobbyWS =  null
     }
 
     set theme(theme: pongTheme) {
         this.#theme = theme;
     }
 
-    set socket(socket: WebSocket) {
-        this.#ws = socket;
+    set pongSocket(socket: WebSocket) {
+        this.#pongWS = socket;
+    }
+
+    set lobbySocket(socket: WebSocket) {
+        this.#lobbyWS = socket;
     }
 
 	get canva(): HTMLCanvasElement {
@@ -42,8 +48,11 @@ export class PongCourt extends HTMLDivElement {
     }
 
     disconnectedCallback() {
-        if (this.#ws !== null)
-            this.#ws.close();
+        if (this.#pongWS !== null)
+            this.#pongWS.close();
+		const newRoute: string = window.location.pathname;
+        if (this.#lobbyWS !== null && newRoute !== "/game" && !newRoute.includes("-lobby"))
+            this.#lobbyWS.close();
     }
 
 	render() {

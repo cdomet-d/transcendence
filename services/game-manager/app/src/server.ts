@@ -1,10 +1,11 @@
 'use strict';
 import Fastify from 'fastify';
-import type { FastifyRequest, FastifyReply } from 'fastify';
+import type { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
 import websocket from '@fastify/websocket';
-import type { FastifyInstance } from 'fastify';
-
-import { wsRoute } from './routes/wsRoute.js';
+import cookie from '@fastify/cookie';
+import fastifyJwt from '@fastify/jwt';
+import { routes } from './routes/routes.js';
+import dbConnector from "./db.js";
 import { options } from './serv.conf.js';
 import { natsConnect } from './nats/publisher.gm.js';
 import { natsSubscribe } from './nats/subscriber.gm.js';
@@ -47,6 +48,9 @@ function addHooks(serv: FastifyInstance) {
 }
 
 function addPlugins(serv: FastifyInstance) {
+    serv.register(fastifyJwt, { secret: process.env.JWT_SECRET! });
+    serv.register(cookie);
+	serv.register(dbConnector);
     serv.register(websocket, {
         errorHandler: function (
             error,
@@ -66,7 +70,7 @@ function addPlugins(serv: FastifyInstance) {
         },
         options: {},
     });
-    serv.register(wsRoute);
+    serv.register(routes);
 }
 
 function runServ(serv: FastifyInstance): void {

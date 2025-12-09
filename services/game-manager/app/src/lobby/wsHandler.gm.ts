@@ -6,6 +6,7 @@ import { validateData, validatePayload } from '../gameManager/inputValidation.gm
 import type { lobbyInfo, userInfo, whitelist } from '../gameManager/gameManager.interface.js';
 import type { lobbyRequestForm, gameNotif, lobbyInviteForm } from './lobby.interface.js';
 import { natsPublish } from '../nats/publisher.gm.js';
+import { addNotifToDB, removeNotifFromDB } from '../inviteNotifs/invite-notifs.js';
 
 export function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): void {
 	let userID: string | null = null;
@@ -72,10 +73,13 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 						lobbyID: lobbyID!,
 						gameType: formInstance === 'remoteForm' ? '1 vs 1' : 'tournament'
 					};
+					addNotifToDB(this, notif);
+					// console.log('inviteeID: ', inviteeID);
 					addUserToWhitelist(invitePayload.invitee, lobbyID!);
 					natsPublish(this, 'post.notif', JSON.stringify(notif));
 				} else if (invitePayload.action === 'decline') {
 					const inviteeID = invitePayload.invitee.userID!;
+					removeNotifFromDB(this, invitePayload.lobbyID!, inviteeID);
 					removeUserFromWhitelist(inviteeID, invitePayload.lobbyID!);
 					if (findLobbyIDFromUserID(inviteeID) === null)
 						socket.close();
@@ -85,10 +89,10 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					}
 
 					userID = invitePayload.invitee.userID;
-					const oldLobbyID: string | null = findLobbyIDFromUserID(userID);
-					if (oldLobbyID !== null)
-						removeUserFromLobby(userID, oldLobbyID);
-
+					let oldLobby: string | null = findLobbyIDFromUserID(userID);
+					if (oldLobby !== null)
+						removeUserFromLobby(userID, oldLobby);
+					removeNotifFromDB(this, invitePayload.lobbyID!, userID);
 					addUserToLobby(userID!, invitePayload.invitee.username!, socket, invitePayload.lobbyID!);
 					const whiteListUsernames: string[] = getWhiteListUsernames(invitePayload.lobbyID!)
 					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance, whiteListUsernames: whiteListUsernames }));
