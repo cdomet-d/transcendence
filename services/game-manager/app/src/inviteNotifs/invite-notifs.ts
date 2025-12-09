@@ -19,14 +19,26 @@ export async function addNotifToDB(serv: FastifyInstance, notif: gameNotif) {
         ];
         const createNotif = await serv.dbGameManager.run(queryNotif, paramsNotif);
         if (createNotif.changes === 0)
-            throw new Error('Database Error: Stats INSERT failed (0 changes).');
+            throw new Error('Database Error: Notif INSERT failed (0 changes).');
     } catch (error) {
         serv.log.error(`[GAME INVITE]: ${error}`);
     }
 }
 
-export function removeNotifFromDB(serv: FastifyInstance, lobbyID: string, userID: string) {
-
+export async function removeNotifFromDB(serv: FastifyInstance, lobbyID: string, userID: string) {
+    try {
+        const query: string = `
+            DELETE FROM gameInviteNotifs
+            WHERE receiverID = ?
+                AND lobbyID = ?;
+        `
+        const deleteNotif = await serv.dbGameManager.run(query, [userID, lobbyID]);
+        if (deleteNotif.changes === 0)
+            throw new Error('Database Error: Notif DELETE failed (0 changes).');
+    }
+    catch (error) {
+        serv.log.error(`[GAME INVITE]: ${error}`);
+    }
 }
 
 export async function sendInviteNotifs(request: FastifyRequest<{ Params: Params }>, reply: FastifyReply) {
