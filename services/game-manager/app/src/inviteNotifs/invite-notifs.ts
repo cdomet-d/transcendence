@@ -11,10 +11,15 @@ export async function addNotifToDB(serv: FastifyInstance, notif: gameNotif) {
             INSERT INTO gameInviteNotifs (type, senderUsername, receiverID, lobbyID, gameType)
             VALUES ("GAME_INVITE", ?, ?, ?, ?)
         `;
-        const paramsNotif: string[] = Object.keys({} as gameNotif);
+        const paramsNotif: string[] = [
+            notif.senderUsername,
+            notif.receiverID,
+            notif.lobbyID,
+            notif.gameType
+        ];
         const createNotif = await serv.dbGameManager.run(queryNotif, paramsNotif);
         if (createNotif.changes === 0)
-            throw new Error('Database Error: Stats INSERT failed (0 changes).');//TODO: handle
+            throw new Error('Database Error: Stats INSERT failed (0 changes).');
     } catch (error) {
         serv.log.error(`[GAME INVITE]: ${error}`);
     }
@@ -27,19 +32,13 @@ export function removeNotifFromDB(serv: FastifyInstance, lobbyID: string, userID
 export async function sendInviteNotifs(request: FastifyRequest<{ Params: Params }>, reply: FastifyReply) {
     try {
         const userID: string = request.params.userID;
-        if (userID === undefined) {
-            //TODO; reply with error
-            return;
-        }
+        if (!userID)
+            return reply.code(400).send({ error: "Missing userID" });
         const sql = `
             SELECT * FROM gameInviteNotifs WHERE receiverID = ?
         `;
         const params = [userID];
         const notifs: gameNotif[] = await request.server.dbGameManager.all<gameNotif[]>(sql, params);
-        if (notifs.length) {
-            console.log("user has no pending game invites");
-            return;
-        }
         reply.code(200).send(notifs);
     } catch (error) {
         request.server.log.error(`[GAME INVITE] Error checking notifs: ${error}`);

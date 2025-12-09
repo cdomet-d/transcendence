@@ -142,12 +142,15 @@ export class NotifBox extends HTMLDivElement {
 		const url = `https://localhost:8443/api/lobby/notification/${status.userID!}`;
 		try {
 			const rawRes = await fetch(url);
-			if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
-			const res = await rawRes.json();
-			for (const notif of res.notifs) {
-				console.log("got notif");
-				this.newGameInvitation(notif);
+			if (!rawRes.ok) {
+				if (rawRes.status === 400)
+					return redirectOnError('/auth', 'You must be registered to see this page');
+				throw await exceptionFromResponse(rawRes);
 			}
+			const notifs: gameNotif[] = await rawRes.json();
+			notifs.forEach((notif: gameNotif) => {
+				this.newGameInvitation(notif);
+			})
 		} catch (error) {
 			console.error('[NOTIFICATIONS]', errorMessageFromException(error));
 			createVisualFeedback(errorMessageFromException(error));
