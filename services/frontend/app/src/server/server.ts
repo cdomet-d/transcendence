@@ -55,36 +55,42 @@ function addHooks(serv: FastifyInstance) {
 }
 
 async function addPlugins(serv: FastifyInstance) {
-	await serv
-		.register(fastifyStatic, {
-			root: '/app/dist/client/',
-			prefix: '/public/',
-			decorateReply: true,
-			setHeaders: (res, pathName) => {
-				if (pathName.endsWith('.woff')) {
-					res.setHeader('Content-Type', 'font/woff');
-				} else if (pathName.endsWith('.png')) {
-					res.setHeader('Content-Type', 'image/png');
-				} else if (pathName.endsWith('.js')) {
-					res.setHeader('Content-Type', 'application/javascript');
-				}
-			},
-		})
-		.register(websocket, {
-			errorHandler: function (
-				error,
-				socket: WebSocket,
-				req: FastifyRequest,
-				reply: FastifyReply,
-			) {
-				serv.log.error(error);
-				socket.close(1011, error.message);
-			},
-			options: {},
-		})
-		.register(servRoutes)
-		.register(
-			cookie /*, {
+    await serv
+        .register(fastifyStatic, {
+            root: '/app/dist/client/',
+            prefix: '/public/',
+            decorateReply: true,
+            setHeaders: (res, pathName) => {
+                if (pathName.endsWith('.woff')) {
+                    res.setHeader('Content-Type', 'font/woff');
+                } else if (pathName.endsWith('.png')) {
+                    res.setHeader('Content-Type', 'image/png');
+                } else if (pathName.endsWith('.js')) {
+                    res.setHeader('Content-Type', 'application/javascript');
+                }
+            },
+        })
+        .register(websocket, {
+            errorHandler: function (
+                error,
+                socket: WebSocket,
+                req: FastifyRequest,
+                reply: FastifyReply
+            ) {
+                serv.log.error(error);
+                socket.close(1011, error.message);
+            },
+            preClose: (done) => {
+                const serverWS = serv.websocketServer;
+                for (const socket of serverWS.clients)
+                    socket.close(1001, 'WS server is going offline');
+                serverWS.close(done);
+            },
+            options: {},
+        })
+        .register(servRoutes)
+        .register(
+            cookie /*, {
 					secret: "", //TODO: add secret ?
 				}*/,
 		);
