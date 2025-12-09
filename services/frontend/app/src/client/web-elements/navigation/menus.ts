@@ -54,7 +54,7 @@ export class SocialMenu extends Menu {
 
 	async #APIRemoveFriendImplementation() {
 		console.log('RemoveFriends');
-		const url = 'https://localhost:8443/api/bff/relation';
+		const url = `https://z1r2p3:8443/api/bff/relation`;
 		const req: RequestInit = {
 			method: 'delete',
 			headers: { 'Content-Type': 'application/json' },
@@ -73,7 +73,7 @@ export class SocialMenu extends Menu {
 
 	async #APIAddFriendImplementation() {
 		console.log('AddFriends');
-		const url = 'https://localhost:8443/api/bff/relation';
+		const url = `https://z1r2p3:8443/api/bff/relation`;
 		const req: RequestInit = {
 			method: 'post',
 			headers: { 'Content-Type': 'application/json' },

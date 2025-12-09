@@ -150,9 +150,9 @@ export class NotifBox extends HTMLDivElement {
 	async fetchPendingFriendRequests() {
 		const status = await userStatus();
 		if (!status.auth) redirectOnError('/auth', 'You must be registered to see this page');
-		const url = `https://localhost:8443/api/bff/profile/${status.username}`;
+		const url = `https://z1r2p3:8443/api/bff/profile/${status.username}`;
 		try {
-			const rawRes = await fetch(url);
+			const rawRes = await fetch(url, { credentials: 'include' });
 			if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
 			const res = await rawRes.json();
 			const requests = userArrayFromAPIRes(res.pending);
@@ -169,7 +169,7 @@ export class NotifBox extends HTMLDivElement {
 		const userStatusInfo: userStatusInfo = await userStatus();
 		if (userStatusInfo.auth === false || userStatusInfo.userID === undefined) return;
 		const userID: string = userStatusInfo.userID;
-		const ws = new WebSocket(`wss://localhost:8443/notification/${userID}`);
+		const ws = new WebSocket(`wss://z1r2p3:8443/notification/${userID}`);
 
 		ws.onerror = () => {
 			ws.close(1011, 'websocket error');

@@ -110,7 +110,7 @@ export let currentLanguage: string = 'en';
 
 export async function setLanguage(lang: string): Promise<void> {
 	try {
-		const response = await fetch(`https://localhost:8443/api/bff/dictionary/${lang}`);
+		const response = await fetch(`https://z1r2p3:8443/api/bff/dictionary/${lang}`);
 
 		//TODO handle error
 		if (!response.ok) {

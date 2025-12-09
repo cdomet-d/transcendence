@@ -1,4 +1,0 @@
-map $http_origin $cors_origin {
-    default \"\";
-    ~^https?://(localhost|127\.0\.0\.1|${PUBLIC_IP})(?::[0-9]+)?/?$ $http_origin;
-}

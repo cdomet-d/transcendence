@@ -6,7 +6,7 @@ import { currentDictionary } from './language.js';
 
 export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails {
 	return {
-		action: 'https://localhost:8443/api/bff/settings',
+		action: `https://z1r2p3:8443/api/bff/settings`,
 		heading: dic.titles.settings,
 		ariaLabel: 'User settings',
 		id: 'user-settings',
@@ -57,7 +57,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 
 export function registrationForm(dic: Dictionary): FormDetails {
 	return {
-		action: 'https://localhost:8443/api/auth/register',
+		action: `https://z1r2p3:8443/api/auth/register`,
 		heading: dic.titles.register,
 		ariaLabel: 'Create an account',
 		id: 'account-create',
@@ -92,7 +92,7 @@ export function registrationForm(dic: Dictionary): FormDetails {
 
 export function loginForm(dic: Dictionary): FormDetails {
 	return {
-		action: 'https://localhost:8443/api/auth/login',
+		action: `https://z1r2p3:8443/api/auth/login`,
 		heading: dic.titles.login,
 		ariaLabel: 'Log into an account',
 		id: 'account-login',
@@ -127,7 +127,7 @@ export function loginForm(dic: Dictionary): FormDetails {
 
 export function search(dic: Dictionary): FormDetails {
 	return {
-		action: 'https://localhost:8443/api/bff/search?name=',
+		action: `https://z1r2p3:8443/api/bff/search?name=`,
 		heading: '',
 		ariaLabel: 'Search for a user',
 		id: 'searchform',
@@ -154,7 +154,7 @@ export function search(dic: Dictionary): FormDetails {
 
 export function localPong(dic: Dictionary): FormDetails {
 	return {
-		action: 'https://localhost:8443/api/game/quick-lobby/',
+		action: `https://z1r2p3:8443/api/game/quick-lobby/`,
 		heading: dic.gameCustom.local,
 		gameFormat: 'local-quickmatch',
 		ariaLabel: 'Pong settings',
@@ -223,7 +223,7 @@ export function localPong(dic: Dictionary): FormDetails {
 
 export function remotePong(dic: Dictionary): FormDetails {
 	return {
-		action: 'https://localhost:8443/api/game/quick-lobby/',
+		action: `https://z1r2p3:8443/api/game/quick-lobby/`,
 		heading: 'Remote Pong',
 		gameFormat: 'remote-quickmatch',
 		ariaLabel: 'Remote Pong settings',
@@ -284,7 +284,7 @@ export function remotePong(dic: Dictionary): FormDetails {
 
 export function pongTournament(dic: Dictionary): FormDetails {
 	return {
-		action: 'https://localhost:8443/api/game/tournament-lobby/',
+		action: `https://z1r2p3:8443/api/game/tournament-lobby/`,
 		heading: dic.titles.pong_tournament,
 		gameFormat: 'tournament',
 		ariaLabel: 'Pong tournament settings',
@@ -345,7 +345,7 @@ export function pongTournament(dic: Dictionary): FormDetails {
 
 export function deleteAccount(dic: Dictionary): FormDetails {
 	return {
-		action: 'https://localhost:8443/api/bff/account',
+		action: `https://z1r2p3:8443/api/bff/account`,
 		heading: '',
 		ariaLabel: 'Account deletion request',
 		id: 'account-deletion-request',
@@ -363,7 +363,7 @@ export function deleteAccount(dic: Dictionary): FormDetails {
 };
 
 export const criticalChange: FormDetails = {
-	action: 'https://localhost:8443/api/auth/verify',
+	action: `https://z1r2p3:8443/api/auth/verify`,
 	heading: 'Password Required',
 	ariaLabel: 'Verify your password',
 	id: 'pw-check',

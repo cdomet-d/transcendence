@@ -85,6 +85,7 @@ services:
         environment:
             - NGINXIP=nginx
             - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+            - HOST="z1r2p3"
         volumes:
             - ./services/frontend/app:/app
     bff:
@@ -147,9 +148,7 @@ services:
             context: ./services/nginx/
             dockerfile: Dockerfile
         container_name: nginx
-        environment:
-            - NGINX_HOST=bigt.com
-            - NGINX_PORT=443
+        env_file: ./services/nginx/.nginx.env
         image: nginx:0.0.1
         networks:
             - transcendence

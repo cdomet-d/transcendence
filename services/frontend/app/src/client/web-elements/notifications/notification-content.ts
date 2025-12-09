@@ -98,7 +98,7 @@ export class NotifContent extends HTMLLIElement {
 	}
 
 	async #acceptRelation() {
-		const url = 'https://localhost:8443/api/bff/relation';
+		const url = `https://z1r2p3:8443/api/bff/relation`;
 		const body = { username: `${this.#requesterUsername}` };
 		const jbody = JSON.stringify(body);
 		const req: RequestInit = {
@@ -118,7 +118,7 @@ export class NotifContent extends HTMLLIElement {
 	}
 
 	async #declineRelation() {
-		const url = 'https://localhost:8443/api/bff/relation';
+		const url = `https://z1r2p3:8443/api/bff/relation`;
 		const body = { username: `${this.#requesterUsername}` };
 		const jbody = JSON.stringify(body);
 		const req: RequestInit = {

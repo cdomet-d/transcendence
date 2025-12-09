@@ -7,7 +7,7 @@ import { createVisualFeedback } from '../error.js';
 const START_DELAY = 500;
 
 export function wsRequest(game: Game, ids: { gameID: string; userID: string }) {
-	const ws = new WebSocket('wss://localhost:8443/api/game/');
+	const ws = new WebSocket(`wss://z1r2p3:8443/api/game/`);
 
 	ws.onerror = () => {
 		ws.close(1011, 'websocket error');

@@ -10,7 +10,7 @@ function openWsConnection() {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 		return wsInstance;
 	}
-	wsInstance = new WebSocket('wss://localhost:8443/api/lobby/');
+	wsInstance = new WebSocket(`wss://z1r2p3:8443/api/lobby/`);
 	return wsInstance;
 }
 

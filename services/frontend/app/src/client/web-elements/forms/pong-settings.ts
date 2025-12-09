@@ -150,7 +150,7 @@ export class RemotePongSettings extends LocalPongSettings {
 	}
 	/* -------------------------------- listeners ------------------------------- */
 	async fetchGuests(guestUsername: string): Promise<UserData | null> {
-		const url = `https://localhost:8443/api/bff/tiny-profile/${guestUsername}`;
+		const url = `https://z1r2p3:8443/api/bff/tiny-profile/${guestUsername}`;
 		try {
 			const rawResp = await fetch(url);
 			console.log(rawResp.ok);
