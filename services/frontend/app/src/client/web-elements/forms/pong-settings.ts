@@ -183,8 +183,12 @@ export class RemotePongSettings extends LocalPongSettings {
 		this.classList.add('sidebar-left');
 	}
 
-	startGame() {
+	enableStartButton() {
 		super.contentMap.get('submit')?.removeAttribute('disabled');
+	}
+
+	disableSearchBar() {
+		this.#searchbar.contentMap.get('submit')?.setAttribute('disabled', "");
 	}
 
 	set owner(o: string) {
@@ -210,18 +214,15 @@ export class RemotePongSettings extends LocalPongSettings {
 		if (target.tagName === 'A') {
 			ev.preventDefault();
 			ev.stopImmediatePropagation();
-			// TODO: keep lobby owner from adding themselves to the lobby;
-			//  && target.title !== this.#owner
+			if (target.title === this.#owner) {
+				createVisualFeedback("You can't invite yourself");
+				return;
+			}
 			if (this.#guests.size < this._guestLimit) {
 				try {
 					const user = await this.fetchGuests(target.title);
 					if (user) this.#guests.set(user.username, user);
-					/**
-					 * HERE @ElSamsam && @cmsweeting
-					 * When the lobby's owner adds a guest to the lobby, I fetch the associated data and store it in the guest Map to render it later.
-					 * You can add whatever you need websocket wise HERE and send `user.username` to add the user to the lobby server-side.
-					 */
-					wsConnect('invite', '', this.details.id, '', '', {userID: user!.id, username: user!.username}); //TODO: check user exists?
+					wsConnect('invite', '', this.details.id, '', '', {userID: user!.id, username: user!.username});
 					this.#displayGuests();
 				} catch (error) {
 					console.log(error);
