@@ -24,8 +24,8 @@ export function createGameObj(lobbyInfo: lobbyInfo, lobbyID: string) {
 		loserID: '', 
 		duration: 0, 
 		longuestPass: 0,
-		startTime: '',
-		// gameSettings
+		startTime: "",
+		gameSettings: lobbyInfo.gameSettings!,
 	};
 
 	return game;
