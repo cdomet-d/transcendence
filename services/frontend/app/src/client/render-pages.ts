@@ -349,9 +349,17 @@ export async function renderTournamentLobby(
 export async function renderGame(
 	param?: Match<Partial<Record<string, string | string[]>>>,
 	gameRequest?: gameRequest,
+	action?: string,
+	whiteListUsernames?: string[],
+	lobbyWS?: WebSocket
 ) {
 	console.log('renderGame');
 
+	const user: userStatusInfo = await userStatus();
+	if (!user.auth || user.username === undefined) {
+		redirectOnError('/auth', 'You must be registered to see this page')
+		return JSON.stringify({ event: 'BAD_USER_TOKEN'});
+	}
 	if (!gameRequest)
 		return redirectOnError('/', "Uh-oh! You can't be there - go join a lobby or something !");
 
@@ -362,13 +370,8 @@ export async function renderGame(
 	}
 
 	const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
+	court.lobbySocket = lobbyWS!;
 	const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;
-
-    const user: userStatusInfo = await userStatus();
-    if (!user.auth || user.username === undefined) {
-        redirectOnError('/auth', 'You must be registered to see this page')
-        return JSON.stringify({ event: 'BAD_USER_TOKEN'});
-    }
     ui.player1.innerText = user.username;
     ui.player2.innerText = gameRequest.opponent;
 
