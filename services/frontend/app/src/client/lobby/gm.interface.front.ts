@@ -27,7 +27,6 @@ export interface lobbyRequestForm {
 export interface gameRequestForm {
     event: 'GAME_REQUEST';
     payload: {
-        // userList: userInfo[];
         hostID: string,
         remote: boolean;
         format: 'quickmatch' | 'tournament' | string;
@@ -35,13 +34,6 @@ export interface gameRequestForm {
         gameSettings: PongOptions;
     };
 }
-
-interface userInfo {
-    userID?: string;
-    username?: string;
-    userSocket?: WebSocket;
-}
-
 
 export interface inviteeObj {
 	userID: string, 

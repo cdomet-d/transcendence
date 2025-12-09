@@ -67,10 +67,13 @@ function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettin
 				const error = data.error;
 				if (error === 'not enough players') {
 					createVisualFeedback('You do not have enough players in your lobby to start playing!', 'error');
+					return;
 				} else if (error === 'lobby not found') {
 					createVisualFeedback('Your lobby is malfunctionning! Please create a new one!', 'error');
 				} else if (error === 'lobby does not exist') {
 					redirectOnError('/home', 'The lobby you are trying to join does not exist anymore!');
+				} else if (error === 'not invited') {
+					createVisualFeedback('You were not invited to this lobby!', 'error');
 				}
 				console.log("ERROR: ", data.error);
 				return;
@@ -104,10 +107,9 @@ function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettin
 			}
 
 			// handle Response for gameRequest
-			if (data.opponent && data.gameID && data.remote /* && data.gameSettings */) {
+			if (data.opponent && data.gameID && data.remote && data.gameSettings) {
 				const gameRequest: gameRequest = data;
-				console.log("IN WS CONNECT GameRequest =>", gameRequest);
-				router.loadRoute('/game', true, gameRequest); // TODO give usernames in gameRequest
+				router.loadRoute('/game', true, gameRequest);
 				return;
 			}
 		} catch (error) {

@@ -30,7 +30,6 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 
 				userID = lobbyPayload.userID;
 				let username: string = lobbyPayload.username;
-				console.log('lobbyHost UID: ', userID);
 
 				if (!wsClientsMap.has(userID!) && lobbyPayload.action !== 'invite') {
 					wsClientsMap.set(userID!, socket);
@@ -50,7 +49,8 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 			if (data.event === 'GAME_REQUEST') {
 				const gamePayload = payload as lobbyInfo;
 				if (processGameRequest(this, gamePayload) === undefined) {
-					wsSend(socket, JSON.stringify({ error: 'not enough players',}));
+					console.log("ICI");
+					wsSend(socket, JSON.stringify({ error: 'not enough players'}));
 				}
 				return;
 			}
@@ -59,7 +59,6 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				const invitePayload = payload as lobbyInviteForm;
 
 				if (invitePayload.action === 'invite') {
-					// this.log.error("IN INVITE")
 					const inviteeID = invitePayload.invitee.userID!;
 					const lobbyID: string | null = findLobbyIDFromUserID(invitePayload.hostID!);
 					if (lobbyID === null) {
@@ -74,7 +73,6 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 						lobbyID: lobbyID!,
 						gameType: formInstance === 'remoteForm' ? '1 vs 1' : 'tournament'
 					};
-					// console.log('inviteeID: ', inviteeID);
 					addUserToWhitelist(invitePayload.invitee, lobbyID!);
 					natsPublish(this, 'post.notif', JSON.stringify(notif));
 				} else if (invitePayload.action === 'decline') {
@@ -85,7 +83,6 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				} else if (invitePayload.action === 'join') {
 					if (!lobbyMap.has(invitePayload.lobbyID!)) {
 						wsSend(socket, JSON.stringify({ error: 'lobby does not exist' }));
-						return;
 					}
 
 					userID = invitePayload.invitee.userID;

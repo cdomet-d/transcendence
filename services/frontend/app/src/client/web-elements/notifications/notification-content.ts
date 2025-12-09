@@ -5,6 +5,7 @@ import type { MenuData } from '../types-interfaces.js';
 import type { navigationLinksData } from '../types-interfaces.js';
 import { createVisualFeedback, errorMessageFromException, exceptionFromResponse } from '../../error.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
+import { userStatus, type userStatusInfo } from '../../main.js';
 
 interface GameInvite {
 	lobbyID: string;
@@ -132,8 +133,13 @@ export class NotifContent extends HTMLDivElement {
 		}
 	}
 
-	#joinGame() {
-		wsConnect("join", "", this.#lobbyInfo?.formInstance!, this.#lobbyInfo?.lobbyID, "", {userID: this.#lobbyInfo!.inviteeID});
+	async #joinGame() {
+		const user: userStatusInfo = await userStatus();
+		if (!user.auth || !user.username) {
+			createVisualFeedback('You are not logged in and thus cannot join a lobby!', 'error');
+			return;
+		}
+		wsConnect("join", "", this.#lobbyInfo?.formInstance!, this.#lobbyInfo?.lobbyID, "", {userID: this.#lobbyInfo!.inviteeID, username: user.username});
 	}
 
 	#declineGame() {

@@ -45,10 +45,6 @@ export function addUserToWhitelist(user: userInfo, lobbyID: string) {
 		lobby.whitelist?.userIDs.set(user.userID!, { userID: user.userID!, username: user.username! });
 		sendUpdatedWhiteList(lobbyID);
 	}
-
-	lobby.whitelist?.userIDs.forEach((value, key) => {
-  		console.log("WHITELIST AFTER: ", value, key);
-	});
 }
 
 export function removeUserFromWhitelist(userID: string, lobbyID: string) {
@@ -79,6 +75,7 @@ export function addUserToLobby(userID: string, username: string, socket: WebSock
 
 	if (!lobby.whitelist?.userIDs.has(userID)) {
 		console.log("YOU WERE NOT INVITED TO THIS LOBBY"); // TODO send this message to wsConnect and call createVisualFeedback("message", "false");
+		wsSend(socket, JSON.stringify({ error: 'not invited' }));
 		return;
 	}
 
@@ -105,17 +102,6 @@ export function removeUserFromLobby(userID: string, lobbyID: string) {
 	lobby.userList.delete(userID);
 	lobby.whitelist!.userIDs.delete(userID);
 	sendUpdatedWhiteList(lobbyID);
-}
-
-export function printPlayersInLobby(lobbyID: string) {
-	const lobby = lobbyMap.get(lobbyID);
-	if (!lobby) {
-		console.log('AAAH PAS DE LOBBY');
-		return;
-	}
-	lobby?.userList.forEach(user => {
-		console.log(`User #${user.userID} is in Lobby #${lobbyID}`);
-	});
 }
 
 export function findLobbyIDFromUserID(userID: string): string | null {
