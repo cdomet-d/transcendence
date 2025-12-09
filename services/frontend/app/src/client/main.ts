@@ -6,7 +6,8 @@ import { errorMessageFromException, redirectOnError } from './error.js';
 import { initLanguage } from './web-elements/forms/language.js';
 
 export const router = new Router(routes);
-export const origin = process.env.HOST;
+export let origin = process.env.HOST;
+if (!origin) origin = 'localhost'
 
 console.log(`${origin}`)
 

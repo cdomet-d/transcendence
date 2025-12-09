@@ -12,8 +12,8 @@ import { pong, type gameRequest } from './pong/pong.js';
 import { PongUI } from './web-elements/game/game-ui.js';
 import { errorMessageFromException, exceptionFromResponse, redirectOnError } from './error.js';
 import type { Match } from 'path-to-regexp';
-import type { navigationLinksData, pongTheme, TabData, ImgData } from './web-elements/types-interfaces.js';
-import { userStatus, router, type userStatusInfo } from './main.js';
+import type { pongTheme, TabData, ImgData } from './web-elements/types-interfaces.js';
+import { router, type userStatusInfo, origin } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
@@ -232,7 +232,7 @@ export async function renderQuickLocalLobby() {
 	const status = await prepareLayout(document.body.layoutInstance, 'quickLobby');
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN'});
 
-	const form = createForm('local-pong-settings', localPong(currentDictionary));
+	const form: LocalPongSettings = createForm('local-pong-settings', localPong(currentDictionary));
 	form.owner = status.username!;
 	document.body.layoutInstance?.appendAndCache(form);
 	form.classList.remove('h-full');
@@ -316,4 +316,24 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
     if (layout) layout.theme = background[1];
     document.body.layoutInstance?.appendAndCache(ui, court);
 	pong(gameRequest!, court, ui);
+}
+
+export async function renderPrivacy() {
+	console.log('renderPrivacy');
+	try {
+		prepareLayout(document.body.layoutInstance, 'privacy');
+	} catch (error) {
+		console.error(errorMessageFromException(error));
+	}
+
+	try {
+		document.body.layoutInstance!.appendAndCache(
+			createHeading('2', "Your privacy"),
+			createPrivacy(),
+		);
+	} catch (error) {
+		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
+	}
+
+	updatePageTitle('Leaderboard');
 }
