@@ -72,8 +72,9 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 						senderUsername: hostUsername,//TODO
 						receiverID: inviteeID,
 						lobbyID: lobbyID!,
-						gameType: formInstance === 'remoteForm' ? '1 vs 1' : 'tournament'
+						gameType: payload.format! === 'quickmatch' ? '1 vs 1' : 'tournament'
 					};
+					this.log.error(`FORMA: ${payload.format}`);
 					addNotifToDB(this, notif);
 					// console.log('inviteeID: ', inviteeID);
 					addUserToWhitelist(invitePayload.invitee, lobbyID!);

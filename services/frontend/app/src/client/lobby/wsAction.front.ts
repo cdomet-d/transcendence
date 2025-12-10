@@ -13,7 +13,7 @@ export async function executeAction(action: string, format: string, formInstance
     if (action === 'invite') {
         // TODO prevent non-host from inviting people
         // get lobby from ID, check if host, allow invite if yes, else wsSend some error code
-        wsSend(wsInstance!, await inviteToLobbyRequest(action, invitee!, formInstance));
+        wsSend(wsInstance!, await inviteToLobbyRequest(action, invitee!, format));
         return;
     }
 

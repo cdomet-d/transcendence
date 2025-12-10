@@ -24,9 +24,9 @@ import { userStatus } from '../../main.js';
  */
 export class LocalPongSettings extends BaseForm {
 	#backgroundSelector: DropdownMenu;
-	#format: string;
+	_format: string;
 	#formInstance: string;
-	_guestLimit: number; // underscore is a convention in js to say protected
+	_guestLimit: number;
 	#ws: WebSocket | null;
 
 	/* -------------------------------------------------------------------------- */
@@ -36,7 +36,7 @@ export class LocalPongSettings extends BaseForm {
 		super();
 		this.#backgroundSelector = createDropdown(backgroundMenu, currentDictionary.gameCustom.choose_back, 'static');
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
-		this.#format = "";
+		this._format = "";
 		this.#formInstance = "";
 		this.#ws = null;
 		this._guestLimit = 0;
@@ -75,7 +75,7 @@ export class LocalPongSettings extends BaseForm {
 	/*                                   Setters                                  */
 	/* -------------------------------------------------------------------------- */
 	set format(format: string) {
-		this.#format = format;
+		this._format = format;
 		if (format === 'tournament')
 			this._guestLimit = 4;
 		else
@@ -110,7 +110,7 @@ export class LocalPongSettings extends BaseForm {
 		console.log(f);
 		// await this.fetchAndRedirect(this.details.action, req);
 
-		wsConnect('game', this.#format, this.#formInstance, '', req.body);
+		wsConnect('game', this._format, this.#formInstance, '', req.body);
 	}
 }
 
@@ -222,7 +222,7 @@ export class RemotePongSettings extends LocalPongSettings {
 				try {
 					const user = await this.fetchGuests(target.title);
 					if (user) this.#guests.set(user.username, user);
-					wsConnect('invite', '', this.details.id, '', '', {userID: user!.id, username: user!.username});
+					wsConnect('invite', this._format, '', '', '', {userID: user!.id, username: user!.username});
 					this.#displayGuests();
 				} catch (error) {
 					console.log(error);
