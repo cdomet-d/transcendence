@@ -321,8 +321,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const userID = request.user.userID;
 			const body = request.body as any;
 
-			console.log("IN SETTINGS", JSON.stringify(body));
-
 			const profileUpdates: any = {};
 			const profileUpdatesUsername: any = {};
 			const accountUpdates: any = {};
@@ -344,8 +342,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const updateTasks: Promise<void>[] = [];
 
 			if (body.username || body.password) {
-				serv.log.info('pw/username change detected');
-
 				if (!validateBearerToken(serv, request.headers.authorization))
 					return reply.code(401).send({ message: 'Unauthorized' });
 
@@ -356,7 +352,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				serv.log.warn(profileUpdatesUsername, accountUpdates);
 				if (Object.keys(accountUpdates).length > 0)
 					updateTasks.push(updateAuthSettings(serv.log, userID, accountUpdates, token));
-				serv.log.warn(`UPDATE TASKS: ${updateTasks}`);
 				if (Object.keys(profileUpdatesUsername).length > 0)
 					updateTasks.push(
 						updateUserProfileUsername(serv.log, userID, profileUpdatesUsername, token)

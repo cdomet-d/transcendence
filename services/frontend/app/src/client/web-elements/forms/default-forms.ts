@@ -125,7 +125,7 @@ export function loginForm(dic: Dictionary): FormDetails {
 	};
 }
 
-export function search(dic: Dictionary): FormDetails {
+export function search (dic: Dictionary): FormDetails {
 	return {
 		action: 'https://localhost:8443/api/bff/search?name=',
 		heading: '',
@@ -135,9 +135,9 @@ export function search(dic: Dictionary): FormDetails {
 		fields: [
 			{
 				id: 'searchbar',
-				labelContent: 'Searchbar',
+				labelContent: dic.gameCustom.searchbar || " Searchbar",
 				pattern: searchbarPattern,
-				placeholder: currentDictionary.gameCustom.searchbar,
+				placeholder: dic.gameCustom.searchbar || " Searchbar",
 				type: 'text',
 				required: true,
 			},
@@ -145,7 +145,7 @@ export function search(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			content: dic.buttons.search,
+			content: dic.gameCustom.searchbar,
 			img: null,
 			ariaLabel: '',
 		},
