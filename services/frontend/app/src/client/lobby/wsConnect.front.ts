@@ -106,10 +106,10 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 				// TODO tell front when everybody there
 
 				if (data.lobby === "joined") {
-					if (data.formInstance === "1 vs 1") {
+					if (data.format === "quickmatch") {
 						router.loadRoute("/quick-remote-lobby", true, undefined, "invitee", data.whiteListUsernames);
 					}
-					else if (data.formInstance === "tournament") {
+					else if (data.format === "tournament") {
 						router.loadRoute("/tournament-lobby", true, undefined, "invitee", data.whiteListUsernames);
 					}
 				}

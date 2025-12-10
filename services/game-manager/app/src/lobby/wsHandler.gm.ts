@@ -7,6 +7,7 @@ import type { lobbyInfo, userInfo, whitelist } from '../gameManager/gameManager.
 import type { lobbyRequestForm, gameNotif, lobbyInviteForm } from './lobby.interface.js';
 import { natsPublish } from '../nats/publisher.gm.js';
 import { addNotifToDB, removeNotifFromDB } from '../inviteNotifs/invite-notifs.js';
+import type { format } from 'path';
 
 export function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest) {
 	let userID: string | null = null;
@@ -41,7 +42,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					if (lobbyID !== null)
 						removeUserFromLobby(userID, lobbyID, 0);
 					const newLobby: lobbyInfo = createLobby({userID: userID!, username: username, userSocket: socket }, lobbyPayload.format!);
-					wsSend(socket, JSON.stringify({ lobby: 'created', lobbyID: newLobby.lobbyID, formInstance: formInstance }))
+					wsSend(socket, JSON.stringify({ lobby: 'created', lobbyID: newLobby.lobbyID }))
 				}
 				return;
 			}
@@ -86,6 +87,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					if (findLobbyIDFromUserID(inviteeID) === null)
 						socket.close();
 				} else if (invitePayload.action === 'join') {
+					this.log.error(`PAYLOAD: ${JSON.stringify(invitePayload)}`)
 					if (!lobbyMap.has(invitePayload.lobbyID!)) {
 						wsSend(socket, JSON.stringify({ error: 'lobby does not exist' }));
 					}
@@ -97,7 +99,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					addUserToLobby(userID!, invitePayload.invitee.username!, socket, invitePayload.lobbyID!);
 					const whiteListUsernames: string[] = getWhiteListUsernames(invitePayload.lobbyID!)
 					informHostToStart(this, socket, invitePayload.lobbyID!);
-					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance, whiteListUsernames: whiteListUsernames }));
+					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, format: lobbyMap.get(invitePayload.lobbyID!)?.format, whiteListUsernames: whiteListUsernames }));
 				}
 			}
 		} catch (error) {
