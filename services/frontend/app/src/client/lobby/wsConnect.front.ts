@@ -17,11 +17,12 @@ function openWsConnection() {
 }
 
 async function wsConnect(action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string, invitee?: inviteeObj, form?: RemotePongSettings | LocalPongSettings) {
-	const ws: WebSocket = openWsConnection();
+	if (wsInstance?.OPEN)
+		executeAction(action, format, formInstance, lobbyID, gameSettings, invitee);
 
+	const ws: WebSocket = openWsConnection();
 	if (form)
 		form.socket = ws;
-
 	ws.onopen = async () => {
 		console.log('Lobby WebSocket connection established!')
 
@@ -37,11 +38,8 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		executeAction(action, format, formInstance, lobbyID, gameSettings, invitee);
 	}
 
-	if (action === 'invitee' && ws.OPEN)//TODO: ws OPEN necessary ?
+	if (action === 'invitee' && ws.OPEN)
 		setMessEvent(ws, form);
-
-	// TODO give socket to executeAction() to avoid duplicate instructions
-	executeAction(action, format, formInstance, lobbyID, gameSettings, invitee);
 
 	ws.onerror = (err: any) => {
 		console.log('Error:', err);
@@ -90,7 +88,6 @@ function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettin
 				if (data.lobby === "joined") {
 					if (data.formInstance === "1 vs 1") {
 						router.loadRoute("/quick-remote-lobby", true, undefined, "invitee", data.whiteListUsernames);
-						//fill lobby with data.whiteListUsers;
 					}
 					else if (data.formInstance === "tournament") {
 						router.loadRoute("/tournament-lobby", true, undefined, "invitee", data.whiteListUsernames);
@@ -117,5 +114,6 @@ function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettin
 		}
 	}
 }
+
 
 export { wsConnect };
