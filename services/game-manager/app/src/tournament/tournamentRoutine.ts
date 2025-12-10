@@ -23,7 +23,7 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 
 	gameOver(game, serv, false);//TODO: give false if its false and true if its second
 
-	const nextGame = getNextGameInBracket(tournamentObj);
+	const nextGame = getNextGameInBracket(tournamentObj, game);
 	if (nextGame === undefined) {
 		tournamentObj.winnerID = game.winnerID;
 		tournamentOver(tournamentObj);
@@ -64,13 +64,9 @@ function getUsernameFromID(userID: string, game: game): string {
 	return 'Error: Could not find username from userID in gameObj!';
 }
 
-function getNextGameInBracket(tournament: tournament): game | undefined {
-	tournament.bracket.forEach((gameObj) => {
-		if (gameObj.users === null) {
-			return gameObj;
-		}
-	});
-	// TODO Find better way to verify if tournament is over?
-	// like if winnerID for tournament or last game is not null then it's over
+function getNextGameInBracket(tournament: tournament, game: game): game | undefined {
+	if (tournament.bracket[2]?.gameID !== game.gameID) {
+		return tournament.bracket[2];
+	}
 	return undefined;
 }
