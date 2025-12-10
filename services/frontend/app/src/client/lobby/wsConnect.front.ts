@@ -19,16 +19,22 @@ function openWsConnection() {
 }
 
 async function wsConnect(action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string, invitee?: inviteeObj, form?: RemotePongSettings | LocalPongSettings) {
-	if (wsInstance?.OPEN)
-		executeAction(action, format, formInstance, lobbyID, gameSettings, invitee);
-
-	const ws: WebSocket = openWsConnection();
+	if (wsInstance && wsInstance.readyState === WebSocket.OPEN)
+		executeAction(wsInstance, action, format, formInstance, lobbyID, gameSettings, invitee);
+	let ws: WebSocket;
+	if (wsInstance === null) {
+		ws = openWsConnection();
+		setMessEvent(ws, form);
+	}
+	else
+		ws = wsInstance;
+	console.log("WS ID:", ws);
 	if (form)
 		form.socket = ws;
 	ws.onopen = async () => {
 		console.log('Lobby WebSocket connection established!')
 
-		setMessEvent(ws, form);
+		// setMessEvent(ws, form);
 
 		const interval = setInterval(() => {
 			if (ws.readyState === ws.OPEN) {
@@ -37,10 +43,10 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		}, 30000);
 
 		// TODO what happens if host leaves lobby, kick everyone ?
-		executeAction(action, format, formInstance, lobbyID, gameSettings, invitee);
+		executeAction(ws, action, format, formInstance, lobbyID, gameSettings, invitee);
 	}
 
-	if (action === 'invitee' && ws.OPEN) {
+	if (action === 'invitee' && ws.readyState === WebSocket.OPEN) {
 		setMessEvent(ws, form);
 		wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "in lobby" } })));
 	}

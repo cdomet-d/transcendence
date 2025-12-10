@@ -11,7 +11,6 @@ import { origin } from '../../main.js';
 interface GameInvite {
 	lobbyID: string;
 	inviteeID: string;
-	formInstance: string;
 }
 
 const notificationBtns: MenuData = {
@@ -145,7 +144,7 @@ export class NotifContent extends HTMLLIElement {
 			createVisualFeedback('You are not logged in and thus cannot join a lobby!', 'error');
 			return;
 		}
-		wsConnect("join", "", this.#lobbyInfo?.formInstance!, this.#lobbyInfo?.lobbyID, "", {userID: this.#lobbyInfo!.inviteeID, username: user.username});
+		wsConnect("join", "", "", this.#lobbyInfo?.lobbyID, "", {userID: this.#lobbyInfo!.inviteeID, username: user.username});
 	}
 
 	#declineGame() {

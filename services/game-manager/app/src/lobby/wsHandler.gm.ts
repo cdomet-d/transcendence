@@ -15,10 +15,10 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 	socket.on('message', (message: string) => {
 		try {
 			const data = JSON.parse(message);
-			if (!validateData(data, this, socket)) return;
+			if (!validateData(data, this, socket)) throw new Error("invalid input");;
 			
 			const { payload, formInstance } = data;
-			if (!validatePayload(data, payload, this, socket)) return;
+			if (!validatePayload(data, payload, this, socket)) throw new Error("invalid input");;
 
 			if (data.event === 'NOTIF' && payload.notif === 'ping') {
 				socket.send(JSON.stringify({ event: 'NOTIF', notif: 'pong' }));
@@ -102,11 +102,11 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					this.log.error(`FORMAT ${lobbyMap.get(invitePayload.lobbyID!)?.format}`)
 					this.log.error(`SENDING TO ${lobbyMap.get(invitePayload.lobbyID!)?.userList.get(userID)?.username}`)
 
-					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, format: lobbyMap.get(invitePayload.lobbyID!)?.format, whiteListUsernames: whiteListUsernames }));
+					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, whiteListUsernames: whiteListUsernames, format: lobbyMap.get(invitePayload.lobbyID!)?.format }));
 				}
 			}
 		} catch (error) {
-			socket.close(1003, `Malformed WS message: ${error}`);
+			socket.close(1003, `Malformed WS message`);
 			req.server.log.error(`Malformed WS message: ${error}`);
 		}
 	});
@@ -134,6 +134,7 @@ export function wsSend(ws: WebSocket, message: string): void {
 export function informHostToStart(serv: FastifyInstance, socket: WebSocket, lobbyID: string) {
 	socket.once('message', (message: string) => {
 		try {
+			serv.log.error("RECEIVED MESSAGE")
 			const data = JSON.parse(message);
 			if (!validateData(data, serv, socket)) throw new Error("invalid input");
 			
@@ -147,7 +148,7 @@ export function informHostToStart(serv: FastifyInstance, socket: WebSocket, lobb
 				}
 			}
 		} catch (err: any) {
-			socket.close(1003, err.message);
+			socket.close(1003, "Invalid input");
 			serv.log.error(err.message);
 		}
 	});

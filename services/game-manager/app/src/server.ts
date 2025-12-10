@@ -2,6 +2,7 @@
 import Fastify from 'fastify';
 import type { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
 import websocket from '@fastify/websocket';
+import type { WebSocket } from '@fastify/websocket';
 import cookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
 import { routes } from './routes/routes.js';
