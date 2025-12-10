@@ -1,12 +1,14 @@
-import { createVisualFeedback, redirectOnError } from '../error.js';
+import { createVisualFeedback, errorMessageFromException, exceptionFromResponse, redirectOnError } from '../error.js';
 import { router, userStatus } from '../main.js';
 import { type gameRequest } from '../pong/pong.js';
 import type { LocalPongSettings, RemotePongSettings } from '../web-elements/forms/pong-settings.js';
 import { origin } from '../main.js'
 import type { inviteeObj } from './gm.interface.front.js';
 import { executeAction, wsSend } from './wsAction.front.js';
-import { endGame } from '../web-elements/game/pong-events.js';
+import { createBracket, endGame } from '../web-elements/game/pong-events.js';
 import { looseImage, winImage } from '../web-elements/default-values.js';
+import type { MatchParticipants, UserData } from '../web-elements/types-interfaces.js';
+import { userDataFromAPIRes } from '../api-responses/user-responses.js';
 
 export let wsInstance: WebSocket | null = null;
 
@@ -128,6 +130,9 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 					}
 					form!.displayUpdatedGuests(data.whiteListUsernames);
 				}
+				if (data.lobby === "brackets") {
+					createMatchParticipants(data.brackets);
+				}
 				return;
 			}
 
@@ -143,5 +148,37 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 	}
 }
 
+async function createMatchParticipants(brackets: [string, string][]) {
+	let tournament: MatchParticipants[] = [];
+	let player1: UserData | null = null;
+	let player2: UserData | null = null;
+	for (const bracket of brackets) {
+		player1 = await fetchTinyProfile(bracket[0]);
+		player2 = await fetchTinyProfile(bracket[1]);
+		if (!player1 || !player2)
+			return;//TODO
+		tournament.push({player1, player2});
+	}
+	console.log(JSON.stringify(tournament));
+	createBracket(tournament);
+}
+
+async function fetchTinyProfile(username: string): Promise<UserData | null> {
+	const url = `https://${origin}:8443/api/bff/tiny-profile/${username}`;
+	try {
+		const raw = await fetch(url, { credentials: 'include' });
+		if (!raw.ok) {
+			if (raw.status === 404) throw redirectOnError('/404', 'No such user');
+			else throw await exceptionFromResponse(raw);
+		}
+		const data = await raw.json();
+		const user = userDataFromAPIRes(data);
+		return user;
+	} catch (error) {
+		console.error(errorMessageFromException(error));
+		redirectOnError(router.stepBefore, errorMessageFromException(error));
+	}
+	return null;
+}
 
 export { wsConnect };

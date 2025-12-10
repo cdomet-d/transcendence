@@ -16,8 +16,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 		try {
 			const data = JSON.parse(message);
 			if (!validateData(data, this, socket)) throw new Error("invalid input");;
-			
-			const { payload, formInstance } = data;
+			const { payload } = data;
 			if (!validatePayload(data, payload, this, socket)) throw new Error("invalid input");;
 
 			if (data.event === 'NOTIF' && payload.notif === 'ping') {
@@ -75,9 +74,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 						lobbyID: lobbyID!,
 						gameType: payload.format! === 'quickmatch' ? '1 vs 1' : 'tournament'
 					};
-					this.log.error(`FORMA: ${payload.format}`);
 					addNotifToDB(this, notif);
-					// console.log('inviteeID: ', inviteeID);
 					addUserToWhitelist(invitePayload.invitee, lobbyID!);
 					natsPublish(this, 'post.notif', JSON.stringify(notif));
 				} else if (invitePayload.action === 'decline') {
@@ -87,7 +84,6 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					if (findLobbyIDFromUserID(inviteeID) === null)
 						socket.close();
 				} else if (invitePayload.action === 'join') {
-					this.log.error(`PAYLOAD: ${JSON.stringify(invitePayload)}`)
 					if (!lobbyMap.has(invitePayload.lobbyID!)) {
 						wsSend(socket, JSON.stringify({ error: 'lobby does not exist' }));
 					}
@@ -99,9 +95,6 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					addUserToLobby(userID!, invitePayload.invitee.username!, socket, invitePayload.lobbyID!);
 					const whiteListUsernames: string[] = getWhiteListUsernames(invitePayload.lobbyID!)
 					informHostToStart(this, socket, invitePayload.lobbyID!);
-					this.log.error(`FORMAT ${lobbyMap.get(invitePayload.lobbyID!)?.format}`)
-					this.log.error(`SENDING TO ${lobbyMap.get(invitePayload.lobbyID!)?.userList.get(userID)?.username}`)
-
 					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, whiteListUsernames: whiteListUsernames, format: lobbyMap.get(invitePayload.lobbyID!)?.format }));
 				}
 			}
@@ -112,7 +105,6 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 	});
 
 	socket.onclose = (ev: any) => {
-		console.log("CLOSE userID:", userID);
 		if (userID !== null) {
 			let lobbyID: string | null = findLobbyIDFromUserID(userID);
 			if (lobbyID !== null)

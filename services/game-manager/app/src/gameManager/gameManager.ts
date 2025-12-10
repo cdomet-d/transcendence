@@ -18,9 +18,8 @@ export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo):
 			return false;
 		}
 		lobbyInfo.joinable = false;
-		startTournament(serv, tournament);
+		startTournament(serv, tournament, lobbyID);
 	} else if (lobbyInfo.format === 'quickmatch') {
-
 		const quickmatch: game | undefined = createGameObj(lobbyInfo, lobbyID);
 		if (quickmatch === undefined) {
 			console.log('Error: Could not create game!');

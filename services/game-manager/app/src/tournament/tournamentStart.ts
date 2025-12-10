@@ -1,12 +1,15 @@
 import { fetch } from 'undici';
-import type { tournament } from '../gameManager/gameManager.interface.js';
+import type { game, lobbyInfo, tournament } from '../gameManager/gameManager.interface.js';
 import { startGame } from '../quickmatch/createGame.js';
 import type { FastifyInstance } from 'fastify';
+import { lobbyMap } from '../lobby/lobby.gm.js';
+import { wsSend } from '../lobby/wsHandler.gm.js';
 
 export const tournamentMap: Map<string, tournament> = new Map();
 
-export function startTournament(serv: FastifyInstance, tournamentObj: tournament) {
-	tournamentMap.set(tournamentObj.tournamentID, tournamentObj)
+export function startTournament(serv: FastifyInstance, tournamentObj: tournament, lobbyID: string) {
+	tournamentMap.set(tournamentObj.tournamentID, tournamentObj);
+	showBrackets(tournamentObj.bracket, lobbyID);
 	startFirstRound(serv, tournamentObj);
 	postTournamentToDashboard(tournamentObj);
 }
@@ -40,3 +43,15 @@ async function postTournamentToDashboard(tournament: tournament) {
 		throw new Error('Dashboard service is unreachable.');
 	}
 };
+
+export function showBrackets(games: game[], lobbyID: string) {
+	const brackets: [string, string][] = [
+		[games[0]!.users![0]!.username!, games[0]!.users![1]!.username!],
+		[games[1]!.users![0]!.username!, games[1]!.users![1]!.username!],
+	];
+	const lobby: lobbyInfo | undefined = lobbyMap.get(lobbyID);
+	if (!lobby) return;
+	for (const user of lobby.userList) {
+		wsSend(user[1].userSocket, JSON.stringify({ lobby: 'brackets', brackets: brackets}))
+	}
+}
