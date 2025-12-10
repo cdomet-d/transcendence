@@ -1,10 +1,6 @@
 import { BaseForm } from './baseform';
 import { router } from '../../main';
-import {
-	exceptionFromResponse,
-	createVisualFeedback,
-	errorMessageFromException,
-} from '../../error';
+import { exceptionFromResponse, createVisualFeedback, errorMessageFromException } from '../../error';
 
 import { createForm } from './helpers';
 import { criticalChange } from './default-forms';
@@ -60,9 +56,28 @@ if (!customElements.get('login-form')) {
 export class CriticalActionForm extends BaseForm {
 	#resolve?: (value: string) => void;
 	#reject?: (error: Error) => void;
+	#escapeHandler: (ev: KeyboardEvent) => void;
 
 	constructor() {
 		super();
+		this.#escapeHandler = this.#escapeImplementation.bind(this);
+	}
+
+	override connectedCallback(): void {
+		super.connectedCallback();
+		this.addEventListener('keydown', this.#escapeHandler);
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		this.removeEventListener('keydown', this.#escapeHandler);
+	}
+
+	#escapeImplementation(ev: KeyboardEvent) {
+		if (ev && ev.key === 'Escape') {
+			if (this.parentElement) this.parentElement?.remove();
+			else this.remove();
+		}
 	}
 
 	static show(): Promise<string> {

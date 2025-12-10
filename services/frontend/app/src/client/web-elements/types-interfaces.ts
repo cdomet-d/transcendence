@@ -387,6 +387,7 @@ export interface Dictionary {
 	error: {
 		username_error: string;
 		password_error: string;
+		forbidden_error: string;
 		page404: string;
 		uppercase: string;
 		lowercase: string;

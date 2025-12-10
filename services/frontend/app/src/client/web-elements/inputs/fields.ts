@@ -59,25 +59,28 @@ export class CustomInput extends HTMLInputElement {
     #typePassword(el: HTMLInputElement): string[] {
         const val = el.value;
         let feedback: string[] = [];
+		const forbiddenRegex = /[^a-zA-Z0-9@$!%*?&]/;
+		if (forbiddenRegex.test(val)) feedback.push(defaultDictionary.error.forbidden + val.match(forbiddenRegex))
         if (!/[A-Z]/.test(val)) feedback.push(defaultDictionary.error.uppercase);
         if (!/[a-z]/.test(val)) feedback.push(defaultDictionary.error.lowercase); 
         if (!/[0-9]/.test(val)) feedback.push(defaultDictionary.error.number);
-        if (!/[!@#$%^&*()\-_=+{};:,<.>]/.test(val)) feedback.push(defaultDictionary.error.special_char);
+        if (!/[@$!%*?&]/.test(val)) feedback.push(defaultDictionary.error.special_char);
         if (val.length < 12 || val.length > 64)
-            feedback.push(defaultDictionary.error.pass_lenght, `${val.length}`);
+            feedback.push(defaultDictionary.error.pass_lenght + `${val.length}`);
         return feedback;
     }
 
 	#typeText(el: HTMLInputElement): string[] {
 		let min: number;
-
+		const forbiddenRegex = /[^a-zA-Z]/;
 		el.id === 'searchbar' ? (min = 0) : (min = 4);
 		const val = el.value;
 		let feedback: string[] = [];
+		if (forbiddenRegex.test(val)) feedback.push(defaultDictionary.error.forbidden + val.match(forbiddenRegex));
 		if (!/[A-Za-z0-9]/.test(val)) feedback.push(defaultDictionary.error.forbidden);
 		if (val.length < min || val.length > 18)
 			feedback.push(
-				defaultDictionary.error.username_lenght, `${min.toString()}`, defaultDictionary.error.username_lenght2, `${val.length}`,
+				defaultDictionary.error.username_lenght + `${min.toString()}` + defaultDictionary.error.username_lenght2 + `${val.length}`,
 			);
 		return feedback;
 	}

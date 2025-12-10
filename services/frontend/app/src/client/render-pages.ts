@@ -156,7 +156,6 @@ export async function renderSelf() {
 	const url = `https://${API_URL}:8443/api/bff/profile/${status.username}`;
 	try {
 		const raw = await fetch(url, { credentials: 'include' });
-		console.log(`raw.status: ${raw.status} | raw.ok: ${raw.ok}`);
 		if (!raw.ok) {
 			if (raw.status === 404) return redirectOnError('/404', 'No such user');
 			else throw await exceptionFromResponse(raw);
@@ -170,14 +169,15 @@ export async function renderSelf() {
 }
 
 export async function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
-	if (!(await prepareLayout(document.body.layoutInstance, 'profile'))) return;
+	const viewer = await prepareLayout(document.body.layoutInstance, 'profile')
+	if (!viewer) return;
+
 	if (!param || !param.params.login || typeof param.params.login !== 'string') return redirectOnError('/404', 'No such user');
 	const login = param.params.login;
 	const url = `https://${API_URL}:8443/api/bff/profile/${login}`;
 
 	try {
 		const raw = await fetch(url, { credentials: 'include' });
-		console.log(`raw.status: ${raw.status} | raw.ok: ${raw.ok}`);
 		if (!raw.ok) {
 			if (raw.status === 404) return redirectOnError('/404', 'No such user');
 			else throw await exceptionFromResponse(raw);

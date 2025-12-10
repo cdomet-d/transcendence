@@ -73,6 +73,7 @@ export const defaultDictionary: Dictionary = {
 	error: {
 		username_error: "Invalid username or password.",
 		password_error: "Password must be at least 8 characters.",
+		forbidden_error: "Forbidden character: ",
 		page404: "There's nothing here :<",
 		uppercase: "missing an uppercase letter",
 		lowercase: "missing an lowercase letter",

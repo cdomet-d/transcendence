@@ -76,7 +76,7 @@ export function registrationForm(dic: Dictionary): FormDetails {
 				pattern: passwordPattern,
 				placeholder: dic.placeholders.enter_password,
 				type: 'password',
-				required: false,
+				required: true,
 			},
 		],
 		button: {

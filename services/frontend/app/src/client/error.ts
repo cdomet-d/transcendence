@@ -30,7 +30,7 @@ if (!customElements.get('ui-feedback')) {
 
 export function errorMessageFromException(error: unknown): string {
 	let mess = 'Something went wrong';
-	if (error && error instanceof Error) mess = error.cause + error.message;
+	if (error && error instanceof Error) mess = error.message;
 	return mess;
 }
 
