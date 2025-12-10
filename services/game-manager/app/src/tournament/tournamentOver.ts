@@ -6,9 +6,9 @@ export function tournamentOver(tournament: tournament) {
 	patchTournamentToDashboard(tournament);
 	// showTournamentWinnerScreen();
 
-	// redirect all users still present in tournament to their original lobby
-	const lobby = lobbyMap.get(tournament.bracket[0]!.lobbyID); // bracket[0] bad ?
-	// renderTournamentLobby();
+	// redirect all users still present in tournament to HOME page
+	const lobby = lobbyMap.get(tournament.bracket[0]!.lobbyID);
+	
 }
 
 async function patchTournamentToDashboard(tournament: tournament) {

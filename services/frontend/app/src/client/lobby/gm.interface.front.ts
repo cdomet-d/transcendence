@@ -12,7 +12,6 @@ export interface lobbyInviteForm {
     formInstance?: string
 }
 
-
 export interface lobbyRequestForm {
     event: 'LOBBY_REQUEST',
     payload: {
@@ -28,7 +27,6 @@ export interface lobbyRequestForm {
 export interface gameRequestForm {
     event: 'GAME_REQUEST';
     payload: {
-        // userList: userInfo[];
         hostID: string,
         remote: boolean;
         format: 'quickmatch' | 'tournament' | string;
@@ -37,8 +35,7 @@ export interface gameRequestForm {
     };
 }
 
-interface userInfo {
-    userID?: string;
-    username?: string;
-    userSocket?: WebSocket;
+export interface inviteeObj {
+	userID: string, 
+	username?: string
 }

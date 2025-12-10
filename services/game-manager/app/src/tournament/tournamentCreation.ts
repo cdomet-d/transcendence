@@ -1,4 +1,4 @@
-import type { game, lobbyInfo, tournament, userInfo } from '../gameManager/gameManager.interface.js';
+import type { game, lobbyInfo, tournament, user, userInfo } from '../gameManager/gameManager.interface.js';
 import { lobbyMap } from '../lobby/lobby.gm.js';
 
 export function createTournament(payload: lobbyInfo, lobbyID: string): tournament | undefined {
@@ -15,17 +15,20 @@ export function createTournament(payload: lobbyInfo, lobbyID: string): tournamen
 }
 
 export function createBracket(lobbyInfo: lobbyInfo, tournamentID: string, lobbyID: string): game[] | undefined {
-	// const nBgames = lobbyInfo.userList.size; // if 8 players tournament
+	const usersArray: userInfo[] = Array.from(lobbyMap.get(lobbyID)!.userList.values());
+	
+	if (usersArray.length !== lobbyInfo.nbPlayers) {
+		return undefined;
+	}
 
-    const usersArray: userInfo[] = Array.from(lobbyMap.get(lobbyID)!.whitelist!.userIDs.values());
-	//TODO: fill userList with usernames and use it instead of whiteList to fill usersArray ? this is only for better logic, whiteList has all usernames
+	const users: user[] = [
+		{userID: usersArray[0]!.userID!, username: usersArray[0]!.username! },
+		{userID: usersArray[1]!.userID!, username: usersArray[1]!.username! },
+		{userID: usersArray[2]!.userID!, username: usersArray[2]!.username! },
+		{userID: usersArray[3]!.userID!, username: usersArray[3]!.username! },
+	];
 
-    if (usersArray.length < 4) { // magic number I know
-        console.log('Error: Not enough players for tournament!');
-        return undefined;
-    }
-
-    const shuffledUsers: userInfo[] = fisherYatesShuffle(usersArray);
+    const shuffledUsers: userInfo[] = fisherYatesShuffle(users);
 
     const opponents: userInfo[][] = [
         [shuffledUsers[0]!, shuffledUsers[1]!],

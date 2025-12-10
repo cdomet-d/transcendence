@@ -13,25 +13,21 @@ export function startTournament(serv: FastifyInstance, tournamentObj: tournament
 
 function startFirstRound(serv: FastifyInstance, tournament: tournament) {
 	if (tournament.bracket && Array.isArray(tournament.bracket)) {
-		for (let i = 0; tournament.bracket[i]?.users !== null; i++) {
-			const game = tournament.bracket[i];
-			if (game && game.users && game.users.length > 0) {
-				startGame(serv, game);
-			}
-		}
+		startGame(serv, tournament.bracket[0]!);
+		startGame(serv, tournament.bracket[1]!);
 	}
 }
 
 async function postTournamentToDashboard(tournament: tournament) {
 	const url = `http://dashboard:1515/tournament`;
-	const reqBody: { tournamentID: string, nbPlayers: number} = {
-		tournamentID: tournament.tournamentID, 
-		nbPlayers: tournament.nbPlayers, 
+	const reqBody: { tournamentID: string, nbPlayers: number } = {
+		tournamentID: tournament.tournamentID,
+		nbPlayers: tournament.nbPlayers,
 	};
 	try {
 		const response: Response = await fetch(url, {
 			method: 'POST',
-			headers: {'Content-Type': 'application/json'},
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(reqBody),
 		});
 		// TODO check response status ?	
