@@ -7,9 +7,7 @@ import type { FastifyInstance } from 'fastify';
 
 const nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }> = new Map();
 
-export async function tournamentState(serv: FastifyInstance, payload: string) {
-	const game: game = JSON.parse(payload);
-
+export async function tournamentState(serv: FastifyInstance, game: game) {
 	const tournamentObj = tournamentMap.get(game.tournamentID!);
 	if (!tournamentObj) {
 		console.log(`${tournamentObj}`)
@@ -23,7 +21,7 @@ export async function tournamentState(serv: FastifyInstance, payload: string) {
 		return;
 	}
 
-	gameOver(game.gameID);
+	gameOver(game);
 
 	const nextGame = getNextGameInBracket(tournamentObj);
 	if (nextGame === undefined) {
@@ -73,5 +71,6 @@ function getNextGameInBracket(tournament: tournament): game | undefined {
 		}
 	});
 	// TODO Find better way to verify if tournament is over?
+	// like if winnerID for tournament or last game is not null then it's over
 	return undefined;
 }
