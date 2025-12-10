@@ -51,7 +51,6 @@ if (!customElements.get('score-board')) {
 }
 
 export class PongUI extends HTMLDivElement {
-	/**[0] is player 1; [1] is player 2 */
 	#players: HTMLSpanElement[];
 	#scboard: Scoreboard;
 

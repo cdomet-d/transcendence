@@ -2,11 +2,10 @@ import type { FormDetails, UserData } from '../types-interfaces.js';
 import type { Dictionary } from '../types-interfaces.js';
 import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
 import { currentDictionary, defaultDictionary } from './language.js';
-import { origin } from '../../main.js';
 
 export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/bff/settings`,
+		action: `https://${API_URL}:8443/api/bff/settings`,
 		heading: dic.titles.settings,
 		ariaLabel: 'User settings',
 		id: 'user-settings',
@@ -57,7 +56,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 
 export function registrationForm(dic: Dictionary): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/auth/register`,
+		action: `https://${API_URL}:8443/api/auth/register`,
 		heading: dic.titles.register,
 		ariaLabel: 'Create an account',
 		id: 'account-create',
@@ -92,7 +91,7 @@ export function registrationForm(dic: Dictionary): FormDetails {
 
 export function loginForm(dic: Dictionary): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/auth/login`,
+		action: `https://${API_URL}:8443/api/auth/login`,
 		heading: dic.titles.login,
 		ariaLabel: 'Log into an account',
 		id: 'account-login',
@@ -127,7 +126,7 @@ export function loginForm(dic: Dictionary): FormDetails {
 
 export function search(dic: Dictionary): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/bff/search?name=`,
+		action: `https://${API_URL}:8443/api/bff/search?name=`,
 		heading: '',
 		ariaLabel: 'Search for a user',
 		id: 'searchform',
@@ -154,7 +153,7 @@ export function search(dic: Dictionary): FormDetails {
 
 export function localPong(dic: Dictionary): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/game/quick-lobby/`,
+		action: `https://${API_URL}:8443/api/game/quick-lobby/`,
 		heading: dic.gameCustom.local,
 		gameFormat: 'local-quickmatch',
 		ariaLabel: 'Pong settings',
@@ -223,7 +222,7 @@ export function localPong(dic: Dictionary): FormDetails {
 
 export function remotePong(dic: Dictionary): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/game/quick-lobby/`,
+		action: `https://${API_URL}:8443/api/game/quick-lobby/`,
 		heading: 'Remote Pong',
 		gameFormat: 'remote-quickmatch',
 		ariaLabel: 'Remote Pong settings',
@@ -284,7 +283,7 @@ export function remotePong(dic: Dictionary): FormDetails {
 
 export function pongTournament(dic: Dictionary): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/game/tournament-lobby/`,
+		action: `https://${API_URL}:8443/api/game/tournament-lobby/`,
 		heading: dic.titles.pong_tournament,
 		gameFormat: 'tournament',
 		ariaLabel: 'Pong tournament settings',
@@ -345,7 +344,7 @@ export function pongTournament(dic: Dictionary): FormDetails {
 
 export function deleteAccount(dic: Dictionary): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/bff/account`,
+		action: `https://${API_URL}:8443/api/bff/account`,
 		heading: '',
 		ariaLabel: 'Account deletion request',
 		id: 'account-deletion-request',
@@ -364,7 +363,7 @@ export function deleteAccount(dic: Dictionary): FormDetails {
 
 export function downloadData(dic: Dictionary): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/bff/data`,
+		action: `https://${API_URL}:8443/api/bff/data`,
 		heading: '',
 		ariaLabel: 'Download personal data request',
 		id: 'download-data-request',
@@ -382,7 +381,7 @@ export function downloadData(dic: Dictionary): FormDetails {
 };
 
 export const criticalChange: FormDetails = {
-	action: `https://${origin}:8443/api/auth/verify`,
+	action: `https://${API_URL}:8443/api/auth/verify`,
 	heading: 'Password Required',
 	ariaLabel: 'Verify your password',
 	id: 'pw-check',

@@ -5,7 +5,6 @@ import type { MenuData } from '../types-interfaces.js';
 import type { NavigationLinksData } from '../types-interfaces.js';
 import { createVisualFeedback, errorMessageFromException, exceptionFromResponse } from '../../error.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
-import { origin } from '../../main.js';
 
 interface GameInvite {
 	lobbyID: string;
@@ -99,7 +98,7 @@ export class NotifContent extends HTMLLIElement {
 	}
 
 	async #acceptRelation() {
-		const url = `https://${origin}:8443/api/bff/relation`;
+		const url = `https://${API_URL}:8443/api/bff/relation`;
 		const body = { username: `${this.#requesterUsername}` };
 		const jbody = JSON.stringify(body);
 		const req: RequestInit = {
@@ -119,7 +118,7 @@ export class NotifContent extends HTMLLIElement {
 	}
 
 	async #declineRelation() {
-		const url = `https://${origin}:8443/api/bff/relation`;
+		const url = `https://${API_URL}:8443/api/bff/relation`;
 		const body = { username: `${this.#requesterUsername}` };
 		const jbody = JSON.stringify(body);
 		const req: RequestInit = {

@@ -21,7 +21,7 @@ export class DowloadDataForm extends BaseForm {
 		try {
 			await CriticalActionForm.show();
 
-			const actionUrl = `https://localhost:8443/api/bff/data`;
+			const actionUrl = `https://${API_URL}:8443/api/bff/data`;
 
 			const req: RequestInit = {
 				method: 'GET',

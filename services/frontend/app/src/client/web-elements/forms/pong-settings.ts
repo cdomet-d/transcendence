@@ -11,7 +11,6 @@ import { userDataFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 import { currentDictionary } from './language.js';
-import { origin } from '../../main.js';
 import { userStatus } from '../../main.js';
 
 /**
@@ -192,7 +191,7 @@ export class RemotePongSettings extends LocalPongSettings {
 	}
 	/* -------------------------------- listeners ------------------------------- */
 	async fetchGuests(guestUsername: string): Promise<UserData | null> {
-		const url = `https://${origin}:8443/api/bff/tiny-profile/${guestUsername}`;
+		const url = `https://${API_URL}:8443/api/bff/tiny-profile/${guestUsername}`;
 		try {
 			const rawResp = await fetch(url);
 			console.log(rawResp.ok);

@@ -14,7 +14,7 @@ async function make() {
 		platform: 'browser',
 		target: ['esnext'],
 		define: {
-			'process.env.HOST': process.env.HOST,
+			'API_URL': JSON.stringify(process.env.HOST),
 		}
 	})
 
@@ -29,7 +29,7 @@ async function make() {
 		packages: 'external',
 		format: 'esm', 
 		define: {
-			'process.env.HOST': process.env.HOST,
+			'API_URL': JSON.stringify(process.env.HOST),
 		}
 	})
 	if (isWatch) {

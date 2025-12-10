@@ -91,7 +91,8 @@ export class InlineMatch extends HTMLDivElement {
 	createSpans(): InlineMatch {
 		for (const key in this.#data) {
 			let el;
-			if (key === 'opponent') {
+			console.log(key);
+			if (key === 'opponent' && this.#data[key] !== 'Unknown User') {
 				const opponent = this.#data[key].toString();
 				const opp: NavigationLinksData = {
 					styleButton: false,
@@ -101,13 +102,15 @@ export class InlineMatch extends HTMLDivElement {
 					title: opponent,
 					img: null,
 				};
-
 				el = document.createElement('a', { is: 'nav-link' }) as NavigationLinks;
 				el.info = opp;
 			} else el = document.createElement('span');
 			this.append(el);
 			el.id = key;
-			el.textContent = this.#data[key as keyof MatchOutcome].toString();
+			if (key === 'tournament') {
+				console.log('IS TOURNAMENT');
+				el.textContent = this.#data[key as keyof MatchOutcome] ? 'Tournament' : '1vs1';
+			} else el.textContent = this.#data[key as keyof MatchOutcome].toString();
 		}
 		this.id = 'match';
 		return this;
@@ -163,15 +166,7 @@ export class MatchHistory extends HTMLDivElement {
 
 	render() {
 		this.id = 'match-history';
-		this.classList.add(
-			'grid',
-			'matches',
-			'grid-flow-rows',
-			'gap-xs',
-			'pad-s',
-			'h-full',
-			'w-full',
-		);
+		this.classList.add('grid', 'matches', 'grid-flow-rows', 'gap-xs', 'pad-s', 'h-full', 'w-full');
 	}
 }
 

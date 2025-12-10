@@ -82,10 +82,7 @@ services:
         networks:
             - transcendence
         restart: unless-stopped
-        environment:
-            - NGINXIP=nginx
-            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-            - HOST="z1r2p3"
+        env_file: ./services/frontend/frontend.env
         volumes:
             - ./services/frontend/app:/app
     bff:
