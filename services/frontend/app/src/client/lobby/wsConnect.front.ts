@@ -70,6 +70,7 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 	ws.onmessage = (message: MessageEvent) => {
 		try {
 			const data = JSON.parse(message.data);
+			console.log("data:", JSON.stringify(data))
 			if (data === "start") {
 				form?.enableStartButton();
 				return;
@@ -106,6 +107,7 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 				// TODO tell front when everybody there
 
 				if (data.lobby === "joined") {
+					console.log("format:", data.format);
 					if (data.format === "quickmatch") {
 						router.loadRoute("/quick-remote-lobby", true, undefined, "invitee", data.whiteListUsernames);
 					}

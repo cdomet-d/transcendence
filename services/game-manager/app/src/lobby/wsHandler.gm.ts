@@ -99,6 +99,9 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					addUserToLobby(userID!, invitePayload.invitee.username!, socket, invitePayload.lobbyID!);
 					const whiteListUsernames: string[] = getWhiteListUsernames(invitePayload.lobbyID!)
 					informHostToStart(this, socket, invitePayload.lobbyID!);
+					this.log.error(`FORMAT ${lobbyMap.get(invitePayload.lobbyID!)?.format}`)
+					this.log.error(`SENDING TO ${lobbyMap.get(invitePayload.lobbyID!)?.userList.get(userID)?.username}`)
+
 					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, format: lobbyMap.get(invitePayload.lobbyID!)?.format, whiteListUsernames: whiteListUsernames }));
 				}
 			}
