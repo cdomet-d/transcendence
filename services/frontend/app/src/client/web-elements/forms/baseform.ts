@@ -41,7 +41,7 @@ export abstract class BaseForm extends HTMLFormElement {
 		super();
 		this.#formData = emptyForm;
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
-		this.validationHandler = this.#validate.bind(this);
+		this.validationHandler = this.validate.bind(this);
 		this.#formContent = new Map<string, HTMLElement>();
 		this.className =
 			'w-full h-full grid row-xl form-gap place-items-center justify-center box-border relative';
@@ -58,7 +58,7 @@ export abstract class BaseForm extends HTMLFormElement {
 		this.addEventListener('submit', this.submitHandler);
 		this.addEventListener('input', this.validationHandler);
 		this.render();
-		this.#validate();
+		this.validate();
 	}
 
 	disconnectedCallback() {
@@ -141,7 +141,7 @@ export abstract class BaseForm extends HTMLFormElement {
 		}
 	}
 
-	#validate() {
+	validate() {
 		if (!this.checkValidity()) {
 			this.#formContent.get('submit')?.setAttribute('disabled', '');
 		} else {

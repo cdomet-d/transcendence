@@ -159,6 +159,7 @@ export class RemotePongSettings extends LocalPongSettings {
 	override async connectedCallback() {
 		super.connectedCallback();
 		this.#searchbar.addEventListener('click', this.#inviteHandler, { capture: true });
+		super.contentMap.get('submit')?.setAttribute('disabled', "");
 		const status = await userStatus();
 		if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');//TODO: maybe not necessary since it is checked in "renderlobbies"
 		const user = await this.fetchGuests(status.username!);
@@ -233,6 +234,10 @@ export class RemotePongSettings extends LocalPongSettings {
 				else createVisualFeedback("You can't invite any more people!");
 			}
 		}
+	}
+
+	override validate() {
+		this.checkValidity()
 	}
 
 	/* ---------------------------- guest management ---------------------------- */

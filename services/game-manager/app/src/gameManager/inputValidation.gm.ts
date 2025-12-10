@@ -90,17 +90,27 @@ const pingPongPaylodSchema = {
 	required: ['notif'],
 }
 
+const inviteeSignalPaylodSchema = {
+	type: 'object',
+	properties: {
+		signal: { type: 'string' },
+	},
+	required: ['signal'],
+}
+
 const validateBaseMessage = ajv.compile(baseMessageSchema);
 const validateLobbyRequestPayload = ajv.compile(lobbyRequestPayloadSchema);
 const validateLobbyInvitePayload = ajv.compile(lobbyInvitePayloadSchema);
 const validateGameRequestPayload = ajv.compile(gameRequestPayloadSchema);
 const validatePingPongNotif = ajv.compile(pingPongPaylodSchema);
+const validateInviteeSignal = ajv.compile(inviteeSignalPaylodSchema);
 
 const validators = {
 	LOBBY_REQUEST: validateLobbyRequestPayload,
 	GAME_REQUEST: validateGameRequestPayload,
 	LOBBY_INVITE: validateLobbyInvitePayload,
-	NOTIF: validatePingPongNotif
+	NOTIF: validatePingPongNotif,
+	SIGNAL: validateInviteeSignal,
 };
 
 export function validateData(data: any, req: FastifyRequest, socket: WebSocket): boolean {

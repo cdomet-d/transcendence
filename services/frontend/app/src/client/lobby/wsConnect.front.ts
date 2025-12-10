@@ -4,7 +4,7 @@ import { type gameRequest } from '../pong/pong.js';
 import type { LocalPongSettings, RemotePongSettings } from '../web-elements/forms/pong-settings.js';
 import { origin } from '../main.js'
 import type { inviteeObj } from './gm.interface.front.js';
-import { executeAction } from './wsAction.front.js';
+import { executeAction, wsSend } from './wsAction.front.js';
 
 export let wsInstance: WebSocket | null = null;
 
@@ -38,8 +38,10 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		executeAction(action, format, formInstance, lobbyID, gameSettings, invitee);
 	}
 
-	if (action === 'invitee' && ws.OPEN)
+	if (action === 'invitee' && ws.OPEN) {
 		setMessEvent(ws, form);
+		wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "in lobby" } })));
+	}
 
 	ws.onerror = (err: any) => {
 		console.log('Error:', err);
@@ -63,6 +65,11 @@ function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettin
 	ws.onmessage = (message: MessageEvent) => {
 		try {
 			const data = JSON.parse(message.data);
+			if (data === "start") {
+				form?.enableStartButton();
+				return;
+			}
+
 			if (data.error) {
 				const error = data.error;
 				if (error === 'not enough players') {
