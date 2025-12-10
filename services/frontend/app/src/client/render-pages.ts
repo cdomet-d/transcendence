@@ -35,6 +35,7 @@ const layoutPerPage: { [key: string]: string } = {
 	profile: 'page-w-header',
 	auth: 'full-screen',
 	settings: 'page-w-header',
+	privacy: 'privacy',
 };
 
 const requireAuth: { [key: string]: boolean } = {
@@ -71,18 +72,7 @@ function toggleHeader(page: string) {
 		document.body.header?.removeAttribute('hidden');
 	}
 }
-//TODO add language
 
-/*export function renderNotFound() {
-	console.log('renderNotFound');
-	const goHomeData: navigationLinksData = {
-		styleButton: true,
-		id: 'backHome',
-		title: currentDictionary.buttons.go_home,
-		datalink: 'home',
-		href: '/',
-		img: null,
-	};*/
 async function prepareLayout(curLayout: Layout | undefined, page: string): Promise<userStatusInfo | null> {
 	if (!layoutPerPage[page]) {
 		return redirectOnError('/404', `Redirected: Requested page (${page}) is undefined`), null;
@@ -320,15 +310,14 @@ function getGameBackground(background?: string): [pongTheme, ImgData[]] {
 }
 
 export async function renderPrivacy() {
-	console.log('renderPrivacy');
-	try {
-		prepareLayout(document.body.layoutInstance, 'privacy');
-	} catch (error) {
-		console.error(errorMessageFromException(error));
-	}
+	// [FIX] Await prepareLayout to ensure DOM is ready and authorized
+	if (!(await prepareLayout(document.body.layoutInstance, 'privacy'))) return;
 
 	try {
-		document.body.layoutInstance!.appendAndCache(createHeading('2', 'Your privacy'), createPrivacy());
+		const wrapper = createWrapper('privacy');
+		// createHeading('2', 'Your privacy')
+		wrapper.append(createPrivacy());
+		document.body.layoutInstance!.appendAndCache(wrapper);
 	} catch (error) {
 		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
 	}
