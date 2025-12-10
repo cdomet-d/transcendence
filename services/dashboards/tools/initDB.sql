@@ -2,7 +2,7 @@ CREATE TABLE game (
   ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   gameID TEXT UNIQUE,
   duration INTEGER,
-  startTime DATETIME,
+  startTime TEXT,
   player1 TEXT,
   player2 TEXT,
   tournamentID TEXT, --zero == no tournament
