@@ -1,16 +1,10 @@
-import { fetch } from 'undici'; // TODO remove this right ?
-import { lobbyMap } from '../lobby/lobby.gm.js';
-import type { tournament } from '../gameManager/gameManager.interface.js';
+import type { tournament, userInfo } from '../gameManager/gameManager.interface.js';
 
 export function tournamentOver(tournament: tournament) {
 	patchTournamentToDashboard(tournament);
 	// showTournamentWinnerScreen();
-
-	// redirect all users still present in tournament to HOME page
-	const lobby = lobbyMap.get(tournament.bracket[0]!.lobbyID);
-	
 }
-
+	
 async function patchTournamentToDashboard(tournament: tournament) {
 	const url = `http://dashboard:1515/tournament/${tournament.tournamentID}`;
 	try {
