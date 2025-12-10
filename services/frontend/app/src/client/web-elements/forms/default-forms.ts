@@ -135,9 +135,9 @@ export function search(dic: Dictionary): FormDetails {
 		fields: [
 			{
 				id: 'searchbar',
-				labelContent: dic.gameCustom.searchbar || " Searchbar",
+				labelContent: 'Searchbar',
 				pattern: searchbarPattern,
-				placeholder: dic.gameCustom.searchbar || " Searchbar",
+				placeholder: currentDictionary.gameCustom.searchbar,
 				type: 'text',
 				required: true,
 			},
@@ -145,7 +145,7 @@ export function search(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			content: dic.gameCustom.searchbar,
+			content: "Search",
 			img: null,
 			ariaLabel: '',
 		},

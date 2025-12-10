@@ -110,7 +110,7 @@ export class NoResults extends HTMLDivElement {
 	connectedCallback() {
 		const img = createIcon(this.#noResultsImg);
 		const p = document.createElement('p');
-		const error404 = currentDictionary.error.page404;
+		const error404 = "There's nothing here :<";
 		p.innerText = error404;
 		this.append(p, img);
 		p.classList.add('text-center', 'f-s', `${this.#theme}`, 'f-bold');

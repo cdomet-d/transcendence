@@ -8,7 +8,6 @@ export async function languageRoutes(serv: FastifyInstance) {
 		const { langCode } = request.params as { langCode: string };
 		
 		const lang = cleanInput(langCode);
-		//console.log("LANGUAGE: ", JSON.stringify(lang));
 
 		const query = `SELECT pack_json FROM language_packs WHERE language_code = ?`;
 		

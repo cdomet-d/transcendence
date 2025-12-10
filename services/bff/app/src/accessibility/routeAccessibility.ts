@@ -5,7 +5,6 @@ import type { JwtPayload } from '../utils/bff.interface.js';
 
 async function fetchLanguagePack(log: any, langCode: string): Promise<Response> {
 	const url = `http://accessibility:1313/dictionary/${langCode}`;
-	console.log("ZEEEEEEEEEEEEEEBI", langCode);
 
 	try {
 		return await fetch(url);
@@ -24,7 +23,6 @@ export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 
 			if (lang === 'Español')
 				lang = "Espanol";
-			console.log("ZEBIIIIIIIIIIIIIIIIIII", lang);
 
 			const response = await fetchLanguagePack(serv.log, lang);
 

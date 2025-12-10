@@ -119,11 +119,7 @@ export async function setLanguage(lang: string): Promise<void> {
 
 		currentDictionary = newDict;
 		currentLanguage = lang;
-		console.log("LANGUAGE SET: ", JSON.stringify(lang));
-		console.log("NEW DICTONARY: ", JSON.stringify(newDict));
-
 		localStorage.setItem('preferred_language', lang);
-		console.log("LANGUAGE IN STORAGE: ", JSON.stringify(localStorage.getItem('preferred_language')));
 
 		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang } }));
 

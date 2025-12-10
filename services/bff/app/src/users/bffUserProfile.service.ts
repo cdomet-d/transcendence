@@ -778,7 +778,6 @@ export async function updateUserProfile(
 	token: string
 ): Promise<void> {
 	const url = `http://users:2626/${userID}`;
-	console.log("UPDATE USER PROFILE IN BFF");
 	let response: Response;
 	try {
 		response = await fetch(url, {

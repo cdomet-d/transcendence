@@ -145,7 +145,7 @@ export class RemotePongSettings extends LocalPongSettings {
 	constructor() {
 		super();
 
-        this.#searchbar = createForm('search-form', search(currentDictionary));
+        this.#searchbar = createForm('search-form');
         this.#guestWrapper = document.createElement('div');
         this.#guests = new Map<string, UserData>();
         this.#inviteHandler = this.#inviteImplementation.bind(this);
