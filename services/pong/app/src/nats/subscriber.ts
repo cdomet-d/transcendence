@@ -20,7 +20,6 @@ export async function natsSubscription(serv: FastifyInstance) {
 
 	(async () => {
 		for await (const msg of sub) {
-
 			const gameInfo: gameInfo = JSON.parse(sc.decode(msg.data));
 			console.log("game id", gameInfo.gameID)
 			console.log("remote", gameInfo.remote)

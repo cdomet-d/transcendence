@@ -1,28 +1,40 @@
 import type { FastifyInstance } from 'fastify';
-import type { game, lobbyInfo, userInfo } from '../gameManager/gameManager.interface.js';
+import type { game, lobbyInfo, user, userInfo } from '../gameManager/gameManager.interface.js';
 import { natsPublish } from '../nats/publisher.gm.js';
-import { findLobbyIDFromUserID, lobbyMap } from '../lobby/lobby.gm.js';
+import { lobbyMap } from '../lobby/lobby.gm.js';
 
-export function createGameObj(lobbyInfo: lobbyInfo, lobbyID: string) {
+export function createGameObj(lobbyInfo: lobbyInfo, lobbyID: string): game | undefined {
 	if (!lobbyInfo) {
 		console.log('Error: lobbyInfo is empty!');
 		return undefined;
 	}
 
-    const usersArray: userInfo[] = Array.from(lobbyMap.get(lobbyID)!.whitelist!.userIDs.values());
-	//TODO: fill userList with usernames and use it instead of whiteList to fill usersArray ? this is only for better logic, whiteList has all usernames
-	if (lobbyInfo.remote === false)
-		usersArray.push({userID: "temporary", username: lobbyInfo.gameSettings!.opponent!})
+	const usersArray: userInfo[] = Array.from(lobbyMap.get(lobbyID)!.userList.values());
+	const users: user[] = [
+		{userID: usersArray[0]!.userID!, username: usersArray[0]!.username! }
+	];
+
+	if (usersArray.length !== lobbyInfo.nbPlayers && lobbyInfo.remote === true) {
+		return undefined;
+	}
+
+	if (lobbyInfo.remote === false)	{
+		users[1] = { userID: "temporary", username: lobbyInfo.gameSettings!.opponent! };
+	} else {
+		users[1] = { userID: usersArray[1]!.userID!, username: usersArray[1]!.username!};
+	}
+
+
 	const game: game = {
 		lobbyID: lobbyInfo.lobbyID!,
 		tournamentID: '-1',
 		gameID: crypto.randomUUID().toString(),
 		remote: lobbyInfo.remote,
-		users: usersArray,
+		users: users,
 		score: [0, 0],
 		winnerID: '',
-		loserID: '', 
-		duration: 0, 
+		loserID: '',
+		duration: 0,
 		longuestPass: 0,
 		startTime: "",
 		gameSettings: lobbyInfo.gameSettings!,

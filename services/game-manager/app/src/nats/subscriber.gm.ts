@@ -1,8 +1,7 @@
 import { StringCodec } from 'nats';
 import { wsSend } from '../lobby/wsHandler.gm.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
-import { natsConnect } from './publisher.gm.js';
-import type { gameRequest, gameReply } from '../gameManager/gameManager.interface.js';
+import type { gameRequest, gameReply, game } from '../gameManager/gameManager.interface.js';
 import { wsClientsMap } from '../lobby/lobby.gm.js';
 import { gameOver } from '../quickmatch/gameOver.js';
 import type { WebSocket } from '@fastify/websocket'
@@ -14,11 +13,14 @@ export async function natsSubscribe(serv: FastifyInstance) {
 		for await (const msg of pregame) {
 			const sc = StringCodec();
 			const game: gameReply = JSON.parse(sc.decode(msg.data));
+
 			console.log('USERS:', game.users);
+
 			if (game.users === null || game.users === undefined) {
 				console.log('EMPTY USERS');
 				return;
 			}
+
 			sendGameRequest(serv, game.users[0]!.userID, game.users[1]!.username, game);
 			sendGameRequest(serv, game.users[1]!.userID, game.users[0]!.username, game);
 		}
@@ -28,20 +30,20 @@ export async function natsSubscribe(serv: FastifyInstance) {
 	(async () => {
 		for await (const msg of postgame) {
 			const sc = StringCodec();
-			const payload = sc.decode(msg.data);
-			console.log(`GM received following in 'game.over' :\n`, JSON.stringify(payload));
+			const game: game = JSON.parse(sc.decode(msg.data));
+			console.log(`GM received following in 'game.over' :\n`, JSON.stringify(game));
 
-			//if (tournamentID ==! -1)
-			//	tournamentState(serv, payload);
-			// else {
-			gameOver(payload);
-			// }
+			if (game.tournamentID !== '-1') {
+				tournamentState(serv, game);
+			} else {
+				gameOver(game);
+			}
 		}
 	})();
 }
 
 function sendGameRequest(serv: FastifyInstance, userID: string, opponentUsername: string, game: gameReply) {
-	if (userID === "temporary") return; 
+	if (userID === "temporary") return;
 
 	const socket: WebSocket | undefined = wsClientsMap.get(userID);
 	if (socket === undefined) {
@@ -55,5 +57,6 @@ function sendGameRequest(serv: FastifyInstance, userID: string, opponentUsername
 		gameSettings: game.gameSettings,
 	}
 	serv.log.error("SENDING GAME REQUEST");
+	console.log("send game request");
 	wsSend(socket, JSON.stringify(gameReq));
 }
