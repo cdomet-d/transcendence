@@ -327,7 +327,16 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const profileUpdatesUsername: any = {};
 			const accountUpdates: any = {};
 
-			if (body.avatar) profileUpdates.avatar = cleanInput(body.avatar);
+			if (body.avatar) {
+				const validImageRegex = /^data:image\/(png|jpeg|jpg);base64,+/;
+				if (!validImageRegex.test(body.avatar)) {
+					return reply.code(400).send({
+						success: false,
+						message: 'Invalid image format. Only PNG and JPEG/JPG are allowed.'
+					});
+				}
+				profileUpdates.avatar = cleanInput(body.avatar);
+			}
 			if (body.biography) profileUpdates.biography = cleanInput(body.biography);
 			if (body.color) profileUpdates.profileColor = cleanInput(body.color);
 			if (body.language) profileUpdates.lang = cleanInput(body.language);

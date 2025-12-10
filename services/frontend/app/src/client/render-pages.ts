@@ -86,7 +86,7 @@ export function renderNotFound() {
 	const goHomeData: navigationLinksData = {
 		styleButton: true,
 		id: 'backHome',
-		title: 'Go home',
+		title: currentDictionary.buttons.go_home,
 		datalink: 'home',
 		href: '/',
 		img: null,
