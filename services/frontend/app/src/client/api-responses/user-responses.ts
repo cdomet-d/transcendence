@@ -17,17 +17,12 @@ function UTCtoDays(since: string): string {
 	return res.toString();
 }
 
-function setColor(c: string): string {
-	if (!c) return 'bg-CE4257';
-	return c.startsWith('bg-') ? c : 'bg-CE4257';
-}
-
 function setStatus(n: number): boolean {
 	return n == 1 ? false : true;
 }
 
 function setAvatar(a: string): ImgData {
-	let uAvatar: ImgData = { src: '', alt: '', id: 'user-profile-picture', size: 'ilarge' };
+	let uAvatar: ImgData = { src: '', alt: '', id: 'user-profile-picture', size: 'ixl' };
 	if (!a || a === 'avatar1.png') uAvatar = defaultAvatar;
 	else uAvatar.src = a;
 	return uAvatar;
@@ -35,20 +30,12 @@ function setAvatar(a: string): ImgData {
 
 function setBiography(b: string): string {
 	if (b) return b;
-	const bio =
-		"What a wee little part of a person's life are his acts and his words!\
-	 His real life is led in his head, and is known to none but himself. \
-	 All day long, the mill of his brain is grinding, and his thoughts, \
-	 not those of other things, are his history. These are his life, and they\
-	 are not written. Everyday would make a whole book of 80,000 words -- \
-	 365 books a year. Biographies are but the clothes and buttons of the man \
-	 -- the biography of the man himself cannot be written. ― Mark Twain ";
+	const bio = "But in the end it's only a passing thing, this shadow; even darkness must pass. ― J.R.R. Tolkien";
 	return bio;
 }
 
 export function userDataFromAPIRes(responseObject: any): UserData {
-	if (!responseObject || typeof responseObject !== 'object' || responseObject instanceof Error)
-		redirectOnError(router.stepBefore, 'Something bad happened :(');
+	if (!responseObject || typeof responseObject !== 'object' || responseObject instanceof Error) redirectOnError(router.stepBefore, 'Something bad happened :(');
 
 	const user: UserData = {
 		winstreak: responseObject.winStreak,
@@ -56,7 +43,7 @@ export function userDataFromAPIRes(responseObject: any): UserData {
 		biography: setBiography(responseObject.biography),
 		id: responseObject.userID,
 		language: responseObject.lang,
-		profileColor: setColor(responseObject.profileColor),
+		profileColor: responseObject.profileColor,
 		relation: responseObject.relation as ProfileView,
 		since: UTCtoDays(responseObject.since),
 		status: setStatus(responseObject.status),
@@ -80,12 +67,9 @@ export async function buildUserProfile(response: Response): Promise<ProfilePage>
 	
 	const rawProfile = await response.json();
 	const userProfileElem = document.createElement('div', { is: 'profile-page' }) as ProfilePage;
-
 	document.body.layoutInstance?.appendAndCache(userProfileElem);
 	userProfileElem.profile = userDataFromAPIRes(rawProfile.userData);
 	userProfileElem.panelContent = createFriendsPanel(userArrayFromAPIRes(rawProfile.friends));
-	userProfileElem.panelContent = createMatchHistoryPanel(
-		MatchOutcomeArrayFromAPIRes(rawProfile.matches),
-	);
+	userProfileElem.panelContent = createMatchHistoryPanel(MatchOutcomeArrayFromAPIRes(rawProfile.matches));
 	return userProfileElem;
 }

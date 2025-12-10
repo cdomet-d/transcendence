@@ -3,12 +3,13 @@ import { Game, WIDTH, HEIGHT } from './classes/game-class.js';
 import { addMessEvent, createKeyEvent } from './game-events.js';
 import { renderGame } from './game-render-utils.js';
 import { createVisualFeedback } from '../error.js';
+import { origin } from '../main.js'
 import type { PongCourt } from '../web-elements/game/pong-court.js';
 
 const START_DELAY = 500;
 
 export function wsRequest(court: PongCourt ,game: Game, ids: { gameID: string; userID: string }) {
-	const ws = new WebSocket('wss://localhost:8443/api/game/');
+	const ws = new WebSocket(`wss://${origin}:8443/api/game/`);
 
 	ws.onerror = () => {
 		ws.close(1011, 'websocket error');

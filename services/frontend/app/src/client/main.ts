@@ -6,6 +6,9 @@ import { errorMessageFromException, redirectOnError } from './error.js';
 import { initLanguage } from './web-elements/forms/language.js';
 
 export const router = new Router(routes);
+export const origin = process.env.HOST;
+
+console.log(`${origin}`)
 
 declare global {
 	interface HTMLElement {
@@ -26,32 +29,42 @@ if (window) {
 
 export async function userStatus(): Promise<userStatusInfo> {
 	try {
-		const isLogged: Response = await fetch('https://localhost:8443/api/auth/status');
+		console.log(`https://${origin}:8443/api/auth/status`);
+		const isLogged: Response = await fetch(`https://${origin}:8443/api/auth/status`, { credentials: 'include' });
 		const data = await isLogged.json();
 		if (isLogged.ok) return { auth: true, username: data.username, userID: data.userID };
-		else return { auth: false };
+		else {
+			return { auth: false };
+		}
 	} catch (error) {
-		redirectOnError('/', errorMessageFromException(error));
+		redirectOnError('/404', errorMessageFromException(`[USER STATUS FAILED]` + error));
 		return { auth: false };
 	}
 }
 
-
 async function startApp() {
 	try {
-		console.log("IN MAIN.TS");
 		await initLanguage();
 	} catch (e) {
-		console.warn("Language failed to load, falling back to English", e);
+		console.warn('Language failed to load, falling back to English', e);
 	}
 
 	document.body.layoutInstance = document.createElement('main', { is: 'custom-layout' }) as Layout;
 	document.body.header = document.createElement('header', { is: 'page-header' }) as PageHeader;
-	if (!document.body.layoutInstance || !document.body.header)
-		throw new Error('Error initializing HTML Layouts - page cannot be charged.');
+	if (!document.body.layoutInstance || !document.body.header) throw new Error('Error initializing HTML Layouts - page cannot be charged.');
 
 	document.body.append(document.body.header, document.body.layoutInstance);
 	router.loadRoute(router.currentPath, true);
 }
 
 startApp();
+/* 
+ initLanguage();
+document.body.layoutInstance = document.createElement('div', { is: 'custom-layout' }) as Layout;
+document.body.header = document.createElement('header', { is: 'page-header' }) as PageHeader;
+if (!document.body.layoutInstance || !document.body.header) {
+	throw new Error('Error initializing HTML Layouts - page cannot be charged.');
+}
+
+document.body.append(document.body.header, document.body.layoutInstance);
+router.loadRoute(router.currentPath, true); */

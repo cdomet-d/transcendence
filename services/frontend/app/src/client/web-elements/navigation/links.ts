@@ -1,8 +1,8 @@
-import type { navigationLinksData } from '../types-interfaces.js';
+import type { NavigationLinksData } from '../types-interfaces.js';
 import { createIcon } from '../typography/helpers.js';
 import { router } from '../../main.js';
 
-const emptyLink: navigationLinksData = {
+const emptyLink: NavigationLinksData = {
 	id: '',
 	datalink: '',
 	href: '',
@@ -12,7 +12,7 @@ const emptyLink: navigationLinksData = {
 };
 
 export class NavigationLinks extends HTMLAnchorElement {
-	#info: navigationLinksData;
+	#info: NavigationLinksData;
 	#animated: boolean;
 
 	#clickHandler: (ev: Event) => void;
@@ -24,7 +24,7 @@ export class NavigationLinks extends HTMLAnchorElement {
 		this.#clickHandler = this.#loadNewPage.bind(this);
 	}
 
-	set info(data: navigationLinksData) {
+	set info(data: NavigationLinksData) {
 		this.#info = data;
 	}
 
@@ -60,6 +60,7 @@ export class NavigationLinks extends HTMLAnchorElement {
 	#renderIconLink() {
 		if (this.#info.img) {
 			const icon = createIcon(this.#info.img);
+			icon.setAttribute('aria-hidden', 'true');
 			this.append(icon);
 		}
 	}
@@ -72,6 +73,7 @@ export class NavigationLinks extends HTMLAnchorElement {
 			letterSpan.textContent = char;
 			letterSpan.style.animationDelay = `${index}s`;
 			letterSpan.classList.add('f-brown', 'f-bold', 'whitepre');
+			letterSpan.setAttribute('aria-hidden', 'true');
 			this.append(letterSpan);
 			index += 0.1;
 		}
@@ -79,14 +81,7 @@ export class NavigationLinks extends HTMLAnchorElement {
 	}
 
 	styleButton() {
-		this.classList.add(
-			'brdr',
-			'input-emphasis',
-			'whitenowrap',
-			'button',
-			'bg-yellow',
-			'w-full',
-		);
+		this.classList.add('brdr', 'input-emphasis', 'whitenowrap', 'button', 'bg-yellow', 'w-full');
 	}
 
 	#dynamicRender() {
@@ -117,7 +112,7 @@ export class NavigationLinks extends HTMLAnchorElement {
 		this.href = this.#info.href;
 		this.title = this.#info.title;
 		this.id = this.#info.id;
-		this.setAttribute('data-link', this.#info.datalink);
+		this.dataset.link = this.#info.datalink;
 	}
 }
 

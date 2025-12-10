@@ -1,5 +1,5 @@
 import type { NavigationLinks } from '../navigation/links.js';
-import type { MatchOutcome, navigationLinksData } from '../types-interfaces.js';
+import type { MatchOutcome, NavigationLinksData } from '../types-interfaces.js';
 
 const emptyMatch: MatchOutcome = {
 	date: '',
@@ -93,7 +93,7 @@ export class InlineMatch extends HTMLDivElement {
 			let el;
 			if (key === 'opponent') {
 				const opponent = this.#data[key].toString();
-				const opp: navigationLinksData = {
+				const opp: NavigationLinksData = {
 					styleButton: false,
 					id: 'opponent-link',
 					datalink: opponent,

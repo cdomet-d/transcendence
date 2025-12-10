@@ -7,9 +7,9 @@
  * - `iicon`: Extra small, icon size
  * - `ismall`: Small size
  * - `imedium`: Medium size
- * - `ilarge`: Large size
+ * - `ixl`: Large size
  */
-export type Size = 'iicon' | 'ismall' | 'imedium' | 'ilarge' | 'ifs';
+export type Size = 'iicon' | 'ismall' | 'imedium' | 'ixl' | 'i2xl' | 'i3xl';
 
 /** Image metadata for assets.
  * @property {string} alt - Alt text for accessibility.
@@ -52,7 +52,7 @@ export type MenuSize = 's' | 'm' | 'l';
  */
 export type DropdownBg = 'dynamic' | 'static';
 
-export interface navigationLinksData {
+export interface NavigationLinksData {
 	styleButton: boolean;
 	id: string;
 	datalink: string;
@@ -77,7 +77,7 @@ export interface TabData {
 export interface MenuData {
 	id?: string; //TODO: had to add "?" to stop having an error on notificationBtns in notifications.ts
 	buttons?: ButtonData[];
-	links?: navigationLinksData[];
+	links?: NavigationLinksData[];
 }
 
 /* -------------------------------------------------------------------------- */
@@ -143,6 +143,7 @@ export interface ButtonData {
 	img: ImgData | null;
 	ariaLabel: string;
 	style?: BtnStyles;
+	action?: string;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -364,7 +365,7 @@ export interface Dictionary {
 		duration: string;
 		tournament: string;
 	};
-	notifs: {
+	noti2xl: {
 		notif_placeholder: string;
 	};
 	gameCustom: {

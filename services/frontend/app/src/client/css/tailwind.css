@@ -2,6 +2,7 @@
 @import "./animations.css";
 @import "./pong-farm.css";
 @import "./pong-ocean.css";
+@import "./pong-forest.css";
 @import "./background.css";
 
 @font-face {
@@ -171,14 +172,19 @@
 		--image-cont-size: 4.43rem;
 	}
 
-	.ilarge {
+	.ixl {
 		--image-size: 6.36rem;
 		--image-cont-size: 8.36rem;
 	}
 
-	.ifs {
+	.i2xl {
 		--image-size: 16.36rem;
 		--image-cont-size: 18.36rem;
+	}
+
+	.i3xl {
+		--image-size: 24.36rem;
+		--image-cont-size: 26.36rem;
 	}
 
 	.thin {
@@ -205,11 +211,22 @@
 		left: var(--panel-left, 0);
 		top: var(--panel-top, 0);
 	}
+
+	*:focus,
+	*:focus-visible {
+		box-shadow: var(--n-inner-border-w) var(--n-inner-border-w) var(--border),
+			var(--n-inner-border-w) var(--inner-border-w) var(--border),
+			var(--inner-border-w) var(--n-inner-border-w) var(--border),
+			var(--inner-border-w) var(--inner-border-w) var(--border),
+			var(--n-border-w) 0 0 0 var(--border), var(--border-w) 0 0 0 var(--border),
+			0 var(--n-border-w) 0 0 var(--border), 0 var(--border-w) 0 0 var(--border),
+			4px 4px 10px rgba(0, 0, 0, 0.599);
+	}
 }
 
 @layer base {
 	.t0 {
-		font-size: calc(15vw + 1em);
+		font-size: calc(10vw + 1em);
 	}
 
 	.t1 {
@@ -625,7 +642,7 @@
 	.header {
 		padding-left: var(--s);
 		padding-right: var(--s);
-		grid-template-columns: 65px 1fr 1fr 65px 150px;
+		grid-template-columns: 65px 1fr 1fr 60px 60px;
 		grid-template-rows: var(--ml);
 		place-items: center;
 	}

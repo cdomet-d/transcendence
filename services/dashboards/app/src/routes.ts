@@ -215,7 +215,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//patch a tournament stats
-	serv.patch('/tournament/:tournamentID', { schema: patchTournamentSchema }, async (request, reply) => {
+	serv.patch('/tournament/:tournamentID', /* { schema: patchTournamentSchema }, */ async (request, reply) => {
 		try {
 			const { tournamentID } = request.params as { tournamentID: string };
 			const { winnerID } = request.body as { winnerID: string };

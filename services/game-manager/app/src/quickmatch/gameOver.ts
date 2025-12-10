@@ -1,18 +1,11 @@
-import { lobbyMap } from '../lobby/lobby.gm.js';
 import type { game } from '../gameManager/gameManager.interface.js';
 
-export function gameOver(payload: string) {
-	//const game: game = JSON.parse(payload);
-	let game: game;
-	if (typeof payload === 'string')
-		game = JSON.parse(payload);
-	else 
-		game = payload;
+export function gameOver(payload: game) {
+	const game: game = payload;
 	postGameToDashboard(game);
 	patchGameToUsers(game);
 	// showWinnerScreen();
-	// TODO redirect all players to their lobby
-	const lobby = lobbyMap.get(game.lobbyID);
+	// TODO redirect players to HOME page
 }
 
 interface gameDashboardReqBody {

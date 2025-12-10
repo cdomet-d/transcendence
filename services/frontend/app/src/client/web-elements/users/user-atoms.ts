@@ -4,7 +4,7 @@ import type {
 	FontSize,
 	FontColor,
 	ImgData,
-	navigationLinksData,
+	NavigationLinksData,
 } from '../types-interfaces.js';
 import { createIcon } from '../typography/helpers.js';
 import type { Icon } from '../typography/images.js';
@@ -35,7 +35,7 @@ export class Username extends HTMLDivElement {
 	 * Sets the username text.
 	 */
 	set name(val: string) {
-		const link: navigationLinksData = {
+		const link: NavigationLinksData = {
 			styleButton: false,
 			img: null,
 			datalink: val,
