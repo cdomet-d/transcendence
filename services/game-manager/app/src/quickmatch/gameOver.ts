@@ -98,13 +98,16 @@ async function showWinnerScreen(game: game, serv: FastifyInstance) {
 	const user1: userInfo = lobby.userList.get(game.users![0]!.userID!)!;
 	const user2: userInfo = lobby.userList.get(game.users![1]!.userID!)!;
 	wsSend(user1.userSocket!, JSON.stringify({ event: "END GAME", result: user1.userID! === game.winnerID ? "winner" : "looser"}));
-	wsSend(user2.userSocket!, JSON.stringify({ event: "END GAME", result: user2.userID! === game.winnerID ? "winner" : "looser"}));
+	if (lobby.remote === true)
+		wsSend(user2.userSocket!, JSON.stringify({ event: "END GAME", result: user2.userID! === game.winnerID ? "winner" : "looser"}));
 	const signal1: string = await waitForSignal(serv, user1.userSocket);
-	const signal2: string = await waitForSignal(serv, user1.userSocket);
+	const signal2: string = await waitForSignal(serv, user2.userSocket);
 	if (signal1 === "got result" && signal2 === "got result") {
-		if (game.remote === false) {
+		if (lobby.format === "quickmatch") {
+			serv.log.error("IN CLOSE IF LOCAL")
 			user1.userSocket!.close(4001);
-			user2.userSocket!.close(4001);
+			if (lobby.remote === true)
+				user2.userSocket!.close(4001);
 		}
 	}
 };
