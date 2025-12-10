@@ -103,7 +103,7 @@ export async function showWinnerScreen(game: game, serv: FastifyInstance, endLob
 			waitForEnd(serv, user2.userSocket!);
 	}
 	wsSend(user1.userSocket!, JSON.stringify({ event: "END GAME", result: user1.userID! === game.winnerID ? "winner" : "looser", endLobby: endLobby}));
-	if (game.remote === true)
+	if (lobby.remote === true)
 		wsSend(user2.userSocket!, JSON.stringify({ event: "END GAME", result: user2.userID! === game.winnerID ? "winner" : "looser", endLobby: endLobby }));
 };
 
