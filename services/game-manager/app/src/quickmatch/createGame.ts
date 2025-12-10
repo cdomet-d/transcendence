@@ -26,7 +26,7 @@ export function createGameObj(lobbyInfo: lobbyInfo, lobbyID: string): game | und
 
 
 	const game: game = {
-		lobbyID: lobbyInfo.lobbyID!,
+		lobbyID: lobbyID,
 		tournamentID: '-1',
 		gameID: crypto.randomUUID().toString(),
 		remote: lobbyInfo.remote,

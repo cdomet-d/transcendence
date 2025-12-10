@@ -1,10 +1,13 @@
-import type { game } from '../gameManager/gameManager.interface.js';
+import type { FastifyInstance } from 'fastify';
+import type { game, lobbyInfo, userInfo } from '../gameManager/gameManager.interface.js';
+import { lobbyMap } from '../lobby/lobby.gm.js';
+import { waitForSignal, wsSend } from '../lobby/wsHandler.gm.js';
+import { close } from 'fs';
 
-export function gameOver(payload: game) {
-	const game: game = payload;
+export function gameOver(game: game, serv: FastifyInstance) {
 	postGameToDashboard(game);
 	patchGameToUsers(game);
-	// showWinnerScreen();
+	showWinnerScreen(game, serv);
 	// TODO redirect players to HOME page
 }
 
@@ -89,3 +92,19 @@ async function patchGameToUsers(game: game) {
 		throw new Error('Users service is unreachable.');
 	}
 }
+
+async function showWinnerScreen(game: game, serv: FastifyInstance) {
+	const lobby: lobbyInfo = lobbyMap.get(game.lobbyID)!;
+	const user1: userInfo = lobby.userList.get(game.users![0]!.userID!)!;
+	const user2: userInfo = lobby.userList.get(game.users![1]!.userID!)!;
+	wsSend(user1.userSocket!, JSON.stringify({ event: "END GAME", result: user1.userID! === game.winnerID ? "winner" : "looser"}));
+	wsSend(user2.userSocket!, JSON.stringify({ event: "END GAME", result: user2.userID! === game.winnerID ? "winner" : "looser"}));
+	const signal1: string = await waitForSignal(serv, user1.userSocket);
+	const signal2: string = await waitForSignal(serv, user1.userSocket);
+	if (signal1 === "got result" && signal2 === "got result") {
+		if (game.remote === false) {
+			user1.userSocket!.close(4001);
+			user2.userSocket!.close(4001);
+		}
+	}
+};

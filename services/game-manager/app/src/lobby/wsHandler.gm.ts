@@ -14,10 +14,10 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 	socket.on('message', (message: string) => {
 		try {
 			const data = JSON.parse(message);
-			if (!validateData(data, req, socket)) return;
+			if (!validateData(data, this, socket)) return;
 			
 			const { payload, formInstance } = data;
-			if (!validatePayload(data, payload, req, socket)) return;
+			if (!validatePayload(data, payload, this, socket)) return;
 
 			if (data.event === 'NOTIF' && payload.notif === 'ping') {
 				socket.send(JSON.stringify({ event: 'NOTIF', notif: 'pong' }));
@@ -89,7 +89,6 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					if (!lobbyMap.has(invitePayload.lobbyID!)) {
 						wsSend(socket, JSON.stringify({ error: 'lobby does not exist' }));
 					}
-
 					userID = invitePayload.invitee.userID;
 					let oldLobby: string | null = findLobbyIDFromUserID(userID);
 					if (oldLobby !== null)
@@ -98,8 +97,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					addUserToLobby(userID!, invitePayload.invitee.username!, socket, invitePayload.lobbyID!);
 					const whiteListUsernames: string[] = getWhiteListUsernames(invitePayload.lobbyID!)
 					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance, whiteListUsernames: whiteListUsernames }));
-					informHostToStart(this, req, socket, invitePayload.lobbyID);
-					//TODO: send start to host once everyone has joined
+					informHostToStart(this, req, socket, invitePayload.lobbyID!);
 				}
 			}
 		} catch (error) {
@@ -129,25 +127,25 @@ export function wsSend(ws: WebSocket, message: string): void {
 }
 
 async function informHostToStart(serv: FastifyInstance, req: FastifyRequest, socket: WebSocket, lobbyID: string) {
-	const signal: string = await waitForSignal(serv, req, socket);
+	const signal: string = await waitForSignal(serv, socket);
+	if (signal !== 'in lobby') return;
 	const lobby: lobbyInfo = lobbyMap.get(lobbyID)!;
-	if (lobby.nbPlayers === lobby.userList.size && signal === 'start') {
+	if (lobby.nbPlayers === lobby.userList.size) {
 		const hostSocket: WebSocket = lobby.userList.get(lobby.hostID!)?.userSocket!;
 		wsSend(hostSocket, JSON.stringify("start"));
 	}
 }
 
-function waitForSignal(serv: FastifyInstance, req: FastifyRequest, socket: WebSocket): Promise<string> {
+export function waitForSignal(serv: FastifyInstance, socket: WebSocket): Promise<string> {
 	return new Promise((resolve, reject) => {
 		socket.once('message', (message: string) => {
 			try {
 				const data = JSON.parse(message);
-				if (!validateData(data, req, socket)) return;
+				if (!validateData(data, serv, socket)) return;
 				
 				const { payload } = data;
-				if (!validatePayload(data, payload, req, socket)) reject("invalid input");
-				if (payload.signal !== 'in lobby')  reject("not in lobby");
-				resolve("start");
+				if (!validatePayload(data, payload, serv, socket)) reject("invalid input");
+				resolve(payload.signal);
 			} catch (err: any) {
 				socket.close(1003, err.message);
 				serv.log.error(err.message);

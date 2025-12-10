@@ -21,7 +21,7 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 		return;
 	}
 
-	gameOver(game);
+	gameOver(game, serv);
 
 	const nextGame = getNextGameInBracket(tournamentObj);
 	if (nextGame === undefined) {

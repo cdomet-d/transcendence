@@ -5,6 +5,8 @@ import type { LocalPongSettings, RemotePongSettings } from '../web-elements/form
 import { origin } from '../main.js'
 import type { inviteeObj } from './gm.interface.front.js';
 import { executeAction, wsSend } from './wsAction.front.js';
+import { endGame } from '../web-elements/game/pong-events.js';
+import { looseImage, winImage } from '../web-elements/default-values.js';
 
 export let wsInstance: WebSocket | null = null;
 
@@ -51,9 +53,10 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	ws.onclose = (event) => {
 		wsInstance = null;
 		console.log('Lobby WebSocket connection closed!');
+		console.log("code:", event.code);
 		if (event.code === 4001) {
 			const currentRoute = window.location.pathname;
-			if (currentRoute.includes("-lobby"))
+			if (currentRoute.includes("-lobby") || currentRoute === "/game")
 				router.loadRoute('/lobby-menu', true);
 		}
 		// TODO KICK USER OUT OF LOBBY_MAP AND GM WS_CLIENT_MAP // 'delete' action ? Handle in GM?
@@ -68,6 +71,14 @@ function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettin
 			if (data === "start") {
 				form?.enableStartButton();
 				return;
+			}
+
+			if (data.event === "END GAME") {
+				if (data.result === "winner")
+					endGame(winImage, "winScreen", "you win !");
+				else
+					endGame(looseImage, "looseScreen", "you loose...");
+				wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
 			}
 
 			if (data.error) {

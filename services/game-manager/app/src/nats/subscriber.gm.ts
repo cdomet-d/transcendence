@@ -36,7 +36,7 @@ export async function natsSubscribe(serv: FastifyInstance) {
 			if (game.tournamentID !== '-1') {
 				tournamentState(serv, game);
 			} else {
-				gameOver(game);
+				gameOver(game, serv);
 			}
 		}
 	})();
