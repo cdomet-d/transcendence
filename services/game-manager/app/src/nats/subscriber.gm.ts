@@ -1,5 +1,5 @@
 import { StringCodec } from 'nats';
-import { waitForSignal, wsSend } from '../lobby/wsHandler.gm.js';
+import { wsSend } from '../lobby/wsHandler.gm.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
 import type { gameRequest, gameReply, game } from '../gameManager/gameManager.interface.js';
 import { wsClientsMap } from '../lobby/lobby.gm.js';

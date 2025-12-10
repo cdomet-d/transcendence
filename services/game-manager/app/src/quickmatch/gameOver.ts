@@ -98,17 +98,17 @@ export async function showWinnerScreen(game: game, serv: FastifyInstance, endLob
 	const user1: userInfo = lobby.userList.get(game.users![0]!.userID!)!;
 	const user2: userInfo = lobby.userList.get(game.users![1]!.userID!)!;
 	if (endLobby === true) {
-		waitForEnd(serv, user1.userSocket!);
+		waitForLobbyEnd(serv, user1.userSocket!);
 		if (game.remote === true)
-			waitForEnd(serv, user2.userSocket!);
+			waitForLobbyEnd(serv, user2.userSocket!);
 	}
 	wsSend(user1.userSocket!, JSON.stringify({ event: "END GAME", result: user1.userID! === game.winnerID ? "winner" : "looser", endLobby: endLobby}));
 	if (lobby.remote === true)
 		wsSend(user2.userSocket!, JSON.stringify({ event: "END GAME", result: user2.userID! === game.winnerID ? "winner" : "looser", endLobby: endLobby }));
 };
 
-export function waitForEnd(serv: FastifyInstance, socket: WebSocket) {
-	socket.on('message', (message: string) => {
+export function waitForLobbyEnd(serv: FastifyInstance, socket: WebSocket) {
+	socket.once('message', (message: string) => {
 		try {
 			const data = JSON.parse(message);
 			if (!validateData(data, serv, socket)) throw new Error("invalid input");
