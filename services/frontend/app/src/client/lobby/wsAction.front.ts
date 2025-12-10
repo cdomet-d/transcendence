@@ -40,6 +40,5 @@ export function wsSend(ws: WebSocket, message: string): void {
     } else {
         const payload = JSON.parse(message);
         console.log(`Error: Connection for userID < ${payload.userID} > not found or not open...`);
-        console.log(`\tCould not start game with gameID < ${payload.gameID} > `);
     }
 }

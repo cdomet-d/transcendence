@@ -64,7 +64,7 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	};
 }
 
-function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettings) {
+function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettings, ) {
 	ws.onmessage = (message: MessageEvent) => {
 		try {
 			const data = JSON.parse(message.data);
@@ -75,9 +75,9 @@ function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettin
 
 			if (data.event === "END GAME") {
 				if (data.result === "winner")
-					endGame(winImage, "winScreen", "you win !");
+					endGame(winImage, "winScreen", "you win !", data.endLobby);
 				else
-					endGame(looseImage, "looseScreen", "you loose...");
+					endGame(looseImage, "looseScreen", "you loose...", data.endLobby);
 				wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
 			}
 
