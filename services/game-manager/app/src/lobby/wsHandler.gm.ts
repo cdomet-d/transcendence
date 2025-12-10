@@ -96,11 +96,12 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					removeNotifFromDB(this, invitePayload.lobbyID!, userID);
 					addUserToLobby(userID!, invitePayload.invitee.username!, socket, invitePayload.lobbyID!);
 					const whiteListUsernames: string[] = getWhiteListUsernames(invitePayload.lobbyID!)
+					informHostToStart(this, socket, invitePayload.lobbyID!);
 					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance, whiteListUsernames: whiteListUsernames }));
-					informHostToStart(this, req, socket, invitePayload.lobbyID!);
 				}
 			}
 		} catch (error) {
+			socket.close(1003, `Malformed WS message: ${error}`);
 			req.server.log.error(`Malformed WS message: ${error}`);
 		}
 	});
@@ -125,30 +126,24 @@ export function wsSend(ws: WebSocket, message: string): void {
 	}
 }
 
-async function informHostToStart(serv: FastifyInstance, req: FastifyRequest, socket: WebSocket, lobbyID: string) {
-	const signal: string = await waitForSignal(serv, socket);
-	if (signal !== 'in lobby') return;
-	const lobby: lobbyInfo = lobbyMap.get(lobbyID)!;
-	if (lobby.nbPlayers === lobby.userList.size) {
-		const hostSocket: WebSocket = lobby.userList.get(lobby.hostID!)?.userSocket!;
-		wsSend(hostSocket, JSON.stringify("start"));
-	}
-}
-
-export function waitForSignal(serv: FastifyInstance, socket: WebSocket): Promise<string> {
-	return new Promise((resolve, reject) => {
-		socket.once('message', (message: string) => {
-			try {
-				const data = JSON.parse(message);
-				if (!validateData(data, serv, socket)) reject("invalid input");
-				
-				const { payload } = data;
-				if (!validatePayload(data, payload, serv, socket)) reject("invalid input");
-				resolve(payload.signal);
-			} catch (err: any) {
-				socket.close(1003, err.message);
-				serv.log.error(err.message);
+export function informHostToStart(serv: FastifyInstance, socket: WebSocket, lobbyID: string) {
+	socket.once('message', (message: string) => {
+		try {
+			const data = JSON.parse(message);
+			if (!validateData(data, serv, socket)) throw new Error("invalid input");
+			
+			const { payload } = data;
+			if (!validatePayload(data, payload, serv, socket)) throw new Error("invalid input");
+			if (payload.signal === 'in lobby') {
+				const lobby: lobbyInfo = lobbyMap.get(lobbyID)!;
+				if (lobby.nbPlayers === lobby.userList.size) {
+					const hostSocket: WebSocket = lobby.userList.get(lobby.hostID!)?.userSocket!;
+					wsSend(hostSocket, JSON.stringify("start"));
+				}
 			}
-		});
+		} catch (err: any) {
+			socket.close(1003, err.message);
+			serv.log.error(err.message);
+		}
 	});
 }
