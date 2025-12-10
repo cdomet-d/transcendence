@@ -78,7 +78,6 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 	serv.post('/verify', { schema: schema.verify }, async (request, reply) => {
 		try {
 			const { password } = request.body as { password: string };
-			serv.log.warn(`[/verify]: ${request.user.username}`);
 			const account = await verifyPasswordMatch(serv, request.user.username, password);
 
 			if (account === 404) return reply.code(404).send({ message: '[AUTH] Account not found.' });

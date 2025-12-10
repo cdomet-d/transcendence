@@ -92,7 +92,6 @@ export class Listbox extends HTMLUListElement {
 		this.#currentFocus = (this.#currentFocus + delta + this.#options.length) % this.#options.length;
 		const focusedOption = this.#options[this.#currentFocus];
 		if (focusedOption) {
-			console.log('Focused option:', focusedOption);
 			focusedOption.focus();
 		}
 	}

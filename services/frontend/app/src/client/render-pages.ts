@@ -4,8 +4,8 @@ import { createHeading, createNoResult } from './web-elements/typography/helpers
 import { createLeaderboard } from './web-elements/statistics/leaderboard.js';
 import { createMenu } from './web-elements/navigation/menu-helpers.js';
 import { createTabs } from './web-elements/navigation/tabs-helpers.js';
-import { farm, ocean, defaultTheme, forest, PongCourt } from './web-elements/game/pong-court.js';
-import { farmAssets, forestAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
+import { farm, ocean, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
+import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
 import { userSettingsForm, localPong, remotePong, pongTournament } from './web-elements/forms/default-forms.js';
 import { lobbyQuickmatchMenu, lobbyTournamentMenu, main, goHomeData } from './web-elements/navigation/default-menus.js';
 import { pong, type gameRequest } from './pong/pong.js';
@@ -13,7 +13,7 @@ import { PongUI } from './web-elements/game/game-ui.js';
 import { errorMessageFromException, exceptionFromResponse, redirectOnError } from './error.js';
 import type { Match } from 'path-to-regexp';
 import type { pongTheme, TabData, ImgData } from './web-elements/types-interfaces.js';
-import { router, type userStatusInfo, origin } from './main.js';
+import { router, type userStatusInfo } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
@@ -35,6 +35,7 @@ const layoutPerPage: { [key: string]: string } = {
 	profile: 'page-w-header',
 	auth: 'full-screen',
 	settings: 'page-w-header',
+	privacy: 'page-w-header',
 };
 
 const requireAuth: { [key: string]: boolean } = {
@@ -169,7 +170,7 @@ export async function renderSelf() {
 }
 
 export async function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
-	const viewer = await prepareLayout(document.body.layoutInstance, 'profile')
+	const viewer = await prepareLayout(document.body.layoutInstance, 'profile');
 	if (!viewer) return;
 
 	if (!param || !param.params.login || typeof param.params.login !== 'string') return redirectOnError('/404', 'No such user');
@@ -240,6 +241,7 @@ export async function renderQuickLocalLobby() {
 	form.classList.remove('h-full');
 	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
 	wsConnect('create', 'quickmatch', 'localForm', undefined, undefined, undefined, form);
+	updatePageTitle('Local lobby');
 }
 
 export async function renderQuickRemoteLobby(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[]) {
@@ -250,14 +252,15 @@ export async function renderQuickRemoteLobby(param?: Match<Partial<Record<string
 	form.format = 'quickmatch';
 	form.formInstance = 'remoteForm';
 	document.body.layoutInstance?.appendAndCache(form);
-
+	form.classList.remove('h-full');
+	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
 	if (action === 'invitee') form.displayUpdatedGuests(whiteListUsernames!);
 	if (action === undefined) {
 		action = 'create';
 		form.owner = status.username!;
 	}
-
 	wsConnect(action!, 'quickmatch', 'remoteForm', undefined, undefined, undefined, form);
+	updatePageTitle('Remote lobby');
 }
 
 export async function renderTournamentLobby(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[]) {
@@ -271,13 +274,13 @@ export async function renderTournamentLobby(param?: Match<Partial<Record<string,
 	form.formInstance = 'remoteForm';
 	form.classList.remove('h-full');
 	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
-
 	if (action === 'invitee') form.displayUpdatedGuests(whiteListUsernames!);
 	if (action === undefined) {
 		action = 'create';
 		form.owner = status.username!;
 	}
 	wsConnect(action!, 'tournament', 'remoteForm', undefined, undefined, undefined, form);
+	updatePageTitle('Tournament lobby');
 }
 export async function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[], lobbyWS?: WebSocket) {
 	const status = await prepareLayout(document.body.layoutInstance, 'game');
@@ -298,26 +301,20 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 	if (layout) layout.theme = background[1];
 	document.body.layoutInstance?.appendAndCache(ui, court);
 	pong(gameRequest!, court, ui);
+	updatePageTitle('Game!');
 }
 
 function getGameBackground(background?: string): [pongTheme, ImgData[]] {
 	if (background === 'Adorable Farm') return [farm, farmAssets];
 	if (background === 'Magical Underwater') return [ocean, oceanAssets];
-	// if (background === "Enchanted Forest")
-	//     return [] //TODO
 	return [defaultTheme, []];
 }
 
 export async function renderPrivacy() {
-	console.log('renderPrivacy');
-	try {
-		prepareLayout(document.body.layoutInstance, 'privacy');
-	} catch (error) {
-		console.error(errorMessageFromException(error));
-	}
+	if (!(await prepareLayout(document.body.layoutInstance, 'leaderboard'))) return;
 
 	try {
-		document.body.layoutInstance!.appendAndCache(createHeading('2', 'Your privacy'), createPrivacy());
+		document.body.layoutInstance?.appendAndCache(createHeading('2', 'Your privacy'), createPrivacy());
 	} catch (error) {
 		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
 	}

@@ -3,10 +3,7 @@ import { Checkbox } from './buttons.js';
 import { createCheckbox } from './helpers.js';
 import { defaultDictionary } from '../forms/language.js';
 
-const MAX_SIZE = 2 * 1024 * 1024; // 2MB
-
-//TODO: feedback on username
-//TODO: err message on required field empty
+const MAX_SIZE = 1024 * 1024; // 1MB
 
 /**
  * Custom input element.
@@ -46,8 +43,6 @@ export class CustomInput extends HTMLInputElement {
 	/* -------------------------------------------------------------------------- */
 	/*                                 Validation                                 */
 	/* -------------------------------------------------------------------------- */
-
-	//TODO: allow hide on ESC
 
 	/**
 	 * Provides feedback for password fields based on validation rules.
@@ -324,13 +319,13 @@ export class InputGroup extends HTMLDivElement {
 	/* -------------------------------------------------------------------------- */
 	#hideImplementation() {
 		this.#feedback.classList.add('hidden');
-		this.classList.remove('z-5');
+		this.classList.remove('z-6');
 	}
 
 	#unhideImplementation() {
 		if (this.#feedback.firstChild) {
 			this.#feedback.classList.remove('hidden');
-			this.classList.add('z-5');
+			this.classList.add('z-6');
 		}
 	}
 

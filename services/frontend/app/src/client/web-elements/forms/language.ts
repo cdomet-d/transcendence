@@ -64,7 +64,6 @@ export const defaultDictionary: Dictionary = {
 		remote: "Remote",
 		background: "Background",
 		farm: "Farm",
-		forest: "Forest",
 		under_water: "Under Water",
 		opponent_name: "Opponent Nickname",
 		choose_back: "Select background",

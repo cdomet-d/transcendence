@@ -24,7 +24,7 @@ export interface ImgData {
 	src: string;
 }
 
-export type BackgroundTheme = 'default' | 'farm' | 'ocean' | 'forest';
+export type BackgroundTheme = 'default' | 'farm' | 'ocean';
 /* -------------------------------------------------------------------------- */
 /*                                    Menus                                   */
 /* -------------------------------------------------------------------------- */
@@ -284,7 +284,7 @@ export interface MatchParticipants {
 	player2: UserData;
 }
 
-export type CourtTheme = 'default' | 'farm' | 'ocean' | 'forest';
+export type CourtTheme = 'default' | 'farm' | 'ocean';
 
 export interface pongTheme {
 	color: string;
@@ -377,7 +377,6 @@ export interface Dictionary {
 		remote: string;
 		background: string;
 		farm: string;
-		forest: string;
 		under_water: string;
 		opponent: string;
 		opponent_name: string;

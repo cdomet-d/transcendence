@@ -1,21 +1,23 @@
 import type { FastifyReply } from 'fastify';
 import type {
-	UsernameResponse, FriendshipStatus, Friendship, ProfileView, userStats, StatsResponse, Matches, RawMatches,
-	userData, UserIDResponse, UserProfileUpdates, UserProfileView
-} from "../utils/bff.interface.js";
+	UsernameResponse,
+	FriendshipStatus,
+	Friendship,
+	ProfileView,
+	userStats,
+	StatsResponse,
+	Matches,
+	RawMatches,
+	userData,
+	UserIDResponse,
+	UserProfileUpdates,
+	UserProfileView,
+} from '../utils/bff.interface.js';
 
-
-export async function fetchFullUserProfile(
-	log: any,
-	requesterID: string,
-	targetUsername: string,
-	token: string
-): Promise<UserProfileView> {
-
+export async function fetchFullUserProfile(log: any, requesterID: string, targetUsername: string, token: string): Promise<UserProfileView> {
 	const combinedUserData = await buildTinyProfile(log, requesterID, targetUsername, token);
 
-	if (!combinedUserData)
-		throw { code: 404, message: 'User profile data not found.' };
+	if (!combinedUserData) throw { code: 404, message: 'User profile data not found.' };
 
 	const [userData, userStats, friends, pending, recentMatches] = await Promise.all([
 		combinedUserData,
@@ -25,8 +27,7 @@ export async function fetchFullUserProfile(
 		processMatches(log, combinedUserData.userID, token),
 	]);
 
-	if (!userData || !userStats)
-		throw { code: 404, message: '[BFF] Failed to retrieve essential user data.' };
+	if (!userData || !userStats) throw { code: 404, message: '[BFF] Failed to retrieve essential user data.' };
 
 	const responseData: UserProfileView = {
 		userData: userData,
@@ -36,16 +37,11 @@ export async function fetchFullUserProfile(
 		matches: recentMatches || [],
 	};
 
-	return (responseData);
+	return responseData;
 }
 
 //error handled
-export async function buildTinyProfile(
-	log: any,
-	viewerUserID: string,
-	targetUsername: string,
-	token: string
-): Promise<userData> {
+export async function buildTinyProfile(log: any, viewerUserID: string, targetUsername: string, token: string): Promise<userData> {
 	try {
 		const targetUserID = await fetchUserID(log, targetUsername, token);
 
@@ -54,10 +50,7 @@ export async function buildTinyProfile(
 			throw { code: 404, message: '[BFF] User not found.' };
 		}
 
-		const [data, relation] = await Promise.all([
-			fetchUserData(log, targetUserID, token),
-			fetchProfileView(log, viewerUserID, targetUserID, token),
-		]);
+		const [data, relation] = await Promise.all([fetchUserData(log, targetUserID, token), fetchProfileView(log, viewerUserID, targetUserID, token)]);
 
 		if (!data) {
 			log.warn(`[BFF] buildTinyProfile: Data not found for userID ${targetUserID}`);
@@ -82,12 +75,9 @@ export async function buildTinyProfile(
 		if (typeof error === 'object' && error !== null && 'code' in error) {
 			const customError = error as { code: number; message: string };
 
-			if (customError.code === 404)
-				throw { code: 404, message: customError.message || '[BFF] User not found.' };
-			if (customError.code === 400)
-				throw { code: 400, message: customError.message || '[BFF] Unauthorized' };
-			if (customError.code === 401)
-				throw { code: 401, message: customError.message || '[BFF] Unauthorized' };
+			if (customError.code === 404) throw { code: 404, message: customError.message || '[BFF] User not found.' };
+			if (customError.code === 400) throw { code: 400, message: customError.message || '[BFF] Unauthorized' };
+			if (customError.code === 401) throw { code: 401, message: customError.message || '[BFF] Unauthorized' };
 		}
 		throw error;
 	}
@@ -139,11 +129,7 @@ export async function searchBar(log: any, username: string, token: string): Prom
 }
 
 //error handled
-export async function fetchUserData(
-	log: any,
-	userID: string,
-	token: string
-): Promise<userData | null> {
+export async function fetchUserData(log: any, userID: string, token: string): Promise<userData | null> {
 	const url = `http://users:2626/${userID}`;
 	let response: Response;
 
@@ -194,9 +180,7 @@ export async function fetchUserData(
 }
 
 export async function fetchProfileView(log: any, userID: string, targetUserID: string, token: string): Promise<ProfileView> {
-
-	if (targetUserID === userID)
-		return ('self');
+	if (targetUserID === userID) return 'self';
 
 	let response: Response;
 	const friendsUrl = `http://friends:1616/friendship?userA=${userID}&userB=${targetUserID}`;
@@ -242,11 +226,7 @@ export async function fetchProfileView(log: any, userID: string, targetUserID: s
 }
 
 //error handled
-export async function fetchUserID(
-	log: any,
-	username: string,
-	token: string
-): Promise<string | null> {
+export async function fetchUserID(log: any, username: string, token: string): Promise<string | null> {
 	const url = `http://users:2626/userID/${username}`;
 
 	let response: Response;
@@ -288,18 +268,13 @@ export async function fetchUserID(
 
 	const body = (await response.json()) as UserIDResponse;
 
-	if (!body.response || !body.response.userID)
-		throw new Error('Invalid response structure from user service');
+	if (!body.response || !body.response.userID) throw new Error('Invalid response structure from user service');
 
 	return body.response.userID;
 }
 
 //error handled
-export async function fetchUserStats(
-	log: any,
-	userID: string,
-	token: string
-): Promise<userStats | null> {
+export async function fetchUserStats(log: any, userID: string, token: string): Promise<userStats | null> {
 	const url = `http://users:2626/stats/${userID}`;
 	let response: Response;
 
@@ -344,12 +319,7 @@ export async function fetchUserStats(
 //The 'since' in the friendlist will store the friendship creation data, not the creation of the profile of the friend
 // Make a issue on github if you'd rather it to be the creation of the friend's profile
 //error handled
-export async function fetchFriendships(
-	log: any,
-	userID: string,
-	status: FriendshipStatus,
-	token: string
-): Promise<userData[]> {
+export async function fetchFriendships(log: any, userID: string, status: FriendshipStatus, token: string): Promise<userData[]> {
 	const url = `http://friends:1616/friendlist?userID=${userID}`;
 	let response: Response;
 
@@ -388,8 +358,7 @@ export async function fetchFriendships(
 	const targetIsAccepted = status === 'friend';
 
 	const filteredList = friendships.filter((f) => {
-		const isAccepted =
-			String(f.statusFriendship) === 'true' || String(f.statusFriendship) === '1';
+		const isAccepted = String(f.statusFriendship) === 'true' || String(f.statusFriendship) === '1';
 
 		return isAccepted === targetIsAccepted;
 	});
@@ -447,9 +416,9 @@ export async function fetchFriendshipsPending(log: any, userID: string, status: 
 		response = await fetch(url, {
 			method: 'GET',
 			headers: {
-				'Cookie': `token=${token}`,
-				'Content-Type': 'application/json'
-			}
+				Cookie: `token=${token}`,
+				'Content-Type': 'application/json',
+			},
 		});
 	} catch (error) {
 		log.error(`[BFF] Friends service is unreachable: ${error}`);
@@ -458,13 +427,13 @@ export async function fetchFriendshipsPending(log: any, userID: string, status: 
 
 	if (response.status === 400) {
 		log.warn(`[BFF] Auth service validation error`);
-		const errorBody = await response.json() as { message: string };
+		const errorBody = (await response.json()) as { message: string };
 		throw { code: 400, message: errorBody.message || '[BFF] Could not friendlist.' };
 	}
 
 	if (response.status === 401) {
 		log.warn(`[BFF] Auth service validation error`);
-		const errorBody = await response.json() as { message: string };
+		const errorBody = (await response.json()) as { message: string };
 		throw { code: 401, message: errorBody.message || '[BFF] Could not friendlist.' };
 	}
 
@@ -473,19 +442,19 @@ export async function fetchFriendshipsPending(log: any, userID: string, status: 
 		throw new Error('Friends service failed.');
 	}
 
-	const friendships = await response.json() as Friendship[];
+	const friendships = (await response.json()) as Friendship[];
 
-	const targetIsAccepted = (status === 'friend');
+	const targetIsAccepted = status === 'friend';
 
-	const filteredList = friendships.filter(f => {
+	const filteredList = friendships.filter((f) => {
 		const isAccepted = String(f.statusFriendship) === 'true' || String(f.statusFriendship) === '1';
 
-		return (isAccepted === targetIsAccepted);
+		return isAccepted === targetIsAccepted;
 	});
 
 	const profilePromises = filteredList.map(async (friendship) => {
 		try {
-			const otherID = (friendship.userID === userID) ? friendship.friendID : friendship.userID;
+			const otherID = friendship.userID === userID ? friendship.friendID : friendship.userID;
 
 			const profile = await fetchUserData(log, String(otherID), token);
 
@@ -493,29 +462,29 @@ export async function fetchFriendshipsPending(log: any, userID: string, status: 
 				(profile as any).relation = status;
 				profile.since = friendship.startTime;
 			}
-			return (profile);
+			return profile;
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
-				const customError = error as { code: number, message: string };
+				const customError = error as { code: number; message: string };
 				if (customError.code === 404) {
-					const errorBody = await response.json() as { message: string };
+					const errorBody = (await response.json()) as { message: string };
 					throw { code: 404, message: errorBody.message || '[BFF] Could not friendlist.' };
 				}
 
 				if (response.status === 400) {
 					log.warn(`[BFF] Auth service validation error`);
-					const errorBody = await response.json() as { message: string };
+					const errorBody = (await response.json()) as { message: string };
 					throw { code: 400, message: errorBody.message || '[BFF] Unauthorized.' };
 				}
 
 				if (response.status === 401) {
 					log.warn(`[BFF] Auth service validation error`);
-					const errorBody = await response.json() as { message: string };
+					const errorBody = (await response.json()) as { message: string };
 					throw { code: 401, message: errorBody.message || '[BFF] Unauthorized.' };
 				}
 
 				log.warn(`[BFF] Could not fetch profile for user ${friendship.friendID}`);
-				return (null);
+				return null;
 			}
 		}
 	});
@@ -524,7 +493,6 @@ export async function fetchFriendshipsPending(log: any, userID: string, status: 
 
 	return profiles.filter((p): p is userData => p !== null);
 }
-
 
 //error handled
 async function fetchMatches(log: any, userID: string, token: string): Promise<RawMatches[]> {
@@ -569,11 +537,7 @@ async function fetchMatches(log: any, userID: string, token: string): Promise<Ra
 }
 
 //error handled
-async function fetchUsernames(
-	log: any,
-	userIDs: string[],
-	token: string
-): Promise<Map<string, string>> {
+async function fetchUsernames(log: any, userIDs: string[], token: string): Promise<Map<string, string>> {
 	if (userIDs.length === 0) return new Map();
 	const url = `http://users:2626/usernames`;
 	let response: Response;
@@ -748,12 +712,7 @@ export async function fetchLeaderboard(log: any, token: string): Promise<userDat
 }
 
 //error handled
-export async function updateUserProfile(
-	log: any,
-	userID: string,
-	updates: UserProfileUpdates,
-	token: string
-): Promise<void> {
+export async function updateUserProfile(log: any, userID: string, updates: UserProfileUpdates, token: string): Promise<void> {
 	const url = `http://users:2626/${userID}`;
 
 	let response: Response;
@@ -800,12 +759,7 @@ export async function updateUserProfile(
 	}
 }
 
-export async function updateUserProfileUsername(
-	log: any,
-	userID: string,
-	updates: UserProfileUpdates,
-	token: string
-): Promise<void> {
+export async function updateUserProfileUsername(log: any, userID: string, updates: UserProfileUpdates, token: string): Promise<void> {
 	const url = `http://users:2626/${userID}`;
 
 	let response: Response;
@@ -853,12 +807,7 @@ export async function updateUserProfileUsername(
 }
 
 //error handling done
-export async function updateAuthSettings(
-	log: any,
-	userID: string,
-	updates: UserProfileUpdates,
-	token: string
-): Promise<void> {
+export async function updateAuthSettings(log: any, userID: string, updates: UserProfileUpdates, token: string): Promise<void> {
 	const url = `http://auth:3939/${userID}`;
 
 	let response: Response;
@@ -906,12 +855,7 @@ export async function updateAuthSettings(
 	}
 }
 
-export async function refreshJWTForUsernameChange(
-	auth: string | undefined,
-	userID: string,
-	username: string,
-	reply: FastifyReply
-) {
+export async function refreshJWTForUsernameChange(auth: string | undefined, userID: string, username: string, reply: FastifyReply) {
 	if (!auth) throw { code: 401, message: '[AUTH] Missing Authorization Header for JWT refresh' };
 	const url = 'http://auth:3939/regen-jwt';
 	const req: RequestInit = {
@@ -924,11 +868,19 @@ export async function refreshJWTForUsernameChange(
 	};
 
 	const res = await fetch(url, req);
-	if (!res.ok)
+	if (!res.ok) {
+		reply.clearCookie('token', {
+			httpOnly: true,
+			secure: true,
+			sameSite: 'none',
+			path: '/',
+			maxAge: 60 * 60 * 1000,
+		});
 		throw {
 			code: 401,
-			message: '[AUTH] Could not refresh cookie after username change - rolling back...',
+			message: '[AUTH] Could not refresh cookie after username change - logging you out',
 		};
+	}
 	const body = (await res.json()) as { token: string };
 	reply.setCookie('token', body.token, {
 		httpOnly: true,
@@ -948,10 +900,10 @@ export async function deleteAllFriendship(log: any, userID: string, token: strin
 			method: 'DELETE',
 			headers: {
 				Cookie: `token=${token}`,
-				'Authorization': `Bearer ${token}`,
-				'Content-Type': 'application/json'
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({})
+			body: JSON.stringify({}),
 		});
 	} catch (error) {
 		log.error(`[BFF] Friends service is unreachable: ${error}`);
@@ -985,10 +937,10 @@ export async function AnonymizeUser(log: any, userID: string, token: string) {
 			method: 'PATCH',
 			headers: {
 				Cookie: `token=${token}`,
-				'Authorization': `Bearer ${token}`,
-				'Content-Type': 'application/json'
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({userID})
+			body: JSON.stringify({ userID }),
 		});
 	} catch (error) {
 		log.error(`[BFF] DUser service is unreachable: ${error}`);
@@ -1028,10 +980,10 @@ export async function AnonymizeAccount(log: any, userID: string, token: string) 
 			method: 'PATCH',
 			headers: {
 				Cookie: `token=${token}`,
-				'Authorization': `Bearer ${token}`,
-				'Content-Type': 'application/json'
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({userID})
+			body: JSON.stringify({ userID }),
 		});
 	} catch (error) {
 		log.error(`[BFF] Auth service is unreachable: ${error}`);

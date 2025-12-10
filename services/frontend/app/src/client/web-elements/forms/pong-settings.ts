@@ -125,13 +125,6 @@ if (!customElements.get('local-pong-settings')) {
  * @extends {LocalPongSettings}
  * @remark customElement: `'remote-pong-settings'`
  */
-
-// Perhaps we should add an invite button and a remove button ?
-// TODO: Override searchbar submit event to add the the invited users to the guest list instead of loading their profile
-// TODO: Add event listener on Searchbar's SUBMIT to capture invitations.
-// TODO: Add API call to /api/user to get requested user and store it in an
-// array of user that will be displayed in #guestWrapper
-// TODO: track the number of invited users and allow form submission when there are 2, 4 or 8 players.
 export class RemotePongSettings extends LocalPongSettings {
 	#searchbar: Searchbar;
 	#guestWrapper: HTMLDivElement;
@@ -159,7 +152,7 @@ export class RemotePongSettings extends LocalPongSettings {
 		super.connectedCallback();
 		this.#searchbar.addEventListener('click', this.#inviteHandler, { capture: true });
 		const status = await userStatus();
-		if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');//TODO: maybe not necessary since it is checked in "renderlobbies"
+		if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
 		const user = await this.fetchGuests(status.username!);
 		if (user) this.#guests.set(user.username, user);
 		this.#displayGuests();

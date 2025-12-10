@@ -22,7 +22,7 @@ import { router } from '../../main.js';
 import { currentDictionary } from './language.js';
 // import imageCompression from 'browser-image-compression';
 
-const MAX_FILE = 2 * 1024 * 1024;
+const MAX_FILE = 1024 * 1024; // 1 MB
 /**
  * Custom form element for user settings, including avatar, color, language, and account deletion.
  * Extends BaseForm.
@@ -122,11 +122,10 @@ export class UserSettingsForm extends BaseForm {
 			const file = f.get('upload');
 			if (!file || !(file instanceof File)) throw new Error('Error processing avatar');
 			if (file.size > MAX_FILE)
-				return createVisualFeedback('That file is way too heavy; max is 2MB. Ta!');
+				return createVisualFeedback('That file is way too heavy; max is MB. Ta!');
 			if (file.name !== '') {
 				console.log(file);
 				try {
-					// TODO: compress images
 					const binaryAvatar = await this.#fileToBinary(file);
 					if (binaryAvatar) f.append('avatar', binaryAvatar);
 				} catch (error) {
@@ -159,6 +158,7 @@ export class UserSettingsForm extends BaseForm {
 		super.renderButtons();
 		this.append(this.#accountDelete);
 		this.append(this.#dataDownload);
+		this.#dataDownload.contentMap.get('submit')?.classList.remove('w-5/6');
 		this.#avatar.classList.add('row-span-2', 'col-start-1', 'row-start-1');
 		super.contentMap.get('title')?.classList.add('row-span-2', 'col-start-2', 'row-start-1');
 		super.contentMap.get('upload')?.classList.add('row-start-3', 'col-start-1');

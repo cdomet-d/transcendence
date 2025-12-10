@@ -50,6 +50,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 			content: dic.buttons.submit,
 			img: null,
 			ariaLabel: '',
+			style: 'green'
 		},
 	};
 }

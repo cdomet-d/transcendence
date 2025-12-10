@@ -167,7 +167,6 @@ export interface Dictionary {
 		remote: string;
 		background: string;
 		farm: string;
-		forest: string;
 		under_water: string;
 	};
 	error: {

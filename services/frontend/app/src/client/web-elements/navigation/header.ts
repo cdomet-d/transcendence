@@ -83,12 +83,12 @@ export class PageHeader extends HTMLElement {
 	async getLogState(): Promise<userStatusInfo> {
 		const log = await userStatus();
 		if (log.auth) {
+			console.log(log.username);
 			if (this.contains(this.#login)) this.#login.remove();
 			if (!this.contains(this.#logout)) {
 				this.append(this.#logout);
 				this.#logout.classList.add('h-m', 'w-l');
 			}
-			await this.#notif.fetchPendingFriendRequests();
 		} else {
 			if (this.contains(this.#logout)) this.#logout.remove();
 			if (!this.contains(this.#login)) {

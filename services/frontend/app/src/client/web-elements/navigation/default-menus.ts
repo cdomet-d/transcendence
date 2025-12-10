@@ -126,7 +126,6 @@ export const languageMenu: ButtonData[] = [
 
 export const backgroundMenu: ButtonData[] = [
 	{ id: 'farm', ariaLabel: 'Farm pong theme', content: 'Adorable Farm', img: null, type: 'button' },
-	{ id: 'forest', ariaLabel: 'Forest pong theme', content: 'Enchanted Forest', img: null, type: 'button' },
 	{ id: 'underwater', ariaLabel: 'Ocean pong theme', content: 'Magical Underwater', img: null, type: 'button' },
 ];
 
