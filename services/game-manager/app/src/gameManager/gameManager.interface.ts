@@ -1,7 +1,9 @@
+import type { WebSocket } from '@fastify/websocket';
+
 interface userInfo {
 	userID?: string,
 	username?: string,
-	userSocket?: WebSocket
+	userSocket?: WebSocket,
 }
 
 interface PongOptions {

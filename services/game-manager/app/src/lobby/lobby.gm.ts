@@ -88,12 +88,13 @@ export function addUserToLobby(userID: string, username: string, socket: WebSock
 	}
 }
 
-export function removeUserFromLobby(userID: string, lobbyID: string) {
+export function removeUserFromLobby(userID: string, lobbyID: string, code: number) {
 	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) return;
 	if (userID === lobby.hostID!) {
 		for (const user of lobby.userList) {
-			if (user[1].userID! !== userID)
+			if (user[1].userID! !== userID && user[1].userSocket !== undefined
+				&& code !== 4002)
 				user[1].userSocket!.close(4001, "Lobby was closed by host")
 		}
 		lobbyMap.delete(lobbyID);

@@ -53,7 +53,6 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	ws.onclose = (event) => {
 		wsInstance = null;
 		console.log('Lobby WebSocket connection closed!');
-		console.log("code:", event.code);
 		if (event.code === 4001) {
 			const currentRoute = window.location.pathname;
 			if (currentRoute.includes("-lobby") || currentRoute === "/game")

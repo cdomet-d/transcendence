@@ -39,7 +39,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				if (lobbyPayload.action === 'create') {
 					let lobbyID: string | null = findLobbyIDFromUserID(userID);
 					if (lobbyID !== null)
-						removeUserFromLobby(userID, lobbyID);
+						removeUserFromLobby(userID, lobbyID, 0);
 					const newLobby: lobbyInfo = createLobby({userID: userID!, username: username, userSocket: socket }, lobbyPayload.format!);
 					wsSend(socket, JSON.stringify({ lobby: 'created', lobbyID: newLobby.lobbyID, formInstance: formInstance }))
 				}
@@ -92,7 +92,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					userID = invitePayload.invitee.userID;
 					let oldLobby: string | null = findLobbyIDFromUserID(userID);
 					if (oldLobby !== null)
-						removeUserFromLobby(userID, oldLobby);
+						removeUserFromLobby(userID, oldLobby, 0);
 					removeNotifFromDB(this, invitePayload.lobbyID!, userID);
 					addUserToLobby(userID!, invitePayload.invitee.username!, socket, invitePayload.lobbyID!);
 					const whiteListUsernames: string[] = getWhiteListUsernames(invitePayload.lobbyID!)
@@ -105,15 +105,15 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 		}
 	});
 
-	socket.on('close', () => {
+	socket.onclose = (ev: any) => {
 		console.log("CLOSE userID:", userID);
 		if (userID !== null) {
 			let lobbyID: string | null = findLobbyIDFromUserID(userID);
 			if (lobbyID !== null)
-				removeUserFromLobby(userID, lobbyID);
+				removeUserFromLobby(userID, lobbyID, ev.code);
 			wsClientsMap.delete(userID);
 		}
-	});
+	};
 }
 
 export function wsSend(ws: WebSocket, message: string): void {
@@ -140,7 +140,7 @@ export function waitForSignal(serv: FastifyInstance, socket: WebSocket): Promise
 		socket.once('message', (message: string) => {
 			try {
 				const data = JSON.parse(message);
-				if (!validateData(data, serv, socket)) return;
+				if (!validateData(data, serv, socket)) reject("invalid input");
 				
 				const { payload } = data;
 				if (!validatePayload(data, payload, serv, socket)) reject("invalid input");

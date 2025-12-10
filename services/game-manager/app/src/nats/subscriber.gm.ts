@@ -1,5 +1,5 @@
 import { StringCodec } from 'nats';
-import { wsSend } from '../lobby/wsHandler.gm.js';
+import { waitForSignal, wsSend } from '../lobby/wsHandler.gm.js';
 import { tournamentState } from '../tournament/tournamentRoutine.js';
 import type { gameRequest, gameReply, game } from '../gameManager/gameManager.interface.js';
 import { wsClientsMap } from '../lobby/lobby.gm.js';
@@ -36,7 +36,7 @@ export async function natsSubscribe(serv: FastifyInstance) {
 			if (game.tournamentID !== '-1') {
 				tournamentState(serv, game);
 			} else {
-				gameOver(game, serv);
+				gameOver(game, serv, true);
 			}
 		}
 	})();
