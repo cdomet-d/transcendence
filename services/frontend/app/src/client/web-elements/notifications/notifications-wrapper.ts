@@ -5,6 +5,7 @@ import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
 import { NotifContent } from './notification-content.js';
 import { NotifToggle, NotifPanel } from './notif-panel-toggle.js';
 import { origin } from '../../main.js';
+import { currentDictionary } from '../forms/language.js';
 
 //TODO: Make notifications tab-focusable
 //TODO: Buttons are actually a form
@@ -130,7 +131,7 @@ export class NotifBox extends HTMLDivElement {
 	 */
 	newFriendRequest(username: string) {
 		const notif = document.createElement('li', { is: 'notif-content' }) as NotifContent;
-		notif.createNotifMessage(username, 'sent you a friend request!');
+		notif.createNotifMessage(username, currentDictionary.notifs.notif_friends);
 		notif.id = 'relation';
 		notif.requesterUsername = username;
 		this.#panel.newNotification(notif);
@@ -145,7 +146,7 @@ export class NotifBox extends HTMLDivElement {
 	 */
 	newGameInvitation(gameNotif: gameNotif) {
 		const notif = document.createElement('li', { is: 'notif-content' }) as NotifContent;
-		notif.createNotifMessage(gameNotif.senderUsername, `challenged you to a ${gameNotif.gameType}!`);
+		notif.createNotifMessage(gameNotif.senderUsername, currentDictionary.notifs.notif_match + `${gameNotif.gameType}!`);
 		notif.id = 'game';
 		notif.lobbyInfo = { lobbyID: gameNotif.lobbyID, inviteeID: gameNotif.receiverID, formInstance: gameNotif.gameType! };
 		this.#panel.newNotification(notif);

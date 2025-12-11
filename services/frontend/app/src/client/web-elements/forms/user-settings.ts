@@ -101,13 +101,11 @@ export class UserSettingsForm extends BaseForm {
 			const rawRes = await fetch(url, req);
 			if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
 
-			// [FIX] Update language based on request body
 			if (req.body && typeof req.body === 'string') {
 				try {
 					const bodyObj = JSON.parse(req.body);
 					console.log()
 					if (bodyObj.language) {
-						// Map full names to codes if necessary
 						const langMap: { [key: string]: string } = {
 							'English': 'English',
 							'Français': 'Français',
@@ -117,18 +115,14 @@ export class UserSettingsForm extends BaseForm {
 
 						console.log("Updating language to:", newLangCode);
 
-						// [CRITICAL] Await this so dictionary loads BEFORE redirect
 						await setLanguage(newLangCode);
 						//TODO check if it belongs here
-						document.body.header?.render();
 					}
 				} catch (e) {
 					console.error("Failed to parse request body for language update", e);
 				}
 			}
-
-			// [FIX] REMOVED the line: setLanguage(user.language); 
-			// That line was resetting the language to the OLD value stored in the default 'user' object.
+			document.body.header?.reloadLanguage();
 			router.loadRoute('/me', true);
 		} catch (error) {
 			createVisualFeedback(errorMessageFromException(error));

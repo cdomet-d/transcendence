@@ -97,7 +97,8 @@ export async function renderNotFound() {
 	const goHome = createLink(goHomeData, false) as NavigationLinks;
 	const noResult = createNoResult('dark', 'i2xl');
 	//TODO debug this
-	noResult.setErrorMessage = currentDictionary.error.page404;//
+	noResult.setErrorMessage(currentDictionary.error.page404);
+	console.log("PAGE404", currentDictionary.error.page404);
 	document.body.layoutInstance!.appendAndCache(noResult, goHome);
 	goHome.classList.remove('w-full');
 	goHome.classList.add('w-1/4', 'place-self-center');

@@ -9,6 +9,7 @@ export const defaultDictionary: Dictionary = {
 		search: "Search",
 		delete: "Delete",
 		decline: "Decline",
+		accept: "Accept",
 		play: "Play",
 		leaderboard: "Leaderboard",
 		profile: "Profile",
@@ -52,8 +53,10 @@ export const defaultDictionary: Dictionary = {
 		duration: "Duration",
 		tournament: "Tournament"
 	},
-	noti2xl: {
-		notif_placeholder: "No new notifications"
+	notifs: {
+		notif_placeholder: "No new notifications",
+		notif_friends: "sent you a friend request!",
+		notif_match: " challenged you to a ",
 	},
 	gameCustom: {
 		ball_speed: "Starting Ball Speed",
@@ -127,11 +130,11 @@ export async function setLanguage(lang: string): Promise<void> {
 
 	} catch (error) {
 		console.error('[LANG] Error loading language pack:', error);
-		throw(error);
+		throw (error);
 	}
 }
 
-export async  function initLanguage() {
+export async function initLanguage() {
 	const savedLang = localStorage.getItem('preferred_language') || "English";
 	console.log("SAVED LANG :", JSON.stringify(localStorage.getItem('preferred_language')));
 	if (savedLang !== "English")

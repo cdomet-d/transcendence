@@ -100,6 +100,37 @@ export class PageHeader extends HTMLElement {
 		return log;
 	}
 
+	reloadLanguage() {
+		const newHome = createMenu(homeLink(currentDictionary), 'horizontal', false);
+		this.#home.replaceWith(newHome);
+		this.#home = newHome;
+
+		const newMainNav = createMenu(main(currentDictionary), 'horizontal', false);
+		newMainNav.classList.add('place-self-stretch'); // Restore layout class
+		this.#mainNav.replaceWith(newMainNav);
+		this.#mainNav = newMainNav;
+
+		const newSearch = createForm('search-form');
+		this.#searchbar.replaceWith(newSearch);
+		this.#searchbar = newSearch;
+
+		const newLogout = createButton(logOut(currentDictionary), false);
+		newLogout.addEventListener('click', this.#logoutHandler);
+		if (this.contains(this.#logout)) {
+			if (this.#logout.classList.contains('h-m')) newLogout.classList.add('h-m', 'w-l');
+			this.#logout.replaceWith(newLogout);
+		}
+		this.#logout = newLogout;
+
+		const newLogin = createButton(logIn(currentDictionary), false);
+		newLogin.addEventListener('click', this.#loginHandler);
+		if (this.contains(this.#login)) {
+			if (this.#login.classList.contains('h-m')) newLogin.classList.add('h-m', 'w-l');
+			this.#login.replaceWith(newLogin);
+		}
+		this.#login = newLogin;
+	}
+
 	render() {
 		this.classList.add('box-border', 'w-screen', 'grid', 'header', 'grid-cols-5', 'gap-m', 'absolute', 'top-0', 'left-0', 'justify-between', 'z-1');
 		this.#mainNav.classList.add('place-self-stretch');
