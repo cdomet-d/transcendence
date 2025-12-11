@@ -120,13 +120,13 @@ export async function renderAuth() {
 			id: 'login-tab',
 			content: currentDictionary.titles.login,
 			default: true,
-			panelContent: createForm('login-form', loginForm(currentDictionary)),
+			panelContent: createForm('login-form', loginForm()),
 		},
 		{
 			id: 'registration-tab',
 			content: currentDictionary.titles.register,
 			default: false,
-			panelContent: createForm('registration-form', registrationForm(currentDictionary)),
+			panelContent: createForm('registration-form', registrationForm()),
 		},
 	];
 	wrapper.append(createTabs(authOptions));
@@ -208,7 +208,7 @@ export async function renderSettings() {
 		}
 		const data = await raw.json();
 		const user = userDataFromAPIRes(data);
-		document.body.layoutInstance?.appendAndCache(createForm('settings-form', userSettingsForm(currentDictionary, user), user));
+		document.body.layoutInstance?.appendAndCache(createForm('settings-form', userSettingsForm(user), user));
 		updatePageTitle(status.username + 'Settings');
 	} catch (error) {
 		console.error(errorMessageFromException(error));
@@ -237,7 +237,7 @@ export async function renderQuickLocalLobby() {
 	const status = await prepareLayout(document.body.layoutInstance, 'quickLobby');
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 
-	const form: LocalPongSettings = createForm('local-pong-settings', localPong(currentDictionary));
+	const form: LocalPongSettings = createForm('local-pong-settings', localPong());
 	document.body.layoutInstance?.appendAndCache(form);
 	form.owner = status.username!;
 	form.format = 'quickmatch';
@@ -251,7 +251,7 @@ export async function renderQuickRemoteLobby(param?: Match<Partial<Record<string
 	const status = await prepareLayout(document.body.layoutInstance, 'quickLobby');
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 
-	const form: RemotePongSettings = createForm('remote-pong-settings', remotePong(currentDictionary));
+	const form: RemotePongSettings = createForm('remote-pong-settings', remotePong());
 	form.format = 'quickmatch';
 	form.formInstance = 'remoteForm';
 	document.body.layoutInstance?.appendAndCache(form);
@@ -269,7 +269,7 @@ export async function renderTournamentLobby(param?: Match<Partial<Record<string,
 	const status = await prepareLayout(document.body.layoutInstance, 'tournamentLobby');
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 
-	const form: LocalPongSettings = createForm('remote-pong-settings', pongTournament(currentDictionary));
+	const form: LocalPongSettings = createForm('remote-pong-settings', pongTournament());
 	document.body.layoutInstance?.appendAndCache(form);
 	form.owner = status.username!;
 	form.format = 'tournament';

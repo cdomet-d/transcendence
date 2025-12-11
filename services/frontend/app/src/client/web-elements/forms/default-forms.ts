@@ -4,17 +4,17 @@ import { usernamePattern, passwordPattern, searchbarPattern } from '../default-v
 import { currentDictionary, defaultDictionary } from './language.js';
 import { origin } from '../../main.js';
 
-export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails {
+export function userSettingsForm(user?: UserData): FormDetails {
 	return {
 		action: `https://${origin}:8443/api/bff/settings`,
-		heading: dic.titles.settings,
+		heading: currentDictionary.titles.settings,
 		ariaLabel: 'User settings',
 		id: 'user-settings',
 		method: 'PATCH',
 		fields: [
 			{
 				id: 'upload',
-				labelContent: dic.forms.avatar_uploader,
+				labelContent: currentDictionary.forms.avatar_uploader,
 				pattern: '',
 				placeholder: '',
 				type: 'file',
@@ -22,7 +22,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 			},
 			{
 				id: 'biography',
-				labelContent: dic.forms.biography,
+				labelContent: currentDictionary.forms.biography,
 				pattern: '',
 				placeholder: user?.biography || 'Enter your new biography!',
 				type: 'textarea',
@@ -30,17 +30,17 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 			},
 			{
 				id: 'username',
-				labelContent: dic.forms.username,
+				labelContent: currentDictionary.forms.username,
 				pattern: usernamePattern,
-				placeholder: user?.username || dic.placeholders.enter_username,
+				placeholder: user?.username || currentDictionary.placeholders.enter_username,
 				type: 'text',
 				required: false,
 			},
 			{
 				id: 'password',
-				labelContent: dic.forms.password,
+				labelContent: currentDictionary.forms.password,
 				pattern: passwordPattern,
-				placeholder: dic.placeholders.enter_password,
+				placeholder: currentDictionary.placeholders.enter_password,
 				type: 'password',
 				required: false,
 			},
@@ -48,34 +48,34 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 		button: {
 			id: 'submit',
 			type: 'submit',
-			content: dic.buttons.submit,
+			content: currentDictionary.buttons.submit,
 			img: null,
 			ariaLabel: '',
 		},
 	};
 }
 
-export function registrationForm(dic: Dictionary): FormDetails {
+export function registrationForm(): FormDetails {
 	return {
 		action: `https://${origin}:8443/api/auth/register`,
-		heading: dic.titles.register,
+		heading: currentDictionary.titles.register,
 		ariaLabel: 'Create an account',
 		id: 'account-create',
 		method: 'POST',
 		fields: [
 			{
 				id: 'username',
-				labelContent: dic.forms.username,
+				labelContent: currentDictionary.forms.username,
 				pattern: usernamePattern,
-				placeholder: dic.placeholders.enter_username,
+				placeholder: currentDictionary.placeholders.enter_username,
 				type: 'text',
 				required: true,
 			},
 			{
 				id: 'password',
-				labelContent: dic.forms.password,
+				labelContent: currentDictionary.forms.password,
 				pattern: passwordPattern,
-				placeholder: dic.placeholders.enter_password,
+				placeholder: currentDictionary.placeholders.enter_password,
 				type: 'password',
 				required: false,
 			},
@@ -83,34 +83,34 @@ export function registrationForm(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			content: dic.buttons.submit,
+			content: currentDictionary.buttons.submit,
 			img: null,
 			ariaLabel: '',
 		},
 	};
 }
 
-export function loginForm(dic: Dictionary): FormDetails {
+export function loginForm(): FormDetails {
 	return {
 		action: `https://${origin}:8443/api/auth/login`,
-		heading: dic.titles.login,
+		heading: currentDictionary.titles.login,
 		ariaLabel: 'Log into an account',
 		id: 'account-login',
 		method: 'POST',
 		fields: [
 			{
 				id: 'username',
-				labelContent: dic.forms.username,
+				labelContent: currentDictionary.forms.username,
 				pattern: usernamePattern,
-				placeholder: dic.placeholders.enter_username,
+				placeholder: currentDictionary.placeholders.enter_username,
 				type: 'text',
 				required: true,
 			},
 			{
 				id: 'password',
-				labelContent: dic.forms.password,
+				labelContent: currentDictionary.forms.password,
 				pattern: passwordPattern,
-				placeholder: dic.placeholders.enter_password,
+				placeholder: currentDictionary.placeholders.enter_password,
 				type: 'password',
 				required: false,
 			},
@@ -118,14 +118,14 @@ export function loginForm(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			content: dic.buttons.submit,
+			content: currentDictionary.buttons.submit,
 			img: null,
 			ariaLabel: '',
 		},
 	};
 }
 
-export function search(dic: Dictionary): FormDetails {
+export function search(): FormDetails {
 	return {
 		action: `https://${origin}:8443/api/bff/search?name=`,
 		heading: '',
@@ -145,17 +145,17 @@ export function search(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			content: "Search",
+			content: currentDictionary.buttons.search,
 			img: null,
 			ariaLabel: '',
 		},
 	};
 }
 
-export function localPong(dic: Dictionary): FormDetails {
+export function localPong(): FormDetails {
 	return {
 		action: `https://${origin}:8443/api/game/quick-lobby/`,
-		heading: dic.gameCustom.local,
+		heading: currentDictionary.gameCustom.local,
 		gameFormat: 'local-quickmatch',
 		ariaLabel: 'Pong settings',
 		id: 'local-pong-settings',
@@ -163,7 +163,7 @@ export function localPong(dic: Dictionary): FormDetails {
 		fields: [
 			{
 				id: 'ballspeed',
-				labelContent: dic.gameCustom.ball_speed,
+				labelContent: currentDictionary.gameCustom.ball_speed,
 				max: '2',
 				min: '0',
 				pattern: '',
@@ -174,7 +174,7 @@ export function localPong(dic: Dictionary): FormDetails {
 			},
 			{
 				id: 'horizontal',
-				labelContent: dic.gameCustom.paddle_horizontal,
+				labelContent: currentDictionary.gameCustom.paddle_horizontal,
 				pattern: '',
 				placeholder: '',
 				type: 'checkbox',
@@ -182,7 +182,7 @@ export function localPong(dic: Dictionary): FormDetails {
 			},
 			{
 				id: 'paddlesize',
-				labelContent: dic.gameCustom.paddle_size,
+				labelContent: currentDictionary.gameCustom.paddle_size,
 				max: '2',
 				min: '0',
 				pattern: '',
@@ -193,15 +193,15 @@ export function localPong(dic: Dictionary): FormDetails {
 			},
 			{
 				id: 'opponent',
-				labelContent: dic.gameCustom.opponent_name,
+				labelContent: currentDictionary.gameCustom.opponent_name,
 				pattern: usernamePattern,
-				placeholder: dic.gameCustom.opponent,
+				placeholder: currentDictionary.gameCustom.opponent,
 				type: 'text',
 				required: true,
 			},
 			{
 				id: 'paddlespeed',
-				labelContent: dic.gameCustom.paddle_speed,
+				labelContent: currentDictionary.gameCustom.paddle_speed,
 				max: '2',
 				min: '0',
 				pattern: '',
@@ -214,14 +214,14 @@ export function localPong(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			content: dic.buttons.start_game,
+			content: currentDictionary.buttons.start_game,
 			img: null,
 			ariaLabel: '',
 		},
 	};
 }
 
-export function remotePong(dic: Dictionary): FormDetails {
+export function remotePong(): FormDetails {
 	return {
 		action: `https://${origin}:8443/api/game/quick-lobby/`,
 		heading: 'Remote Pong',
@@ -232,7 +232,7 @@ export function remotePong(dic: Dictionary): FormDetails {
 		fields: [
 			{
 				id: 'horizontal',
-				labelContent: dic.gameCustom.paddle_horizontal,
+				labelContent: currentDictionary.gameCustom.paddle_horizontal,
 				pattern: '',
 				placeholder: '',
 				type: 'checkbox',
@@ -240,7 +240,7 @@ export function remotePong(dic: Dictionary): FormDetails {
 			},
 			{
 				id: 'ballspeed',
-				labelContent: dic.gameCustom.ball_speed,
+				labelContent: currentDictionary.gameCustom.ball_speed,
 				max: '2',
 				min: '0',
 				pattern: '',
@@ -251,7 +251,7 @@ export function remotePong(dic: Dictionary): FormDetails {
 			},
 			{
 				id: 'paddlesize',
-				labelContent: dic.gameCustom.paddle_size,
+				labelContent: currentDictionary.gameCustom.paddle_size,
 				max: '2',
 				min: '0',
 				pattern: '',
@@ -262,7 +262,7 @@ export function remotePong(dic: Dictionary): FormDetails {
 			},
 			{
 				id: 'paddlespeed',
-				labelContent: dic.gameCustom.paddle_speed,
+				labelContent: currentDictionary.gameCustom.paddle_speed,
 				max: '2',
 				min: '0',
 				pattern: '',
@@ -275,17 +275,17 @@ export function remotePong(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			content: dic.buttons.start_game,
+			content: currentDictionary.buttons.start_game,
 			img: null,
 			ariaLabel: '',
 		},
 	};
 }
 
-export function pongTournament(dic: Dictionary): FormDetails {
+export function pongTournament(): FormDetails {
 	return {
 		action: `https://${origin}:8443/api/game/tournament-lobby/`,
-		heading: dic.titles.pong_tournament,
+		heading: currentDictionary.titles.pong_tournament,
 		gameFormat: 'tournament',
 		ariaLabel: 'Pong tournament settings',
 		id: 'pong-tournament-settings',
@@ -293,7 +293,7 @@ export function pongTournament(dic: Dictionary): FormDetails {
 		fields: [
 			{
 				id: 'horizontal',
-				labelContent: dic.gameCustom.paddle_horizontal,
+				labelContent: currentDictionary.gameCustom.paddle_horizontal,
 				pattern: '',
 				placeholder: '',
 				type: 'checkbox',
@@ -301,7 +301,7 @@ export function pongTournament(dic: Dictionary): FormDetails {
 			},
 			{
 				id: 'ballspeed',
-				labelContent: dic.gameCustom.ball_speed,
+				labelContent: currentDictionary.gameCustom.ball_speed,
 				max: '2',
 				min: '0',
 				pattern: '',
@@ -312,7 +312,7 @@ export function pongTournament(dic: Dictionary): FormDetails {
 			},
 			{
 				id: 'paddlesize',
-				labelContent: dic.gameCustom.paddle_size,
+				labelContent: currentDictionary.gameCustom.paddle_size,
 				max: '2',
 				min: '0',
 				pattern: '',
@@ -323,7 +323,7 @@ export function pongTournament(dic: Dictionary): FormDetails {
 			},
 			{
 				id: 'paddlespeed',
-				labelContent: dic.gameCustom.paddle_speed,
+				labelContent: currentDictionary.gameCustom.paddle_speed,
 				max: '2',
 				min: '0',
 				pattern: '',
@@ -336,14 +336,14 @@ export function pongTournament(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			content: dic.buttons.start_tournament,
+			content: currentDictionary.buttons.start_tournament,
 			img: null,
 			ariaLabel: '',
 		},
 	};
 }
 
-export function deleteAccount(dic: Dictionary): FormDetails {
+export function deleteAccount(): FormDetails {
 	return {
 		action: `https://${origin}:8443/api/bff/account`,
 		heading: '',
@@ -354,7 +354,7 @@ export function deleteAccount(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			content: dic.buttons.delete_account,
+			content: currentDictionary.buttons.delete_account,
 			img: null,
 			ariaLabel: '',
 			style: 'red',
@@ -362,7 +362,7 @@ export function deleteAccount(dic: Dictionary): FormDetails {
 	}
 };
 
-export function downloadData(dic: Dictionary): FormDetails {
+export function downloadData(): FormDetails {
 	return {
 		action: `https://${origin}:8443/api/bff/data`,
 		heading: '',
@@ -399,7 +399,7 @@ export const criticalChange: FormDetails = {
 	button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
 };
 
-export function privacyButton(dic: Dictionary): FormDetails {
+export function privacyButton(): FormDetails {
 	return {
 		action: '/privacy',
 		heading: '',
@@ -416,5 +416,3 @@ export function privacyButton(dic: Dictionary): FormDetails {
 		},
 	}
 };
-
-//"Privacy Policy"
