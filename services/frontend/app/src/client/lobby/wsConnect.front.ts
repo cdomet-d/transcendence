@@ -160,7 +160,7 @@ async function displayBrackets(brackets: [string, string][], ws: WebSocket) {
 	createBracket(tournament);
 	setTimeout(() => {
 		wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got bracket" } })));
-	}, 30000);
+	}, 10000);
 }
 
 async function fetchTinyProfile(username: string): Promise<UserData | null> {
