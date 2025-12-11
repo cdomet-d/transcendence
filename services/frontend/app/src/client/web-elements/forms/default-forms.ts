@@ -134,7 +134,7 @@ export function search(): FormDetails {
 		fields: [
 			{
 				id: 'searchbar',
-				labelContent: 'Searchbar',
+				labelContent: currentDictionary.buttons.search,
 				pattern: searchbarPattern,
 				placeholder: currentDictionary.gameCustom.searchbar,
 				type: 'text',
@@ -379,23 +379,25 @@ export function downloadData(): FormDetails {
 	}
 };
 
-export const criticalChange: FormDetails = {
-	action: `https://${origin}:8443/api/auth/verify`,
-	heading: 'Password Required',
-	ariaLabel: 'Verify your password',
-	id: 'pw-check',
-	method: 'POST',
-	fields: [
-		{
-			id: 'password',
-			labelContent: 'Password',
-			pattern: passwordPattern,
-			placeholder: defaultDictionary.placeholders.enter_password,
-			type: 'password',
-			required: true,
-		},
-	],
-	button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+export function criticalChange: FormDetails {
+	return {
+		action: `https://${origin}:8443/api/auth/verify`,
+		heading: 'Password Required',
+		ariaLabel: 'Verify your password',
+		id: 'pw-check',
+		method: 'POST',
+		fields: [
+			{
+				id: 'password',
+				labelContent: 'Password',
+				pattern: passwordPattern,
+				placeholder: defaultDictionary.placeholders.enter_password,
+				type: 'password',
+				required: true,
+			},
+		],
+		button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+	}
 };
 
 export function privacyButton(): FormDetails {

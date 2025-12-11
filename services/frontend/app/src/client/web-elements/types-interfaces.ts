@@ -332,7 +332,7 @@ export interface Dictionary {
 		download_data: string;
 		go_home: string;
 		accept: string;
-
+		privacy: string;
 	};
 	forms: {
 		username: string;

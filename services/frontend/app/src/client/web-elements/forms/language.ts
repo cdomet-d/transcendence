@@ -136,8 +136,10 @@ export async function setLanguage(lang: string): Promise<void> {
 }
 
 export async function initLanguage() {
-	const savedLang = localStorage.getItem('preferred_language') || "English";
-	console.log("SAVED LANG :", JSON.stringify(localStorage.getItem('preferred_language')));
+	let savedLang = localStorage.getItem('preferred_language');
+	if (!savedLang) savedLang = 'English'
 	if (savedLang !== "English")
 		await setLanguage(savedLang);
+	else
+		currentDictionary = defaultDictionary;
 }

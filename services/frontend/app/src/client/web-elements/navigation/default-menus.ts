@@ -125,11 +125,31 @@ export const languageMenu: ButtonData[] = [
     { id: 'French', ariaLabel: 'Francais', content: 'Francais', img: null, type: 'button' },
 ];
 
-export const backgroundMenu: ButtonData[] = [
-	{ id: 'farm', ariaLabel: 'Farm pong theme', content: currentDictionary.gameCustom.farm, img: null, type: 'button' },
-	{ id: 'forest', ariaLabel: 'Forest pong theme', content: currentDictionary.gameCustom.forest, img: null, type: 'button' },
-	{ id: 'underwater', ariaLabel: 'Ocean pong theme', content: currentDictionary.gameCustom.under_water, img: null, type: 'button' },
-];
+export function backgroundMenu(): ButtonData[] {
+	return [
+		{
+			id: 'farm',
+			ariaLabel: 'Farm pong theme',
+			content: currentDictionary.gameCustom.farm,
+			img: null,
+			type: 'button'
+		},
+		{
+			id: 'forest',
+			ariaLabel: 'Forest pong theme',
+			content: currentDictionary.gameCustom.forest,
+			img: null,
+			type: 'button'
+		},
+		{
+			id: 'underwater',
+			ariaLabel: 'Ocean pong theme',
+			content: currentDictionary.gameCustom.under_water,
+			img: null,
+			type: 'button'
+		},
+	];
+}
 
 export const userColorsMenu: ButtonData[] = [
 	{
