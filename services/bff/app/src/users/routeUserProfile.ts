@@ -342,8 +342,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 					return reply.code(401).send({ message: 'Unauthorized' });
 
 				if (body.username) profileUpdatesUsername.username = cleanInput(body.username);
-				console.log("SENT USERNAME: ", JSON.stringify(body.username));
-				console.log("REGEX USERNAME: ", JSON.stringify(profileUpdatesUsername.username));
 				if (body.username) accountUpdates.username = cleanInput(body.username);
 				if (body.password) accountUpdates.password = body.password;
 
