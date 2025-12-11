@@ -41,7 +41,7 @@ class Scoreboard extends HTMLSpanElement {
 		separator.innerText = '|';
 		this.append(this.#scoreUI[0], separator, this.#scoreUI[1]);
 		this.className =
-			'border-box grid place-content-between w-xxl pad-xs item-center bg-wood brdr f-bold f-yellow f-m';
+			'border-box flex place-content-between w-xxl pad-xs item-center bg-wood brdr f-bold f-yellow f-m';
 		this.id = 'pongui';
 	}
 }
@@ -98,7 +98,8 @@ export class PongUI extends HTMLDivElement {
 		this.append(this.#players[0], this.#scboard, this.#players[1]);
 		this.styleUsernames();
 		this.scoreboard = [0, 0];
-		this.className = 'flex justify-self-center pc-w place-content-between items-center z-26';
+		this.className = 'grid scoreboard justify-self-center pc-w place-content-between items-center z-26';
+		this.player2.classList.add('justify-self-end');
 	}
 }
 

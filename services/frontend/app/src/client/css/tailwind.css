@@ -440,6 +440,10 @@
 	.layout-col {
 		grid-template-columns: minmax(600px, 60%);
 	}
+
+	.scoreboard {
+		grid-template-columns: 40% 10% 40%;
+	}
 }
 
 @layer components {}
