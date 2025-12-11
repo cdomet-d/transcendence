@@ -1,3 +1,8 @@
+export interface JWTPayload {
+    userID: string;
+    username: string;
+}
+
 export interface lobbyRequestForm {
 	action: string,
 	format: string,
