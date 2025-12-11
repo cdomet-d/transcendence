@@ -36,13 +36,13 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: string, lobbyI
     ];
 
 	const games: game[] = [
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
+		{ lobbyID: lobbyID, gameID: crypto.randomUUID().toString(), 
 			tournamentID: tournamentID, remote: true, users: opponents[0], 
 			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "", gameSettings: lobbyInfo.gameSettings! },
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
+		{ lobbyID: lobbyID, gameID: crypto.randomUUID().toString(), 
 			tournamentID: tournamentID, remote: true, users: opponents[1], 
 			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "", gameSettings: lobbyInfo.gameSettings! },
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
+		{ lobbyID: lobbyID, gameID: crypto.randomUUID().toString(), 
 			tournamentID: tournamentID, remote: true, users: null, 
 			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "", gameSettings: lobbyInfo.gameSettings! },
 	];
@@ -69,6 +69,7 @@ export function makeTournamentObj(tournamentID: string, games: game[], nbPlayers
 		nbPlayers: nbPlayers,
 		gotBracket: 0,
 		gotEndGame: 0,
+		nextPlayersMap: new Map(),
 	}
 	return tournament;
 }

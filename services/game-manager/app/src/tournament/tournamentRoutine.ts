@@ -6,7 +6,7 @@ import { tournamentOver } from './tournamentOver.js';
 import type { FastifyInstance } from 'fastify';
 import { findLobbyIDFromUserID, lobbyMap } from '../lobby/lobby.gm.js';
 
-const nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }> = new Map();
+// const nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }> = new Map();
 
 export async function tournamentState(serv: FastifyInstance, game: game) {
 	const tournamentObj: tournament | undefined = tournamentMap.get(game.tournamentID!);
@@ -18,29 +18,34 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 	const lobby: lobbyInfo | undefined = lobbyMap.get(tournamentObj.lobbyID);
 	if (lobby === undefined) return;
 
+	serv.log.error("IN TOURNAMENT STATE");
 	const index = tournamentObj.bracket.findIndex((obj) => obj.gameID === game.gameID);
 	if (index === -1) {
 		console.log('Error: game not found in tournament bracket!');
 		return;
 	}
 
-	if (tournamentObj.gotEndGame === lobby.userList.size)
-		gameOver(game, serv, true, tournamentObj, undefined);
+	// if (tournamentObj.gotEndGame === lobby.userList.size) {
+	// 	serv.log.error("IN GOT ENDGAME CONDITION")
+	// 	gameOver(game, serv, true, tournamentObj, undefined);
+	// }
 
 	const nextGame = getNextGameInBracket(tournamentObj, game);
 	if (nextGame === undefined) {
+		serv.log.error("IN ENDGAME")
 		tournamentObj.winnerID = game.winnerID;
-		tournamentOver(tournamentObj);
+		gameOver(game, serv, true, tournamentObj, undefined);
+		// tournamentOver(tournamentObj);
 		return;
 	}
 
 	// set up nextGame
 	const nextGameID = nextGame.gameID;
 
-	let nextPlayers = nextPlayersMap.get(nextGameID);
+	let nextPlayers = tournamentObj.nextPlayersMap.get(nextGameID);
 	if (!nextPlayers) {
 		nextPlayers = {};
-		nextPlayersMap.set(nextGameID, nextPlayers);
+		tournamentObj.nextPlayersMap.set(nextGameID, nextPlayers);
 	}
 
 	const username: string = getUsernameFromID(game.winnerID, game);
@@ -50,11 +55,17 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 		nextPlayers.player2 = { userID: game.winnerID, username: username };
 	}
 
+	if (nextPlayers.player1 && nextPlayers.player2 === undefined) {
+		serv.log.error("IN NEXTPLAYER2 UNDEFINED")
+		gameOver(game, serv, false, tournamentObj, undefined);
+	}
+
 	if (nextPlayers.player1 && nextPlayers.player2) {
+		serv.log.error("IN BOTH PLAYERS")
 		tournamentObj.bracket[index] = game; // update local tournamentObj
 		nextGame.users = [nextPlayers.player1, nextPlayers.player2];
 		gameOver(game, serv, false, tournamentObj, nextGame);
-		nextPlayersMap.delete(nextGameID);
+		tournamentObj.nextPlayersMap.delete(nextGameID);
 	}
 }
 

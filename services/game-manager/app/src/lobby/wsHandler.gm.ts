@@ -123,8 +123,9 @@ export function wsSend(ws: WebSocket, message: string): void {
 	}
 }
 
+export let hostStartHandler: (message: string) => void;
 export function informHostToStart(serv: FastifyInstance, socket: WebSocket, lobbyID: string) {
-	socket.on('message', (message: string) => {
+	hostStartHandler = (message: string) => {
 		try {
 			const data = JSON.parse(message);
 			if (!validateData(data, serv, socket)) throw new Error("invalid input");
@@ -140,5 +141,6 @@ export function informHostToStart(serv: FastifyInstance, socket: WebSocket, lobb
 			socket.close(1003, "Invalid input");
 			serv.log.error(err.message);
 		}
-	});
+	}
+	socket.on('message', hostStartHandler);
 }

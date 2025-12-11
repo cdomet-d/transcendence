@@ -97,7 +97,10 @@ async function patchGameToUsers(game: game) {
 export async function showWinnerScreen(game: game, serv: FastifyInstance, endLobby: boolean, tournamentObj: tournament | null, nextGame: game | undefined) {
 	serv.log.error("IN WINNER SCREEN")
 	const lobby: lobbyInfo | undefined = lobbyMap.get(game.lobbyID);
-	if (lobby === undefined) return;
+	if (lobby === undefined) {
+		serv.log.error("LOBBY UNDEFINED");
+		return;
+	}
 	const user1: userInfo = lobby.userList.get(game.users![0]!.userID!)!;
 	const user2: userInfo = lobby.userList.get(game.users![1]!.userID!)!;
 	if (endLobby === true) {
@@ -117,11 +120,12 @@ export async function showWinnerScreen(game: game, serv: FastifyInstance, endLob
 		wsSend(user2.userSocket!, JSON.stringify({ event: "END GAME", result: user2.userID! === game.winnerID ? "winner" : "looser", endLobby: endLobby }));
 };
 
+export let lobbyEndHandler: (message: string) => void;
 export function waitForLobbyEnd(serv: FastifyInstance, socket: WebSocket) {
-	socket.on('message', (message: string) => {
+	lobbyEndHandler = (message: string) => {
 		try {
 			const data = JSON.parse(message);
-			serv.log.error(`DATA: ${JSON.stringify(data)}`)
+			serv.log.error(`DATA IN WAITFORLOBBYEND: ${JSON.stringify(data)}`)
 			if (!validateData(data, serv, socket)) throw new Error("invalid input");
 			if (!validatePayload(data, data.payload, serv, socket)) throw new Error("invalid input");
 			if (data.payload.signal === "got result") {
@@ -131,14 +135,17 @@ export function waitForLobbyEnd(serv: FastifyInstance, socket: WebSocket) {
 			socket.close(1003, err.message);
 			serv.log.error(err.message);
 		}
-	});
+	}
+	socket.on('message', lobbyEndHandler);
 }
 
+export let resultDisplayHandler: (message: string) => void;
 function waitForResultDisplay(serv: FastifyInstance, socket: WebSocket, tournamentObj: tournament, lobby: lobbyInfo, nextGame: game | undefined) {
-	socket.on('message', (message: string) => {
+	resultDisplayHandler = (message: string) => {
 		try {
 			const data = JSON.parse(message);
-			serv.log.error(`DATA IN WAIT FOR RESULT DISPLAY: ${JSON.stringify(data)}`)
+			if (data.event !== "NOTIF")
+				serv.log.error(`DATA IN WAIT FOR RESULT DISPLAY: ${JSON.stringify(data)}`)
 			if (!validateData(data, serv, socket)) throw new Error("invalid input");
 			if (!validatePayload(data, data.payload, serv, socket)) throw new Error("invalid input");
 			if (data.payload.signal === "got result") {
@@ -150,5 +157,6 @@ function waitForResultDisplay(serv: FastifyInstance, socket: WebSocket, tourname
 			socket.close(1003, err.message);
 			serv.log.error(err.message);
 		}
-	});
+	};
+	socket.on('message', resultDisplayHandler);
 }

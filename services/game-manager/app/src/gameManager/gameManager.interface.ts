@@ -55,7 +55,8 @@ interface tournament {
 	bracket: game[],
 	nbPlayers: number,
 	gotBracket: number,
-	gotEndGame: number
+	gotEndGame: number,
+	nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }>
 }
 
 // NATS

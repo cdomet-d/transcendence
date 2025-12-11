@@ -47,7 +47,7 @@ function sendGameRequest(serv: FastifyInstance, userID: string, opponentUsername
 	const socket: WebSocket | undefined = wsClientsMap.get(userID);
 	if (socket === undefined) {
 		serv.log.error(`socket not found for user: ${userID}`);
-		return
+		return;
 	}
 	const gameReq: gameRequest = {
 		opponent: opponentUsername, 
