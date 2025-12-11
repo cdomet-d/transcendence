@@ -15,17 +15,18 @@ export function wsRequest(court: PongCourt ,game: Game, ids: { gameID: string; u
 		ws.close(1011, 'websocket error');
 	};
 
+	ws.addEventListener(
+		'message',
+		(event) => {
+			const signal: number = JSON.parse(event.data);
+			if (signal === 1 || signal === -1) setUpGame(game, ws, signal);
+		},
+		{ once: true },
+	);
+
     ws.onopen = () => {
         console.log('PONG webSocket connection established!');
         court.pongSocket = ws;
-        ws.addEventListener(
-            'message',
-            (event) => {
-                const signal: number = JSON.parse(event.data);
-                if (signal === 1 || signal === -1) setUpGame(game, ws, signal);
-            },
-            { once: true },
-        );
         if (ws.OPEN)
             ws.send(JSON.stringify(ids));
     };

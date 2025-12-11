@@ -98,12 +98,13 @@ export async function showWinnerScreen(game: game, serv: FastifyInstance, endLob
 	const user1: userInfo = lobby.userList.get(game.users![0]!.userID!)!;
 	const user2: userInfo = lobby.userList.get(game.users![1]!.userID!)!;
 	if (endLobby === true) {
-		waitForLobbyEnd(serv, user1.userSocket!);
-		if (game.remote === true)
+		if (user1.userSocket && user1.userSocket.readyState === WebSocket.OPEN)
+			waitForLobbyEnd(serv, user1.userSocket!);
+		if (game.remote === true && user2.userSocket && user2.userSocket.readyState === WebSocket.OPEN)
 			waitForLobbyEnd(serv, user2.userSocket!);
 	}
 	wsSend(user1.userSocket!, JSON.stringify({ event: "END GAME", result: user1.userID! === game.winnerID ? "winner" : "looser", endLobby: endLobby}));
-	if (lobby.remote === true)
+	if (game.remote === true)
 		wsSend(user2.userSocket!, JSON.stringify({ event: "END GAME", result: user2.userID! === game.winnerID ? "winner" : "looser", endLobby: endLobby }));
 };
 
