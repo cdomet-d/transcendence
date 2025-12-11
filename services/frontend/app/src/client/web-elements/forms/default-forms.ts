@@ -373,8 +373,7 @@ export function downloadData(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			//content: dic.buttons.download_data,
-			content: "Download personal data",
+			content: currentDictionary.buttons.download_data,
 			img: null,
 			ariaLabel: '',
 		},
@@ -411,9 +410,11 @@ export function privacyButton(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			content: "Privacy Policy",
+			content: currentDictionary.buttons.privacy,
 			img: null,
 			ariaLabel: 'Go to privacy policy',
 		},
 	}
 };
+
+//"Privacy Policy"

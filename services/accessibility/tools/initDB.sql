@@ -32,6 +32,7 @@ VALUES
         "start_tournament": "Start tournament",
         "delete_account": "Delete account",
         "download_data": "Download personal data",
+		"privacy": "Privacy policy",
         "go_home": "Go home"
     },
     "forms": {
@@ -144,6 +145,7 @@ VALUES
         "start_tournament": "Lancer le tournoi",
         "delete_account": "Supprimer le compte",
         "download_data": "Télécharger vos données",
+		"privacy": "Politique de confidentialité",
         "go_home": "Retourner a l''accueil"
 
     },
@@ -257,6 +259,7 @@ VALUES
         "start_tournament": "Empezar torneo",
         "delete_account": "Eliminar cuenta",
         "download_data": "descargar datos",
+        "privacy": "Política de privacidad",
         "go_home": "Volver al inicio"
     },
     "forms": {
