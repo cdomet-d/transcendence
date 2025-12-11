@@ -52,7 +52,8 @@ interface tournament {
 	tournamentID: string,
 	winnerID: string | undefined | null,
 	bracket: game[],
-	nbPlayers: number
+	nbPlayers: number,
+	gotBracket: number
 }
 
 // NATS

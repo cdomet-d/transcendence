@@ -49,7 +49,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 			if (data.event === 'GAME_REQUEST') {
 				const gamePayload = payload as lobbyInfo;
 
-				if (processGameRequest(this, gamePayload) === false) {
+				if (processGameRequest(this, gamePayload, socket) === false) {
 					console.log("Error: bad processGameRequest!");
 					wsSend(socket, JSON.stringify({ error: 'not enough players' }));
 				}
@@ -126,13 +126,10 @@ export function wsSend(ws: WebSocket, message: string): void {
 export function informHostToStart(serv: FastifyInstance, socket: WebSocket, lobbyID: string) {
 	socket.once('message', (message: string) => {
 		try {
-			serv.log.error("RECEIVED MESSAGE")
 			const data = JSON.parse(message);
 			if (!validateData(data, serv, socket)) throw new Error("invalid input");
-			
-			const { payload } = data;
-			if (!validatePayload(data, payload, serv, socket)) throw new Error("invalid input");
-			if (payload.signal === 'in lobby') {
+			if (!validatePayload(data, data.payload, serv, socket)) throw new Error("invalid input");
+			if (data.payload.signal === 'in lobby') {
 				const lobby: lobbyInfo = lobbyMap.get(lobbyID)!;
 				if (lobby.nbPlayers === lobby.userList.size) {
 					const hostSocket: WebSocket = lobby.userList.get(lobby.hostID!)?.userSocket!;

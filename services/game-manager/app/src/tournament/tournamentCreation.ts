@@ -66,6 +66,7 @@ export function makeTournamentObj(tournamentID: string, games: game[], nbPlayers
 		winnerID: null,
 		bracket: games,
 		nbPlayers: nbPlayers,
+		gotBracket: 0,
 	}
 	return tournament;
 }

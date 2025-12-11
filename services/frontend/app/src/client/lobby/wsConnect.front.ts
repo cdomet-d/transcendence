@@ -132,6 +132,7 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 				}
 				if (data.lobby === "brackets") {
 					createMatchParticipants(data.brackets);
+					wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got bracket" } })));
 				}
 				return;
 			}
@@ -161,6 +162,7 @@ async function createMatchParticipants(brackets: [string, string][]) {
 	}
 	console.log(JSON.stringify(tournament));
 	createBracket(tournament);
+	// await new Promise(res => setTimeout(res, 10000));todo:fix timer + only display names
 }
 
 async function fetchTinyProfile(username: string): Promise<UserData | null> {

@@ -4,8 +4,9 @@ import { createTournament } from '../tournament/tournamentCreation.js';
 import { startTournament } from '../tournament/tournamentStart.js';
 import type { game, lobbyInfo, tournament } from './gameManager.interface.js';
 import { findLobbyIDFromUserID } from '../lobby/lobby.gm.js';
+import type { WebSocket } from '@fastify/websocket';
 
-export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo): boolean {
+export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo, socket: WebSocket): boolean {
 	const lobbyID: string | null = findLobbyIDFromUserID(lobbyInfo.hostID!);
 	if (lobbyID === null) {
 		console.log("Error: Lobby not found in processGameRequest");
@@ -18,7 +19,7 @@ export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo):
 			return false;
 		}
 		lobbyInfo.joinable = false;
-		startTournament(serv, tournament, lobbyID);
+		startTournament(serv, tournament, lobbyID, socket);
 	} else if (lobbyInfo.format === 'quickmatch') {
 		const quickmatch: game | undefined = createGameObj(lobbyInfo, lobbyID);
 		if (quickmatch === undefined) {

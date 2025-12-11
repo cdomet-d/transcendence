@@ -4,13 +4,16 @@ import { startGame } from '../quickmatch/createGame.js';
 import type { FastifyInstance } from 'fastify';
 import { lobbyMap } from '../lobby/lobby.gm.js';
 import { wsSend } from '../lobby/wsHandler.gm.js';
+import type { WebSocket } from '@fastify/websocket';
+import { validateData, validatePayload } from '../gameManager/inputValidation.gm.js';
 
 export const tournamentMap: Map<string, tournament> = new Map();
 
-export function startTournament(serv: FastifyInstance, tournamentObj: tournament, lobbyID: string) {
+export function startTournament(serv: FastifyInstance, tournamentObj: tournament, lobbyID: string, socket: WebSocket) {
 	tournamentMap.set(tournamentObj.tournamentID, tournamentObj);
+	waitForBracketDisplay(serv, socket, tournamentObj);
 	showBrackets(tournamentObj.bracket, lobbyID);
-	startFirstRound(serv, tournamentObj);
+	// startFirstRound(serv, tournamentObj);
 	postTournamentToDashboard(tournamentObj);
 }
 
@@ -54,4 +57,23 @@ export function showBrackets(games: game[], lobbyID: string) {
 	for (const user of lobby.userList) {
 		wsSend(user[1].userSocket, JSON.stringify({ lobby: 'brackets', brackets: brackets}))
 	}
+}
+
+function waitForBracketDisplay(serv: FastifyInstance, socket: WebSocket, tournamentObj: tournament) {
+	socket.once('message', (message: string) => {
+	try {
+			const data = JSON.parse(message);
+			if (!validateData(data, serv, socket)) throw new Error("invalid input");
+			if (!validatePayload(data, data.payload, serv, socket)) throw new Error("invalid input");
+			if (data.payload.signal === "got bracket") {
+				serv.log.error("GOT BRACKET");
+				tournamentObj.gotBracket += 1;
+				if (tournamentObj.gotBracket === 4)
+					startFirstRound(serv, tournamentObj);
+			}
+		} catch (err: any) {
+			socket.close(1003, err.message);
+			serv.log.error(err.message);
+		}
+	});
 }
