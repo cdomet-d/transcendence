@@ -241,186 +241,216 @@
 
 #dropdown .bg-4F9FFF:hover,
 #dropdown .bg-4F9FFF:focus,
-#dropdown .bg-4F9FFF:focus-visible {
-	background: linear-gradient(180deg,
-			#4d84d9 0 10%,
-			#5790e3 0 20%,
-			#619df0 0 30%,
-			#6baafc 0 40%,
-			#75b7ff 0 50%,
-			#75b7ff 0 60%,
-			#6baafc 0 70%,
-			#619df0 0 80%,
-			#5790e3 0 90%,
-			#4d84d9 0 100%);
+#dropdown .bg-4F9FFF:focus-visible,
+#listbox .bg-4F9FFF:hover,
+#listbox .bg-4F9FFF:focus,
+#listbox .bg-4F9FFF:focus-visible {
+    background: linear-gradient(180deg,
+            #4d84d9 0 10%,
+            #5790e3 0 20%,
+            #619df0 0 30%,
+            #6baafc 0 40%,
+            #75b7ff 0 50%,
+            #75b7ff 0 60%,
+            #6baafc 0 70%,
+            #619df0 0 80%,
+            #5790e3 0 90%,
+            #4d84d9 0 100%);
 }
 
 #dropdown .bg-4F9FFF:active,
-#dropdown .bg-4F9FFF.selected {
-	background: linear-gradient(180deg,
-			#244f83 0 10%,
-			#2c598d 0 20%,
-			#346298 0 30%,
-			#3c6b9e 0 40%,
-			#4372a3 0 50%,
-			#4372a3 0 60%,
-			#3c6b9e 0 70%,
-			#346298 0 80%,
-			#2c598d 0 90%,
-			#244f83 0 100%);
+#dropdown .bg-4F9FFF.selected,
+#listbox .bg-4F9FFF:active,
+#listbox .bg-4F9FFF.selected {
+    background: linear-gradient(180deg,
+            #244f83 0 10%,
+            #2c598d 0 20%,
+            #346298 0 30%,
+            #3c6b9e 0 40%,
+            #4372a3 0 50%,
+            #4372a3 0 60%,
+            #3c6b9e 0 70%,
+            #346298 0 80%,
+            #2c598d 0 90%,
+            #244f83 0 100%);
 }
 
 #dropdown .bg-5200FF:hover,
 #dropdown .bg-5200FF:focus,
-#dropdown .bg-5200FF:focus-visible {
-	background: linear-gradient(180deg,
-			#6a33ff 0 10%,
-			#7740ff 0 20%,
-			#834bff 0 30%,
-			#8f57ff 0 40%,
-			#9d62ff 0 50%,
-			#9d62ff 0 60%,
-			#8f57ff 0 70%,
-			#834bff 0 80%,
-			#7740ff 0 90%,
-			#6a33ff 0 100%);
+#dropdown .bg-5200FF:focus-visible,
+#listbox .bg-5200FF:hover,
+#listbox .bg-5200FF:focus,
+#listbox .bg-5200FF:focus-visible {
+    background: linear-gradient(180deg,
+            #6a33ff 0 10%,
+            #7740ff 0 20%,
+            #834bff 0 30%,
+            #8f57ff 0 40%,
+            #9d62ff 0 50%,
+            #9d62ff 0 60%,
+            #8f57ff 0 70%,
+            #834bff 0 80%,
+            #7740ff 0 90%,
+            #6a33ff 0 100%);
 }
 
 #dropdown .bg-5200FF:active,
-#dropdown .bg-5200FF.selected {
-	background: linear-gradient(180deg,
-			#3c00b3 0 10%,
-			#4600c0 0 20%,
-			#4f00cc 0 30%,
-			#5800d7 0 40%,
-			#6100e0 0 50%,
-			#6100e0 0 60%,
-			#5800d7 0 70%,
-			#4f00cc 0 80%,
-			#4600c0 0 90%,
-			#3c00b3 0 100%);
+#dropdown .bg-5200FF.selected,
+#listbox .bg-5200FF:active,
+#listbox .bg-5200FF.selected {
+    background: linear-gradient(180deg,
+            #3c00b3 0 10%,
+            #4600c0 0 20%,
+            #4f00cc 0 30%,
+            #5800d7 0 40%,
+            #6100e0 0 50%,
+            #6100e0 0 60%,
+            #5800d7 0 70%,
+            #4f00cc 0 80%,
+            #4600c0 0 90%,
+            #3c00b3 0 100%);
 }
 
 #dropdown .bg-000080:hover,
 #dropdown .bg-000080:focus,
-#dropdown .bg-000080:focus-visible {
-	background: linear-gradient(180deg,
-			#1a1a99 0 10%,
-			#2e2eb3 0 20%,
-			#4343cc 0 30%,
-			#5a5adf 0 40%,
-			#7070f2 0 50%,
-			#7070f2 0 60%,
-			#5a5adf 0 70%,
-			#4343cc 0 80%,
-			#2e2eb3 0 90%,
-			#1a1a99 0 100%);
+#dropdown .bg-000080:focus-visible,
+#listbox .bg-000080:hover,
+#listbox .bg-000080:focus,
+#listbox .bg-000080:focus-visible {
+    background: linear-gradient(180deg,
+            #1a1a99 0 10%,
+            #2e2eb3 0 20%,
+            #4343cc 0 30%,
+            #5a5adf 0 40%,
+            #7070f2 0 50%,
+            #7070f2 0 60%,
+            #5a5adf 0 70%,
+            #4343cc 0 80%,
+            #2e2eb3 0 90%,
+            #1a1a99 0 100%);
 }
 
 #dropdown .bg-000080:active,
-#dropdown .bg-000080.selected {
-	background: linear-gradient(180deg,
-			#00004c 0 10%,
-			#0f0f66 0 20%,
-			#1f1f80 0 30%,
-			#2f2f99 0 40%,
-			#3f3fb3 0 50%,
-			#3f3fb3 0 60%,
-			#2f2f99 0 70%,
-			#1f1f80 0 80%,
-			#0f0f66 0 90%,
-			#00004c 0 100%);
+#dropdown .bg-000080.selected,
+#listbox .bg-000080:active,
+#listbox .bg-000080.selected {
+    background: linear-gradient(180deg,
+            #00004c 0 10%,
+            #0f0f66 0 20%,
+            #1f1f80 0 30%,
+            #2f2f99 0 40%,
+            #3f3fb3 0 50%,
+            #3f3fb3 0 60%,
+            #2f2f99 0 70%,
+            #1f1f80 0 80%,
+            #0f0f66 0 90%,
+            #00004c 0 100%);
 }
 
 #dropdown .bg-98A869:hover,
 #dropdown .bg-98A869:focus,
-#dropdown .bg-98A869:focus-visible {
-	background: linear-gradient(180deg,
-			#8ca971 0 10%,
-			#97b47f 0 20%,
-			#a0bd86 0 30%,
-			#aac794 0 40%,
-			#b3d1a2 0 50%,
-			#b3d1a2 0 60%,
-			#aac794 0 70%,
-			#a0bd86 0 80%,
-			#97b47f 0 90%,
-			#8ca971 0 100%);
+#dropdown .bg-98A869:focus-visible,
+#listbox .bg-98A869:hover,
+#listbox .bg-98A869:focus,
+#listbox .bg-98A869:focus-visible {
+    background: linear-gradient(180deg,
+            #8ca971 0 10%,
+            #97b47f 0 20%,
+            #a0bd86 0 30%,
+            #aac794 0 40%,
+            #b3d1a2 0 50%,
+            #b3d1a2 0 60%,
+            #aac794 0 70%,
+            #a0bd86 0 80%,
+            #97b47f 0 90%,
+            #8ca971 0 100%);
 }
 
 #dropdown .bg-98A869.selected,
-#dropdown .bg-98A869:active {
-	background: linear-gradient(180deg,
-			#555c39 0 10%,
-			#60663f 0 20%,
-			#6b7044 0 30%,
-			#767a4a 0 40%,
-			#828550 0 50%,
-			#828550 0 60%,
-			#767a4a 0 70%,
-			#6b7044 0 80%,
-			#60663f 0 90%,
-			#555c39 0 100%);
+#dropdown .bg-98A869:active,
+#listbox .bg-98A869.selected,
+#listbox .bg-98A869:active {
+    background: linear-gradient(180deg,
+            #555c39 0 10%,
+            #60663f 0 20%,
+            #6b7044 0 30%,
+            #767a4a 0 40%,
+            #828550 0 50%,
+            #828550 0 60%,
+            #767a4a 0 70%,
+            #6b7044 0 80%,
+            #60663f 0 90%,
+            #555c39 0 100%);
 }
 
 #dropdown .bg-BE5103:hover,
 #dropdown .bg-BE5103:focus,
-#dropdown .bg-BE5103:focus-visible {
-	background: linear-gradient(180deg,
-			#d7792b 0 10%,
-			#de8541 0 20%,
-			#e4905a 0 30%,
-			#e4905a 0 40%,
-			#e99f6f 0 50%,
-			#e99f6f 0 60%,
-			#e4905a 0 70%,
-			#e4905a 0 80%,
-			#de8541 0 90%,
-			#d7792b 0 100%);
+#dropdown .bg-BE5103:focus-visible,
+#listbox .bg-BE5103:hover,
+#listbox .bg-BE5103:focus,
+#listbox .bg-BE5103:focus-visible {
+    background: linear-gradient(180deg,
+            #d7792b 0 10%,
+            #de8541 0 20%,
+            #e4905a 0 30%,
+            #e4905a 0 40%,
+            #e99f6f 0 50%,
+            #e99f6f 0 60%,
+            #e4905a 0 70%,
+            #e4905a 0 80%,
+            #de8541 0 90%,
+            #d7792b 0 100%);
 }
 
 #dropdown .bg-BE5103.selected,
-#dropdown .bg-BE5103:active {
-	background: linear-gradient(180deg,
-			#8b3800 0 10%,
-			#944100 0 20%,
-			#9e4800 0 30%,
-			#9e4800 0 40%,
-			#a85100 0 50%,
-			#a85100 0 60%,
-			#9e4800 0 70%,
-			#9e4800 0 80%,
-			#944100 0 90%,
-			#8b3800 0 100%);
+#dropdown .bg-BE5103:active,
+#listbox .bg-BE5103.selected,
+#listbox .bg-BE5103:active {
+    background: linear-gradient(180deg,
+            #8b3800 0 10%,
+            #944100 0 20%,
+            #9e4800 0 30%,
+            #9e4800 0 40%,
+            #a85100 0 50%,
+            #a85100 0 60%,
+            #9e4800 0 70%,
+            #9e4800 0 80%,
+            #944100 0 90%,
+            #8b3800 0 100%);
 }
 
 #dropdown .bg-CE4257:hover,
 #dropdown .bg-CE4257:focus,
-#dropdown .bg-CE4257:focus-visible {
-	background: linear-gradient(180deg,
-			#c46270 0 10%,
-			#ce6777 0 20%,
-			#d56c7c 0 30%,
-			#db7180 0 40%,
-			#e67787 0 50%,
-			#e67787 0 60%,
-			#db7180 0 70%,
-			#d56c7c 0 80%,
-			#ce6777 0 90%,
-			#c46270 0 100%);
+#dropdown .bg-CE4257:focus-visible,
+#listbox .bg-CE4257:hover,
+#listbox .bg-CE4257:focus,
+#listbox .bg-CE4257:focus-visible {
+    background: linear-gradient(180deg,
+            #c46270 0 10%,
+            #ce6777 0 20%,
+            #d56c7c 0 30%,
+            #db7180 0 40%,
+            #e67787 0 50%,
+            #e67787 0 60%,
+            #db7180 0 70%,
+            #d56c7c 0 80%,
+            #ce6777 0 90%,
+            #c46270 0 100%);
 }
 
 #dropdown .bg-CE4257.selected,
-#dropdown .bg-CE4257:active {
-	background: linear-gradient(180deg,
-			#6f2a36 0 10%,
-			#782e38 0 20%,
-			#81243a 0 30%,
-			#8b263c 0 40%,
-			#94293e 0 50%,
-			#94293e 0 60%,
-			#8b263c 0 70%,
-			#81243a 0 80%,
-			#782e38 0 90%,
-			#6f2a36 0 100%);
+#dropdown .bg-CE4257:active,
+#listbox .bg-CE4257.selected,
+#listbox .bg-CE4257:active {
+    background: linear-gradient(180deg,
+            #6f2a36 0 10%,
+            #782e38 0 20%,
+            #81243a 0 30%,
+            #8b263c 0 40%,
+            #94293e 0 50%,
+            #94293e 0 60%,
+            #8b263c 0 70%,
+            #81243a 0 80%,
+            #782e38 0 90%,
+            #6f2a36 0 100%);
 }

@@ -113,7 +113,7 @@ export class Winstreak extends HTMLSpanElement {
 		const iconData: ImgData = {
 			src: '/public/assets/images/winstreak.png',
 			id: '',
-			alt: 'A gold pixel trophy with the number 1 engraved in a darker color.',
+			alt: 'Winstreak',
 			size: 'iicon',
 		};
 		this.#icon = createIcon(iconData);
