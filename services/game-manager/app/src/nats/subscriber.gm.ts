@@ -33,11 +33,10 @@ export async function natsSubscribe(serv: FastifyInstance) {
 			const game: game = JSON.parse(sc.decode(msg.data));
 			console.log(`GM received following in 'game.over' :\n`, JSON.stringify(game));
 
-			if (game.tournamentID !== '-1') {
+			if (game.tournamentID !== '-1')
 				tournamentState(serv, game);
-			} else {
+			else
 				gameOver(game, serv, true);
-			}
 		}
 	})();
 }

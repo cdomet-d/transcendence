@@ -21,7 +21,7 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 		return;
 	}
 
-	gameOver(game, serv, false);//TODO: give false if its false and true if its second
+	gameOver(game, serv, false);//TODO: give false if its first and true if its second
 
 	const nextGame = getNextGameInBracket(tournamentObj, game);
 	if (nextGame === undefined) {

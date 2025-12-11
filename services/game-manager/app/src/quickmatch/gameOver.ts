@@ -6,9 +6,9 @@ import type { WebSocket } from '@fastify/websocket';
 import { validateData, validatePayload } from '../gameManager/inputValidation.gm.js';
 
 export function gameOver(game: game, serv: FastifyInstance, endLobby: boolean) {
+	showWinnerScreen(game, serv, endLobby);
 	postGameToDashboard(game);
 	patchGameToUsers(game);
-	showWinnerScreen(game, serv, endLobby);
 }
 
 interface gameDashboardReqBody {
@@ -94,6 +94,7 @@ async function patchGameToUsers(game: game) {
 }
 
 export async function showWinnerScreen(game: game, serv: FastifyInstance, endLobby: boolean) {
+	serv.log.error("IN WINNER SCREEN")
 	const lobby: lobbyInfo | undefined = lobbyMap.get(game.lobbyID);
 	if (lobby === undefined) return;
 	const user1: userInfo = lobby.userList.get(game.users![0]!.userID!)!;
@@ -104,6 +105,12 @@ export async function showWinnerScreen(game: game, serv: FastifyInstance, endLob
 		if (game.remote === true && user2.userSocket)
 			waitForLobbyEnd(serv, user2.userSocket!);
 	}
+	else {
+		if (user1.userSocket)
+			await waitForResultDisplay(serv, user1.userSocket!);
+		if (game.remote === true && user2.userSocket)
+			await waitForResultDisplay(serv, user2.userSocket!);
+	}
 	wsSend(user1.userSocket!, JSON.stringify({ event: "END GAME", result: user1.userID! === game.winnerID ? "winner" : "looser", endLobby: endLobby}));
 	if (game.remote === true)
 		wsSend(user2.userSocket!, JSON.stringify({ event: "END GAME", result: user2.userID! === game.winnerID ? "winner" : "looser", endLobby: endLobby }));
@@ -113,6 +120,7 @@ export function waitForLobbyEnd(serv: FastifyInstance, socket: WebSocket) {
 	socket.on('message', (message: string) => {
 		try {
 			const data = JSON.parse(message);
+			serv.log.error(`DATA: ${JSON.stringify(data)}`)
 			if (!validateData(data, serv, socket)) throw new Error("invalid input");
 			if (!validatePayload(data, data.payload, serv, socket)) throw new Error("invalid input");
 			if (data.payload.signal === "got result") {
@@ -122,5 +130,23 @@ export function waitForLobbyEnd(serv: FastifyInstance, socket: WebSocket) {
 			socket.close(1003, err.message);
 			serv.log.error(err.message);
 		}
+	});
+}
+
+function waitForResultDisplay(serv: FastifyInstance, socket: WebSocket): Promise<void> {
+	return new Promise((resolve, reject) => {
+		socket.on('message', (message: string) => {
+			try {
+				const data = JSON.parse(message);
+				serv.log.error(`DATA: ${JSON.stringify(data)}`)
+				if (!validateData(data, serv, socket)) reject("invalid input");
+				if (!validatePayload(data, data.payload, serv, socket)) reject("invalid input");
+				if (data.payload.signal === "got result")
+					resolve;
+			} catch (err: any) {
+				socket.close(1003, err.message);
+				serv.log.error(err.message);
+			}
+		});
 	});
 }
