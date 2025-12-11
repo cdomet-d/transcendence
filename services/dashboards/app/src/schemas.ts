@@ -30,6 +30,50 @@ export const postGameSchema = {
 		401: messageResponse
 	}
 };
+/* 
+const postGameSchema = {
+	body: {
+		type: 'object',
+		required: ['gameID', 'localGame', 'player1', 'player2', 'duration', 'player1Score', 'player2Score'],
+		properties: {
+			gameID: { type: 'string' },
+			tournamentID: { type: 'string' },
+			localGame: { type: 'boolean' },
+			startTime: { type: 'string' }, // Could add format: 'date-time'
+			player1: { type: 'string' },
+			player2: { type: 'string' },
+
+			// [SECURITY] Prevent negative duration
+			duration: { type: 'number', minimum: 0 },
+
+			// [SECURITY] Prevent negative scores or integer overflows
+			player1Score: { type: 'integer', minimum: 0, maximum: 99999 },
+			player2Score: { type: 'integer', minimum: 0, maximum: 99999 }
+		}
+	},
+	response: {
+		201: {
+			type: 'object',
+			properties: {
+				success: { type: 'boolean' },
+				message: { type: 'string' }
+			}
+		},
+		400: {
+			type: 'object',
+			properties: {
+				message: { type: 'string' }
+			}
+		},
+		409: {
+			type: 'object',
+			properties: {
+				success: { type: 'boolean' },
+				message: { type: 'string' }
+			}
+		}
+	}
+}; */
 
 export const getGamesSchema = {
 	params: {
@@ -44,7 +88,7 @@ export const getGamesSchema = {
 			type: 'array',
 			items: {
 				type: 'object',
-				additionalProperties: true 
+				additionalProperties: true
 			}
 		},
 		400: messageResponse,

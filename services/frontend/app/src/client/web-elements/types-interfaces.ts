@@ -203,7 +203,7 @@ export interface gameNotif {
 	type: 'GAME_INVITE',
 	senderUsername: string,
 	receiverID: string,
-    lobbyID: string,
+	lobbyID: string,
 	gameType?: GameType
 }
 
@@ -331,6 +331,8 @@ export interface Dictionary {
 		delete_account: string;
 		download_data: string;
 		go_home: string;
+		accept: string;
+		privacy: string;
 	};
 	forms: {
 		username: string;
@@ -365,8 +367,10 @@ export interface Dictionary {
 		duration: string;
 		tournament: string;
 	};
-	noti2xl: {
+	notifs: {
 		notif_placeholder: string;
+		notif_friends: string;
+		notif_match: string;
 	};
 	gameCustom: {
 		ball_speed: string;
@@ -414,6 +418,14 @@ export interface Dictionary {
 	settings: {
 		pick_color: string;
 		pick_language: string;
+	};
+	match_history: {
+		date: string;
+		opponent: string;
+		outcome: string;
+		score: string;
+		duration: string;
+		tournament: string;
 	}
 }
 

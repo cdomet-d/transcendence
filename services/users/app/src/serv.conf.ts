@@ -51,6 +51,7 @@ const options = {
         },
     },
     trustProxy: checkProxy,
+    bodyLimit: 1048576 * 2,
     //connectionTimeout
     //forceCloseConnections
     //pluginTimeout

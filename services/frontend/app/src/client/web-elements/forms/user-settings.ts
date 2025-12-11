@@ -53,15 +53,15 @@ export class UserSettingsForm extends BaseForm {
 		this.#previewAvatar = this.#previewAvatarImplementation.bind(this);
 		this.#accountDelete = createForm(
 			'delete-account-form',
-			deleteAccount(currentDictionary),
+			deleteAccount(),
 		);
 		this.#dataDownload = createForm(
 			'download-data-request',
-			downloadData(currentDictionary),
+			downloadData(),
 		);
 		this.#gdpr = createForm(
 			'privacy-button-form',
-			privacyButton(currentDictionary),
+			privacyButton(),
 		);
 		this.#avatar = createAvatar(this.#user.avatar);
 		this.#colors = createDropdown(userColorsMenu, currentDictionary.settings.pick_color, 'dynamic');
@@ -101,13 +101,11 @@ export class UserSettingsForm extends BaseForm {
 			const rawRes = await fetch(url, req);
 			if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
 
-			// [FIX] Update language based on request body
 			if (req.body && typeof req.body === 'string') {
 				try {
 					const bodyObj = JSON.parse(req.body);
 					console.log()
 					if (bodyObj.language) {
-						// Map full names to codes if necessary
 						const langMap: { [key: string]: string } = {
 							'English': 'English',
 							'Français': 'Français',
@@ -117,16 +115,14 @@ export class UserSettingsForm extends BaseForm {
 
 						console.log("Updating language to:", newLangCode);
 
-						// [CRITICAL] Await this so dictionary loads BEFORE redirect
 						await setLanguage(newLangCode);
+						console.log("DICO: ", JSON.stringify(currentDictionary));
 					}
 				} catch (e) {
 					console.error("Failed to parse request body for language update", e);
 				}
 			}
-
-			// [FIX] REMOVED the line: setLanguage(user.language); 
-			// That line was resetting the language to the OLD value stored in the default 'user' object.
+			document.body.header?.reloadLanguage();
 			router.loadRoute('/me', true);
 		} catch (error) {
 			createVisualFeedback(errorMessageFromException(error));
@@ -145,12 +141,13 @@ export class UserSettingsForm extends BaseForm {
 		const langSelection = this.#languages.selectedElement;
 
 		if (this.#user) {
-			if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
-				f.append('color', 'bg-' + colSelection.id);
+			if (colSelection && colSelection.id !== this.#user.profileColor)
+				f.append('color', colSelection.id);
 			if (langSelection && langSelection.id !== this.#user.language)
 				f.append('language', langSelection.id);
 		}
 
+		console.log(f);
 		if (f.get('upload') && this.#user) {
 			const file = f.get('upload');
 			if (!file || !(file instanceof File)) throw new Error('Error processing avatar');
