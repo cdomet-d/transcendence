@@ -163,7 +163,11 @@ async function displayBrackets(brackets: [string, string][], ws: WebSocket) {
 			return;//TODO
 		tournament.push({player1, player2});
 	}
-	// console.log(tournament);
+	// if (brackets.length === 3) {
+	// 	const bracket = createBracket([tournament[0], tournament[1]])
+	// 	bracket.populateBrackets([tournament[2]]);
+	// 	return;
+	// };
 	createBracket(tournament);
 	setTimeout(() => {
 		console.log("in brackets callback timer")

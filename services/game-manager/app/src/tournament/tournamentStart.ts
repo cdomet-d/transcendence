@@ -48,12 +48,21 @@ async function postTournamentToDashboard(tournament: tournament) {
 export function showBrackets(games: game[], lobbyID: string, tournamentObj: tournament, serv: FastifyInstance, nextGame: game | undefined) {
 	// const brackets: [string, string][] = [];
 	// for (const game of games) {
-	// 	brackets.push([game.users![0]!.username!, games[0]!.users![1]!.username!])
+	// 	if (game.users.length === 2) {
+	// 		const user1: userInfo | undefined = game.users![0];
+	// 		const user2: userInfo | undefined = game.users![1];
+	// 		brackets.push([user1!.username!, user2!.username!])
+	// 	}
 	// }
-	const brackets: [string, string][] = [
-		[games[0]!.users![0]!.username!, games[0]!.users![1]!.username!],
-		[games[1]!.users![0]!.username!, games[1]!.users![1]!.username!],
-	];
+	let brackets: [string, string][] = [];
+	if (games.length === 2 && games[0]!.users.length === 2 && games[1]!.users.length === 2)
+		brackets = [
+			[games[0]!.users![0]!.username!, games[0]!.users![1]!.username!],
+			[games[1]!.users![0]!.username!, games[1]!.users![1]!.username!],
+		];
+	else if (games.length === 3 && games[2]!.users.length === 2)
+		brackets = [[games[2]!.users![0]!.username!, games[2]!.users![1]!.username!]];//TODO: fix
+
 	const lobby: lobbyInfo | undefined = lobbyMap.get(lobbyID);
 	if (!lobby) return;
 	for (const user of lobby.userList) {
