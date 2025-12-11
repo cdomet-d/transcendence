@@ -1,23 +1,19 @@
-import type { FastifyInstance, FastifyRequest } from 'fastify';
-import type { UserProfileView, JwtPayload } from '../utils/bff.interface.js';
+import type { FastifyInstance } from 'fastify';
+import type { JwtPayload } from '../utils/bff.interface.js';
 import {
 	fetchLeaderboard,
 	searchBar,
 	buildTinyProfile,
-	fetchUserStats,
-	fetchFriendships,
-	processMatches,
 	updateAuthSettings,
 	updateUserProfile,
 	updateUserProfileUsername,
 	refreshJWTForUsernameChange,
-	fetchFriendshipsPending,
 	deleteAllFriendship,
 	AnonymizeUser,
 	AnonymizeAccount,
 	fetchFullUserProfile
 } from './bffUserProfile.service.js';
-import { cleanInput } from '../utils/sanitizer.js';
+import { cleanInput, cleanUsername,isUsernameSafe } from '../utils/sanitizer.js';
 import { settingsPatchSchema, profileGet, tinyProfileGet, searchGet, leaderboardGet, usernameGet } from './bff.usersSchemas.js';
 import jwt from 'jsonwebtoken';
 
@@ -326,11 +322,11 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const accountUpdates: any = {};
 
 			if (body.avatar) {
-				const validImageRegex = /^data:image\/(png|jpeg|jpg);base64,+/;
+				const validImageRegex = /^data:image\/(png|jpeg|jpg|gif);base64,+/;
 				if (!validImageRegex.test(body.avatar)) {
 					return reply.code(400).send({
 						success: false,
-						message: 'Invalid image format. Only PNG and JPEG/JPG are allowed.'
+						message: 'Invalid image format. Only PNG, GIF and JPEG/JPG are allowed.'
 					});
 				}
 				profileUpdates.avatar = cleanInput(body.avatar);
@@ -346,6 +342,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 					return reply.code(401).send({ message: 'Unauthorized' });
 
 				if (body.username) profileUpdatesUsername.username = cleanInput(body.username);
+				console.log("SENT USERNAME: ", JSON.stringify(body.username));
+				console.log("REGEX USERNAME: ", JSON.stringify(profileUpdatesUsername.username));
 				if (body.username) accountUpdates.username = cleanInput(body.username);
 				if (body.password) accountUpdates.password = body.password;
 

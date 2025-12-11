@@ -87,7 +87,12 @@ export const settingsPatchSchema = {
 			username: {
 				anyOf: [
 					{ type: 'string', maxLength: 0 },
-					{ type: 'string', minLength: 3, maxLength: 18 }
+					{
+						type: 'string',
+						minLength: 3,
+						maxLength: 18,
+						pattern: '^[a-zA-Z0-9]+$'
+					}
 				]
 			},
 			password: {

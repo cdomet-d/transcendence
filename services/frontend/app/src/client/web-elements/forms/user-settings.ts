@@ -119,6 +119,8 @@ export class UserSettingsForm extends BaseForm {
 
 						// [CRITICAL] Await this so dictionary loads BEFORE redirect
 						await setLanguage(newLangCode);
+						//TODO check if it belongs here
+						document.body.header?.render();
 					}
 				} catch (e) {
 					console.error("Failed to parse request body for language update", e);

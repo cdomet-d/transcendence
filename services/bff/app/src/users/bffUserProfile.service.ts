@@ -695,10 +695,6 @@ export async function processMatches(log: any, userID: string, token: string): P
 				duration: formatDuration(rawMatch.duration),
 				tournament: tournamentFront,
 			};
-			console.log('START TIME', JSON.stringify(match.date));
-
-
-			console.log('in process matches', JSON.stringify(match));
 			return match;
 		});
 

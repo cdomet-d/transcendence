@@ -85,6 +85,7 @@ if (!customElements.get('user-avatar')) {
 export class NoResults extends HTMLDivElement {
 	#noResultsImg: ImgData;
 	#theme: ColorTheme;
+	#mess: string;
 
 	constructor() {
 		super();
@@ -96,22 +97,26 @@ export class NoResults extends HTMLDivElement {
 		};
 		this.id = 'NoResults';
 		this.#theme = 'dark';
+		this.#mess = 'There\'s nothing there';
+	}
+
+	setErrorMessage(mess: string) {
+		this.#mess = mess;
 	}
 
 	set size(size: Size) {
 		this.#noResultsImg.size = size;
 	}
-
+	
 	set theme(theme: ColorTheme) {
 		this.#theme = theme;
 	}
-
+	
 	//TODO 404 for language
 	connectedCallback() {
 		const img = createIcon(this.#noResultsImg);
 		const p = document.createElement('p');
-		const error404 = "There's nothing here :<";
-		p.innerText = error404;
+		p.innerText = this.#mess;
 		this.append(p, img);
 		p.classList.add('text-center', 'f-s', `${this.#theme}`, 'f-bold');
 		img.classList.add('breathe', 'justify-self-center');
