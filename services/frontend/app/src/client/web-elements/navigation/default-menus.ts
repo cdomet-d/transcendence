@@ -121,8 +121,8 @@ export function social(): MenuData {
 
 export const languageMenu: ButtonData[] = [
     { id: 'English', ariaLabel: 'English', content: 'English', img: null, type: 'button' },
-    { id: 'Spanish', ariaLabel: 'Spanish', content: 'Espanol', img: null, type: 'button' },
-    { id: 'French', ariaLabel: 'Francais', content: 'Francais', img: null, type: 'button' },
+    { id: 'Espanol', ariaLabel: 'Espanol', content: 'Espanol', img: null, type: 'button' },
+    { id: 'Francais', ariaLabel: 'Francais', content: 'Francais', img: null, type: 'button' },
 ];
 
 export function backgroundMenu(): ButtonData[] {
@@ -153,42 +153,42 @@ export function backgroundMenu(): ButtonData[] {
 
 export const userColorsMenu: ButtonData[] = [
 	{
-		id: '',
+		id: 'bg-4F9FFF',
 		ariaLabel: 'Hexcode selection for azure background.',
 		content: '4F9FFF',
 		img: null,
 		type: 'button',
 	},
 	{
-		id: '',
+		id: 'bg-5200FF',
 		ariaLabel: 'Hexcode selection for purple background.',
 		content: '5200FF',
 		img: null,
 		type: 'button',
 	},
 	{
-		id: '',
+		id: 'bg-000080',
 		ariaLabel: 'Hexcode selection for navy background.',
 		content: '000080',
 		img: null,
 		type: 'button',
 	},
 	{
-		id: '',
+		id: 'bg-98A869',
 		ariaLabel: 'Hexcode selection for green background.',
 		content: '98A869',
 		img: null,
 		type: 'button',
 	},
 	{
-		id: '',
+		id: 'bg-BE5103',
 		ariaLabel: 'Hexcode selection for orange background.',
 		content: 'BE5103',
 		img: null,
 		type: 'button',
 	},
 	{
-		id: '',
+		id: 'bg-CE4257',
 		ariaLabel: 'Hexcode selection for red background.',
 		content: 'CE4257',
 		img: null,

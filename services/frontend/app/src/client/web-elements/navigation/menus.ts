@@ -248,7 +248,7 @@ export class DropdownMenu extends HTMLDivElement {
 			const el = document.createElement('li');
 			this.#listbox.append(el);
 			if (option.content) {
-				el.id = option.content;
+				el.id = option.id;
 				el.textContent = option.content;
 				el.className =
 					'brdr pad-xs flex justify-center items-center cursor-pointer \

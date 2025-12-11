@@ -418,6 +418,14 @@ export interface Dictionary {
 	settings: {
 		pick_color: string;
 		pick_language: string;
+	};
+	match_history: {
+		date: string;
+		opponent: string;
+		outcome: string;
+		score: string;
+		duration: string;
+		tournament: string;
 	}
 }
 

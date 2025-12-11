@@ -32,7 +32,7 @@ VALUES
         "start_tournament": "Start tournament",
         "delete_account": "Delete account",
         "download_data": "Download personal data",
-		"privacy": "Privacy policy",
+        "privacy": "Privacy policy",
         "go_home": "Go home"
     },
     "forms": {
@@ -52,7 +52,8 @@ VALUES
         "tournament": "Tournament",
         "leaderboard": "Leaderboard",
         "home": "Home",
-        "pong_tournament": "Pong Tournament"
+        "pong_tournament": "Pong Tournament",
+        "choose_lobby": "Choose Lobby"
     },
     "profile": {
         "joined": "Joined",
@@ -68,7 +69,7 @@ VALUES
     },
     "notifs": {
         "notif_placeholder": "No new notifications",
-		"notif_friends": " sent you a friend request!",
+        "notif_friends": " sent you a friend request!",
         "notif_match" : "challenged you to a match"
 
     },
@@ -93,15 +94,15 @@ VALUES
         "username_error": "Invalid username or password.",
         "password_error": "Password must be at least 8 characters.",
         "uppercase": "missing an uppercase letter",
-		"lowercase": "missing an lowercase letter",
-		"number": "missing an number",
-		"special_char": "missing a special character",
-		"pass_lenght": "Password should be 12-64 characters long, is",
-		"forbidden": "Forbidden character",
-		"username_lenght": "Username should be ",
-		"username_lenght2": " -18 character long, is ",
-		"file_heavy": "That file is too heavy: max is 2MB!",
-		"file_extension": "Invalid extension: ",
+        "lowercase": "missing an lowercase letter",
+        "number": "missing an number",
+        "special_char": "missing a special character",
+        "pass_lenght": "Password should be 12-64 characters long, is",
+        "forbidden": "Forbidden character",
+        "username_lenght": "Username should be ",
+        "username_lenght2": " -18 character long, is ",
+        "file_heavy": "That file is too heavy: max is 2MB!",
+        "file_extension": "Invalid extension: ",
         "page404": "There''s nothing here :("
     },
     "lobby": {
@@ -118,6 +119,14 @@ VALUES
     "settings": {
         "pick_color": "Pick color",
         "pick_language": "Pick language"
+    },
+    "match_history": {
+        "date": "date",
+        "opponent": "opponent",
+        "outcome": "outcome",
+        "score": "score",
+        "duration": "duration",
+        "tournament": "game mode"
     }
 }'
     );
@@ -145,7 +154,7 @@ VALUES
         "start_tournament": "Lancer le tournoi",
         "delete_account": "Supprimer le compte",
         "download_data": "Télécharger vos données",
-		"privacy": "Politique de confidentialité",
+        "privacy": "Politique de confidentialité",
         "go_home": "Retourner a l''accueil"
 
     },
@@ -232,6 +241,14 @@ VALUES
     "settings": {
         "pick_color": "Choisir une couleur",
         "pick_language": "Choisir la langue"
+    },
+    "match_history": {
+        "date": "date",
+        "opponent": "opposant",
+        "outcome": "resultat",
+        "score": "score",
+        "duration": "duree",
+        "tournament": "mode de jeu"
     }
 }'
     );
@@ -258,7 +275,7 @@ VALUES
         "start_game": "Empezar partida",
         "start_tournament": "Empezar torneo",
         "delete_account": "Eliminar cuenta",
-        "download_data": "descargar datos",
+        "download_data": "Descargar datos",
         "privacy": "Política de privacidad",
         "go_home": "Volver al inicio"
     },
@@ -296,7 +313,7 @@ VALUES
     "notifs": {
         "notif_placeholder": "No hay notificaciones nuevas",
         "notif_friends": " te envie una solicitud de amistad!",
-		"notif_match": " te retó a un "
+        "notif_match": " te retó a un "
     },
     "gameCustom": {
         "ball_speed": "Velocidad de bola",
@@ -345,6 +362,14 @@ VALUES
     "settings": {
         "pick_color": "Elegir color",
         "pick_language": "Elegir idioma"
+    },
+    "match_history": {
+        "date": "fecha",
+        "opponent": "adversario",
+        "outcome": "resultado",
+        "score": "puntaje",
+        "duration": "duración",
+        "tournament": "modo de juego"
     }
 }'
-    )
+    );

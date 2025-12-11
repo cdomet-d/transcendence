@@ -141,12 +141,13 @@ export class UserSettingsForm extends BaseForm {
 		const langSelection = this.#languages.selectedElement;
 
 		if (this.#user) {
-			if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
-				f.append('color', 'bg-' + colSelection.id);
+			if (colSelection && colSelection.id !== this.#user.profileColor)
+				f.append('color', colSelection.id);
 			if (langSelection && langSelection.id !== this.#user.language)
 				f.append('language', langSelection.id);
 		}
 
+		console.log(f);
 		if (f.get('upload') && this.#user) {
 			const file = f.get('upload');
 			if (!file || !(file instanceof File)) throw new Error('Error processing avatar');

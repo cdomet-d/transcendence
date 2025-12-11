@@ -106,6 +106,14 @@ export const defaultDictionary: Dictionary = {
 	settings: {
 		pick_color: "Pick color",
 		pick_language: "Pick language",
+	},
+	match_history: {
+		date: "date",
+		opponent: "opponent",
+		outcome: "outcome",
+		score: "score",
+		duration: "duration",
+		tournament: "game mode",
 	}
 };
 
@@ -114,7 +122,9 @@ export let currentLanguage: string = 'English';
 
 export async function setLanguage(lang: string): Promise<void> {
 	try {
+		console.log("LANGUAGE", JSON.stringify(lang));
 		const response = await fetch(`https://${origin}:8443/api/bff/dictionary/${lang}`);
+		console.log("DICO: ", JSON.stringify(response));
 
 		if (!response.ok) {
 
