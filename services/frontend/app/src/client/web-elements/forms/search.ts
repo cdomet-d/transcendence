@@ -8,7 +8,7 @@ import { UserInline } from '../users/profile.js';
 import type { UserData } from '../types-interfaces.js';
 import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
-import { currentDictionary } from './language.js'
+import { currentDictionary } from './language.js';
 
 /**
  * Custom HTML form element representing a search bar UI component.

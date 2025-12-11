@@ -17,7 +17,8 @@ export const defaultDictionary: Dictionary = {
 		start_game: "Start game",
 		start_tournament: "Start tournament",
 		delete_account: "Delete account",
-		download_data: "Download personal data"
+		download_data: "Download personal data",
+		go_home: "Go home"
 	},
 	forms: {
 		username: "Username",
@@ -101,14 +102,11 @@ export const defaultDictionary: Dictionary = {
 	settings: {
 		pick_color: "Pick color",
 		pick_language: "Pick language",
-		en: "English",
-		fr: "French",
-		es: "Spanish"
 	}
 };
 
 export let currentDictionary: Dictionary = defaultDictionary;
-export let currentLanguage: string = 'en';
+export let currentLanguage: string = 'English';
 
 export async function setLanguage(lang: string): Promise<void> {
 	try {
@@ -121,7 +119,6 @@ export async function setLanguage(lang: string): Promise<void> {
 
 		currentDictionary = newDict;
 		currentLanguage = lang;
-
 		localStorage.setItem('preferred_language', lang);
 
 		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang } }));
@@ -135,7 +132,8 @@ export async function setLanguage(lang: string): Promise<void> {
 }
 
 export async  function initLanguage() {
-	const savedLang = localStorage.getItem('preferred_language') || 'fr';
-	if (savedLang !== 'en')
-		await setLanguage("fr");
+	const savedLang = localStorage.getItem('preferred_language') || "English";
+	console.log("SAVED LANG :", JSON.stringify(localStorage.getItem('preferred_language')));
+	if (savedLang !== "English")
+		await setLanguage(savedLang);
 }

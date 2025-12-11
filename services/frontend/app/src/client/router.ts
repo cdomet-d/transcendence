@@ -81,7 +81,7 @@ export class Router {
 				res = dynRoute(path);
 				if (res) {
 					matchedRoute = route;
-					break;
+					break ;
 				}
 			}
 		}
