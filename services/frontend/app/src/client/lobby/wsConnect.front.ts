@@ -93,8 +93,9 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 					wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
 				else
 					setTimeout(() => {
+						console.log("in end game callback timer")
 						wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
-					}, 10000);
+					}, 7000);
 			}
 
 			if (data.error) {
@@ -162,10 +163,12 @@ async function displayBrackets(brackets: [string, string][], ws: WebSocket) {
 			return;//TODO
 		tournament.push({player1, player2});
 	}
+	// console.log(tournament);
 	createBracket(tournament);
 	setTimeout(() => {
+		console.log("in brackets callback timer")
 		wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got bracket" } })));
-	}, 10000);
+	}, 7000);
 }
 
 async function fetchTinyProfile(username: string): Promise<UserData | null> {
