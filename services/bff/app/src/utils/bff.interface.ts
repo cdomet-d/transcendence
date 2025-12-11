@@ -103,7 +103,7 @@ export interface Matches {
 	outcome: string;
 	score: string;
 	duration: string;
-	tournament: boolean;
+	tournament: string;
 }
 
 export interface UserProfileUpdates {

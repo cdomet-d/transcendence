@@ -66,10 +66,6 @@ function handleDeclineAction(fastify: FastifyInstance, invitePayload: lobbyInvit
 
     removeNotifFromDB(fastify, invitePayload.lobbyID!, authenticatedUserID);
     removeUserFromWhitelist(authenticatedUserID, invitePayload.lobbyID!);
-
-    if (findLobbyIDFromUserID(authenticatedUserID) === null) {
-        socket.close();
-    }
 }
 
 function handleJoinAction(invitePayload: lobbyInviteForm, authenticatedUserID: string, authenticatedUsername: string, formInstance: string, socket: WebSocket, req: FastifyRequest, fastify: FastifyInstance): void {
