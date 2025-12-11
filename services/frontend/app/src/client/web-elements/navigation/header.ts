@@ -89,7 +89,6 @@ export class PageHeader extends HTMLElement {
 				this.append(this.#logout);
 				this.#logout.classList.add('h-m', 'w-l');
 			}
-			await this.#notif.fetchPendingFriendRequests();
 		} else {
 			if (this.contains(this.#logout)) this.#logout.remove();
 			if (!this.contains(this.#login)) {
