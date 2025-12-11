@@ -27,7 +27,7 @@ export class NotifBox extends HTMLDivElement {
 	#ws: WebSocket | null;
 	#blurHandler: (e: FocusEvent) => void;
 	#clickHandler: (e: Event) => void;
-	//#langHandler: () => void;
+	#langHandler: () => void;
 
 	constructor() {
 		super();
@@ -39,6 +39,7 @@ export class NotifBox extends HTMLDivElement {
 		this.#panel = document.createElement('ul', { is: 'notif-panel' }) as NotifPanel;
 		this.computePanelPos = this.computePanelPos.bind(this);
 		this.#clickHandler = this.#clickImplementation.bind(this);
+		this.#langHandler = this.reloadLanguage.bind(this);
 		this.#blurHandler = this.#focusOutImplementation.bind(this);
 		this.#ws = null;
 	}
@@ -49,7 +50,7 @@ export class NotifBox extends HTMLDivElement {
 		this.addEventListener('click', this.#clickHandler);
 		this.addEventListener('focusout', this.#blurHandler);
 		this.addEventListener('keydown', this.#clickHandler);
-		//document.addEventListener('language-changed', this.#langHandler);
+		document.addEventListener('language-changed', this.#langHandler);
 		window.addEventListener('resize', this.computePanelPos);
 		window.addEventListener('scroll', this.computePanelPos);
 		this.render();
@@ -127,7 +128,7 @@ export class NotifBox extends HTMLDivElement {
 		}
 	}
 
-/*  	reloadLanguage() {
+	reloadLanguage() {
 		const defaultElem = this.#panel.querySelector('#default') as HTMLElement;
 		if (defaultElem) {
 			defaultElem.innerText = currentDictionary.notifs.notif_placeholder;
@@ -142,7 +143,7 @@ export class NotifBox extends HTMLDivElement {
 				notif.createNotifMessage(notif.dataset.sender, currentDictionary.notifs.notif_match + `${gameType}!`);
 			}
 		});
-	}  */
+	}
 
 	/**
 	 * Creates and displays a new friend request notification.
