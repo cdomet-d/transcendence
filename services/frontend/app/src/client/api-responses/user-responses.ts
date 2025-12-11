@@ -1,5 +1,4 @@
 import type { UserData, ImgData, ProfileView } from '../web-elements/types-interfaces';
-import { defaultAvatar } from '../web-elements/default-values';
 import { ProfilePage } from '../web-elements/users/user-profile-containers';
 import { createFriendsPanel, createMatchHistoryPanel } from '../web-elements/users/profile-helpers';
 import { exceptionFromResponse, redirectOnError } from '../error';
@@ -22,10 +21,13 @@ function setStatus(n: number): boolean {
 }
 
 function setAvatar(a: string): ImgData {
-	let uAvatar: ImgData = { src: '', alt: '', id: 'user-profile-picture', size: 'ixl' };
-	if (!a || a === 'avatar1.png') uAvatar = defaultAvatar;
-	else uAvatar.src = a;
-	return uAvatar;
+	if (!a) {
+		const defaultAvatar: ImgData = { alt: 'A pink pixel art little blob', id: 'user-avatar', size: 'ixl', src: '/public/assets/images/pink-avatar.png' };
+		return defaultAvatar;
+	} else {
+		const userSetProfilePicture: ImgData = { id: 'user-pp', alt: 'User-set profile picture', src: a, size: 'ixl' };
+		return userSetProfilePicture;
+	}
 }
 
 function setBiography(b: string): string {
@@ -64,7 +66,7 @@ export function userArrayFromAPIRes(responseObject: any): UserData[] {
 
 export async function buildUserProfile(response: Response): Promise<ProfilePage> {
 	if (!response.ok) throw await exceptionFromResponse(response);
-	
+
 	const rawProfile = await response.json();
 	const userProfileElem = document.createElement('div', { is: 'profile-page' }) as ProfilePage;
 	document.body.layoutInstance?.appendAndCache(userProfileElem);

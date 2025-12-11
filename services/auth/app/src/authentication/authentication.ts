@@ -14,8 +14,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 		} else {
 			try {
 				const user: JwtPayload = await request.jwtVerify();
-				if ((await checkJWTVersion(serv, user.userID, user.version)) === 401) 
-					return reply.code(401).send({ message: 'Unauthorized - invalid token' });
+				if ((await checkJWTVersion(serv, user.userID, user.version)) === 401) return reply.code(401).send({ message: 'Unauthorized - invalid token' });
 				return reply.code(200).send({ username: user.username, userID: user.userID });
 			} catch (error) {
 				serv.log.error('Unauthorized: invalid token');
@@ -38,19 +37,22 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			await updateStatus(serv.log, account.userID, false, token);
 			return reply.code(200).send({ token: token });
 		} catch (error) {
-			serv.log.error(`[AUTH] An unexpected error occurred while login: ${error}`);
-			throw error;
+			return reply.code(400).send({message: 'AUTH: Bad request'})
 		}
 	});
 
 	serv.post('/logout', async (request, reply) => {
-		await updateJWTVersion(serv, request.user.userID);
-		const token = request.cookies.token;
-		if (token === undefined) return;
-		const user: JwtPayload = await request.jwtVerify();
-		await updateStatus(serv.log, user.userID, true, token);
-		clearCookie(reply);
-		return reply.code(200).send({ message: 'Success' });
+		try {
+			await updateJWTVersion(serv, request.user.userID);
+			const token = request.cookies.token;
+			if (token === undefined) return;
+			const user: JwtPayload = await request.jwtVerify();
+			await updateStatus(serv.log, user.userID, true, token);
+			clearCookie(reply);
+			return reply.code(200).send({ message: 'Success' });
+		} catch (error) {
+			return reply.code(400).send({message: 'AUTH: Bad request'})
+		}
 	});
 
 	serv.post('/regen-jwt', { schema: schema.regen }, async (request, reply) => {

@@ -20,13 +20,6 @@ export const winImage: types.ImgData = {
 	alt: ' An image of small blob dancing in stars in pixel-art style',
 };
 
-export const defaultAvatar: types.ImgData = {
-	alt: 'A pink pixel art little blob',
-	id: 'user-avatar',
-	size: 'ixl',
-	src: '/public/assets/images/purple-avatar.png',
-};
-
 export const user: types.UserData = {
 	avatar: {
 		alt: 'pp',
