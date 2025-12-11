@@ -68,16 +68,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
 				const customError = error as { code: number; message: string };
-				if (customError.code === 404) {
-					const { username } = request.params as { username: string };
-					const safeUsername = cleanInput(username);
-					if (safeUsername === request.user.username)
-						return reply
-							.code(404)
-							.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'none', path: '/', maxAge: 60 * 60 * 1000 })
-							.send({ message: 'It seems you changed your username - logging you out...' });
-					else return reply.code(404).send({ message: 'User profile data not found.' });
-				}
+				if (customError.code === 404) return reply.code(404).send({ message: 'User profile data not found.' });
 				if (customError.code === 401) return reply.code(401).send({ message: 'Unauthorized' });
 				if (customError.code === 400) return reply.code(400).send({ message: 'Unauthorized' });
 			}
@@ -162,16 +153,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
 				const customError = error as { code: number; message: string };
-				if (customError.code === 404) {
-					const { username } = request.params as { username: string };
-					const safeUsername = cleanInput(username);
-					if (safeUsername === request.user.username)
-						return reply
-							.code(404)
-							.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'none', path: '/', maxAge: 60 * 60 * 1000 })
-							.send({ message: 'It seems you changed your username - logging you out...' });
-					else return reply.code(404).send({ message: 'User profile data not found.' });
-				}
+				if (customError.code === 404) return reply.code(404).send({ message: 'User profile data not found.' });
 				if (customError.code === 400) return reply.code(400).send({ message: 'Unauthorized' });
 				if (customError.code === 401) return reply.code(401).send({ message: 'Unauthorized' });
 

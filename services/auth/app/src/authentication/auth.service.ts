@@ -4,11 +4,7 @@ import type { ProfileCreationResult } from './auth.interfaces.js';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import * as bcrypt from 'bcrypt';
 
-export async function createUserProfile(
-	log: any,
-	userID: string,
-	username: string
-): Promise<ProfileCreationResult> {
+export async function createUserProfile(log: any, userID: string, username: string): Promise<ProfileCreationResult> {
 	const url = `http://nginx:80/api/users/${userID}`;
 
 	//const body = JSON.stringify({ username: username });
@@ -31,7 +27,7 @@ export async function createUserProfile(
 			const errorBody = (await response.json()) as { message: string };
 			if (errorBody.message) message = errorBody.message;
 			return { errorCode: 'conflict' };
-		} catch (error) { }
+		} catch (error) {}
 		return { errorCode: 'conflict' };
 	}
 
@@ -54,7 +50,7 @@ export async function updateStatus(log: any, userID: string, status: boolean, to
 			headers: { 'Content-Type': 'application/json', Cookie: `token=${token}` },
 			body: JSON.stringify({ status: status, lastConnexion: new Date().toISOString() }),
 		});
-	} catch (err) { }
+	} catch (err) {}
 }
 
 export async function checkUsernameUnique(db: Database, username: string): Promise<boolean> {
@@ -125,11 +121,7 @@ export function clearCookie(reply: FastifyReply) {
 	});
 }
 
-export async function verifyPasswordMatch(
-	serv: FastifyInstance,
-	username: string,
-	password: string
-): Promise<any> {
+export async function verifyPasswordMatch(serv: FastifyInstance, username: string, password: string): Promise<any> {
 	try {
 		const query = `
 				SELECT userID, hashedPassword FROM account WHERE username = ?
@@ -144,6 +136,56 @@ export async function verifyPasswordMatch(
 		return account;
 	} catch (error) {
 		serv.log.error(`[AUTH] An unexpected error occurred while login: ${error}`);
+		throw error;
+	}
+}
+
+export async function checkJWTVersion(serv: FastifyInstance, userID: string, extractedVersion: number): Promise<any> {
+	try {
+		let version: number = await getJWTVersion(serv, userID);
+		console;
+		serv.log.info(`DB version: ${version} | extractedVersion: ${extractedVersion}`);
+		if (version !== extractedVersion) return 401;
+		return 200;
+	} catch (error) {
+		serv.log.error(`[AUTH] An unexpected error occurred while checking authentication: ${error}`);
+		throw error;
+	}
+}
+
+export async function updateJWTVersion(serv: FastifyInstance, userID?: string): Promise<any> {
+	try {
+		let version: number = await getJWTVersion(serv, userID);
+		console.log('IN DB:', version);
+		version += 1;
+		console.log('AFTER UPDATE', version);
+		const setJWTquery = `UPDATE account SET JWTVersion = ? WHERE userID = ?;`;
+		await serv.dbAuth.run(setJWTquery, [version, userID]);
+		return version;
+	} catch (error) {
+		serv.log.error(`[AUTH] An unexpected error occurred while updating JWT version: ${error}`);
+		throw error;
+	}
+}
+
+export async function getJWTVersion(serv: FastifyInstance, userID?: string, username?: string): Promise<any> {
+	try {
+		let version;
+		serv.log.info(`GETTING JWT VERSION | UserID: ${userID} | Username: ${username}`);
+		if (userID) {
+			serv.log.info(`WITH USERID`);
+			const query = `SELECT JWTVersion FROM account WHERE userID = ?;`;
+			version = await serv.dbAuth.get(query, [userID]);
+		} else if (username) {
+			serv.log.info(`WITH USERNAME`);
+			const query = `SELECT JWTVersion FROM account WHERE username = ?;`;
+			version = await serv.dbAuth.get(query, [username]);
+		}
+		serv.log.info(`VERSION VALUE: ${version.JWTVersion}`);
+		if (!version) throw new Error('Could not get token version');
+		return version.JWTVersion;
+	} catch (error) {
+		serv.log.error(`[AUTH] An unexpected error occurred while getting JWT version: ${error}`);
 		throw error;
 	}
 }
