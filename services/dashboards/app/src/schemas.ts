@@ -7,7 +7,7 @@ const messageResponse = {
 	}
 };
 
-export const postGameSchema = {
+/* export const postGameSchema = {
 	body: {
 		type: 'object',
 		properties: {
@@ -29,9 +29,9 @@ export const postGameSchema = {
 		409: messageResponse,
 		401: messageResponse
 	}
-};
-/* 
-const postGameSchema = {
+}; */
+
+export const postGameSchema = {
 	body: {
 		type: 'object',
 		required: ['gameID', 'localGame', 'player1', 'player2', 'duration', 'player1Score', 'player2Score'],
@@ -47,8 +47,9 @@ const postGameSchema = {
 			duration: { type: 'number', minimum: 0 },
 
 			// [SECURITY] Prevent negative scores or integer overflows
-			player1Score: { type: 'integer', minimum: 0, maximum: 99999 },
-			player2Score: { type: 'integer', minimum: 0, maximum: 99999 }
+			// Modified to allow -1 for disconnects
+			player1Score: { type: 'integer', minimum: -1, maximum: 99999 },
+			player2Score: { type: 'integer', minimum: -1, maximum: 99999 }
 		}
 	},
 	response: {
@@ -73,7 +74,7 @@ const postGameSchema = {
 			}
 		}
 	}
-}; */
+};
 
 export const getGamesSchema = {
 	params: {
