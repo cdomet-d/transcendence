@@ -108,7 +108,6 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 			if (data.event === "NOTIF" && data.notif === "pong") return;
 			if (data.lobby) {
 				console.log(`${data.lobby} lobby ${data.lobbyID} successfully!`);
-
 				// TODO send host to front as soon as lobby 'created'
 				// send lobbyID to Form
 				// updateGameForm(data.formInstance);
@@ -149,18 +148,37 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 
 async function displayBrackets(brackets: [string, string][], ws: WebSocket) {
 	let tournament: MatchParticipants[] = [];
-	let player1: string = "";
-	let player2: string = "";
+	let player1: UserData | null = null;
+	let player2: UserData | null = null;
 	for (const bracket of brackets) {
-		player1 = bracket[0];
-		player2 = bracket[1];
+		player1 = await fetchTinyProfile(bracket[0]);
+		player2 = await fetchTinyProfile(bracket[1]);
+		if (!player1 || !player2)
+			return;//TODO
 		tournament.push({player1, player2});
 	}
-	console.log(JSON.stringify(tournament));
 	createBracket(tournament);
 	setTimeout(() => {
 		wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got bracket" } })));
 	}, 30000);
+}
+
+async function fetchTinyProfile(username: string): Promise<UserData | null> {
+	const url = `https://${origin}:8443/api/bff/tiny-profile/${username}`;
+	try {
+		const raw = await fetch(url, { credentials: 'include' });
+		if (!raw.ok) {
+			if (raw.status === 404) throw redirectOnError('/404', 'No such user');
+			else throw await exceptionFromResponse(raw);
+		}
+		const data = await raw.json();
+		const user = userDataFromAPIRes(data);
+		return user;
+	} catch (error) {
+		console.error(errorMessageFromException(error));
+		redirectOnError(router.stepBefore, errorMessageFromException(error));
+	}
+	return null;
 }
 
 export { wsConnect };

@@ -280,8 +280,8 @@ export interface MatchOutcome {
  * @property {UserData} player2 - Second player data.
  */
 export interface MatchParticipants {
-	player1: string;
-	player2: string;
+	player1: UserData;
+	player2: UserData;
 }
 
 export type CourtTheme = 'default' | 'farm' | 'ocean' | 'forest';

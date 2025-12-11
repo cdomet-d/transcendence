@@ -1,4 +1,5 @@
 import type { MatchParticipants } from '../types-interfaces.js';
+import { createUserInline } from '../users/profile-helpers.js';
 import { UserInline } from '../users/profile.js';
 
 /**
@@ -7,8 +8,8 @@ import { UserInline } from '../users/profile.js';
  * Extends HTMLDivElement.
  */
 export class Match extends HTMLDivElement {
-	#player1: UserInline;
-	#player2: UserInline;
+	#player1?: UserInline;
+	#player2?: UserInline;
 	#players: MatchParticipants | null;
 
 	/**
@@ -16,8 +17,8 @@ export class Match extends HTMLDivElement {
 	 */
 	constructor() {
 		super();
-		this.#player1 = document.createElement('div', { is: 'user-inline' }) as UserInline;
-		this.#player2 = document.createElement('div', { is: 'user-inline' }) as UserInline;
+		// this.#player1 = document.createElement('div', { is: 'user-inline' }) as UserInline;
+		// this.#player2 = document.createElement('div', { is: 'user-inline' }) as UserInline;
 		this.#players = null;
 	}
 
@@ -27,8 +28,9 @@ export class Match extends HTMLDivElement {
 	 */
 	set players(players: MatchParticipants) {
 		this.#players = players;
-		this.#player1.userInfo = this.#players.player1;
-		this.#player2.userInfo = this.#players.player2;
+		this.#player1 = createUserInline(this.#players.player1);
+		this.#player2 = createUserInline(this.#players.player2);
+		this.render();
 	}
 
 	/**
@@ -43,8 +45,12 @@ export class Match extends HTMLDivElement {
 		this.render();
 	}
 	render() {
-		this.append(this.#player1, this.#player2);
-		this.className = 'grid brdr';
+		if (this.#player1 && this.#player2) {
+			this.append(this.#player1, this.#player2);
+			this.#player1.getUsername.link.classList.add('dead-link');
+			this.#player2.getUsername.link.classList.add('dead-link');
+		}
+		this.className = 'grid brdr row-l';
 	}
 }
 
@@ -173,9 +179,8 @@ export class TournamentBrackets extends HTMLDivElement {
 	 */
 	render() {
 		this.#computeTotalRounds();
-		this.className = `grid grid-rows-${this.#players.length} grid-col-${
-			this.#totalRounds
-		} pad-xs gap-l place-items-center`;
+		this.className = `grid grid-rows-${this.#players.length} grid-col-${this.#totalRounds
+			} pad-s gap-l place-items-center bg brdr`;
 		this.id = 'tournament-brackets';
 		this.populateBrackets(this.#players);
 	}
