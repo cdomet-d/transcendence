@@ -1,5 +1,7 @@
 import type { Dictionary } from '../types-interfaces.js';
 import { origin } from '../../main.js'
+import { createVisualFeedback } from '../../error.js';
+import { errorMessageFromException } from '../../error.js';
 
 // hardcoded this so the app renders instantly without waiting for a fetch for now, will do route calling in next branch
 export const defaultDictionary: Dictionary = {
@@ -90,7 +92,6 @@ export const defaultDictionary: Dictionary = {
 		username_lenght2: " -18 character long, is ",
 		file_heavy: "That file is too heavy: max is 2MB!",
 		file_extension: "Invalid extension: ",
-
 	},
 	lobby: {
 		local: "Local 1v1",
@@ -122,13 +123,12 @@ export let currentLanguage: string = 'English';
 
 export async function setLanguage(lang: string): Promise<void> {
 	try {
-		console.log("LANGUAGE", JSON.stringify(lang));
 		const response = await fetch(`https://${origin}:8443/api/bff/dictionary/${lang}`);
-		console.log("DICO: ", JSON.stringify(response));
 
-		if (!response.ok) {
 
-		}
+		if (!response.ok)
+			createVisualFeedback(errorMessageFromException(response.body));
+
 		const newDict = (await response.json()) as Dictionary;
 
 		currentDictionary = newDict;
@@ -136,7 +136,6 @@ export async function setLanguage(lang: string): Promise<void> {
 		localStorage.setItem('preferred_language', lang);
 
 		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang } }));
-
 		console.log(`[LANG] Switched to ${lang}`);
 
 	} catch (error) {

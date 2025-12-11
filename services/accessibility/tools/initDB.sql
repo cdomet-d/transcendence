@@ -330,7 +330,6 @@ VALUES
         "under_water": "Bajo el agua",
         "searchbar": "barra de búsqueda",
         "choose_back": "Elige fondo"
-
     },
     "error": {
         "username_error": "Nombre de usuario o contraseña inválidos.",

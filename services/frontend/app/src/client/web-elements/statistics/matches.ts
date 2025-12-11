@@ -66,55 +66,6 @@ export class InlineMatch extends HTMLDivElement {
 		this.#data = matchOutcome;
 	}
 
-	///**
-	// * Creates and appends header spans for each match property.
-	// * @returns {InlineMatch} The InlineMatch element with header spans.
-	// */
-	//createHeader(): InlineMatch {
-	//	for (const key in this.#data) {
-	//		const span = document.createElement('span');
-	//		this.append(span);
-	//		span.classList.add('f-bold', 'f-orange');
-	//		span.classList.add('text-center');
-	//		span.id = key;
-	//		span.textContent = key;
-	//	}
-	//	this.classList.add('bg-yellow', 'sticky', 'top-0', 'thin', 'brdr');
-	//	this.id = 'matchesheader';
-	//	return this;
-	//}
-	//
-	////TODO: probably should add link to opponent profile
-	///**
-	// * Creates and appends spans for each match property value.
-	// * @returns {InlineMatch} The InlineMatch element with value spans.
-	// */
-	//createSpans(): InlineMatch {
-	//	for (const key in this.#data) {
-	//		let el;
-	//		if (key === 'opponent') {
-	//			const opponent = this.#data[key].toString();
-	//			const opp: NavigationLinksData = {
-	//				styleButton: false,
-	//				id: 'opponent-link',
-	//				datalink: opponent,
-	//				href: `/user/${opponent}`,
-	//				title: opponent,
-	//				img: null,
-	//			};
-	//
-	//			el = document.createElement('a', { is: 'nav-link' }) as NavigationLinks;
-	//			el.info = opp;
-	//		} else el = document.createElement('span');
-	//		this.append(el);
-	//		el.id = key;
-	//		el.textContent = this.#data[key as keyof MatchOutcome].toString();
-	//	}
-	//	this.id = 'match';
-	//	return this;
-	//}
-	//
-
 	/**
 	 * Creates and appends header spans for each match property.
 	 * @returns {InlineMatch} The InlineMatch element with header spans.

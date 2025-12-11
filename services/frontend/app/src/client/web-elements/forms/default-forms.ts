@@ -192,7 +192,7 @@ export function localPong(): FormDetails {
 			},
 			{
 				id: 'opponent',
-				labelContent: currentDictionary.gameCustom.opponent_name,
+				labelContent: currentDictionary.gameCustom.opponent,
 				pattern: usernamePattern,
 				placeholder: currentDictionary.gameCustom.opponent,
 				type: 'text',

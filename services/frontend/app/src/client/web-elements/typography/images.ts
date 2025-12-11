@@ -1,6 +1,6 @@
 import type { ImgData, Size, ColorTheme } from '../types-interfaces.js';
 import { createIcon } from './helpers.js';
-import { currentDictionary, currentDictionary } from '../forms/language.js';
+import { currentDictionary } from '../forms/language.js';
 
 /**
  * Custom image element representing an icon.
@@ -97,7 +97,7 @@ export class NoResults extends HTMLDivElement {
 		};
 		this.id = 'NoResults';
 		this.#theme = 'dark';
-		this.#mess = 'There\'s nothing there';
+		this.#mess = currentDictionary.error.page404;
 	}
 
 	setErrorMessage(mess: string) {
