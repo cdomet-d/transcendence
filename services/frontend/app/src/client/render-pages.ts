@@ -18,7 +18,7 @@ import { loginForm, registrationForm } from './web-elements/forms/default-forms.
 import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
 import { createLink } from './web-elements/navigation/buttons-helpers.js';
-import type { NavigationLinks } from './web-elements/navigation/links.js';
+import { NavigationLinks } from './web-elements/navigation/links.js';
 import { currentDictionary } from './web-elements/forms/language.js';
 import type { LocalPongSettings, RemotePongSettings } from './web-elements/forms/pong-settings.js';
 import { createPrivacy } from './web-elements/users/privacy.js';
@@ -71,11 +71,19 @@ function toggleHeader(page: string) {
 		document.body.header?.classList.remove('hidden');
 		document.body.header?.removeAttribute('hidden');
 	}
+	const grpd = document.body.footer?.children;
+	if (!grpd) return;
+	for (const el of grpd) {
+		if (el instanceof NavigationLinks) {
+			el.info.title = currentDictionary.buttons.privacy;
+			el.render();
+		}
+	}
 }
 
 async function prepareLayout(curLayout: Layout | undefined, page: string): Promise<userStatusInfo | null> {
 	if (!layoutPerPage[page]) {
-		return redirectOnError('/404', `Redirected: Requested page (${page}) is undefined`), null;
+		return redirectOnError('/404', `Requested page (${page}) is undefined`), null;
 	}
 	if (!curLayout) return redirectOnError('/404', 'Failed to load DOM'), null;
 
@@ -97,7 +105,7 @@ export async function renderNotFound() {
 	const goHome = createLink(goHomeData, false) as NavigationLinks;
 	const noResult = createNoResult('dark', 'i2xl');
 	noResult.setErrorMessage(currentDictionary.error.page404);
-	console.log("PAGE404", currentDictionary.error.page404);
+	console.log('PAGE404', currentDictionary.error.page404);
 	document.body.layoutInstance!.appendAndCache(noResult, goHome);
 	goHome.classList.remove('w-full');
 	goHome.classList.add('w-1/4', 'place-self-center');
@@ -310,13 +318,10 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 function getGameBackground(background?: string): [pongTheme, ImgData[]] {
 	if (background === 'farm') return [farm, farmAssets];
 	if (background === 'ocean') return [ocean, oceanAssets];
-	// if (background === "Enchanted Forest")
-	//     return [] //TODO
 	return [defaultTheme, []];
 }
 
 export async function renderPrivacy() {
-	// [FIX] Await prepareLayout to ensure DOM is ready and authorized
 	if (!(await prepareLayout(document.body.layoutInstance, 'privacy'))) return;
 
 	try {

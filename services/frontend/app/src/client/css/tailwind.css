@@ -259,9 +259,7 @@
 	footer {
 		position: absolute;
 		bottom: 0px;
-		left: 0px;
-		text-align: left;
-		padding: var(--s);
+		right: 0px;
 	}
 
 	p,

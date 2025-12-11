@@ -113,16 +113,16 @@ export class PageHeader extends HTMLElement {
 		const newLogout = createButton(logOut(), false);
 		newLogout.addEventListener('click', this.#logoutHandler);
 		if (this.contains(this.#logout)) {
-			if (this.#logout.classList.contains('h-m')) newLogout.classList.add('h-m', 'w-l');
 			this.#logout.replaceWith(newLogout);
+			if (this.#logout.classList.contains('h-m')) newLogout.classList.add('h-m');
 		}
 		this.#logout = newLogout;
 
 		const newLogin = createButton(logIn(), false);
 		newLogin.addEventListener('click', this.#loginHandler);
 		if (this.contains(this.#login)) {
-			if (this.#login.classList.contains('h-m')) newLogin.classList.add('h-m', 'w-l');
 			this.#login.replaceWith(newLogin);
+			if (this.#login.classList.contains('h-m')) newLogin.classList.add('h-m');
 		}
 		this.#login = newLogin;
 	}

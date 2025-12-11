@@ -166,8 +166,8 @@ export class Winstreak extends HTMLSpanElement {
 		this.#val.className = 'f-bold dark';
 		if (this.#lossValue && this.#winsValue) {
 			this.append(this.#totalW, this.#totalL);
-			this.#totalW.innerText = 'Wins: ' + this.#winsValue;
-			this.#totalL.innerText = 'Losses: ' + this.#lossValue;
+			this.#totalW.innerText = 'W: ' + this.#winsValue;
+			this.#totalL.innerText = 'L: ' + this.#lossValue;
 			this.#totalL.className = 'f-bold dark';
 			this.#totalW.className = 'f-bold dark';
 			this.classList.add('grid-rows-2')

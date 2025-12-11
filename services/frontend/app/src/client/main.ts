@@ -3,7 +3,7 @@ import { Layout } from './web-elements/layouts/layout.js';
 import { PageHeader } from './web-elements/navigation/header.js';
 import { Router, routes } from './router.js';
 import { errorMessageFromException, redirectOnError } from './error.js';
-import { currentDictionary, currentLanguage, initLanguage } from './web-elements/forms/language.js';
+import { currentDictionary, initLanguage } from './web-elements/forms/language.js';
 import type { NavigationLinks } from './web-elements/navigation/links.js';
 import type { NavigationLinksData } from './web-elements/types-interfaces.js';
 import { createLink } from './web-elements/navigation/buttons-helpers.js';
@@ -14,6 +14,7 @@ declare global {
 	interface HTMLElement {
 		layoutInstance: Layout | undefined;
 		header: PageHeader | undefined;
+		footer: HTMLElement | undefined;
 	}
 }
 
@@ -42,7 +43,7 @@ export async function userStatus(): Promise<userStatusInfo> {
 }
 
 function linkGRPD(): NavigationLinks {
-	const grpd: NavigationLinksData = { styleButton: false, id: 'privacy', datalink: '/privacy', href: '/privacy', title: 'Privacy policy', img: null };
+	const grpd: NavigationLinksData = { styleButton: false, id: 'privacy', datalink: '/privacy', href: '/privacy', title: currentDictionary.buttons.privacy, img: null };
 	return createLink(grpd, false);
 }
 
@@ -51,10 +52,10 @@ async function startApp() {
 		await initLanguage();
 		document.body.layoutInstance = document.createElement('main', { is: 'custom-layout' }) as Layout;
 		document.body.header = document.createElement('header', { is: 'page-header' }) as PageHeader;
-		const bottom: HTMLElement = document.createElement('footer');
-		if (!document.body.layoutInstance || !document.body.header || !bottom) throw new Error('Error initializing HTML Layouts - page cannot be charged.');
-		document.body.append(document.body.header, document.body.layoutInstance, bottom);
-		bottom.append(linkGRPD());
+		document.body.footer = document.createElement('footer');
+		if (!document.body.layoutInstance || !document.body.header || !document.body.footer) throw new Error('Error initializing HTML Layouts - page cannot be charged.');
+		document.body.append(document.body.header, document.body.layoutInstance, document.body.footer);
+		document.body.footer.append(linkGRPD());
 		router.loadRoute(router.currentPath, true);
 	} catch (e) {
 		console.error(errorMessageFromException(e));
