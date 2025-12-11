@@ -27,6 +27,8 @@ export class NotifBox extends HTMLDivElement {
 	#ws: WebSocket | null;
 	#blurHandler: (e: FocusEvent) => void;
 	#clickHandler: (e: Event) => void;
+	//#langHandler: () => void;
+
 	constructor() {
 		super();
 		this.role = 'combobox';
@@ -41,23 +43,24 @@ export class NotifBox extends HTMLDivElement {
 		this.#ws = null;
 	}
 
-    async connectedCallback() {
+	async connectedCallback() {
 		this.setAttribute('aria-controls', this.#panel.id);
 		this.setAttribute('tabindex', '0');
-        this.addEventListener('click', this.#clickHandler);
+		this.addEventListener('click', this.#clickHandler);
 		this.addEventListener('focusout', this.#blurHandler);
 		this.addEventListener('keydown', this.#clickHandler);
-        window.addEventListener('resize', this.computePanelPos);
-        window.addEventListener('scroll', this.computePanelPos);
-        this.render();
-        if (this.#ws === null) {
-            const status = await userStatus();
-            if (status.auth === false) return;
+		//document.addEventListener('language-changed', this.#langHandler);
+		window.addEventListener('resize', this.computePanelPos);
+		window.addEventListener('scroll', this.computePanelPos);
+		this.render();
+		if (this.#ws === null) {
+			const status = await userStatus();
+			if (status.auth === false) return;
 			await this.fetchPendingFriendRequests();
 			await this.fetchGameInvites();
-            this.notifWsRequest();
-        }
-    }
+			this.notifWsRequest();
+		}
+	}
 
 	disconnectedCallback() {
 		this.removeEventListener('click', this.#clickHandler);
@@ -123,6 +126,23 @@ export class NotifBox extends HTMLDivElement {
 			}
 		}
 	}
+
+/*  	reloadLanguage() {
+		const defaultElem = this.#panel.querySelector('#default') as HTMLElement;
+		if (defaultElem) {
+			defaultElem.innerText = currentDictionary.notifs.notif_placeholder;
+		}
+
+		const notifs = Array.from(this.#panel.children) as NotifContent[];
+		notifs.forEach(notif => {
+			if (notif.id === 'relation' && notif.requesterUsername) {
+				notif.createNotifMessage(notif.requesterUsername, currentDictionary.notifs.notif_friends);
+			} else if (notif.id === 'game' && notif.dataset.sender) {
+				const gameType = notif.dataset.gameType || '';
+				notif.createNotifMessage(notif.dataset.sender, currentDictionary.notifs.notif_match + `${gameType}!`);
+			}
+		});
+	}  */
 
 	/**
 	 * Creates and displays a new friend request notification.

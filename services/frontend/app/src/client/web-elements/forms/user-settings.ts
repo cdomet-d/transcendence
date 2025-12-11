@@ -122,6 +122,7 @@ export class UserSettingsForm extends BaseForm {
 					console.error("Failed to parse request body for language update", e);
 				}
 			}
+			document.body.header?.notif?.render();
 			document.body.header?.reloadLanguage();
 			router.loadRoute('/me', true);
 		} catch (error) {
