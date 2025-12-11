@@ -6,6 +6,7 @@ import type { inviteeObj } from './gm.interface.front.js';
 import { executeAction } from './wsAction.front.js';
 import { handleGameStart, handleLobbyEvent } from './wsUtils.front.js';
 import { handleError } from './wsError.front.js';
+import { wsSafeSend } from './wsSend.front.js';
 
 export let wsInstance: WebSocket | null = null;
 
@@ -30,7 +31,7 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 
 		const interval = setInterval(() => {
 			if (ws.readyState === ws.OPEN) {
-				ws.send(JSON.stringify({ event: "NOTIF", payload: { notif: "ping" } }));
+				wsSafeSend(ws, JSON.stringify({ event: "NOTIF", payload: { notif: "ping" } }));
 			} else clearInterval(interval);
 		}, 30000);
 
