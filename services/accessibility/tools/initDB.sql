@@ -1,23 +1,28 @@
 -- Ensure table exists
-CREATE TABLE IF NOT EXISTS language_packs (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    language_code TEXT UNIQUE NOT NULL,
-    pack_json TEXT NOT NULL
-);
+CREATE TABLE
+    IF NOT EXISTS language_packs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        language_code TEXT UNIQUE NOT NULL,
+        pack_json TEXT NOT NULL
+    );
 
 -- Clear existing data to prevent unique constraint errors on re-seed
 DELETE FROM language_packs;
 
 -- 1. English (en)
-INSERT INTO language_packs (language_code, pack_json) VALUES (
-    'English',
-    '{
+INSERT INTO
+    language_packs (language_code, pack_json)
+VALUES
+    (
+        'English',
+        '{
     "buttons": {
         "submit": "Submit",
         "cancel": "Cancel",
         "search": "Search",
         "delete": "Delete",
         "decline": "Decline",
+        "accept": "Accept",
         "play": "Play",
         "leaderboard": "Leaderboard",
         "profile": "Profile",
@@ -27,6 +32,7 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "start_tournament": "Start tournament",
         "delete_account": "Delete account",
         "download_data": "Download personal data",
+        "privacy": "Privacy policy",
         "go_home": "Go home"
     },
     "forms": {
@@ -46,7 +52,8 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "tournament": "Tournament",
         "leaderboard": "Leaderboard",
         "home": "Home",
-        "pong_tournament": "Pong Tournament"
+        "pong_tournament": "Pong Tournament",
+        "choose_lobby": "Choose Lobby"
     },
     "profile": {
         "joined": "Joined",
@@ -61,7 +68,10 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "tournament": "Tournament"
     },
     "notifs": {
-        "notif_placeholder": "No new notifications"
+        "notif_placeholder": "No new notifications",
+        "notif_friends": " sent you a friend request!",
+        "notif_match" : "challenged you to a match"
+
     },
     "gameCustom": {
         "ball_speed": "Starting Ball Speed",
@@ -73,9 +83,9 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "local": "Local",
         "remote": "Remote",
         "background": "Background",
-        "farm": "Farm",
-        "forest": "Forest",
-        "under_water": "Under Water",
+        "farm": "Adorable Farm",
+        "forest": "Enchanted Forest",
+        "under_water": "Magical Underwater",
         "searchbar": "Searchbar",
         "choose_back": "Choose background"
 
@@ -84,15 +94,16 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "username_error": "Invalid username or password.",
         "password_error": "Password must be at least 8 characters.",
         "uppercase": "missing an uppercase letter",
-		"lowercase": "missing an lowercase letter",
-		"number": "missing an number",
-		"special_char": "missing a special character",
-		"pass_lenght": "Password should be 12-64 characters long, is",
-		"forbidden": "Forbidden character",
-		"username_lenght": "Username should be ",
-		"username_lenght2": " -18 character long, is ",
-		"file_heavy": "That file is too heavy: max is 2MB!",
-		"file_extension": "Invalid extension: "
+        "lowercase": "missing an lowercase letter",
+        "number": "missing an number",
+        "special_char": "missing a special character",
+        "pass_lenght": "Password should be 12-64 characters long, is",
+        "forbidden": "Forbidden character",
+        "username_lenght": "Username should be ",
+        "username_lenght2": " -18 character long, is ",
+        "file_heavy": "That file is too heavy: max is 2MB!",
+        "file_extension": "Invalid extension: ",
+        "page404": "There''s nothing here :("
     },
     "lobby": {
         "local": "Local 1v1",
@@ -108,20 +119,32 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
     "settings": {
         "pick_color": "Pick color",
         "pick_language": "Pick language"
+    },
+    "match_history": {
+        "date": "date",
+        "opponent": "opponent",
+        "outcome": "outcome",
+        "score": "score",
+        "duration": "duration",
+        "tournament": "game mode"
     }
 }'
-);
+    );
 
 -- 2. French (fr)
-INSERT INTO language_packs (language_code, pack_json) VALUES (
-    'Francais',
-    '{
+INSERT INTO
+    language_packs (language_code, pack_json)
+VALUES
+    (
+        'Francais',
+        '{
     "buttons": {
         "submit": "Valider",
         "cancel": "Annuler",
         "search": "Rechercher",
         "delete": "Supprimer",
         "decline": "Refuser",
+        "accept": "Accepter",
         "play": "Jouer",
         "leaderboard": "Classement",
         "profile": "Profil",
@@ -131,6 +154,7 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "start_tournament": "Lancer le tournoi",
         "delete_account": "Supprimer le compte",
         "download_data": "Télécharger vos données",
+        "privacy": "Politique de confidentialité",
         "go_home": "Retourner a l''accueil"
 
     },
@@ -166,7 +190,9 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "tournament": "Tournoi"
     },
     "notifs": {
-        "notif_placeholder": "Pas de nouvelles notifications"
+        "notif_placeholder": "Pas de nouvelles notifications",
+        "notif_friends": " t''as envoye une demande d''ami!",
+        "notif_match" : " t''as challenge a un "
     },
     "gameCustom": {
         "ball_speed": "Vitesse de la balle",
@@ -178,8 +204,8 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "local": "Local",
         "remote": "Distant",
         "background": "Arrière-plan",
-        "farm": "Ferme",
-        "forest": "Forêt",
+        "farm": "Ferme adorable",
+        "forest": "Forêt enchantee",
         "under_water": "Sous l''eau",
         "searchbar": "Barre de recherche",
         "choose_back": "Choisi ton fond"
@@ -197,7 +223,9 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "username_lenght": "Le nom d''utilisateur doit faire ",
         "username_lenght2": " -18 caractères, il en fait ",
         "file_heavy": "Fichier trop volumineux : max 2 Mo !",
-        "file_extension": "Extension invalide : "
+        "file_extension": "Extension invalide : ",
+        "page404": "Il n''y a rien ici :("
+
     },
     "lobby": {
         "local": "Local 1vs1",
@@ -213,19 +241,31 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
     "settings": {
         "pick_color": "Choisir une couleur",
         "pick_language": "Choisir la langue"
+    },
+    "match_history": {
+        "date": "date",
+        "opponent": "opposant",
+        "outcome": "resultat",
+        "score": "score",
+        "duration": "duree",
+        "tournament": "mode de jeu"
     }
 }'
-);
+    );
 
 -- 3. Spanish (es)
-INSERT INTO language_packs (language_code, pack_json) VALUES (
-    'Espanol',
-    '{
+INSERT INTO
+    language_packs (language_code, pack_json)
+VALUES
+    (
+        'Espanol',
+        '{
     "buttons": {
         "submit": "Enviar",
         "cancel": "Cancelar",
         "search": "Buscar",
         "delete": "Eliminar",
+        "accept": "Aceptar",
         "decline": "Rechazar",
         "play": "Jugar",
         "leaderboard": "Clasificación",
@@ -235,7 +275,8 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "start_game": "Empezar partida",
         "start_tournament": "Empezar torneo",
         "delete_account": "Eliminar cuenta",
-        "download_data": "descargar datos",
+        "download_data": "Descargar datos",
+        "privacy": "Política de privacidad",
         "go_home": "Volver al inicio"
     },
     "forms": {
@@ -270,7 +311,9 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "tournament": "Torneo"
     },
     "notifs": {
-        "notif_placeholder": "No hay notificaciones nuevas"
+        "notif_placeholder": "No hay notificaciones nuevas",
+        "notif_friends": " te envie una solicitud de amistad!",
+        "notif_match": " te retó a un "
     },
     "gameCustom": {
         "ball_speed": "Velocidad de bola",
@@ -282,12 +325,11 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "local": "Local",
         "remote": "Remoto",
         "background": "Fondo",
-        "farm": "Granja",
-        "forest": "Bosque",
+        "farm": "Adorable granja",
+        "forest": "Bosque encantado",
         "under_water": "Bajo el agua",
         "searchbar": "barra de búsqueda",
         "choose_back": "Elige fondo"
-
     },
     "error": {
         "username_error": "Nombre de usuario o contraseña inválidos.",
@@ -301,7 +343,9 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
         "username_lenght": "El usuario debe tener ",
         "username_lenght2": " -18 caracteres, tiene ",
         "file_heavy": "El archivo es demasiado grande: ¡máx. 2MB!",
-        "file_extension": "Extensión no válida: "
+        "file_extension": "Extensión no válida: ",
+        "page404": "No hay nada aqui :("
+
     },
     "lobby": {
         "local": "Local 1vs1",
@@ -317,6 +361,14 @@ INSERT INTO language_packs (language_code, pack_json) VALUES (
     "settings": {
         "pick_color": "Elegir color",
         "pick_language": "Elegir idioma"
+    },
+    "match_history": {
+        "date": "fecha",
+        "opponent": "adversario",
+        "outcome": "resultado",
+        "score": "puntaje",
+        "duration": "duración",
+        "tournament": "modo de juego"
     }
 }'
-)
+    );

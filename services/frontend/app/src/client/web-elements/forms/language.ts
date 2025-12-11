@@ -1,5 +1,7 @@
 import type { Dictionary } from '../types-interfaces.js';
 import { origin } from '../../main.js'
+import { createVisualFeedback } from '../../error.js';
+import { errorMessageFromException } from '../../error.js';
 
 // hardcoded this so the app renders instantly without waiting for a fetch for now, will do route calling in next branch
 export const defaultDictionary: Dictionary = {
@@ -9,6 +11,7 @@ export const defaultDictionary: Dictionary = {
 		search: "Search",
 		delete: "Delete",
 		decline: "Decline",
+		accept: "Accept",
 		play: "Play",
 		leaderboard: "Leaderboard",
 		profile: "Profile",
@@ -18,6 +21,7 @@ export const defaultDictionary: Dictionary = {
 		start_tournament: "Start tournament",
 		delete_account: "Delete account",
 		download_data: "Download personal data",
+		privacy: "Privacy policy",
 		go_home: "Go home"
 	},
 	forms: {
@@ -52,8 +56,10 @@ export const defaultDictionary: Dictionary = {
 		duration: "Duration",
 		tournament: "Tournament"
 	},
-	noti2xl: {
-		notif_placeholder: "No new notifications"
+	notifs: {
+		notif_placeholder: "No new notifications",
+		notif_friends: "sent you a friend request!",
+		notif_match: " challenged you to a ",
 	},
 	gameCustom: {
 		ball_speed: "Starting Ball Speed",
@@ -65,9 +71,9 @@ export const defaultDictionary: Dictionary = {
 		local: "Local",
 		remote: "Remote",
 		background: "Background",
-		farm: "Farm",
-		forest: "Forest",
-		under_water: "Under Water",
+		farm: "Adorable Farm",
+		forest: "Enchanted forest",
+		under_water: "Magical ocean",
 		opponent_name: "Opponent Nickname",
 		choose_back: "Select background",
 		searchbar: "Searchbar"
@@ -86,7 +92,6 @@ export const defaultDictionary: Dictionary = {
 		username_lenght2: " -18 character long, is ",
 		file_heavy: "That file is too heavy: max is 2MB!",
 		file_extension: "Invalid extension: ",
-
 	},
 	lobby: {
 		local: "Local 1v1",
@@ -102,6 +107,14 @@ export const defaultDictionary: Dictionary = {
 	settings: {
 		pick_color: "Pick color",
 		pick_language: "Pick language",
+	},
+	match_history: {
+		date: "date",
+		opponent: "opponent",
+		outcome: "outcome",
+		score: "score",
+		duration: "duration",
+		tournament: "game mode",
 	}
 };
 
@@ -113,8 +126,14 @@ export async function setLanguage(lang: string): Promise<void> {
 		const response = await fetch(`https://${origin}:8443/api/bff/dictionary/${lang}`);
 
 		if (!response.ok) {
-
+			console.warn(`[LANG] Fetch failed for ${lang}. Status: ${response.status}. Reverting to default.`);
+			currentDictionary = defaultDictionary;
+			currentLanguage = 'English';
+			document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang: 'English' } }));
+			createVisualFeedback(errorMessageFromException(`[LANG] Fetch failed for ${lang}. Status: ${response.status}. Reverting to default.`));
+			return;
 		}
+
 		const newDict = (await response.json()) as Dictionary;
 
 		currentDictionary = newDict;
@@ -122,18 +141,23 @@ export async function setLanguage(lang: string): Promise<void> {
 		localStorage.setItem('preferred_language', lang);
 
 		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang } }));
-
 		console.log(`[LANG] Switched to ${lang}`);
 
 	} catch (error) {
-		console.error('[LANG] Error loading language pack:', error);
-		throw(error);
+		console.error('[LANG] Network error loading language pack:', error);
+
+		// [FIX] Fallback on network error (e.g. offline, DNS failure)
+		currentDictionary = defaultDictionary;
+		currentLanguage = 'English';
+		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang: 'English' } }));
 	}
 }
 
-export async  function initLanguage() {
-	const savedLang = localStorage.getItem('preferred_language') || "English";
-	console.log("SAVED LANG :", JSON.stringify(localStorage.getItem('preferred_language')));
+export async function initLanguage() {
+	let savedLang = localStorage.getItem('preferred_language');
+	if (!savedLang) savedLang = 'English'
 	if (savedLang !== "English")
 		await setLanguage(savedLang);
+	else
+		currentDictionary = defaultDictionary;
 }
