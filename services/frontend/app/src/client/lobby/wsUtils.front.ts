@@ -67,7 +67,7 @@ export function handleGameStart(data: any, ws: WebSocket): void {
         return;
     }
 
-    if (!data.opponent || typeof data.opponent !== 'object') {
+    if (!data.opponent || typeof data.opponent !== 'string') {
         console.error('Invalid opponent data:', data.opponent);
         createVisualFeedback('Invalid game data received.', 'error');
         return;

@@ -50,12 +50,6 @@ function handleGameRequest(fastify: FastifyInstance, gamePayload: lobbyInfo, aut
         return;
     }
 
-    if (gamePayload.lobbyID !== lobbyID) {
-        req.server.log.warn(`Lobby ID mismatch: payload=${gamePayload.lobbyID}, actual=${lobbyID}`);
-        wsSend(socket, JSON.stringify({ error: 'invalid lobby' }));
-        return;
-    }
-
     if (processGameRequest(fastify, gamePayload) === false) {
         req.server.log.error("processGameRequest failed: not enough players");
         wsSend(socket, JSON.stringify({ error: 'not enough players' }));

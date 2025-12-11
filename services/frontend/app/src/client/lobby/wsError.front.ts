@@ -21,7 +21,6 @@ const ERROR_HANDLERS: Record<string, { message: string; action: 'feedback' | 're
         message: 'You are not in a lobby. Please create or join one first!',
         action: 'feedback'
     },
-    
     'not lobby host': {
         message: 'Only the lobby host can perform this action!',
         action: 'feedback'
@@ -34,7 +33,6 @@ const ERROR_HANDLERS: Record<string, { message: string; action: 'feedback' | 're
         message: 'Unauthorized action detected. Please log in again.',
         action: 'redirect'
     },
-    
     'cannot invite yourself': {
         message: 'You cannot invite yourself to the lobby!',
         action: 'feedback'
@@ -47,11 +45,6 @@ const ERROR_HANDLERS: Record<string, { message: string; action: 'feedback' | 're
         message: 'Lobby data corrupted. Please create a new lobby!',
         action: 'redirect'
     },
-    'invalid lobby': {
-        message: 'Invalid lobby detected. Please refresh and try again!',
-        action: 'feedback'
-    },
-    
     'Invalid message format': {
         message: 'Connection error. Please refresh the page.',
         action: 'feedback'
