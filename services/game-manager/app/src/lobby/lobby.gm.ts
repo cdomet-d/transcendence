@@ -105,8 +105,8 @@ export function removeUserFromLobby(userID: string, lobbyID: string, code: numbe
 	sendUpdatedWhiteList(lobbyID);
 }
 
-export function findLobbyIDFromUserID(userID: string): string | null {
-	let lobbyID: string | null = null; 
+export function findLobbyIDFromUserID(userID: string): string | undefined {
+	let lobbyID: string | undefined = undefined; 
 	
 	for (const [_, lobbyInfo] of lobbyMap.entries()) {
 		if (lobbyInfo.userList.has(userID!)) {

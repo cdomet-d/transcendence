@@ -1,12 +1,13 @@
 import type { FastifyInstance } from 'fastify';
-import type { game, lobbyInfo, userInfo } from '../gameManager/gameManager.interface.js';
+import type { game, lobbyInfo, tournament, userInfo } from '../gameManager/gameManager.interface.js';
 import { lobbyMap } from '../lobby/lobby.gm.js';
 import { wsSend } from '../lobby/wsHandler.gm.js';
 import type { WebSocket } from '@fastify/websocket';
 import { validateData, validatePayload } from '../gameManager/inputValidation.gm.js';
+import { showBrackets } from '../tournament/tournamentStart.js';
 
-export function gameOver(game: game, serv: FastifyInstance, endLobby: boolean) {
-	showWinnerScreen(game, serv, endLobby);
+export function gameOver(game: game, serv: FastifyInstance, endLobby: boolean, tournamentObj: tournament | null, nextGame: game | undefined) {
+	showWinnerScreen(game, serv, endLobby, tournamentObj, nextGame);
 	postGameToDashboard(game);
 	patchGameToUsers(game);
 }
@@ -93,7 +94,7 @@ async function patchGameToUsers(game: game) {
 	}
 }
 
-export async function showWinnerScreen(game: game, serv: FastifyInstance, endLobby: boolean) {
+export async function showWinnerScreen(game: game, serv: FastifyInstance, endLobby: boolean, tournamentObj: tournament | null, nextGame: game | undefined) {
 	serv.log.error("IN WINNER SCREEN")
 	const lobby: lobbyInfo | undefined = lobbyMap.get(game.lobbyID);
 	if (lobby === undefined) return;
@@ -105,11 +106,11 @@ export async function showWinnerScreen(game: game, serv: FastifyInstance, endLob
 		if (game.remote === true && user2.userSocket)
 			waitForLobbyEnd(serv, user2.userSocket!);
 	}
-	else {
+	else if (tournamentObj && endLobby === false) {
 		if (user1.userSocket)
-			await waitForResultDisplay(serv, user1.userSocket!);
-		if (game.remote === true && user2.userSocket)
-			await waitForResultDisplay(serv, user2.userSocket!);
+			waitForResultDisplay(serv, user1.userSocket!, tournamentObj, lobby, nextGame);
+		if (user2.userSocket)
+			waitForResultDisplay(serv, user2.userSocket!, tournamentObj, lobby, nextGame);
 	}
 	wsSend(user1.userSocket!, JSON.stringify({ event: "END GAME", result: user1.userID! === game.winnerID ? "winner" : "looser", endLobby: endLobby}));
 	if (game.remote === true)
@@ -133,20 +134,21 @@ export function waitForLobbyEnd(serv: FastifyInstance, socket: WebSocket) {
 	});
 }
 
-function waitForResultDisplay(serv: FastifyInstance, socket: WebSocket): Promise<void> {
-	return new Promise((resolve, reject) => {
-		socket.on('message', (message: string) => {
-			try {
-				const data = JSON.parse(message);
-				serv.log.error(`DATA: ${JSON.stringify(data)}`)
-				if (!validateData(data, serv, socket)) reject("invalid input");
-				if (!validatePayload(data, data.payload, serv, socket)) reject("invalid input");
-				if (data.payload.signal === "got result")
-					resolve;
-			} catch (err: any) {
-				socket.close(1003, err.message);
-				serv.log.error(err.message);
+function waitForResultDisplay(serv: FastifyInstance, socket: WebSocket, tournamentObj: tournament, lobby: lobbyInfo, nextGame: game | undefined) {
+	socket.on('message', (message: string) => {
+		try {
+			const data = JSON.parse(message);
+			serv.log.error(`DATA IN WAIT FOR RESULT DISPLAY: ${JSON.stringify(data)}`)
+			if (!validateData(data, serv, socket)) throw new Error("invalid input");
+			if (!validatePayload(data, data.payload, serv, socket)) throw new Error("invalid input");
+			if (data.payload.signal === "got result") {
+				tournamentObj.gotEndGame += 1;
+				if (tournamentObj.gotEndGame === lobby.userList.size)
+					showBrackets(tournamentObj.bracket, lobby.lobbyID!, tournamentObj, serv, nextGame);
 			}
-		});
+		} catch (err: any) {
+			socket.close(1003, err.message);
+			serv.log.error(err.message);
+		}
 	});
 }

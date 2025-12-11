@@ -89,7 +89,12 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 					endGame(winImage, "winScreen", `${user.username!} won !`, data.endLobby);
 				else
 					endGame(looseImage, "looseScreen", `${user.username!} lost...`, data.endLobby);
-				wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
+				if (data.endGame === true)
+					wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
+				else
+					setTimeout(() => {
+						wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
+					}, 10000);
 			}
 
 			if (data.error) {

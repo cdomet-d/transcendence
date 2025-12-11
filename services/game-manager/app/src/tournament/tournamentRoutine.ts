@@ -1,19 +1,22 @@
-import { tournamentMap } from './tournamentStart.js';
-import type { game, tournament, userInfo } from '../gameManager/gameManager.interface.js';
+import { showBrackets, tournamentMap } from './tournamentStart.js';
+import type { game, lobbyInfo, tournament, userInfo } from '../gameManager/gameManager.interface.js';
 import { startGame } from '../quickmatch/createGame.js';
 import { gameOver } from '../quickmatch/gameOver.js';
 import { tournamentOver } from './tournamentOver.js';
 import type { FastifyInstance } from 'fastify';
+import { findLobbyIDFromUserID, lobbyMap } from '../lobby/lobby.gm.js';
 
 const nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }> = new Map();
 
 export async function tournamentState(serv: FastifyInstance, game: game) {
-	const tournamentObj = tournamentMap.get(game.tournamentID!);
+	const tournamentObj: tournament | undefined = tournamentMap.get(game.tournamentID!);
 	if (!tournamentObj) {
 		console.log(`${tournamentObj}`)
 		console.log('Error: Could not make tournamentObj!');
 		return;
 	}
+	const lobby: lobbyInfo | undefined = lobbyMap.get(tournamentObj.lobbyID);
+	if (lobby === undefined) return;
 
 	const index = tournamentObj.bracket.findIndex((obj) => obj.gameID === game.gameID);
 	if (index === -1) {
@@ -21,7 +24,8 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 		return;
 	}
 
-	gameOver(game, serv, false);//TODO: give false if its first and true if its second
+	if (tournamentObj.gotEndGame === lobby.userList.size)
+		gameOver(game, serv, true, tournamentObj, undefined);
 
 	const nextGame = getNextGameInBracket(tournamentObj, game);
 	if (nextGame === undefined) {
@@ -49,7 +53,7 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 	if (nextPlayers.player1 && nextPlayers.player2) {
 		tournamentObj.bracket[index] = game; // update local tournamentObj
 		nextGame.users = [nextPlayers.player1, nextPlayers.player2];
-		startGame(serv, nextGame);
+		gameOver(game, serv, false, tournamentObj, nextGame);
 		nextPlayersMap.delete(nextGameID);
 	}
 }

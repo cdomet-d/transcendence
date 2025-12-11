@@ -9,9 +9,9 @@ import { validateData, validatePayload } from '../gameManager/inputValidation.gm
 
 export const tournamentMap: Map<string, tournament> = new Map();
 
-export function startTournament(serv: FastifyInstance, tournamentObj: tournament, lobbyID: string, socket: WebSocket) {
+export function startTournament(serv: FastifyInstance, tournamentObj: tournament, lobbyID: string) {
 	tournamentMap.set(tournamentObj.tournamentID, tournamentObj);
-	showBrackets(tournamentObj.bracket, lobbyID, tournamentObj, serv);
+	showBrackets(tournamentObj.bracket, lobbyID, tournamentObj, serv, undefined);
 	postTournamentToDashboard(tournamentObj);
 }
 
@@ -45,7 +45,7 @@ async function postTournamentToDashboard(tournament: tournament) {
 	}
 };
 
-export function showBrackets(games: game[], lobbyID: string, tournamentObj: tournament, serv: FastifyInstance) {
+export function showBrackets(games: game[], lobbyID: string, tournamentObj: tournament, serv: FastifyInstance, nextGame: game | undefined) {
 	const brackets: [string, string][] = [
 		[games[0]!.users![0]!.username!, games[0]!.users![1]!.username!],
 		[games[1]!.users![0]!.username!, games[1]!.users![1]!.username!],
@@ -54,12 +54,12 @@ export function showBrackets(games: game[], lobbyID: string, tournamentObj: tour
 	if (!lobby) return;
 	for (const user of lobby.userList) {
 		if (user[1].userSocket)
-			waitForBracketDisplay(serv, user[1].userSocket, tournamentObj);
+			waitForBracketDisplay(serv, user[1].userSocket, tournamentObj, lobby.userList.size, nextGame);
 		wsSend(user[1].userSocket, JSON.stringify({ lobby: 'brackets', brackets: brackets}))
 	}
 }
 
-function waitForBracketDisplay(serv: FastifyInstance, socket: WebSocket, tournamentObj: tournament) {
+function waitForBracketDisplay(serv: FastifyInstance, socket: WebSocket, tournamentObj: tournament, nbPlayers: number, nextGame: game | undefined) {
 	socket.on('message', (message: string) => {
 	try {
 			const data = JSON.parse(message);
@@ -67,8 +67,11 @@ function waitForBracketDisplay(serv: FastifyInstance, socket: WebSocket, tournam
 			if (!validatePayload(data, data.payload, serv, socket)) throw new Error("invalid input");
 			if (data.payload.signal === "got bracket") {
 				tournamentObj.gotBracket += 1;
-				if (tournamentObj.gotBracket === 4) {
-					startFirstRound(serv, tournamentObj);
+				if (tournamentObj.gotBracket === nbPlayers) {
+					if (tournamentObj.gotEndGame === 0)
+						startFirstRound(serv, tournamentObj);
+					else if (tournamentObj.gotEndGame === nbPlayers && nextGame)
+						startGame(serv, nextGame);
 					tournamentObj.gotBracket = 0;
 				}
 			}

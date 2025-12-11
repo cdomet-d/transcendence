@@ -50,10 +50,12 @@ interface game {
 
 interface tournament {
 	tournamentID: string,
+	lobbyID: string,
 	winnerID: string | undefined | null,
 	bracket: game[],
 	nbPlayers: number,
-	gotBracket: number
+	gotBracket: number,
+	gotEndGame: number
 }
 
 // NATS

@@ -10,7 +10,7 @@ export function createTournament(payload: lobbyInfo, lobbyID: string): tournamen
 		return undefined;
 	}
 
-	const tournamentObj = makeTournamentObj(tournamentID, games, payload.nbPlayers);
+	const tournamentObj = makeTournamentObj(tournamentID, games, payload.nbPlayers, lobbyID);
 	return tournamentObj;
 }
 
@@ -60,13 +60,15 @@ function fisherYatesShuffle(usersArray: any) {
 }
 
 
-export function makeTournamentObj(tournamentID: string, games: game[], nbPlayers: number): tournament {
+export function makeTournamentObj(tournamentID: string, games: game[], nbPlayers: number, lobbyID: string): tournament {
 	const tournament: tournament = {
 		tournamentID: tournamentID,
+		lobbyID: lobbyID,
 		winnerID: null,
 		bracket: games,
 		nbPlayers: nbPlayers,
 		gotBracket: 0,
+		gotEndGame: 0,
 	}
 	return tournament;
 }

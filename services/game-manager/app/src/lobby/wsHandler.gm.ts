@@ -37,8 +37,8 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				}
 
 				if (lobbyPayload.action === 'create') {
-					let lobbyID: string | null = findLobbyIDFromUserID(userID);
-					if (lobbyID !== null)
+					let lobbyID: string | undefined = findLobbyIDFromUserID(userID);
+					if (lobbyID !== undefined)
 						removeUserFromLobby(userID, lobbyID, 0);
 					const newLobby: lobbyInfo = createLobby({userID: userID!, username: username, userSocket: socket }, lobbyPayload.format!);
 					wsSend(socket, JSON.stringify({ lobby: 'created', lobbyID: newLobby.lobbyID }))
@@ -49,7 +49,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 			if (data.event === 'GAME_REQUEST') {
 				const gamePayload = payload as lobbyInfo;
 
-				if (processGameRequest(this, gamePayload, socket) === false) {
+				if (processGameRequest(this, gamePayload) === false) {
 					console.log("Error: bad processGameRequest!");
 					wsSend(socket, JSON.stringify({ error: 'not enough players' }));
 				}
@@ -61,8 +61,8 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 
 				if (invitePayload.action === 'invite') {
 					const inviteeID = invitePayload.invitee.userID!;
-					const lobbyID: string | null = findLobbyIDFromUserID(invitePayload.hostID!);
-					if (lobbyID === null) {
+					const lobbyID: string | undefined = findLobbyIDFromUserID(invitePayload.hostID!);
+					if (lobbyID === undefined) {
 						wsSend(socket, JSON.stringify({ error: 'lobby not found' }));
 						return;
 					}
@@ -88,8 +88,8 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 						wsSend(socket, JSON.stringify({ error: 'lobby does not exist' }));
 					}
 					userID = invitePayload.invitee.userID;
-					let oldLobby: string | null = findLobbyIDFromUserID(userID);
-					if (oldLobby !== null)
+					let oldLobby: string | undefined = findLobbyIDFromUserID(userID);
+					if (oldLobby !== undefined)
 						removeUserFromLobby(userID, oldLobby, 0);
 					removeNotifFromDB(this, invitePayload.lobbyID!, userID);
 					addUserToLobby(userID!, invitePayload.invitee.username!, socket, invitePayload.lobbyID!);
@@ -106,8 +106,8 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 
 	socket.onclose = (ev: any) => {
 		if (userID !== null) {
-			let lobbyID: string | null = findLobbyIDFromUserID(userID);
-			if (lobbyID !== null)
+			let lobbyID: string | undefined = findLobbyIDFromUserID(userID);
+			if (lobbyID !== undefined)
 				removeUserFromLobby(userID, lobbyID, ev.code);
 			wsClientsMap.delete(userID);
 		}
