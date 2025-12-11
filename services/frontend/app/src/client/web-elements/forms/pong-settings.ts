@@ -13,6 +13,7 @@ import { wsConnect } from '../../lobby/wsConnect.front.js';
 import { currentDictionary } from './language.js';
 import { origin } from '../../main.js';
 import { userStatus } from '../../main.js';
+import { search } from './default-forms.js';
 
 /**
  * A form allowing user to create a local pong game.
@@ -144,13 +145,13 @@ export class RemotePongSettings extends LocalPongSettings {
 	constructor() {
 		super();
 
-		this.#searchbar = createForm('search-form');
-		this.#guestWrapper = document.createElement('div');
-		this.#guests = new Map<string, UserData>();
-		this.#inviteHandler = this.#inviteImplementation.bind(this);
-		this.#owner = '';
-		super.contentMap.get('submit')?.setAttribute('disabled', '');
-	}
+        this.#searchbar = createForm('search-form');
+        this.#guestWrapper = document.createElement('div');
+        this.#guests = new Map<string, UserData>();
+        this.#inviteHandler = this.#inviteImplementation.bind(this);
+        this.#owner = '';
+        super.contentMap.get('submit')?.setAttribute('disabled', '');
+    }
 
 	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
 		console.log('Fetch&Redirect');
