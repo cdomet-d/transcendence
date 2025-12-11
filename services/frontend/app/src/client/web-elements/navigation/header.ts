@@ -86,13 +86,13 @@ export class PageHeader extends HTMLElement {
 			if (this.contains(this.#login)) this.#login.remove();
 			if (!this.contains(this.#logout)) {
 				this.append(this.#logout);
-				this.#logout.classList.add('h-m', 'w-l');
+				this.#logout.classList.add('h-m');
 			}
 		} else {
 			if (this.contains(this.#logout)) this.#logout.remove();
 			if (!this.contains(this.#login)) {
 				this.append(this.#login);
-				this.#login.classList.add('h-m', 'w-l');
+				this.#login.classList.add('h-m');
 			}
 		}
 		return log;

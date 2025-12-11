@@ -645,7 +645,7 @@
 	.header {
 		padding-left: var(--s);
 		padding-right: var(--s);
-		grid-template-columns: 65px 1fr 1fr 60px 60px;
+		grid-template-columns: 65px 1fr 1fr 60px 120px;
 		grid-template-rows: var(--ml);
 		place-items: center;
 	}
