@@ -8,9 +8,6 @@ export function matchOutcomeFromAPIRes(res: any): MatchOutcome {
 		const trimmedDuration = res.duration.slice(0, 7);
 		res.duration = trimmedDuration;
 	}
-	if (res.hasOwnProperty('date')) {
-		console.log('[DATE TYPE]:', typeof res.date,'[DATE VALUE]:', res.date);
-	}
 	return res as MatchOutcome;
 }
 

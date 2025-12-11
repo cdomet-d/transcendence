@@ -182,6 +182,8 @@ export interface UserData {
 	status: boolean;
 	username: string;
 	winstreak: string;
+	totalWins?: string;
+	totalLosses?: string;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -337,6 +339,7 @@ export interface Dictionary {
 		password: string;
 		biography: string;
 		avatar: string;
+		searchbar: string;
 		search_placeholder: string;
 		avatar_uploader: string;
 	};
@@ -414,6 +417,9 @@ export interface Dictionary {
 	settings: {
 		pick_color: string;
 		pick_language: string;
+	};
+	notifs: {
+		notif_placeholder: string;
 	}
 }
 

@@ -91,7 +91,6 @@ export class InlineMatch extends HTMLDivElement {
 	createSpans(): InlineMatch {
 		for (const key in this.#data) {
 			let el;
-			console.log(key);
 			if (key === 'opponent' && this.#data[key] !== 'Unknown User') {
 				const opponent = this.#data[key].toString();
 				const opp: NavigationLinksData = {
@@ -108,7 +107,6 @@ export class InlineMatch extends HTMLDivElement {
 			this.append(el);
 			el.id = key;
 			if (key === 'tournament') {
-				console.log('IS TOURNAMENT');
 				el.textContent = this.#data[key as keyof MatchOutcome] ? 'Tournament' : '1vs1';
 			} else el.textContent = this.#data[key as keyof MatchOutcome].toString();
 		}

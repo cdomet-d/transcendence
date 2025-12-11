@@ -1,4 +1,3 @@
-import { redirectOnError } from '../../error.js';
 import type { Dictionary } from '../types-interfaces.js';
 
 // hardcoded this so the app renders instantly without waiting for a fetch for now, will do route calling in next branch
@@ -25,6 +24,7 @@ export const defaultDictionary: Dictionary = {
 		password: 'Password',
 		biography: 'Biography',
 		avatar: 'Avatar',
+		searchbar: 'Searchbar',
 		search_placeholder: 'Search...',
 		avatar_uploader: 'Avatar uploader',
 	},
@@ -102,6 +102,9 @@ export const defaultDictionary: Dictionary = {
 		pick_color: 'Pick color',
 		pick_language: 'Pick language',
 	},
+	notifs: {
+		notif_placeholder: 'No new notification :<',
+	}
 };
 
 export let currentDictionary: Dictionary = defaultDictionary;
@@ -114,6 +117,7 @@ export async function setLanguage(lang: string): Promise<void> {
 			throw new Error('[LANGUAGE] Could not fetch language');
 		}
 
+		console.log('Response OK')
 		const newDict = (await response.json()) as Dictionary;
 		currentDictionary = newDict;
 		currentLanguage = lang;
@@ -126,8 +130,9 @@ export async function setLanguage(lang: string): Promise<void> {
 }
 
 export async function initLanguage() {
-	const savedLang = localStorage.getItem('preferred_language') || 'English';
-	console.log('SAVED LANG :', JSON.stringify(localStorage.getItem('preferred_language')));
+	let savedLang = localStorage.getItem('preferred_language');
+	if (!savedLang) savedLang = 'English'
+	console.log(savedLang);
 	if (savedLang !== 'English') {
 		try {
 			await setLanguage(savedLang);

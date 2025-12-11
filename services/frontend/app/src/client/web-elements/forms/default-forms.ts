@@ -1,7 +1,6 @@
 import type { FormDetails, UserData } from '../types-interfaces.js';
 import type { Dictionary } from '../types-interfaces.js';
 import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
-import { currentDictionary } from './language.js';
 
 export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails {
 	return {
@@ -135,9 +134,9 @@ export function search(dic: Dictionary): FormDetails {
 		fields: [
 			{
 				id: 'searchbar',
-				labelContent: 'Searchbar',
+				labelContent: dic.forms.searchbar,
 				pattern: searchbarPattern,
-				placeholder: currentDictionary.gameCustom.searchbar,
+				placeholder: dic.gameCustom.searchbar,
 				type: 'text',
 				required: true,
 			},

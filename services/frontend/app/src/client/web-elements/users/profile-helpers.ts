@@ -25,6 +25,8 @@ export function setUserProfileCommonValues(
 	el.status = user.status;
 	el.username = user.username;
 	el.winstreak = user.winstreak;
+	el.totalWins = user.totalWins;
+	el.totalLosses = user.totalLosses;
 	setAvatar(size, el, user.avatar);
 }
 
@@ -49,6 +51,7 @@ export function createUserCardSocial(user: UserData): UserCardSocial {
  *
  */
 export function createUserInline(user: UserData): UserInline {
+	console.log(user);
 	const el = document.createElement('div', { is: 'user-inline' }) as UserInline;
 	setUserProfileCommonValues(user, 'ismall', el);
 	return el;

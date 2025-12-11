@@ -38,7 +38,6 @@ function setBiography(b: string): string {
 
 export function userDataFromAPIRes(responseObject: any): UserData {
 	if (!responseObject || typeof responseObject !== 'object' || responseObject instanceof Error) redirectOnError(router.stepBefore, 'Something bad happened :(');
-
 	const user: UserData = {
 		winstreak: responseObject.winStreak,
 		avatar: setAvatar(responseObject.avatar),
@@ -51,6 +50,8 @@ export function userDataFromAPIRes(responseObject: any): UserData {
 		status: setStatus(responseObject.status),
 		username: responseObject.username,
 	};
+	if ('totalWins' in responseObject) user.totalWins = responseObject.totalWins.toString();
+	if ('totalLosses' in responseObject) user.totalLosses = responseObject.totalLosses.toString();
 	return user;
 }
 

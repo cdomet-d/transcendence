@@ -634,8 +634,7 @@
 	}
 
 	.uinline-grid {
-		grid-template-columns: 1fr 1fr 1fr;
-		/* grid-template-rows: var(--s); */
+		grid-template-columns: 60px 1fr 1fr;
 	}
 
 	.user-profile-header-grid {

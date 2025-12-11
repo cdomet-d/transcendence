@@ -110,6 +110,7 @@ export class CriticalActionForm extends BaseForm {
 			createVisualFeedback(errorMessageFromException(error));
 			this.#reject?.(error as Error);
 		}
+		window.localStorage.removeItem('criticalChange');
 		document.body.layoutInstance?.components.get('popup')?.remove();
 	}
 }

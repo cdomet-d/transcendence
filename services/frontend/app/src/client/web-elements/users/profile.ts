@@ -76,8 +76,20 @@ export class UserProfile extends HTMLDivElement {
 	 * Sets the user's winstreak value.
 	 */
 	set winstreak(val: string) {
-		if (val !== this.#winstreak.winstreakValue) {
-			this.#winstreak.winstreakValue = val;
+		if (val !== this.#winstreak.getWinstreakValue) {
+			this.#winstreak.setWinstreakValue = val;
+		}
+	}
+
+	set totalWins(val: string) {
+		this.#winstreak.setTotalWins = val;
+		this.#winstreak.render();
+	}
+
+	set totalLosses(val: string) {
+		if (val !== this.#winstreak.getTotalLosses) {
+			this.#winstreak.setTotalLosses = val;
+			this.#winstreak.render();
 		}
 	}
 
@@ -134,6 +146,8 @@ export class UserProfile extends HTMLDivElement {
 		this.profileView = user.relation;
 		this.status = user.status;
 		this.winstreak = user.winstreak;
+		if (user.totalLosses) this.totalLosses = user.totalLosses;
+		if (user.totalWins) this.totalWins = user.totalWins;
 	}
 
 	get getAvatar() {
@@ -169,14 +183,7 @@ export class UserProfile extends HTMLDivElement {
 	}
 
 	render() {
-		this.append(
-			this.#avatar,
-			this.#username,
-			this.#joinedSince,
-			this.#biography,
-			this.#actionButtons,
-			this.#winstreak,
-		);
+		this.append(this.#avatar, this.#username, this.#joinedSince, this.#biography, this.#actionButtons, this.#winstreak);
 		this.#username.customizeStyle('f-yellow', 'f-m', 'f-bold', false);
 		this.#joinedSince.classList.add('place-self-center', 'dark');
 		this.#biography.classList.add('row-span-2');
@@ -204,18 +211,10 @@ export class UserCardSocial extends UserProfile {
 	}
 
 	override render() {
-		this.append(super.getAvatar, super.getUsername);
+		this.append(super.getAvatar, super.getUsername, super.getWinstreak);
 		super.getActionMenu.updateView();
 		super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
-		this.classList.add(
-			'grid',
-			'gap-s',
-			'place-items-center',
-			'wrap-anywhere',
-			'w-full',
-			'h-[248px]',
-			'text-center',
-		);
+		this.classList.add('grid', 'gap-s', 'place-items-center', 'wrap-anywhere', 'w-full', 'h-[248px]', 'text-center');
 	}
 }
 if (!customElements.get('user-card-social')) {
@@ -247,7 +246,7 @@ export class UserInline extends UserProfile {
 		super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);
 		super.getAvatar.classList.remove('pad-s');
 		super.getAvatar.classList.add('pad-xs');
-		this.className = `pad-xs cursor-pointer gap-xs grid uinline-grid ${super.getColor} brdr`;
+		this.className = `cursor-pointer gap-xs grid uinline-grid ${super.getColor} brdr`;
 	}
 }
 
