@@ -125,9 +125,14 @@ export async function setLanguage(lang: string): Promise<void> {
 	try {
 		const response = await fetch(`https://${origin}:8443/api/bff/dictionary/${lang}`);
 
-
-		if (!response.ok)
-			createVisualFeedback(errorMessageFromException(response.body));
+		if (!response.ok) {
+			console.warn(`[LANG] Fetch failed for ${lang}. Status: ${response.status}. Reverting to default.`);
+			currentDictionary = defaultDictionary;
+			currentLanguage = 'English';
+			document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang: 'English' } }));
+			createVisualFeedback(errorMessageFromException(`[LANG] Fetch failed for ${lang}. Status: ${response.status}. Reverting to default.`));
+			return;
+		}
 
 		const newDict = (await response.json()) as Dictionary;
 
@@ -139,8 +144,12 @@ export async function setLanguage(lang: string): Promise<void> {
 		console.log(`[LANG] Switched to ${lang}`);
 
 	} catch (error) {
-		console.error('[LANG] Error loading language pack:', error);
-		throw (error);
+		console.error('[LANG] Network error loading language pack:', error);
+
+		// [FIX] Fallback on network error (e.g. offline, DNS failure)
+		currentDictionary = defaultDictionary;
+		currentLanguage = 'English';
+		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang: 'English' } }));
 	}
 }
 
