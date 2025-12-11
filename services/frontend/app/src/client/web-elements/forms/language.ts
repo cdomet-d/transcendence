@@ -69,7 +69,7 @@ export const defaultDictionary: Dictionary = {
 		local: "Local",
 		remote: "Remote",
 		background: "Background",
-		farm: "Adorable farm",
+		farm: "Adorable Farm",
 		forest: "Enchanted forest",
 		under_water: "Magical ocean",
 		opponent_name: "Opponent Nickname",

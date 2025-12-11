@@ -1,6 +1,6 @@
 import type { FormDetails, UserData } from '../types-interfaces.js';
 import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
-import { currentDictionary, defaultDictionary } from './language.js';
+import { currentDictionary } from './language.js';
 import { origin } from '../../main.js';
 
 export function userSettingsForm(user?: UserData): FormDetails {
@@ -379,7 +379,7 @@ export function downloadData(): FormDetails {
 	}
 };
 
-export function criticalChange: FormDetails {
+export function criticalChange(): FormDetails {
 	return {
 		action: `https://${origin}:8443/api/auth/verify`,
 		heading: 'Password Required',
@@ -391,7 +391,7 @@ export function criticalChange: FormDetails {
 				id: 'password',
 				labelContent: 'Password',
 				pattern: passwordPattern,
-				placeholder: defaultDictionary.placeholders.enter_password,
+				placeholder: currentDictionary.placeholders.enter_password,
 				type: 'password',
 				required: true,
 			},

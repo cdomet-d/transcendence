@@ -107,7 +107,7 @@ export async function renderNotFound() {
 
 export async function renderHome() {
 	if (!(await prepareLayout(document.body.layoutInstance, 'home'))) return;
-	document.body.layoutInstance!.appendAndCache(createHeading('0', 'PONG!'), createMenu(main(currentDictionary), 'vertical', true));
+	document.body.layoutInstance!.appendAndCache(createHeading('0', 'PONG!'), createMenu(main(), 'vertical', true));
 	updatePageTitle('Home');
 }
 
@@ -220,8 +220,8 @@ export async function renderLobbyMenu() {
 	if (!(await prepareLayout(document.body.layoutInstance, 'lobbyMenu'))) return;
 	document.body.layoutInstance?.appendAndCache(
 		createHeading('1', currentDictionary.titles.choose_lobby),
-		createMenu(lobbyQuickmatchMenu(currentDictionary), 'horizontal', true),
-		createMenu(lobbyTournamentMenu(currentDictionary), 'vertical', true),
+		createMenu(lobbyQuickmatchMenu(), 'horizontal', true),
+		createMenu(lobbyTournamentMenu(), 'vertical', true),
 	);
 	const quickMen = document.body.layoutInstance?.components.get('quickMatchMenu') as Menu;
 	quickMen?.cache.forEach((el) => {

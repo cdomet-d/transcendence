@@ -1,6 +1,6 @@
 import type { ImgData, Size, ColorTheme } from '../types-interfaces.js';
 import { createIcon } from './helpers.js';
-import { currentDictionary, defaultDictionary } from '../forms/language.js';
+import { currentDictionary, currentDictionary } from '../forms/language.js';
 
 /**
  * Custom image element representing an icon.

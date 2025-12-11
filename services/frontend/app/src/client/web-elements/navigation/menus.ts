@@ -265,7 +265,7 @@ export class DropdownMenu extends HTMLDivElement {
 
 	#updateToggle() {
 		const selected = this.selectedElement;
-		if (!selected) return console.error('[LISTBOX] No selection');
+		if (!selected) return console.log('[LISTBOX] No selection');
 		else if (this.#toggle.textContent !== selected.textContent + ' \u25BE') {
 			this.#toggle.textContent = selected.textContent + ' \u25BE';
 			if (this.#dropdownStyle === 'dynamic') this.#updateBackground(`bg-${selected.textContent}`);

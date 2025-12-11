@@ -1,14 +1,14 @@
 import { currentDictionary } from '../forms/language.js';
 import type { ButtonData, Dictionary, MenuData, TabData, NavigationLinksData } from '../types-interfaces.js';
 
-export function main(dic: Dictionary): MenuData {
+export function main(): MenuData {
 	return {
 		id: 'mainNav',
 		links: [
 			{
 				styleButton: true,
 				id: 'leaderboard',
-				title: dic.titles.leaderboard,
+				title: currentDictionary.titles.leaderboard,
 				datalink: 'leaderboard',
 				href: '/leaderboard',
 				img: null,
@@ -16,7 +16,7 @@ export function main(dic: Dictionary): MenuData {
 			{
 				styleButton: true,
 				id: 'lobby',
-				title: dic.buttons.play,
+				title: currentDictionary.buttons.play,
 				datalink: '/lobby-menu',
 				href: '/lobby-menu',
 				img: null,
@@ -24,7 +24,7 @@ export function main(dic: Dictionary): MenuData {
 			{
 				styleButton: true,
 				id: 'profile',
-				title: dic.buttons.profile,
+				title: currentDictionary.buttons.profile,
 				datalink: 'profile',
 				href: '/me',
 				img: null,
@@ -33,7 +33,7 @@ export function main(dic: Dictionary): MenuData {
 	};
 }
 
-export function homeLink(dic: Dictionary): MenuData {
+export function homeLink(): MenuData {
 	return {
 		id: 'backHome',
 		links: [
@@ -41,7 +41,7 @@ export function homeLink(dic: Dictionary): MenuData {
 				styleButton: false,
 				datalink: 'home',
 				href: '/',
-				title: dic.titles.home,
+				title: currentDictionary.titles.home,
 				id: 'home',
 				img: {
 					alt: 'A cute pixel art blob',
@@ -54,29 +54,29 @@ export function homeLink(dic: Dictionary): MenuData {
 	};
 }
 
-export function logOut(dic: Dictionary): ButtonData {
+export function logOut(): ButtonData {
 	return {
 		type: 'button',
 		id: 'logout',
-		content: dic.buttons.logout,
+		content: currentDictionary.buttons.logout,
 		img: null,
 		ariaLabel: '',
 		style: 'red',
 	};
 }
 
-export function logIn(dic: Dictionary): ButtonData {
+export function logIn(): ButtonData {
 	return {
 		type: 'button',
 		id: 'login',
-		content: dic.buttons.login,
+		content: currentDictionary.buttons.login,
 		img: null,
 		ariaLabel: '',
 		style: 'green',
 	};
 }
 
-export function social(dic: Dictionary): MenuData {
+export function social(): MenuData {
 	return {
 		id: 'social',
 		buttons: [
@@ -112,7 +112,7 @@ export function social(dic: Dictionary): MenuData {
 				datalink: '/user/settings',
 				id: 'settings',
 				href: '/user/settings',
-				title: dic.titles.settings,
+				title: currentDictionary.titles.settings,
 				img: null,
 			},
 		],
@@ -196,27 +196,27 @@ export const userColorsMenu: ButtonData[] = [
 	},
 ];
 
-export function profileTabs(dic: Dictionary): TabData[] {
+export function profileTabs(): TabData[] {
 	return [
-		{ id: 'friends', content: dic.profile.friends, default: true, panelContent: null },
-		{ id: 'history', content: dic.profile.game_history, default: false, panelContent: null },
+		{ id: 'friends', content: currentDictionary.profile.friends, default: true, panelContent: null },
+		{ id: 'history', content: currentDictionary.profile.game_history, default: false, panelContent: null },
 	];
 }
 
-export function lobbyQuickmatchMenu(dic: Dictionary): MenuData {
+export function lobbyQuickmatchMenu(): MenuData {
 	return {
 		id: 'quickMatchMenu',
 		links: [
-			{ styleButton: true, id: 'local-quickmatch', title: dic.lobby.local, datalink: '/quick-local-lobby', href: '/quick-local-lobby', img: null },
-			{ styleButton: true, id: 'remote-quickmatch', title: dic.lobby.remote, datalink: '/quick-remote-lobby', href: '/quick-remote-lobby', img: null },
+			{ styleButton: true, id: 'local-quickmatch', title: currentDictionary.lobby.local, datalink: '/quick-local-lobby', href: '/quick-local-lobby', img: null },
+			{ styleButton: true, id: 'remote-quickmatch', title: currentDictionary.lobby.remote, datalink: '/quick-remote-lobby', href: '/quick-remote-lobby', img: null },
 		],
 	};
 }
 
-export function lobbyTournamentMenu(dic: Dictionary): MenuData {
+export function lobbyTournamentMenu(): MenuData {
 	return {
 		id: 'tournamentMenu',
-		links: [{ styleButton: true, id: 'tournament', title: dic.lobby.tournament, datalink: '/tournament-lobby', href: '/tournament-lobby', img: null }],
+		links: [{ styleButton: true, id: 'tournament', title: currentDictionary.lobby.tournament, datalink: '/tournament-lobby', href: '/tournament-lobby', img: null }],
 	};
 }
 
