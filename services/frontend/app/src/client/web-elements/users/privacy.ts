@@ -1,3 +1,5 @@
+import { createHeading } from "../typography/helpers";
+
 export class Privacy extends HTMLDivElement {
 	constructor() {
 		super();
@@ -9,25 +11,17 @@ export class Privacy extends HTMLDivElement {
 
 	render() {
 		this.id = 'privacy';
-		this.className = 'bg content-h w-full brdr overflow-y-auto overflow-x-hidden grid justify-center text-left p-l';
+		this.className = 'bg content-h w-full brdr overflow-y-auto overflow-x-hidden pad-sm';
 
-		this.innerHTML = '';
-
-		const container = document.createElement('div');
-		container.className = 'max-w-prose mx-auto w-full f-s';
-
-		const h1 = document.createElement('h1');
-		h1.textContent = 'GDPR Compliance & Data Privacy';
-		h1.className = 'f-xl f-bold mb-m text-center';
+		const h1 = createHeading('3', 'GDPR Compliance & Data Privacy');
+		const storageTitle = createHeading('3', 'What We Store');
+		const rightsTitle = createHeading('3', 'Your Rights');
 
 		const intro = document.createElement('p');
 		intro.textContent = 'We value your privacy. In compliance with the General Data Protection Regulation (GDPR), ' +
 			'this page outlines exactly what data we store, why we store it, and your rights regarding that data.';
-		intro.className = 'mb-l text-wrap f-s';
+		intro.className = 'text-wrap f-s';
 
-		const storageTitle = document.createElement('h2');
-		storageTitle.textContent = 'What We Store';
-		storageTitle.className = 'f-lg f-bold mb-s  f-s';
 
 		const storageList = document.createElement('ul');
 		storageList.className = 'list-disc list-inside mb-l space-y-s f-s';
@@ -37,7 +31,10 @@ export class Privacy extends HTMLDivElement {
 			'<strong>Authentication:</strong> Securely hashed passwords. We never store your actual password.',
 			'<strong>Game History:</strong> Statistics (Wins, Losses, Streaks) and a log of matches played to populate leaderboards and history.',
 			'<strong>Social:</strong> Your list of friends and pending friend requests.',
-			'<strong>Session Data:</strong> We use a secure HTTP-only cookie (JWT) to keep you logged in. We do not use third-party tracking cookies.'
+			'<strong>Session Data:</strong> We use a secure HTTP-only cookie (JWT) to keep you logged in. \
+			We do not use third-party tracking cookies. \
+			In that cookie, we store your userID (that we generate) and your username (that we set) so we can render your informations on the website.\
+			That cookie expires on its own after an hour.'
 		];
 
 		dataPoints.forEach(point => {
@@ -46,7 +43,6 @@ export class Privacy extends HTMLDivElement {
 			storageList.appendChild(li);
 		});
 
-		const rightsTitle = document.createElement('h2');
 		rightsTitle.textContent = 'Your Rights';
 		rightsTitle.className = 'f-lg f-bold mb-s f-s';
 
@@ -65,8 +61,7 @@ export class Privacy extends HTMLDivElement {
 			rightsList.appendChild(li);
 		});
 
-		container.append(h1, intro, storageTitle, storageList, rightsTitle, rightsList);
-		this.append(container);
+		this.append(h1, intro, storageTitle, storageList, rightsTitle, rightsList);
 	}
 }
 

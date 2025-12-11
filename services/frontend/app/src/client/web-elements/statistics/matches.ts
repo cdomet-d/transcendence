@@ -91,7 +91,7 @@ export class InlineMatch extends HTMLDivElement {
 	createSpans(): InlineMatch {
 		for (const key in this.#data) {
 			let el;
-			if (key === 'opponent' && this.#data[key] !== 'Unknown User') {
+			if (key === 'opponent' && this.#data[key] !== 'John Doe') {
 				const opponent = this.#data[key].toString();
 				const opp: NavigationLinksData = {
 					styleButton: false,

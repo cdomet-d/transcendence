@@ -21,6 +21,7 @@ import { router } from '../../main.js';
 import { currentDictionary, setLanguage } from './language.js';
 import { PrivacyButtonForm } from './gdprForm.js';
 import { privacyButton } from './default-forms.js';
+
 // import imageCompression from 'browser-image-compression';
 
 const MAX_FILE = 1024 * 1024; // 1 MB

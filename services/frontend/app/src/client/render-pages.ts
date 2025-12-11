@@ -315,10 +315,7 @@ export async function renderPrivacy() {
 	if (!(await prepareLayout(document.body.layoutInstance, 'privacy'))) return;
 
 	try {
-		const wrapper = createWrapper('privacy');
-		// createHeading('2', 'Your privacy')
-		wrapper.append(createPrivacy());
-		document.body.layoutInstance!.appendAndCache(wrapper);
+		document.body.layoutInstance!.appendAndCache(createPrivacy());
 	} catch (error) {
 		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
 	}

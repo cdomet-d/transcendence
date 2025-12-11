@@ -897,7 +897,7 @@ export async function refreshJWTForUsernameChange(auth: string | undefined, user
 			secure: true,
 			sameSite: 'none',
 			path: '/',
-			maxAge: 60 * 60 * 1000,
+			maxAge: 3600,
 		});
 		throw {
 			code: 401,
@@ -910,7 +910,7 @@ export async function refreshJWTForUsernameChange(auth: string | undefined, user
 		secure: true,
 		sameSite: 'none',
 		path: '/',
-		maxAge: 60 * 60 * 1000,
+		maxAge: 3600,
 	});
 }
 

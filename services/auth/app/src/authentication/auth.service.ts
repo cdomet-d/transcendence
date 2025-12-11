@@ -107,7 +107,7 @@ export function setCookie(reply: FastifyReply, token: string) {
 		secure: true,
 		sameSite: 'none',
 		path: '/',
-		maxAge: 60 * 60 * 1000,
+		maxAge: 3600,
 	});
 }
 
@@ -117,7 +117,7 @@ export function clearCookie(reply: FastifyReply) {
 		secure: true,
 		sameSite: 'none',
 		path: '/',
-		maxAge: 60 * 60 * 1000,
+		maxAge: 3600,
 	});
 }
 

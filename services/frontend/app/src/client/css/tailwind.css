@@ -256,6 +256,14 @@
 		overflow: hidden;
 	}
 
+	footer {
+		position: absolute;
+		bottom: 0px;
+		left: 0px;
+		text-align: left;
+		padding: var(--s);
+	}
+
 	p,
 	span {
 		margin: 0;
@@ -343,9 +351,27 @@
 
 	input[type="range"] {
 		height: 18.5px;
+		appearance: none;
+		-webkit-appearance: none;
 	}
 
 	input[type="range"]::-moz-range-thumb {
+		box-sizing: border-box;
+		cursor: pointer;
+		outline: none;
+		border: none;
+		border-radius: 0;
+		width: var(--xs);
+		height: var(--sm);
+		background-color: var(--orange);
+		border-top: 2px solid var(--highlight-orange);
+		border-bottom: 2px solid var(--shadow-orange);
+		box-shadow: -2px 0 0 0 var(--border), 2px 0 0 0 var(--border),
+			0 -2px 0 0 var(--border), 0 2px 0 0 var(--border);
+	}
+
+	input[type="range"]::-webkit-slider-thumb {
+		-webkit-appearance: none;
 		box-sizing: border-box;
 		cursor: pointer;
 		outline: none;
