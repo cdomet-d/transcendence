@@ -642,9 +642,15 @@ export async function processMatches(log: any, userID: string, token: string): P
 			const scoreLoser = Math.min(myScore, opponentScore);
 			const scoreString = `${scoreWinner} - ${scoreLoser}`;
 
-			const opponentName = opponentMap.get(opponentID) || 'Anonyme';
+			const opponentName = opponentMap.get(opponentID) || 'John Doe';
 
 			const isTournament = rawMatch.tournamentID > 0;
+			let tournamentFront = ""; 
+			if (isTournament === false)
+				tournamentFront = "no";
+			else
+				tournamentFront === JSON.stringify(rawMatch.tournamentID);
+
 
 			const match: Matches = {
 				date: formatMatchDate(rawMatch.startTime),
@@ -652,12 +658,8 @@ export async function processMatches(log: any, userID: string, token: string): P
 				outcome: outcome,
 				score: scoreString,
 				duration: formatDuration(rawMatch.duration),
-				tournament: isTournament,
+				tournament: tournamentFront,
 			};
-			console.log('START TIME', JSON.stringify(match.date));
-
-
-			console.log('in process matches', JSON.stringify(match));
 			return match;
 		});
 

@@ -82,7 +82,7 @@ export class CriticalActionForm extends BaseForm {
 
 	static show(): Promise<string> {
 		const dialog = document.createElement('dialog', { is: 'custom-popup' }) as Popup;
-		const form = createForm('pw-form', criticalChange(currentDictionary));
+		const form = createForm('pw-form', criticalChange());
 		form.classList.add('bg', 'brdr', 'pad-s');
 		document.body.layoutInstance?.appendAndCache(dialog);
 		dialog.appendAndCache(form);

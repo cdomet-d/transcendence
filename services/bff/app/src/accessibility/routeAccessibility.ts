@@ -18,31 +18,43 @@ export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 
 	serv.get('/dictionary/:lang', { schema: dictionaryGet }, async (request, reply) => {
 		try {
-			let { lang } = request.params as { lang: string };
-			const safeLang = cleanInput(lang);
+			const { lang } = request.params as { lang: string };
 
-			if (lang === 'Español')
-				lang = "Espanol";
+			const langMap: Record<string, string> = {
+				'English': 'English',
+				'Français': 'Français',
+				'French': 'Francais',
+				'Español': 'Espanol',
+				'Espanol': 'Espanol',
+				'en': 'English',
+				'fr': 'Francais',
+				'es': 'Espanol'
+			};
 
-			const response = await fetchLanguagePack(serv.log, lang);
+			const safeInput = cleanInput(lang);
+
+			const targetCode = langMap[lang] || langMap[safeInput] || safeInput;
+
+			const response = await fetchLanguagePack(serv.log, targetCode);
 
 			if (!response.ok) {
 				if (response.status === 404)
 					throw { code: 404, message: 'Dictionary not found' };
-				throw { code: response.status, message: 'Error fetching dictionary' };
+
+				throw { code: response.status, message: 'Error fetching dictionary from service' };
 			}
 
 			const dictionary = await response.json();
 			return reply.code(200).send(dictionary);
 
 		} catch (error) {
-			serv.log.error(`[BFF] Error fetching dictionary: ${error}`);
+			serv.log.error(`[BFF] Error fetching dictionary: ${JSON.stringify(error)}`);
+
 			if (typeof error === 'object' && error !== null && 'code' in error) {
 				const customError = error as { code: number; message: string };
-				if (customError.code === 404)
-					return reply.code(404).send({ message: '[BFF] Error fetching dictionary' });
+				return reply.code(customError.code as any).send({ message: customError.message });
 			}
-			throw (error);
+			throw(error)
 		}
 	});
 }

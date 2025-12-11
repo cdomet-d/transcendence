@@ -95,7 +95,10 @@ export async function renderNotFound() {
 	document.body.header?.classList.add('hidden');
 	document.body.header?.setAttribute('hidden', '');
 	const goHome = createLink(goHomeData, false) as NavigationLinks;
-	document.body.layoutInstance!.appendAndCache(createNoResult('dark', 'i2xl'), goHome);
+	const noResult = createNoResult('dark', 'i2xl');
+	noResult.setErrorMessage(currentDictionary.error.page404);
+	console.log("PAGE404", currentDictionary.error.page404);
+	document.body.layoutInstance!.appendAndCache(noResult, goHome);
 	goHome.classList.remove('w-full');
 	goHome.classList.add('w-1/4', 'place-self-center');
 	updatePageTitle('Not Found');
@@ -103,7 +106,7 @@ export async function renderNotFound() {
 
 export async function renderHome() {
 	if (!(await prepareLayout(document.body.layoutInstance, 'home'))) return;
-	document.body.layoutInstance!.appendAndCache(createHeading('0', 'PONG!'), createMenu(main(currentDictionary), 'vertical', true));
+	document.body.layoutInstance!.appendAndCache(createHeading('0', 'PONG!'), createMenu(main(), 'vertical', true));
 	updatePageTitle('Home');
 }
 
@@ -116,13 +119,13 @@ export async function renderAuth() {
 			id: 'login-tab',
 			content: currentDictionary.titles.login,
 			default: true,
-			panelContent: createForm('login-form', loginForm(currentDictionary)),
+			panelContent: createForm('login-form', loginForm()),
 		},
 		{
 			id: 'registration-tab',
 			content: currentDictionary.titles.register,
 			default: false,
-			panelContent: createForm('registration-form', registrationForm(currentDictionary)),
+			panelContent: createForm('registration-form', registrationForm()),
 		},
 	];
 	wrapper.append(createTabs(authOptions));
@@ -204,7 +207,7 @@ export async function renderSettings() {
 		}
 		const data = await raw.json();
 		const user = userDataFromAPIRes(data);
-		document.body.layoutInstance?.appendAndCache(createForm('settings-form', userSettingsForm(currentDictionary, user), user));
+		document.body.layoutInstance?.appendAndCache(createForm('settings-form', userSettingsForm(user), user));
 		updatePageTitle(status.username + 'Settings');
 	} catch (error) {
 		console.error(errorMessageFromException(error));
@@ -216,8 +219,8 @@ export async function renderLobbyMenu() {
 	if (!(await prepareLayout(document.body.layoutInstance, 'lobbyMenu'))) return;
 	document.body.layoutInstance?.appendAndCache(
 		createHeading('1', currentDictionary.titles.choose_lobby),
-		createMenu(lobbyQuickmatchMenu(currentDictionary), 'horizontal', true),
-		createMenu(lobbyTournamentMenu(currentDictionary), 'vertical', true),
+		createMenu(lobbyQuickmatchMenu(), 'horizontal', true),
+		createMenu(lobbyTournamentMenu(), 'vertical', true),
 	);
 	const quickMen = document.body.layoutInstance?.components.get('quickMatchMenu') as Menu;
 	quickMen?.cache.forEach((el) => {
@@ -233,7 +236,7 @@ export async function renderQuickLocalLobby() {
 	const status = await prepareLayout(document.body.layoutInstance, 'quickLobby');
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 
-	const form: LocalPongSettings = createForm('local-pong-settings', localPong(currentDictionary));
+	const form: LocalPongSettings = createForm('local-pong-settings', localPong());
 	document.body.layoutInstance?.appendAndCache(form);
 	form.owner = status.username!;
 	form.format = 'quickmatch';
@@ -248,7 +251,7 @@ export async function renderQuickRemoteLobby(param?: Match<Partial<Record<string
 	const status = await prepareLayout(document.body.layoutInstance, 'quickLobby');
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 
-	const form: RemotePongSettings = createForm('remote-pong-settings', remotePong(currentDictionary));
+	const form: RemotePongSettings = createForm('remote-pong-settings', remotePong());
 	form.format = 'quickmatch';
 	form.formInstance = 'remoteForm';
 	document.body.layoutInstance?.appendAndCache(form);
@@ -267,7 +270,7 @@ export async function renderTournamentLobby(param?: Match<Partial<Record<string,
 	const status = await prepareLayout(document.body.layoutInstance, 'tournamentLobby');
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 
-	const form: LocalPongSettings = createForm('remote-pong-settings', pongTournament(currentDictionary));
+	const form: LocalPongSettings = createForm('remote-pong-settings', pongTournament());
 	document.body.layoutInstance?.appendAndCache(form);
 	form.owner = status.username!;
 	form.format = 'tournament';
@@ -305,8 +308,10 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 }
 
 function getGameBackground(background?: string): [pongTheme, ImgData[]] {
-	if (background === 'Adorable Farm') return [farm, farmAssets];
-	if (background === 'Magical Underwater') return [ocean, oceanAssets];
+	if (background === 'farm') return [farm, farmAssets];
+	if (background === 'ocean') return [ocean, oceanAssets];
+	// if (background === "Enchanted Forest")
+	//     return [] //TODO
 	return [defaultTheme, []];
 }
 

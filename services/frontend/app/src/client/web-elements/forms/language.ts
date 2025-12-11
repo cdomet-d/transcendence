@@ -1,23 +1,27 @@
 import type { Dictionary } from '../types-interfaces.js';
+import { createVisualFeedback } from '../../error.js';
+import { errorMessageFromException } from '../../error.js';
 
 // hardcoded this so the app renders instantly without waiting for a fetch for now, will do route calling in next branch
 export const defaultDictionary: Dictionary = {
 	buttons: {
-		submit: 'Submit',
-		cancel: 'Cancel',
-		search: 'Search',
-		delete: 'Delete',
-		decline: 'Decline',
-		play: 'Play',
-		leaderboard: 'Leaderboard',
-		profile: 'Profile',
-		login: 'Log in',
-		logout: 'Log out',
-		start_game: 'Start game',
-		start_tournament: 'Start tournament',
-		delete_account: 'Delete account',
-		download_data: 'Download personal data',
-		go_home: 'Go home',
+		submit: "Submit",
+		cancel: "Cancel",
+		search: "Search",
+		delete: "Delete",
+		decline: "Decline",
+		accept: "Accept",
+		play: "Play",
+		leaderboard: "Leaderboard",
+		profile: "Profile",
+		login: "Log in",
+		logout: "Log out",
+		start_game: "Start game",
+		start_tournament: "Start tournament",
+		delete_account: "Delete account",
+		download_data: "Download personal data",
+		privacy: "Privacy policy",
+		go_home: "Go home"
 	},
 	forms: {
 		username: 'Username',
@@ -52,40 +56,42 @@ export const defaultDictionary: Dictionary = {
 		duration: 'Duration',
 		tournament: 'Tournament',
 	},
-	noti2xl: {
-		notif_placeholder: 'No new notifications',
+	notifs: {
+		notif_placeholder: "No new notifications",
+		notif_friends: "sent you a friend request!",
+		notif_match: " challenged you to a ",
 	},
 	gameCustom: {
-		ball_speed: 'Starting Ball Speed',
-		paddle_size: 'Paddle Size',
-		paddle_speed: 'Paddle Speed',
-		paddle_horizontal: 'Horizontal',
-		opponent: 'Opponent',
-		start: 'Start Game',
-		local: 'Local',
-		remote: 'Remote',
-		background: 'Background',
-		farm: 'Farm',
-		under_water: 'Under Water',
-		opponent_name: 'Opponent Nickname',
-		choose_back: 'Select background',
-		searchbar: 'Searchbar',
+		ball_speed: "Starting Ball Speed",
+		paddle_size: "Paddle Size",
+		paddle_speed: "Paddle Speed",
+		paddle_horizontal: "Horizontal",
+		opponent: "Opponent",
+		start: "Start Game",
+		local: "Local",
+		remote: "Remote",
+		background: "Background",
+		farm: "Adorable Farm",
+		under_water: "Magical ocean",
+		opponent_name: "Opponent Nickname",
+		choose_back: "Select background",
+		searchbar: "Searchbar"
 	},
 	error: {
 		username_error: 'Invalid username or password.',
 		password_error: 'Password must be at least 8 characters.',
 		forbidden_error: 'Forbidden character: ',
 		page404: "There's nothing here :<",
-		uppercase: 'missing an uppercase letter',
-		lowercase: 'missing an lowercase letter',
-		number: 'missing an number',
-		special_char: 'missing a special character',
-		pass_lenght: 'Password should be 12-64 characters long, is',
-		forbidden: 'Forbidden character',
-		username_lenght: 'Username should be ',
-		username_lenght2: ' -18 character long, is ',
-		file_heavy: 'That file is too heavy: max is 2MB!',
-		file_extension: 'Invalid extension: ',
+		uppercase: "missing an uppercase letter",
+		lowercase: "missing an lowercase letter",
+		number: "missing an number",
+		special_char: "missing a special character",
+		pass_lenght: "Password should be 12-64 characters long, is",
+		forbidden: "Forbidden character",
+		username_lenght: "Username should be ",
+		username_lenght2: " -18 character long, is ",
+		file_heavy: "That file is too heavy: max is 2MB!",
+		file_extension: "Invalid extension: ",
 	},
 	lobby: {
 		local: 'Local 1v1',
@@ -99,11 +105,16 @@ export const defaultDictionary: Dictionary = {
 		upload_file: 'Choose a file from your computer...',
 	},
 	settings: {
-		pick_color: 'Pick color',
-		pick_language: 'Pick language',
+		pick_color: "Pick color",
+		pick_language: "Pick language",
 	},
-	notifs: {
-		notif_placeholder: 'No new notification :<',
+	match_history: {
+		date: "date",
+		opponent: "opponent",
+		outcome: "outcome",
+		score: "score",
+		duration: "duration",
+		tournament: "game mode",
 	}
 };
 
@@ -114,10 +125,14 @@ export async function setLanguage(lang: string): Promise<void> {
 	try {
 		const response = await fetch(`https://${API_URL}:8443/api/bff/dictionary/${lang}`);
 		if (!response.ok) {
-			throw new Error('[LANGUAGE] Could not fetch language');
+			console.warn(`[LANG] Fetch failed for ${lang}. Status: ${response.status}. Reverting to default.`);
+			currentDictionary = defaultDictionary;
+			currentLanguage = 'English';
+			document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang: 'English' } }));
+			createVisualFeedback(errorMessageFromException(`[LANG] Fetch failed for ${lang}. Status: ${response.status}. Reverting to default.`));
+			return;
 		}
 
-		console.log('Response OK')
 		const newDict = (await response.json()) as Dictionary;
 		currentDictionary = newDict;
 		currentLanguage = lang;
@@ -125,19 +140,20 @@ export async function setLanguage(lang: string): Promise<void> {
 		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang } }));
 		console.log(`[LANG] Switched to ${lang}`);
 	} catch (error) {
-		throw error;
+		console.error('[LANG] Network error loading language pack:', error);
+
+		// [FIX] Fallback on network error (e.g. offline, DNS failure)
+		currentDictionary = defaultDictionary;
+		currentLanguage = 'English';
+		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang: 'English' } }));
 	}
 }
 
 export async function initLanguage() {
 	let savedLang = localStorage.getItem('preferred_language');
 	if (!savedLang) savedLang = 'English'
-	console.log(savedLang);
-	if (savedLang !== 'English') {
-		try {
-			await setLanguage(savedLang);
-		} catch (e) {
-			throw e;
-		}
-	}
+	if (savedLang !== "English")
+		await setLanguage(savedLang);
+	else
+		currentDictionary = defaultDictionary;
 }

@@ -34,7 +34,7 @@ export class LocalPongSettings extends BaseForm {
 	/* -------------------------------------------------------------------------- */
 	constructor() {
 		super();
-		this.#backgroundSelector = createDropdown(backgroundMenu, currentDictionary.gameCustom.choose_back, 'static');
+		this.#backgroundSelector = createDropdown(backgroundMenu(), currentDictionary.gameCustom.choose_back, 'static');
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
 		this.#format = "";
 		this.#formInstance = "";

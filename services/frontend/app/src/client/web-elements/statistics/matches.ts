@@ -1,5 +1,6 @@
 import type { NavigationLinks } from '../navigation/links.js';
 import type { MatchOutcome, NavigationLinksData } from '../types-interfaces.js';
+import {currentDictionary} from '../forms/language.js'
 
 const emptyMatch: MatchOutcome = {
 	date: '',
@@ -70,13 +71,13 @@ export class InlineMatch extends HTMLDivElement {
 	 * @returns {InlineMatch} The InlineMatch element with header spans.
 	 */
 	createHeader(): InlineMatch {
-		for (const key in this.#data) {
+		for (const [key, value] of Object.entries(currentDictionary.match_history)) {
 			const span = document.createElement('span');
 			this.append(span);
 			span.classList.add('f-bold', 'f-orange');
 			span.classList.add('text-center');
 			span.id = key;
-			span.textContent = key;
+			span.textContent = value;
 		}
 		this.classList.add('bg-yellow', 'sticky', 'top-0', 'thin', 'brdr');
 		this.id = 'matchesheader';

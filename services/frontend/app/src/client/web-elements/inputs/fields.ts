@@ -1,7 +1,7 @@
 import type { InputFieldsData } from '../types-interfaces.js';
 import { Checkbox } from './buttons.js';
 import { createCheckbox } from './helpers.js';
-import { defaultDictionary } from '../forms/language.js';
+import { currentDictionary, } from '../forms/language.js';
 
 const MAX_SIZE = 1024 * 1024; // 1MB
 
@@ -55,13 +55,13 @@ export class CustomInput extends HTMLInputElement {
         const val = el.value;
         let feedback: string[] = [];
 		const forbiddenRegex = /[^a-zA-Z0-9@$!%*?&]/;
-		if (forbiddenRegex.test(val)) feedback.push(defaultDictionary.error.forbidden + val.match(forbiddenRegex))
-        if (!/[A-Z]/.test(val)) feedback.push(defaultDictionary.error.uppercase);
-        if (!/[a-z]/.test(val)) feedback.push(defaultDictionary.error.lowercase); 
-        if (!/[0-9]/.test(val)) feedback.push(defaultDictionary.error.number);
-        if (!/[@$!%*?&]/.test(val)) feedback.push(defaultDictionary.error.special_char);
+		if (forbiddenRegex.test(val)) feedback.push(currentDictionary.error.forbidden + val.match(forbiddenRegex))
+        if (!/[A-Z]/.test(val)) feedback.push(currentDictionary.error.uppercase);
+        if (!/[a-z]/.test(val)) feedback.push(currentDictionary.error.lowercase); 
+        if (!/[0-9]/.test(val)) feedback.push(currentDictionary.error.number);
+        if (!/[@$!%*?&]/.test(val)) feedback.push(currentDictionary.error.special_char);
         if (val.length < 12 || val.length > 64)
-            feedback.push(defaultDictionary.error.pass_lenght + `${val.length}`);
+            feedback.push(currentDictionary.error.pass_lenght, `${val.length}`);
         return feedback;
     }
 
@@ -71,11 +71,10 @@ export class CustomInput extends HTMLInputElement {
 		el.id === 'searchbar' ? (min = 0) : (min = 4);
 		const val = el.value;
 		let feedback: string[] = [];
-		if (forbiddenRegex.test(val)) feedback.push(defaultDictionary.error.forbidden + val.match(forbiddenRegex));
-		if (!/[A-Za-z0-9]/.test(val)) feedback.push(defaultDictionary.error.forbidden);
+		if (!/[A-Za-z0-9]/.test(val)) feedback.push(currentDictionary.error.forbidden);
 		if (val.length < min || val.length > 18)
 			feedback.push(
-				defaultDictionary.error.username_lenght + `${min.toString()}` + defaultDictionary.error.username_lenght2 + `${val.length}`,
+				currentDictionary.error.username_lenght, `${min.toString()}`, currentDictionary.error.username_lenght2, `${val.length}`,
 			);
 		return feedback;
 	}
@@ -90,10 +89,10 @@ export class CustomInput extends HTMLInputElement {
 
 		if (file[0].size >= MAX_SIZE) {
 			el.setCustomValidity('too large');
-			feedback.push(defaultDictionary.error.file_heavy);
+			feedback.push(currentDictionary.error.file_heavy);
 		} else if (!allowed.includes(file[0].type)) {
-			el.setCustomValidity(defaultDictionary.error.file_heavy);
-			feedback.push(defaultDictionary.error.file_heavy, `${file[0].type}`);
+			el.setCustomValidity(currentDictionary.error.file_heavy);
+			feedback.push(currentDictionary.error.file_heavy, `${file[0].type}`);
 		} else {
 			el.setCustomValidity('');
 		}

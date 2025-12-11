@@ -7,6 +7,7 @@ import { createVisualFeedback, errorMessageFromException, exceptionFromResponse 
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 import { userStatus, type userStatusInfo } from '../../main.js';
 import { origin } from '../../main.js';
+import { currentDictionary } from '../forms/language.js';
 
 interface GameInvite {
 	lobbyID: string;
@@ -20,7 +21,7 @@ const notificationBtns: MenuData = {
 		{
 			id: 'decline',
 			type: 'button',
-			content: 'Decline',
+			content: currentDictionary.buttons.decline,
 			img: null,
 			ariaLabel: 'Decline invitation',
 			style: 'red',
@@ -29,7 +30,7 @@ const notificationBtns: MenuData = {
 		{
 			id: 'accept',
 			type: 'button',
-			content: 'Accept',
+			content: currentDictionary.buttons.accept,
 			img: null,
 			ariaLabel: 'Accept invitation',
 			style: 'green',
