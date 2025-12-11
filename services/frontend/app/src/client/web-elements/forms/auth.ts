@@ -1,10 +1,10 @@
 import { BaseForm } from './baseform';
 import { router } from '../../main';
 import { exceptionFromResponse, createVisualFeedback, errorMessageFromException } from '../../error';
-
 import { createForm } from './helpers';
 import { criticalChange } from './default-forms';
 import { Popup } from '../layouts/popup';
+import { currentDictionary } from './language';
 
 export class RegistrationForm extends BaseForm {
 	constructor() {
@@ -82,7 +82,7 @@ export class CriticalActionForm extends BaseForm {
 
 	static show(): Promise<string> {
 		const dialog = document.createElement('dialog', { is: 'custom-popup' }) as Popup;
-		const form = createForm('pw-form', criticalChange);
+		const form = createForm('pw-form', criticalChange(currentDictionary));
 		form.classList.add('bg', 'brdr', 'pad-s');
 		document.body.layoutInstance?.appendAndCache(dialog);
 		dialog.appendAndCache(form);

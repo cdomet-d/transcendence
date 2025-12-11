@@ -1,7 +1,7 @@
 import type { FormDetails, UserData } from '../types-interfaces.js';
 import type { Dictionary } from '../types-interfaces.js';
 import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
-import { currentDictionary, defaultDictionary } from './language.js';
+import { currentDictionary } from './language.js';
 
 export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails {
 	return {
@@ -50,7 +50,7 @@ export function userSettingsForm(dic: Dictionary, user?: UserData): FormDetails 
 			content: dic.buttons.submit,
 			img: null,
 			ariaLabel: '',
-			style: 'green'
+			style: 'green',
 		},
 	};
 }
@@ -145,7 +145,7 @@ export function search(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			content: "Search",
+			content: 'Search',
 			img: null,
 			ariaLabel: '',
 		},
@@ -359,8 +359,8 @@ export function deleteAccount(dic: Dictionary): FormDetails {
 			ariaLabel: '',
 			style: 'red',
 		},
-	}
-};
+	};
+}
 
 export function downloadData(dic: Dictionary): FormDetails {
 	return {
@@ -374,31 +374,33 @@ export function downloadData(dic: Dictionary): FormDetails {
 			id: 'submit',
 			type: 'submit',
 			//content: dic.buttons.download_data,
-			content: "Download personal data",
+			content: 'Download personal data',
 			img: null,
 			ariaLabel: '',
 		},
-	}
-};
+	};
+}
 
-export const criticalChange: FormDetails = {
-	action: `https://${API_URL}:8443/api/auth/verify`,
-	heading: 'Password Required',
-	ariaLabel: 'Verify your password',
-	id: 'pw-check',
-	method: 'POST',
-	fields: [
-		{
-			id: 'password',
-			labelContent: 'Password',
-			pattern: passwordPattern,
-			placeholder: defaultDictionary.placeholders.enter_password,
-			type: 'password',
-			required: true,
-		},
-	],
-	button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
-};
+export function criticalChange(dic: Dictionary): FormDetails {
+	return {
+		action: `https://${API_URL}:8443/api/auth/verify`,
+		heading: 'Password Required',
+		ariaLabel: 'Verify your password',
+		id: 'pw-check',
+		method: 'POST',
+		fields: [
+			{
+				id: 'password',
+				labelContent: 'Password',
+				pattern: passwordPattern,
+				placeholder: dic.placeholders.enter_password,
+				type: 'password',
+				required: true,
+			},
+		],
+		button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+	};
+}
 
 export function privacyButton(dic: Dictionary): FormDetails {
 	return {
@@ -411,9 +413,9 @@ export function privacyButton(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			content: "Privacy Policy",
+			content: 'Privacy Policy',
 			img: null,
 			ariaLabel: 'Go to privacy policy',
 		},
-	}
-};
+	};
+}
