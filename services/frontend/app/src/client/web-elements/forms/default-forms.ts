@@ -1,5 +1,4 @@
 import type { FormDetails, UserData } from '../types-interfaces.js';
-import type { Dictionary } from '../types-interfaces.js';
 import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
 import { currentDictionary, defaultDictionary } from './language.js';
 import { origin } from '../../main.js';

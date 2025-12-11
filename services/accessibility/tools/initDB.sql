@@ -82,9 +82,9 @@ VALUES
         "local": "Local",
         "remote": "Remote",
         "background": "Background",
-        "farm": "Farm",
-        "forest": "Forest",
-        "under_water": "Under Water",
+        "farm": "Adorable Farm",
+        "forest": "Enchanted Forest",
+        "under_water": "Magical Underwater",
         "searchbar": "Searchbar",
         "choose_back": "Choose background"
 
@@ -195,8 +195,8 @@ VALUES
         "local": "Local",
         "remote": "Distant",
         "background": "Arrière-plan",
-        "farm": "Ferme",
-        "forest": "Forêt",
+        "farm": "Ferme adorable",
+        "forest": "Forêt enchantee",
         "under_water": "Sous l''eau",
         "searchbar": "Barre de recherche",
         "choose_back": "Choisi ton fond"
@@ -308,8 +308,8 @@ VALUES
         "local": "Local",
         "remote": "Remoto",
         "background": "Fondo",
-        "farm": "Granja",
-        "forest": "Bosque",
+        "farm": "Adorable granja",
+        "forest": "Bosque encantado",
         "under_water": "Bajo el agua",
         "searchbar": "barra de búsqueda",
         "choose_back": "Elige fondo"

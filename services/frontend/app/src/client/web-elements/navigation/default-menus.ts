@@ -1,3 +1,4 @@
+import { currentDictionary } from '../forms/language.js';
 import type { ButtonData, Dictionary, MenuData, TabData, NavigationLinksData } from '../types-interfaces.js';
 
 export function main(dic: Dictionary): MenuData {
@@ -125,9 +126,9 @@ export const languageMenu: ButtonData[] = [
 ];
 
 export const backgroundMenu: ButtonData[] = [
-	{ id: 'farm', ariaLabel: 'Farm pong theme', content: 'Adorable Farm', img: null, type: 'button' },
-	{ id: 'forest', ariaLabel: 'Forest pong theme', content: 'Enchanted Forest', img: null, type: 'button' },
-	{ id: 'underwater', ariaLabel: 'Ocean pong theme', content: 'Magical Underwater', img: null, type: 'button' },
+	{ id: 'farm', ariaLabel: 'Farm pong theme', content: currentDictionary.gameCustom.farm, img: null, type: 'button' },
+	{ id: 'forest', ariaLabel: 'Forest pong theme', content: currentDictionary.gameCustom.forest, img: null, type: 'button' },
+	{ id: 'underwater', ariaLabel: 'Ocean pong theme', content: currentDictionary.gameCustom.under_water, img: null, type: 'button' },
 ];
 
 export const userColorsMenu: ButtonData[] = [

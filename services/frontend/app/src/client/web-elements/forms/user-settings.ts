@@ -116,7 +116,7 @@ export class UserSettingsForm extends BaseForm {
 						console.log("Updating language to:", newLangCode);
 
 						await setLanguage(newLangCode);
-						//TODO check if it belongs here
+						console.log("DICO: ", JSON.stringify(currentDictionary));
 					}
 				} catch (e) {
 					console.error("Failed to parse request body for language update", e);
