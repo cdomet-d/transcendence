@@ -590,6 +590,28 @@ async function fetchUsernames(log: any, userIDs: string[], token: string): Promi
 	return usernameMap;
 }
 
+function formatMatchDate(dateStr: string): string {
+	if (!dateStr) return 'N/A';
+
+	let safeDateStr = dateStr;
+	if (dateStr.includes('T') && !dateStr.includes(':')) {
+		safeDateStr = dateStr.replace(
+			/T(\d{2})(\d{2})(\d{2})(\d+)?Z/,
+			(match, h, m, s, ms) => `T${h}:${m}:${s}${ms ? '.' + ms : ''}Z`
+		);
+	}
+
+	const date = new Date(safeDateStr);
+
+	return date.toLocaleString('en-GB', {
+		day: 'numeric',
+		month: 'short',
+		year: 'numeric',
+		hour: '2-digit',
+		minute: '2-digit',
+	});
+}
+
 //error handled
 export async function processMatches(log: any, userID: string, token: string): Promise<Matches[]> {
 	try {
@@ -620,18 +642,20 @@ export async function processMatches(log: any, userID: string, token: string): P
 			const scoreLoser = Math.min(myScore, opponentScore);
 			const scoreString = `${scoreWinner} - ${scoreLoser}`;
 
-			const opponentName = opponentMap.get(opponentID) || 'Unknown User';
+			const opponentName = opponentMap.get(opponentID) || 'Anonyme';
 
 			const isTournament = rawMatch.tournamentID > 0;
 
 			const match: Matches = {
-				date: new Date(rawMatch.startTime).toLocaleDateString(),
+				date: formatMatchDate(rawMatch.startTime),
 				opponent: opponentName,
 				outcome: outcome,
 				score: scoreString,
 				duration: formatDuration(rawMatch.duration),
 				tournament: isTournament,
 			};
+			console.log('START TIME', JSON.stringify(match.date));
+
 
 			console.log('in process matches', JSON.stringify(match));
 			return match;
@@ -714,7 +738,6 @@ export async function fetchLeaderboard(log: any, token: string): Promise<userDat
 //error handled
 export async function updateUserProfile(log: any, userID: string, updates: UserProfileUpdates, token: string): Promise<void> {
 	const url = `http://users:2626/${userID}`;
-
 	let response: Response;
 	try {
 		response = await fetch(url, {
@@ -940,7 +963,7 @@ export async function AnonymizeUser(log: any, userID: string, token: string) {
 				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ userID }),
+			body: JSON.stringify({ userID })
 		});
 	} catch (error) {
 		log.error(`[BFF] DUser service is unreachable: ${error}`);
@@ -983,7 +1006,7 @@ export async function AnonymizeAccount(log: any, userID: string, token: string) 
 				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ userID }),
+			body: JSON.stringify({ userID })
 		});
 	} catch (error) {
 		log.error(`[BFF] Auth service is unreachable: ${error}`);

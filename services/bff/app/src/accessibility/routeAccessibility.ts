@@ -18,10 +18,13 @@ export async function bffAccessibilityRoutes(serv: FastifyInstance) {
 
 	serv.get('/dictionary/:lang', { schema: dictionaryGet }, async (request, reply) => {
 		try {
-			const { lang } = request.params as { lang: string };
+			let { lang } = request.params as { lang: string };
 			const safeLang = cleanInput(lang);
 
-			const response = await fetchLanguagePack(serv.log, safeLang);
+			if (lang === 'Español')
+				lang = "Espanol";
+
+			const response = await fetchLanguagePack(serv.log, lang);
 
 			if (!response.ok) {
 				if (response.status === 404)

@@ -311,10 +311,14 @@ function getGameBackground(background?: string): [pongTheme, ImgData[]] {
 }
 
 export async function renderPrivacy() {
-	if (!(await prepareLayout(document.body.layoutInstance, 'leaderboard'))) return;
+	// [FIX] Await prepareLayout to ensure DOM is ready and authorized
+	if (!(await prepareLayout(document.body.layoutInstance, 'privacy'))) return;
 
 	try {
-		document.body.layoutInstance?.appendAndCache(createHeading('2', 'Your privacy'), createPrivacy());
+		const wrapper = createWrapper('privacy');
+		// createHeading('2', 'Your privacy')
+		wrapper.append(createPrivacy());
+		document.body.layoutInstance!.appendAndCache(wrapper);
 	} catch (error) {
 		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
 	}

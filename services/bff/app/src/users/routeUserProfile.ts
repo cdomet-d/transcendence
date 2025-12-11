@@ -63,7 +63,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const { username } = request.params as { username: string };
 			const safeUsername = cleanInput(username);
 			const responseData = await fetchFullUserProfile(serv.log, requesterID, safeUsername, token);
-
 			return reply.code(200).send(responseData);
 		} catch (error) {
 			if (typeof error === 'object' && error !== null && 'code' in error) {
@@ -269,24 +268,37 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const profileUpdatesUsername: any = {};
 			const accountUpdates: any = {};
 
-			if (body.avatar) profileUpdates.avatar = cleanInput(body.avatar);
+			if (body.avatar) {
+				const validImageRegex = /^data:image\/(png|jpeg|jpg);base64,+/;
+				if (!validImageRegex.test(body.avatar)) {
+					return reply.code(400).send({
+						success: false,
+						message: 'Invalid image format. Only PNG and JPEG/JPG are allowed.'
+					});
+				}
+				profileUpdates.avatar = cleanInput(body.avatar);
+			}
 			if (body.biography) profileUpdates.biography = cleanInput(body.biography);
 			if (body.color) profileUpdates.profileColor = cleanInput(body.color);
-			if (body.defaultLang) profileUpdates.lang = cleanInput(body.defaultLang);
+			if (body.language) profileUpdates.lang = cleanInput(body.language);
 
 			const updateTasks: Promise<void>[] = [];
 
 			if (body.username || body.password) {
-				if (!validateBearerToken(serv, request.headers.authorization)) return reply.code(401).send({ message: 'Unauthorized' });
+				if (!validateBearerToken(serv, request.headers.authorization))
+					return reply.code(401).send({ message: 'Unauthorized' });
 
 				if (body.username) profileUpdatesUsername.username = cleanInput(body.username);
 				if (body.username) accountUpdates.username = cleanInput(body.username);
 				if (body.password) accountUpdates.password = body.password;
 
 				serv.log.warn(profileUpdatesUsername, accountUpdates);
-				if (Object.keys(accountUpdates).length > 0) updateTasks.push(updateAuthSettings(serv.log, userID, accountUpdates, token));
-				serv.log.warn(`UPDATE TASKS: ${updateTasks}`);
-				if (Object.keys(profileUpdatesUsername).length > 0) updateTasks.push(updateUserProfileUsername(serv.log, userID, profileUpdatesUsername, token));
+				if (Object.keys(accountUpdates).length > 0)
+					updateTasks.push(updateAuthSettings(serv.log, userID, accountUpdates, token));
+				if (Object.keys(profileUpdatesUsername).length > 0)
+					updateTasks.push(
+						updateUserProfileUsername(serv.log, userID, profileUpdatesUsername, token)
+					);
 			}
 
 			if (Object.keys(profileUpdates).length > 0) updateTasks.push(updateUserProfile(serv.log, userID, profileUpdates, token));

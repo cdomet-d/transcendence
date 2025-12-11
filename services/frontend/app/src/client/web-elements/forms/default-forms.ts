@@ -145,7 +145,7 @@ export function search(dic: Dictionary): FormDetails {
 		button: {
 			id: 'submit',
 			type: 'submit',
-			content: dic.buttons.search,
+			content: "Search",
 			img: null,
 			ariaLabel: '',
 		},
@@ -398,4 +398,22 @@ export const criticalChange: FormDetails = {
 		},
 	],
 	button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
+};
+
+export function privacyButton(dic: Dictionary): FormDetails {
+	return {
+		action: '/privacy',
+		heading: '',
+		ariaLabel: 'Privacy Policy',
+		id: 'privacy-button-form',
+		method: 'get',
+		fields: [],
+		button: {
+			id: 'submit',
+			type: 'submit',
+			content: "Privacy Policy",
+			img: null,
+			ariaLabel: 'Go to privacy policy',
+		},
+	}
 };
