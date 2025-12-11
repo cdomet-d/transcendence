@@ -130,10 +130,8 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 					}
 					form!.displayUpdatedGuests(data.whiteListUsernames);
 				}
-				if (data.lobby === "brackets") {
-					createMatchParticipants(data.brackets);
-					wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got bracket" } })));
-				}
+				if (data.lobby === "brackets")
+					displayBrackets(data.brackets, ws);
 				return;
 			}
 
@@ -149,38 +147,20 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 	}
 }
 
-async function createMatchParticipants(brackets: [string, string][]) {
+async function displayBrackets(brackets: [string, string][], ws: WebSocket) {
 	let tournament: MatchParticipants[] = [];
-	let player1: UserData | null = null;
-	let player2: UserData | null = null;
+	let player1: string = "";
+	let player2: string = "";
 	for (const bracket of brackets) {
-		player1 = await fetchTinyProfile(bracket[0]);
-		player2 = await fetchTinyProfile(bracket[1]);
-		if (!player1 || !player2)
-			return;//TODO
+		player1 = bracket[0];
+		player2 = bracket[1];
 		tournament.push({player1, player2});
 	}
 	console.log(JSON.stringify(tournament));
 	createBracket(tournament);
-	// await new Promise(res => setTimeout(res, 10000));todo:fix timer + only display names
-}
-
-async function fetchTinyProfile(username: string): Promise<UserData | null> {
-	const url = `https://${origin}:8443/api/bff/tiny-profile/${username}`;
-	try {
-		const raw = await fetch(url, { credentials: 'include' });
-		if (!raw.ok) {
-			if (raw.status === 404) throw redirectOnError('/404', 'No such user');
-			else throw await exceptionFromResponse(raw);
-		}
-		const data = await raw.json();
-		const user = userDataFromAPIRes(data);
-		return user;
-	} catch (error) {
-		console.error(errorMessageFromException(error));
-		redirectOnError(router.stepBefore, errorMessageFromException(error));
-	}
-	return null;
+	setTimeout(() => {
+		wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got bracket" } })));
+	}, 30000);
 }
 
 export { wsConnect };

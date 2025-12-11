@@ -11,9 +11,7 @@ export const tournamentMap: Map<string, tournament> = new Map();
 
 export function startTournament(serv: FastifyInstance, tournamentObj: tournament, lobbyID: string, socket: WebSocket) {
 	tournamentMap.set(tournamentObj.tournamentID, tournamentObj);
-	waitForBracketDisplay(serv, socket, tournamentObj);
-	showBrackets(tournamentObj.bracket, lobbyID);
-	// startFirstRound(serv, tournamentObj);
+	showBrackets(tournamentObj.bracket, lobbyID, tournamentObj, serv);
 	postTournamentToDashboard(tournamentObj);
 }
 
@@ -47,7 +45,7 @@ async function postTournamentToDashboard(tournament: tournament) {
 	}
 };
 
-export function showBrackets(games: game[], lobbyID: string) {
+export function showBrackets(games: game[], lobbyID: string, tournamentObj: tournament, serv: FastifyInstance) {
 	const brackets: [string, string][] = [
 		[games[0]!.users![0]!.username!, games[0]!.users![1]!.username!],
 		[games[1]!.users![0]!.username!, games[1]!.users![1]!.username!],
@@ -55,21 +53,24 @@ export function showBrackets(games: game[], lobbyID: string) {
 	const lobby: lobbyInfo | undefined = lobbyMap.get(lobbyID);
 	if (!lobby) return;
 	for (const user of lobby.userList) {
+		if (user[1].userSocket)
+			waitForBracketDisplay(serv, user[1].userSocket, tournamentObj);
 		wsSend(user[1].userSocket, JSON.stringify({ lobby: 'brackets', brackets: brackets}))
 	}
 }
 
 function waitForBracketDisplay(serv: FastifyInstance, socket: WebSocket, tournamentObj: tournament) {
-	socket.once('message', (message: string) => {
+	socket.on('message', (message: string) => {
 	try {
 			const data = JSON.parse(message);
 			if (!validateData(data, serv, socket)) throw new Error("invalid input");
 			if (!validatePayload(data, data.payload, serv, socket)) throw new Error("invalid input");
 			if (data.payload.signal === "got bracket") {
-				serv.log.error("GOT BRACKET");
 				tournamentObj.gotBracket += 1;
-				if (tournamentObj.gotBracket === 4)
+				if (tournamentObj.gotBracket === 4) {
 					startFirstRound(serv, tournamentObj);
+					tournamentObj.gotBracket = 0;
+				}
 			}
 		} catch (err: any) {
 			socket.close(1003, err.message);

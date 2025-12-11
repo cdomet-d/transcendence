@@ -124,7 +124,7 @@ export function wsSend(ws: WebSocket, message: string): void {
 }
 
 export function informHostToStart(serv: FastifyInstance, socket: WebSocket, lobbyID: string) {
-	socket.once('message', (message: string) => {
+	socket.on('message', (message: string) => {
 		try {
 			const data = JSON.parse(message);
 			if (!validateData(data, serv, socket)) throw new Error("invalid input");
