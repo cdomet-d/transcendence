@@ -13,7 +13,7 @@ import {
 	AnonymizeAccount,
 	fetchFullUserProfile
 } from './bffUserProfile.service.js';
-import { cleanInput, cleanUsername,isUsernameSafe } from '../utils/sanitizer.js';
+import { cleanInput, isPasswordSafe } from '../utils/sanitizer.js';
 import { settingsPatchSchema, profileGet, tinyProfileGet, searchGet, leaderboardGet, usernameGet } from './bff.usersSchemas.js';
 import jwt from 'jsonwebtoken';
 
@@ -343,6 +343,8 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 
 				if (body.username) profileUpdatesUsername.username = cleanInput(body.username);
 				if (body.username) accountUpdates.username = cleanInput(body.username);
+				if (isPasswordSafe(body.password))
+					throw { code: 400, message:'[BFF] Could not change settings.' };
 				if (body.password) accountUpdates.password = body.password;
 
 				serv.log.warn(profileUpdatesUsername, accountUpdates);
