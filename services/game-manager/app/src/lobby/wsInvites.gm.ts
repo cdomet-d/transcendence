@@ -6,23 +6,46 @@ import { addNotifToDB, removeNotifFromDB } from "../inviteNotifs/invite-notifs.j
 import { natsPublish } from "../nats/publisher.gm.js";
 
 function handleInviteAction(fastify: FastifyInstance, invitePayload: lobbyInviteForm, authenticatedUserID: string, formInstance: string, socket: WebSocket, req: FastifyRequest): void {
-    if (invitePayload.hostID !== authenticatedUserID) {
-        req.server.log.warn(`Unauthorized invite attempt by ${authenticatedUserID}`);
-        wsSend(socket, JSON.stringify({ error: 'not lobby host' }));
+    const lobbyID = findLobbyIDFromUserID(authenticatedUserID);
+    if (lobbyID === null) {
+        wsSend(socket, JSON.stringify({ error: 'user not in lobby' }));
         return;
     }
 
-    const lobbyID = findLobbyIDFromUserID(authenticatedUserID);
-    if (lobbyID === null) {
+    const lobby = lobbyMap.get(lobbyID);
+    if (!lobby) {
         wsSend(socket, JSON.stringify({ error: 'lobby not found' }));
         return;
     }
 
-    const hostUsername = lobbyMap.get(lobbyID)?.userList.get(authenticatedUserID)?.username!;
+    if (lobby.hostID !== authenticatedUserID) {
+        req.server.log.warn(`Unauthorized invite attempt by ${authenticatedUserID} in lobby ${lobbyID}. Real host: ${lobby.hostID}`);
+        wsSend(socket, JSON.stringify({ error: 'not lobby host' }));
+        return;
+    }
+
+    if (!invitePayload.invitee?.userID) {
+        wsSend(socket, JSON.stringify({ error: 'invalid invitee' }));
+        return;
+    }
+
+    if (invitePayload.invitee.userID === authenticatedUserID) {
+        req.server.log.warn(`Host ${authenticatedUserID} tried to invite themselves`);
+        wsSend(socket, JSON.stringify({ error: 'cannot invite yourself' }));
+        return;
+    }
+
+    const hostUsername = lobby.userList.get(authenticatedUserID)?.username;
+    if (!hostUsername) {
+        req.server.log.error(`Host ${authenticatedUserID} not found in lobby ${lobbyID} userList`);
+        wsSend(socket, JSON.stringify({ error: 'host data corrupted' }));
+        return;
+    }
+
     const notif: gameNotif = {
         type: 'GAME_INVITE',
         senderUsername: hostUsername,
-        receiverID: invitePayload.invitee.userID!,
+        receiverID: invitePayload.invitee.userID,
         lobbyID: lobbyID,
         gameType: formInstance === 'remoteForm' ? '1 vs 1' : 'tournament'
     };

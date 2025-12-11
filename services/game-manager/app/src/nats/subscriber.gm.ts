@@ -57,6 +57,5 @@ function sendGameRequest(serv: FastifyInstance, userID: string, opponentUsername
 		gameSettings: game.gameSettings,
 	}
 	serv.log.error("SENDING GAME REQUEST");
-	console.log("send game request");
 	wsSend(socket, JSON.stringify(gameReq));
 }

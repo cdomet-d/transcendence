@@ -1,10 +1,11 @@
-import { createVisualFeedback, redirectOnError } from '../error.js';
+import { createVisualFeedback } from '../error.js';
 import { router } from '../main.js';
-import { type gameRequest } from '../pong/pong.js';
 import type { LocalPongSettings, RemotePongSettings } from '../web-elements/forms/pong-settings.js';
 import { origin } from '../main.js'
 import type { inviteeObj } from './gm.interface.front.js';
 import { executeAction } from './wsAction.front.js';
+import { handleGameStart, handleLobbyEvent } from './wsUtils.front.js';
+import { handleError } from './wsError.front.js';
 
 export let wsInstance: WebSocket | null = null;
 
@@ -33,7 +34,6 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 			} else clearInterval(interval);
 		}, 30000);
 
-		// TODO what happens if host leaves lobby, kick everyone ?
 		executeAction(action, format, formInstance, lobbyID, gameSettings, invitee);
 	}
 
@@ -61,23 +61,77 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	};
 }
 
+function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettings): void {
+    ws.onmessage = (message: MessageEvent) => {
+        try {
+            const data = JSON.parse(message.data);
+
+            if (data.error) {
+                handleError(data.error);
+                return;
+            }
+
+            if (data.event === 'NOTIF' && data.notif === 'pong') {
+                return;
+            }
+
+            if (data.lobby) {
+                handleLobbyEvent(data, form);
+                return;
+            }
+
+            if (data.opponent && data.gameID && data.gameSettings !== undefined && typeof data.remote === 'boolean') {
+                handleGameStart(data, ws);
+                return;
+            }
+
+            console.warn('Unhandled WebSocket message type:', data);
+
+        } catch (error) {
+            console.error('Error: Failed to parse WS message', error);
+            createVisualFeedback('Connection error. Please refresh the page.', 'error');
+        }
+    };
+}
+
+/* 
 function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettings) {
 	ws.onmessage = (message: MessageEvent) => {
 		try {
 			const data = JSON.parse(message.data);
-			if (data.error) {
-				const error = data.error;
-				if (error === 'not enough players') {
-					createVisualFeedback('You do not have enough players in your lobby to start playing!', 'error');
-				} else if (error === 'lobby not found') {
-					createVisualFeedback('Your lobby is malfunctionning! Please create a new one!', 'error');
-				} else if (error === 'lobby does not exist') {
-					redirectOnError('/home', 'The lobby you are trying to join does not exist anymore!');
-				} else if (error === 'not invited') {
-					createVisualFeedback('You were not invited to this lobby!', 'error');
-				}
-				return;
-			}
+        if (data.error) {
+            const error = data.error;
+            
+            if (error === 'not enough players') {
+                createVisualFeedback('You do not have enough players in your lobby to start playing!', 'error');
+            } else if (error === 'lobby not found') {
+                createVisualFeedback('Your lobby is malfunctioning! Please create a new one!', 'error');
+            } else if (error === 'lobby does not exist') {
+                redirectOnError('/home', 'The lobby you are trying to join does not exist anymore!');
+            } else if (error === 'not invited') {
+                createVisualFeedback('You were not invited to this lobby!', 'error');
+            } else if (error === 'user not in lobby') {
+                createVisualFeedback('You are not in a lobby. Please create or join one first!', 'error');
+            } else if (error === 'not lobby host') {
+                createVisualFeedback('Only the lobby host can perform this action!', 'error');
+            } else if (error === 'Unauthorized' || error === 'user mismatch') {
+                redirectOnError('/home', 'Unauthorized action detected. Please log in again.');
+            } else if (error === 'cannot invite yourself') {
+                createVisualFeedback('You cannot invite yourself to the lobby!', 'error');
+            } else if (error === 'invalid invitee') {
+                createVisualFeedback('Invalid user selected. Please try again!', 'error');
+            } else if (error === 'host data corrupted') {
+                redirectOnError('/home', 'Lobby data corrupted. Please create a new lobby!');
+            } else if (error === 'invalid lobby') {
+                createVisualFeedback('Invalid lobby detected. Please refresh and try again!', 'error');
+            } else if (error === 'Invalid message format') {
+                console.error('Client sent invalid message format to server');
+                createVisualFeedback('Connection error. Please refresh the page.', 'error');
+            } else {
+                createVisualFeedback('An unexpected error occurred. Please try again.', 'error');
+            }
+            return;
+        }
 			if (data.event === "NOTIF" && data.notif === "pong") return;
 			if (data.lobby) {
 				console.log(`${data.lobby} lobby ${data.lobbyID} successfully!`);
@@ -106,7 +160,6 @@ function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettin
 				return;
 			}
 
-			// handle Response for gameRequest
 			if (data.opponent && data.gameID && (data.remote === true || data.remote === false) && data.gameSettings) {
 				const gameRequest: gameRequest = data;
 				router.loadRoute('/game', true, gameRequest, undefined, undefined, ws);
@@ -117,5 +170,6 @@ function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettin
 		}
 	}
 }
+ */
 
 export { wsConnect };

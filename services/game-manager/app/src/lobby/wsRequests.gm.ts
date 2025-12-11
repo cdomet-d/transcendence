@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyRequest } from "fastify";
 import type { lobbyInfo } from "../gameManager/gameManager.interface.js";
-import { createLobby, findLobbyIDFromUserID, removeUserFromLobby } from "./lobby.gm.js";
+import { createLobby, findLobbyIDFromUserID, lobbyMap, removeUserFromLobby } from "./lobby.gm.js";
 import type { lobbyInviteForm, lobbyRequestForm } from "./lobby.interface.js";
 import { wsSend } from "./wsHandler.gm.js";
 import { processGameRequest } from "../gameManager/gameManager.js";
@@ -32,14 +32,27 @@ function handleLobbyRequest(lobbyPayload: lobbyRequestForm, authenticatedUserID:
 }
 
 function handleGameRequest(fastify: FastifyInstance, gamePayload: lobbyInfo, authenticatedUserID: string, socket: WebSocket, req: FastifyRequest): void {
-    if (gamePayload.hostID !== authenticatedUserID) {
-        req.server.log.warn(`Unauthorized game start attempt by ${authenticatedUserID}`);
+    const lobbyID = findLobbyIDFromUserID(authenticatedUserID);
+    if (lobbyID === null) {
+        wsSend(socket, JSON.stringify({ error: 'user not in lobby' }));
+        return;
+    }
+
+    const lobby = lobbyMap.get(lobbyID);
+    if (!lobby) {
+        wsSend(socket, JSON.stringify({ error: 'lobby not found' }));
+        return;
+    }
+
+    if (lobby.hostID !== authenticatedUserID) {
+        req.server.log.warn(`Unauthorized game start attempt by ${authenticatedUserID} in lobby ${lobbyID}. Real host: ${lobby.hostID}`);
         wsSend(socket, JSON.stringify({ error: 'not lobby host' }));
         return;
     }
 
-    if (findLobbyIDFromUserID(authenticatedUserID) === null) {
-        wsSend(socket, JSON.stringify({ error: 'user not in lobby' }));
+    if (gamePayload.lobbyID !== lobbyID) {
+        req.server.log.warn(`Lobby ID mismatch: payload=${gamePayload.lobbyID}, actual=${lobbyID}`);
+        wsSend(socket, JSON.stringify({ error: 'invalid lobby' }));
         return;
     }
 
