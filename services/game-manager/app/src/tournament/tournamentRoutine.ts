@@ -25,22 +25,17 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 		return;
 	}
 
-	// if (tournamentObj.gotEndGame === lobby.userList.size) {
-	// 	serv.log.error("IN GOT ENDGAME CONDITION")
-	// 	gameOver(game, serv, true, tournamentObj, undefined);
-	// }
-
-	const nextGame = getNextGameInBracket(tournamentObj, game);
-	if (nextGame === undefined) {
+	tournamentObj.nextGame = getNextGameInBracket(tournamentObj, game);
+	if (tournamentObj.nextGame === undefined) {
 		serv.log.error("IN ENDGAME")
 		tournamentObj.winnerID = game.winnerID;
 		gameOver(game, serv, true, tournamentObj, undefined);
-		// tournamentOver(tournamentObj);
+		tournamentOver(tournamentObj);
 		return;
 	}
 
 	// set up nextGame
-	const nextGameID = nextGame.gameID;
+	const nextGameID = tournamentObj.nextGame.gameID;
 
 	let nextPlayers = tournamentObj.nextPlayersMap.get(nextGameID);
 	if (!nextPlayers) {
@@ -55,17 +50,15 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 		nextPlayers.player2 = { userID: game.winnerID, username: username };
 	}
 
-	if (nextPlayers.player1 && nextPlayers.player2 === undefined) {
-		serv.log.error("IN NEXTPLAYER2 UNDEFINED")
+	if (!nextPlayers.player1 || !nextPlayers.player2)
 		gameOver(game, serv, false, tournamentObj, undefined);
-	}
 
 	if (nextPlayers.player1 && nextPlayers.player2) {
 		serv.log.error("IN BOTH PLAYERS")
 		tournamentObj.bracket[index] = game; // update local tournamentObj
-		nextGame.users = [nextPlayers.player1, nextPlayers.player2];
-		gameOver(game, serv, false, tournamentObj, nextGame);
-		tournamentObj.nextPlayersMap.delete(nextGameID);
+		tournamentObj.nextGame.users = [nextPlayers.player1, nextPlayers.player2];
+		gameOver(game, serv, false, tournamentObj, tournamentObj.nextGame);
+		// tournamentObj.nextPlayersMap.delete(nextGameID);
 	}
 }
 

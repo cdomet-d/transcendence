@@ -38,7 +38,7 @@ interface game {
 	gameID: string,
 	tournamentID?: string,
 	remote: boolean,
-	users: userInfo[] | undefined | null,
+	users: userInfo[],
 	score: [number, number],
 	winnerID: string,
 	loserID: string,
@@ -56,7 +56,8 @@ interface tournament {
 	nbPlayers: number,
 	gotBracket: number,
 	gotEndGame: number,
-	nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }>
+	nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }>,
+	nextGame: game | undefined;
 }
 
 // NATS

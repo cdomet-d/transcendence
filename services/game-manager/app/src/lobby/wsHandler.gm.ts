@@ -7,7 +7,7 @@ import type { lobbyInfo, userInfo, whitelist } from '../gameManager/gameManager.
 import type { lobbyRequestForm, gameNotif, lobbyInviteForm } from './lobby.interface.js';
 import { natsPublish } from '../nats/publisher.gm.js';
 import { addNotifToDB, removeNotifFromDB } from '../inviteNotifs/invite-notifs.js';
-import type { format } from 'path';
+import { stopHandler } from '../tournament/tournamentStart.js';
 
 export function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest) {
 	let userID: string | null = null;
@@ -136,6 +136,7 @@ export function informHostToStart(serv: FastifyInstance, socket: WebSocket, lobb
 					const hostSocket: WebSocket = lobby.userList.get(lobby.hostID!)?.userSocket!;
 					wsSend(hostSocket, JSON.stringify("start"));
 				}
+				stopHandler(hostStartHandler, socket);
 			}
 		} catch (err: any) {
 			socket.close(1003, "Invalid input");

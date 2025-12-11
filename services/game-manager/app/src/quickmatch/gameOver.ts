@@ -4,7 +4,7 @@ import { lobbyMap } from '../lobby/lobby.gm.js';
 import { wsSend } from '../lobby/wsHandler.gm.js';
 import type { WebSocket } from '@fastify/websocket';
 import { validateData, validatePayload } from '../gameManager/inputValidation.gm.js';
-import { showBrackets } from '../tournament/tournamentStart.js';
+import { showBrackets, stopHandler } from '../tournament/tournamentStart.js';
 
 export function gameOver(game: game, serv: FastifyInstance, endLobby: boolean, tournamentObj: tournament | null, nextGame: game | undefined) {
 	showWinnerScreen(game, serv, endLobby, tournamentObj, nextGame);
@@ -152,6 +152,7 @@ function waitForResultDisplay(serv: FastifyInstance, socket: WebSocket, tourname
 				tournamentObj.gotEndGame += 1;
 				if (tournamentObj.gotEndGame === lobby.userList.size)
 					showBrackets(tournamentObj.bracket, lobby.lobbyID!, tournamentObj, serv, nextGame);
+				stopHandler(resultDisplayHandler, socket);
 			}
 		} catch (err: any) {
 			socket.close(1003, err.message);
