@@ -12,7 +12,6 @@ import { createNoResult } from '../typography/helpers.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 import { currentDictionary } from './language.js';
 import { userStatus } from '../../main.js';
-import { search } from './default-forms.js';
 
 /**
  * A form allowing user to create a local pong game.
