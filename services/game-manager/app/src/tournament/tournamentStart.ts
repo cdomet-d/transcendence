@@ -72,23 +72,14 @@ function waitForBracketDisplay(serv: FastifyInstance, socket: WebSocket, tournam
 	bracketDisplayHandler = (message: string) => {
 		try {
 			const data = JSON.parse(message);
-			if (data.event !== "NOTIF")
-				serv.log.error(`DATA IN WAIT FOR BRACKET DISPLAY: ${JSON.stringify(data)}`)
 			if (!validateData(data, serv, socket)) throw new Error("invalid input");
 			if (!validatePayload(data, data.payload, serv, socket)) throw new Error("invalid input");
 			if (data.payload.signal === "got bracket") {
 				tournamentObj.gotBracket += 1;
 				if (tournamentObj.gotBracket === lobby.userList.size) {
-					serv.log.error(`
-						NEXT GAME: ${JSON.stringify(nextGame)}
-						USER LIST SIZE: ${JSON.stringify(lobby.userList.size)}
-						GOT END GAME: ${tournamentObj.gotEndGame}
-						NEXT GAME USERS LENGTH: ${nextGame?.users?.length}
-					`);
 					if (tournamentObj.gotEndGame === 0)
 						startFirstRound(serv, tournamentObj);
 					else if (tournamentObj.gotEndGame >= lobby.userList.size && nextGame && nextGame.users?.length === 2) {
-						serv.log.error(`IN START GAME`);
 						startGame(serv, nextGame);
 						tournamentObj.gotEndGame = -1;
 					}

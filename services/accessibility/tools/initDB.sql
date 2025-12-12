@@ -130,7 +130,8 @@ VALUES
         "no_user": "No such user",
         "login_lobby": "You are not logged in and thus cannot join a lobby!",
         "too_many_players": "You can''t invite any more people!",
-        "invite_yourself": "You can''t invite yourself, dummy"
+        "invite_yourself": "You can''t invite yourself, dummy",
+        "times_up": "Time is up !!"
     },
     "lobby": {
         "local": "Local 1v1",
@@ -278,7 +279,8 @@ VALUES
         "no_user": "Cette utilisateur n''existe pas",
         "login_lobby": "Tu n''est pas connecter donc tu ne peux pas rejoindre de lobby!",
         "too_many_players": "Tu ne peux pas inviter plus de joueurs!",
-        "invite_yourself": "Tu ne peux pas t''inviter toi-meme!"
+        "invite_yourself": "Tu ne peux pas t''inviter toi-meme!",
+        "times_up": "Le temps est ecoule!!"
     },
     "lobby": {
         "local": "Local 1vs1",
@@ -427,7 +429,8 @@ VALUES
         "no_user": "No hay tal usuaria/usuario",
         "login_lobby": "¡No has iniciado sesión y por lo tanto no puedes unirte a un lobby!",
         "too_many_players": "¡No puedes invitar a más personas!",
-        "invite_yourself": "No puedes invitarte a ti mismo, tonto"
+        "invite_yourself": "No puedes invitarte a ti mismo, tonto",
+        "times_up": "El juego ha terminado!!"
     },
     "lobby": {
         "local": "Local 1vs1",

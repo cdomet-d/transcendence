@@ -2,7 +2,6 @@ import type { tournament, userInfo } from '../gameManager/gameManager.interface.
 
 export function tournamentOver(tournament: tournament) {
 	patchTournamentToDashboard(tournament);
-	// showTournamentWinnerScreen();
 }
 
 async function patchTournamentToDashboard(tournament: tournament) {

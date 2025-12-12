@@ -44,6 +44,5 @@ export function createGameObj(lobbyInfo: lobbyInfo, lobbyID: string): game | und
 }
 
 export function startGame(serv: FastifyInstance, game: game) {
-	// serv.log.error("IN START GAME");
 	natsPublish(serv, 'game.request', JSON.stringify(game), 'game.reply');
 }

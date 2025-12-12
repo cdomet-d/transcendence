@@ -10,7 +10,7 @@ const MAX_TIME: number = 180000; // 3min
 
 export async function setUpGame(game: Game) {
 	if (!game.players[0] || !game.players[1])
-		return; //TODO: make player1 and player2 getters
+		return;
 	const player1: Player = game.players[0];
 	const player2: Player = game.players[1];
 
@@ -28,7 +28,7 @@ export async function setUpGame(game: Game) {
 	game.addTimoutID(setTimeout(endGame, MAX_TIME, player1, player2, game));
 	game.startTimestamp = performance.now();
 	game.passStart = performance.now();
-	game.infos.startTime = new Date().toISOString(); //TODO: winter time
+	game.infos.startTime = new Date().toISOString();
 	console.log("START TIME", JSON.stringify(game.infos.startTime));
 	game.addTimoutID(setTimeout(gameLoop, SERVER_TICK, game, player1, player2));
 }

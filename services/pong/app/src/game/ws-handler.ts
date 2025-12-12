@@ -48,7 +48,8 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 				game.nc.publish("game.over", sc.encode(JSON.stringify(game.infos)));
 				game.endSent = true;
 			}
-			game.deletePlayers();
+			if (event.code !== 4001)
+				game.deletePlayers();
 			this.gameRegistry.deleteGame(game.gameID);
 			// natsSubscription(this); //TODO: only for testing
 		}
