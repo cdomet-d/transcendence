@@ -16,7 +16,7 @@ export interface userStats {
 	totalMatch: number;
 	totalWins: number;
 	totalLosses: number;
-	winStreak: number;
+	winstreak: number;
 	averageMatchDuration: number;
 	longuestPass: number;
 	[key: string]: number | string;
@@ -27,7 +27,7 @@ function calculateStats(current: userStats, isWinner: boolean, duration: number,
 	const newTotalWins = current.totalWins + (isWinner ? 1 : 0);
 	const newTotalLosses = current.totalLosses + (isWinner ? 0 : 1)
 
-	const newWinStreak = isWinner ? (current.winStreak + 1) : 0;
+	const newWinStreak = isWinner ? (current.winstreak + 1) : 0;
 
 	const newLongestMatch = Math.max(current.longestMatch, duration);
 	console.log(`${current.shortestMatch}`);
@@ -49,7 +49,7 @@ function calculateStats(current: userStats, isWinner: boolean, duration: number,
 		totalMatch: newTotalMatches,
 		totalWins: newTotalWins,
 		totalLosses: newTotalLosses,
-		winStreak: newWinStreak,
+		winstreak: newWinStreak,
 		averageMatchDuration: newAverageDuration,
 		longuestPass: newLongestPass
 	};
@@ -76,7 +76,7 @@ export async function updateUserStats(serv: FastifyInstance, userID: string, isW
 			totalMatch = ?,
 			totalWins = ?,
 			totalLosses = ?,
-			winStreak = ?,
+			winstreak = ?,
 			averageMatchDuration = ?,
 			longuestPass = ?
 		WHERE userID = ?
@@ -88,7 +88,7 @@ export async function updateUserStats(serv: FastifyInstance, userID: string, isW
 		newStats.totalMatch,
 		newStats.totalWins,
 		newStats.totalLosses,
-		newStats.winStreak,
+		newStats.winstreak,
 		newStats.averageMatchDuration,
 		newStats.longuestPass,
 		userID

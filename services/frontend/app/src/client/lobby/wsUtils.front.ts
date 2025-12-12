@@ -8,11 +8,8 @@ import type { MatchParticipants, UserData } from "../web-elements/types-interfac
 import { wsSend } from "./wsAction.front";
 
 export function handleLobbyEvent(data: any, ws: WebSocket, form?: RemotePongSettings | LocalPongSettings): void {
-    console.log(`${data.lobby} lobby ${data.lobbyID} successfully!`);
-
     switch (data.lobby) {
         case 'created':
-            console.log('Lobby created with ID:', data.lobbyID);
             break;
         case 'joined':
             handleLobbyJoined(data);
@@ -105,7 +102,6 @@ async function displayBrackets(brackets: [string, string][], ws: WebSocket) {
 	}
 	createBracket(tournament);
 	setTimeout(() => {
-		console.log("in brackets callback timer")
 		wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got bracket" } })));
 	}, 5000);
 }

@@ -15,10 +15,7 @@ export interface gameRequest {
 }
 
 export async function pong(gameReq: gameRequest, court: PongCourt, ui: PongUI) {
-    console.log('game request obj: ', gameReq);
-
     if (!court.ctx) {
-        console.log('error: context not supported');
         router.loadRoute('/404', true);
         return;
     }

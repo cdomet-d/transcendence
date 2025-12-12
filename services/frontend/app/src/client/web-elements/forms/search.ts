@@ -4,11 +4,11 @@ import { createInputGroup } from '../inputs/helpers.js';
 import { createUserInline } from '../users/profile-helpers.js';
 import { InputGroup } from '../inputs/fields.js';
 import { search } from './default-forms.js';
-// import { UserInline } from '../users/profile.js';
 import type { UserData } from '../types-interfaces.js';
 import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
 import type { Listbox } from '../navigation/listbox.js';
+import { currentDictionary } from './language.js';
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -95,6 +95,7 @@ export class Searchbar extends BaseForm {
 			if (data.message === 'Unauthorized')
 				redirectOnError('/auth', 'You must be registered to access this page!');
 		}
+
 		this.displayResults(userArrayFromAPIRes(data));
 	}
 

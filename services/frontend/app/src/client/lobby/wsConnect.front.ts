@@ -32,7 +32,6 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	if (form)
 		form.socket = ws;
 	ws.onopen = async () => {
-		console.log('Lobby WebSocket connection established!')
 
 		const interval = setInterval(() => {
 			if (ws.readyState === ws.OPEN) {
@@ -49,13 +48,11 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	}
 
 	ws.onerror = (err: any) => {
-		console.log('Error:', err);
 		return;
 	};
 
 	ws.onclose = (event) => {
 		wsInstance = null;
-		console.log('Lobby WebSocket connection closed!');
 		if (event.code === 4001) {
 			const currentRoute = window.location.pathname;
 			if (currentRoute.includes("-lobby") || currentRoute === "/game")
@@ -86,7 +83,6 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
                 return;
             }
 
-			console.log("data:", JSON.stringify(data))
 			if (data === "start") {
 				form?.enableStartButton();
 				return;
@@ -101,7 +97,6 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 					wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
 				else
 					setTimeout(() => {
-						console.log("in end game callback timer")
 						wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
 					}, 5000);
 			}

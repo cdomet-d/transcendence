@@ -65,7 +65,7 @@ export async function buildTinyProfile(log: any, viewerUserID: string, targetUse
 			profileColor: data.profileColor,
 			since: data.since,
 			status: data.status,
-			winStreak: data.winStreak,
+			winstreak: data.winstreak,
 			totalLosses: data.totalLosses,
 			totalWins: data.totalWins,
 			lang: data.lang,

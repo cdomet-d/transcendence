@@ -33,7 +33,7 @@ export class DowloadDataForm extends BaseForm {
 			await this.fetchAndRedirect(actionUrl, req);
 
 		} catch (error) {
-			console.log('Downloading stopped:', error);
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
@@ -74,7 +74,6 @@ export class DowloadDataForm extends BaseForm {
 			createVisualFeedback(currentDictionary.buttons.downloaded, 'success');
 
 		} catch (error) {
-			console.error('[DOWNLOAD DATA ERROR]', error);
 			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}

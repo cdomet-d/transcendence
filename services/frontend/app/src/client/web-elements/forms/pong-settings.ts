@@ -12,7 +12,6 @@ import { createNoResult } from '../typography/helpers.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 import { currentDictionary } from './language.js';
 import { userStatus } from '../../main.js';
-import { search } from './default-forms.js';
 
 /**
  * A form allowing user to create a local pong game.
@@ -209,7 +208,7 @@ export class RemotePongSettings extends LocalPongSettings {
 			ev.preventDefault();
 			ev.stopImmediatePropagation();
 			if (target.title === this.#owner) {
-				createVisualFeedback("You can't invite yourself");
+				createVisualFeedback(currentDictionary.error.invite_yourself);
 				return;
 			}
 			if (this.#guests.size < this._guestLimit) {
@@ -222,7 +221,6 @@ export class RemotePongSettings extends LocalPongSettings {
 					console.log(error);
 				}
 			} else {
-				console.log('too many guests');
 				if (target.title === this.#owner) createVisualFeedback(currentDictionary.error.invite_yourself);
 				else createVisualFeedback(currentDictionary.error.too_many_players);
 			}
