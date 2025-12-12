@@ -3,7 +3,7 @@ import { createGameObj, startGame } from '../quickmatch/createGame.js';
 import { createTournament } from '../tournament/tournamentCreation.js';
 import { startTournament } from '../tournament/tournamentStart.js';
 import type { game, lobbyInfo, tournament } from './gameManager.interface.js';
-import { findLobbyIDFromUserID } from '../lobby/lobby.gm.js';
+import { findLobbyIDFromUserID, lobbyMap } from '../lobby/lobby.gm.js';
 import type { WebSocket } from '@fastify/websocket';
 
 export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo): boolean {
@@ -19,6 +19,7 @@ export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo):
 			return false;
 		}
 		lobbyInfo.joinable = false;
+		lobbyMap.get(lobbyID)!.start = true;
 		startTournament(serv, tournament, lobbyID);
 	} else if (lobbyInfo.format === 'quickmatch') {
 		const quickmatch: game | undefined = createGameObj(lobbyInfo, lobbyID);

@@ -188,6 +188,10 @@ export class RemotePongSettings extends LocalPongSettings {
 		super.contentMap.get('submit')?.removeAttribute('disabled');
 	}
 
+	disableStartButton() {
+		super.contentMap.get('submit')?.setAttribute('disabled', "");
+	}
+
 	disableSearchBar() {
 		this.#searchbar.remove()
 		this.#guestWrapper.classList.remove('row-start-4', 'row-span-2');

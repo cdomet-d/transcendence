@@ -24,7 +24,8 @@ interface lobbyInfo {
 	remote: boolean,
 	format: 'quickmatch' | 'tournament' | string,
 	nbPlayers: number,
-	gameSettings?: PongOptions
+	gameSettings?: PongOptions,
+	start: boolean
 }
 
 interface whitelist {

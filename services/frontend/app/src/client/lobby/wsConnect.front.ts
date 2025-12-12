@@ -131,6 +131,7 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 						return;
 					}
 					form!.displayUpdatedGuests(data.whiteListUsernames);
+					form!.disableStartButton();
 				}
 				if (data.lobby === "brackets")
 					displayBrackets(data.brackets, ws);
