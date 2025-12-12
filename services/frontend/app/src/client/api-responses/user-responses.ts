@@ -22,7 +22,7 @@ function setStatus(n: number): boolean {
 
 function setAvatar(a: string): ImgData {
 	if (!a) {
-		const defaultAvatar: ImgData = { alt: 'The user\'s profile picture', id: 'user-avatar', size: 'ixl', src: '/public/assets/images/pink-avatar.png' };
+		const defaultAvatar: ImgData = { alt: 'The user\'s profile picture', id: 'user-avatar', size: 'ixl', src: '../assets/images/pink-avatar.png' };
 		return defaultAvatar;
 	} else {
 		const userSetProfilePicture: ImgData = { id: 'user-pp', alt: 'User-set profile picture', src: a, size: 'ixl' };

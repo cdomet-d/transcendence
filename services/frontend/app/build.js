@@ -1,4 +1,6 @@
 import esbuild from 'esbuild'
+import tailwindPlugin from 'esbuild-plugin-tailwindcss';
+
 const { context } = esbuild;
 
 const args = process.argv.slice(2)
@@ -12,6 +14,12 @@ async function make() {
 		minify: true,
 		platform: 'browser',
 		target: ['esnext'],
+		loader: {
+			'.png': 'file',
+			'.gif': 'file',
+			'.woff': 'file',
+		},
+		plugins: [tailwindPlugin()],
 		define: {
 			'API_URL': JSON.stringify(process.env.HOST),
 		}
@@ -25,7 +33,7 @@ async function make() {
 		platform: 'node',
 		target: ['node20'],
 		packages: 'external',
-		format: 'esm', 
+		format: 'esm',
 		define: {
 			'API_URL': JSON.stringify(process.env.HOST),
 		}
@@ -43,3 +51,8 @@ async function make() {
 }
 
 make().catch(() => process.exit(1));
+
+// "copy:assets": "mkdir -p dist/client/ && cp -r src/client/assets dist/client && npm run copy:html",
+// "build:css": "postcss ./src/client/css/tailwind.css -o ./dist/client/css/output.css",
+// "build": "node build.js && npm run build:css && npm run copy:assets"
+// && npm run build:css && npm run copy:assets

@@ -61,7 +61,9 @@ async function addPlugins(serv: FastifyInstance) {
             prefix: '/public/',
             decorateReply: true,
             setHeaders: (res, pathName) => {
-                if (pathName.endsWith('.woff')) {
+				if (pathName.endsWith('.css')) {
+                    res.setHeader('Content-Type', 'text/css');
+				} else if (pathName.endsWith('.woff')) {
                     res.setHeader('Content-Type', 'font/woff');
                 } else if (pathName.endsWith('.png')) {
                     res.setHeader('Content-Type', 'image/png');

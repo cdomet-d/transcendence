@@ -719,7 +719,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			const safeUserID = targetUserID;
 
 			const newUsername = `DeletedUser_${crypto.randomUUID().slice(0, 8)}`;
-			const placeholderAvatar = '/public/default_avatar.png';
+			const placeholderAvatar = '../../default_avatar.png';
 
 			const query = `UPDATE userProfile SET username = ?, avatar = ?, biography = NULL WHERE userID = ?`;
 

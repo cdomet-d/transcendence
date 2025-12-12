@@ -1,6 +1,6 @@
 import { currentDictionary } from '../forms/language.js';
 import type { ButtonData, MenuData, TabData, NavigationLinksData } from '../types-interfaces.js';
-
+// import '../../assets/images/add-user.png';
 export function main(): MenuData {
 	return {
 		id: 'mainNav',
@@ -46,7 +46,7 @@ export function homeLink(): MenuData {
 				img: {
 					alt: 'A cute pixel art blob',
 					size: 'imedium',
-					src: '/public/assets/images/default-avatar.png',
+					src: '../../assets/images/default-avatar.png',
 					id: 'homelink',
 				},
 			},
@@ -89,7 +89,7 @@ export function social(): MenuData {
 					alt: 'a small pixel art blue blob with a green plus sign',
 					id: '',
 					size: 'ismall',
-					src: '/public/assets/images/add-user.png',
+					src: '../../assets/images/add-user.png',
 				},
 			},
 			{
@@ -101,7 +101,7 @@ export function social(): MenuData {
 					alt: 'a small pixel art blue blob with a red minus sign',
 					id: '',
 					size: 'ismall',
-					src: '/public/assets/images/remove-user.png',
+					src: '../../assets/images/remove-user.png',
 				},
 			},
 		],
@@ -120,9 +120,9 @@ export function social(): MenuData {
 }
 
 export const languageMenu: ButtonData[] = [
-    { id: 'English', ariaLabel: 'English', content: 'English', img: null, type: 'button' },
-    { id: 'Espanol', ariaLabel: 'Espanol', content: 'Espanol', img: null, type: 'button' },
-    { id: 'Francais', ariaLabel: 'Francais', content: 'Francais', img: null, type: 'button' },
+	{ id: 'English', ariaLabel: 'English', content: 'English', img: null, type: 'button' },
+	{ id: 'Espanol', ariaLabel: 'Espanol', content: 'Espanol', img: null, type: 'button' },
+	{ id: 'Francais', ariaLabel: 'Francais', content: 'Francais', img: null, type: 'button' },
 ];
 
 export function backgroundMenu(): ButtonData[] {
@@ -132,14 +132,14 @@ export function backgroundMenu(): ButtonData[] {
 			ariaLabel: 'Farm pong theme',
 			content: currentDictionary.gameCustom.farm,
 			img: null,
-			type: 'button'
+			type: 'button',
 		},
 		{
 			id: 'underwater',
 			ariaLabel: 'Ocean pong theme',
 			content: currentDictionary.gameCustom.under_water,
 			img: null,
-			type: 'button'
+			type: 'button',
 		},
 	];
 }

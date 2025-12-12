@@ -7,7 +7,7 @@ import { currentDictionary, initLanguage } from './web-elements/forms/language.j
 import type { NavigationLinks } from './web-elements/navigation/links.js';
 import type { NavigationLinksData } from './web-elements/types-interfaces.js';
 import { createLink } from './web-elements/navigation/buttons-helpers.js';
-
+import './css/tailwind.css';
 export const router = new Router(routes);
 
 declare global {

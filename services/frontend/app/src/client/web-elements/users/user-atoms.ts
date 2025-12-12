@@ -111,7 +111,7 @@ export class Winstreak extends HTMLSpanElement {
 	constructor() {
 		super();
 		const iconData: ImgData = {
-			src: '/public/assets/images/winstreak.png',
+			src: '../../assets/images/winstreak.png',
 			id: '',
 			alt: 'Winstreak',
 			size: 'iicon',

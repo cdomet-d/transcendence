@@ -51,7 +51,7 @@ export class Avatar extends HTMLDivElement {
 	constructor() {
 		super();
 		this.#data = {
-			src: '/public/assets/images/default-avatar.png',
+			src: '/../../assets/images/default-avatar.png',
 			id: 'default-avatar',
 			alt: "A pixel art blue blob with a neutral expression, the site's default avatar",
 			size: 'iicon',
@@ -93,7 +93,7 @@ export class NoResults extends HTMLDivElement {
 			alt: 'A crying blue pixel art blob',
 			id: 'no-results',
 			size: 'ixl',
-			src: '/public/assets/images/no-result.png',
+			src: '/../../assets/images/no-result.png',
 		};
 		this.id = 'NoResults';
 		this.#theme = 'dark';

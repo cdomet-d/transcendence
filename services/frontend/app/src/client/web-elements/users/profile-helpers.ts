@@ -8,7 +8,7 @@ export function setAvatar(
 	el: UserProfile | UserCardSocial | UserInline,
 	av?: ImgData | null,
 ) {
-	if (!av) av ={ alt: 'A pink pixel art little blob', id: 'user-avatar', size: 'ixl', src: '/public/assets/images/pink-avatar.png' };
+	if (!av) av ={ alt: 'A pink pixel art little blob', id: 'user-avatar', size: 'ixl', src: '../../assets/images/pink-avatar.png' };
 	const avatar = { ...av };
 	avatar.size = size;
 	el.avatar = avatar;

@@ -76,7 +76,7 @@ export class Searchbar extends BaseForm {
 	createSearchIcon(): HTMLImageElement {
 		const img = document.createElement('img');
 		img.className = 'w-s h-s absolute top-[6px] left-[6px]';
-		img.src = '/public/assets/images/search-icon.png';
+		img.src = '../../assets/images/search-icon.png';
 		img.alt = 'A pixel art magnifier';
 		return img;
 	}
