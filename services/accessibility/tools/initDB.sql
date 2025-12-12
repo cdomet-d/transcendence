@@ -1,21 +1,32 @@
--- Ensure table exists
 CREATE TABLE
-    IF NOT EXISTS language_packs (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        language_code TEXT UNIQUE NOT NULL,
-        pack_json TEXT NOT NULL
-    );
+	IF NOT EXISTS language_packs (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		language_code TEXT UNIQUE NOT NULL,
+		pack_json TEXT NOT NULL
+	);
 
--- Clear existing data to prevent unique constraint errors on re-seed
 DELETE FROM language_packs;
 
--- 1. English (en)
 INSERT INTO
-    language_packs (language_code, pack_json)
+	language_packs (language_code, pack_json)
 VALUES
-    (
-        'English',
-        '{
+	(
+		'English',
+		'{
+	"privacy": {
+		"mainTitle": "GDPR Compliance & Data Privacy",
+		"storageTitle": "What We Store",
+		"rightsTitles": "Your Rights",
+		"intro": "We value your privacy. In compliance with the General Data Protection Regulation (GDPR), this page outlines exactly what data we store, why we store it, and your rights regarding that data.",
+		"identity": "<strong>Identity:</strong> Username, avatar image, and biography to display your profile to other players.",
+		"auth": "<strong>Authentication:</strong> Securely hashed passwords. We never store your actual password.", 
+		"history": "<strong>Game History:</strong> Statistics (Wins, Losses, Streaks) and a log of matches played to populate leaderboards and history.",
+		"social": "<strong>Social:</strong> Your list of friends and pending friend requests.",
+		"sessionData": "<strong>Session Data:</strong> We use a secure HTTP-only cookie (JWT) to keep you logged in. We do not use third-party tracking cookies. In that cookie, we store your userID (that we generate) and your username (that we set) so we can render your informations on the website. That cookie expires on its own after an hour.",
+		"access": "<strong>Right to Access (Portability):</strong> You can download a full copy of your personal data in JSON format via the User Settings page.",
+		"erasure": "<strong>Right to Erasure (Right to be Forgotten):</strong> You can delete your account at any time. This process is permanent and irreversibly anonymizes your data (replacing your username or avatar with generic placeholders) while preserving game statistics for fair history.",
+		"rectify": "<strong>Right to Rectification:</strong> You can update your profile information (username, bio, avatar, language) at any time."
+	},
     "buttons": {
         "submit": "Submit",
         "cancel": "Cancel",
@@ -33,7 +44,8 @@ VALUES
         "delete_account": "Delete account",
         "download_data": "Download personal data",
         "privacy": "Privacy policy",
-        "go_home": "Go home"
+        "go_home": "Go home",
+        "downloaded": "Data downloaded"
     },
     "forms": {
         "username": "Username",
@@ -103,7 +115,22 @@ VALUES
         "username_lenght2": " -18 character long, is ",
         "file_heavy": "That file is too heavy: max is 2MB!",
         "file_extension": "Invalid extension: ",
-        "page404": "There''s nothing here :("
+        "page404": "There''s nothing here :(",
+        "join_lobby": "Uh-oh! You can''t be there - go join a lobby or something !",
+        "invite_lobby": "You were not invited to this lobby!",
+        "deleted_lobby": "The lobby you are trying to join does not exist anymore!",
+        "broke_lobby": "Your lobby is malfunctionning! Please create a new one!",
+        "nbplayers_lobby": "You do not have enough players in your lobby to start playing!",
+        "account_deleted": "Account permanently deleted",
+        "bad_request": "Bad Request",
+        "unauthorized": "Unauthorized",
+        "conflict": "Conflict: Resource already exists",
+        "redirection": "Redirected: You must be registered to see this page!",
+        "something_wrong": "Something went wrong",
+        "no_user": "No such user",
+        "login_lobby": "You are not logged in and thus cannot join a lobby!",
+        "too_many_players": "You can''t invite any more people!",
+        "invite_yourself": "You can''t invite yourself, dummy"
     },
     "lobby": {
         "local": "Local 1v1",
@@ -129,15 +156,28 @@ VALUES
         "tournament": "game mode"
     }
 }'
-    );
+	);
 
--- 2. French (fr)
 INSERT INTO
-    language_packs (language_code, pack_json)
+	language_packs (language_code, pack_json)
 VALUES
-    (
-        'Francais',
-        '{
+	(
+		'Francais',
+		'{
+    "privacy": {
+        "mainTitle": "Conformité RGPD & Confidentialité des Données",
+        "storageTitle": "Ce que Nous Stockons",
+        "rightsTitles": "Vos Droits",
+        "intro": "Nous accordons une grande importance à votre vie privée. En conformité avec le Règlement Général sur la Protection des Données (RGPD), cette page décrit précisément quelles données nous stockons, pourquoi nous les stockons, et quels sont vos droits concernant ces données.",
+        "identity": "<strong>Identité :</strong> Nom d''utilisateur, image d''avatar et biographie pour afficher votre profil aux autres joueurs.",
+        "auth": "<strong>Authentification :</strong> Mots de passe sécurisés et hachés. Nous ne stockons jamais votre mot de passe réel.",
+        "history": "<strong>Historique de Jeu :</strong> Statistiques (Victoires, Défaites, Séries) et journal des matchs joués pour alimenter les classements et l''historique.",
+        "social": "<strong>Social :</strong> Votre liste d''amis et vos demandes d''amis en attente.",
+        "sessionData": "<strong>Données de Session :</strong> Nous utilisons un cookie HTTP-only sécurisé (JWT) pour maintenir votre connexion. Nous n''utilisons pas de cookies de suivi tiers. Dans ce cookie, nous stockons votre identifiant utilisateur (que nous générons) et votre nom d''utilisateur (que vous définissez) afin d''afficher vos informations sur le site. Ce cookie expire automatiquement après une heure.",
+        "access": "<strong>Droit d''Accès (Portabilité) :</strong> Vous pouvez télécharger une copie complète de vos données personnelles au format JSON via la page des Paramètres Utilisateur.",
+        "erasure": "<strong>Droit à l''Effacement (Droit à l''Oubli) :</strong> Vous pouvez supprimer votre compte à tout moment. Ce processus est permanent et rend vos données anonymes de manière irréversible (remplaçant votre nom d''utilisateur et avatar par des éléments génériques) tout en conservant les statistiques de jeu pour un historique équitable.",
+        "rectify": "<strong>Droit de Rectification :</strong> Vous pouvez mettre à jour les informations de votre profil (nom d''utilisateur, bio, avatar, langue) à tout moment."
+    },
     "buttons": {
         "submit": "Valider",
         "cancel": "Annuler",
@@ -155,8 +195,8 @@ VALUES
         "delete_account": "Supprimer le compte",
         "download_data": "Télécharger vos données",
         "privacy": "Politique de confidentialité",
-        "go_home": "Retourner a l''accueil"
-
+        "go_home": "Retourner a l''accueil",
+        "downloaded": "Donnees telechargees"
     },
     "forms": {
         "username": "Nom d''utilisateur",
@@ -209,7 +249,6 @@ VALUES
         "under_water": "Sous l''eau",
         "searchbar": "Barre de recherche",
         "choose_back": "Choisi ton fond"
-
     },
     "error": {
         "username_error": "Nom d''utilisateur ou mot de passe invalide.",
@@ -224,8 +263,22 @@ VALUES
         "username_lenght2": " -18 caractères, il en fait ",
         "file_heavy": "Fichier trop volumineux : max 2 Mo !",
         "file_extension": "Extension invalide : ",
-        "page404": "Il n''y a rien ici :("
-
+        "page404": "Il n''y a rien ici :(",
+        "join_lobby": "Oh-oh! Tu n''as pas le droit d''etre ici - Vas rejoindre un lobby !",
+        "invite_lobby": "Vous n''avez pas ete invite dans ce lobby !",
+        "deleted_lobby": "Le lobby que vous essayez de rejoindre n''existe plus !",
+        "broke_lobby": "Votre lobby fonctionne mal ! Veuillez en creer un nouveau !",
+        "nbplayers_lobby": "Vous n''avez pas assez de joueurs dans votre lobby pour commencer a jouer !",
+        "account_deleted": "Compte supprime definitivement",
+        "bad_request": "Mauvaise requete",
+        "unauthorized": "Non autorise",
+        "conflict": "Conflit : La ressource existe deja",
+        "redirection": "Redirection: Tu dois etre connecter pour voir cette page!",
+        "something_wrong": "Quelque chose s''est mal passé",
+        "no_user": "Cette utilisateur n''existe pas",
+        "login_lobby": "Tu n''est pas connecter donc tu ne peux pas rejoindre de lobby!",
+        "too_many_players": "Tu ne peux pas inviter plus de joueurs!",
+        "invite_yourself": "Tu ne peux pas t''inviter toi-meme!"
     },
     "lobby": {
         "local": "Local 1vs1",
@@ -251,15 +304,28 @@ VALUES
         "tournament": "mode de jeu"
     }
 }'
-    );
+	);
 
--- 3. Spanish (es)
 INSERT INTO
-    language_packs (language_code, pack_json)
+	language_packs (language_code, pack_json)
 VALUES
-    (
-        'Espanol',
-        '{
+	(
+		'Espanol',
+		'{
+	"privacy": {
+        "mainTitle": "Cumplimiento GDPR y Privacidad de Datos",
+        "storageTitle": "Qué Almacenamos",
+        "rightsTitles": "Tus Derechos",
+        "intro": "Valoramos tu privacidad. En cumplimiento con el Reglamento General de Protección de Datos (GDPR), esta página detalla exactamente qué datos almacenamos, por qué los almacenamos y cuáles son tus derechos respecto a esos datos.",
+        "identity": "<strong>Identidad:</strong> Nombre de usuario, imagen de avatar y biografía para mostrar tu perfil a otros jugadores.",
+        "auth": "<strong>Autenticación:</strong> Contraseñas cifradas de forma segura. Nunca almacenamos tu contraseña real.",
+        "history": "<strong>Historial de Juego:</strong> Estadísticas (Victorias, Derrotas, Rachas) y un registro de partidas jugadas para completar los marcadores y el historial.",
+        "social": "<strong>Social:</strong> Tu lista de amigos y solicitudes de amistad pendientes.",
+        "sessionData": "<strong>Datos de Sesión:</strong> Usamos una cookie HTTP-only segura (JWT) para mantener tu sesión activa. No utilizamos cookies de seguimiento de terceros. En esa cookie almacenamos tu ID de usuario (que generamos) y tu nombre de usuario (que establecemos) para poder mostrar tu información en el sitio web. Esa cookie expira automáticamente después de una hora.",
+        "access": "<strong>Derecho de Acceso (Portabilidad):</strong> Puedes descargar una copia completa de tus datos personales en formato JSON desde la página de Configuración de Usuario.",
+        "erasure": "<strong>Derecho de Supresión (Derecho al Olvido):</strong> Puedes eliminar tu cuenta en cualquier momento. Este proceso es permanente y anonimiza tus datos de forma irreversible (reemplazando tu nombre de usuario ou avatar con valores genéricos) preservando las estadísticas de juego para mantener un historial justo.",
+        "rectify": "<strong>Derecho de Rectificación:</strong> Puedes actualizar la información de tu perfil (nombre de usuario, biografía, avatar, idioma) en cualquier momento."
+    },
     "buttons": {
         "submit": "Enviar",
         "cancel": "Cancelar",
@@ -277,7 +343,8 @@ VALUES
         "delete_account": "Eliminar cuenta",
         "download_data": "Descargar datos",
         "privacy": "Política de privacidad",
-        "go_home": "Volver al inicio"
+        "go_home": "Volver al inicio",
+        "downloaded": "Datos descargados"
     },
     "forms": {
         "username": "Nombre de usuario",
@@ -330,6 +397,7 @@ VALUES
         "under_water": "Bajo el agua",
         "searchbar": "barra de búsqueda",
         "choose_back": "Elige fondo"
+
     },
     "error": {
         "username_error": "Nombre de usuario o contraseña inválidos.",
@@ -344,8 +412,22 @@ VALUES
         "username_lenght2": " -18 caracteres, tiene ",
         "file_heavy": "El archivo es demasiado grande: ¡máx. 2MB!",
         "file_extension": "Extensión no válida: ",
-        "page404": "No hay nada aqui :("
-
+        "page404": "No hay nada aqui :(",
+        "join_lobby": "No tienes derecho a estar aquí. ¡Únete a un lobby!",
+        "invite_lobby": "¡No fuiste invitado a este lobby!",
+        "deleted_lobby": "¡El lobby al que intentas unirte ya no existe!",
+        "broke_lobby": "¡Tu lobby está funcionando mal! ¡Por favor crea uno nuevo!",
+        "nbplayers_lobby": "¡No tienes suficientes jugadores en tu lobby para empezar a jugar!",
+        "account_deleted": "Cuenta eliminada permanentemente",
+        "bad_request": "Solicitud incorrecta",
+        "unauthorized": "No autorizado",
+        "conflict": "Conflicto: El recurso ya existe",
+        "redirection": "Redirección: Debe iniciar sesión para ver esta página.",
+        "something_wrong": "Algo salió mal",
+        "no_user": "No hay tal usuaria/usuario",
+        "login_lobby": "¡No has iniciado sesión y por lo tanto no puedes unirte a un lobby!",
+        "too_many_players": "¡No puedes invitar a más personas!",
+        "invite_yourself": "No puedes invitarte a ti mismo, tonto"
     },
     "lobby": {
         "local": "Local 1vs1",
@@ -371,4 +453,4 @@ VALUES
         "tournament": "modo de juego"
     }
 }'
-    );
+	);

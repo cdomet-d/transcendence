@@ -2,6 +2,7 @@ import { BaseForm } from './baseform.js';
 import { CriticalActionForm } from './auth.js';
 import { exceptionFromResponse, createVisualFeedback, errorMessageFromException } from '../../error.js';
 import { router } from '../../main.js';
+import { currentDictionary } from './language.js';
 
 export class DeleteAccountForm extends BaseForm {
 
@@ -59,11 +60,11 @@ export class DeleteAccountForm extends BaseForm {
 			localStorage.removeItem('criticalChange');
 
 			router.loadRoute('/auth', true);
-			createVisualFeedback('Account permanently deleted', 'success');
+			createVisualFeedback(currentDictionary.error.account_deleted, 'success');
 
 		} catch (error) {
 			console.error('[DELETE ACCOUNT]', error);
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 }

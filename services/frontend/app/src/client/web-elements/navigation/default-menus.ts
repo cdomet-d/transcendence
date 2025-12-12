@@ -1,5 +1,5 @@
 import { currentDictionary } from '../forms/language.js';
-import type { ButtonData, Dictionary, MenuData, TabData, NavigationLinksData } from '../types-interfaces.js';
+import type { ButtonData, MenuData, TabData, NavigationLinksData } from '../types-interfaces.js';
 
 export function main(): MenuData {
 	return {
@@ -131,13 +131,6 @@ export function backgroundMenu(): ButtonData[] {
 			id: 'farm',
 			ariaLabel: 'Farm pong theme',
 			content: currentDictionary.gameCustom.farm,
-			img: null,
-			type: 'button'
-		},
-		{
-			id: 'forest',
-			ariaLabel: 'Forest pong theme',
-			content: currentDictionary.gameCustom.forest,
 			img: null,
 			type: 'button'
 		},

@@ -30,7 +30,8 @@ function makeLobbyInfo(host: userInfo, format: string): lobbyInfo {
 		]),
 		remote: true, // TODO set to false if local pong before START event //TODO: is it used ?
 		format: format,
-		nbPlayers: format === 'quickmatch' ? 2 : 4
+		nbPlayers: format === 'quickmatch' ? 2 : 4,
+		start: false,
 	}
 	return lobby;
 }
@@ -88,12 +89,13 @@ export function addUserToLobby(userID: string, username: string, socket: WebSock
 	}
 }
 
-export function removeUserFromLobby(userID: string, lobbyID: string) {
+export function removeUserFromLobby(userID: string, lobbyID: string, code: number) {
 	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) return;
-	if (userID === lobby.hostID!) {
+	if (userID === lobby.hostID! && lobby.start === false) {
 		for (const user of lobby.userList) {
-			if (user[1].userID! !== userID)
+			if (user[1].userID! !== userID && user[1].userSocket !== undefined
+				&& code !== 4002)
 				user[1].userSocket!.close(4001, "Lobby was closed by host")
 		}
 		lobbyMap.delete(lobbyID);
@@ -104,8 +106,8 @@ export function removeUserFromLobby(userID: string, lobbyID: string) {
 	sendUpdatedWhiteList(lobbyID);
 }
 
-export function findLobbyIDFromUserID(userID: string): string | null {
-	let lobbyID: string | null = null; 
+export function findLobbyIDFromUserID(userID: string): string | undefined {
+	let lobbyID: string | undefined = undefined; 
 	
 	for (const [_, lobbyInfo] of lobbyMap.entries()) {
 		if (lobbyInfo.userList.has(userID!)) {

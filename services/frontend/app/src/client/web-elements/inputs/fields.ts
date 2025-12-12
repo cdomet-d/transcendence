@@ -3,10 +3,7 @@ import { Checkbox } from './buttons.js';
 import { createCheckbox } from './helpers.js';
 import { currentDictionary, } from '../forms/language.js';
 
-const MAX_SIZE = 2 * 1024 * 1024; // 2MB
-
-//TODO: feedback on username
-//TODO: err message on required field empty
+const MAX_SIZE = 1024 * 1024; // 1MB
 
 /**
  * Custom input element.
@@ -47,8 +44,6 @@ export class CustomInput extends HTMLInputElement {
 	/*                                 Validation                                 */
 	/* -------------------------------------------------------------------------- */
 
-	//TODO: allow hide on ESC
-
 	/**
 	 * Provides feedback for password fields based on validation rules.
 	 * Dispatches a 'validation' event with feedback details.
@@ -59,10 +54,12 @@ export class CustomInput extends HTMLInputElement {
     #typePassword(el: HTMLInputElement): string[] {
         const val = el.value;
         let feedback: string[] = [];
+		const forbiddenRegex = /[^a-zA-Z0-9@$!%*?&]/;
+		if (forbiddenRegex.test(val)) feedback.push(currentDictionary.error.forbidden + val.match(forbiddenRegex))
         if (!/[A-Z]/.test(val)) feedback.push(currentDictionary.error.uppercase);
         if (!/[a-z]/.test(val)) feedback.push(currentDictionary.error.lowercase); 
         if (!/[0-9]/.test(val)) feedback.push(currentDictionary.error.number);
-        if (!/[!@#$%^&*()\-_=+{};:,<.>]/.test(val)) feedback.push(currentDictionary.error.special_char);
+        if (!/[@$!%*?&]/.test(val)) feedback.push(currentDictionary.error.special_char);
         if (val.length < 12 || val.length > 64)
             feedback.push(currentDictionary.error.pass_lenght, `${val.length}`);
         return feedback;
@@ -70,7 +67,7 @@ export class CustomInput extends HTMLInputElement {
 
 	#typeText(el: HTMLInputElement): string[] {
 		let min: number;
-
+		const forbiddenRegex = /[^a-zA-Z]/;
 		el.id === 'searchbar' ? (min = 0) : (min = 4);
 		const val = el.value;
 		let feedback: string[] = [];
@@ -321,13 +318,13 @@ export class InputGroup extends HTMLDivElement {
 	/* -------------------------------------------------------------------------- */
 	#hideImplementation() {
 		this.#feedback.classList.add('hidden');
-		this.classList.remove('z-5');
+		this.classList.remove('z-6');
 	}
 
 	#unhideImplementation() {
 		if (this.#feedback.firstChild) {
 			this.#feedback.classList.remove('hidden');
-			this.classList.add('z-5');
+			this.classList.add('z-6');
 		}
 	}
 

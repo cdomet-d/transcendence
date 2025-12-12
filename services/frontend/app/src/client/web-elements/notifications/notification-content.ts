@@ -12,7 +12,6 @@ import { currentDictionary } from '../forms/language.js';
 interface GameInvite {
 	lobbyID: string;
 	inviteeID: string;
-	formInstance: string;
 }
 
 const notificationBtns: MenuData = {
@@ -101,7 +100,7 @@ export class NotifContent extends HTMLLIElement {
 	}
 
 	async #acceptRelation() {
-		const url = `https://${origin}:8443/api/bff/relation`;
+		const url = `https://${API_URL}:8443/api/bff/relation`;
 		const body = { username: `${this.#requesterUsername}` };
 		const jbody = JSON.stringify(body);
 		const req: RequestInit = {
@@ -116,12 +115,12 @@ export class NotifContent extends HTMLLIElement {
 			this.#disableButtons()
 		} catch (error) {
 			console.error('[ACCEPT RELATION]', errorMessageFromException(error));
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
 	async #declineRelation() {
-		const url = `https://${origin}:8443/api/bff/relation`;
+		const url = `https://${API_URL}:8443/api/bff/relation`;
 		const body = { username: `${this.#requesterUsername}` };
 		const jbody = JSON.stringify(body);
 		const req: RequestInit = {
@@ -136,17 +135,17 @@ export class NotifContent extends HTMLLIElement {
 			this.#disableButtons()
 		} catch (error) {
 			console.error('[DECLINE RELATION]', errorMessageFromException(error));
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
 	async #joinGame() {
 		const user: userStatusInfo = await userStatus();
 		if (!user.auth || !user.username) {
-			createVisualFeedback('You are not logged in and thus cannot join a lobby!', 'error');
+			createVisualFeedback(currentDictionary.error.login_lobby, 'error');
 			return;
 		}
-		wsConnect("join", "", this.#lobbyInfo?.formInstance!, this.#lobbyInfo?.lobbyID, "", {userID: this.#lobbyInfo!.inviteeID, username: user.username});
+		wsConnect("join", "", "", this.#lobbyInfo?.lobbyID, "", {userID: this.#lobbyInfo!.inviteeID, username: user.username});
 	}
 
 	#declineGame() {

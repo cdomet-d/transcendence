@@ -4,17 +4,6 @@ import { wsClientsMap, removeUserFromLobby, findLobbyIDFromUserID } from './lobb
 import type { JWTPayload } from './lobby.interface.js';
 import { wsSend } from './wsHandler.gm.js';
 
-export function validateOrigin(origin: string | undefined, req: FastifyRequest, socket: WebSocket): boolean {
-    const allowedOrigins = ['https://localhost:8443'];
-    
-    if (origin && !allowedOrigins.includes(origin)) {
-        req.server.log.warn(`Rejected WS connection from invalid origin: ${origin}`);
-        socket.close(1008, 'Invalid origin');
-        return false;
-    }
-    return true;
-}
-
 export function authenticateConnection(fastify: FastifyInstance, req: FastifyRequest, socket: WebSocket): { userID: string; username: string } | null {
     try {
         const token = req.cookies?.token || req.cookies?.accessToken;
@@ -44,14 +33,4 @@ export function verifyUserIDMatch(payloadUserID: string | undefined, authenticat
         return false;
     }
     return true;
-}
-
-export function handleClose(authenticatedUserID: string, req: FastifyRequest): void {
-    req.server.log.info(`WebSocket closed for user: ${authenticatedUserID}`);
-
-    const lobbyID = findLobbyIDFromUserID(authenticatedUserID);
-    if (lobbyID !== null) {
-        removeUserFromLobby(authenticatedUserID, lobbyID);
-    }
-    wsClientsMap.delete(authenticatedUserID);
 }

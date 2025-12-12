@@ -7,17 +7,19 @@ import type { NavigationLinks } from '../navigation/links';
 import type { ImgData, MatchParticipants } from '../types-interfaces';
 import { TournamentBrackets } from './tournament';
 
-export function endGame(img: ImgData, id: string, mess: string) {
+export function endGame(img: ImgData, id: string, mess: string, end: boolean) {
 	const popup = document.createElement('dialog', { is: 'custom-popup' }) as Popup;
 	const title = createHeading('1', mess);
 	const image = createIcon(img);
 	const wrapper = createWrapper(id);
-	const goHome = createLink(goHomeData, false) as NavigationLinks;
-
-	wrapper.append(title, image, goHome);
+	wrapper.append(title, image);
+	if (end === true) {
+		const goHome = createLink(goHomeData, false) as NavigationLinks;
+		wrapper.append(goHome);
+	}
 	popup.append(wrapper);
 	document.body.layoutInstance?.appendAndCache(popup);
-	wrapper.classList.add('grid', 'bg-000080', 'gap-s');
+	wrapper.classList.add('grid', 'bg-000080', 'gap-s', 'z-30');
 	wrapper.classList.remove('justify-start', 'bg');
 	image.classList.add('place-self-center');
 }
@@ -28,7 +30,8 @@ export function createBracket(tournament: MatchParticipants[]) {
 	const bracket = document.createElement('div', {
 		is: 'tournament-bracket',
 	}) as TournamentBrackets;
-	if (bracket) bracket.players = tournament;
+	if (bracket) bracket.matchesParticipants = tournament;
 	popup.append(bracket)
 	document.body.layoutInstance?.appendAndCache(popup);
+	popup.classList.add('z-30')
 }

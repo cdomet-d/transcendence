@@ -4,11 +4,11 @@ import { createInputGroup } from '../inputs/helpers.js';
 import { createUserInline } from '../users/profile-helpers.js';
 import { InputGroup } from '../inputs/fields.js';
 import { search } from './default-forms.js';
-import { UserInline } from '../users/profile.js';
+// import { UserInline } from '../users/profile.js';
 import type { UserData } from '../types-interfaces.js';
 import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
-import { currentDictionary } from './language.js';
+import type { Listbox } from '../navigation/listbox.js';
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -20,35 +20,33 @@ import { currentDictionary } from './language.js';
  */
 export class Searchbar extends BaseForm {
 	#searchInput: InputGroup;
-	#results: HTMLUListElement;
-	#currentFocus: number;
+	#results: Listbox;
 
-	#navHandler: (ev: KeyboardEvent) => void;
 	#blurHandler: (ev: FocusEvent) => void;
+	#navHandler: (ev: KeyboardEvent) => void;
 
     /* -------------- constructors and associated default functions ------------- */
     constructor() {
         super();
-        super.details = search(currentDictionary);
-        this.#results = document.createElement('ul');
+        super.details = search();
+        this.#results = document.createElement('ul', {is: 'list-box'}) as Listbox;
         this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
-        this.#currentFocus = -1;
 
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
-		this.#navHandler = this.#navigationImplementation.bind(this);
 		this.#blurHandler = this.#focusOutImplementation.bind(this);
+		this.#navHandler = this.#navigationImplementation.bind(this);
 	}
 
 	override connectedCallback() {
 		super.connectedCallback();
-		this.addEventListener('keydown', this.#navHandler);
 		this.addEventListener('focusout', this.#blurHandler);
+		this.addEventListener('keydown', this.#navHandler);
 	}
 
 	override disconnectedCallback() {
 		super.disconnectedCallback();
-		this.removeEventListener('keydown', this.#navHandler);
 		this.removeEventListener('focusout', this.#blurHandler);
+		this.removeEventListener('keydown', this.#navHandler);
 	}
 
 	/* -------------------------------- rendering ------------------------------- */
@@ -97,7 +95,6 @@ export class Searchbar extends BaseForm {
 			if (data.message === 'Unauthorized')
 				redirectOnError('/auth', 'You must be registered to access this page!');
 		}
-
 		this.displayResults(userArrayFromAPIRes(data));
 	}
 
@@ -114,40 +111,13 @@ export class Searchbar extends BaseForm {
 		const form = new FormData(this);
 		const url = this.#createQueryURL(form);
 		if (!url) {
-			createVisualFeedback('Error processing query - try again');
+			createVisualFeedback(currentDictionary.error.something_wrong);
 			return;
 		}
 		try {
 			await this.fetchAndRedirect(url, this.initReq());
 		} catch (error) {
 			console.error(error);
-		}
-	}
-
-	/**
-	 * Used by the `'keydown'` handler to calculate where the user is in the menu's option, remaining within the bounds of the options.
-	 * @param {number} delta - the incrementing step; it's worth `-1` on `ArrowUp` and `1` on `ArrowDown`
-	 */
-	#moveFocus(delta: number) {
-		this.#currentFocus =
-			(this.#currentFocus + delta + this.#results.children.length) %
-			this.#results.children.length;
-		const focusedOption = this.#results.children[this.#currentFocus];
-		if (focusedOption && focusedOption instanceof UserInline) {
-			focusedOption.getUsername.link.focus();
-		}
-	}
-
-	#navigationImplementation(ev: KeyboardEvent) {
-		const actions: { [key: string]: () => void } = {
-			ArrowDown: () => this.#moveFocus(1),
-			ArrowUp: () => this.#moveFocus(-1),
-			Escape: () => this.#hideResults(),
-		};
-
-		if (actions[ev.key]) {
-			ev.preventDefault();
-			actions[ev.key]!();
 		}
 	}
 
@@ -161,30 +131,36 @@ export class Searchbar extends BaseForm {
 		}
 	}
 
-	#focusOutImplementation(ev?: FocusEvent) {
-		if (!ev) {
-			this.#hideResults();
-		} else {
-			const newFocus = ev.relatedTarget as HTMLElement | null;
-			if (!newFocus || !this.contains(newFocus)) {
-				this.#hideResults();
-			}
+	#navigationImplementation(ev: KeyboardEvent) {
+		const actions: { [key: string]: () => void } = {
+			Escape: () => this.#results.collapse(),
+		};
+
+		if (actions[ev.key]) {
+			ev.preventDefault();
+			actions[ev.key]!();
 		}
 	}
 
-	#hideResults() {
-		this.clearResults();
-		this.#results.classList.add('hidden');
-		this.#results.setAttribute('hidden', '');
-		this.classList.remove('z-1')
+	#focusOutImplementation(ev?: FocusEvent) {
+		if (!ev) {
+			this.#results.collapse();
+		} else {
+			const newFocus = ev.relatedTarget as HTMLElement | null;
+			if (!newFocus || !this.contains(newFocus)) {
+				this.#results.collapse();
+			}
+		}
 	}
 
 	/**
 	 * @param {UserData} user - User data to render inline.
 	 */
 	addUser(user: UserData) {
-		const el = createUserInline(user);
-		this.#results.append(el);
+		const li = document.createElement('li');
+		li.classList.add('pad-xs');
+		li.append(createUserInline(user))
+		this.#results.append(li);
 	}
 
 	/**
@@ -195,10 +171,10 @@ export class Searchbar extends BaseForm {
 	 */
 	displayResults(res: UserData[]) {
 		this.clearResults();
-		this.#results.classList.remove('hidden');
-		this.#results.removeAttribute('hidden');
 		if (res.length < 1) this.#results.append(createNoResult('light', 'ixl'));
 		res.forEach((user) => this.addUser(user));
+		this.#results.arrayFromChildren();
+		this.#results.expand();
 		this.classList.add('z-1')
 	}
 }

@@ -18,7 +18,7 @@ async function createLobbyRequest(action: string, format: string, formInstance?:
 	return JSON.stringify(createLobbyForm);
 }
 
-async function inviteToLobbyRequest(action: string, invitee: inviteeObj, formInstance: string) {
+async function inviteToLobbyRequest(action: string, invitee: inviteeObj, format: string) {
 	const host: userStatusInfo = await userStatus();
 	if (!host.auth || !host.userID) {
 		redirectOnError('/auth', 'You must be registered to see this page');
@@ -31,8 +31,8 @@ async function inviteToLobbyRequest(action: string, invitee: inviteeObj, formIns
 			action: action,
 			invitee: invitee,
 			hostID: host.userID,
+			format: format,
 		},
-		formInstance: formInstance === 'remote-pong-settings' ? 'remoteForm' : 'tournamentForm'
 	};
 	return JSON.stringify(inviteToLobbyForm);
 }

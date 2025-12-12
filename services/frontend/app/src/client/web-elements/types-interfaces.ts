@@ -2,6 +2,8 @@
 /*                                   Images                                   */
 /* -------------------------------------------------------------------------- */
 
+import type { init } from "../../server/server";
+
 /** Size options for Avatar components.
  * @remarks
  * - `iicon`: Extra small, icon size
@@ -24,7 +26,7 @@ export interface ImgData {
 	src: string;
 }
 
-export type BackgroundTheme = 'default' | 'farm' | 'ocean' | 'forest';
+export type BackgroundTheme = 'default' | 'farm' | 'ocean';
 /* -------------------------------------------------------------------------- */
 /*                                    Menus                                   */
 /* -------------------------------------------------------------------------- */
@@ -182,6 +184,8 @@ export interface UserData {
 	status: boolean;
 	username: string;
 	winstreak: string;
+	totalWins?: string;
+	totalLosses?: string;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -284,7 +288,7 @@ export interface MatchParticipants {
 	player2: UserData;
 }
 
-export type CourtTheme = 'default' | 'farm' | 'ocean' | 'forest';
+export type CourtTheme = 'default' | 'farm' | 'ocean';
 
 export interface pongTheme {
 	color: string;
@@ -315,6 +319,20 @@ export interface PongOptions {
 /* -------------------------------------------------------------------------- */
 
 export interface Dictionary {
+	privacy: {
+		mainTitle: string;
+		storageTitle: string;
+		rightsTitles: string;
+		intro: string;
+		identity: string;
+		auth: string;
+		history: string;
+		social: string;
+		sessionData: string;
+		access: string;
+		erasure: string;
+		rectify: string;
+	},
 	buttons: {
 		submit: string;
 		cancel: string;
@@ -333,12 +351,14 @@ export interface Dictionary {
 		go_home: string;
 		accept: string;
 		privacy: string;
+		downloaded: string,
 	};
 	forms: {
 		username: string;
 		password: string;
 		biography: string;
 		avatar: string;
+		searchbar: string;
 		search_placeholder: string;
 		avatar_uploader: string;
 	};
@@ -382,7 +402,6 @@ export interface Dictionary {
 		remote: string;
 		background: string;
 		farm: string;
-		forest: string;
 		under_water: string;
 		opponent: string;
 		opponent_name: string;
@@ -392,6 +411,7 @@ export interface Dictionary {
 	error: {
 		username_error: string;
 		password_error: string;
+		forbidden_error: string;
 		page404: string;
 		uppercase: string;
 		lowercase: string;
@@ -403,6 +423,21 @@ export interface Dictionary {
 		username_lenght2: string;
 		file_heavy: string;
 		file_extension: string;
+		join_lobby: string;
+		invite_lobby: string;
+		deleted_lobby: string;
+		broke_lobby: string;
+		nbplayers_lobby: string,
+		account_deleted: string;
+		bad_request: string;
+		unauthorized: string;
+		conflict: string;
+		redirection: string;
+		something_wrong: string;
+		no_user: string;
+		login_lobby: string;
+		too_many_players: string;
+		invite_yourself: string;
 	};
 	lobby: {
 		local: string;
