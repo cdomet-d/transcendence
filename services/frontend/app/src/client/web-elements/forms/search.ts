@@ -23,6 +23,7 @@ export class Searchbar extends BaseForm {
 	#results: Listbox;
 
 	#blurHandler: (ev: FocusEvent) => void;
+	#navHandler: (ev: KeyboardEvent) => void;
 
     /* -------------- constructors and associated default functions ------------- */
     constructor() {
@@ -30,21 +31,22 @@ export class Searchbar extends BaseForm {
         super.details = search();
         this.#results = document.createElement('ul', {is: 'list-box'}) as Listbox;
         this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
-        // this.#currentFocus = -1;
 
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
-		// this.#navHandler = this.#navigationImplementation.bind(this);
 		this.#blurHandler = this.#focusOutImplementation.bind(this);
+		this.#navHandler = this.#navigationImplementation.bind(this);
 	}
 
 	override connectedCallback() {
 		super.connectedCallback();
 		this.addEventListener('focusout', this.#blurHandler);
+		this.addEventListener('keydown', this.#navHandler);
 	}
 
 	override disconnectedCallback() {
 		super.disconnectedCallback();
 		this.removeEventListener('focusout', this.#blurHandler);
+		this.removeEventListener('keydown', this.#navHandler);
 	}
 
 	/* -------------------------------- rendering ------------------------------- */
@@ -126,6 +128,17 @@ export class Searchbar extends BaseForm {
 	clearResults() {
 		while (this.#results.firstChild) {
 			this.#results.removeChild(this.#results.firstChild);
+		}
+	}
+
+	#navigationImplementation(ev: KeyboardEvent) {
+		const actions: { [key: string]: () => void } = {
+			Escape: () => this.#results.collapse(),
+		};
+
+		if (actions[ev.key]) {
+			ev.preventDefault();
+			actions[ev.key]!();
 		}
 	}
 
