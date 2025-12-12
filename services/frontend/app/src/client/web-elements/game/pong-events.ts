@@ -17,7 +17,7 @@ export function endGame(img: ImgData, id: string, mess: string) {
 	wrapper.append(title, image, goHome);
 	popup.append(wrapper);
 	document.body.layoutInstance?.appendAndCache(popup);
-	wrapper.classList.add('grid', 'bg-000080', 'gap-s');
+	wrapper.classList.add('grid', 'bg-000080', 'gap-s', 'z5');
 	wrapper.classList.remove('justify-start', 'bg');
 	image.classList.add('place-self-center');
 }

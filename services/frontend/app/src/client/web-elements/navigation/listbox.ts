@@ -8,6 +8,7 @@ export class Listbox extends HTMLUListElement {
 		super();
 		this.#keynavHandler = this.keyboardNavHandler.bind(this);
 		this.#mouseNavHandler = this.mouseNavHandler.bind(this);
+		this.id = 'listbox';
 		this.role = 'listbox';
 		this.#currentFocus = -1;
 		this.setAttribute('hidden', '');
@@ -92,7 +93,6 @@ export class Listbox extends HTMLUListElement {
 		this.#currentFocus = (this.#currentFocus + delta + this.#options.length) % this.#options.length;
 		const focusedOption = this.#options[this.#currentFocus];
 		if (focusedOption) {
-			console.log('Focused option:', focusedOption);
 			focusedOption.focus();
 		}
 	}

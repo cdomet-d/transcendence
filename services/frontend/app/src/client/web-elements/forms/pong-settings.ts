@@ -11,7 +11,6 @@ import { userDataFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 import { currentDictionary } from './language.js';
-import { origin } from '../../main.js';
 import { userStatus } from '../../main.js';
 import { search } from './default-forms.js';
 
@@ -37,8 +36,8 @@ export class LocalPongSettings extends BaseForm {
 		super();
 		this.#backgroundSelector = createDropdown(backgroundMenu(), currentDictionary.gameCustom.choose_back, 'static');
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
-		this.#format = "";
-		this.#formInstance = "";
+		this.#format = '';
+		this.#formInstance = '';
 		this.#ws = null;
 		this._guestLimit = 0;
 	}
@@ -56,9 +55,10 @@ export class LocalPongSettings extends BaseForm {
 	}
 
 	override disconnectedCallback() {
-		super.disconnectedCallback()
+		super.disconnectedCallback();
 		const newRoute: string = window.location.pathname;
-		if (this.#ws && newRoute !== "/game" && !newRoute.includes("-lobby"))//TODO: if brackets or winner/loser screen have routes, add them here
+		if (this.#ws && newRoute !== '/game' && !newRoute.includes('-lobby'))
+			//TODO: if brackets or winner/loser screen have routes, add them here
 			this.#ws.close();
 	}
 
@@ -77,10 +77,8 @@ export class LocalPongSettings extends BaseForm {
 	/* -------------------------------------------------------------------------- */
 	set format(format: string) {
 		this.#format = format;
-		if (format === 'tournament')
-			this._guestLimit = 4;
-		else
-			this._guestLimit = 2;
+		if (format === 'tournament') this._guestLimit = 4;
+		else this._guestLimit = 2;
 	}
 
 	set formInstance(formInstance: string) {
@@ -88,17 +86,14 @@ export class LocalPongSettings extends BaseForm {
 	}
 
 	set socket(ws: WebSocket) {
-		if (this.#ws === null)
-			this.#ws = ws;
+		if (this.#ws === null) this.#ws = ws;
 	}
 
 	/* -------------------------------------------------------------------------- */
 	/*                               Event listeners                              */
 	/* -------------------------------------------------------------------------- */
 
-	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
-		console.log('Fetch&Redirect');
-	}
+	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {}
 
 	override async submitHandlerImplementation(ev: SubmitEvent): Promise<void> {
 		ev.preventDefault();
@@ -108,7 +103,6 @@ export class LocalPongSettings extends BaseForm {
 
 		const req = this.initReq();
 		req.body = await this.createReqBody(f);
-		console.log(f);
 		// await this.fetchAndRedirect(this.details.action, req);
 
 		wsConnect('game', this.#format, this.#formInstance, '', req.body);
@@ -127,13 +121,6 @@ if (!customElements.get('local-pong-settings')) {
  * @extends {LocalPongSettings}
  * @remark customElement: `'remote-pong-settings'`
  */
-
-// Perhaps we should add an invite button and a remove button ?
-// TODO: Override searchbar submit event to add the the invited users to the guest list instead of loading their profile
-// TODO: Add event listener on Searchbar's SUBMIT to capture invitations.
-// TODO: Add API call to /api/user to get requested user and store it in an
-// array of user that will be displayed in #guestWrapper
-// TODO: track the number of invited users and allow form submission when there are 2, 4 or 8 players.
 export class RemotePongSettings extends LocalPongSettings {
 	#searchbar: Searchbar;
 	#guestWrapper: HTMLDivElement;
@@ -145,23 +132,21 @@ export class RemotePongSettings extends LocalPongSettings {
 	constructor() {
 		super();
 
-        this.#searchbar = createForm('search-form');
-        this.#guestWrapper = document.createElement('div');
-        this.#guests = new Map<string, UserData>();
-        this.#inviteHandler = this.#inviteImplementation.bind(this);
-        this.#owner = '';
-        super.contentMap.get('submit')?.setAttribute('disabled', '');
-    }
-
-	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {
-		console.log('Fetch&Redirect');
+		this.#searchbar = createForm('search-form');
+		this.#guestWrapper = document.createElement('div');
+		this.#guests = new Map<string, UserData>();
+		this.#inviteHandler = this.#inviteImplementation.bind(this);
+		this.#owner = '';
+		super.contentMap.get('submit')?.setAttribute('disabled', '');
 	}
+
+	override async fetchAndRedirect(url: string, req: RequestInit): Promise<void> {}
 
 	override async connectedCallback() {
 		super.connectedCallback();
 		this.#searchbar.addEventListener('click', this.#inviteHandler, { capture: true });
 		const status = await userStatus();
-		if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');//TODO: maybe not necessary since it is checked in "renderlobbies"
+		if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
 		const user = await this.fetchGuests(status.username!);
 		if (user) this.#guests.set(user.username, user);
 		this.#displayGuests();
@@ -193,10 +178,9 @@ export class RemotePongSettings extends LocalPongSettings {
 	}
 	/* -------------------------------- listeners ------------------------------- */
 	async fetchGuests(guestUsername: string): Promise<UserData | null> {
-		const url = `https://${origin}:8443/api/bff/tiny-profile/${guestUsername}`;
+		const url = `https://${API_URL}:8443/api/bff/tiny-profile/${guestUsername}`;
 		try {
 			const rawResp = await fetch(url);
-			console.log(rawResp.ok);
 			if (!rawResp.ok) throw await exceptionFromResponse(rawResp);
 			const resp = await rawResp.json();
 			const user = userDataFromAPIRes(resp);
@@ -217,7 +201,7 @@ export class RemotePongSettings extends LocalPongSettings {
 				try {
 					const user = await this.fetchGuests(target.title);
 					if (user) this.#guests.set(user.username, user);
-					wsConnect('invite', '', this.details.id, '', '', {userID: user!.id, username: user!.username}); //TODO: check user exists?
+					wsConnect('invite', '', this.details.id, '', '', { userID: user!.id, username: user!.username }); //TODO: check user exists?
 					this.#displayGuests();
 				} catch (error) {
 					console.log(error);

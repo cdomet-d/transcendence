@@ -16,7 +16,7 @@ function openWsConnection() {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 		return wsInstance;
 	}
-	wsInstance = new WebSocket(`wss://${origin}:8443/api/lobby/`);
+	wsInstance = new WebSocket(`wss://${API_URL}:8443/api/lobby/`);
 	return wsInstance;
 }
 

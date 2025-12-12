@@ -136,8 +136,6 @@ export class TournamentBrackets extends HTMLDivElement {
 		this.#currentRound++;
 		this.#span *= 2;
 	}
-	//TODO: disable looser from previous bracket
-	//TODO: need to make sure that the elemnt has been attached and everything before accessing the cache I guess ? It doesn't crash but it doesn't work if it's not attached.
 	/**
 	 * Populates the brackets with player data for each match.
 	 * Can be called externally to populate the next round with the finished round's winners.

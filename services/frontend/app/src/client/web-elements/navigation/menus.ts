@@ -4,7 +4,6 @@ import type { CustomButton } from './buttons.js';
 import { Menu } from './basemenu.js';
 import { errorMessageFromException, createVisualFeedback, exceptionFromResponse } from '../../error.js';
 import { Listbox } from './listbox.js';
-import { origin } from '../../main.js';
 import { currentDictionary } from '../forms/language.js';
 
 interface Relation {
@@ -55,8 +54,7 @@ export class SocialMenu extends Menu {
 	}
 
 	async #APIRemoveFriendImplementation() {
-		console.log('RemoveFriends');
-		const url = `https://${origin}:8443/api/bff/relation`;
+		const url = `https://${API_URL}:8443/api/bff/relation`;
 		const req: RequestInit = {
 			method: 'delete',
 			headers: { 'Content-Type': 'application/json' },
@@ -74,8 +72,7 @@ export class SocialMenu extends Menu {
 	}
 
 	async #APIAddFriendImplementation() {
-		console.log('AddFriends');
-		const url = `https://${origin}:8443/api/bff/relation`;
+		const url = `https://${API_URL}:8443/api/bff/relation`;
 		const req: RequestInit = {
 			method: 'post',
 			headers: { 'Content-Type': 'application/json' },
@@ -266,7 +263,7 @@ export class DropdownMenu extends HTMLDivElement {
 
 	#updateToggle() {
 		const selected = this.selectedElement;
-		if (!selected) return console.log('[LISTBOX] No selection');
+		if (!selected) return 
 		else if (this.#toggle.textContent !== selected.textContent + ' \u25BE') {
 			this.#toggle.textContent = selected.textContent + ' \u25BE';
 			if (this.#dropdownStyle === 'dynamic') this.#updateBackground(`bg-${selected.textContent}`);
@@ -317,7 +314,6 @@ export class DropdownMenu extends HTMLDivElement {
 		try {
 			const target = e.target as Element | null;
 			if (!target || !this.contains(target)) return;
-			console.log(target);
 			if (e instanceof KeyboardEvent) this.#handleKeyboardEvent(e);
 			else {
 				this.#listbox.hasAttribute('hidden') ? this.#listbox.expand() : this.#listbox.collapse();

@@ -22,6 +22,8 @@ export const user: UserData = {
 	username: '',
 	winstreak: '',
 	since: '',
+	totalLosses: '',
+	totalWins: '',
 };
 
 /**
@@ -85,11 +87,11 @@ export class ProfilePage extends HTMLDivElement {
 	#userProfile: UserProfile;
 	#userTabs: TabContainer;
 
-    constructor() {
-        super();
-        this.#userProfile = document.createElement('div', { is: 'user-profile' }) as UserProfile;
-        this.#userTabs = createTabs(profileTabs(currentDictionary));
-    }
+	constructor() {
+		super();
+		this.#userProfile = document.createElement('div', { is: 'user-profile' }) as UserProfile;
+		this.#userTabs = createTabs(profileTabs(currentDictionary));
+	}
 
 	set profile(user: UserData) {
 		this.#userProfile.userInfo = user;
@@ -111,8 +113,7 @@ export class ProfilePage extends HTMLDivElement {
 	render() {
 		this.append(this.#userProfile, this.#userTabs);
 		this.id = 'user-profile';
-		this.className =
-			'bg content-h min-w-fit brdr overflow-y-auto overflow-x-hidden flex flex-col justify-start';
+		this.className = 'bg content-h min-w-fit brdr overflow-y-auto overflow-x-hidden flex flex-col justify-start';
 	}
 }
 

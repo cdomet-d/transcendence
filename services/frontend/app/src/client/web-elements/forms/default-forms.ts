@@ -1,11 +1,10 @@
 import type { FormDetails, UserData } from '../types-interfaces.js';
 import { usernamePattern, passwordPattern, searchbarPattern } from '../default-values.js';
 import { currentDictionary } from './language.js';
-import { origin } from '../../main.js';
 
 export function userSettingsForm(user?: UserData): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/bff/settings`,
+		action: `https://${API_URL}:8443/api/bff/settings`,
 		heading: currentDictionary.titles.settings,
 		ariaLabel: 'User settings',
 		id: 'user-settings',
@@ -50,13 +49,14 @@ export function userSettingsForm(user?: UserData): FormDetails {
 			content: currentDictionary.buttons.submit,
 			img: null,
 			ariaLabel: '',
+			style: 'green',
 		},
 	};
 }
 
 export function registrationForm(): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/auth/register`,
+		action: `https://${API_URL}:8443/api/auth/register`,
 		heading: currentDictionary.titles.register,
 		ariaLabel: 'Create an account',
 		id: 'account-create',
@@ -76,7 +76,7 @@ export function registrationForm(): FormDetails {
 				pattern: passwordPattern,
 				placeholder: currentDictionary.placeholders.enter_password,
 				type: 'password',
-				required: false,
+				required: true,
 			},
 		],
 		button: {
@@ -91,7 +91,7 @@ export function registrationForm(): FormDetails {
 
 export function loginForm(): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/auth/login`,
+		action: `https://${API_URL}:8443/api/auth/login`,
 		heading: currentDictionary.titles.login,
 		ariaLabel: 'Log into an account',
 		id: 'account-login',
@@ -126,7 +126,7 @@ export function loginForm(): FormDetails {
 
 export function search(): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/bff/search?name=`,
+		action: `https://${API_URL}:8443/api/bff/search?name=`,
 		heading: '',
 		ariaLabel: 'Search for a user',
 		id: 'searchform',
@@ -153,7 +153,7 @@ export function search(): FormDetails {
 
 export function localPong(): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/game/quick-lobby/`,
+		action: `https://${API_URL}:8443/api/game/quick-lobby/`,
 		heading: currentDictionary.gameCustom.local,
 		gameFormat: 'local-quickmatch',
 		ariaLabel: 'Pong settings',
@@ -222,7 +222,7 @@ export function localPong(): FormDetails {
 
 export function remotePong(): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/game/quick-lobby/`,
+		action: `https://${API_URL}:8443/api/game/quick-lobby/`,
 		heading: 'Remote Pong',
 		gameFormat: 'remote-quickmatch',
 		ariaLabel: 'Remote Pong settings',
@@ -283,7 +283,7 @@ export function remotePong(): FormDetails {
 
 export function pongTournament(): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/game/tournament-lobby/`,
+		action: `https://${API_URL}:8443/api/game/tournament-lobby/`,
 		heading: currentDictionary.titles.pong_tournament,
 		gameFormat: 'tournament',
 		ariaLabel: 'Pong tournament settings',
@@ -344,7 +344,7 @@ export function pongTournament(): FormDetails {
 
 export function deleteAccount(): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/bff/account`,
+		action: `https://${API_URL}:8443/api/bff/account`,
 		heading: '',
 		ariaLabel: 'Account deletion request',
 		id: 'account-deletion-request',
@@ -358,12 +358,12 @@ export function deleteAccount(): FormDetails {
 			ariaLabel: '',
 			style: 'red',
 		},
-	}
-};
+	};
+}
 
 export function downloadData(): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/bff/data`,
+		action: `https://${API_URL}:8443/api/bff/data`,
 		heading: '',
 		ariaLabel: 'Download personal data request',
 		id: 'download-data-request',
@@ -376,12 +376,12 @@ export function downloadData(): FormDetails {
 			img: null,
 			ariaLabel: '',
 		},
-	}
-};
+	};
+}
 
 export function criticalChange(): FormDetails {
 	return {
-		action: `https://${origin}:8443/api/auth/verify`,
+		action: `https://${API_URL}:8443/api/auth/verify`,
 		heading: 'Password Required',
 		ariaLabel: 'Verify your password',
 		id: 'pw-check',
@@ -415,5 +415,5 @@ export function privacyButton(): FormDetails {
 			img: null,
 			ariaLabel: 'Go to privacy policy',
 		},
-	}
-};
+	};
+}

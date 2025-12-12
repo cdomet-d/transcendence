@@ -1,11 +1,5 @@
 import { NavigationLinks } from '../navigation/links.js';
-import type {
-	FontWeight,
-	FontSize,
-	FontColor,
-	ImgData,
-	NavigationLinksData,
-} from '../types-interfaces.js';
+import type { FontWeight, FontSize, FontColor, ImgData, NavigationLinksData } from '../types-interfaces.js';
 import { createIcon } from '../typography/helpers.js';
 import type { Icon } from '../typography/images.js';
 
@@ -18,7 +12,6 @@ export class Username extends HTMLDivElement {
 	#link: NavigationLinks;
 	#isLogged: boolean;
 
-	// TODO: make the user-status a percentage of username fontSize ?
 	/**
 	 * Initializes the username and status elements.
 	 * Sets initial logged status to false.
@@ -110,17 +103,25 @@ if (!customElements.get('username-container')) {
 export class Winstreak extends HTMLSpanElement {
 	#icon: Icon;
 	#val: HTMLSpanElement;
+	#totalW: HTMLSpanElement;
+	#totalL: HTMLSpanElement;
+	#winsValue: string;
+	#lossValue: string;
 
 	constructor() {
 		super();
 		const iconData: ImgData = {
 			src: '/public/assets/images/winstreak.png',
 			id: '',
-			alt: 'A gold pixel trophy with the number 1 engraved in a darker color.',
+			alt: 'Winstreak',
 			size: 'iicon',
 		};
 		this.#icon = createIcon(iconData);
-		this.#val = document.createElement('p');
+		this.#val = document.createElement('span');
+		this.#totalL = document.createElement('span');
+		this.#totalW = document.createElement('span');
+		this.#winsValue = '';
+		this.#lossValue = '';
 		this.append(this.#icon, this.#val);
 	}
 
@@ -128,8 +129,31 @@ export class Winstreak extends HTMLSpanElement {
 	 * Sets the winstreak value text.
 	 * @param val - The winstreak value to display.
 	 */
-	set winstreakValue(val: string) {
+	set setWinstreakValue(val: string) {
 		this.#val.innerText = val;
+	}
+
+	set setTotalWins(val: string) {
+		this.#winsValue = val;
+	}
+
+	set setTotalLosses(val: string) {
+		this.#lossValue = val;
+	}
+
+	/** Getter for winstreak val */
+	get getWinstreakValue() {
+		return this.#val.innerText;
+	}
+
+	/** Getter for totalWins val */
+	get getTotalWins() {
+		return this.#winsValue;
+	}
+
+	/** Getter for totalLoss val */
+	get getTotalLosses() {
+		return this.#lossValue;
 	}
 
 	connectedCallback() {
@@ -138,8 +162,16 @@ export class Winstreak extends HTMLSpanElement {
 
 	render() {
 		this.id = 'winstreak';
-		this.className = 'flex flex-initial gap-xs items-center even';
+		this.className = 'grid grid-cols-2 gap-xs place-items-center even';
 		this.#val.className = 'f-bold dark';
+		if (this.#lossValue && this.#winsValue) {
+			this.append(this.#totalW, this.#totalL);
+			this.#totalW.innerText = 'W: ' + this.#winsValue;
+			this.#totalL.innerText = 'L: ' + this.#lossValue;
+			this.#totalL.className = 'f-bold dark';
+			this.#totalW.className = 'f-bold dark';
+			this.classList.add('grid-rows-2')
+		}
 	}
 }
 

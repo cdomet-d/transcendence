@@ -45,7 +45,7 @@ export async function exceptionFromResponse(response: Response): Promise<Error> 
 	let errorData = { message: '' };
 	try {
 		errorData = await response.json();
-	} catch { }
+	} catch {}
 
 	const translatedMessage = getStatusTranslation(response.status);
 	const message = translatedMessage || errorData.message || response.statusText;

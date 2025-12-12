@@ -73,6 +73,7 @@ services:
         volumes:
             - ./services/dashboards/app:/usr/app
             - ./services/dashboards/data:/usr/data
+
     friends:
         build:
             context: ./services/friends
@@ -126,8 +127,6 @@ services:
         volumes:
             - ./services/game-manager/app:/usr/app
             - ./services/game-manager/data:/usr/data
-        depends_on:
-            - nats-server
 
     pong:
         build:
@@ -173,10 +172,11 @@ services:
         networks:
             - transcendence
         restart: unless-stopped
-        environment:
-            - NGINXIP=nginx
-            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-            - HOST="localhost"
+        env_file: ./services/frontend/frontend.env
+        # environment:
+        #     - NGINXIP=nginx
+        #     - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+        #     - HOST="localhost"
         volumes:
             - ./services/frontend/app:/app
         depends_on:
@@ -188,7 +188,7 @@ services:
             context: ./services/nginx/
             dockerfile: Dockerfile
         container_name: nginx
-        env_file: ./services/nginx/.nginx.env
+        env_file: ./services/nginx/nginx.env
         image: nginx:0.0.1
         networks:
             - transcendence

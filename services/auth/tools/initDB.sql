@@ -2,5 +2,6 @@ CREATE TABLE account (
 	ID INTEGER PRIMARY KEY AUTOINCREMENT,
 	userID TEXT,
 	username TEXT UNIQUE,
-	hashedPassword TEXT
+	hashedPassword TEXT,
+	JWTVersion INTEGER DEFAULT 0
 );

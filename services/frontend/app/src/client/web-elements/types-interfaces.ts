@@ -26,7 +26,7 @@ export interface ImgData {
 	src: string;
 }
 
-export type BackgroundTheme = 'default' | 'farm' | 'ocean' | 'forest';
+export type BackgroundTheme = 'default' | 'farm' | 'ocean';
 /* -------------------------------------------------------------------------- */
 /*                                    Menus                                   */
 /* -------------------------------------------------------------------------- */
@@ -184,6 +184,8 @@ export interface UserData {
 	status: boolean;
 	username: string;
 	winstreak: string;
+	totalWins?: string;
+	totalLosses?: string;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -286,7 +288,7 @@ export interface MatchParticipants {
 	player2: UserData;
 }
 
-export type CourtTheme = 'default' | 'farm' | 'ocean' | 'forest';
+export type CourtTheme = 'default' | 'farm' | 'ocean';
 
 export interface pongTheme {
 	color: string;
@@ -317,6 +319,20 @@ export interface PongOptions {
 /* -------------------------------------------------------------------------- */
 
 export interface Dictionary {
+	privacy: {
+		mainTitle: string;
+		storageTitle: string;
+		rightsTitles: string;
+		intro: string;
+		identity: string;
+		auth: string;
+		history: string;
+		social: string;
+		sessionData: string;
+		access: string;
+		erasure: string;
+		rectify: string;
+	},
 	buttons: {
 		submit: string;
 		cancel: string;
@@ -342,6 +358,7 @@ export interface Dictionary {
 		password: string;
 		biography: string;
 		avatar: string;
+		searchbar: string;
 		search_placeholder: string;
 		avatar_uploader: string;
 	};
@@ -385,7 +402,6 @@ export interface Dictionary {
 		remote: string;
 		background: string;
 		farm: string;
-		forest: string;
 		under_water: string;
 		opponent: string;
 		opponent_name: string;
@@ -395,6 +411,7 @@ export interface Dictionary {
 	error: {
 		username_error: string;
 		password_error: string;
+		forbidden_error: string;
 		page404: string;
 		uppercase: string;
 		lowercase: string;

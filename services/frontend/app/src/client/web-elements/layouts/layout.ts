@@ -21,13 +21,6 @@ export const oceanAssets: ImgData[] = [
 	{ id: 'sunrays', src: '/public/assets/images/ocean-scene/sunrays.png', alt: 'ahah', size: 'iicon' },
 ];
 
-export const forestAssets: ImgData[] = [
-	{ id: 'bushes', src: '/public/assets/images/forest-scene/bushes.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'trees', src: '/public/assets/images/forest-scene/trees.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'bg_tree', src: '/public/assets/images/forest-scene/bg-tree.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'sunset', src: '/public/assets/images/forest-scene/sunset.png', alt: 'ahah', size: 'iicon' },
-];
-
 export class Layout extends HTMLElement {
 	/**
 	 * 	The layout's cache.
