@@ -2,8 +2,27 @@ import type { Dictionary } from '../types-interfaces.js';
 import { createVisualFeedback } from '../../error.js';
 import { errorMessageFromException } from '../../error.js';
 
-// hardcoded this so the app renders instantly without waiting for a fetch for now, will do route calling in next branch
 export const defaultDictionary: Dictionary = {
+	privacy: {
+		mainTitle: "GDPR Compliance & Data Privacy",
+		storageTitle: "What We Store",
+		rightsTitles: "Your Rights",
+		intro: "We value your privacy. In compliance with the General Data Protection Regulation (GDPR),\
+			this page outlines exactly what data we store, why we store it, and your rights regarding that data.",
+		identity: '<strong>Identity:</strong> Username, avatar image, and biography to display your profile to other players.',
+		auth: '<strong>Authentication:</strong> Securely hashed passwords. We never store your actual password.', 
+		history: '<strong>Game History:</strong> Statistics (Wins, Losses, Streaks) and a log of matches played to populate leaderboards and history.',
+		social: '<strong>Social:</strong> Your list of friends and pending friend requests.',
+		sessionData: '<strong>Session Data:</strong> We use a secure HTTP-only cookie (JWT) to keep you logged in. \
+			We do not use third-party tracking cookies. \
+			In that cookie, we store your userID (that we generate) and your username (that we set) so we can render your informations on the website.\
+			That cookie expires on its own after an hour.',
+		access: '<strong>Right to Access (Portability):</strong> You can download a full copy of your personal data in JSON format via the User Settings page.',
+		erasure: '<strong>Right to Erasure (Right to be Forgotten):</strong> You can delete your account at any time. \
+		This process is permanent and irreversibly anonymizes your data (replacing your username/avatar with generic placeholders) \
+		while preserving game statistics for fair history.',
+		rectify: '<strong>Right to Rectification:</strong> You can update your profile information (username, bio, avatar, language) at any time.',
+	},
 	buttons: {
 		submit: "Submit",
 		cancel: "Cancel",

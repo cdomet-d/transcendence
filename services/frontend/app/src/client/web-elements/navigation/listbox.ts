@@ -57,11 +57,9 @@ export class Listbox extends HTMLUListElement {
 	/** Reveals the listbox popup and sets the focus back on either
 	 * the first element or the current selection */
 	expand() {
-		console.log('expanded')
 		this.classList.remove('hidden');
 		this.removeAttribute('hidden');
 		this.setAttribute('aria-expanded', 'true');
-		console.log(this.#currentFocus)
 		if (this.#currentFocus === -1) this.#moveFocus(1);
 		else if (this.#currentFocus !== -1) {
 			const focusedOption = this.#options[this.#currentFocus];
@@ -97,7 +95,6 @@ export class Listbox extends HTMLUListElement {
 		if (focusedOption) {
 			focusedOption.focus();
 		}
-		console.log(focusedOption.firstChild)
 	}
 
 	/**

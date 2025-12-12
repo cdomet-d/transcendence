@@ -317,6 +317,20 @@ export interface PongOptions {
 /* -------------------------------------------------------------------------- */
 
 export interface Dictionary {
+	privacy: {
+		mainTitle: string;
+		storageTitle: string;
+		rightsTitles: string;
+		intro: string;
+		identity: string;
+		auth: string;
+		history: string;
+		social: string;
+		sessionData: string;
+		access: string;
+		erasure: string;
+		rectify: string;
+	},
 	buttons: {
 		submit: string;
 		cancel: string;
