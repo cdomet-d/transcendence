@@ -71,17 +71,17 @@ export class DowloadDataForm extends BaseForm {
 			window.URL.revokeObjectURL(downloadUrl);
 
 			localStorage.removeItem('criticalChange');
-			createVisualFeedback('Data downloaded!', 'success');
+			createVisualFeedback(currentDictionary.buttons.downloaded, 'success');
 
 		} catch (error) {
 			console.error('[DOWNLOAD DATA ERROR]', error);
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
 	set user(details: UserData) {
 		this.#user = details;
-		this.details = downloadData(currentDictionary);
+		this.details = downloadData();
 	}
 }
 

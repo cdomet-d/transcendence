@@ -5,6 +5,7 @@ import { Menu } from './basemenu.js';
 import { errorMessageFromException, createVisualFeedback, exceptionFromResponse } from '../../error.js';
 import { Listbox } from './listbox.js';
 import { origin } from '../../main.js';
+import { currentDictionary } from '../forms/language.js';
 
 interface Relation {
 	username: string;
@@ -68,7 +69,7 @@ export class SocialMenu extends Menu {
 			this.view = 'stranger';
 			this.updateView();
 		} catch (error) {
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
@@ -87,7 +88,7 @@ export class SocialMenu extends Menu {
 			this.view = 'pending';
 			this.updateView();
 		} catch (error) {
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 	/** Called when element connects to DOM; calls base and updates view. */

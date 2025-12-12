@@ -1,4 +1,3 @@
--- Ensure table exists
 CREATE TABLE
     IF NOT EXISTS language_packs (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -6,10 +5,8 @@ CREATE TABLE
         pack_json TEXT NOT NULL
     );
 
--- Clear existing data to prevent unique constraint errors on re-seed
 DELETE FROM language_packs;
 
--- 1. English (en)
 INSERT INTO
     language_packs (language_code, pack_json)
 VALUES
@@ -33,7 +30,8 @@ VALUES
         "delete_account": "Delete account",
         "download_data": "Download personal data",
         "privacy": "Privacy policy",
-        "go_home": "Go home"
+        "go_home": "Go home",
+        "downloaded": "Data downloaded"
     },
     "forms": {
         "username": "Username",
@@ -103,7 +101,22 @@ VALUES
         "username_lenght2": " -18 character long, is ",
         "file_heavy": "That file is too heavy: max is 2MB!",
         "file_extension": "Invalid extension: ",
-        "page404": "There''s nothing here :("
+        "page404": "There''s nothing here :(",
+        "join_lobby": "Uh-oh! You can''t be there - go join a lobby or something !",
+        "invite_lobby": "You were not invited to this lobby!",
+        "deleted_lobby": "The lobby you are trying to join does not exist anymore!",
+        "broke_lobby": "Your lobby is malfunctionning! Please create a new one!",
+        "nbplayers_lobby": "You do not have enough players in your lobby to start playing!",
+        "account_deleted": "Account permanently deleted",
+        "bad_request": "Bad Request",
+        "unauthorized": "Unauthorized",
+        "conflict": "Conflict: Resource already exists",
+        "redirection": "Redirected: You must be registered to see this page!",
+        "something_wrong": "Something went wrong",
+        "no_user": "No such user",
+        "login_lobby": "You are not logged in and thus cannot join a lobby!",
+        "too_many_players": "You can''t invite any more people!",
+        "invite_yourself": "You can''t invite yourself, dummy"
     },
     "lobby": {
         "local": "Local 1v1",
@@ -131,7 +144,6 @@ VALUES
 }'
     );
 
--- 2. French (fr)
 INSERT INTO
     language_packs (language_code, pack_json)
 VALUES
@@ -155,8 +167,8 @@ VALUES
         "delete_account": "Supprimer le compte",
         "download_data": "Télécharger vos données",
         "privacy": "Politique de confidentialité",
-        "go_home": "Retourner a l''accueil"
-
+        "go_home": "Retourner a l''accueil",
+        "downloaded": "Donnees telechargees"
     },
     "forms": {
         "username": "Nom d''utilisateur",
@@ -224,8 +236,22 @@ VALUES
         "username_lenght2": " -18 caractères, il en fait ",
         "file_heavy": "Fichier trop volumineux : max 2 Mo !",
         "file_extension": "Extension invalide : ",
-        "page404": "Il n''y a rien ici :("
-
+        "page404": "Il n''y a rien ici :(",
+        "join_lobby": "Oh-oh! Tu n''as pas le droit d''etre ici - Vas rejoindre un lobby !",
+        "invite_lobby": "Vous n''avez pas ete invite dans ce lobby !",
+        "deleted_lobby": "Le lobby que vous essayez de rejoindre n''existe plus !",
+        "broke_lobby": "Votre lobby fonctionne mal ! Veuillez en creer un nouveau !",
+        "nbplayers_lobby": "Vous n''avez pas assez de joueurs dans votre lobby pour commencer a jouer !",
+        "account_deleted": "Compte supprime definitivement",
+        "bad_request": "Mauvaise requete",
+        "unauthorized": "Non autorise",
+        "conflict": "Conflit : La ressource existe deja",
+        "redirection": "Redirection: Tu dois etre connecter pour voir cette page!",
+        "something_wrong": "Quelque chose s''est mal passé",
+        "no_user": "Cette utilisateur n''existe pas",
+        "login_lobby": "Tu n''est pas connecter donc tu ne peux pas rejoindre de lobby!",
+        "too_many_players": "Tu ne peux pas inviter plus de joueurs!",
+        "invite_yourself": "Tu ne peux pas t''inviter toi-meme!"
     },
     "lobby": {
         "local": "Local 1vs1",
@@ -253,7 +279,6 @@ VALUES
 }'
     );
 
--- 3. Spanish (es)
 INSERT INTO
     language_packs (language_code, pack_json)
 VALUES
@@ -277,7 +302,8 @@ VALUES
         "delete_account": "Eliminar cuenta",
         "download_data": "Descargar datos",
         "privacy": "Política de privacidad",
-        "go_home": "Volver al inicio"
+        "go_home": "Volver al inicio",
+        "downloaded": "Datos descargados"
     },
     "forms": {
         "username": "Nombre de usuario",
@@ -330,6 +356,7 @@ VALUES
         "under_water": "Bajo el agua",
         "searchbar": "barra de búsqueda",
         "choose_back": "Elige fondo"
+
     },
     "error": {
         "username_error": "Nombre de usuario o contraseña inválidos.",
@@ -344,8 +371,22 @@ VALUES
         "username_lenght2": " -18 caracteres, tiene ",
         "file_heavy": "El archivo es demasiado grande: ¡máx. 2MB!",
         "file_extension": "Extensión no válida: ",
-        "page404": "No hay nada aqui :("
-
+        "page404": "No hay nada aqui :(",
+        "join_lobby": "No tienes derecho a estar aquí. ¡Únete a un lobby!",
+        "invite_lobby": "¡No fuiste invitado a este lobby!",
+        "deleted_lobby": "¡El lobby al que intentas unirte ya no existe!",
+        "broke_lobby": "¡Tu lobby está funcionando mal! ¡Por favor crea uno nuevo!",
+        "nbplayers_lobby": "¡No tienes suficientes jugadores en tu lobby para empezar a jugar!",
+        "account_deleted": "Cuenta eliminada permanentemente",
+        "bad_request": "Solicitud incorrecta",
+        "unauthorized": "No autorizado",
+        "conflict": "Conflicto: El recurso ya existe",
+        "redirection": "Redirección: Debe iniciar sesión para ver esta página.",
+        "something_wrong": "Algo salió mal",
+        "no_user": "No hay tal usuaria/usuario",
+        "login_lobby": "¡No has iniciado sesión y por lo tanto no puedes unirte a un lobby!",
+        "too_many_players": "¡No puedes invitar a más personas!",
+        "invite_yourself": "No puedes invitarte a ti mismo, tonto"
     },
     "lobby": {
         "local": "Local 1vs1",
@@ -371,4 +412,4 @@ VALUES
         "tournament": "modo de juego"
     }
 }'
-    );
+);

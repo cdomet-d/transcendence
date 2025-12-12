@@ -5,6 +5,8 @@ import type { LocalPongSettings, RemotePongSettings } from '../web-elements/form
 import { origin } from '../main.js'
 import type { inviteeObj } from './gm.interface.front.js';
 import { executeAction } from './wsAction.front.js';
+import { currentDictionary } from '../web-elements/forms/language.js';
+;
 
 export let wsInstance: WebSocket | null = null;
 
@@ -61,20 +63,20 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	};
 }
 
-function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettings) {
+async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettings) {
 	ws.onmessage = (message: MessageEvent) => {
 		try {
 			const data = JSON.parse(message.data);
 			if (data.error) {
 				const error = data.error;
 				if (error === 'not enough players') {
-					createVisualFeedback('You do not have enough players in your lobby to start playing!', 'error');
+					createVisualFeedback(currentDictionary.error.nbplayers_lobby, 'error');
 				} else if (error === 'lobby not found') {
-					createVisualFeedback('Your lobby is malfunctionning! Please create a new one!', 'error');
+					createVisualFeedback(currentDictionary.error.broke_lobby, 'error');
 				} else if (error === 'lobby does not exist') {
-					redirectOnError('/home', 'The lobby you are trying to join does not exist anymore!');
+					redirectOnError('/home', currentDictionary.error.deleted_lobby);
 				} else if (error === 'not invited') {
-					createVisualFeedback('You were not invited to this lobby!', 'error');
+					createVisualFeedback(currentDictionary.error.invite_lobby, 'error');
 				}
 				return;
 			}

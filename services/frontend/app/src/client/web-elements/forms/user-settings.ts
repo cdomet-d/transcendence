@@ -112,11 +112,7 @@ export class UserSettingsForm extends BaseForm {
 							'Espanol': 'Espanol',
 						};
 						const newLangCode = langMap[bodyObj.language] || bodyObj.language;
-
-						console.log("Updating language to:", newLangCode);
-
 						await setLanguage(newLangCode);
-						console.log("DICO: ", JSON.stringify(currentDictionary));
 					}
 				} catch (e) {
 					console.error("Failed to parse request body for language update", e);
@@ -125,7 +121,7 @@ export class UserSettingsForm extends BaseForm {
 			document.body.header?.reloadLanguage();
 			router.loadRoute('/me', true);
 		} catch (error) {
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
@@ -152,7 +148,7 @@ export class UserSettingsForm extends BaseForm {
 			const file = f.get('upload');
 			if (!file || !(file instanceof File)) throw new Error('Error processing avatar');
 			if (file.size > MAX_FILE)
-				return createVisualFeedback('That file is way too heavy; max is 2MB. Ta!');
+				return createVisualFeedback(currentDictionary.error.file_heavy);
 			if (file.name !== '') {
 				console.log(file);
 				try {
@@ -161,7 +157,7 @@ export class UserSettingsForm extends BaseForm {
 					if (binaryAvatar) f.append('avatar', binaryAvatar);
 				} catch (error) {
 					console.error('[USER-SETTINGS]', errorMessageFromException(error));
-					createVisualFeedback(errorMessageFromException(error));
+					createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 				}
 			}
 		}

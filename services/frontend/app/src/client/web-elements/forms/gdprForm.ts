@@ -2,6 +2,7 @@ import { BaseForm } from './baseform.js';
 import { router } from '../../main.js';
 import { createVisualFeedback } from '../../error.js';
 import { errorMessageFromException } from '../../error.js';
+import { currentDictionary } from './language.js';
 
 export class PrivacyButtonForm extends BaseForm {
 
@@ -20,7 +21,7 @@ export class PrivacyButtonForm extends BaseForm {
 			router.loadRoute('/auth', true);
 		} catch (error) {
 			console.error('[DELETE ACCOUNT]', error);
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 }
