@@ -1,12 +1,13 @@
-import { createVisualFeedback, redirectOnError } from '../error.js';
+import { createVisualFeedback } from '../error.js';
 import { router } from '../main.js';
-import { type gameRequest } from '../pong/pong.js';
 import type { LocalPongSettings, RemotePongSettings } from '../web-elements/forms/pong-settings.js';
-import { origin } from '../main.js'
 import type { inviteeObj } from './gm.interface.front.js';
-import { executeAction } from './wsAction.front.js';
-import { currentDictionary } from '../web-elements/forms/language.js';
-;
+import { executeAction, wsSend } from './wsAction.front.js';
+import { endGame } from '../web-elements/game/pong-events.js';
+import { looseImage, winImage } from '../web-elements/default-values.js';
+
+import { handleGameStart, handleLobbyEvent } from './wsUtils.front.js';
+import { handleError } from './wsError.front.js';
 
 export let wsInstance: WebSocket | null = null;
 
@@ -19,15 +20,19 @@ function openWsConnection() {
 }
 
 async function wsConnect(action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string, invitee?: inviteeObj, form?: RemotePongSettings | LocalPongSettings) {
-	const ws: WebSocket = openWsConnection();
-
+	if (wsInstance && wsInstance.readyState === WebSocket.OPEN)
+		executeAction(wsInstance, action, format, formInstance, lobbyID, gameSettings, invitee);
+	let ws: WebSocket;
+	if (wsInstance === null) {
+		ws = openWsConnection();
+		setMessEvent(ws, form);
+	}
+	else
+		ws = wsInstance;
 	if (form)
 		form.socket = ws;
-
 	ws.onopen = async () => {
 		console.log('Lobby WebSocket connection established!')
-
-		setMessEvent(ws, form);
 
 		const interval = setInterval(() => {
 			if (ws.readyState === ws.OPEN) {
@@ -35,15 +40,13 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 			} else clearInterval(interval);
 		}, 30000);
 
-		// TODO what happens if host leaves lobby, kick everyone ?
-		executeAction(action, format, formInstance, lobbyID, gameSettings, invitee);
+		executeAction(ws, action, format, formInstance, lobbyID, gameSettings, invitee);
 	}
 
-	if (action === 'invitee' && ws.OPEN)//TODO: ws OPEN necessary ?
+	if (action === 'invitee' && ws.readyState === WebSocket.OPEN) {
 		setMessEvent(ws, form);
-
-	// TODO give socket to executeAction() to avoid duplicate instructions
-	executeAction(action, format, formInstance, lobbyID, gameSettings, invitee);
+		wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "in lobby" } })));
+	}
 
 	ws.onerror = (err: any) => {
 		console.log('Error:', err);
@@ -55,11 +58,9 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		console.log('Lobby WebSocket connection closed!');
 		if (event.code === 4001) {
 			const currentRoute = window.location.pathname;
-			if (currentRoute.includes("-lobby"))
+			if (currentRoute.includes("-lobby") || currentRoute === "/game")
 				router.loadRoute('/lobby-menu', true);
 		}
-		// TODO KICK USER OUT OF LOBBY_MAP AND GM WS_CLIENT_MAP // 'delete' action ? Handle in GM?
-		// TODO: Check wether deconnection was expected or not
 	};
 }
 
@@ -67,55 +68,46 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 	ws.onmessage = (message: MessageEvent) => {
 		try {
 			const data = JSON.parse(message.data);
+
 			if (data.error) {
-				const error = data.error;
-				if (error === 'not enough players') {
-					createVisualFeedback(currentDictionary.error.nbplayers_lobby, 'error');
-				} else if (error === 'lobby not found') {
-					createVisualFeedback(currentDictionary.error.broke_lobby, 'error');
-				} else if (error === 'lobby does not exist') {
-					redirectOnError('/home', currentDictionary.error.deleted_lobby);
-				} else if (error === 'not invited') {
-					createVisualFeedback(currentDictionary.error.invite_lobby, 'error');
-				}
-				return;
-			}
-			if (data.event === "NOTIF" && data.notif === "pong") return;
-			if (data.lobby) {
-				console.log(`${data.lobby} lobby ${data.lobbyID} successfully!`);
+                handleError(data.error);
+                return;
+            }
 
-				// TODO send host to front as soon as lobby 'created'
-				// send lobbyID to Form
-				// updateGameForm(data.formInstance);
-				// TODO tell front when everybody there
+            if (data.event === 'NOTIF' && data.notif === 'pong') return;
 
-				if (data.lobby === "joined") {
-					if (data.formInstance === "1 vs 1") {
-						router.loadRoute("/quick-remote-lobby", true, undefined, "invitee", data.whiteListUsernames);
-						//fill lobby with data.whiteListUsers;
-					}
-					else if (data.formInstance === "tournament") {
-						router.loadRoute("/tournament-lobby", true, undefined, "invitee", data.whiteListUsernames);
-					}
-				}
-				if (data.lobby === "whiteListUpdate") {
-					if (form === undefined) {
-						console.log("FORM UNDEFINED");
-						return;
-					}
-					form!.displayUpdatedGuests(data.whiteListUsernames);
-				}
+            if (data.lobby) {
+                handleLobbyEvent(data, ws, form);
+                return;
+            }
+
+            if (data.opponent && data.gameID && data.gameSettings !== undefined && typeof data.remote === 'boolean') {
+                handleGameStart(data, ws);
+                return;
+            }
+
+			console.log("data:", JSON.stringify(data))
+			if (data === "start") {
+				form?.enableStartButton();
 				return;
 			}
 
-			// handle Response for gameRequest
-			if (data.opponent && data.gameID && (data.remote === true || data.remote === false) && data.gameSettings) {
-				const gameRequest: gameRequest = data;
-				router.loadRoute('/game', true, gameRequest, undefined, undefined, ws);
-				return;
+			if (data.event === "END GAME") {
+				if (data.result === "winner")
+					endGame(winImage, "winScreen", `${data.username} won !`, data.endLobby);
+				else
+					endGame(looseImage, "looseScreen", `${data.username} lost...`, data.endLobby);
+				if (data.endGame === true)
+					wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
+				else
+					setTimeout(() => {
+						console.log("in end game callback timer")
+						wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
+					}, 5000);
 			}
 		} catch (error) {
 			console.error("Error: Failed to parse WS message", error);
+			createVisualFeedback('Connection error. Please refresh the page.', 'error');
 		}
 	}
 }

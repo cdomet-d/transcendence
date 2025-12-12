@@ -33,11 +33,10 @@ export async function natsSubscribe(serv: FastifyInstance) {
 			const game: game = JSON.parse(sc.decode(msg.data));
 			console.log(`GM received following in 'game.over' :\n`, JSON.stringify(game));
 
-			if (game.tournamentID !== '-1') {
+			if (game.tournamentID !== '-1')
 				tournamentState(serv, game);
-			} else {
-				gameOver(game);
-			}
+			else
+				gameOver(game, serv, true, null, undefined);
 		}
 	})();
 }
@@ -48,7 +47,7 @@ function sendGameRequest(serv: FastifyInstance, userID: string, opponentUsername
 	const socket: WebSocket | undefined = wsClientsMap.get(userID);
 	if (socket === undefined) {
 		serv.log.error(`socket not found for user: ${userID}`);
-		return
+		return;
 	}
 	const gameReq: gameRequest = {
 		opponent: opponentUsername, 
@@ -57,6 +56,5 @@ function sendGameRequest(serv: FastifyInstance, userID: string, opponentUsername
 		gameSettings: game.gameSettings,
 	}
 	serv.log.error("SENDING GAME REQUEST");
-	console.log("send game request");
 	wsSend(socket, JSON.stringify(gameReq));
 }

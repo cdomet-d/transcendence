@@ -10,7 +10,7 @@ export function createTournament(payload: lobbyInfo, lobbyID: string): tournamen
 		return undefined;
 	}
 
-	const tournamentObj = makeTournamentObj(tournamentID, games, payload.nbPlayers);
+	const tournamentObj = makeTournamentObj(tournamentID, games, payload.nbPlayers, lobbyID);
 	return tournamentObj;
 }
 
@@ -36,14 +36,14 @@ export function createBracket(lobbyInfo: lobbyInfo, tournamentID: string, lobbyI
     ];
 
 	const games: game[] = [
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
-			tournamentID: tournamentID, remote: true, users: opponents[0], 
+		{ lobbyID: lobbyID, gameID: crypto.randomUUID().toString(), 
+			tournamentID: tournamentID, remote: true, users: opponents[0]!, 
 			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "", gameSettings: lobbyInfo.gameSettings! },
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
-			tournamentID: tournamentID, remote: true, users: opponents[1], 
+		{ lobbyID: lobbyID, gameID: crypto.randomUUID().toString(), 
+			tournamentID: tournamentID, remote: true, users: opponents[1]!, 
 			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "", gameSettings: lobbyInfo.gameSettings! },
-		{ lobbyID: lobbyInfo.lobbyID!, gameID: crypto.randomUUID().toString(), 
-			tournamentID: tournamentID, remote: true, users: null, 
+		{ lobbyID: lobbyID, gameID: crypto.randomUUID().toString(), 
+			tournamentID: tournamentID, remote: true, users: [], 
 			score: [0, 0], winnerID: "", loserID: "", duration: 0, longuestPass: 0, startTime: "", gameSettings: lobbyInfo.gameSettings! },
 	];
 
@@ -60,12 +60,17 @@ function fisherYatesShuffle(usersArray: any) {
 }
 
 
-export function makeTournamentObj(tournamentID: string, games: game[], nbPlayers: number): tournament {
+export function makeTournamentObj(tournamentID: string, games: game[], nbPlayers: number, lobbyID: string): tournament {
 	const tournament: tournament = {
 		tournamentID: tournamentID,
+		lobbyID: lobbyID,
 		winnerID: null,
 		bracket: games,
 		nbPlayers: nbPlayers,
+		gotBracket: 0,
+		gotEndGame: 0,
+		nextPlayersMap: new Map(),
+		nextGame: undefined,
 	}
 	return tournament;
 }

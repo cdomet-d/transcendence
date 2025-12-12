@@ -168,7 +168,7 @@ export class NotifBox extends HTMLDivElement {
 		const notif = document.createElement('li', { is: 'notif-content' }) as NotifContent;
 		notif.createNotifMessage(gameNotif.senderUsername, currentDictionary.notifs.notif_match + `${gameNotif.gameType}!`);
 		notif.id = 'game';
-		notif.lobbyInfo = { lobbyID: gameNotif.lobbyID, inviteeID: gameNotif.receiverID, formInstance: gameNotif.gameType! };
+		notif.lobbyInfo = { lobbyID: gameNotif.lobbyID, inviteeID: gameNotif.receiverID };
 		this.#panel.newNotification(notif);
 		this.#toggle.toggleAlert(true);
 	}
