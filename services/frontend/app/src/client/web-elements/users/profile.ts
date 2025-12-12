@@ -47,7 +47,6 @@ export class UserProfile extends HTMLDivElement {
 	 */
 	set status(status: boolean) {
 		if (status !== this.#username.status) {
-			// console.log('status');
 			this.#username.status = status;
 		}
 	}

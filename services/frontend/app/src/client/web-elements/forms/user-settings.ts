@@ -88,7 +88,6 @@ export class UserSettingsForm extends BaseForm {
 			if (req.body && typeof req.body === 'string') {
 				try {
 					const bodyObj = JSON.parse(req.body);
-					console.log();
 					if (bodyObj.language) {
 						const langMap: { [key: string]: string } = {
 							English: 'English',
@@ -125,14 +124,12 @@ export class UserSettingsForm extends BaseForm {
 			if (langSelection && langSelection.id !== this.#user.language) f.append('language', langSelection.id);
 		}
 
-		console.log(f);
 		if (f.get('upload') && this.#user) {
 			const file = f.get('upload');
 			if (!file || !(file instanceof File)) throw new Error('Error processing avatar');
 			if (file.size > MAX_FILE)
 				return createVisualFeedback(currentDictionary.error.file_heavy);
 			if (file.name !== '') {
-				console.log(file);
 				try {
 					const binaryAvatar = await this.#fileToBinary(file);
 					if (binaryAvatar) f.append('avatar', binaryAvatar);

@@ -176,7 +176,7 @@ export class NotifBox extends HTMLDivElement {
 	async fetchPendingFriendRequests() {
 		const status = await userStatus();
 		if (!status.auth) redirectOnError('/auth', currentDictionary.error.redirection);
-		const url = `https://${origin}:8443/api/bff/profile/${status.username}`;
+		const url = `https://${API_URL}:8443/api/bff/profile/${status.username}`;
 		try {
 			const rawRes = await fetch(url, { credentials: 'include' });
 			if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
@@ -194,7 +194,7 @@ export class NotifBox extends HTMLDivElement {
 	async fetchGameInvites() {
 		const status = await userStatus();
 		if (!status.auth) redirectOnError('/auth', currentDictionary.error.redirection);
-		const url = `https://${origin}:8443/api/lobby/notification/${status.userID!}`;
+		const url = `https://${API_URL}:8443/api/lobby/notification/${status.userID!}`;
 		try {
 			const rawRes = await fetch(url);
 			if (!rawRes.ok) {

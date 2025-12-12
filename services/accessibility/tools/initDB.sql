@@ -1,36 +1,30 @@
 CREATE TABLE
-    IF NOT EXISTS language_packs (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        language_code TEXT UNIQUE NOT NULL,
-        pack_json TEXT NOT NULL
-    );
+	IF NOT EXISTS language_packs (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		language_code TEXT UNIQUE NOT NULL,
+		pack_json TEXT NOT NULL
+	);
 
 DELETE FROM language_packs;
 
 INSERT INTO
-    language_packs (language_code, pack_json)
+	language_packs (language_code, pack_json)
 VALUES
-    (
-	'English',
-	'{
+	(
+		'English',
+		'{
 	"privacy": {
 		"mainTitle": "GDPR Compliance & Data Privacy",
 		"storageTitle": "What We Store",
 		"rightsTitles": "Your Rights",
-		"intro": "We value your privacy. In compliance with the General Data Protection Regulation (GDPR),\
-			this page outlines exactly what data we store, why we store it, and your rights regarding that data.",
+		"intro": "We value your privacy. In compliance with the General Data Protection Regulation (GDPR), this page outlines exactly what data we store, why we store it, and your rights regarding that data.",
 		"identity": "<strong>Identity:</strong> Username, avatar image, and biography to display your profile to other players.",
 		"auth": "<strong>Authentication:</strong> Securely hashed passwords. We never store your actual password.", 
 		"history": "<strong>Game History:</strong> Statistics (Wins, Losses, Streaks) and a log of matches played to populate leaderboards and history.",
 		"social": "<strong>Social:</strong> Your list of friends and pending friend requests.",
-		"sessionData": "<strong>Session Data:</strong> We use a secure HTTP-only cookie (JWT) to keep you logged in. \
-			We do not use third-party tracking cookies. \
-			In that cookie, we store your userID (that we generate) and your username (that we set) so we can render your informations on the website.\
-			That cookie expires on its own after an hour.",
+		"sessionData": "<strong>Session Data:</strong> We use a secure HTTP-only cookie (JWT) to keep you logged in. We do not use third-party tracking cookies. In that cookie, we store your userID (that we generate) and your username (that we set) so we can render your informations on the website. That cookie expires on its own after an hour.",
 		"access": "<strong>Right to Access (Portability):</strong> You can download a full copy of your personal data in JSON format via the User Settings page.",
-		"erasure": "<strong>Right to Erasure (Right to be Forgotten):</strong> You can delete your account at any time. \
-			This process is permanent and irreversibly anonymizes your data (replacing your username/avatar with generic placeholders) \
-		"while preserving game statistics for fair history.",
+		"erasure": "<strong>Right to Erasure (Right to be Forgotten):</strong> You can delete your account at any time. This process is permanent and irreversibly anonymizes your data (replacing your username or avatar with generic placeholders) while preserving game statistics for fair history.",
 		"rectify": "<strong>Right to Rectification:</strong> You can update your profile information (username, bio, avatar, language) at any time."
 	},
     "buttons": {
@@ -162,14 +156,14 @@ VALUES
         "tournament": "game mode"
     }
 }'
-    );
+	);
 
 INSERT INTO
-    language_packs (language_code, pack_json)
+	language_packs (language_code, pack_json)
 VALUES
-    (
-	'Francais',
-	'{
+	(
+		'Francais',
+		'{
     "privacy": {
         "mainTitle": "Conformité RGPD & Confidentialité des Données",
         "storageTitle": "Ce que Nous Stockons",
@@ -181,7 +175,7 @@ VALUES
         "social": "<strong>Social :</strong> Votre liste d''amis et vos demandes d''amis en attente.",
         "sessionData": "<strong>Données de Session :</strong> Nous utilisons un cookie HTTP-only sécurisé (JWT) pour maintenir votre connexion. Nous n''utilisons pas de cookies de suivi tiers. Dans ce cookie, nous stockons votre identifiant utilisateur (que nous générons) et votre nom d''utilisateur (que vous définissez) afin d''afficher vos informations sur le site. Ce cookie expire automatiquement après une heure.",
         "access": "<strong>Droit d''Accès (Portabilité) :</strong> Vous pouvez télécharger une copie complète de vos données personnelles au format JSON via la page des Paramètres Utilisateur.",
-        "erasure": "<strong>Droit à l''Effacement (Droit à l''Oubli) :</strong> Vous pouvez supprimer votre compte à tout moment. Ce processus est permanent et rend vos données anonymes de manière irréversible (remplaçant votre nom d''utilisateur/avatar par des éléments génériques) tout en conservant les statistiques de jeu pour une historique équitable.",
+        "erasure": "<strong>Droit à l''Effacement (Droit à l''Oubli) :</strong> Vous pouvez supprimer votre compte à tout moment. Ce processus est permanent et rend vos données anonymes de manière irréversible (remplaçant votre nom d''utilisateur et avatar par des éléments génériques) tout en conservant les statistiques de jeu pour un historique équitable.",
         "rectify": "<strong>Droit de Rectification :</strong> Vous pouvez mettre à jour les informations de votre profil (nom d''utilisateur, bio, avatar, langue) à tout moment."
     },
     "buttons": {
@@ -310,14 +304,14 @@ VALUES
         "tournament": "mode de jeu"
     }
 }'
-    );
+	);
 
 INSERT INTO
-    language_packs (language_code, pack_json)
+	language_packs (language_code, pack_json)
 VALUES
-    (
-	'Espanol',
-	'{
+	(
+		'Espanol',
+		'{
 	"privacy": {
         "mainTitle": "Cumplimiento GDPR y Privacidad de Datos",
         "storageTitle": "Qué Almacenamos",
@@ -329,7 +323,7 @@ VALUES
         "social": "<strong>Social:</strong> Tu lista de amigos y solicitudes de amistad pendientes.",
         "sessionData": "<strong>Datos de Sesión:</strong> Usamos una cookie HTTP-only segura (JWT) para mantener tu sesión activa. No utilizamos cookies de seguimiento de terceros. En esa cookie almacenamos tu ID de usuario (que generamos) y tu nombre de usuario (que establecemos) para poder mostrar tu información en el sitio web. Esa cookie expira automáticamente después de una hora.",
         "access": "<strong>Derecho de Acceso (Portabilidad):</strong> Puedes descargar una copia completa de tus datos personales en formato JSON desde la página de Configuración de Usuario.",
-        "erasure": "<strong>Derecho de Supresión (Derecho al Olvido):</strong> Puedes eliminar tu cuenta en cualquier momento. Este proceso es permanente y anonimiza tus datos de forma irreversible (reemplazando tu nombre de usuario/avatar con valores genéricos) preservando las estadísticas de juego para mantener un historial justo.",
+        "erasure": "<strong>Derecho de Supresión (Derecho al Olvido):</strong> Puedes eliminar tu cuenta en cualquier momento. Este proceso es permanente y anonimiza tus datos de forma irreversible (reemplazando tu nombre de usuario ou avatar con valores genéricos) preservando las estadísticas de juego para mantener un historial justo.",
         "rectify": "<strong>Derecho de Rectificación:</strong> Puedes actualizar la información de tu perfil (nombre de usuario, biografía, avatar, idioma) en cualquier momento."
     },
     "buttons": {
@@ -459,4 +453,4 @@ VALUES
         "tournament": "modo de juego"
     }
 }'
-);
+	);

@@ -10,7 +10,6 @@ async function make() {
 		bundle: true,
 		outfile: 'dist/client/bundle.js',
 		minify: true,
-		sourcemap: true,
 		platform: 'browser',
 		target: ['esnext'],
 		define: {
@@ -23,7 +22,6 @@ async function make() {
 		bundle: true,
 		outdir: 'dist/server',
 		minify: true,
-		sourcemap: true,
 		platform: 'node',
 		target: ['node20'],
 		packages: 'external',

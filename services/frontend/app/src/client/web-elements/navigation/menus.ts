@@ -54,7 +54,6 @@ export class SocialMenu extends Menu {
 	}
 
 	async #APIRemoveFriendImplementation() {
-		console.log('RemoveFriends');
 		const url = `https://${API_URL}:8443/api/bff/relation`;
 		const req: RequestInit = {
 			method: 'delete',
@@ -73,7 +72,6 @@ export class SocialMenu extends Menu {
 	}
 
 	async #APIAddFriendImplementation() {
-		console.log('AddFriends');
 		const url = `https://${API_URL}:8443/api/bff/relation`;
 		const req: RequestInit = {
 			method: 'post',
@@ -316,7 +314,6 @@ export class DropdownMenu extends HTMLDivElement {
 		try {
 			const target = e.target as Element | null;
 			if (!target || !this.contains(target)) return;
-			console.log(target);
 			if (e instanceof KeyboardEvent) this.#handleKeyboardEvent(e);
 			else {
 				this.#listbox.hasAttribute('hidden') ? this.#listbox.expand() : this.#listbox.collapse();
