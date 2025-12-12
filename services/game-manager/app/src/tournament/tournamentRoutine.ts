@@ -18,7 +18,6 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 	const lobby: lobbyInfo | undefined = lobbyMap.get(tournamentObj.lobbyID);
 	if (lobby === undefined) return;
 
-	serv.log.error("IN TOURNAMENT STATE");
 	const index = tournamentObj.bracket.findIndex((obj) => obj.gameID === game.gameID);
 	if (index === -1) {
 		console.log('Error: game not found in tournament bracket!');
@@ -27,7 +26,6 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 
 	tournamentObj.nextGame = getNextGameInBracket(tournamentObj, game);
 	if (tournamentObj.nextGame === undefined) {
-		serv.log.error("IN ENDGAME")
 		tournamentObj.winnerID = game.winnerID;
 		gameOver(game, serv, true, tournamentObj, undefined);
 		tournamentOver(tournamentObj);
@@ -54,7 +52,6 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 		gameOver(game, serv, false, tournamentObj, undefined);
 
 	if (nextPlayers.player1 && nextPlayers.player2) {
-		serv.log.error("IN BOTH PLAYERS")
 		tournamentObj.bracket[index] = game; // update local tournamentObj
 		tournamentObj.nextGame.users = [nextPlayers.player1, nextPlayers.player2];
 		gameOver(game, serv, false, tournamentObj, tournamentObj.nextGame);

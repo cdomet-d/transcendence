@@ -120,7 +120,6 @@ export function waitForLobbyEnd(serv: FastifyInstance, socket: WebSocket) {
 	lobbyEndHandler = (message: string) => {
 		try {
 			const data = JSON.parse(message);
-			serv.log.error(`DATA IN WAITFORLOBBYEND: ${JSON.stringify(data)}`)
 			if (!validateData(data, serv, socket)) throw new Error("invalid input");
 			if (!validatePayload(data, data.payload, serv, socket)) throw new Error("invalid input");
 			if (data.payload.signal === "got result") {
@@ -139,8 +138,6 @@ function waitForResultDisplay(serv: FastifyInstance, socket: WebSocket, tourname
 	resultDisplayHandler = (message: string) => {
 		try {
 			const data = JSON.parse(message);
-			if (data.event !== "NOTIF")
-				serv.log.error(`DATA IN WAIT FOR RESULT DISPLAY: ${JSON.stringify(data)}`)
 			if (!validateData(data, serv, socket)) throw new Error("invalid input");
 			if (!validatePayload(data, data.payload, serv, socket)) throw new Error("invalid input");
 			if (data.payload.signal === "got result") {
