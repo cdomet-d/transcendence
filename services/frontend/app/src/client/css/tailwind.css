@@ -256,6 +256,12 @@
 		overflow: hidden;
 	}
 
+	footer {
+		position: absolute;
+		bottom: 0px;
+		right: 0px;
+	}
+
 	p,
 	span {
 		margin: 0;
@@ -343,9 +349,27 @@
 
 	input[type="range"] {
 		height: 18.5px;
+		appearance: none;
+		-webkit-appearance: none;
 	}
 
 	input[type="range"]::-moz-range-thumb {
+		box-sizing: border-box;
+		cursor: pointer;
+		outline: none;
+		border: none;
+		border-radius: 0;
+		width: var(--xs);
+		height: var(--sm);
+		background-color: var(--orange);
+		border-top: 2px solid var(--highlight-orange);
+		border-bottom: 2px solid var(--shadow-orange);
+		box-shadow: -2px 0 0 0 var(--border), 2px 0 0 0 var(--border),
+			0 -2px 0 0 var(--border), 0 2px 0 0 var(--border);
+	}
+
+	input[type="range"]::-webkit-slider-thumb {
+		-webkit-appearance: none;
 		box-sizing: border-box;
 		cursor: pointer;
 		outline: none;
@@ -445,6 +469,10 @@
 
 	.layout-col {
 		grid-template-columns: minmax(600px, 60%);
+	}
+
+	.scoreboard {
+		grid-template-columns: 40% 10% 40%;
 	}
 }
 
@@ -636,8 +664,7 @@
 	}
 
 	.uinline-grid {
-		grid-template-columns: 1fr 1fr 1fr;
-		/* grid-template-rows: var(--s); */
+		grid-template-columns: 60px 1fr 1fr;
 	}
 
 	.user-profile-header-grid {
@@ -648,7 +675,7 @@
 	.header {
 		padding-left: var(--s);
 		padding-right: var(--s);
-		grid-template-columns: 65px 1fr 1fr 60px 60px;
+		grid-template-columns: 65px 1fr 1fr 60px 120px;
 		grid-template-rows: var(--ml);
 		place-items: center;
 	}

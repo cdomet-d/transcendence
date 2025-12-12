@@ -24,6 +24,7 @@ export const dictionaryGet = {
 		502: messageResponse,
 		503: messageResponse,
 		401: messageResponse,
-		400: messageResponse
+		400: messageResponse,
+		500: messageResponse
 	}
 };

@@ -1,3 +1,6 @@
+import { currentDictionary } from '../forms/language';
+import { createHeading } from '../typography/helpers';
+
 export class Privacy extends HTMLDivElement {
 	constructor() {
 		super();
@@ -9,64 +12,45 @@ export class Privacy extends HTMLDivElement {
 
 	render() {
 		this.id = 'privacy';
-		this.className = 'bg content-h w-full brdr overflow-y-auto overflow-x-hidden grid justify-center text-left p-l';
+		this.className = 'bg content-h w-full brdr overflow-y-auto overflow-x-hidden pad-sm';
 
-		this.innerHTML = '';
-
-		const container = document.createElement('div');
-		container.className = 'max-w-prose mx-auto w-full f-s';
-
-		const h1 = document.createElement('h1');
-		h1.textContent = 'GDPR Compliance & Data Privacy';
-		h1.className = 'f-xl f-bold mb-m text-center';
+		const h1 = createHeading('3', currentDictionary.privacy.mainTitle);
+		const storageTitle = createHeading('3', currentDictionary.privacy.storageTitle);
+		const rightsTitle = createHeading('3', currentDictionary.privacy.rightsTitles);
 
 		const intro = document.createElement('p');
-		intro.textContent = 'We value your privacy. In compliance with the General Data Protection Regulation (GDPR), ' +
-			'this page outlines exactly what data we store, why we store it, and your rights regarding that data.';
-		intro.className = 'mb-l text-wrap f-s';
-
-		const storageTitle = document.createElement('h2');
-		storageTitle.textContent = 'What We Store';
-		storageTitle.className = 'f-lg f-bold mb-s  f-s';
+		intro.textContent = currentDictionary.privacy.intro;
+		intro.className = 'text-wrap f-s';
 
 		const storageList = document.createElement('ul');
 		storageList.className = 'list-disc list-inside mb-l space-y-s f-s';
 
 		const dataPoints = [
-			'<strong>Identity:</strong> Username, avatar image, and biography to display your profile to other players.',
-			'<strong>Authentication:</strong> Securely hashed passwords. We never store your actual password.',
-			'<strong>Game History:</strong> Statistics (Wins, Losses, Streaks) and a log of matches played to populate leaderboards and history.',
-			'<strong>Social:</strong> Your list of friends and pending friend requests.',
-			'<strong>Session Data:</strong> We use a secure HTTP-only cookie (JWT) to keep you logged in. We do not use third-party tracking cookies.'
+			currentDictionary.privacy.identity,
+			currentDictionary.privacy.auth,
+			currentDictionary.privacy.history,
+			currentDictionary.privacy.social,
+			currentDictionary.privacy.sessionData,
 		];
 
-		dataPoints.forEach(point => {
+		dataPoints.forEach((point) => {
 			const li = document.createElement('li');
 			li.innerHTML = point;
 			storageList.appendChild(li);
 		});
 
-		const rightsTitle = document.createElement('h2');
-		rightsTitle.textContent = 'Your Rights';
-		rightsTitle.className = 'f-lg f-bold mb-s f-s';
-
 		const rightsList = document.createElement('ul');
 		rightsList.className = 'list-disc list-inside mb-l space-y-s f-s';
 
-		const rightsPoints = [
-			'<strong>Right to Access (Portability):</strong> You can download a full copy of your personal data in JSON format via the User Settings page.',
-			'<strong>Right to Erasure (Right to be Forgotten):</strong> You can delete your account at any time. This process is permanent and irreversibly anonymizes your data (replacing your username/avatar with generic placeholders) while preserving game statistics for fair history.',
-			'<strong>Right to Rectification:</strong> You can update your profile information (username, bio, avatar, language) at any time.'
-		];
+		const rightsPoints = [currentDictionary.privacy.access, currentDictionary.privacy.erasure, currentDictionary.privacy.rectify];
 
-		rightsPoints.forEach(point => {
+		rightsPoints.forEach((point) => {
 			const li = document.createElement('li');
 			li.innerHTML = point;
 			rightsList.appendChild(li);
 		});
 
-		container.append(h1, intro, storageTitle, storageList, rightsTitle, rightsList);
-		this.append(container);
+		this.append(h1, intro, storageTitle, storageList, rightsTitle, rightsList);
 	}
 }
 

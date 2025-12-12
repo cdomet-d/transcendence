@@ -7,6 +7,7 @@ import { createVisualFeedback, errorMessageFromException, exceptionFromResponse 
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 import { userStatus, type userStatusInfo } from '../../main.js';
 import { origin } from '../../main.js';
+import { currentDictionary } from '../forms/language.js';
 
 interface GameInvite {
 	lobbyID: string;
@@ -19,7 +20,7 @@ const notificationBtns: MenuData = {
 		{
 			id: 'decline',
 			type: 'button',
-			content: 'Decline',
+			content: currentDictionary.buttons.decline,
 			img: null,
 			ariaLabel: 'Decline invitation',
 			style: 'red',
@@ -28,7 +29,7 @@ const notificationBtns: MenuData = {
 		{
 			id: 'accept',
 			type: 'button',
-			content: 'Accept',
+			content: currentDictionary.buttons.accept,
 			img: null,
 			ariaLabel: 'Accept invitation',
 			style: 'green',
@@ -99,7 +100,7 @@ export class NotifContent extends HTMLLIElement {
 	}
 
 	async #acceptRelation() {
-		const url = `https://${origin}:8443/api/bff/relation`;
+		const url = `https://${API_URL}:8443/api/bff/relation`;
 		const body = { username: `${this.#requesterUsername}` };
 		const jbody = JSON.stringify(body);
 		const req: RequestInit = {
@@ -114,12 +115,12 @@ export class NotifContent extends HTMLLIElement {
 			this.#disableButtons()
 		} catch (error) {
 			console.error('[ACCEPT RELATION]', errorMessageFromException(error));
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
 	async #declineRelation() {
-		const url = `https://${origin}:8443/api/bff/relation`;
+		const url = `https://${API_URL}:8443/api/bff/relation`;
 		const body = { username: `${this.#requesterUsername}` };
 		const jbody = JSON.stringify(body);
 		const req: RequestInit = {
@@ -134,14 +135,14 @@ export class NotifContent extends HTMLLIElement {
 			this.#disableButtons()
 		} catch (error) {
 			console.error('[DECLINE RELATION]', errorMessageFromException(error));
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
 	async #joinGame() {
 		const user: userStatusInfo = await userStatus();
 		if (!user.auth || !user.username) {
-			createVisualFeedback('You are not logged in and thus cannot join a lobby!', 'error');
+			createVisualFeedback(currentDictionary.error.login_lobby, 'error');
 			return;
 		}
 		wsConnect("join", "", "", this.#lobbyInfo?.lobbyID, "", {userID: this.#lobbyInfo!.inviteeID, username: user.username});

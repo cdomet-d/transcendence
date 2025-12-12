@@ -1,5 +1,6 @@
 import type { NavigationLinks } from '../navigation/links.js';
 import type { MatchOutcome, NavigationLinksData } from '../types-interfaces.js';
+import {currentDictionary} from '../forms/language.js'
 
 const emptyMatch: MatchOutcome = {
 	date: '',
@@ -70,13 +71,13 @@ export class InlineMatch extends HTMLDivElement {
 	 * @returns {InlineMatch} The InlineMatch element with header spans.
 	 */
 	createHeader(): InlineMatch {
-		for (const key in this.#data) {
+		for (const [key, value] of Object.entries(currentDictionary.match_history)) {
 			const span = document.createElement('span');
 			this.append(span);
 			span.classList.add('f-bold', 'f-orange');
 			span.classList.add('text-center');
 			span.id = key;
-			span.textContent = key;
+			span.textContent = value;
 		}
 		this.classList.add('bg-yellow', 'sticky', 'top-0', 'thin', 'brdr');
 		this.id = 'matchesheader';
@@ -91,7 +92,7 @@ export class InlineMatch extends HTMLDivElement {
 	createSpans(): InlineMatch {
 		for (const key in this.#data) {
 			let el;
-			if (key === 'opponent') {
+			if (key === 'opponent' && this.#data[key] !== 'John Doe') {
 				const opponent = this.#data[key].toString();
 				const opp: NavigationLinksData = {
 					styleButton: false,
@@ -101,13 +102,14 @@ export class InlineMatch extends HTMLDivElement {
 					title: opponent,
 					img: null,
 				};
-
 				el = document.createElement('a', { is: 'nav-link' }) as NavigationLinks;
 				el.info = opp;
 			} else el = document.createElement('span');
 			this.append(el);
 			el.id = key;
-			el.textContent = this.#data[key as keyof MatchOutcome].toString();
+			if (key === 'tournament') {
+				el.textContent = this.#data[key as keyof MatchOutcome] ? 'Tournament' : '1vs1';
+			} else el.textContent = this.#data[key as keyof MatchOutcome].toString();
 		}
 		this.id = 'match';
 		return this;
@@ -163,15 +165,7 @@ export class MatchHistory extends HTMLDivElement {
 
 	render() {
 		this.id = 'match-history';
-		this.classList.add(
-			'grid',
-			'matches',
-			'grid-flow-rows',
-			'gap-xs',
-			'pad-s',
-			'h-full',
-			'w-full',
-		);
+		this.classList.add('grid', 'matches', 'grid-flow-rows', 'gap-xs', 'pad-s', 'h-full', 'w-full');
 	}
 }
 

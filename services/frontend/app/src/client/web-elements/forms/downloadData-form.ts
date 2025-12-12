@@ -21,7 +21,7 @@ export class DowloadDataForm extends BaseForm {
 		try {
 			await CriticalActionForm.show();
 
-			const actionUrl = `https://localhost:8443/api/bff/data`;
+			const actionUrl = `https://${API_URL}:8443/api/bff/data`;
 
 			const req: RequestInit = {
 				method: 'GET',
@@ -71,17 +71,17 @@ export class DowloadDataForm extends BaseForm {
 			window.URL.revokeObjectURL(downloadUrl);
 
 			localStorage.removeItem('criticalChange');
-			createVisualFeedback('Data downloaded!', 'success');
+			createVisualFeedback(currentDictionary.buttons.downloaded, 'success');
 
 		} catch (error) {
 			console.error('[DOWNLOAD DATA ERROR]', error);
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
 	set user(details: UserData) {
 		this.#user = details;
-		this.details = downloadData(currentDictionary);
+		this.details = downloadData();
 	}
 }
 

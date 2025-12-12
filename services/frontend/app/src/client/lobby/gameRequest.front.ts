@@ -5,7 +5,6 @@ import type { gameRequestForm } from "./gm.interface.front";
 
 async function createGameRequest(format: string, formInstance: string, gameSettings: string): Promise<string> {
     const customSettings: PongOptions = JSON.parse(gameSettings);
-    // console.log("FORM: ", formInstance); // will be useful at some point
 
 	const host: userStatusInfo = await userStatus();
 	if (!host.auth) {

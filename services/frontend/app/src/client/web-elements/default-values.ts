@@ -2,7 +2,7 @@ import * as types from './types-interfaces.js';
 import type { Dictionary } from './types-interfaces.js';
 
 export const biographyPattern: string = '^[A-Za-z0-9\\s,\\.\\?!:\\)\\(\\/\\-_]{0,256}$';
-export const passwordPattern: string = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{12,64}$';
+export const passwordPattern: string = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[a-zA-Z0-9@$!%*?&]{12,64}$';
 export const usernamePattern: string = '^[A-Za-z0-9]{4,18}$';
 export const searchbarPattern: string = '^[A-Za-z0-9]{0,18}$';
 
@@ -18,13 +18,6 @@ export const winImage: types.ImgData = {
 	id: 'winGif',
 	size: 'i3xl',
 	alt: ' An image of small blob dancing in stars in pixel-art style',
-};
-
-export const defaultAvatar: types.ImgData = {
-	alt: 'A pink pixel art little blob',
-	id: 'user-avatar',
-	size: 'ixl',
-	src: '/public/assets/images/purple-avatar.png',
 };
 
 export const user: types.UserData = {

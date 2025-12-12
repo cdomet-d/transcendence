@@ -103,7 +103,7 @@ export interface Matches {
 	outcome: string;
 	score: string;
 	duration: string;
-	tournament: boolean;
+	tournament: string;
 }
 
 export interface UserProfileUpdates {
@@ -167,7 +167,6 @@ export interface Dictionary {
 		remote: string;
 		background: string;
 		farm: string;
-		forest: string;
 		under_water: string;
 	};
 	error: {

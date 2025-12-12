@@ -1,11 +1,5 @@
-import { deleteAccount, createUserProfile, checkUsernameUnique } from './auth.service.js';
-import {
-	clearCookie,
-	setCookie,
-	validateBearerToken,
-	verifyPasswordMatch,
-	updateStatus
-} from './auth.service.js';
+import { deleteAccount, createUserProfile, checkUsernameUnique, updateJWTVersion, getJWTVersion, checkJWTVersion } from './auth.service.js';
+import { clearCookie, setCookie, validateBearerToken, verifyPasswordMatch, updateStatus } from './auth.service.js';
 import * as bcrypt from 'bcrypt';
 import type { FastifyInstance } from 'fastify';
 import type { JwtPayload } from './auth.interfaces.js';
@@ -17,10 +11,10 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 		if (!token) {
 			serv.log.error('Unauthorized: Token not found');
 			return reply.code(401).send({ message: 'Unauthorized - token not found' });
-		}
-		if (token) {
+		} else {
 			try {
 				const user: JwtPayload = await request.jwtVerify();
+				if ((await checkJWTVersion(serv, user.userID, user.version)) === 401) return reply.code(401).send({ message: 'Unauthorized - invalid token' });
 				return reply.code(200).send({ username: user.username, userID: user.userID });
 			} catch (error) {
 				serv.log.error('Unauthorized: invalid token');
@@ -33,40 +27,42 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 		try {
 			const { username, password } = request.body as { username: string; password: string };
 			const account = await verifyPasswordMatch(serv, username, password);
+			if (account === 401) return reply.code(401).send({ message: '[AUTH] Invalid credentials.' });
+			if (account === 404 || typeof account !== 'object') return reply.code(404).send({ message: '[AUTH] Account not found.' });
 
-			if (account === 401)
-				return reply.code(401).send({ message: '[AUTH] Invalid credentials.' });
-
-			if (account === 404 || typeof account !== 'object')
-				return reply.code(404).send({ message: '[AUTH] Account not found.' });
-			const tokenPayload = { userID: account.userID, username: username };
+			const tokenVers = await getJWTVersion(serv, undefined, username);
+			const tokenPayload = { userID: account.userID, username: username, version: tokenVers };
 			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
 			setCookie(reply, token);
 			await updateStatus(serv.log, account.userID, false, token);
 			return reply.code(200).send({ token: token });
 		} catch (error) {
-			serv.log.error(`[AUTH] An unexpected error occurred while login: ${error}`);
-			throw error;
+			return reply.code(400).send({message: 'AUTH: Bad request'})
 		}
 	});
 
 	serv.post('/logout', async (request, reply) => {
-		const token = request.cookies.token;
-		clearCookie(reply);
-		if (token === undefined) return;
-		const user: JwtPayload = await request.jwtVerify();
-		await updateStatus(serv.log, user.userID, true, token);
-		return reply.code(200).send({ message: 'Success' });
+		try {
+			await updateJWTVersion(serv, request.user.userID);
+			const token = request.cookies.token;
+			if (token === undefined) return;
+			const user: JwtPayload = await request.jwtVerify();
+			await updateStatus(serv.log, user.userID, true, token);
+			clearCookie(reply);
+			return reply.code(200).send({ message: 'Success' });
+		} catch (error) {
+			return reply.code(400).send({message: 'AUTH: Bad request'})
+		}
 	});
-
 
 	serv.post('/regen-jwt', { schema: schema.regen }, async (request, reply) => {
 		try {
 			const { username, userID } = request.body as { username: string; userID: string };
 
 			if (!validateBearerToken(serv, request.headers.authorization)) return reply.code(401).send({ message: '[AUTH] Unauthorized.' });
+			const newTokenVersion = await updateJWTVersion(serv, request.user.userID);
 			clearCookie(reply);
-			const tokenPayload = { userID: userID, username: username };
+			const tokenPayload = { userID: userID, username: username, version: newTokenVersion };
 			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
 			return reply.code(200).send({ token: token });
 		} catch (error) {
@@ -78,7 +74,6 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 	serv.post('/verify', { schema: schema.verify }, async (request, reply) => {
 		try {
 			const { password } = request.body as { password: string };
-			serv.log.warn(`[/verify]: ${request.user.username}`);
 			const account = await verifyPasswordMatch(serv, request.user.username, password);
 
 			if (account === 404) return reply.code(404).send({ message: '[AUTH] Account not found.' });
@@ -89,7 +84,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 					username: request.user.username,
 					action: true,
 				};
-				const token = serv.jwt.sign(tokenPayload, { expiresIn: '5m' });
+				const token = serv.jwt.sign(tokenPayload, { expiresIn: '1m' });
 				return reply.code(200).send({ token: token });
 			}
 		} catch (error) {
@@ -123,7 +118,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			const usersResponse = createUserProfile(serv.log, newAccountId, username);
 			if ((await usersResponse).errorCode === `conflict`) return reply.code(409).send({ message: 'UserID taken' });
 
-			const tokenPayload = { userID: newAccountId, username: username };
+			const tokenPayload = { userID: newAccountId, username: username, version: 0 };
 			const token = serv.jwt.sign(tokenPayload, { expiresIn: '1h' });
 			switch ((await usersResponse).errorCode) {
 				case 'success':
@@ -160,11 +155,7 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 					request.user = user;
 				} catch (error) {
 					if (error instanceof Error && 'code' in error) {
-						if (
-							error.code === 'FST_JWT_BAD_REQUEST' ||
-							error.code === 'ERR_ASSERTION' ||
-							error.code === 'FST_JWT_BAD_COOKIE_REQUEST'
-						)
+						if (error.code === 'FST_JWT_BAD_REQUEST' || error.code === 'ERR_ASSERTION' || error.code === 'FST_JWT_BAD_COOKIE_REQUEST')
 							return reply.code(400).send({ code: error.code, message: error.message });
 						return reply.code(401).send({ code: error.code, message: 'Unauthaurized' });
 					} else {
@@ -186,11 +177,9 @@ export async function authenticationRoutes(serv: FastifyInstance) {
 			const query = `UPDATE account SET username = ? WHERE userID = ?`;
 
 			const result = await serv.dbAuth.run(query, [newUsername, userID]);
-			if (result.changes === 0)
-				return reply.code(404).send({ message: '[AUTH] Account not found' });
+			if (result.changes === 0) return reply.code(404).send({ message: '[AUTH] Account not found' });
 
 			return reply.code(200).send({ success: true, message: '[AUTH] Account anonymized' });
-
 		} catch (error) {
 			serv.log.error(`[AUTH] Error processing anonymization: ${error}`);
 			if (error instanceof Error && error.message.includes('Stats not found')) {

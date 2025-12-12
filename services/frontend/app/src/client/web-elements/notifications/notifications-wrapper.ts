@@ -4,7 +4,7 @@ import { createVisualFeedback, errorMessageFromException, exceptionFromResponse,
 import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
 import { NotifContent } from './notification-content.js';
 import { NotifToggle, NotifPanel } from './notif-panel-toggle.js';
-import { origin } from '../../main.js';
+import { currentDictionary } from '../forms/language.js';
 
 //TODO: Make notifications tab-focusable
 //TODO: Buttons are actually a form
@@ -26,6 +26,8 @@ export class NotifBox extends HTMLDivElement {
 	#ws: WebSocket | null;
 	#blurHandler: (e: FocusEvent) => void;
 	#clickHandler: (e: Event) => void;
+	#langHandler: () => void;
+
 	constructor() {
 		super();
 		this.role = 'combobox';
@@ -36,27 +38,29 @@ export class NotifBox extends HTMLDivElement {
 		this.#panel = document.createElement('ul', { is: 'notif-panel' }) as NotifPanel;
 		this.computePanelPos = this.computePanelPos.bind(this);
 		this.#clickHandler = this.#clickImplementation.bind(this);
+		this.#langHandler = this.reloadLanguage.bind(this);
 		this.#blurHandler = this.#focusOutImplementation.bind(this);
 		this.#ws = null;
 	}
 
-    async connectedCallback() {
+	async connectedCallback() {
 		this.setAttribute('aria-controls', this.#panel.id);
 		this.setAttribute('tabindex', '0');
-        this.addEventListener('click', this.#clickHandler);
+		this.addEventListener('click', this.#clickHandler);
 		this.addEventListener('focusout', this.#blurHandler);
 		this.addEventListener('keydown', this.#clickHandler);
-        window.addEventListener('resize', this.computePanelPos);
-        window.addEventListener('scroll', this.computePanelPos);
-        this.render();
-        if (this.#ws === null) {
-            const status = await userStatus();
-            if (status.auth === false) return;
+		document.addEventListener('language-changed', this.#langHandler);
+		window.addEventListener('resize', this.computePanelPos);
+		window.addEventListener('scroll', this.computePanelPos);
+		this.render();
+		if (this.#ws === null) {
+			const status = await userStatus();
+			if (status.auth === false) return;
 			await this.fetchPendingFriendRequests();
 			await this.fetchGameInvites();
-            this.notifWsRequest();
-        }
-    }
+			this.notifWsRequest();
+		}
+	}
 
 	disconnectedCallback() {
 		this.removeEventListener('click', this.#clickHandler);
@@ -123,6 +127,23 @@ export class NotifBox extends HTMLDivElement {
 		}
 	}
 
+	reloadLanguage() {
+		const defaultElem = this.#panel.querySelector('#default') as HTMLElement;
+		if (defaultElem) {
+			defaultElem.innerText = currentDictionary.notifs.notif_placeholder;
+		}
+
+		const notifs = Array.from(this.#panel.children) as NotifContent[];
+		notifs.forEach(notif => {
+			if (notif.id === 'relation' && notif.requesterUsername) {
+				notif.createNotifMessage(notif.requesterUsername, currentDictionary.notifs.notif_friends);
+			} else if (notif.id === 'game' && notif.dataset.sender) {
+				const gameType = notif.dataset.gameType || '';
+				notif.createNotifMessage(notif.dataset.sender, currentDictionary.notifs.notif_match + `${gameType}!`);
+			}
+		});
+	}
+
 	/**
 	 * Creates and displays a new friend request notification.
 	 *
@@ -130,7 +151,7 @@ export class NotifBox extends HTMLDivElement {
 	 */
 	newFriendRequest(username: string) {
 		const notif = document.createElement('li', { is: 'notif-content' }) as NotifContent;
-		notif.createNotifMessage(username, 'sent you a friend request!');
+		notif.createNotifMessage(username, currentDictionary.notifs.notif_friends);
 		notif.id = 'relation';
 		notif.requesterUsername = username;
 		this.#panel.newNotification(notif);
@@ -145,7 +166,7 @@ export class NotifBox extends HTMLDivElement {
 	 */
 	newGameInvitation(gameNotif: gameNotif) {
 		const notif = document.createElement('li', { is: 'notif-content' }) as NotifContent;
-		notif.createNotifMessage(gameNotif.senderUsername, `challenged you to a ${gameNotif.gameType}!`);
+		notif.createNotifMessage(gameNotif.senderUsername, currentDictionary.notifs.notif_match + `${gameNotif.gameType}!`);
 		notif.id = 'game';
 		notif.lobbyInfo = { lobbyID: gameNotif.lobbyID, inviteeID: gameNotif.receiverID };
 		this.#panel.newNotification(notif);
@@ -154,8 +175,8 @@ export class NotifBox extends HTMLDivElement {
 
 	async fetchPendingFriendRequests() {
 		const status = await userStatus();
-		if (!status.auth) redirectOnError('/auth', 'You must be registered to see this page');
-		const url = `https://${origin}:8443/api/bff/profile/${status.username}`;
+		if (!status.auth) redirectOnError('/auth', currentDictionary.error.redirection);
+		const url = `https://${API_URL}:8443/api/bff/profile/${status.username}`;
 		try {
 			const rawRes = await fetch(url, { credentials: 'include' });
 			if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
@@ -166,19 +187,19 @@ export class NotifBox extends HTMLDivElement {
 			});
 		} catch (error) {
 			console.error('[NOTIFICATIONS]', errorMessageFromException(error));
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
 	async fetchGameInvites() {
 		const status = await userStatus();
-		if (!status.auth) redirectOnError('/auth', 'You must be registered to see this page');
-		const url = `https://${origin}:8443/api/lobby/notification/${status.userID!}`;
+		if (!status.auth) redirectOnError('/auth', currentDictionary.error.redirection);
+		const url = `https://${API_URL}:8443/api/lobby/notification/${status.userID!}`;
 		try {
 			const rawRes = await fetch(url);
 			if (!rawRes.ok) {
 				if (rawRes.status === 400)
-					return redirectOnError('/auth', 'You must be registered to see this page');
+					return redirectOnError('/auth', currentDictionary.error.redirection);
 				throw await exceptionFromResponse(rawRes);
 			}
 			const notifs: gameNotif[] = await rawRes.json();
@@ -187,7 +208,7 @@ export class NotifBox extends HTMLDivElement {
 			})
 		} catch (error) {
 			console.error('[NOTIFICATIONS]', errorMessageFromException(error));
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
@@ -195,7 +216,7 @@ export class NotifBox extends HTMLDivElement {
 		const userStatusInfo: userStatusInfo = await userStatus();
 		if (userStatusInfo.auth === false || userStatusInfo.userID === undefined) return;
 		const userID: string = userStatusInfo.userID;
-		const ws = new WebSocket(`wss://${origin}:8443/notification/${userID}`);
+		const ws = new WebSocket(`wss://${API_URL}:8443/notification/${userID}`);
 
 		ws.onerror = () => {
 			ws.close(1011, 'websocket error');

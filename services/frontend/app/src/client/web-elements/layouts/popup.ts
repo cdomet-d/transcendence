@@ -32,7 +32,6 @@ export class Popup extends HTMLDialogElement {
 	 */
 	appendAndCache(...el: HTMLElement[]) {
 		el.forEach((component) => {
-			console.log(el);
 			component.classList.add('z-1');
 			this.append(component);
 			this.#innerComponents.set(component.id, component);

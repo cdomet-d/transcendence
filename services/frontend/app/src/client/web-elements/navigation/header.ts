@@ -9,8 +9,6 @@ import { NotifBox } from '../notifications/notifications-wrapper.js';
 import { router, type userStatusInfo } from '../../main.js';
 import { Searchbar } from '../forms/search.js';
 import { userStatus } from '../../main.js';
-import { currentDictionary } from '../forms/language.js';
-import { origin } from '../../main.js';
 
 /**
  * Custom element for the main page header.
@@ -33,13 +31,12 @@ export class PageHeader extends HTMLElement {
 	}
 	constructor() {
 		super();
-		this.#home = createMenu(homeLink(currentDictionary), 'horizontal', false);
+		this.#home = createMenu(homeLink(), 'horizontal', false);
 		this.#searchbar = createForm('search-form');
-		this.#mainNav = createMenu(main(currentDictionary), 'horizontal', false);
+		this.#mainNav = createMenu(main(), 'horizontal', false);
 		this.#notif = createNotificationBox();
-		this.#logout = createButton(logOut(currentDictionary), false);
-		this.#login = createButton(logIn(currentDictionary), false);
-
+		this.#logout = createButton(logOut(), false);
+		this.#login = createButton(logIn(), false);
 		this.#loginHandler = this.#loginImplementation.bind(this);
 		this.#logoutHandler = this.#logoutImplementation.bind(this);
 	}
@@ -49,7 +46,7 @@ export class PageHeader extends HTMLElement {
 	}
 
 	async #logoutImplementation() {
-		await fetch(`https://${origin}:8443/api/auth/logout`, { method: 'POST', credentials: 'include' });
+		await fetch(`https://${API_URL}:8443/api/auth/logout`, { method: 'POST', credentials: 'include' });
 		this.#notif.ws?.close();
 		router.loadRoute('/', true);
 	}
@@ -87,17 +84,47 @@ export class PageHeader extends HTMLElement {
 			if (this.contains(this.#login)) this.#login.remove();
 			if (!this.contains(this.#logout)) {
 				this.append(this.#logout);
-				this.#logout.classList.add('h-m', 'w-l');
+				this.#logout.classList.add('h-m');
 			}
-			await this.#notif.fetchPendingFriendRequests();
 		} else {
 			if (this.contains(this.#logout)) this.#logout.remove();
 			if (!this.contains(this.#login)) {
 				this.append(this.#login);
-				this.#login.classList.add('h-m', 'w-l');
+				this.#login.classList.add('h-m');
 			}
 		}
 		return log;
+	}
+
+	reloadLanguage() {
+		const newHome = createMenu(homeLink(), 'horizontal', false);
+		this.#home.replaceWith(newHome);
+		this.#home = newHome;
+
+		const newMainNav = createMenu(main(), 'horizontal', false);
+		newMainNav.classList.add('place-self-stretch'); // Restore layout class
+		this.#mainNav.replaceWith(newMainNav);
+		this.#mainNav = newMainNav;
+
+		const newSearch = createForm('search-form');
+		this.#searchbar.replaceWith(newSearch);
+		this.#searchbar = newSearch;
+
+		const newLogout = createButton(logOut(), false);
+		newLogout.addEventListener('click', this.#logoutHandler);
+		if (this.contains(this.#logout)) {
+			this.#logout.replaceWith(newLogout);
+			if (this.#logout.classList.contains('h-m')) newLogout.classList.add('h-m');
+		}
+		this.#logout = newLogout;
+
+		const newLogin = createButton(logIn(), false);
+		newLogin.addEventListener('click', this.#loginHandler);
+		if (this.contains(this.#login)) {
+			this.#login.replaceWith(newLogin);
+			if (this.#login.classList.contains('h-m')) newLogin.classList.add('h-m');
+		}
+		this.#login = newLogin;
 	}
 
 	render() {

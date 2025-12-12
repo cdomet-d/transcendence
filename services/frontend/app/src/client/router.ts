@@ -85,11 +85,11 @@ export class Router {
 				}
 			}
 		}
-        if (updateHistory && path !== window.location.pathname) this.updateURL(path);
-        if (!matchedRoute) {
-            renderNotFound();
-            return;
-        }
-        matchedRoute.callback(res ? res : undefined, gameRequest, action, whiteListUsernames, lobbyWS);
-    }
+		if (updateHistory && path !== window.location.pathname) this.updateURL(path);
+		if (!matchedRoute) {
+			renderNotFound();
+			return;
+		}
+		matchedRoute.callback(res ? res : undefined, gameRequest, action, whiteListUsernames, lobbyWS);
+	}
 }

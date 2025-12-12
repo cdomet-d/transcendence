@@ -713,12 +713,14 @@ SET totalPlayedGame = totalPlayedGame + 1
 WHERE userID = 101;
 ```
 
-[WIP] DOC NOT UP TO DATE YET (nginx conf not done yet)
+[WIP] DOC NOT UP TO DATE YET
 
+
+* footer for GDPR link page
+* Check all translations
 
 * do anonymization of account on delete
 * status in db on login logout
-
 * GDPR: check profile photos and more
 * sanitise input in back
 * add schemas to route

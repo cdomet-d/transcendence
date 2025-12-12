@@ -39,6 +39,7 @@ async function postGameToDashboard(game: game) {
 		player1Score: game.users![0]!.userID! === game.winnerID ? game.score[0] : game.score[1],
 		player2Score: game.users![1]!.userID! === game.winnerID ? game.score[0] : game.score[1],
 	}
+	console.log("START TIME", JSON.stringify(reqBody.startTime));
 	try {
 		const response: Response = await fetch(url, {
 			method: 'POST',

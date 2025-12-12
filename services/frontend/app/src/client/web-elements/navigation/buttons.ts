@@ -1,8 +1,6 @@
 import { createIcon } from '../typography/helpers.js';
 import type { ButtonData } from '../types-interfaces.js';
 
-//TODO: Migrate to inheritance ?
-
 /**
  * Custom menu button element extending HTMLButtonElement.
  * Updates styles dynamically based on the "disabled" attribute.

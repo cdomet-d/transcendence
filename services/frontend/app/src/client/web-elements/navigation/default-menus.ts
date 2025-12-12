@@ -1,13 +1,14 @@
-import type { ButtonData, Dictionary, MenuData, TabData, NavigationLinksData } from '../types-interfaces.js';
+import { currentDictionary } from '../forms/language.js';
+import type { ButtonData, MenuData, TabData, NavigationLinksData } from '../types-interfaces.js';
 
-export function main(dic: Dictionary): MenuData {
+export function main(): MenuData {
 	return {
 		id: 'mainNav',
 		links: [
 			{
 				styleButton: true,
 				id: 'leaderboard',
-				title: dic.titles.leaderboard,
+				title: currentDictionary.titles.leaderboard,
 				datalink: 'leaderboard',
 				href: '/leaderboard',
 				img: null,
@@ -15,7 +16,7 @@ export function main(dic: Dictionary): MenuData {
 			{
 				styleButton: true,
 				id: 'lobby',
-				title: dic.buttons.play,
+				title: currentDictionary.buttons.play,
 				datalink: '/lobby-menu',
 				href: '/lobby-menu',
 				img: null,
@@ -23,7 +24,7 @@ export function main(dic: Dictionary): MenuData {
 			{
 				styleButton: true,
 				id: 'profile',
-				title: dic.buttons.profile,
+				title: currentDictionary.buttons.profile,
 				datalink: 'profile',
 				href: '/me',
 				img: null,
@@ -32,7 +33,7 @@ export function main(dic: Dictionary): MenuData {
 	};
 }
 
-export function homeLink(dic: Dictionary): MenuData {
+export function homeLink(): MenuData {
 	return {
 		id: 'backHome',
 		links: [
@@ -40,7 +41,7 @@ export function homeLink(dic: Dictionary): MenuData {
 				styleButton: false,
 				datalink: 'home',
 				href: '/',
-				title: dic.titles.home,
+				title: currentDictionary.titles.home,
 				id: 'home',
 				img: {
 					alt: 'A cute pixel art blob',
@@ -53,29 +54,29 @@ export function homeLink(dic: Dictionary): MenuData {
 	};
 }
 
-export function logOut(dic: Dictionary): ButtonData {
+export function logOut(): ButtonData {
 	return {
 		type: 'button',
 		id: 'logout',
-		content: dic.buttons.logout,
+		content: currentDictionary.buttons.logout,
 		img: null,
 		ariaLabel: '',
 		style: 'red',
 	};
 }
 
-export function logIn(dic: Dictionary): ButtonData {
+export function logIn(): ButtonData {
 	return {
 		type: 'button',
 		id: 'login',
-		content: dic.buttons.login,
+		content: currentDictionary.buttons.login,
 		img: null,
 		ariaLabel: '',
 		style: 'green',
 	};
 }
 
-export function social(dic: Dictionary): MenuData {
+export function social(): MenuData {
 	return {
 		id: 'social',
 		buttons: [
@@ -111,7 +112,7 @@ export function social(dic: Dictionary): MenuData {
 				datalink: '/user/settings',
 				id: 'settings',
 				href: '/user/settings',
-				title: dic.titles.settings,
+				title: currentDictionary.titles.settings,
 				img: null,
 			},
 		],
@@ -119,55 +120,68 @@ export function social(dic: Dictionary): MenuData {
 }
 
 export const languageMenu: ButtonData[] = [
-	{ id: 'English', ariaLabel: 'English', content: 'English', img: null, type: 'button' },
-	{ id: 'Spanish', ariaLabel: 'Spanish', content: 'Español', img: null, type: 'button' },
-	{ id: 'French', ariaLabel: 'Francais', content: 'French', img: null, type: 'button' },
+    { id: 'English', ariaLabel: 'English', content: 'English', img: null, type: 'button' },
+    { id: 'Espanol', ariaLabel: 'Espanol', content: 'Espanol', img: null, type: 'button' },
+    { id: 'Francais', ariaLabel: 'Francais', content: 'Francais', img: null, type: 'button' },
 ];
 
-export const backgroundMenu: ButtonData[] = [
-	{ id: 'farm', ariaLabel: 'Farm pong theme', content: 'Adorable Farm', img: null, type: 'button' },
-	{ id: 'forest', ariaLabel: 'Forest pong theme', content: 'Enchanted Forest', img: null, type: 'button' },
-	{ id: 'underwater', ariaLabel: 'Ocean pong theme', content: 'Magical Underwater', img: null, type: 'button' },
-];
+export function backgroundMenu(): ButtonData[] {
+	return [
+		{
+			id: 'farm',
+			ariaLabel: 'Farm pong theme',
+			content: currentDictionary.gameCustom.farm,
+			img: null,
+			type: 'button'
+		},
+		{
+			id: 'underwater',
+			ariaLabel: 'Ocean pong theme',
+			content: currentDictionary.gameCustom.under_water,
+			img: null,
+			type: 'button'
+		},
+	];
+}
 
 export const userColorsMenu: ButtonData[] = [
 	{
-		id: '',
+		id: 'bg-4F9FFF',
 		ariaLabel: 'Hexcode selection for azure background.',
 		content: '4F9FFF',
 		img: null,
 		type: 'button',
 	},
 	{
-		id: '',
+		id: 'bg-5200FF',
 		ariaLabel: 'Hexcode selection for purple background.',
 		content: '5200FF',
 		img: null,
 		type: 'button',
 	},
 	{
-		id: '',
+		id: 'bg-000080',
 		ariaLabel: 'Hexcode selection for navy background.',
 		content: '000080',
 		img: null,
 		type: 'button',
 	},
 	{
-		id: '',
+		id: 'bg-98A869',
 		ariaLabel: 'Hexcode selection for green background.',
 		content: '98A869',
 		img: null,
 		type: 'button',
 	},
 	{
-		id: '',
+		id: 'bg-BE5103',
 		ariaLabel: 'Hexcode selection for orange background.',
 		content: 'BE5103',
 		img: null,
 		type: 'button',
 	},
 	{
-		id: '',
+		id: 'bg-CE4257',
 		ariaLabel: 'Hexcode selection for red background.',
 		content: 'CE4257',
 		img: null,
@@ -175,27 +189,27 @@ export const userColorsMenu: ButtonData[] = [
 	},
 ];
 
-export function profileTabs(dic: Dictionary): TabData[] {
+export function profileTabs(): TabData[] {
 	return [
-		{ id: 'friends', content: dic.profile.friends, default: true, panelContent: null },
-		{ id: 'history', content: dic.profile.game_history, default: false, panelContent: null },
+		{ id: 'friends', content: currentDictionary.profile.friends, default: true, panelContent: null },
+		{ id: 'history', content: currentDictionary.profile.game_history, default: false, panelContent: null },
 	];
 }
 
-export function lobbyQuickmatchMenu(dic: Dictionary): MenuData {
+export function lobbyQuickmatchMenu(): MenuData {
 	return {
 		id: 'quickMatchMenu',
 		links: [
-			{ styleButton: true, id: 'local-quickmatch', title: dic.lobby.local, datalink: '/quick-local-lobby', href: '/quick-local-lobby', img: null },
-			{ styleButton: true, id: 'remote-quickmatch', title: dic.lobby.remote, datalink: '/quick-remote-lobby', href: '/quick-remote-lobby', img: null },
+			{ styleButton: true, id: 'local-quickmatch', title: currentDictionary.lobby.local, datalink: '/quick-local-lobby', href: '/quick-local-lobby', img: null },
+			{ styleButton: true, id: 'remote-quickmatch', title: currentDictionary.lobby.remote, datalink: '/quick-remote-lobby', href: '/quick-remote-lobby', img: null },
 		],
 	};
 }
 
-export function lobbyTournamentMenu(dic: Dictionary): MenuData {
+export function lobbyTournamentMenu(): MenuData {
 	return {
 		id: 'tournamentMenu',
-		links: [{ styleButton: true, id: 'tournament', title: dic.lobby.tournament, datalink: '/tournament-lobby', href: '/tournament-lobby', img: null }],
+		links: [{ styleButton: true, id: 'tournament', title: currentDictionary.lobby.tournament, datalink: '/tournament-lobby', href: '/tournament-lobby', img: null }],
 	};
 }
 

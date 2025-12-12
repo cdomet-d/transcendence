@@ -2,13 +2,14 @@ import { createVisualFeedback, errorMessageFromException, exceptionFromResponse,
 import { router, userStatus } from '../main.js';
 import { type gameRequest } from '../pong/pong.js';
 import type { LocalPongSettings, RemotePongSettings } from '../web-elements/forms/pong-settings.js';
-import { origin } from '../main.js'
 import type { inviteeObj } from './gm.interface.front.js';
 import { executeAction, wsSend } from './wsAction.front.js';
 import { createBracket, endGame } from '../web-elements/game/pong-events.js';
 import { looseImage, winImage } from '../web-elements/default-values.js';
 import type { MatchParticipants, UserData } from '../web-elements/types-interfaces.js';
 import { userDataFromAPIRes } from '../api-responses/user-responses.js';
+import { currentDictionary } from '../web-elements/forms/language.js';
+
 
 export let wsInstance: WebSocket | null = null;
 
@@ -16,7 +17,7 @@ function openWsConnection() {
 	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) {
 		return wsInstance;
 	}
-	wsInstance = new WebSocket(`wss://${origin}:8443/api/lobby/`);
+	wsInstance = new WebSocket(`wss://${API_URL}:8443/api/lobby/`);
 	return wsInstance;
 }
 
@@ -71,7 +72,7 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	};
 }
 
-async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettings, ) {
+async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettings) {
 	ws.onmessage = (message: MessageEvent) => {
 		try {
 			const data = JSON.parse(message.data);
@@ -98,13 +99,13 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 			if (data.error) {
 				const error = data.error;
 				if (error === 'not enough players') {
-					createVisualFeedback('You do not have enough players in your lobby to start playing!', 'error');
+					createVisualFeedback(currentDictionary.error.nbplayers_lobby, 'error');
 				} else if (error === 'lobby not found') {
-					createVisualFeedback('Your lobby is malfunctionning! Please create a new one!', 'error');
+					createVisualFeedback(currentDictionary.error.broke_lobby, 'error');
 				} else if (error === 'lobby does not exist') {
-					redirectOnError('/home', 'The lobby you are trying to join does not exist anymore!');
+					redirectOnError('/home', currentDictionary.error.deleted_lobby);
 				} else if (error === 'not invited') {
-					createVisualFeedback('You were not invited to this lobby!', 'error');
+					createVisualFeedback(currentDictionary.error.invite_lobby, 'error');
 				}
 				return;
 			}

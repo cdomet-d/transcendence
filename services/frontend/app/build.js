@@ -10,11 +10,10 @@ async function make() {
 		bundle: true,
 		outfile: 'dist/client/bundle.js',
 		minify: true,
-		sourcemap: true,
 		platform: 'browser',
 		target: ['esnext'],
 		define: {
-			'process.env.HOST': process.env.HOST,
+			'API_URL': JSON.stringify(process.env.HOST),
 		}
 	})
 
@@ -23,13 +22,12 @@ async function make() {
 		bundle: true,
 		outdir: 'dist/server',
 		minify: true,
-		sourcemap: true,
 		platform: 'node',
 		target: ['node20'],
 		packages: 'external',
 		format: 'esm', 
 		define: {
-			'process.env.HOST': process.env.HOST,
+			'API_URL': JSON.stringify(process.env.HOST),
 		}
 	})
 	if (isWatch) {

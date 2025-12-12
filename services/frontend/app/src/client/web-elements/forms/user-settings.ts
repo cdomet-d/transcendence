@@ -12,17 +12,13 @@ import type { DropdownMenu } from '../navigation/menus.js';
 import type { UserData } from '../types-interfaces.js';
 import { downloadData } from './default-forms.js';
 import { DowloadDataForm } from './downloadData-form.js';
-import {
-	exceptionFromResponse,
-	errorMessageFromException,
-	createVisualFeedback,
-} from '../../error.js';
+import { exceptionFromResponse, errorMessageFromException, createVisualFeedback } from '../../error.js';
 import { router } from '../../main.js';
-//import { currentDictionary } from './language.js';
-import { currentDictionary } from './language.js';
+import { currentDictionary, setLanguage } from './language.js';
+
 // import imageCompression from 'browser-image-compression';
 
-const MAX_FILE = 2 * 1024 * 1024;
+const MAX_FILE = 1024 * 1024; // 1 MB
 /**
  * Custom form element for user settings, including avatar, color, language, and account deletion.
  * Extends BaseForm.
@@ -49,14 +45,8 @@ export class UserSettingsForm extends BaseForm {
 		this.#user = user;
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
 		this.#previewAvatar = this.#previewAvatarImplementation.bind(this);
-		this.#accountDelete = createForm(
-			'delete-account-form',
-			deleteAccount(currentDictionary),
-		);
-		this.#dataDownload = createForm(
-			'download-data-request',
-			downloadData(currentDictionary),
-		);
+		this.#accountDelete = createForm('delete-account-form', deleteAccount());
+		this.#dataDownload = createForm('download-data-request', downloadData());
 		this.#avatar = createAvatar(this.#user.avatar);
 		this.#colors = createDropdown(userColorsMenu, currentDictionary.settings.pick_color, 'dynamic');
 		this.#languages = createDropdown(languageMenu, currentDictionary.settings.pick_language, 'static');
@@ -94,9 +84,27 @@ export class UserSettingsForm extends BaseForm {
 			}
 			const rawRes = await fetch(url, req);
 			if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
+
+			if (req.body && typeof req.body === 'string') {
+				try {
+					const bodyObj = JSON.parse(req.body);
+					if (bodyObj.language) {
+						const langMap: { [key: string]: string } = {
+							English: 'English',
+							Français: 'Français',
+							Espanol: 'Espanol',
+						};
+						const newLangCode = langMap[bodyObj.language] || bodyObj.language;
+						await setLanguage(newLangCode);
+					}
+				} catch (e) {
+					console.error('Failed to parse request body for language update', e);
+				}
+			}
+			document.body.header?.reloadLanguage();
 			router.loadRoute('/me', true);
 		} catch (error) {
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
@@ -112,26 +120,22 @@ export class UserSettingsForm extends BaseForm {
 		const langSelection = this.#languages.selectedElement;
 
 		if (this.#user) {
-			if (colSelection && 'bg-' + colSelection.id !== this.#user.profileColor)
-				f.append('color', 'bg-' + colSelection.id);
-			if (langSelection && langSelection.id !== this.#user.language)
-				f.append('language', langSelection.id);
+			if (colSelection && colSelection.id !== this.#user.profileColor) f.append('color', colSelection.id);
+			if (langSelection && langSelection.id !== this.#user.language) f.append('language', langSelection.id);
 		}
 
 		if (f.get('upload') && this.#user) {
 			const file = f.get('upload');
 			if (!file || !(file instanceof File)) throw new Error('Error processing avatar');
 			if (file.size > MAX_FILE)
-				return createVisualFeedback('That file is way too heavy; max is 2MB. Ta!');
+				return createVisualFeedback(currentDictionary.error.file_heavy);
 			if (file.name !== '') {
-				console.log(file);
 				try {
-					// TODO: compress images
 					const binaryAvatar = await this.#fileToBinary(file);
 					if (binaryAvatar) f.append('avatar', binaryAvatar);
 				} catch (error) {
 					console.error('[USER-SETTINGS]', errorMessageFromException(error));
-					createVisualFeedback(errorMessageFromException(error));
+					createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 				}
 			}
 		}
@@ -159,6 +163,8 @@ export class UserSettingsForm extends BaseForm {
 		super.renderButtons();
 		this.append(this.#accountDelete);
 		this.append(this.#dataDownload);
+
+		this.#dataDownload.contentMap.get('submit')?.classList.remove('w-5/6');
 		this.#avatar.classList.add('row-span-2', 'col-start-1', 'row-start-1');
 		super.contentMap.get('title')?.classList.add('row-span-2', 'col-start-2', 'row-start-1');
 		super.contentMap.get('upload')?.classList.add('row-start-3', 'col-start-1');

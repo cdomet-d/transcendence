@@ -3,17 +3,18 @@ import { Layout } from './web-elements/layouts/layout.js';
 import { PageHeader } from './web-elements/navigation/header.js';
 import { Router, routes } from './router.js';
 import { errorMessageFromException, redirectOnError } from './error.js';
-import { initLanguage } from './web-elements/forms/language.js';
+import { currentDictionary, initLanguage } from './web-elements/forms/language.js';
+import type { NavigationLinks } from './web-elements/navigation/links.js';
+import type { NavigationLinksData } from './web-elements/types-interfaces.js';
+import { createLink } from './web-elements/navigation/buttons-helpers.js';
 
 export const router = new Router(routes);
-export const origin = process.env.HOST;
-
-console.log(`${origin}`)
 
 declare global {
 	interface HTMLElement {
 		layoutInstance: Layout | undefined;
 		header: PageHeader | undefined;
+		footer: HTMLElement | undefined;
 	}
 }
 
@@ -29,7 +30,7 @@ if (window) {
 
 export async function userStatus(): Promise<userStatusInfo> {
 	try {
-		const isLogged: Response = await fetch(`https://${origin}:8443/api/auth/status`, { credentials: 'include' });
+		const isLogged: Response = await fetch(`https://${API_URL}:8443/api/auth/status`, { credentials: 'include' });
 		const data = await isLogged.json();
 		if (isLogged.ok) return { auth: true, username: data.username, userID: data.userID };
 		else {
@@ -41,29 +42,24 @@ export async function userStatus(): Promise<userStatusInfo> {
 	}
 }
 
+function linkGRPD(): NavigationLinks {
+	const grpd: NavigationLinksData = { styleButton: false, id: 'privacy', datalink: '/privacy', href: '/privacy', title: currentDictionary.buttons.privacy, img: null };
+	return createLink(grpd, false);
+}
+
 async function startApp() {
 	try {
 		await initLanguage();
+		document.body.layoutInstance = document.createElement('main', { is: 'custom-layout' }) as Layout;
+		document.body.header = document.createElement('header', { is: 'page-header' }) as PageHeader;
+		document.body.footer = document.createElement('footer');
+		if (!document.body.layoutInstance || !document.body.header || !document.body.footer) throw new Error('Error initializing HTML Layouts - page cannot be charged.');
+		document.body.append(document.body.header, document.body.layoutInstance, document.body.footer);
+		document.body.footer.append(linkGRPD());
+		router.loadRoute(router.currentPath, true);
 	} catch (e) {
-		console.warn('Language failed to load, falling back to English', e);
+		console.error(errorMessageFromException(e));
 	}
-
-	document.body.layoutInstance = document.createElement('main', { is: 'custom-layout' }) as Layout;
-	document.body.header = document.createElement('header', { is: 'page-header' }) as PageHeader;
-	if (!document.body.layoutInstance || !document.body.header) throw new Error('Error initializing HTML Layouts - page cannot be charged.');
-
-	document.body.append(document.body.header, document.body.layoutInstance);
-	router.loadRoute(router.currentPath, true);
 }
 
 startApp();
-/* 
- initLanguage();
-document.body.layoutInstance = document.createElement('div', { is: 'custom-layout' }) as Layout;
-document.body.header = document.createElement('header', { is: 'page-header' }) as PageHeader;
-if (!document.body.layoutInstance || !document.body.header) {
-	throw new Error('Error initializing HTML Layouts - page cannot be charged.');
-}
-
-document.body.append(document.body.header, document.body.layoutInstance);
-router.loadRoute(router.currentPath, true); */
