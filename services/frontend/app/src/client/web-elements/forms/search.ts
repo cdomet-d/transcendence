@@ -9,7 +9,7 @@ import type { UserData } from '../types-interfaces.js';
 import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
 import type { Listbox } from '../navigation/listbox.js';
-
+import { currentDictionary } from './language.js';
 /**
  * Custom HTML form element representing a search bar UI component.
  *
@@ -95,6 +95,8 @@ export class Searchbar extends BaseForm {
 			if (data.message === 'Unauthorized')
 				redirectOnError('/auth', 'You must be registered to access this page!');
 		}
+		console.log("THERE!", JSON.stringify(data));
+
 		this.displayResults(userArrayFromAPIRes(data));
 	}
 
@@ -170,6 +172,7 @@ export class Searchbar extends BaseForm {
 	 * @param {UserData[]} res - Array of user data to display as search results.
 	 */
 	displayResults(res: UserData[]) {
+		console.log("HERE!", JSON.stringify(res));
 		this.clearResults();
 		if (res.length < 1) this.#results.append(createNoResult('light', 'ixl'));
 		res.forEach((user) => this.addUser(user));

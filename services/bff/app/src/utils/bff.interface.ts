@@ -17,7 +17,7 @@ export interface userData {
 	relation: ProfileView,
 	status: boolean,
 	username: string,
-	winStreak: string,
+	winstreak: string,
 	since: string,
 	totalWins: string,
 	totalLosses: string,
