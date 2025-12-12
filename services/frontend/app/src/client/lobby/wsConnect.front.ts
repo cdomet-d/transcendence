@@ -48,7 +48,6 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	}
 
 	ws.onerror = (err: any) => {
-		console.log('Error:', err);
 		return;
 	};
 
@@ -84,7 +83,6 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
                 return;
             }
 
-			console.log("data:", JSON.stringify(data))
 			if (data === "start") {
 				form?.enableStartButton();
 				return;
@@ -99,7 +97,6 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 					wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
 				else
 					setTimeout(() => {
-						console.log("in end game callback timer")
 						wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
 					}, 5000);
 			}
