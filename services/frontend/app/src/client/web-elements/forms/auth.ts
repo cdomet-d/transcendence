@@ -14,13 +14,14 @@ export class RegistrationForm extends BaseForm {
 	override async fetchAndRedirect(url: string, req: RequestInit) {
 		try {
 			const response = await fetch(url, req);
+			console.log(response.status);
 			if (!response.ok) throw await exceptionFromResponse(response);
 			if (typeof req.body === 'string') {
 				document.body.header?.notif.notifWsRequest();
 				router.loadRoute('/me', true);
 			}
 		} catch (error) {
-			throw error;
+			createVisualFeedback(currentDictionary.error.conflict);
 		}
 	}
 }
@@ -37,13 +38,15 @@ export class LoginForm extends BaseForm {
 	override async fetchAndRedirect(url: string, req: RequestInit) {
 		try {
 			const response = await fetch(url, req);
-			if (!response.ok) throw await exceptionFromResponse(response);
+			if (!response.ok) {
+				if (response.status === 404) createVisualFeedback(currentDictionary.error.no_user);
+				else throw await exceptionFromResponse(response);
+			}
 			await document.body.header?.notif.fetchPendingFriendRequests();
 			await document.body.header?.notif.fetchGameInvites();
 			document.body.header?.notif.notifWsRequest();
 			router.loadRoute('/me', true);
 		} catch (error) {
-			console.error('[LOGIN FORM]', errorMessageFromException(error));
 			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
@@ -103,7 +106,6 @@ export class CriticalActionForm extends BaseForm {
 			if (!response.ok) throw await exceptionFromResponse(response);
 			const critical = await response.json();
 			localStorage.setItem('criticalChange', JSON.stringify(critical));
-			console.log(critical);
 			this.#resolve?.(JSON.stringify(critical));
 		} catch (error) {
 			console.error('[CRITICAL CHANGE FORM]', errorMessageFromException(error));
