@@ -3,10 +3,6 @@ import { router } from './main';
 import { DOMReady } from './router';
 import { currentDictionary } from './web-elements/forms/language';
 
-//TODO : map avec le code et current dictionnary
-// not allow to be here on redirect 
-// massage pour lobby "go join a lobby"
-
 export class UIFeedback extends HTMLSpanElement {
 	constructor() {
 		super();

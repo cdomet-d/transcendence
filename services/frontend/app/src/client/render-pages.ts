@@ -288,7 +288,6 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 	if (!gameRequest) {
 		console.error('GameRequest =>', gameRequest);
-		//TODO dictionary
 		return redirectOnError('/', currentDictionary.error.join_lobby);
 	}
 	const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;

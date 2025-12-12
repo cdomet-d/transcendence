@@ -146,7 +146,6 @@ export async function setLanguage(lang: string): Promise<void> {
 			currentDictionary = defaultDictionary;
 			currentLanguage = 'English';
 			document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang: 'English' } }));
-			//TODO add trad here
 			createVisualFeedback(errorMessageFromException(`[LANG] Fetch failed for ${lang}. Status: ${response.status}. Reverting to default.`));
 			return;
 		}

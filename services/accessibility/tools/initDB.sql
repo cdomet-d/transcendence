@@ -1,4 +1,3 @@
--- Ensure table exists
 CREATE TABLE
     IF NOT EXISTS language_packs (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -6,10 +5,8 @@ CREATE TABLE
         pack_json TEXT NOT NULL
     );
 
--- Clear existing data to prevent unique constraint errors on re-seed
 DELETE FROM language_packs;
 
--- 1. English (en)
 INSERT INTO
     language_packs (language_code, pack_json)
 VALUES
@@ -147,7 +144,6 @@ VALUES
 }'
     );
 
--- 2. French (fr)
 INSERT INTO
     language_packs (language_code, pack_json)
 VALUES
@@ -283,7 +279,6 @@ VALUES
 }'
     );
 
--- 3. Spanish (es)
 INSERT INTO
     language_packs (language_code, pack_json)
 VALUES
