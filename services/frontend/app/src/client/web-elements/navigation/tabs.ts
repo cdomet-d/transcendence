@@ -213,7 +213,7 @@ export class TabContainer extends HTMLDivElement {
 		} else {
 			if (tab && !tab.panelContent) {
 				this.#tabPanels[tab.id]?.appendContent(createNoResult('light', 'i2xl'));
-			} else console.log('No such tab - do better');
+			} else {}
 		}
 	}
 

@@ -39,7 +39,7 @@ function setBiography(b: string): string {
 export function userDataFromAPIRes(responseObject: any): UserData {
 	if (!responseObject || typeof responseObject !== 'object' || responseObject instanceof Error) redirectOnError(router.stepBefore, 'Something bad happened :(');
 	const user: UserData = {
-		winstreak: responseObject.winStreak,
+		winstreak: responseObject.winstreak,
 		avatar: setAvatar(responseObject.avatar),
 		biography: setBiography(responseObject.biography),
 		id: responseObject.userID,

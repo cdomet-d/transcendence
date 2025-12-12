@@ -1,8 +1,7 @@
 #!/bin/sh
 
 DB_DIR="/usr/data"
-DB_FILE="$DB_DIR/users.db" # maybe rename the database profile ? But for now it will match the microservice name 
-SEED_FILE="/usr/local/bin/seed.sql"
+DB_FILE="$DB_DIR/users.db"
 
 # Create data directory if it doesn't exist
 mkdir -p "$DB_DIR"
@@ -16,7 +15,4 @@ else
     echo "[STARTUP] Database already exists at $DB_FILE"
 fi
 
-sqlite3 "$DB_FILE" < "$SEED_FILE" 2> /usr/data/seed_error.log
-
-# Execute the command passed to the container (keeps it running)
 exec "$@"

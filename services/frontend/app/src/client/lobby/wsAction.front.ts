@@ -18,7 +18,6 @@ export async function executeAction(ws: WebSocket, action: string, format: strin
 
     // reply Lobby Invite
     if (action === 'join') {
-        console.log("SENDING JOIN WITH FORMAT:", format)
         wsSend(ws, joinLobbyRequest(action, format, invitee!, lobbyID!, formInstance));
         return;
     }
@@ -39,6 +38,5 @@ export function wsSend(ws: WebSocket, message: string): void {
         ws.send(message);
     } else {
         const payload = JSON.parse(message);
-        console.log(`Error: Connection for userID < ${payload.userID} > not found or not open...`);
     }
 }

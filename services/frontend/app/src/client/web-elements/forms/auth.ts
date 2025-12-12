@@ -108,7 +108,6 @@ export class CriticalActionForm extends BaseForm {
 			localStorage.setItem('criticalChange', JSON.stringify(critical));
 			this.#resolve?.(JSON.stringify(critical));
 		} catch (error) {
-			console.error('[CRITICAL CHANGE FORM]', errorMessageFromException(error));
 			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 			this.#reject?.(error as Error);
 		}
