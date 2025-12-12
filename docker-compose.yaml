@@ -205,7 +205,6 @@ services:
             - friends
             - bff
             - game-manager
-            - monitoring
             - pong
             - users
             - frontend

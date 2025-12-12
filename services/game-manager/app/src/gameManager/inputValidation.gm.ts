@@ -76,10 +76,9 @@ const gameRequestPayloadSchema = {
 				paddlespeed: { type: 'string'},
 				opponent: { type: 'string'},
 			},
-			//TODO: required
 		}
 	},
-	required: ['hostID', /*'userList', */'remote', 'format', 'nbPlayers', 'gameSettings'],
+	required: ['hostID', 'remote', 'format', 'nbPlayers', 'gameSettings'],
 };
 
 const pingPongPaylodSchema = {
