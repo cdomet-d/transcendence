@@ -95,7 +95,6 @@ export class Searchbar extends BaseForm {
 			if (data.message === 'Unauthorized')
 				redirectOnError('/auth', 'You must be registered to access this page!');
 		}
-		console.log("THERE!", JSON.stringify(data));
 
 		this.displayResults(userArrayFromAPIRes(data));
 	}
@@ -172,7 +171,6 @@ export class Searchbar extends BaseForm {
 	 * @param {UserData[]} res - Array of user data to display as search results.
 	 */
 	displayResults(res: UserData[]) {
-		console.log("HERE!", JSON.stringify(res));
 		this.clearResults();
 		if (res.length < 1) this.#results.append(createNoResult('light', 'ixl'));
 		res.forEach((user) => this.addUser(user));

@@ -12,7 +12,6 @@ export function handleLobbyEvent(data: any, ws: WebSocket, form?: RemotePongSett
 
     switch (data.lobby) {
         case 'created':
-            console.log('Lobby created with ID:', data.lobbyID);
             break;
         case 'joined':
             handleLobbyJoined(data);
