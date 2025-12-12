@@ -91,7 +91,7 @@ function waitForEnd(game: Game, socket: WebSocket) {
 		try {
 			const signal = JSON.parse(payload);
 			if (signal == "0")
-				socket.close();
+				socket.close(4001);
 		} catch (err: any) {
 			game.infos.score = [-1, -1];
 			game.log.error(err.message);
