@@ -43,10 +43,16 @@ async function postGameToDashboard(game: game) {
 	try {
 		const response: Response = await fetch(url, {
 			method: 'POST',
-			headers: {'Content-Type': 'application/json'},
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(reqBody),
 		});
-		// TODO check response status ?
+
+		if (response.status === 400) {
+			console.log(`[DASHBOARD] Bad request`);
+			const errorBody = (await response.json()) as { message: string };
+			throw { code: 400, message: errorBody.message || '[DAHSBOARD] Could not post game.' };
+		}
+
 		if (!response.ok) {
 			console.error(`[GM] Dashboard service failed with status: ${response.status}`);
 			throw new Error(`Dashboard service failed with status ${response.status}`);
@@ -80,10 +86,32 @@ async function patchGameToUsers(game: game) {
 	try {
 		const response: Response = await fetch(url, {
 			method: 'PATCH',
-			headers: {'Content-Type': 'application/json'},
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(reqBody),
 		});
-		// TODO check response status ?
+		if (response.status === 400) {
+			console.log(`[USERS] Bad request`);
+			const errorBody = (await response.json()) as { message: string };
+			throw { code: 400, message: errorBody.message || '[USERS] Could not post game.' };
+		}
+
+		if (response.status === 401) {
+			console.log(`[USERS] Unauthorized`);
+			const errorBody = (await response.json()) as { message: string };
+			throw { code: 401, message: errorBody.message || '[USERS] Could not patch user stats.' };
+		}
+
+		if (response.status === 403) {
+			console.log(`[USERS] Forbidden`);
+			const errorBody = (await response.json()) as { message: string };
+			throw { code: 403, message: errorBody.message || '[USERS] Forbidden.' };
+		}
+
+		if (response.status === 404) {
+			console.log(`[USERS] User not found`);
+			const errorBody = (await response.json()) as { message: string };
+			throw { code: 403, message: errorBody.message || '[USERS] User not found.' };
+		}
 		if (!response.ok) {
 			console.error(`[GM] Users service failed with status: ${response.status}`);
 		}
@@ -158,7 +186,7 @@ function waitForResultDisplay(serv: FastifyInstance, socket: WebSocket, tourname
 }
 
 function sendEndGame(player1: userInfo | undefined, player2: userInfo | undefined, game: game, endLobby: boolean, tournamentObj: tournament | null, lobby: lobbyInfo) {
-	wsSend(player1?.userSocket, JSON.stringify({ event: "END GAME", result: player1?.userID === game.winnerID ? "winner" : "looser", username: player1?.username, endLobby: endLobby}));
+	wsSend(player1?.userSocket, JSON.stringify({ event: "END GAME", result: player1?.userID === game.winnerID ? "winner" : "looser", username: player1?.username, endLobby: endLobby }));
 	if (game.remote === true)
 		wsSend(player2?.userSocket, JSON.stringify({ event: "END GAME", result: player2?.userID === game.winnerID ? "winner" : "looser", username: player2?.username, endLobby: endLobby }));
 	if (tournamentObj && endLobby === true) {

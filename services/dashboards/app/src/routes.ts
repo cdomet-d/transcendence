@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { getGameHistory } from './dashboard.service.js';
 import { cleanInput, sanitizeBodyValues } from './sanitizer.js';
-import { postGameSchema, getGamesSchema, deleteGameSchema, deleteTournamentSchema, patchTournamentSchema, postTournamentSchema } from './schemas.js';
+import { postGameSchema, getGamesSchema, deleteGameSchema, deleteTournamentSchema, postTournamentSchema } from './schemas.js';
 
 export interface Match {
 	gameID: string;
@@ -215,7 +215,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 	});
 
 	//patch a tournament stats
-	serv.patch('/tournament/:tournamentID', /* { schema: patchTournamentSchema }, */ async (request, reply) => {
+	serv.patch('/tournament/:tournamentID', async (request, reply) => {
 		try {
 			const { tournamentID } = request.params as { tournamentID: string };
 			const { winnerID } = request.body as { winnerID: string };

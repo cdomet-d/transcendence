@@ -6,7 +6,6 @@ import {
 	anonymizeUserSchema, getUserByNameSchema, getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, searchUsersSchema, updateStatsSchema, getUserIDByUsernameSchema,
 	getUserProfileSchema, getUserStatsSchema, getUsernamesByIdsSchema, createProfileSchema, deleteProfileSchema, updateProfileSchema
 } from './schemas.js';
-import { profile } from 'console';
 
 export interface userData {
 	avatar: string | null | undefined,
