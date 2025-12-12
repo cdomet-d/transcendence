@@ -1,6 +1,11 @@
 import type { Feedback } from './web-elements/types-interfaces';
 import { router } from './main';
 import { DOMReady } from './router';
+import { currentDictionary } from './web-elements/forms/language';
+
+//TODO : map avec le code et current dictionnary
+// not allow to be here on redirect 
+// massage pour lobby "go join a lobby"
 
 export class UIFeedback extends HTMLSpanElement {
 	constructor() {
@@ -21,7 +26,7 @@ export class UIFeedback extends HTMLSpanElement {
 		this.render();
 	}
 
-	render() {}
+	render() { }
 }
 
 if (!customElements.get('ui-feedback')) {
@@ -29,14 +34,26 @@ if (!customElements.get('ui-feedback')) {
 }
 
 export function errorMessageFromException(error: unknown): string {
-	let mess = 'Something went wrong';
-	if (error && error instanceof Error) mess = error.cause + error.message;
+	let mess = currentDictionary.error.something_wrong;
+
+	if (error && error instanceof Error) {
+		mess = error.message;
+		if (error.cause) {
+			mess = `${error.cause}: ${mess}`;
+		}
+	}
 	return mess;
 }
 
 export async function exceptionFromResponse(response: Response): Promise<Error> {
-	const errorData = await response.json();
-	return new Error(`Error: ${response.status}: ${errorData.message}`);
+	let errorData = { message: '' };
+	try {
+		errorData = await response.json();
+	} catch { }
+
+	const translatedMessage = getStatusTranslation(response.status);
+	const message = translatedMessage || errorData.message || response.statusText;
+	return new Error(message);
 }
 
 export function createVisualFeedback(message: string, type?: Feedback) {
@@ -50,4 +67,17 @@ export async function redirectOnError(route: string, message: string) {
 	router.loadRoute(route, true);
 	await DOMReady();
 	createVisualFeedback(message);
+}
+
+export function getStatusTranslation(status: number): string | undefined {
+	const errDict = currentDictionary.error as any;
+
+	const map: Record<number, string | undefined> = {
+		400: errDict.bad_request || "Bad Request",
+		401: errDict.unauthorized || "Unauthorized",
+		404: currentDictionary.error.page404 || "Not Found",
+		409: errDict.conflict || "Conflict: Resource already exists"
+	};
+
+	return map[status];
 }
