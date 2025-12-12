@@ -39,6 +39,10 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const rawBody = request.body as { [key: string]: any };
 			const body = sanitizeBodyValues(rawBody);
 
+			if (!body.startTime) {
+				body.duration = "";
+			}
+
 			if (body.duration !== undefined) {
 				body.duration = Math.trunc(Number(body.duration));
 			}
@@ -59,7 +63,6 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			if (keysToInsert.length === 0)
 				return (reply.code(400).send({ message: '[DASHBOARD] No valid fields provided for update.' }));
 
-			console.log("STATS: ", JSON.stringify(body));
 			const columns = keysToInsert.join(', ');
 
 			const placeholders = keysToInsert.map(() => '?').join(', ');
