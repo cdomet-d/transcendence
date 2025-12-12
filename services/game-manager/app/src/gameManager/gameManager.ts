@@ -27,6 +27,7 @@ export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo):
 			return false;
 		}
 		lobbyInfo.joinable = false;
+		lobbyMap.get(lobbyID)!.start = true;
 		startGame(serv, quickmatch);
 	}
 	return true;
