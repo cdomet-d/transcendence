@@ -8,8 +8,7 @@ export interface lobbyRequestForm {
 	format: string,
 	userID: string,
 	username: string,
-	inviteeID?: string,//TODO: what is it for?
-	lobbyID?: string
+	inviteeID?: string,
 }
 
 type GameType = '1 vs 1' | 'tournament';

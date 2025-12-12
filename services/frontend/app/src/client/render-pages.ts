@@ -236,8 +236,6 @@ export async function renderLobbyMenu() {
 	updatePageTitle('Choose Lobby');
 }
 
-//TODO: for each lobby: set 'owner' with currently registered user to avoid owner
-//  being able to add himself to the game (in the UI - even if it's handled in the pong server)
 export async function renderQuickLocalLobby() {
 	const status = await prepareLayout(document.body.layoutInstance, 'quickLobby');
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
