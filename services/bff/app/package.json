@@ -16,6 +16,7 @@
     "cookie": "^1.1.0",
     "dotenv": "^17.2.3",
     "fastify": "^5.5.0",
+    "file-type-checker": "^1.1.6",
     "jsonwebtoken": "^9.0.2",
     "nats": "^2.29.3",
     "node-cron": "^4.2.1",

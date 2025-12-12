@@ -25,6 +25,7 @@
 		"@tailwindcss/postcss": "^4.1.13",
 		"@types/ws": "^8.18.1",
 		"fastify": "^5.5.0",
+		"file-type-checker": "^1.1.6",
 		"mime": "^4.1.0",
 		"nats": "^2.29.3",
 		"postcss-import": "^16.1.1",

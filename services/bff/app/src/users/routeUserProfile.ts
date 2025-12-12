@@ -16,6 +16,8 @@ import {
 import { cleanInput, isPasswordSafe } from '../utils/sanitizer.js';
 import { settingsPatchSchema, profileGet, tinyProfileGet, searchGet, leaderboardGet, usernameGet } from './bff.usersSchemas.js';
 import jwt from 'jsonwebtoken';
+import fileTypeChecker from 'file-type-checker';
+import { Buffer } from 'buffer';
 
 function validateBearerToken(serv: FastifyInstance, authorization?: string): boolean {
 	if (!authorization) return false;
@@ -199,7 +201,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//error handled
 	serv.get('/leaderboard', { schema: leaderboardGet }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
@@ -235,7 +236,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//error handled
 	serv.patch('/settings', { schema: settingsPatchSchema }, async (request, reply) => {
 		try {
 			const token = request.cookies.token;
@@ -265,11 +265,12 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const accountUpdates: any = {};
 
 			if (body.avatar) {
-				const validImageRegex = /^data:image\/(png|jpeg|jpg|gif);base64,+/;
-				if (!validImageRegex.test(body.avatar)) {
+				const avatarBuffer = Buffer.from(body.avatar, 'base64');
+				const uintArr = new Uint8Array(avatarBuffer);
+				if (!fileTypeChecker.validateFileType(uintArr, ['png', 'gif', 'jpeg'])) {
 					return reply.code(400).send({
 						success: false,
-						message: 'Invalid image format. Only PNG, GIF and JPEG/JPG are allowed.'
+						message: 'z image format. Only PNG, GIF and JPEG/JPG are allowed.',
 					});
 				}
 				profileUpdates.avatar = cleanInput(body.avatar);
@@ -281,22 +282,16 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const updateTasks: Promise<void>[] = [];
 
 			if (body.username || body.password) {
-				if (!validateBearerToken(serv, request.headers.authorization))
-					return reply.code(401).send({ message: 'Unauthorized' });
+				if (!validateBearerToken(serv, request.headers.authorization)) return reply.code(401).send({ message: 'Unauthorized' });
 
 				if (body.username) profileUpdatesUsername.username = cleanInput(body.username);
 				if (body.username) accountUpdates.username = cleanInput(body.username);
-				if (isPasswordSafe(body.password))
-					throw { code: 400, message: '[BFF] Could not change settings.' };
+				if (isPasswordSafe(body.password)) throw { code: 400, message: '[BFF] Could not change settings.' };
 				if (body.password) accountUpdates.password = body.password;
 
 				serv.log.warn(profileUpdatesUsername, accountUpdates);
-				if (Object.keys(accountUpdates).length > 0)
-					updateTasks.push(updateAuthSettings(serv.log, userID, accountUpdates, token));
-				if (Object.keys(profileUpdatesUsername).length > 0)
-					updateTasks.push(
-						updateUserProfileUsername(serv.log, userID, profileUpdatesUsername, token)
-					);
+				if (Object.keys(accountUpdates).length > 0) updateTasks.push(updateAuthSettings(serv.log, userID, accountUpdates, token));
+				if (Object.keys(profileUpdatesUsername).length > 0) updateTasks.push(updateUserProfileUsername(serv.log, userID, profileUpdatesUsername, token));
 			}
 
 			if (Object.keys(profileUpdates).length > 0) updateTasks.push(updateUserProfile(serv.log, userID, profileUpdates, token));

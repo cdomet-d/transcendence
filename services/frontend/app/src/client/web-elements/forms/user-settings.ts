@@ -54,12 +54,12 @@ export class UserSettingsForm extends BaseForm {
 
 	override connectedCallback(): void {
 		super.connectedCallback();
-		this.contentMap.get('upload')?.addEventListener('input', this.#previewAvatar);
+		this.contentMap.get('upload')?.addEventListener('validation', this.#previewAvatar);
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		this.contentMap.get('upload')?.removeEventListener('input', this.#previewAvatar);
+		this.contentMap.get('upload')?.removeEventListener('validation', this.#previewAvatar);
 	}
 
 	override async createReqBody(form: FormData): Promise<string> {
@@ -68,6 +68,7 @@ export class UserSettingsForm extends BaseForm {
 			await CriticalActionForm.show();
 		}
 		const jsonBody = JSON.stringify(fObject);
+		console.log(jsonBody);
 		return jsonBody;
 	}
 
@@ -215,7 +216,7 @@ export class UserSettingsForm extends BaseForm {
 		if (ev.target instanceof HTMLInputElement) {
 			target = ev.target as HTMLInputElement;
 		}
-		if (!target) return;
+		if (!target || !target.checkValidity()) return;
 		const file = target.files;
 		if (!file) return;
 		try {
@@ -225,7 +226,6 @@ export class UserSettingsForm extends BaseForm {
 				this.#avatar.metadata = this.#user.avatar;
 			}
 		} catch (error) {
-			//TODO: better error handling;
 			console.error(error);
 		}
 	}

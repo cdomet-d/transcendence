@@ -1,6 +1,7 @@
 import type { InputFieldsData } from '../types-interfaces.js';
 import { Checkbox } from './buttons.js';
 import { createCheckbox } from './helpers.js';
+import fileTypeChecker from 'file-type-checker';
 import { currentDictionary } from '../forms/language.js';
 
 const MAX_SIZE = 1024 * 1024; // 1MB
@@ -11,7 +12,6 @@ const MAX_SIZE = 1024 * 1024; // 1MB
  */
 export class CustomInput extends HTMLInputElement {
 	#inputCallback: (event: Event) => void;
-	#inputValidation: Map<string, (el: HTMLInputElement) => string[]>;
 
 	/* -------------------------------------------------------------------------- */
 	/*                                   Default                                  */
@@ -19,11 +19,6 @@ export class CustomInput extends HTMLInputElement {
 	constructor() {
 		super();
 		this.#inputCallback = (event) => this.feedback(event);
-		this.#inputValidation = new Map<string, (el: HTMLInputElement) => string[]>();
-
-		this.#inputValidation.set('password', this.#typePassword);
-		this.#inputValidation.set('text', this.#typeText);
-		this.#inputValidation.set('file', this.#typeFile);
 	}
 
 	connectedCallback() {
@@ -76,26 +71,26 @@ export class CustomInput extends HTMLInputElement {
 	}
 
 	// TODO: test large file
-	#typeFile(el: HTMLInputElement): string[] {
+	async #typeFile(el: HTMLInputElement): Promise<string[]> {
 		let feedback: string[] = [];
 		const file = el.files;
 
 		if (!file || !file[0]) return feedback;
-		const allowed = ['image/jpeg', 'image/png', 'image/gif'];
 
-		if (file[0].size >= MAX_SIZE) {
-			el.setCustomValidity('too large');
+		const buf = await file[0].arrayBuffer();
+		if (!fileTypeChecker.validateFileType(buf, ['png', 'gif', 'jpeg'])) {
+			el.setCustomValidity('bad extension');
+			feedback.push(currentDictionary.error.file_extension);
+		} else if (file[0].size >= MAX_SIZE) {
+			el.setCustomValidity('too heavy');
 			feedback.push(currentDictionary.error.file_heavy);
-		} else if (!allowed.includes(file[0].type)) {
-			el.setCustomValidity(currentDictionary.error.file_heavy);
-			feedback.push(currentDictionary.error.file_heavy, `${file[0].type}`);
 		} else {
 			el.setCustomValidity('');
 		}
 		return feedback;
 	}
 
-	feedback(event: Event) {
+	async feedback(event: Event) {
 		let target: HTMLInputElement | null = null;
 		if (event.target instanceof HTMLInputElement) {
 			target = event.target as HTMLInputElement;
@@ -103,9 +98,20 @@ export class CustomInput extends HTMLInputElement {
 		if (!target) return;
 		const type = target.getAttribute('type');
 		if (!type) return;
-		const fn = this.#inputValidation.get(type);
-		if (!fn) return;
-		let feedback = fn(target);
+		let feedback: string[] = [];
+		switch (type) {
+			case 'file':
+				feedback = await this.#typeFile(target);
+				break;
+			case 'text':
+				feedback = this.#typeText(target);
+				break;
+			case 'password':
+				this.#typePassword(target);
+				break;
+			default:
+				break;
+		}
 		this.dispatchEvent(new CustomEvent('validation', { detail: { feedback }, bubbles: true }));
 	}
 }
