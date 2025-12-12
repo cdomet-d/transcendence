@@ -103,14 +103,12 @@ export class CriticalActionForm extends BaseForm {
 			if (!response.ok) throw await exceptionFromResponse(response);
 			const critical = await response.json();
 			localStorage.setItem('criticalChange', JSON.stringify(critical));
-			console.log(critical);
 			this.#resolve?.(JSON.stringify(critical));
 		} catch (error) {
 			console.error('[CRITICAL CHANGE FORM]', errorMessageFromException(error));
 			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 			this.#reject?.(error as Error);
 		}
-		window.localStorage.removeItem('criticalChange');
 		document.body.layoutInstance?.components.get('popup')?.remove();
 	}
 }

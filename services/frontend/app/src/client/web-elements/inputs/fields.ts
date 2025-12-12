@@ -1,7 +1,7 @@
 import type { InputFieldsData } from '../types-interfaces.js';
 import { Checkbox } from './buttons.js';
 import { createCheckbox } from './helpers.js';
-import { currentDictionary, } from '../forms/language.js';
+import { currentDictionary } from '../forms/language.js';
 
 const MAX_SIZE = 1024 * 1024; // 1MB
 
@@ -50,20 +50,19 @@ export class CustomInput extends HTMLInputElement {
 	 * @param event - The input event.
 	 */
 
-    //TODO language switch not working here 
-    #typePassword(el: HTMLInputElement): string[] {
-        const val = el.value;
-        let feedback: string[] = [];
+	//TODO language switch not working here
+	#typePassword(el: HTMLInputElement): string[] {
+		const val = el.value;
+		let feedback: string[] = [];
 		const forbiddenRegex = /[^a-zA-Z0-9@$!%*?&]/;
-		if (forbiddenRegex.test(val)) feedback.push(currentDictionary.error.forbidden + val.match(forbiddenRegex))
-        if (!/[A-Z]/.test(val)) feedback.push(currentDictionary.error.uppercase);
-        if (!/[a-z]/.test(val)) feedback.push(currentDictionary.error.lowercase); 
-        if (!/[0-9]/.test(val)) feedback.push(currentDictionary.error.number);
-        if (!/[@$!%*?&]/.test(val)) feedback.push(currentDictionary.error.special_char);
-        if (val.length < 12 || val.length > 64)
-            feedback.push(currentDictionary.error.pass_lenght, `${val.length}`);
-        return feedback;
-    }
+		if (forbiddenRegex.test(val)) feedback.push(currentDictionary.error.forbidden + val.match(forbiddenRegex));
+		if (!/[A-Z]/.test(val)) feedback.push(currentDictionary.error.uppercase);
+		if (!/[a-z]/.test(val)) feedback.push(currentDictionary.error.lowercase);
+		if (!/[0-9]/.test(val)) feedback.push(currentDictionary.error.number);
+		if (!/[@$!%*?&]/.test(val)) feedback.push(currentDictionary.error.special_char);
+		if (val.length < 12 || val.length > 64) feedback.push(currentDictionary.error.pass_lenght, `${val.length}`);
+		return feedback;
+	}
 
 	#typeText(el: HTMLInputElement): string[] {
 		let min: number;
@@ -71,11 +70,8 @@ export class CustomInput extends HTMLInputElement {
 		el.id === 'searchbar' ? (min = 0) : (min = 4);
 		const val = el.value;
 		let feedback: string[] = [];
-		if (!/[A-Za-z0-9]/.test(val)) feedback.push(currentDictionary.error.forbidden);
-		if (val.length < min || val.length > 18)
-			feedback.push(
-				currentDictionary.error.username_lenght, `${min.toString()}`, currentDictionary.error.username_lenght2, `${val.length}`,
-			);
+		if (forbiddenRegex.test(val)) feedback.push(currentDictionary.error.forbidden + val.match(forbiddenRegex));
+		if (val.length < min || val.length > 18) feedback.push(currentDictionary.error.username_lenght + `${min.toString()}` + currentDictionary.error.username_lenght2 + `${val.length}`);
 		return feedback;
 	}
 
@@ -215,9 +211,7 @@ export class InputGroup extends HTMLDivElement {
 	/* -------------------------------------------------------------------------- */
 	#isRequiredField() {
 		if (this.#info.required) this.#input.setAttribute('required', '');
-		this.#info.required
-			? (this.#label.content = this.#info.labelContent + ' *')
-			: (this.#label.content = this.#info.labelContent);
+		this.#info.required ? (this.#label.content = this.#info.labelContent + ' *') : (this.#label.content = this.#info.labelContent);
 	}
 
 	#isRange() {
@@ -232,14 +226,7 @@ export class InputGroup extends HTMLDivElement {
 	}
 
 	#isUpload() {
-		this.#input.classList.add(
-			'pl-(24px)',
-			'file:absolute',
-			'file:top-[5px]',
-			'file:left-[4px]',
-			'file:w-[5rem]',
-			'file:h-[26px]',
-		);
+		this.#input.classList.add('pl-(24px)', 'file:absolute', 'file:top-[5px]', 'file:left-[4px]', 'file:w-[5rem]', 'file:h-[26px]');
 		this.#input.setAttribute('accept', 'image/jpeg,image/png,image/gif');
 	}
 
