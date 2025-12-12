@@ -111,7 +111,7 @@ export class Searchbar extends BaseForm {
 		const form = new FormData(this);
 		const url = this.#createQueryURL(form);
 		if (!url) {
-			createVisualFeedback('Error processing query - try again');
+			createVisualFeedback(currentDictionary.error.something_wrong);
 			return;
 		}
 		try {

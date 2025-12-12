@@ -116,7 +116,7 @@ export class NotifContent extends HTMLLIElement {
 			this.#disableButtons()
 		} catch (error) {
 			console.error('[ACCEPT RELATION]', errorMessageFromException(error));
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
@@ -136,14 +136,14 @@ export class NotifContent extends HTMLLIElement {
 			this.#disableButtons()
 		} catch (error) {
 			console.error('[DECLINE RELATION]', errorMessageFromException(error));
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
 	async #joinGame() {
 		const user: userStatusInfo = await userStatus();
 		if (!user.auth || !user.username) {
-			createVisualFeedback('You are not logged in and thus cannot join a lobby!', 'error');
+			createVisualFeedback(currentDictionary.error.login_lobby, 'error');
 			return;
 		}
 		wsConnect("join", "", this.#lobbyInfo?.formInstance!, this.#lobbyInfo?.lobbyID, "", {userID: this.#lobbyInfo!.inviteeID, username: user.username});

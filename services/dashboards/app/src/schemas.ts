@@ -10,45 +10,19 @@ const messageResponse = {
 export const postGameSchema = {
 	body: {
 		type: 'object',
-		properties: {
-			gameID: { type: 'string' },
-			tournamentID: { type: ['string'], nullable: true },
-			localGame: { type: 'boolean' },
-			startTime: { type: ['string'] },
-			player1: { type: ['string'] },
-			player2: { type: ['string'] },
-			duration: { type: 'number' },
-			player1Score: { type: 'number' },
-			player2Score: { type: 'number' }
-		},
-		additionalProperties: false
-	},
-	response: {
-		201: messageResponse,
-		400: messageResponse,
-		409: messageResponse,
-		401: messageResponse
-	}
-};
-/* 
-const postGameSchema = {
-	body: {
-		type: 'object',
 		required: ['gameID', 'localGame', 'player1', 'player2', 'duration', 'player1Score', 'player2Score'],
 		properties: {
 			gameID: { type: 'string' },
 			tournamentID: { type: 'string' },
 			localGame: { type: 'boolean' },
-			startTime: { type: 'string' }, // Could add format: 'date-time'
+			startTime: { type: 'string' },
 			player1: { type: 'string' },
 			player2: { type: 'string' },
 
-			// [SECURITY] Prevent negative duration
 			duration: { type: 'number', minimum: 0 },
 
-			// [SECURITY] Prevent negative scores or integer overflows
-			player1Score: { type: 'integer', minimum: 0, maximum: 99999 },
-			player2Score: { type: 'integer', minimum: 0, maximum: 99999 }
+			player1Score: { type: 'integer', minimum: -1, maximum: 99999 },
+			player2Score: { type: 'integer', minimum: -1, maximum: 99999 }
 		}
 	},
 	response: {
@@ -73,7 +47,7 @@ const postGameSchema = {
 			}
 		}
 	}
-}; */
+};
 
 export const getGamesSchema = {
 	params: {

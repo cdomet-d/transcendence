@@ -216,8 +216,8 @@ export class RemotePongSettings extends LocalPongSettings {
 				}
 			} else {
 				console.log('too many guests');
-				if (target.title === this.#owner) createVisualFeedback("You can't invite yourself, dummy");
-				else createVisualFeedback("You can't invite any more people!");
+				if (target.title === this.#owner) createVisualFeedback(currentDictionary.error.invite_yourself);
+				else createVisualFeedback(currentDictionary.error.too_many_players);
 			}
 		}
 	}

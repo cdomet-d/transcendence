@@ -175,8 +175,8 @@ export class NotifBox extends HTMLDivElement {
 
 	async fetchPendingFriendRequests() {
 		const status = await userStatus();
-		if (!status.auth) redirectOnError('/auth', 'You must be registered to see this page');
-		const url = `https://${API_URL}:8443/api/bff/profile/${status.username}`;
+		if (!status.auth) redirectOnError('/auth', currentDictionary.error.redirection);
+		const url = `https://${origin}:8443/api/bff/profile/${status.username}`;
 		try {
 			const rawRes = await fetch(url, { credentials: 'include' });
 			if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
@@ -187,19 +187,19 @@ export class NotifBox extends HTMLDivElement {
 			});
 		} catch (error) {
 			console.error('[NOTIFICATIONS]', errorMessageFromException(error));
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 
 	async fetchGameInvites() {
 		const status = await userStatus();
-		if (!status.auth) redirectOnError('/auth', 'You must be registered to see this page');
-		const url = `https://${API_URL}:8443/api/lobby/notification/${status.userID!}`;
+		if (!status.auth) redirectOnError('/auth', currentDictionary.error.redirection);
+		const url = `https://${origin}:8443/api/lobby/notification/${status.userID!}`;
 		try {
 			const rawRes = await fetch(url);
 			if (!rawRes.ok) {
 				if (rawRes.status === 400)
-					return redirectOnError('/auth', 'You must be registered to see this page');
+					return redirectOnError('/auth', currentDictionary.error.redirection);
 				throw await exceptionFromResponse(rawRes);
 			}
 			const notifs: gameNotif[] = await rawRes.json();
@@ -208,7 +208,7 @@ export class NotifBox extends HTMLDivElement {
 			})
 		} catch (error) {
 			console.error('[NOTIFICATIONS]', errorMessageFromException(error));
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 

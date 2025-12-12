@@ -40,7 +40,8 @@ export const defaultDictionary: Dictionary = {
 		delete_account: "Delete account",
 		download_data: "Download personal data",
 		privacy: "Privacy policy",
-		go_home: "Go home"
+		go_home: "Go home",
+		downloaded: "Data downloaded"
 	},
 	forms: {
 		username: 'Username',
@@ -111,6 +112,21 @@ export const defaultDictionary: Dictionary = {
 		username_lenght2: " -18 character long, is ",
 		file_heavy: "That file is too heavy: max is 2MB!",
 		file_extension: "Invalid extension: ",
+		join_lobby: "Uh-oh! You can't be there - go join a lobby or something !",
+		invite_lobby: "You were not invited to this lobby!",
+		deleted_lobby: "The lobby you are trying to join does not exist anymore!",
+		broke_lobby: "Your lobby is malfunctionning! Please create a new one!",
+		nbplayers_lobby: "You do not have enough players in your lobby to start playing!",
+		account_deleted: "Account permanently deleted",
+		bad_request: "Bad Request",
+		unauthorized: "Unauthorized",
+		conflict: "Conflict: Resource already exists",
+		redirection: "Redirected: You must be registered to see this page!",
+		something_wrong: "Something went wrong",
+		no_user: "No such user",
+		login_lobby: "You are not logged in and thus cannot join a lobby!",
+		too_many_players: "You can't invite any more people!",
+		invite_yourself: "You can't invite yourself, dummy",
 	},
 	lobby: {
 		local: 'Local 1v1',
@@ -161,7 +177,6 @@ export async function setLanguage(lang: string): Promise<void> {
 	} catch (error) {
 		console.error('[LANG] Network error loading language pack:', error);
 
-		// [FIX] Fallback on network error (e.g. offline, DNS failure)
 		currentDictionary = defaultDictionary;
 		currentLanguage = 'English';
 		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang: 'English' } }));

@@ -92,7 +92,7 @@ async function prepareLayout(curLayout: Layout | undefined, page: string): Promi
 	curLayout.clearAll();
 
 	if (!user.auth && requireAuth[page]) {
-		return redirectOnError('/auth', 'Redirected: You must be registered to see this page!'), null;
+		return redirectOnError('/auth', currentDictionary.error.redirection), null;
 	}
 	toggleHeader(page);
 	return user;
@@ -169,7 +169,7 @@ export async function renderSelf() {
 	try {
 		const raw = await fetch(url, { credentials: 'include' });
 		if (!raw.ok) {
-			if (raw.status === 404) return redirectOnError('/404', 'No such user');
+			if (raw.status === 404) return redirectOnError('/404', currentDictionary.error.no_user);
 			else throw await exceptionFromResponse(raw);
 		}
 		buildUserProfile(raw);
@@ -181,17 +181,15 @@ export async function renderSelf() {
 }
 
 export async function renderProfile(param?: Match<Partial<Record<string, string | string[]>>>) {
-	const viewer = await prepareLayout(document.body.layoutInstance, 'profile');
-	if (!viewer) return;
-
-	if (!param || !param.params.login || typeof param.params.login !== 'string') return redirectOnError('/404', 'No such user');
+	if (!(await prepareLayout(document.body.layoutInstance, 'profile'))) return;
+	if (!param || !param.params.login || typeof param.params.login !== 'string') return redirectOnError('/404', currentDictionary.error.no_user);
 	const login = param.params.login;
 	const url = `https://${API_URL}:8443/api/bff/profile/${login}`;
 
 	try {
 		const raw = await fetch(url, { credentials: 'include' });
 		if (!raw.ok) {
-			if (raw.status === 404) return redirectOnError('/404', 'No such user');
+			if (raw.status === 404) return redirectOnError('/404', currentDictionary.error.no_user);
 			else throw await exceptionFromResponse(raw);
 		}
 		buildUserProfile(raw);
@@ -210,7 +208,7 @@ export async function renderSettings() {
 	try {
 		const raw = await fetch(url, { credentials: 'include' });
 		if (!raw.ok) {
-			if (raw.status === 404) return redirectOnError('/404', 'No such user');
+			if (raw.status === 404) return redirectOnError('/404', currentDictionary.error.no_user);
 			else throw await exceptionFromResponse(raw);
 		}
 		const data = await raw.json();
@@ -298,7 +296,7 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 	if (!gameRequest) {
 		console.error('GameRequest =>', gameRequest);
-		return redirectOnError('/', "Uh-oh! You can't be there - go join a lobby or something !");
+		return redirectOnError('/', currentDictionary.error.join_lobby);
 	}
 	const court = document.createElement('div', { is: 'pong-court' }) as PongCourt;
 	const ui = document.createElement('div', { is: 'pong-ui' }) as PongUI;

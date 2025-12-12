@@ -2,6 +2,8 @@
 /*                                   Images                                   */
 /* -------------------------------------------------------------------------- */
 
+import type { init } from "../../server/server";
+
 /** Size options for Avatar components.
  * @remarks
  * - `iicon`: Extra small, icon size
@@ -349,6 +351,7 @@ export interface Dictionary {
 		go_home: string;
 		accept: string;
 		privacy: string;
+		downloaded: string,
 	};
 	forms: {
 		username: string;
@@ -420,6 +423,21 @@ export interface Dictionary {
 		username_lenght2: string;
 		file_heavy: string;
 		file_extension: string;
+		join_lobby: string;
+		invite_lobby: string;
+		deleted_lobby: string;
+		broke_lobby: string;
+		nbplayers_lobby: string,
+		account_deleted: string;
+		bad_request: string;
+		unauthorized: string;
+		conflict: string;
+		redirection: string;
+		something_wrong: string;
+		no_user: string;
+		login_lobby: string;
+		too_many_players: string;
+		invite_yourself: string;
 	};
 	lobby: {
 		local: string;
