@@ -30,7 +30,7 @@ export function createBracket(tournament: MatchParticipants[]) {
 	const bracket = document.createElement('div', {
 		is: 'tournament-bracket',
 	}) as TournamentBrackets;
-	if (bracket) bracket.players = tournament;
+	if (bracket) bracket.matchesParticipants = tournament;
 	popup.append(bracket)
 	document.body.layoutInstance?.appendAndCache(popup);
 	popup.classList.add('z-30')
