@@ -79,7 +79,7 @@ const gameRequestPayloadSchema = {
 			//TODO: required
 		}
 	},
-	required: ['hostID', /*'userList', */'remote', 'format', 'nbPlayers', 'gameSettings'],
+	required: ['hostID', 'remote', 'format', 'nbPlayers', 'gameSettings'],
 };
 
 const pingPongPaylodSchema = {
