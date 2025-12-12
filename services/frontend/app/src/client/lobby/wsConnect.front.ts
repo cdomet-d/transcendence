@@ -170,7 +170,7 @@ async function displayBrackets(brackets: [string, string][], ws: WebSocket) {
 }
 
 async function fetchTinyProfile(username: string): Promise<UserData | null> {
-	const url = `https://${origin}:8443/api/bff/tiny-profile/${username}`;
+	const url = `https://${API_URL}:8443/api/bff/tiny-profile/${username}`;
 	try {
 		const raw = await fetch(url, { credentials: 'include' });
 		if (!raw.ok) {
