@@ -209,7 +209,6 @@ export class Game {
 		let score1: number = 0;
 		let score2: number = 0;
 		if (this.#players[0] && this.#players[1]) {
-			console.log("IN BOTH PLAYERS")
 			if (this.#players[0].userID === user1) {
 				score1 = this.#players[0].score;
 				score2 = this.#players[1].score;
@@ -230,13 +229,11 @@ export class Game {
 			}
 		}
 		if (!this.#players[0] && this.#players[1]) {
-			console.log("NO PLAYER 1")
 			this.#gameInfo.winnerID = user2;
 			this.#gameInfo.loserID = user1;
 			this.#gameInfo.score = [this.#players[1].score, -1];
 		}
 		if (!this.#players[1] && this.#players[0]) {
-			console.log("NO PLAYER 2")
 			this.#gameInfo.winnerID = user1;
 			this.#gameInfo.loserID = user2;
 			this.#gameInfo.score = [this.#players[0].score, -1];

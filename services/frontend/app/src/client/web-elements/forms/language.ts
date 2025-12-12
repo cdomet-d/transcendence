@@ -127,6 +127,7 @@ export const defaultDictionary: Dictionary = {
 		login_lobby: "You are not logged in and thus cannot join a lobby!",
 		too_many_players: "You can't invite any more people!",
 		invite_yourself: "You can't invite yourself, dummy",
+		times_up: "Time's up!!"
 	},
 	lobby: {
 		local: 'Local 1v1',

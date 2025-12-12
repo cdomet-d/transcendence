@@ -438,6 +438,7 @@ export interface Dictionary {
 		login_lobby: string;
 		too_many_players: string;
 		invite_yourself: string;
+		times_up: string;
 	};
 	lobby: {
 		local: string;
