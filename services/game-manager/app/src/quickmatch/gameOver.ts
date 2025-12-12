@@ -53,7 +53,6 @@ async function postGameToDashboard(game: game) {
 		}
 	} catch (error) {
 		console.error(`[GM] Dashboard service (via route /game) is unreachable: ${error}`);
-		throw new Error('Dashboard service is unreachable.');
 	}
 }
 
@@ -87,11 +86,9 @@ async function patchGameToUsers(game: game) {
 		// TODO check response status ?
 		if (!response.ok) {
 			console.error(`[GM] Users service failed with status: ${response.status}`);
-			// throw new Error(`Users service failed with status ${response.status}`);
 		}
 	} catch (error) {
 		console.error(`[GM] Users service (via route /game) is unreachable: ${error}`);
-		throw new Error('Users service is unreachable.');
 	}
 }
 
