@@ -26,7 +26,7 @@ export function createGameObj(lobbyInfo: lobbyInfo, lobbyID: string): game | und
 
 
 	const game: game = {
-		lobbyID: lobbyInfo.lobbyID!,
+		lobbyID: lobbyID,
 		tournamentID: '-1',
 		gameID: crypto.randomUUID().toString(),
 		remote: lobbyInfo.remote,
@@ -44,5 +44,6 @@ export function createGameObj(lobbyInfo: lobbyInfo, lobbyID: string): game | und
 }
 
 export function startGame(serv: FastifyInstance, game: game) {
+	// serv.log.error("IN START GAME");
 	natsPublish(serv, 'game.request', JSON.stringify(game), 'game.reply');
 }

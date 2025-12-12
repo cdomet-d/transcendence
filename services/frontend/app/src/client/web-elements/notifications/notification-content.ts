@@ -12,7 +12,6 @@ import { currentDictionary } from '../forms/language.js';
 interface GameInvite {
 	lobbyID: string;
 	inviteeID: string;
-	formInstance: string;
 }
 
 const notificationBtns: MenuData = {
@@ -146,7 +145,7 @@ export class NotifContent extends HTMLLIElement {
 			createVisualFeedback(currentDictionary.error.login_lobby, 'error');
 			return;
 		}
-		wsConnect("join", "", this.#lobbyInfo?.formInstance!, this.#lobbyInfo?.lobbyID, "", {userID: this.#lobbyInfo!.inviteeID, username: user.username});
+		wsConnect("join", "", "", this.#lobbyInfo?.lobbyID, "", {userID: this.#lobbyInfo!.inviteeID, username: user.username});
 	}
 
 	#declineGame() {

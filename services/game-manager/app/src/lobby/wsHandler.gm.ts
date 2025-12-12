@@ -7,17 +7,17 @@ import type { lobbyInfo, userInfo, whitelist } from '../gameManager/gameManager.
 import type { lobbyRequestForm, gameNotif, lobbyInviteForm } from './lobby.interface.js';
 import { natsPublish } from '../nats/publisher.gm.js';
 import { addNotifToDB, removeNotifFromDB } from '../inviteNotifs/invite-notifs.js';
+import { stopHandler } from '../tournament/tournamentStart.js';
 
-export function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest): void {
+export function wsHandler(this: FastifyInstance, socket: WebSocket, req: FastifyRequest) {
 	let userID: string | null = null;
 
 	socket.on('message', (message: string) => {
 		try {
 			const data = JSON.parse(message);
-			if (!validateData(data, req, socket)) return;
-			
-			const { payload, formInstance } = data;
-			if (!validatePayload(data, payload, req, socket)) return;
+			if (!validateData(data, this, socket)) throw new Error("invalid input");;
+			const { payload } = data;
+			if (!validatePayload(data, payload, this, socket)) throw new Error("invalid input");;
 
 			if (data.event === 'NOTIF' && payload.notif === 'ping') {
 				socket.send(JSON.stringify({ event: 'NOTIF', notif: 'pong' }));
@@ -37,11 +37,11 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				}
 
 				if (lobbyPayload.action === 'create') {
-					let lobbyID: string | null = findLobbyIDFromUserID(userID);
-					if (lobbyID !== null)
-						removeUserFromLobby(userID, lobbyID);
+					let lobbyID: string | undefined = findLobbyIDFromUserID(userID);
+					if (lobbyID !== undefined)
+						removeUserFromLobby(userID, lobbyID, 0);
 					const newLobby: lobbyInfo = createLobby({userID: userID!, username: username, userSocket: socket }, lobbyPayload.format!);
-					wsSend(socket, JSON.stringify({ lobby: 'created', lobbyID: newLobby.lobbyID, formInstance: formInstance }))
+					wsSend(socket, JSON.stringify({ lobby: 'created', lobbyID: newLobby.lobbyID }))
 				}
 				return;
 			}
@@ -61,8 +61,8 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 
 				if (invitePayload.action === 'invite') {
 					const inviteeID = invitePayload.invitee.userID!;
-					const lobbyID: string | null = findLobbyIDFromUserID(invitePayload.hostID!);
-					if (lobbyID === null) {
+					const lobbyID: string | undefined = findLobbyIDFromUserID(invitePayload.hostID!);
+					if (lobbyID === undefined) {
 						wsSend(socket, JSON.stringify({ error: 'lobby not found' }));
 						return;
 					}
@@ -72,7 +72,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 						senderUsername: hostUsername,//TODO
 						receiverID: inviteeID,
 						lobbyID: lobbyID!,
-						gameType: formInstance === 'remoteForm' ? '1 vs 1' : 'tournament'
+						gameType: payload.format! === 'quickmatch' ? '1 vs 1' : 'tournament'
 					};
 					addNotifToDB(this, notif);
 					addUserToWhitelist(invitePayload.invitee, lobbyID!);
@@ -86,33 +86,35 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				} else if (invitePayload.action === 'join') {
 					if (!lobbyMap.has(invitePayload.lobbyID!)) {
 						wsSend(socket, JSON.stringify({ error: 'lobby does not exist' }));
+						removeNotifFromDB(this, invitePayload.lobbyID!, invitePayload.invitee.userID);
+						if (findLobbyIDFromUserID(invitePayload.invitee.userID) === null)
+							socket.close();
 					}
-
 					userID = invitePayload.invitee.userID;
-					let oldLobby: string | null = findLobbyIDFromUserID(userID);
-					if (oldLobby !== null)
-						removeUserFromLobby(userID, oldLobby);
+					let oldLobby: string | undefined = findLobbyIDFromUserID(userID);
+					if (oldLobby !== undefined)
+						removeUserFromLobby(userID, oldLobby, 0);
 					removeNotifFromDB(this, invitePayload.lobbyID!, userID);
 					addUserToLobby(userID!, invitePayload.invitee.username!, socket, invitePayload.lobbyID!);
 					const whiteListUsernames: string[] = getWhiteListUsernames(invitePayload.lobbyID!)
-					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, formInstance: formInstance, whiteListUsernames: whiteListUsernames }));
-					//TODO: send start to host once everyone has joined
+					informHostToStart(this, socket, invitePayload.lobbyID!);
+					wsSend(socket, JSON.stringify({ lobby: 'joined', lobbyID: invitePayload.lobbyID, whiteListUsernames: whiteListUsernames, format: lobbyMap.get(invitePayload.lobbyID!)?.format }));
 				}
 			}
 		} catch (error) {
+			socket.close(1003, `Malformed WS message`);
 			req.server.log.error(`Malformed WS message: ${error}`);
 		}
 	});
 
-	socket.on('close', () => {
-		console.log("CLOSE userID:", userID);
+	socket.onclose = (ev: any) => {
 		if (userID !== null) {
-			let lobbyID: string | null = findLobbyIDFromUserID(userID);
-			if (lobbyID !== null)
-				removeUserFromLobby(userID, lobbyID);
+			let lobbyID: string | undefined = findLobbyIDFromUserID(userID);
+			if (lobbyID !== undefined)
+				removeUserFromLobby(userID, lobbyID, ev.code);
 			wsClientsMap.delete(userID);
 		}
-	});
+	};
 }
 
 export function wsSend(ws: WebSocket, message: string): void {
@@ -121,6 +123,28 @@ export function wsSend(ws: WebSocket, message: string): void {
 	} else {
 		const payload = JSON.parse(message);
 		console.log(`Error: Connection for userID < ${payload.userID} > not found or not open...`);
-		console.log(`\tCould not start game with gameID < ${payload.gameID} > `);
 	}
+}
+
+export let hostStartHandler: (message: string) => void;
+export function informHostToStart(serv: FastifyInstance, socket: WebSocket, lobbyID: string) {
+	hostStartHandler = (message: string) => {
+		try {
+			const data = JSON.parse(message);
+			if (!validateData(data, serv, socket)) throw new Error("invalid input");
+			if (!validatePayload(data, data.payload, serv, socket)) throw new Error("invalid input");
+			if (data.payload.signal === 'in lobby') {
+				const lobby: lobbyInfo = lobbyMap.get(lobbyID)!;
+				if (lobby.nbPlayers === lobby.userList.size) {
+					const hostSocket: WebSocket = lobby.userList.get(lobby.hostID!)?.userSocket!;
+					wsSend(hostSocket, JSON.stringify("start"));
+				}
+				stopHandler(hostStartHandler, socket);
+			}
+		} catch (err: any) {
+			socket.close(1003, "Invalid input");
+			serv.log.error(err.message);
+		}
+	}
+	socket.on('message', hostStartHandler);
 }

@@ -1,7 +1,9 @@
+import type { WebSocket } from '@fastify/websocket';
+
 interface userInfo {
 	userID?: string,
 	username?: string,
-	userSocket?: WebSocket
+	userSocket?: WebSocket,
 }
 
 interface PongOptions {
@@ -22,7 +24,8 @@ interface lobbyInfo {
 	remote: boolean,
 	format: 'quickmatch' | 'tournament' | string,
 	nbPlayers: number,
-	gameSettings?: PongOptions
+	gameSettings?: PongOptions,
+	start: boolean
 }
 
 interface whitelist {
@@ -36,7 +39,7 @@ interface game {
 	gameID: string,
 	tournamentID?: string,
 	remote: boolean,
-	users: userInfo[] | undefined | null,
+	users: userInfo[],
 	score: [number, number],
 	winnerID: string,
 	loserID: string,
@@ -48,9 +51,14 @@ interface game {
 
 interface tournament {
 	tournamentID: string,
+	lobbyID: string,
 	winnerID: string | undefined | null,
 	bracket: game[],
-	nbPlayers: number
+	nbPlayers: number,
+	gotBracket: number,
+	gotEndGame: number,
+	nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }>,
+	nextGame: game | undefined;
 }
 
 // NATS
