@@ -42,7 +42,6 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 		} catch (error) {
 			socket.close(1003, `Malformed WS message`);
 			req.server.log.error(`Malformed WS message: ${error}`);
-			wsSend(socket, JSON.stringify({ error: 'Invalid message format' }));
 		}
 	});
 

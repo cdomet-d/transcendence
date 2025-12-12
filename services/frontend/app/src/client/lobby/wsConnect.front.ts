@@ -105,14 +105,11 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 						wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
 					}, 5000);
 			}
-
-            console.warn('Unhandled WebSocket message type:', data);
-
-        } catch (error) {
-            console.error('Error: Failed to parse WS message', error);
-            createVisualFeedback('Connection error. Please refresh the page.', 'error');
-        }
-    };
+		} catch (error) {
+			console.error("Error: Failed to parse WS message", error);
+			createVisualFeedback('Connection error. Please refresh the page.', 'error');
+		}
+	}
 }
 
 export { wsConnect };
