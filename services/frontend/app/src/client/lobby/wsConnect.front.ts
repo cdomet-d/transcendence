@@ -7,6 +7,8 @@ import { executeAction } from './wsAction.front.js';
 import { handleGameStart, handleLobbyEvent } from './wsUtils.front.js';
 import { handleError } from './wsError.front.js';
 import { wsSafeSend } from './wsSend.front.js';
+import { currentDictionary } from '../web-elements/forms/language.js';
+;
 
 export let wsInstance: WebSocket | null = null;
 

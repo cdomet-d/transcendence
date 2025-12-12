@@ -9,6 +9,7 @@ import {
 import { createForm } from './helpers';
 import { criticalChange } from './default-forms';
 import { Popup } from '../layouts/popup';
+import { currentDictionary } from './language';
 
 export class RegistrationForm extends BaseForm {
 	constructor() {
@@ -48,7 +49,7 @@ export class LoginForm extends BaseForm {
 			router.loadRoute('/me', true);
 		} catch (error) {
 			console.error('[LOGIN FORM]', errorMessageFromException(error));
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 		}
 	}
 }
@@ -93,7 +94,7 @@ export class CriticalActionForm extends BaseForm {
 			this.#resolve?.(JSON.stringify(critical));
 		} catch (error) {
 			console.error('[CRITICAL CHANGE FORM]', errorMessageFromException(error));
-			createVisualFeedback(errorMessageFromException(error));
+			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 			this.#reject?.(error as Error);
 		}
 		document.body.layoutInstance?.components.get('popup')?.remove();

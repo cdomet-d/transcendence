@@ -29,7 +29,7 @@ export class Searchbar extends BaseForm {
     /* -------------- constructors and associated default functions ------------- */
     constructor() {
         super();
-        super.details = search(currentDictionary);
+        super.details = search();
         this.#results = document.createElement('ul');
         this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
         this.#currentFocus = -1;
@@ -114,7 +114,7 @@ export class Searchbar extends BaseForm {
 		const form = new FormData(this);
 		const url = this.#createQueryURL(form);
 		if (!url) {
-			createVisualFeedback('Error processing query - try again');
+			createVisualFeedback(currentDictionary.error.something_wrong);
 			return;
 		}
 		try {

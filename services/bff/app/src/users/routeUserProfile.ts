@@ -344,7 +344,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				if (body.username) profileUpdatesUsername.username = cleanInput(body.username);
 				if (body.username) accountUpdates.username = cleanInput(body.username);
 				if (isPasswordSafe(body.password))
-					throw { code: 400, message:'[BFF] Could not change settings.' };
+					throw { code: 400, message: '[BFF] Could not change settings.' };
 				if (body.password) accountUpdates.password = body.password;
 
 				serv.log.warn(profileUpdatesUsername, accountUpdates);
