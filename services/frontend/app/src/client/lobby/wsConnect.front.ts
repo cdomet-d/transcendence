@@ -72,9 +72,6 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 }
 
 async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPongSettings, ) {
-	const user = await userStatus();
-	if (user.auth === false)
-		redirectOnError('/auth', 'Redirected: Failed to recover user'), null;
 	ws.onmessage = (message: MessageEvent) => {
 		try {
 			const data = JSON.parse(message.data);
@@ -86,9 +83,9 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 
 			if (data.event === "END GAME") {
 				if (data.result === "winner")
-					endGame(winImage, "winScreen", `${user.username!} won !`, data.endLobby);
+					endGame(winImage, "winScreen", `${data.username} won !`, data.endLobby);
 				else
-					endGame(looseImage, "looseScreen", `${user.username!} lost...`, data.endLobby);
+					endGame(looseImage, "looseScreen", `${data.username} lost...`, data.endLobby);
 				if (data.endGame === true)
 					wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
 				else

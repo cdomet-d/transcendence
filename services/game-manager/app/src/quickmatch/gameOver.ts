@@ -95,29 +95,26 @@ async function patchGameToUsers(game: game) {
 }
 
 export async function showWinnerScreen(game: game, serv: FastifyInstance, endLobby: boolean, tournamentObj: tournament | null, nextGame: game | undefined) {
-	serv.log.error("IN WINNER SCREEN")
 	const lobby: lobbyInfo | undefined = lobbyMap.get(game.lobbyID);
 	if (lobby === undefined) {
 		serv.log.error("LOBBY UNDEFINED");
 		return;
 	}
-	const user1: userInfo = lobby.userList.get(game.users![0]!.userID!)!;
-	const user2: userInfo = lobby.userList.get(game.users![1]!.userID!)!;
+	const player1: userInfo | undefined = lobby.userList.get(game.users![0]!.userID!);
+	const player2: userInfo | undefined = lobby.userList.get(game.users![1]!.userID!);
 	if (endLobby === true) {
-		if (user1.userSocket)
-			waitForLobbyEnd(serv, user1.userSocket!);
-		if (game.remote === true && user2.userSocket)
-			waitForLobbyEnd(serv, user2.userSocket!);
+		for (const user of lobby.userList) {
+			if (user[1].userSocket)
+				waitForLobbyEnd(serv, user[1].userSocket!);
+		}
 	}
 	else if (tournamentObj && endLobby === false) {
-		if (user1.userSocket)
-			waitForResultDisplay(serv, user1.userSocket!, tournamentObj, lobby, nextGame);
-		if (user2.userSocket)
-			waitForResultDisplay(serv, user2.userSocket!, tournamentObj, lobby, nextGame);
+		if (player1 && player1.userSocket)
+			waitForResultDisplay(serv, player1.userSocket!, tournamentObj, lobby, nextGame);
+		if (player2 && player2.userSocket)
+			waitForResultDisplay(serv, player2.userSocket!, tournamentObj, lobby, nextGame);
 	}
-	wsSend(user1.userSocket!, JSON.stringify({ event: "END GAME", result: user1.userID! === game.winnerID ? "winner" : "looser", endLobby: endLobby}));
-	if (game.remote === true)
-		wsSend(user2.userSocket!, JSON.stringify({ event: "END GAME", result: user2.userID! === game.winnerID ? "winner" : "looser", endLobby: endLobby }));
+	sendEndGame(player1, player2, game, endLobby, tournamentObj, lobby);
 };
 
 export let lobbyEndHandler: (message: string) => void;
@@ -160,4 +157,16 @@ function waitForResultDisplay(serv: FastifyInstance, socket: WebSocket, tourname
 		}
 	};
 	socket.on('message', resultDisplayHandler);
+}
+
+function sendEndGame(player1: userInfo | undefined, player2: userInfo | undefined, game: game, endLobby: boolean, tournamentObj: tournament | null, lobby: lobbyInfo) {
+	wsSend(player1?.userSocket, JSON.stringify({ event: "END GAME", result: player1?.userID === game.winnerID ? "winner" : "looser", username: player1?.username, endLobby: endLobby}));
+	if (game.remote === true)
+		wsSend(player2?.userSocket, JSON.stringify({ event: "END GAME", result: player2?.userID === game.winnerID ? "winner" : "looser", username: player2?.username, endLobby: endLobby }));
+	if (tournamentObj && endLobby === true) {
+		for (const user of lobby.userList) {
+			if (user[1].userID !== game.users[0]?.userID && user[1].userID !== game.users[1]?.userID)
+				wsSend(user[1].userSocket, JSON.stringify({ event: "END GAME", result: "winner", username: player1?.userID === game.winnerID ? player1.username! : player2?.username!, endLobby: endLobby }));
+		}
+	}
 }
