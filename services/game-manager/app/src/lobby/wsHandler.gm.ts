@@ -99,7 +99,7 @@ export function wsSend(ws: WebSocket, message: string): void {
 		ws.send(message);
 	} else {
 		const payload = JSON.parse(message);
-		console.log(`Error: Connection for userID < ${payload.userID} > not found or not open...`);
+		// console.log(`Error: Connection for userID < ${payload.userID} > not found or not open...`);
 	}
 }
 

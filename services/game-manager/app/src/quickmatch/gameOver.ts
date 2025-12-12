@@ -39,7 +39,7 @@ async function postGameToDashboard(game: game) {
 		player1Score: game.users![0]!.userID! === game.winnerID ? game.score[0] : game.score[1],
 		player2Score: game.users![1]!.userID! === game.winnerID ? game.score[0] : game.score[1],
 	}
-	console.log("START TIME", JSON.stringify(reqBody.startTime));
+	// console.log("START TIME", JSON.stringify(reqBody.startTime));
 	try {
 		const response: Response = await fetch(url, {
 			method: 'POST',
@@ -48,7 +48,7 @@ async function postGameToDashboard(game: game) {
 		});
 
 		if (response.status === 400) {
-			console.log(`[DASHBOARD] Bad request`);
+			// console.log(`[DASHBOARD] Bad request`);
 			const errorBody = (await response.json()) as { message: string };
 			throw { code: 400, message: errorBody.message || '[DAHSBOARD] Could not post game.' };
 		}
@@ -90,25 +90,25 @@ async function patchGameToUsers(game: game) {
 			body: JSON.stringify(reqBody),
 		});
 		if (response.status === 400) {
-			console.log(`[USERS] Bad request`);
+			// console.log(`[USERS] Bad request`);
 			const errorBody = (await response.json()) as { message: string };
 			throw { code: 400, message: errorBody.message || '[USERS] Could not post game.' };
 		}
 
 		if (response.status === 401) {
-			console.log(`[USERS] Unauthorized`);
+			// console.log(`[USERS] Unauthorized`);
 			const errorBody = (await response.json()) as { message: string };
 			throw { code: 401, message: errorBody.message || '[USERS] Could not patch user stats.' };
 		}
 
 		if (response.status === 403) {
-			console.log(`[USERS] Forbidden`);
+			// console.log(`[USERS] Forbidden`);
 			const errorBody = (await response.json()) as { message: string };
 			throw { code: 403, message: errorBody.message || '[USERS] Forbidden.' };
 		}
 
 		if (response.status === 404) {
-			console.log(`[USERS] User not found`);
+			// console.log(`[USERS] User not found`);
 			const errorBody = (await response.json()) as { message: string };
 			throw { code: 403, message: errorBody.message || '[USERS] User not found.' };
 		}
