@@ -86,6 +86,9 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 				} else if (invitePayload.action === 'join') {
 					if (!lobbyMap.has(invitePayload.lobbyID!)) {
 						wsSend(socket, JSON.stringify({ error: 'lobby does not exist' }));
+						removeNotifFromDB(this, invitePayload.lobbyID!, invitePayload.invitee.userID);
+						if (findLobbyIDFromUserID(invitePayload.invitee.userID) === null)
+							socket.close();
 					}
 					userID = invitePayload.invitee.userID;
 					let oldLobby: string | undefined = findLobbyIDFromUserID(userID);
