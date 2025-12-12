@@ -1,7 +1,8 @@
 import type { InputFieldsData } from '../types-interfaces.js';
 import { Checkbox } from './buttons.js';
 import { createCheckbox } from './helpers.js';
-import { currentDictionary, } from '../forms/language.js';
+import fileTypeChecker from 'file-type-checker';
+import { currentDictionary } from '../forms/language.js';
 
 const MAX_SIZE = 1024 * 1024; // 1MB
 
@@ -11,7 +12,6 @@ const MAX_SIZE = 1024 * 1024; // 1MB
  */
 export class CustomInput extends HTMLInputElement {
 	#inputCallback: (event: Event) => void;
-	#inputValidation: Map<string, (el: HTMLInputElement) => string[]>;
 
 	/* -------------------------------------------------------------------------- */
 	/*                                   Default                                  */
@@ -19,11 +19,6 @@ export class CustomInput extends HTMLInputElement {
 	constructor() {
 		super();
 		this.#inputCallback = (event) => this.feedback(event);
-		this.#inputValidation = new Map<string, (el: HTMLInputElement) => string[]>();
-
-		this.#inputValidation.set('password', this.#typePassword);
-		this.#inputValidation.set('text', this.#typeText);
-		this.#inputValidation.set('file', this.#typeFile);
 	}
 
 	connectedCallback() {
@@ -50,20 +45,19 @@ export class CustomInput extends HTMLInputElement {
 	 * @param event - The input event.
 	 */
 
-    //TODO language switch not working here 
-    #typePassword(el: HTMLInputElement): string[] {
-        const val = el.value;
-        let feedback: string[] = [];
+	//TODO language switch not working here
+	#typePassword(el: HTMLInputElement): string[] {
+		const val = el.value;
+		let feedback: string[] = [];
 		const forbiddenRegex = /[^a-zA-Z0-9@$!%*?&]/;
-		if (forbiddenRegex.test(val)) feedback.push(currentDictionary.error.forbidden + val.match(forbiddenRegex))
-        if (!/[A-Z]/.test(val)) feedback.push(currentDictionary.error.uppercase);
-        if (!/[a-z]/.test(val)) feedback.push(currentDictionary.error.lowercase); 
-        if (!/[0-9]/.test(val)) feedback.push(currentDictionary.error.number);
-        if (!/[@$!%*?&]/.test(val)) feedback.push(currentDictionary.error.special_char);
-        if (val.length < 12 || val.length > 64)
-            feedback.push(currentDictionary.error.pass_lenght, `${val.length}`);
-        return feedback;
-    }
+		if (forbiddenRegex.test(val)) feedback.push(currentDictionary.error.forbidden + val.match(forbiddenRegex));
+		if (!/[A-Z]/.test(val)) feedback.push(currentDictionary.error.uppercase);
+		if (!/[a-z]/.test(val)) feedback.push(currentDictionary.error.lowercase);
+		if (!/[0-9]/.test(val)) feedback.push(currentDictionary.error.number);
+		if (!/[@$!%*?&]/.test(val)) feedback.push(currentDictionary.error.special_char);
+		if (val.length < 12 || val.length > 64) feedback.push(currentDictionary.error.pass_lenght, `${val.length}`);
+		return feedback;
+	}
 
 	#typeText(el: HTMLInputElement): string[] {
 		let min: number;
@@ -71,35 +65,32 @@ export class CustomInput extends HTMLInputElement {
 		el.id === 'searchbar' ? (min = 0) : (min = 4);
 		const val = el.value;
 		let feedback: string[] = [];
-		if (!/[A-Za-z0-9]/.test(val)) feedback.push(currentDictionary.error.forbidden);
-		if (val.length < min || val.length > 18)
-			feedback.push(
-				currentDictionary.error.username_lenght, `${min.toString()}`, currentDictionary.error.username_lenght2, `${val.length}`,
-			);
+		if (forbiddenRegex.test(val)) feedback.push(currentDictionary.error.forbidden + val.match(forbiddenRegex));
+		if (val.length < min || val.length > 18) feedback.push(currentDictionary.error.username_lenght + `${min.toString()}` + currentDictionary.error.username_lenght2 + `${val.length}`);
 		return feedback;
 	}
 
 	// TODO: test large file
-	#typeFile(el: HTMLInputElement): string[] {
+	async #typeFile(el: HTMLInputElement): Promise<string[]> {
 		let feedback: string[] = [];
 		const file = el.files;
 
 		if (!file || !file[0]) return feedback;
-		const allowed = ['image/jpeg', 'image/png', 'image/gif'];
 
-		if (file[0].size >= MAX_SIZE) {
-			el.setCustomValidity('too large');
+		const buf = await file[0].arrayBuffer();
+		if (!fileTypeChecker.validateFileType(buf, ['png', 'gif', 'jpeg'])) {
+			el.setCustomValidity('bad extension');
+			feedback.push(currentDictionary.error.file_extension);
+		} else if (file[0].size >= MAX_SIZE) {
+			el.setCustomValidity('too heavy');
 			feedback.push(currentDictionary.error.file_heavy);
-		} else if (!allowed.includes(file[0].type)) {
-			el.setCustomValidity(currentDictionary.error.file_heavy);
-			feedback.push(currentDictionary.error.file_heavy, `${file[0].type}`);
 		} else {
 			el.setCustomValidity('');
 		}
 		return feedback;
 	}
 
-	feedback(event: Event) {
+	async feedback(event: Event) {
 		let target: HTMLInputElement | null = null;
 		if (event.target instanceof HTMLInputElement) {
 			target = event.target as HTMLInputElement;
@@ -107,9 +98,20 @@ export class CustomInput extends HTMLInputElement {
 		if (!target) return;
 		const type = target.getAttribute('type');
 		if (!type) return;
-		const fn = this.#inputValidation.get(type);
-		if (!fn) return;
-		let feedback = fn(target);
+		let feedback: string[] = [];
+		switch (type) {
+			case 'file':
+				feedback = await this.#typeFile(target);
+				break;
+			case 'text':
+				feedback = this.#typeText(target);
+				break;
+			case 'password':
+				this.#typePassword(target);
+				break;
+			default:
+				break;
+		}
 		this.dispatchEvent(new CustomEvent('validation', { detail: { feedback }, bubbles: true }));
 	}
 }
@@ -215,9 +217,7 @@ export class InputGroup extends HTMLDivElement {
 	/* -------------------------------------------------------------------------- */
 	#isRequiredField() {
 		if (this.#info.required) this.#input.setAttribute('required', '');
-		this.#info.required
-			? (this.#label.content = this.#info.labelContent + ' *')
-			: (this.#label.content = this.#info.labelContent);
+		this.#info.required ? (this.#label.content = this.#info.labelContent + ' *') : (this.#label.content = this.#info.labelContent);
 	}
 
 	#isRange() {
@@ -232,14 +232,7 @@ export class InputGroup extends HTMLDivElement {
 	}
 
 	#isUpload() {
-		this.#input.classList.add(
-			'pl-(24px)',
-			'file:absolute',
-			'file:top-[5px]',
-			'file:left-[4px]',
-			'file:w-[5rem]',
-			'file:h-[26px]',
-		);
+		this.#input.classList.add('pl-(24px)', 'file:absolute', 'file:top-[5px]', 'file:left-[4px]', 'file:w-[5rem]', 'file:h-[26px]');
 		this.#input.setAttribute('accept', 'image/jpeg,image/png,image/gif');
 	}
 
