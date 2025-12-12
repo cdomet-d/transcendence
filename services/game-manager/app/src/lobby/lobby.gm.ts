@@ -10,7 +10,6 @@ export function createLobby(host: userInfo, format: string) {
 	return lobby;
 }
 
-// add INVITEE in parameter and get all userInfo (invitee) from JWT payload
 function makeLobbyInfo(host: userInfo, format: string): lobbyInfo {
 	const lobbyID = crypto.randomUUID().toString();
 
@@ -22,6 +21,7 @@ function makeLobbyInfo(host: userInfo, format: string): lobbyInfo {
 			hostID: host.userID!,
 			userIDs: new Map<string, userInfo>([
 				[host.userID!, { userID: host.userID!, username: host.username! }],
+			]),
 		},
 		joinable: true,
 		userList: new Map<string, userInfo>([
@@ -39,7 +39,7 @@ export function addUserToWhitelist(user: userInfo, lobbyID: string) {
 	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) return;
 
-	if (lobby.whitelist?.userIDs.size === 4) return; // send `whitelist full` to front?
+	if (lobby.whitelist?.userIDs.size === 4) return;
 
 	if (lobby.whitelist?.userIDs.has(user.userID!) === false) {
 		lobby.whitelist?.userIDs.set(user.userID!, { userID: user.userID!, username: user.username! });

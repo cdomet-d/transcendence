@@ -5,8 +5,8 @@ CREATE TABLE game (
   startTime TEXT,
   player1 TEXT,
   player2 TEXT,
-  tournamentID TEXT, --zero == no tournament
-  localGame BOOLEAN, --zero == local, 1 == remote
+  tournamentID TEXT,
+  localGame BOOLEAN,
   player1Score INTEGER,
   player2Score INTEGER
 );
@@ -14,8 +14,8 @@ CREATE TABLE game (
 CREATE TABLE tournament (
     ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     tournamentID TEXT UNIQUE,
-    nbPlayers INTEGER NOT NULL CHECK(nbPlayers = 4), -- Enforces 4
-    tournamentStatus INTEGER NOT NULL DEFAULT 0, -- 0: Pending, 1: In Progress, 2: Completed
-    winnerID INTEGER, -- The ID of the winning player, NULL until completed
+    nbPlayers INTEGER NOT NULL CHECK(nbPlayers = 4),
+    tournamentStatus INTEGER NOT NULL DEFAULT 0, 
+    winnerID INTEGER,
     creationTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

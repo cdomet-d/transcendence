@@ -214,7 +214,7 @@ export class RemotePongSettings extends LocalPongSettings {
 			ev.preventDefault();
 			ev.stopImmediatePropagation();
 			if (target.title === this.#owner) {
-				createVisualFeedback("You can't invite yourself");
+				createVisualFeedback(currentDictionary.error.invite_yourself);
 				return;
 			}
 			if (this.#guests.size < this._guestLimit) {
@@ -227,7 +227,6 @@ export class RemotePongSettings extends LocalPongSettings {
 					console.log(error);
 				}
 			} else {
-				console.log('too many guests');
 				if (target.title === this.#owner) createVisualFeedback(currentDictionary.error.invite_yourself);
 				else createVisualFeedback(currentDictionary.error.too_many_players);
 			}

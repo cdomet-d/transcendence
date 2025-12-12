@@ -20,7 +20,7 @@ CREATE TABLE userStats (
   totalMatch INTEGER,
   totalWins INTEGER,
   totalLosses INTEGER,
-  winStreak INTEGER,
+  winstreak INTEGER,
   averageMatchDuration INTEGER, --time in secondes
   longuestPass INTEGER --time in secondes
 );
