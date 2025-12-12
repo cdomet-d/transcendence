@@ -1,6 +1,6 @@
 map $http_origin $cors_origin {
     default \"\";
-	^https:\/\/(localhost|$PUBLIC_IP):8443\/?$ $http_origin;
+	 ~^https://(localhost|${PUBLIC_IP}):8443/?$ $http_origin;
 }
 
 server {

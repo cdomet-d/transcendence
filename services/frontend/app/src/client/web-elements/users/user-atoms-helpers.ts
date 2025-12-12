@@ -16,7 +16,7 @@ export function createUsername(username: string, status: boolean): Username {
 
 export function createWinstreak(val: string): Winstreak {
 	const el = document.createElement('span', { is: 'winstreak-block' }) as Winstreak;
-	el.winstreakValue = val;
+	el.setWinstreakValue = val;
 	return el;
 }
 

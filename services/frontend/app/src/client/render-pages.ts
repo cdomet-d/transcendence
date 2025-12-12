@@ -4,8 +4,8 @@ import { createHeading, createNoResult } from './web-elements/typography/helpers
 import { createLeaderboard } from './web-elements/statistics/leaderboard.js';
 import { createMenu } from './web-elements/navigation/menu-helpers.js';
 import { createTabs } from './web-elements/navigation/tabs-helpers.js';
-import { farm, ocean, defaultTheme, forest, PongCourt } from './web-elements/game/pong-court.js';
-import { farmAssets, forestAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
+import { farm, ocean, defaultTheme, PongCourt } from './web-elements/game/pong-court.js';
+import { farmAssets, Layout, oceanAssets } from './web-elements/layouts/layout.js';
 import { userSettingsForm, localPong, remotePong, pongTournament } from './web-elements/forms/default-forms.js';
 import { lobbyQuickmatchMenu, lobbyTournamentMenu, main, goHomeData } from './web-elements/navigation/default-menus.js';
 import { pong, type gameRequest } from './pong/pong.js';
@@ -13,12 +13,12 @@ import { PongUI } from './web-elements/game/game-ui.js';
 import { errorMessageFromException, exceptionFromResponse, redirectOnError } from './error.js';
 import type { Match } from 'path-to-regexp';
 import type { pongTheme, TabData, ImgData } from './web-elements/types-interfaces.js';
-import { router, type userStatusInfo, origin } from './main.js';
+import { router, type userStatusInfo } from './main.js';
 import { loginForm, registrationForm } from './web-elements/forms/default-forms.js';
 import { wsConnect } from './lobby/wsConnect.front.js';
 import type { Menu } from './web-elements/navigation/basemenu.js';
 import { createLink } from './web-elements/navigation/buttons-helpers.js';
-import type { NavigationLinks } from './web-elements/navigation/links.js';
+import { NavigationLinks } from './web-elements/navigation/links.js';
 import { currentDictionary } from './web-elements/forms/language.js';
 import type { LocalPongSettings, RemotePongSettings } from './web-elements/forms/pong-settings.js';
 import { createPrivacy } from './web-elements/users/privacy.js';
@@ -35,7 +35,7 @@ const layoutPerPage: { [key: string]: string } = {
 	profile: 'page-w-header',
 	auth: 'full-screen',
 	settings: 'page-w-header',
-	privacy: 'privacy',
+	privacy: 'page-w-header',
 };
 
 const requireAuth: { [key: string]: boolean } = {
@@ -71,11 +71,19 @@ function toggleHeader(page: string) {
 		document.body.header?.classList.remove('hidden');
 		document.body.header?.removeAttribute('hidden');
 	}
+	const grpd = document.body.footer?.children;
+	if (!grpd) return;
+	for (const el of grpd) {
+		if (el instanceof NavigationLinks) {
+			el.info.title = currentDictionary.buttons.privacy;
+			el.render();
+		}
+	}
 }
 
 async function prepareLayout(curLayout: Layout | undefined, page: string): Promise<userStatusInfo | null> {
 	if (!layoutPerPage[page]) {
-		return redirectOnError('/404', `Redirected: Requested page (${page}) is undefined`), null;
+		return redirectOnError('/404', `Requested page (${page}) is undefined`), null;
 	}
 	if (!curLayout) return redirectOnError('/404', 'Failed to load DOM'), null;
 
@@ -97,7 +105,7 @@ export async function renderNotFound() {
 	const goHome = createLink(goHomeData, false) as NavigationLinks;
 	const noResult = createNoResult('dark', 'i2xl');
 	noResult.setErrorMessage(currentDictionary.error.page404);
-	console.log("PAGE404", currentDictionary.error.page404);
+	console.log('PAGE404', currentDictionary.error.page404);
 	document.body.layoutInstance!.appendAndCache(noResult, goHome);
 	goHome.classList.remove('w-full');
 	goHome.classList.add('w-1/4', 'place-self-center');
@@ -136,7 +144,7 @@ export async function renderAuth() {
 export async function renderLeaderboard() {
 	if (!(await prepareLayout(document.body.layoutInstance, 'leaderboard'))) return;
 
-	const url = `https://${origin}:8443/api/bff/leaderboard`;
+	const url = `https://${API_URL}:8443/api/bff/leaderboard`;
 
 	try {
 		const rawRes = await fetch(url, { credentials: 'include' });
@@ -157,10 +165,9 @@ export async function renderSelf() {
 	const status = await prepareLayout(document.body.layoutInstance, 'profile');
 	if (!status) return;
 
-	const url = `https://${origin}:8443/api/bff/profile/${status.username}`;
+	const url = `https://${API_URL}:8443/api/bff/profile/${status.username}`;
 	try {
 		const raw = await fetch(url, { credentials: 'include' });
-		console.log(`raw.status: ${raw.status} | raw.ok: ${raw.ok}`);
 		if (!raw.ok) {
 			if (raw.status === 404) return redirectOnError('/404', currentDictionary.error.no_user);
 			else throw await exceptionFromResponse(raw);
@@ -177,11 +184,10 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
 	if (!(await prepareLayout(document.body.layoutInstance, 'profile'))) return;
 	if (!param || !param.params.login || typeof param.params.login !== 'string') return redirectOnError('/404', currentDictionary.error.no_user);
 	const login = param.params.login;
-	const url = `https://${origin}:8443/api/bff/profile/${login}`;
+	const url = `https://${API_URL}:8443/api/bff/profile/${login}`;
 
 	try {
 		const raw = await fetch(url, { credentials: 'include' });
-		console.log(`raw.status: ${raw.status} | raw.ok: ${raw.ok}`);
 		if (!raw.ok) {
 			if (raw.status === 404) return redirectOnError('/404', currentDictionary.error.no_user);
 			else throw await exceptionFromResponse(raw);
@@ -198,7 +204,7 @@ export async function renderSettings() {
 	const status = await prepareLayout(document.body.layoutInstance, 'settings');
 	if (!status) return;
 
-	const url = `https://${origin}:8443/api/bff/tiny-profile/${status.username}`;
+	const url = `https://${API_URL}:8443/api/bff/tiny-profile/${status.username}`;
 	try {
 		const raw = await fetch(url, { credentials: 'include' });
 		if (!raw.ok) {
@@ -244,6 +250,7 @@ export async function renderQuickLocalLobby() {
 	form.classList.remove('h-full');
 	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
 	wsConnect('create', 'quickmatch', 'localForm', undefined, undefined, undefined, form);
+	updatePageTitle('Local lobby');
 }
 
 export async function renderQuickRemoteLobby(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[]) {
@@ -254,14 +261,15 @@ export async function renderQuickRemoteLobby(param?: Match<Partial<Record<string
 	form.format = 'quickmatch';
 	form.formInstance = 'remoteForm';
 	document.body.layoutInstance?.appendAndCache(form);
-
+	form.classList.remove('h-full');
+	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
 	if (action === 'invitee') form.displayUpdatedGuests(whiteListUsernames!);
 	if (action === undefined) {
 		action = 'create';
 		form.owner = status.username!;
 	}
-
 	wsConnect(action!, 'quickmatch', 'remoteForm', undefined, undefined, undefined, form);
+	updatePageTitle('Remote lobby');
 }
 
 export async function renderTournamentLobby(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[]) {
@@ -275,13 +283,13 @@ export async function renderTournamentLobby(param?: Match<Partial<Record<string,
 	form.formInstance = 'remoteForm';
 	form.classList.remove('h-full');
 	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
-
 	if (action === 'invitee') form.displayUpdatedGuests(whiteListUsernames!);
 	if (action === undefined) {
 		action = 'create';
 		form.owner = status.username!;
 	}
 	wsConnect(action!, 'tournament', 'remoteForm', undefined, undefined, undefined, form);
+	updatePageTitle('Tournament lobby');
 }
 export async function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[], lobbyWS?: WebSocket) {
 	const status = await prepareLayout(document.body.layoutInstance, 'game');
@@ -302,25 +310,20 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 	if (layout) layout.theme = background[1];
 	document.body.layoutInstance?.appendAndCache(ui, court);
 	pong(gameRequest!, court, ui);
+	updatePageTitle('Game!');
 }
 
 function getGameBackground(background?: string): [pongTheme, ImgData[]] {
 	if (background === 'farm') return [farm, farmAssets];
 	if (background === 'ocean') return [ocean, oceanAssets];
-	// if (background === "Enchanted Forest")
-	//     return [] //TODO
 	return [defaultTheme, []];
 }
 
 export async function renderPrivacy() {
-	// [FIX] Await prepareLayout to ensure DOM is ready and authorized
 	if (!(await prepareLayout(document.body.layoutInstance, 'privacy'))) return;
 
 	try {
-		const wrapper = createWrapper('privacy');
-		// createHeading('2', 'Your privacy')
-		wrapper.append(createPrivacy());
-		document.body.layoutInstance!.appendAndCache(wrapper);
+		document.body.layoutInstance!.appendAndCache(createPrivacy());
 	} catch (error) {
 		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
 	}

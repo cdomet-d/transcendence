@@ -1,4 +1,3 @@
-import { defaultAvatar } from '../default-values.js';
 import { createUserMasonery } from '../navigation/tabs-helpers.js';
 import { createMatchHistory } from '../statistics/matches.js';
 import type { ImgData, MatchOutcome, Size, TabData, UserData } from '../types-interfaces.js';
@@ -9,7 +8,7 @@ export function setAvatar(
 	el: UserProfile | UserCardSocial | UserInline,
 	av?: ImgData | null,
 ) {
-	if (!av) av = defaultAvatar;
+	if (!av) av ={ alt: 'A pink pixel art little blob', id: 'user-avatar', size: 'ixl', src: '/public/assets/images/pink-avatar.png' };
 	const avatar = { ...av };
 	avatar.size = size;
 	el.avatar = avatar;
@@ -26,6 +25,8 @@ export function setUserProfileCommonValues(
 	el.status = user.status;
 	el.username = user.username;
 	el.winstreak = user.winstreak;
+	if (user.totalWins) el.totalWins = user.totalWins;
+	if (user.totalLosses) el.totalLosses = user.totalLosses;
 	setAvatar(size, el, user.avatar);
 }
 

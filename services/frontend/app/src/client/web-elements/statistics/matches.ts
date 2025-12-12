@@ -165,15 +165,7 @@ export class MatchHistory extends HTMLDivElement {
 
 	render() {
 		this.id = 'match-history';
-		this.classList.add(
-			'grid',
-			'matches',
-			'grid-flow-rows',
-			'gap-xs',
-			'pad-s',
-			'h-full',
-			'w-full',
-		);
+		this.classList.add('grid', 'matches', 'grid-flow-rows', 'gap-xs', 'pad-s', 'h-full', 'w-full');
 	}
 }
 

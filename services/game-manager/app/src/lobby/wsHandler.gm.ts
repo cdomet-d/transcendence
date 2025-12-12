@@ -75,7 +75,6 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 						gameType: formInstance === 'remoteForm' ? '1 vs 1' : 'tournament'
 					};
 					addNotifToDB(this, notif);
-					// console.log('inviteeID: ', inviteeID);
 					addUserToWhitelist(invitePayload.invitee, lobbyID!);
 					natsPublish(this, 'post.notif', JSON.stringify(notif));
 				} else if (invitePayload.action === 'decline') {

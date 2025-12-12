@@ -2,7 +2,7 @@ import cron from 'node-cron';
 import type { FastifyInstance } from 'fastify';
 import { AnonymizeUser, AnonymizeAccount, deleteAllFriendship } from './bffUserProfile.service.js';
 
-const TWO_YEARS_MS = 2 * 365 * 24 * 60 * 60 * 1000;
+const TWO_YEARS_MS = 2 * 365 * 24 * 60;
 
 export function startRetentionPolicyJob(serv: FastifyInstance) {
 	cron.schedule('0 3 * * *', async () => {

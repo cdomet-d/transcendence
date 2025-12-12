@@ -9,7 +9,6 @@ import { NotifBox } from '../notifications/notifications-wrapper.js';
 import { router, type userStatusInfo } from '../../main.js';
 import { Searchbar } from '../forms/search.js';
 import { userStatus } from '../../main.js';
-import { origin } from '../../main.js';
 
 /**
  * Custom element for the main page header.
@@ -47,7 +46,7 @@ export class PageHeader extends HTMLElement {
 	}
 
 	async #logoutImplementation() {
-		await fetch(`https://${origin}:8443/api/auth/logout`, { method: 'POST', credentials: 'include' });
+		await fetch(`https://${API_URL}:8443/api/auth/logout`, { method: 'POST', credentials: 'include' });
 		this.#notif.ws?.close();
 		router.loadRoute('/', true);
 	}
@@ -85,13 +84,13 @@ export class PageHeader extends HTMLElement {
 			if (this.contains(this.#login)) this.#login.remove();
 			if (!this.contains(this.#logout)) {
 				this.append(this.#logout);
-				this.#logout.classList.add('h-m', 'w-l');
+				this.#logout.classList.add('h-m');
 			}
 		} else {
 			if (this.contains(this.#logout)) this.#logout.remove();
 			if (!this.contains(this.#login)) {
 				this.append(this.#login);
-				this.#login.classList.add('h-m', 'w-l');
+				this.#login.classList.add('h-m');
 			}
 		}
 		return log;
@@ -114,16 +113,16 @@ export class PageHeader extends HTMLElement {
 		const newLogout = createButton(logOut(), false);
 		newLogout.addEventListener('click', this.#logoutHandler);
 		if (this.contains(this.#logout)) {
-			if (this.#logout.classList.contains('h-m')) newLogout.classList.add('h-m', 'w-l');
 			this.#logout.replaceWith(newLogout);
+			if (this.#logout.classList.contains('h-m')) newLogout.classList.add('h-m');
 		}
 		this.#logout = newLogout;
 
 		const newLogin = createButton(logIn(), false);
 		newLogin.addEventListener('click', this.#loginHandler);
 		if (this.contains(this.#login)) {
-			if (this.#login.classList.contains('h-m')) newLogin.classList.add('h-m', 'w-l');
 			this.#login.replaceWith(newLogin);
+			if (this.#login.classList.contains('h-m')) newLogin.classList.add('h-m');
 		}
 		this.#login = newLogin;
 	}

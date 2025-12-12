@@ -1,11 +1,6 @@
 import { BaseForm } from './baseform';
 import { router } from '../../main';
-import {
-	exceptionFromResponse,
-	createVisualFeedback,
-	errorMessageFromException,
-} from '../../error';
-
+import { exceptionFromResponse, createVisualFeedback, errorMessageFromException } from '../../error';
 import { createForm } from './helpers';
 import { criticalChange } from './default-forms';
 import { Popup } from '../layouts/popup';
@@ -61,9 +56,28 @@ if (!customElements.get('login-form')) {
 export class CriticalActionForm extends BaseForm {
 	#resolve?: (value: string) => void;
 	#reject?: (error: Error) => void;
+	#escapeHandler: (ev: KeyboardEvent) => void;
 
 	constructor() {
 		super();
+		this.#escapeHandler = this.#escapeImplementation.bind(this);
+	}
+
+	override connectedCallback(): void {
+		super.connectedCallback();
+		this.addEventListener('keydown', this.#escapeHandler);
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		this.removeEventListener('keydown', this.#escapeHandler);
+	}
+
+	#escapeImplementation(ev: KeyboardEvent) {
+		if (ev && ev.key === 'Escape') {
+			if (this.parentElement) this.parentElement?.remove();
+			else this.remove();
+		}
 	}
 
 	static show(): Promise<string> {
@@ -85,7 +99,6 @@ export class CriticalActionForm extends BaseForm {
 
 	override async fetchAndRedirect(url: string, req: RequestInit) {
 		try {
-			console.log(url);
 			const response = await fetch(url, req);
 			if (!response.ok) throw await exceptionFromResponse(response);
 			const critical = await response.json();
@@ -97,6 +110,7 @@ export class CriticalActionForm extends BaseForm {
 			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
 			this.#reject?.(error as Error);
 		}
+		window.localStorage.removeItem('criticalChange');
 		document.body.layoutInstance?.components.get('popup')?.remove();
 	}
 }
