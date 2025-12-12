@@ -5,6 +5,7 @@ import { movePaddle, updatePaddlePos } from './paddle.js';
 import { Player } from "../classes/player-class.js";
 import { coordinates } from '../classes/game-interfaces.js';
 import { getBallStartingSpeed } from '../classes/game-settings.js';
+const MAX_TIME: number = 180000; // 3min
 
 const SERVER_TICK: number = 1000 / 60;
 const TIME_STEP: number = 1000 / 60;
@@ -71,7 +72,7 @@ export function endGame(player1: Player, player2: Player, game: Game) {
 	game.ball.dy = 0;
 	game.deleteReq();
 	sendToPlayers(game, player1, player2);
-	if (player1.score === player2.score) {
+	if (player1.score === player2.score && game.lastBall === false) {
 		evenScore(game, player1, player2);
 		return;
 	}
@@ -105,6 +106,7 @@ function sendToPlayers(game: Game, player1: Player, player2: Player) {
 		player2.sendReply(game.ball, player1, game.padSpec.w);
 }
 
+
 async function evenScore(game: Game, player1: Player, player2: Player) {
 	game.cleanTimeoutIDs();
 	game.lastBall = true;
@@ -117,5 +119,6 @@ async function evenScore(game: Game, player1: Player, player2: Player) {
 	game.passStart = performance.now();
 	game.lastTick = performance.now();
 	sendToPlayers(game, player1, player2);
+	game.addTimoutID(setTimeout(endGame, MAX_TIME, player1, player2, game));
 	game.addTimoutID(setTimeout(gameLoop, SERVER_TICK, game, player1, player2));
 }
