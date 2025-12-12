@@ -3,8 +3,8 @@ import { updateUserStats } from './dashboard.service.js'
 import type { GameInput, userStats } from '././dashboard.service.js';
 import { cleanInput } from './sanitizer.js';
 import {
-	anonymizeUserSchema, getUserByNameSchema, getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, searchUsersSchema, updateStatsSchema, getUserIDByUsernameSchema,
-	getUserProfileSchema, getUserStatsSchema, getUsernamesByIdsSchema, createProfileSchema, deleteProfileSchema, updateProfileSchema
+	anonymizeUserSchema, getUserByNameSchema, getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, searchUsersSchema, updateStatsSchema,
+	getUserProfileSchema, getUserStatsSchema, getUsernamesByIdsSchema, createProfileSchema, deleteProfileSchema, updateProfileSchema, getInactiveUsersSchema
 } from './schemas.js';
 
 export interface userData {
@@ -736,8 +736,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO schema ?
-	serv.get('/inactive', async (request, reply) => {
+	serv.get('/inactive', {schema: getInactiveUsersSchema},async (request, reply) => {
 		try {
 			const query = `
 				SELECT userID 
