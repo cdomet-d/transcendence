@@ -1,42 +1,46 @@
-import { tournamentMap } from './tournamentStart.js';
-import type { game, tournament, userInfo } from '../gameManager/gameManager.interface.js';
+import { showBrackets, tournamentMap } from './tournamentStart.js';
+import type { game, lobbyInfo, tournament, userInfo } from '../gameManager/gameManager.interface.js';
 import { startGame } from '../quickmatch/createGame.js';
 import { gameOver } from '../quickmatch/gameOver.js';
 import { tournamentOver } from './tournamentOver.js';
 import type { FastifyInstance } from 'fastify';
+import { findLobbyIDFromUserID, lobbyMap } from '../lobby/lobby.gm.js';
 
-const nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }> = new Map();
+// const nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }> = new Map();
 
 export async function tournamentState(serv: FastifyInstance, game: game) {
-	const tournamentObj = tournamentMap.get(game.tournamentID!);
+	const tournamentObj: tournament | undefined = tournamentMap.get(game.tournamentID!);
 	if (!tournamentObj) {
 		console.log(`${tournamentObj}`)
 		console.log('Error: Could not make tournamentObj!');
 		return;
 	}
+	const lobby: lobbyInfo | undefined = lobbyMap.get(tournamentObj.lobbyID);
+	if (lobby === undefined) return;
 
+	serv.log.error("IN TOURNAMENT STATE");
 	const index = tournamentObj.bracket.findIndex((obj) => obj.gameID === game.gameID);
 	if (index === -1) {
 		console.log('Error: game not found in tournament bracket!');
 		return;
 	}
 
-	gameOver(game);
-
-	const nextGame = getNextGameInBracket(tournamentObj, game);
-	if (nextGame === undefined) {
+	tournamentObj.nextGame = getNextGameInBracket(tournamentObj, game);
+	if (tournamentObj.nextGame === undefined) {
+		serv.log.error("IN ENDGAME")
 		tournamentObj.winnerID = game.winnerID;
+		gameOver(game, serv, true, tournamentObj, undefined);
 		tournamentOver(tournamentObj);
 		return;
 	}
 
 	// set up nextGame
-	const nextGameID = nextGame.gameID;
+	const nextGameID = tournamentObj.nextGame.gameID;
 
-	let nextPlayers = nextPlayersMap.get(nextGameID);
+	let nextPlayers = tournamentObj.nextPlayersMap.get(nextGameID);
 	if (!nextPlayers) {
 		nextPlayers = {};
-		nextPlayersMap.set(nextGameID, nextPlayers);
+		tournamentObj.nextPlayersMap.set(nextGameID, nextPlayers);
 	}
 
 	const username: string = getUsernameFromID(game.winnerID, game);
@@ -46,11 +50,15 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 		nextPlayers.player2 = { userID: game.winnerID, username: username };
 	}
 
+	if (!nextPlayers.player1 || !nextPlayers.player2)
+		gameOver(game, serv, false, tournamentObj, undefined);
+
 	if (nextPlayers.player1 && nextPlayers.player2) {
+		serv.log.error("IN BOTH PLAYERS")
 		tournamentObj.bracket[index] = game; // update local tournamentObj
-		nextGame.users = [nextPlayers.player1, nextPlayers.player2];
-		startGame(serv, nextGame);
-		nextPlayersMap.delete(nextGameID);
+		tournamentObj.nextGame.users = [nextPlayers.player1, nextPlayers.player2];
+		gameOver(game, serv, false, tournamentObj, tournamentObj.nextGame);
+		// tournamentObj.nextPlayersMap.delete(nextGameID);
 	}
 }
 

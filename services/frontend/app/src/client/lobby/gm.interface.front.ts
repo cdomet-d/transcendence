@@ -27,6 +27,7 @@ export interface lobbyRequestForm {
 export interface gameRequestForm {
     event: 'GAME_REQUEST';
     payload: {
+        lobbyID: string,
         hostID: string,
         remote: boolean;
         format: 'quickmatch' | 'tournament' | string;

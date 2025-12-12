@@ -12,7 +12,6 @@ import { createNoResult } from '../typography/helpers.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 import { currentDictionary } from './language.js';
 import { userStatus } from '../../main.js';
-import { search } from './default-forms.js';
 
 /**
  * A form allowing user to create a local pong game.
@@ -24,10 +23,11 @@ import { search } from './default-forms.js';
  */
 export class LocalPongSettings extends BaseForm {
 	#backgroundSelector: DropdownMenu;
-	#format: string;
+	_format: string;
 	#formInstance: string;
-	_guestLimit: number; // underscore is a convention in js to say protected
+	_guestLimit: number;
 	#ws: WebSocket | null;
+	#lobbyID: string;
 
 	/* -------------------------------------------------------------------------- */
 	/*                                   Default                                  */
@@ -36,10 +36,11 @@ export class LocalPongSettings extends BaseForm {
 		super();
 		this.#backgroundSelector = createDropdown(backgroundMenu(), currentDictionary.gameCustom.choose_back, 'static');
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
-		this.#format = '';
-		this.#formInstance = '';
+		this._format = "";
+		this.#formInstance = "";
 		this.#ws = null;
 		this._guestLimit = 0;
+		this.#lobbyID = '';
 	}
 
 	/**
@@ -76,9 +77,11 @@ export class LocalPongSettings extends BaseForm {
 	/*                                   Setters                                  */
 	/* -------------------------------------------------------------------------- */
 	set format(format: string) {
-		this.#format = format;
-		if (format === 'tournament') this._guestLimit = 4;
-		else this._guestLimit = 2;
+		this._format = format;
+		if (format === 'tournament')
+			this._guestLimit = 4;
+		else
+			this._guestLimit = 2;
 	}
 
 	set formInstance(formInstance: string) {
@@ -87,6 +90,10 @@ export class LocalPongSettings extends BaseForm {
 
 	set socket(ws: WebSocket) {
 		if (this.#ws === null) this.#ws = ws;
+	}
+
+	set lobbyID(l: string) {
+		this.#lobbyID = l;
 	}
 
 	/* -------------------------------------------------------------------------- */
@@ -105,7 +112,7 @@ export class LocalPongSettings extends BaseForm {
 		req.body = await this.createReqBody(f);
 		// await this.fetchAndRedirect(this.details.action, req);
 
-		wsConnect('game', this.#format, this.#formInstance, '', req.body);
+		wsConnect('game', this._format, this.#formInstance, this.#lobbyID, req.body);
 	}
 }
 
@@ -145,6 +152,7 @@ export class RemotePongSettings extends LocalPongSettings {
 	override async connectedCallback() {
 		super.connectedCallback();
 		this.#searchbar.addEventListener('click', this.#inviteHandler, { capture: true });
+		super.contentMap.get('submit')?.setAttribute('disabled', "");
 		const status = await userStatus();
 		if (!status.auth) return redirectOnError('/auth', 'You must be registered to see this page');
 		const user = await this.fetchGuests(status.username!);
@@ -169,8 +177,18 @@ export class RemotePongSettings extends LocalPongSettings {
 		this.classList.add('sidebar-left');
 	}
 
-	startGame() {
+	enableStartButton() {
 		super.contentMap.get('submit')?.removeAttribute('disabled');
+	}
+
+	disableStartButton() {
+		super.contentMap.get('submit')?.setAttribute('disabled', "");
+	}
+
+	disableSearchBar() {
+		this.#searchbar.remove()
+		this.#guestWrapper.classList.remove('row-start-4', 'row-span-2');
+		this.#guestWrapper.classList.add('row-start-3', 'row-span-3');
 	}
 
 	set owner(o: string) {
@@ -195,13 +213,15 @@ export class RemotePongSettings extends LocalPongSettings {
 		if (target.tagName === 'A') {
 			ev.preventDefault();
 			ev.stopImmediatePropagation();
-			// TODO: keep lobby owner from adding themselves to the lobby;
-			//  && target.title !== this.#owner
+			if (target.title === this.#owner) {
+				createVisualFeedback("You can't invite yourself");
+				return;
+			}
 			if (this.#guests.size < this._guestLimit) {
 				try {
 					const user = await this.fetchGuests(target.title);
 					if (user) this.#guests.set(user.username, user);
-					wsConnect('invite', '', this.details.id, '', '', { userID: user!.id, username: user!.username }); //TODO: check user exists?
+					wsConnect('invite', this._format, '', '', '', {userID: user!.id, username: user!.username});
 					this.#displayGuests();
 				} catch (error) {
 					console.log(error);
@@ -212,6 +232,10 @@ export class RemotePongSettings extends LocalPongSettings {
 				else createVisualFeedback(currentDictionary.error.too_many_players);
 			}
 		}
+	}
+
+	override validate() {
+		this.checkValidity()
 	}
 
 	/* ---------------------------- guest management ---------------------------- */

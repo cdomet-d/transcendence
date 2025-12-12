@@ -7,32 +7,29 @@ import { processGameRequest } from "../gameManager/gameManager.js";
 import { handleDeclineAction, handleInviteAction, handleJoinAction } from "./wsInvites.gm.js";
 import { verifyUserIDMatch } from "./wsUtils.gm.js";
 
-function handleLobbyRequest(lobbyPayload: lobbyRequestForm, authenticatedUserID: string, authenticatedUsername: string, socket: WebSocket, formInstance: string, req: FastifyRequest): void {
+function handleLobbyRequest(lobbyPayload: lobbyRequestForm, authenticatedUserID: string, authenticatedUsername: string, socket: WebSocket, req: FastifyRequest): void {
     if (!verifyUserIDMatch(lobbyPayload.userID, authenticatedUserID, req, socket)) {
         return;
     }
 
     if (lobbyPayload.action === 'create') {
-        const existingLobbyID = findLobbyIDFromUserID(authenticatedUserID);
-        if (existingLobbyID !== null) {
-            removeUserFromLobby(authenticatedUserID, existingLobbyID);
-        }
-
+        let existingLobbyID: string | undefined = findLobbyIDFromUserID(authenticatedUserID);
+        if (existingLobbyID !== undefined)
+            removeUserFromLobby(authenticatedUserID, existingLobbyID, 0);
         const newLobby: lobbyInfo = createLobby(
-            { userID: authenticatedUserID, username: authenticatedUsername, userSocket: socket },
+            {userID: authenticatedUserID, username: authenticatedUsername, userSocket: socket }, 
             lobbyPayload.format!
         );
 
-        wsSend(socket, JSON.stringify({
-            lobby: 'created',
-            lobbyID: newLobby.lobbyID,
-            formInstance: formInstance
-        }));
+        wsSend(socket, JSON.stringify({ 
+            lobby: 'created', 
+            lobbyID: newLobby.lobbyID 
+        }))
     }
 }
 
 function handleGameRequest(fastify: FastifyInstance, gamePayload: lobbyInfo, authenticatedUserID: string, socket: WebSocket, req: FastifyRequest): void {
-    const lobbyID = findLobbyIDFromUserID(authenticatedUserID);
+    const lobbyID = gamePayload.lobbyID;
     if (lobbyID === null) {
         wsSend(socket, JSON.stringify({ error: 'user not in lobby' }));
         return;
@@ -56,16 +53,16 @@ function handleGameRequest(fastify: FastifyInstance, gamePayload: lobbyInfo, aut
     }
 }
 
-function handleLobbyInvite(fastify: FastifyInstance, invitePayload: lobbyInviteForm, authenticatedUserID: string, authenticatedUsername: string, formInstance: string, socket: WebSocket, req: FastifyRequest): void {
+function handleLobbyInvite(fastify: FastifyInstance, invitePayload: lobbyInviteForm, authenticatedUserID: string, authenticatedUsername: string, socket: WebSocket, req: FastifyRequest): void {
     switch (invitePayload.action) {
         case 'invite':
-            handleInviteAction(fastify, invitePayload, authenticatedUserID, formInstance, socket, req);
+            handleInviteAction(fastify, invitePayload, authenticatedUserID, socket, req);
             break;
         case 'decline':
             handleDeclineAction(fastify, invitePayload, authenticatedUserID, socket, req);
             break;
         case 'join':
-            handleJoinAction(invitePayload, authenticatedUserID, authenticatedUsername, formInstance, socket, req, fastify);
+            handleJoinAction(invitePayload, authenticatedUserID, authenticatedUsername, socket, req, fastify);
             break;
     }
 }

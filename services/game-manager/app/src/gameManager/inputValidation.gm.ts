@@ -1,5 +1,5 @@
 import { Ajv } from 'ajv';
-import type { FastifyRequest } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
 import { wsSend } from '../lobby/wsHandler.gm.js';
 
@@ -50,6 +50,7 @@ const lobbyInvitePayloadSchema = {
 const gameRequestPayloadSchema = {
 	type: 'object',
 	properties: {
+		lobbyID: {type: 'string' },
 		hostID: {type: 'string'},
 		userList: {
 			type: 'array',
@@ -78,7 +79,7 @@ const gameRequestPayloadSchema = {
 			},
 		}
 	},
-	required: ['hostID', 'remote', 'format', 'nbPlayers', 'gameSettings'],
+	required: ['lobbyID', 'hostID', 'remote', 'format', 'nbPlayers', 'gameSettings'],
 };
 
 const pingPongPaylodSchema = {
@@ -89,40 +90,50 @@ const pingPongPaylodSchema = {
 	required: ['notif'],
 }
 
+const inviteeSignalPaylodSchema = {
+	type: 'object',
+	properties: {
+		signal: { type: 'string' },
+	},
+	required: ['signal'],
+}
+
 const validateBaseMessage = ajv.compile(baseMessageSchema);
 const validateLobbyRequestPayload = ajv.compile(lobbyRequestPayloadSchema);
 const validateLobbyInvitePayload = ajv.compile(lobbyInvitePayloadSchema);
 const validateGameRequestPayload = ajv.compile(gameRequestPayloadSchema);
 const validatePingPongNotif = ajv.compile(pingPongPaylodSchema);
+const validateInviteeSignal = ajv.compile(inviteeSignalPaylodSchema);
 
 const validators = {
 	LOBBY_REQUEST: validateLobbyRequestPayload,
 	GAME_REQUEST: validateGameRequestPayload,
 	LOBBY_INVITE: validateLobbyInvitePayload,
-	NOTIF: validatePingPongNotif
+	NOTIF: validatePingPongNotif,
+	SIGNAL: validateInviteeSignal,
 };
 
-export function validateData(data: any, req: FastifyRequest, socket: WebSocket): boolean {
+export function validateData(data: any, serv: FastifyInstance, socket: WebSocket): boolean {
 	if (!validateBaseMessage(data)) {
-		req.server.log.error(`Invalid message structure: ${ajv.errorsText(validateBaseMessage.errors)}`);
+		serv.log.error(`Invalid message structure: ${ajv.errorsText(validateBaseMessage.errors)}`);
 		wsSend(socket, JSON.stringify({ error: 'Invalid message format' }));
 		return false;
 	}
 	return true;
 }
 
-export function validatePayload(data: any, payload: any, req: FastifyRequest, socket: WebSocket): boolean {
+export function validatePayload(data: any, payload: any, serv: FastifyInstance, socket: WebSocket): boolean {
 	type EventType = keyof typeof validators;
 	const event = data.event;
 		if (typeof event === 'string' && event in validators) {
 			const validate = validators[event as EventType];
 			if (!validate(payload)) {
-			req.server.log.error(`Invalid payload for event ${event}: ${ajv.errorsText(validate.errors)}`);
+			serv.log.error(`Invalid payload for event ${event}: ${ajv.errorsText(validate.errors)}`);
 			wsSend(socket, JSON.stringify({ error: 'Invalid message payload' }));
 			return false;
 		}
 	} else {
-		req.server.log.error(`Unknown or missing event type: ${event}`);
+		serv.log.error(`Unknown or missing event type: ${event}`);
 		wsSend(socket, JSON.stringify({ error: 'Unknown event type' }));
 		return false;
 	}

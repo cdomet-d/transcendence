@@ -446,6 +446,12 @@
 		cursor: pointer;
 	}
 
+	.dead-link {
+		pointer-events: none;
+		cursor: default;
+		text-decoration: none;
+	}
+
 	button:active {
 		transform: scale(1);
 	}
