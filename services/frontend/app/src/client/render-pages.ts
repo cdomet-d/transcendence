@@ -278,7 +278,7 @@ export async function renderTournamentLobby(param?: Match<Partial<Record<string,
 	const status = await prepareLayout(document.body.layoutInstance, 'tournamentLobby');
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 
-	const form: RemotePongSettings = createForm('remote-pong-settings', pongTournament(currentDictionary));
+	const form: RemotePongSettings = createForm('remote-pong-settings', pongTournament());
 	document.body.layoutInstance?.appendAndCache(form);
 	form.owner = status.username!;
 	form.format = 'tournament';
