@@ -112,11 +112,7 @@ export class UserSettingsForm extends BaseForm {
 							'Espanol': 'Espanol',
 						};
 						const newLangCode = langMap[bodyObj.language] || bodyObj.language;
-
-						console.log("Updating language to:", newLangCode);
-
 						await setLanguage(newLangCode);
-						console.log("DICO: ", JSON.stringify(currentDictionary));
 					}
 				} catch (e) {
 					console.error("Failed to parse request body for language update", e);

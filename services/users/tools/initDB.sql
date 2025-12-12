@@ -1,6 +1,6 @@
 CREATE TABLE userProfile (
   ID INTEGER PRIMARY KEY NOT NULL UNIQUE,
-  userID TEXT,
+  userID TEXT UNIQUE,
   username TEXT,
   avatar TEXT,
   biography TEXT,
@@ -13,8 +13,8 @@ CREATE TABLE userProfile (
 );
 
 CREATE TABLE userStats (
-  ID INTEGER PRIMARY KEY NOT NULL,
-  userID TEXT,
+  ID INTEGER PRIMARY KEY NOT NULL UNIQUE,
+  userID TEXT UNIQUE,
   longestMatch INTEGER,
   shortestMatch INTEGER,
   totalMatch INTEGER,
