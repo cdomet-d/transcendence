@@ -11,8 +11,8 @@
 -- INSERT INTO userProfile (userID, username, avatar, biography, profileColor, status, lastConnection, userRole, since, lang) VALUES (3, 'Coralie', 'avatar1.png', 'biography of Coralie', 'green', 2, '2025-09-04 13:00:00', 1, '2025-09-04 13:00:00', 'en');
 -- INSERT INTO userProfile (userID, username, avatar, biography, profileColor, status, lastConnection, userRole, since, lang) VALUES (4, 'Charlotte', 'avatar1.png', 'biography of Charlotte', 'purple', 2, '2025-09-04 13:00:00', 1, '2025-09-04 13:00:00', 'en');
 -- INSERT INTO userProfile (userID, username, avatar, biography, profileColor, status, lastConnection, userRole, since, lang) VALUES (5, 'Sam', 'avatar1.png', 'biography of Sam', 'red', 2, '2025-09-04 13:00:00', 1, '2025-09-04 13:00:00', 'en');
--- INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins, winStreak, averageMatchDuration, longuestPass) VALUES (1, 120, 30, 10, 6, 0, 60, 200);
--- INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins, winStreak, averageMatchDuration, longuestPass) VALUES (2, 120, 30, 10, 6, 18, 60, 200);
--- INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins, winStreak, averageMatchDuration, longuestPass) VALUES (3, 120, 30, 10, 6, 0, 60, 200);
--- INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins, winStreak, averageMatchDuration, longuestPass) VALUES (4, 120, 30, 10, 6, 3, 60, 200);
--- INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins, winStreak, averageMatchDuration, longuestPass) VALUES (5, 120, 30, 10, 6, 6, 60, 200);
+-- INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins, winstreak, averageMatchDuration, longuestPass) VALUES (1, 120, 30, 10, 6, 0, 60, 200);
+-- INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins, winstreak, averageMatchDuration, longuestPass) VALUES (2, 120, 30, 10, 6, 18, 60, 200);
+-- INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins, winstreak, averageMatchDuration, longuestPass) VALUES (3, 120, 30, 10, 6, 0, 60, 200);
+-- INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins, winstreak, averageMatchDuration, longuestPass) VALUES (4, 120, 30, 10, 6, 3, 60, 200);
+-- INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins, winstreak, averageMatchDuration, longuestPass) VALUES (5, 120, 30, 10, 6, 6, 60, 200);

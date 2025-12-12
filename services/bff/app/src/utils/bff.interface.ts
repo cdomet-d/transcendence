@@ -38,7 +38,7 @@ export interface userStats {
 	shortestMatch: number;
 	totalMatch: number;
 	totalWins: number;
-	winStreak: number;
+	winstreak: number;
 	averageMatchDuration: number;
 	longuestPass: number;
     [key: string]: number | string;
@@ -55,7 +55,7 @@ export interface ProfileDataBatch {
 	avatar: string;
 	biography: string;
 	profileColor: string;
-	winStreak: number;
+	winstreak: number;
 }
 
 export interface ProfileDataBatchResponse {

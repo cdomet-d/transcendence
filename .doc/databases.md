@@ -194,7 +194,7 @@ This table has the following column :
 * shortestMatch &rarr; integer
 * totalMatch &rarr; integer
 * totalWins &rarr; integer
-* winStreak &rarr; integer
+* winstreak &rarr; integer
 * averageMatchDuration &rarr; integer
 * longuestPass &rarr; integer
 

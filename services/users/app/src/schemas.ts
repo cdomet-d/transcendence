@@ -19,7 +19,7 @@ const userProfileObject = {
 		lang: { type: 'string' },
 		profileColor: { type: 'string' },
 		status: { type: 'boolean' },
-		winStreak: { type: ['number'] },
+		winstreak: { type: ['number'] },
 		since: { type: 'string' }
 	},
 	additionalProperties: true
