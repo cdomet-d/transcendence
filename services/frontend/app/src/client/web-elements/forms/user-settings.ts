@@ -54,12 +54,12 @@ export class UserSettingsForm extends BaseForm {
 
 	override connectedCallback(): void {
 		super.connectedCallback();
-		this.contentMap.get('upload')?.addEventListener('input', this.#previewAvatar);
+		this.contentMap.get('upload')?.addEventListener('validation', this.#previewAvatar);
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		this.contentMap.get('upload')?.removeEventListener('input', this.#previewAvatar);
+		this.contentMap.get('upload')?.removeEventListener('validation', this.#previewAvatar);
 	}
 
 	override async createReqBody(form: FormData): Promise<string> {
@@ -83,8 +83,11 @@ export class UserSettingsForm extends BaseForm {
 				};
 			}
 			const rawRes = await fetch(url, req);
-			if (!rawRes.ok) throw await exceptionFromResponse(rawRes);
-
+			if (!rawRes.ok) {
+				window.localStorage.removeItem('criticalChange');
+				throw await exceptionFromResponse(rawRes);
+			}
+			window.localStorage.removeItem('criticalChange');
 			if (req.body && typeof req.body === 'string') {
 				try {
 					const bodyObj = JSON.parse(req.body);
@@ -127,8 +130,7 @@ export class UserSettingsForm extends BaseForm {
 		if (f.get('upload') && this.#user) {
 			const file = f.get('upload');
 			if (!file || !(file instanceof File)) throw new Error('Error processing avatar');
-			if (file.size > MAX_FILE)
-				return createVisualFeedback(currentDictionary.error.file_heavy);
+			if (file.size > MAX_FILE) return createVisualFeedback(currentDictionary.error.file_heavy);
 			if (file.name !== '') {
 				try {
 					const binaryAvatar = await this.#fileToBinary(file);
@@ -213,7 +215,7 @@ export class UserSettingsForm extends BaseForm {
 		if (ev.target instanceof HTMLInputElement) {
 			target = ev.target as HTMLInputElement;
 		}
-		if (!target) return;
+		if (!target || !target.checkValidity()) return;
 		const file = target.files;
 		if (!file) return;
 		try {
@@ -223,7 +225,6 @@ export class UserSettingsForm extends BaseForm {
 				this.#avatar.metadata = this.#user.avatar;
 			}
 		} catch (error) {
-			//TODO: better error handling;
 			console.error(error);
 		}
 	}
