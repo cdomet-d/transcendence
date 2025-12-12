@@ -68,7 +68,6 @@ export class UserSettingsForm extends BaseForm {
 			await CriticalActionForm.show();
 		}
 		const jsonBody = JSON.stringify(fObject);
-		console.log(jsonBody);
 		return jsonBody;
 	}
 
