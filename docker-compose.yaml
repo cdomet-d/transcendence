@@ -116,11 +116,9 @@ services:
             dockerfile: Dockerfile
         container_name: game-manager
         image: gamemanager:0.0.1
+        env_file: ./services/game-manager/game-manager.env
         environment:
             - PORT=2121
-            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-            - NGINXIP=nginx
-            - JWT_SECRET=${JWT_SECRET}
         networks:
             - transcendence
         restart: unless-stopped

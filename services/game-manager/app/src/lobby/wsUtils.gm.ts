@@ -5,7 +5,7 @@ import type { JWTPayload } from './lobby.interface.js';
 import { wsSend } from './wsHandler.gm.js';
 
 export function validateOrigin(origin: string | undefined, req: FastifyRequest, socket: WebSocket): boolean {
-    const allowedOrigins = ['https://localhost:8443'];
+    const allowedOrigins = [`https://${process.env.HOST}:8443`];
     
     if (origin && !allowedOrigins.includes(origin)) {
         req.server.log.warn(`Rejected WS connection from invalid origin: ${origin}`);
