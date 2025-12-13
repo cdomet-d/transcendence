@@ -1,10 +1,7 @@
-import type { userInfo, lobbyInfo, whitelist, tournament, game } from '../gameManager/gameManager.interface.js';
+import type { userInfo, lobbyInfo, whitelist } from '../gameManager/gameManager.interface.js';
 import type { WebSocket } from '@fastify/websocket';
 import { wsSend } from './wsHandler.gm.js';
-import { tournamentMap } from '../tournament/tournamentStart.js';
-import { gameOver } from '../quickmatch/gameOver.js';
 import type { FastifyInstance } from 'fastify';
-import { tournamentState } from '../tournament/tournamentRoutine.js';
 export const wsClientsMap: Map<string, WebSocket> = new Map();
 export const lobbyMap: Map<string | undefined, lobbyInfo> = new Map();
 
@@ -104,25 +101,6 @@ export function removeUserFromLobby(userID: string, lobbyID: string, code: numbe
 		lobbyMap.delete(lobbyID);
 		return;
 	}
-	if (lobby.start === true && lobby.tournamentID !== "-1") {
-		const tournamentObj: tournament | undefined = tournamentMap.get(lobby.tournamentID);
-		if (tournamentObj === undefined) return;
-		if (tournamentObj.bracket[2]!.users.length === 0) {
-			let game: game | undefined = findGameInBracketByUserId(tournamentObj.bracket, userID);
-			if (game === undefined) return;
-			game.loserID = userID;
-			game.winnerID = game.users[0]!.userID === userID ? game.users[1]!.userID! : game.users[0]!.userID!
-			game.score = [0, -1];
-			tournamentState(serv, game);
-		}
-		else {
-			let game: game = tournamentObj.bracket[2]!;
-			game.loserID = userID;
-			game.winnerID = game.users[0]!.userID === userID ? game.users[1]!.userID! : game.users[0]!.userID!
-			game.score = [0, -1];
-			gameOver(game, serv, true, tournamentObj, undefined);
-		}
-	}
 	lobby.userList.delete(userID);
 	lobby.whitelist!.userIDs.delete(userID);
 	sendUpdatedWhiteList(lobbyID);
@@ -138,10 +116,4 @@ export function findLobbyIDFromUserID(userID: string, socket: WebSocket): string
 		}
 	}
 	return lobbyID;
-}
-
-function findGameInBracketByUserId(bracket: game[], userID: string): game | undefined {
-  return bracket.find((g) =>
-    g.users.some((u) => u.userID === userID)
-  );
 }

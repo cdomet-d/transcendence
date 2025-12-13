@@ -10,7 +10,7 @@ const usernameParams = {
 	type: 'object',
 	required: ['username'],
 	properties: {
-		username: { type: 'string' },
+		username: { type: 'string', minLength: 4, maxLength: 18, pattern: '^[a-zA-Z0-9_-]+$' },
 	},
 };
 

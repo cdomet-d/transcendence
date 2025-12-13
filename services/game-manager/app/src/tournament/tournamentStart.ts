@@ -16,18 +16,10 @@ export function startTournament(serv: FastifyInstance, tournamentObj: tournament
 
 function startFirstRound(serv: FastifyInstance, tournament: tournament, lobby: lobbyInfo) {
 	if (tournament.bracket && Array.isArray(tournament.bracket)) {
-		if (areGameUsersStillInLobby(tournament.bracket[0]!, lobby))
-			startGame(serv, tournament.bracket[0]!);
-		if (areGameUsersStillInLobby(tournament.bracket[1]!, lobby))
-			startGame(serv, tournament.bracket[1]!);
+		startGame(serv, tournament.bracket[0]!);
+		startGame(serv, tournament.bracket[1]!);
 	}
 }
-
-function areGameUsersStillInLobby(game: game, lobby: lobbyInfo): boolean {
-  const gameUserIds = game.users.map(user => user.userID!);
-  return gameUserIds.every(userID => lobby.userList.has(userID));
-}
-
 
 async function postTournamentToDashboard(tournament: tournament) {
 	const url = `http://dashboard:1515/tournament`;
