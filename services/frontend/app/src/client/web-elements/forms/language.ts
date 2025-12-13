@@ -117,6 +117,8 @@ export const defaultDictionary: Dictionary = {
 		deleted_lobby: "The lobby you are trying to join does not exist anymore!",
 		broke_lobby: "Your lobby is malfunctionning! Please create a new one!",
 		nbplayers_lobby: "You do not have enough players in your lobby to start playing!",
+		already_in_lobby: "You are already in a lobby!",
+		ws_closed: "You got disconnected",
 		account_deleted: "Account permanently deleted",
 		bad_request: "Bad Request",
 		unauthorized: "Unauthorized",

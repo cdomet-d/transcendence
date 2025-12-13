@@ -44,7 +44,7 @@ export function lineIntersection(p1: coordinates, p2: coordinates, p3: coordinat
 	return t;
 }
 
-const maxAngleDeg: number = 45;
+const maxAngleDeg: number = 40;
 const maxAngle: number = maxAngleDeg * Math.PI / 180; 
 export function updateVelocity(game: Game, paddle: coordinates, nx: number) {
 	let pos: number = 0;

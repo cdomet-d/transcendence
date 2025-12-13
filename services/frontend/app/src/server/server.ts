@@ -9,6 +9,7 @@ import type { WebSocket } from '@fastify/websocket';
 import { initNatsConnection, natsSubscription } from './notifications/nats-subscriber.js';
 import type { NatsConnection } from 'nats';
 import { Users } from './notifications/users-class.js';
+import fastifyJwt from '@fastify/jwt';
 
 (async () => {
 	try {
@@ -91,9 +92,6 @@ async function addPlugins(serv: FastifyInstance) {
             options: {},
         })
         .register(servRoutes)
-        .register(
-            cookie /*, {
-					secret: "", //TODO: add secret ?
-				}*/,
-		);
+        .register(cookie)
+        .register(fastifyJwt, { secret: process.env.JWT_SECRET! });
 }

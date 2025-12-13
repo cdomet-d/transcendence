@@ -196,7 +196,7 @@ export class NotifBox extends HTMLDivElement {
 		if (!status.auth) redirectOnError('/auth', currentDictionary.error.redirection);
 		const url = `https://${API_URL}:8443/api/lobby/notification/${status.userID!}`;
 		try {
-			const rawRes = await fetch(url);
+			const rawRes = await fetch(url, { credentials: 'include' });
 			if (!rawRes.ok) {
 				if (rawRes.status === 400)
 					return redirectOnError('/auth', currentDictionary.error.redirection);
@@ -216,7 +216,7 @@ export class NotifBox extends HTMLDivElement {
 		const userStatusInfo: userStatusInfo = await userStatus();
 		if (userStatusInfo.auth === false || userStatusInfo.userID === undefined) return;
 		const userID: string = userStatusInfo.userID;
-		const ws = new WebSocket(`wss://${API_URL}:8443/notification/${userID}`);
+		const ws = new WebSocket(`wss://${API_URL}:8443/notification`);
 
 		ws.onerror = () => {
 			ws.close(1011, 'websocket error');

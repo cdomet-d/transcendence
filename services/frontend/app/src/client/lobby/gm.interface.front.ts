@@ -4,12 +4,29 @@ export interface lobbyInviteForm {
     event: 'LOBBY_INVITE',
     payload: {
         action: string,
-        format?: string,
+        format: string,
         invitee: {userID: string, username?: string},
-        lobbyID?: string,
-        hostID?: string,
+        hostID: string,
     },
-    formInstance?: string
+}
+
+export interface lobbyJoinForm {
+    event: 'LOBBY_JOIN',
+    payload: {
+        action: string,
+        format: string,
+        invitee: {userID: string, username?: string},
+        lobbyID: string,
+    },
+}
+
+export interface lobbyDeclineForm {
+    event: 'LOBBY_DECLINE',
+    payload: {
+        action: string,
+        invitee: {userID: string, username?: string},
+        lobbyID: string,
+    },
 }
 
 export interface lobbyRequestForm {
@@ -21,7 +38,6 @@ export interface lobbyRequestForm {
         username: string,
         lobbyID?: string
     },
-    formInstance?: string
 }
 
 export interface gameRequestForm {

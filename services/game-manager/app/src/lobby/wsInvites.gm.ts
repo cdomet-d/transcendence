@@ -1,12 +1,12 @@
 import type { FastifyInstance, FastifyRequest } from "fastify";
-import type { gameNotif, lobbyInviteForm } from "./lobby.interface.js";
+import type { gameNotif, lobbyDeclineForm, lobbyInviteForm, lobbyJoinForm } from "./lobby.interface.js";
 import { informHostToStart, wsSend } from "./wsHandler.gm.js";
 import { addUserToLobby, addUserToWhitelist, findLobbyIDFromUserID, getWhiteListUsernames, lobbyMap, removeUserFromLobby, removeUserFromWhitelist } from "./lobby.gm.js";
 import { addNotifToDB, removeNotifFromDB } from "../inviteNotifs/invite-notifs.js";
 import { natsPublish } from "../nats/publisher.gm.js";
 
 function handleInviteAction(fastify: FastifyInstance, invitePayload: lobbyInviteForm, authenticatedUserID: string, socket: WebSocket, req: FastifyRequest): void {
-    const lobbyID = findLobbyIDFromUserID(authenticatedUserID);
+    const lobbyID = findLobbyIDFromUserID(authenticatedUserID, socket);
     if (lobbyID === null) {
         wsSend(socket, JSON.stringify({ error: 'user not in lobby' }));
         return;
@@ -23,9 +23,15 @@ function handleInviteAction(fastify: FastifyInstance, invitePayload: lobbyInvite
         wsSend(socket, JSON.stringify({ error: 'not lobby host' }));
         return;
     }
-
+    
     if (!invitePayload.invitee?.userID) {
         wsSend(socket, JSON.stringify({ error: 'invalid invitee' }));
+        return;
+    }
+
+    if (invitePayload.invitee.userID === authenticatedUserID) {
+        req.server.log.warn(`Host ${authenticatedUserID} tried to invite themselves`);
+        wsSend(socket, JSON.stringify({ error: 'cannot invite yourself' }));
         return;
     }
 
@@ -49,7 +55,7 @@ function handleInviteAction(fastify: FastifyInstance, invitePayload: lobbyInvite
     natsPublish(fastify, 'post.notif', JSON.stringify(notif));
 }
 
-function handleDeclineAction(fastify: FastifyInstance, invitePayload: lobbyInviteForm, authenticatedUserID: string, socket: WebSocket, req: FastifyRequest): void {
+function handleDeclineAction(fastify: FastifyInstance, invitePayload: lobbyDeclineForm, authenticatedUserID: string, socket: WebSocket, req: FastifyRequest): void {
     const inviteeID = invitePayload.invitee.userID!;
     if (inviteeID !== authenticatedUserID) {
         req.server.log.warn(`User ${authenticatedUserID} tried to decline invite for ${inviteeID}`);
@@ -58,11 +64,11 @@ function handleDeclineAction(fastify: FastifyInstance, invitePayload: lobbyInvit
     }
     removeNotifFromDB(fastify, invitePayload.lobbyID!, inviteeID);
     removeUserFromWhitelist(inviteeID, invitePayload.lobbyID!);
-    if (findLobbyIDFromUserID(inviteeID) === null)
+    if (findLobbyIDFromUserID(inviteeID, socket) === null)
         socket.close();
 }
 
-function handleJoinAction(invitePayload: lobbyInviteForm, authenticatedUserID: string, authenticatedUsername: string, socket: WebSocket, req: FastifyRequest, fastify: FastifyInstance): void {
+function handleJoinAction(invitePayload: lobbyJoinForm, authenticatedUserID: string, authenticatedUsername: string, socket: WebSocket, req: FastifyRequest, fastify: FastifyInstance): void {
     if (invitePayload.invitee.userID !== authenticatedUserID) {
         req.server.log.warn(`User ${authenticatedUserID} tried to join as ${invitePayload.invitee.userID}`);
         wsSend(socket, JSON.stringify({ error: 'Unauthorized' }));
@@ -72,12 +78,12 @@ function handleJoinAction(invitePayload: lobbyInviteForm, authenticatedUserID: s
     if (!lobbyMap.has(invitePayload.lobbyID!)) {
         wsSend(socket, JSON.stringify({ error: 'lobby does not exist' }));
         removeNotifFromDB(fastify, invitePayload.lobbyID!, invitePayload.invitee.userID);
-        if (findLobbyIDFromUserID(invitePayload.invitee.userID) === null)
+        if (findLobbyIDFromUserID(invitePayload.invitee.userID, socket) === null)
             socket.close();
     }
-    let oldLobby: string | undefined = findLobbyIDFromUserID(authenticatedUserID);
+    let oldLobby: string | undefined = findLobbyIDFromUserID(authenticatedUserID, socket);
     if (oldLobby !== undefined && oldLobby !== invitePayload.lobbyID!)
-        removeUserFromLobby(authenticatedUserID, oldLobby, 0);
+        removeUserFromLobby(authenticatedUserID, oldLobby, 0, fastify);
     removeNotifFromDB(fastify, invitePayload.lobbyID!, authenticatedUserID);
     addUserToLobby(authenticatedUserID!, authenticatedUsername, socket, invitePayload.lobbyID!);
     const whiteListUsernames: string[] = getWhiteListUsernames(invitePayload.lobbyID!)

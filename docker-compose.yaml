@@ -174,6 +174,7 @@ services:
             - transcendence
         restart: unless-stopped
         environment:
+            - JWT_SECRET=${JWT_SECRET}
             - NGINXIP=nginx
             - HOST=${HOST}
             - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}

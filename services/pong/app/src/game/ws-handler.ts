@@ -29,7 +29,7 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 		return;
 	}
 
-	getPlayerInGame(game, ids.userID, socket);//TODO: what if second player never manages to connect ? add timer?
+	getPlayerInGame(game, ids.userID, socket);
 
 	socket.onerror = (event) => {
 		this.log.error(event.message);
@@ -51,7 +51,6 @@ export async function wsHandler(this: FastifyInstance, socket: WebSocket, req: F
 			if (event.code !== 4001)
 				game.deletePlayers();
 			this.gameRegistry.deleteGame(game.gameID);
-			// natsSubscription(this); //TODO: only for testing
 		}
 	}
 }
