@@ -22,6 +22,9 @@ import { NavigationLinks } from './web-elements/navigation/links.js';
 import { currentDictionary } from './web-elements/forms/language.js';
 import type { LocalPongSettings, RemotePongSettings } from './web-elements/forms/pong-settings.js';
 import { createPrivacy } from './web-elements/users/privacy.js';
+import { AriaLiveAnnouncer } from 'aria-announcer-js';
+
+export const announcer = new AriaLiveAnnouncer({politeness: 'polite'});
 
 const layoutPerPage: { [key: string]: string } = {
 	bracket: 'full-screen',
@@ -110,12 +113,14 @@ export async function renderNotFound() {
 	goHome.classList.remove('w-full');
 	goHome.classList.add('w-1/4', 'place-self-center');
 	updatePageTitle('Not Found');
+	announcer.announce('Loaded page: not found', 'polite')
 }
 
 export async function renderHome() {
 	if (!(await prepareLayout(document.body.layoutInstance, 'home'))) return;
 	document.body.layoutInstance!.appendAndCache(createHeading('0', 'PONG!'), createMenu(main(), 'vertical', true));
 	updatePageTitle('Home');
+	announcer.announce('Loaded page: Home', 'polite')
 }
 
 export async function renderAuth() {
@@ -139,6 +144,7 @@ export async function renderAuth() {
 	wrapper.append(createTabs(authOptions));
 	document.body.layoutInstance!.appendAndCache(wrapper);
 	updatePageTitle('Login | Register');
+	announcer.announce('Loaded page: Authentication', 'polite')
 }
 
 export async function renderLeaderboard() {
@@ -159,6 +165,7 @@ export async function renderLeaderboard() {
 	}
 
 	updatePageTitle('Leaderboard');
+	announcer.announce('Loaded page: Leaderboard', 'polite')
 }
 
 export async function renderSelf() {
@@ -174,6 +181,7 @@ export async function renderSelf() {
 		}
 		buildUserProfile(raw);
 		updatePageTitle(status.username!);
+		announcer.announce(`Loaded page: ${status.username} profile page`, 'polite')
 	} catch (error) {
 		console.error(errorMessageFromException(error));
 		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
@@ -194,6 +202,7 @@ export async function renderProfile(param?: Match<Partial<Record<string, string 
 		}
 		buildUserProfile(raw);
 		updatePageTitle(login);
+		announcer.announce(`Loaded page: ${login} profile page`, 'polite')
 	} catch (error) {
 		console.error(errorMessageFromException(error));
 		redirectOnError(router.stepBefore, errorMessageFromException(error));
@@ -215,6 +224,7 @@ export async function renderSettings() {
 		const user = userDataFromAPIRes(data);
 		document.body.layoutInstance?.appendAndCache(createForm('settings-form', userSettingsForm(user), user));
 		updatePageTitle(status.username + 'Settings');
+		announcer.announce(`Loaded page: settings for ${status.username}`, 'polite')
 	} catch (error) {
 		console.error(errorMessageFromException(error));
 		redirectOnError(router.stepBefore, errorMessageFromException(error));
@@ -234,6 +244,7 @@ export async function renderLobbyMenu() {
 		el.classList.add('f-l');
 	});
 	updatePageTitle('Choose Lobby');
+	announcer.announce(`Loaded page: Menu lobby`, 'polite')
 }
 
 //TODO: for each lobby: set 'owner' with currently registered user to avoid owner
@@ -249,7 +260,8 @@ export async function renderQuickLocalLobby() {
 	form.classList.remove('h-full');
 	form.classList.add('content-h', 'bg', 'brdr', 'pad-s');
 	wsConnect('create', 'quickmatch', 'localForm', undefined, undefined, undefined, form);
-	updatePageTitle('Local lobby');
+	updatePageTitle('Local lobby settings');
+	announcer.announce(`Loaded page: Local lobby settings`, 'polite')
 }
 
 export async function renderQuickRemoteLobby(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[]) {
@@ -272,13 +284,14 @@ export async function renderQuickRemoteLobby(param?: Match<Partial<Record<string
 	}
 	wsConnect(action!, 'quickmatch', 'remoteForm', undefined, undefined, undefined, form);
 	updatePageTitle('Remote lobby');
+	announcer.announce(`Loaded page: Remote lobby settings`, 'polite')
 }
 
 export async function renderTournamentLobby(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[]) {
 	const status = await prepareLayout(document.body.layoutInstance, 'tournamentLobby');
 	if (!status) return JSON.stringify({ event: 'BAD_USER_TOKEN' });
 
-	const form: RemotePongSettings = createForm('remote-pong-settings', pongTournament(currentDictionary));
+	const form: RemotePongSettings = createForm('remote-pong-settings', pongTournament());
 	document.body.layoutInstance?.appendAndCache(form);
 	form.owner = status.username!;
 	form.format = 'tournament';
@@ -296,6 +309,7 @@ export async function renderTournamentLobby(param?: Match<Partial<Record<string,
 	}
 	wsConnect(action!, 'tournament', 'remoteForm', undefined, undefined, undefined, form);
 	updatePageTitle('Tournament lobby');
+	announcer.announce(`Loaded page: Tournament lobby settings`, 'polite')
 }
 export async function renderGame(param?: Match<Partial<Record<string, string | string[]>>>, gameRequest?: gameRequest, action?: string, whiteListUsernames?: string[], lobbyWS?: WebSocket) {
 	const status = await prepareLayout(document.body.layoutInstance, 'game');
@@ -317,6 +331,7 @@ export async function renderGame(param?: Match<Partial<Record<string, string | s
 	document.body.layoutInstance?.appendAndCache(ui, court);
 	pong(gameRequest!, court, ui);
 	updatePageTitle('Game!');
+	announcer.announce(`Loaded page: Pong game`, 'polite')
 }
 
 function getGameBackground(background?: string): [pongTheme, ImgData[]] {
@@ -329,10 +344,12 @@ export async function renderPrivacy() {
 	if (!(await prepareLayout(document.body.layoutInstance, 'privacy'))) return;
 
 	try {
-		document.body.layoutInstance!.appendAndCache(createPrivacy());
+		const privacy = createPrivacy();
+		privacy.tabIndex = 1;
+		document.body.layoutInstance!.appendAndCache(privacy);
 	} catch (error) {
 		redirectOnError(router.stepBefore, 'Error: ' + errorMessageFromException(error));
 	}
-
 	updatePageTitle('Privacy');
+	announcer.announce(`Loaded page: Privacy policy page`, 'polite')
 }

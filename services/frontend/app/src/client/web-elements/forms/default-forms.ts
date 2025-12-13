@@ -346,7 +346,7 @@ export function deleteAccount(): FormDetails {
 	return {
 		action: `https://${API_URL}:8443/api/bff/account`,
 		heading: '',
-		ariaLabel: 'Account deletion request',
+		ariaLabel: '',
 		id: 'account-deletion-request',
 		method: 'delete',
 		fields: [],
@@ -365,7 +365,7 @@ export function downloadData(): FormDetails {
 	return {
 		action: `https://${API_URL}:8443/api/bff/data`,
 		heading: '',
-		ariaLabel: 'Download personal data request',
+		ariaLabel: '',
 		id: 'download-data-request',
 		method: 'get',
 		fields: [],
@@ -400,20 +400,20 @@ export function criticalChange(): FormDetails {
 	}
 };
 
-export function privacyButton(): FormDetails {
-	return {
-		action: '/privacy',
-		heading: '',
-		ariaLabel: 'Privacy Policy',
-		id: 'privacy-button-form',
-		method: 'get',
-		fields: [],
-		button: {
-			id: 'submit',
-			type: 'submit',
-			content: currentDictionary.buttons.privacy,
-			img: null,
-			ariaLabel: 'Go to privacy policy',
-		},
-	};
-}
+// export function privacyButton(): FormDetails {
+// 	return {
+// 		action: '/privacy',
+// 		heading: '',
+// 		ariaLabel: 'Privacy Policy',
+// 		id: 'privacy-button-form',
+// 		method: 'get',
+// 		fields: [],
+// 		button: {
+// 			id: 'submit',
+// 			type: 'submit',
+// 			content: currentDictionary.buttons.privacy,
+// 			img: null,
+// 			ariaLabel: 'Go to privacy policy',
+// 		},
+// 	};
+// }

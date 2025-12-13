@@ -22,6 +22,7 @@
 		"@tailwindcss/cli": "^4.1.13",
 		"@tailwindcss/postcss": "^4.1.13",
 		"@types/ws": "^8.18.1",
+		"aria-announcer-js": "^1.0.28",
 		"esbuild-plugin-tailwindcss": "^2.1.0",
 		"fastify": "^5.5.0",
 		"file-type-checker": "^1.1.6",

@@ -51,8 +51,3 @@ async function make() {
 }
 
 make().catch(() => process.exit(1));
-
-// "copy:assets": "mkdir -p dist/client/ && cp -r src/client/assets dist/client && npm run copy:html",
-// "build:css": "postcss ./src/client/css/tailwind.css -o ./dist/client/css/output.css",
-// "build": "node build.js && npm run build:css && npm run copy:assets"
-// && npm run build:css && npm run copy:assets
