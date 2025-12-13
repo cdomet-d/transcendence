@@ -12,7 +12,6 @@ import { createNoResult } from '../typography/helpers.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 import { currentDictionary } from './language.js';
 import { userStatus } from '../../main.js';
-import { search } from './default-forms.js';
 
 /**
  * A form allowing user to create a local pong game.
@@ -28,6 +27,7 @@ export class LocalPongSettings extends BaseForm {
 	#formInstance: string;
 	_guestLimit: number;
 	#ws: WebSocket | null;
+	#lobbyID: string;
 
 	/* -------------------------------------------------------------------------- */
 	/*                                   Default                                  */
@@ -40,6 +40,7 @@ export class LocalPongSettings extends BaseForm {
 		this.#formInstance = "";
 		this.#ws = null;
 		this._guestLimit = 0;
+		this.#lobbyID = '';
 	}
 
 	/**
@@ -91,6 +92,10 @@ export class LocalPongSettings extends BaseForm {
 		if (this.#ws === null) this.#ws = ws;
 	}
 
+	set lobbyID(l: string) {
+		this.#lobbyID = l;
+	}
+
 	/* -------------------------------------------------------------------------- */
 	/*                               Event listeners                              */
 	/* -------------------------------------------------------------------------- */
@@ -107,7 +112,7 @@ export class LocalPongSettings extends BaseForm {
 		req.body = await this.createReqBody(f);
 		// await this.fetchAndRedirect(this.details.action, req);
 
-		wsConnect('game', this._format, this.#formInstance, '', req.body);
+		wsConnect('game', this._format, this.#formInstance, this.#lobbyID, req.body);
 	}
 }
 
@@ -209,7 +214,7 @@ export class RemotePongSettings extends LocalPongSettings {
 			ev.preventDefault();
 			ev.stopImmediatePropagation();
 			if (target.title === this.#owner) {
-				createVisualFeedback("You can't invite yourself");
+				createVisualFeedback(currentDictionary.error.invite_yourself);
 				return;
 			}
 			if (this.#guests.size < this._guestLimit) {
@@ -222,7 +227,6 @@ export class RemotePongSettings extends LocalPongSettings {
 					console.log(error);
 				}
 			} else {
-				console.log('too many guests');
 				if (target.title === this.#owner) createVisualFeedback(currentDictionary.error.invite_yourself);
 				else createVisualFeedback(currentDictionary.error.too_many_players);
 			}

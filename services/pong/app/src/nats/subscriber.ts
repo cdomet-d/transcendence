@@ -16,7 +16,6 @@ export async function natsSubscription(serv: FastifyInstance) {
 	const sc = StringCodec();
 
 	const sub = serv.nc.subscribe('game.request');
-	// console.log(`Listening for messages on "game.request"...`);
 
 	(async () => {
 		for await (const msg of sub) {
@@ -24,7 +23,6 @@ export async function natsSubscription(serv: FastifyInstance) {
 			console.log("game id", gameInfo.gameID)
 			console.log("remote", gameInfo.remote)
 
-			// serv.log.info(`Received message: ${JSON.stringify(_gameInfo)}`);
 			serv.gameRegistry.addGame(new Game(gameInfo, serv.nc, serv.log));
 
 			if (msg.reply) {
@@ -39,30 +37,4 @@ export async function natsSubscription(serv: FastifyInstance) {
 		}
 	})();
 
-	// serv.gameRegistry.addGame(new Game(gameobj, serv.nc, serv.log)); //TODO: for testing
 };
-
-// import type { user } from '../classes/game-interfaces.js';
-// const player1: user = {
-// 	userID: 1,
-// 	username: "cha",
-// }
-
-// const player2: user = {
-// 	userID: 2,
-// 	username: "sweet",
-// }
-
-// const gameobj: gameInfo = {
-// 	lobbyID: 1,
-// 	gameID: "1",
-// 	tournamentID: "99",
-// 	remote: false,
-// 	users: [player1, player2],
-// 	score: [0, 0],
-// 	winnerID: 0,
-// 	loserID: 0,
-// 	duration: 0,
-// 	longuestPass: 0,
-// 	startTime: ""
-// }

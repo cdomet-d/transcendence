@@ -29,7 +29,7 @@ function handleLobbyRequest(lobbyPayload: lobbyRequestForm, authenticatedUserID:
 }
 
 function handleGameRequest(fastify: FastifyInstance, gamePayload: lobbyInfo, authenticatedUserID: string, socket: WebSocket, req: FastifyRequest): void {
-    const lobbyID = findLobbyIDFromUserID(authenticatedUserID);
+    const lobbyID = gamePayload.lobbyID;
     if (lobbyID === null) {
         wsSend(socket, JSON.stringify({ error: 'user not in lobby' }));
         return;

@@ -3,10 +3,9 @@ import { updateUserStats } from './dashboard.service.js'
 import type { GameInput, userStats } from '././dashboard.service.js';
 import { cleanInput } from './sanitizer.js';
 import {
-	anonymizeUserSchema, getUserByNameSchema, getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, searchUsersSchema, updateStatsSchema, getUserIDByUsernameSchema,
-	getUserProfileSchema, getUserStatsSchema, getUsernamesByIdsSchema, createProfileSchema, deleteProfileSchema, updateProfileSchema
+	anonymizeUserSchema, getUserByNameSchema, getLeaderboardSchema, getProfilesByIdsSchema, getUserByUsernameBodySchema, searchUsersSchema, updateStatsSchema,
+	getUserProfileSchema, getUserStatsSchema, getUsernamesByIdsSchema, createProfileSchema, deleteProfileSchema, updateProfileSchema, getInactiveUsersSchema
 } from './schemas.js';
-import { profile } from 'console';
 
 export interface userData {
 	avatar: string | null | undefined,
@@ -16,7 +15,7 @@ export interface userData {
 	profileColor: string,
 	status: boolean,
 	username: string,
-	winStreak: string,
+	winstreak: string,
 	since: string,
 	totalWins: string;
 	totalLosses: string
@@ -63,7 +62,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			const query = `
 			SELECT
 				p.*,
-				s.winStreak,
+				s.winstreak,
 				s.totalLosses,
 				s.totalWins
 			FROM userProfile p
@@ -125,14 +124,14 @@ export async function userRoutes(serv: FastifyInstance) {
 					p.status,
 					p.userRole,
 					p.username,
-					s.winStreak,
+					s.winstreak,
 					p.since
 				FROM 
 					userProfile p
 				JOIN 
 					userStats s ON p.userID = s.userID
 				ORDER BY 
-					s.winStreak DESC
+					s.winstreak DESC
 				LIMIT 50;
 			`;
 
@@ -185,7 +184,7 @@ export async function userRoutes(serv: FastifyInstance) {
 			const sql = `
 				SELECT 
 					p.*,
-					s.winStreak as winstreak
+					s.winstreak as winstreak
 				FROM 
 					userProfile p
 				LEFT JOIN 
@@ -450,7 +449,7 @@ export async function userRoutes(serv: FastifyInstance) {
 
 			const queryStats = `
 				INSERT INTO userStats (userID, longestMatch, shortestMatch, totalMatch, totalWins, totalLosses,
-				winStreak, averageMatchDuration, longuestPass)
+				winstreak, averageMatchDuration, longuestPass)
 				VALUES (?, 0, 0, 0, 0, 0, 0, 0, 0)
 			`;
 
@@ -737,8 +736,7 @@ export async function userRoutes(serv: FastifyInstance) {
 		}
 	});
 
-	//TODO schema ?
-	serv.get('/inactive', async (request, reply) => {
+	serv.get('/inactive', {schema: getInactiveUsersSchema},async (request, reply) => {
 		try {
 			const query = `
 				SELECT userID 

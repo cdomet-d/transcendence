@@ -10,6 +10,18 @@ secrets:
         file: ${TSECRETS}/cert.pem
 
 services:
+    nats-server:
+        build:
+            context: ./services/nats-server
+            dockerfile: Dockerfile
+        container_name: nats-server
+        image: nats:0.0.1
+        environment:
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+        networks:
+            - transcendence
+        restart: unless-stopped
+
     accessibility:
         build:
             context: ./services/accessibility
@@ -24,6 +36,7 @@ services:
         volumes:
             - ./services/accessibility/app:/usr/app
             - ./services/accessibility/data:/usr/data
+
     auth:
         build:
             context: ./services/auth
@@ -41,6 +54,9 @@ services:
         volumes:
             - ./services/auth/app:/usr/app
             - ./services/auth/data:/usr/data
+        depends_on:
+            - nats-server
+
     dashboard:
         build:
             context: ./services/dashboards
@@ -57,6 +73,7 @@ services:
         volumes:
             - ./services/dashboards/app:/usr/app
             - ./services/dashboards/data:/usr/data
+
     friends:
         build:
             context: ./services/friends
@@ -73,18 +90,7 @@ services:
         volumes:
             - ./services/friends/app:/usr/app
             - ./services/friends/data:/usr/data
-    frontend:
-        build:
-            context: ./services/frontend
-            dockerfile: Dockerfile
-        container_name: frontend
-        image: frontend:0.0.1
-        networks:
-            - transcendence
-        restart: unless-stopped
-        env_file: ./services/frontend/frontend.env
-        volumes:
-            - ./services/frontend/app:/app
+
     bff:
         build:
             context: ./services/bff
@@ -101,62 +107,25 @@ services:
             - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
         volumes:
             - ./services/bff/app:/usr/app
+        depends_on:
+            - nats-server
+
     game-manager:
         build:
             context: ./services/game-manager
             dockerfile: Dockerfile
         container_name: game-manager
         image: gamemanager:0.0.1
+        env_file: ./services/game-manager/game-manager.env
         environment:
             - PORT=2121
-            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-            - NGINXIP=nginx
-            - JWT_SECRET=${JWT_SECRET}
         networks:
             - transcendence
         restart: unless-stopped
         volumes:
             - ./services/game-manager/app:/usr/app
             - ./services/game-manager/data:/usr/data
-    monitoring:
-        build:
-            context: ./services/monitoring
-            dockerfile: Dockerfile
-        container_name: monitoring
-        image: monitoring:0.0.1
-        networks:
-            - transcendence
-        restart: unless-stopped
-        environment:
-            - NGINXIP=nginx
-        volumes:
-            - ./services/monitoring/app:/usr/app
-    nats-server:
-        build:
-            context: ./services/nats-server
-            dockerfile: Dockerfile
-        container_name: nats-server
-        image: nats:0.0.1
-        environment:
-            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-        networks:
-            - transcendence
-        restart: unless-stopped
-    nginx:
-        build:
-            context: ./services/nginx/
-            dockerfile: Dockerfile
-        container_name: nginx
-        env_file: ./services/nginx/nginx.env
-        image: nginx:0.0.1
-        networks:
-            - transcendence
-        ports:
-            - '8443:443'
-        restart: unless-stopped
-        secrets:
-            - cert.pem
-            - key.pem
+
     pong:
         build:
             context: ./services/pong
@@ -172,6 +141,9 @@ services:
         restart: unless-stopped
         volumes:
             - ./services/pong/app:/usr/app
+        depends_on:
+            - nats-server
+
     users:
         build:
             context: ./services/users
@@ -189,41 +161,48 @@ services:
             - ./services/users/app:/usr/app
             - ./services/users/data:/usr/data
 
-#TODO: these aren't used unless I forgot how volumes work
-volumes:
-    friendsDB:
-        driver: local
-        driver_opts:
-            device: services/friends/data
-            o: bind
-            type: none
-    accessibilityDB:
-        driver: local
-        driver_opts:
-            device: services/accessibility/data
-            o: bind
-            type: none
-    accountDB:
-        driver: local
-        driver_opts:
-            device: services/account/data
-            o: bind
-            type: none
-    usersDB:
-        driver: local
-        driver_opts:
-            device: services/users/data
-            o: bind
-            type: none
-    statsDB:
-        driver: local
-        driver_opts:
-            device: services/dashboards/data
-            o: bind
-            type: none
-    gameManagerDB:
-        driver: local
-        driver_opts:
-            device: services/game-manager/data
-            o: bind
-            type: none
+    frontend:
+        build:
+            context: ./services/frontend
+            dockerfile: Dockerfile
+        container_name: frontend
+        image: frontend:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        env_file: ./services/frontend/frontend.env
+        # environment:
+        #     - NGINXIP=nginx
+        #     - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+        #     - HOST="localhost"
+        volumes:
+            - ./services/frontend/app:/app
+        depends_on:
+            - nats-server
+            - bff
+
+    nginx:
+        build:
+            context: ./services/nginx/
+            dockerfile: Dockerfile
+        container_name: nginx
+        env_file: ./services/nginx/nginx.env
+        image: nginx:0.0.1
+        networks:
+            - transcendence
+        ports:
+            - '8443:443'
+        restart: unless-stopped
+        secrets:
+            - cert.pem
+            - key.pem
+        depends_on:
+            - accessibility
+            - auth
+            - dashboard
+            - friends
+            - bff
+            - game-manager
+            - pong
+            - users
+            - frontend

@@ -3,6 +3,8 @@ import { Game, HEIGHT, WIDTH } from './classes/game-class.js';
 import type { repObj } from './classes/game-interfaces.js';
 import { movePaddle, updatePaddlePos } from './paddle.js';
 import { deadReckoning } from './ball.js';
+import { createVisualFeedback } from '../error.js';
+import { currentDictionary } from '../web-elements/forms/language.js';
 
 const SERVER_TICK: number = 1000 / 60;
 const TIME_STEP: number = 1000 / 60;
@@ -78,6 +80,8 @@ function reconciliation(game: Game, latestReply: repObj, ws: WebSocket): boolean
 	if (game.local) game.rightPad = latestReply.rightPad;
 	game.ball = latestReply.ball;
 	if (latestReply.end === true) {
+		if (latestReply.score[0] !== 5 && latestReply.score[1] !== 5)
+			createVisualFeedback(currentDictionary.error.times_up);
         if (ws.OPEN)
             ws.send('0');
         return true;

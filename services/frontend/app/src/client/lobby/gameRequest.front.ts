@@ -3,7 +3,7 @@ import { userStatus, type userStatusInfo } from "../main";
 import type { PongOptions } from "../web-elements/types-interfaces";
 import type { gameRequestForm } from "./gm.interface.front";
 
-async function createGameRequest(format: string, formInstance: string, gameSettings: string): Promise<string> {
+async function createGameRequest(format: string, formInstance: string, gameSettings: string, lobbyID: string): Promise<string> {
     const customSettings: PongOptions = JSON.parse(gameSettings);
 
 	const host: userStatusInfo = await userStatus();
@@ -15,6 +15,7 @@ async function createGameRequest(format: string, formInstance: string, gameSetti
 	const gameRequestForm: gameRequestForm = {
 		event: 'GAME_REQUEST',
 		payload: {
+			lobbyID: lobbyID,
 			hostID: host.userID!,
 			format: format,
 			remote: formInstance === 'localForm' ? false : true,

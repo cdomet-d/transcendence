@@ -127,6 +127,7 @@ export const defaultDictionary: Dictionary = {
 		login_lobby: "You are not logged in and thus cannot join a lobby!",
 		too_many_players: "You can't invite any more people!",
 		invite_yourself: "You can't invite yourself, dummy",
+		times_up: "Time's up!!"
 	},
 	lobby: {
 		local: 'Local 1v1',
@@ -160,7 +161,6 @@ export async function setLanguage(lang: string): Promise<void> {
 	try {
 		const response = await fetch(`https://${API_URL}:8443/api/bff/dictionary/${lang}`);
 		if (!response.ok) {
-			console.warn(`[LANG] Fetch failed for ${lang}. Status: ${response.status}. Reverting to default.`);
 			currentDictionary = defaultDictionary;
 			currentLanguage = 'English';
 			document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang: 'English' } }));
@@ -173,10 +173,7 @@ export async function setLanguage(lang: string): Promise<void> {
 		currentLanguage = lang;
 		localStorage.setItem('preferred_language', lang);
 		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang } }));
-		console.log(`[LANG] Switched to ${lang}`);
 	} catch (error) {
-		console.error('[LANG] Network error loading language pack:', error);
-
 		currentDictionary = defaultDictionary;
 		currentLanguage = 'English';
 		document.dispatchEvent(new CustomEvent('language-changed', { detail: { lang: 'English' } }));

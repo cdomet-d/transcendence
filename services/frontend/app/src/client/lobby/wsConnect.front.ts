@@ -5,9 +5,9 @@ import type { inviteeObj } from './gm.interface.front.js';
 import { executeAction, wsSend } from './wsAction.front.js';
 import { endGame } from '../web-elements/game/pong-events.js';
 import { looseImage, winImage } from '../web-elements/default-values.js';
-
 import { handleGameStart, handleLobbyEvent } from './wsUtils.front.js';
 import { handleError } from './wsError.front.js';
+import { wsSafeSend } from './wsSend.front.js';
 
 export let wsInstance: WebSocket | null = null;
 
@@ -32,11 +32,10 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	if (form)
 		form.socket = ws;
 	ws.onopen = async () => {
-		console.log('Lobby WebSocket connection established!')
 
 		const interval = setInterval(() => {
 			if (ws.readyState === ws.OPEN) {
-				ws.send(JSON.stringify({ event: "NOTIF", payload: { notif: "ping" } }));
+				wsSafeSend(ws, JSON.stringify({ event: "NOTIF", payload: { notif: "ping" } }));
 			} else clearInterval(interval);
 		}, 30000);
 
@@ -49,13 +48,11 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 	}
 
 	ws.onerror = (err: any) => {
-		console.log('Error:', err);
 		return;
 	};
 
 	ws.onclose = (event) => {
 		wsInstance = null;
-		console.log('Lobby WebSocket connection closed!');
 		if (event.code === 4001) {
 			const currentRoute = window.location.pathname;
 			if (currentRoute.includes("-lobby") || currentRoute === "/game")
@@ -70,23 +67,22 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 			const data = JSON.parse(message.data);
 
 			if (data.error) {
-                handleError(data.error);
-                return;
-            }
+				handleError(data.error);
+				return;
+			}
 
-            if (data.event === 'NOTIF' && data.notif === 'pong') return;
+			if (data.event === 'NOTIF' && data.notif === 'pong') return;
 
-            if (data.lobby) {
-                handleLobbyEvent(data, ws, form);
-                return;
-            }
+			if (data.lobby) {
+				handleLobbyEvent(data, ws, form);
+				return;
+			}
 
-            if (data.opponent && data.gameID && data.gameSettings !== undefined && typeof data.remote === 'boolean') {
-                handleGameStart(data, ws);
-                return;
-            }
+			if (data.opponent && data.gameID && data.gameSettings !== undefined && typeof data.remote === 'boolean') {
+				handleGameStart(data, ws);
+				return;
+			}
 
-			console.log("data:", JSON.stringify(data))
 			if (data === "start") {
 				form?.enableStartButton();
 				return;
@@ -101,7 +97,6 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 					wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
 				else
 					setTimeout(() => {
-						console.log("in end game callback timer")
 						wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
 					}, 5000);
 			}

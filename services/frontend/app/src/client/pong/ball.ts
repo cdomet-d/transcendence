@@ -2,8 +2,6 @@ import { Game, HEIGHT, WIDTH } from './classes/game-class.js';
 import { raycast, updateVelocity } from './collision-utils.js';
 import type { ballObj, coordinates, repObj } from './classes/game-interfaces.js';
 
-const TIME_STEP: number = 1000 / 60; // 60FPS
-
 export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 	let timeSinceUpdate: number = performance.now() - game.lastFrameTime;
 	let ball: ballObj = { ...game.ball };
@@ -14,14 +12,14 @@ export function deadReckoning(game: Game, latestReply: repObj | undefined) {
 	if (timeSinceUpdate > 30) timeSinceUpdate = 30;
 	const nextX: number = ball.x + ball.dx * timeSinceUpdate;
 	const nextY: number = ball.y + ball.dy * timeSinceUpdate;
-	updateBallPos(game, nextX, nextY);
+	updateBallPos(game, nextX, nextY, timeSinceUpdate);
 }
 
-export function updateBallPos(game: Game, nextX: number, nextY: number) {
+export function updateBallPos(game: Game, nextX: number, nextY: number, timeSinceUpdate: number) {
 	if (sideWallCollision(game, nextX)) return false;
 	nextY = upperAndBottomWallCollision(game, nextY);
-	if (paddleCollision(game, game.leftPad, nextX, nextY)) return false;
-	if (paddleCollision(game, game.rightPad, nextX, nextY)) return false;
+	if (paddleCollision(game, game.leftPad, nextX, nextY, timeSinceUpdate)) return false;
+	if (paddleCollision(game, game.rightPad, nextX, nextY, timeSinceUpdate)) return false;
 	game.ball.x = nextX;
 	game.ball.y = nextY;
 }
@@ -54,12 +52,13 @@ export function paddleCollision(
 	paddle: coordinates,
 	nextX: number,
 	nextY: number,
+	timeSinceUpdate: number
 ): boolean {
 	const result: [number, coordinates] | null = raycast(game, paddle, nextX, nextY);
 	if (!result) return false;
 	const [t, n] = result;
-	game.ball.x += game.ball.dx * TIME_STEP * t + 1 * n.x;
-	game.ball.y += game.ball.dy * TIME_STEP * t + 1 * n.y;
+	game.ball.x += game.ball.dx * timeSinceUpdate * t + 1 * n.x;
+	game.ball.y += game.ball.dy * timeSinceUpdate * t + 1 * n.y;
 	updateVelocity(game, paddle, n.x);
 	return true;
 }

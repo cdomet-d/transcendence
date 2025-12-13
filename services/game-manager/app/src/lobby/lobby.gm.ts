@@ -10,7 +10,6 @@ export function createLobby(host: userInfo, format: string) {
 	return lobby;
 }
 
-// add INVITEE in parameter and get all userInfo (invitee) from JWT payload
 function makeLobbyInfo(host: userInfo, format: string): lobbyInfo {
 	const lobbyID = crypto.randomUUID().toString();
 
@@ -21,14 +20,14 @@ function makeLobbyInfo(host: userInfo, format: string): lobbyInfo {
 			lobbyId: lobbyID,
 			hostID: host.userID!,
 			userIDs: new Map<string, userInfo>([
-				[host.userID!, { userID: host.userID!, username: host.username! }], // TODO Make this a vector ? // 1. put invitee ID here on invite
+				[host.userID!, { userID: host.userID!, username: host.username! }],
 			]),
 		},
 		joinable: true,
 		userList: new Map<string, userInfo>([
 			[host.userID!, { userID: host.userID!, username: host.username!, userSocket: host.userSocket! }],
 		]),
-		remote: true, // TODO set to false if local pong before START event //TODO: is it used ?
+		remote: true,
 		format: format,
 		nbPlayers: format === 'quickmatch' ? 2 : 4,
 		start: false,
@@ -40,7 +39,7 @@ export function addUserToWhitelist(user: userInfo, lobbyID: string) {
 	const lobby = lobbyMap.get(lobbyID);
 	if (!lobby) return;
 
-	if (lobby.whitelist?.userIDs.size === 4) return; // send `whitelist full` to front?
+	if (lobby.whitelist?.userIDs.size === 4) return;
 
 	if (lobby.whitelist?.userIDs.has(user.userID!) === false) {
 		lobby.whitelist?.userIDs.set(user.userID!, { userID: user.userID!, username: user.username! });
@@ -75,7 +74,6 @@ export function addUserToLobby(userID: string, username: string, socket: WebSock
 
 
 	if (!lobby.whitelist?.userIDs.has(userID)) {
-		console.log("YOU WERE NOT INVITED TO THIS LOBBY"); // TODO send this message to wsConnect and call createVisualFeedback("message", "false");
 		wsSend(socket, JSON.stringify({ error: 'not invited' }));
 		return;
 	}

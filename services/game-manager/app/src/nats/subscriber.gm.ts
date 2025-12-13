@@ -14,10 +14,10 @@ export async function natsSubscribe(serv: FastifyInstance) {
 			const sc = StringCodec();
 			const game: gameReply = JSON.parse(sc.decode(msg.data));
 
-			console.log('USERS:', game.users);
+			// console.log('USERS:', game.users);
 
 			if (game.users === null || game.users === undefined) {
-				console.log('EMPTY USERS');
+				// console.log('EMPTY USERS');
 				return;
 			}
 
@@ -31,7 +31,7 @@ export async function natsSubscribe(serv: FastifyInstance) {
 		for await (const msg of postgame) {
 			const sc = StringCodec();
 			const game: game = JSON.parse(sc.decode(msg.data));
-			console.log(`GM received following in 'game.over' :\n`, JSON.stringify(game));
+			// console.log(`GM received following in 'game.over' :\n`, JSON.stringify(game));
 
 			if (game.tournamentID !== '-1')
 				tournamentState(serv, game);

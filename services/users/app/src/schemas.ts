@@ -1,5 +1,3 @@
-import { kMaxLength } from "buffer";
-
 const messageResponse = {
 	type: 'object',
 	properties: {
@@ -19,10 +17,30 @@ const userProfileObject = {
 		lang: { type: 'string' },
 		profileColor: { type: 'string' },
 		status: { type: 'boolean' },
-		winStreak: { type: ['number'] },
+		winstreak: { type: ['number'] },
 		since: { type: 'string' }
 	},
 	additionalProperties: true
+};
+
+export const getInactiveUsersSchema = {
+	response: {
+		200: {
+			type: 'object',
+			properties: {
+				userIDs: {
+					type: 'array',
+					items: { type: 'string' }
+				}
+			}
+		},
+		500: {
+			type: 'object',
+			properties: {
+				message: { type: 'string' }
+			}
+		}
+	}
 };
 
 export const getUserProfileSchema = {
@@ -143,35 +161,6 @@ export const getUserByNameSchema = {
 		400: { type: 'object', properties: { success: { type: 'boolean' }, message: { type: 'string' }, code: { type: 'string' } } },
 		401: { type: 'object', properties: { success: { type: 'boolean' }, message: { type: 'string' } } },
 		404: { type: 'object', properties: { success: { type: 'boolean' }, message: { type: 'string' } } }
-	}
-};
-
-export const getUserIDByUsernameSchema = {
-	params: {
-		type: 'object',
-		required: ['username'],
-		properties: {
-			username: { type: 'string' }
-		}
-	},
-	response: {
-		200: {
-			type: 'object',
-			properties: {
-				success: { type: 'boolean' },
-				message: { type: 'string' },
-				response: {
-					type: 'object',
-					properties: {
-						userID: { type: ['string'] },
-						username: { type: 'string' }
-					}
-				}
-			}
-		},
-		404: messageResponse,
-		400: messageResponse,
-		401: messageResponse
 	}
 };
 

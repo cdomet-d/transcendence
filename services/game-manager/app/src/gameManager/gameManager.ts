@@ -3,19 +3,18 @@ import { createGameObj, startGame } from '../quickmatch/createGame.js';
 import { createTournament } from '../tournament/tournamentCreation.js';
 import { startTournament } from '../tournament/tournamentStart.js';
 import type { game, lobbyInfo, tournament } from './gameManager.interface.js';
-import { findLobbyIDFromUserID, lobbyMap } from '../lobby/lobby.gm.js';
-import type { WebSocket } from '@fastify/websocket';
+import { lobbyMap } from '../lobby/lobby.gm.js';
 
 export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo): boolean {
-	const lobbyID: string | undefined = findLobbyIDFromUserID(lobbyInfo.hostID!);
+	const lobbyID: string | undefined = lobbyInfo.lobbyID;
 	if (lobbyID === undefined) {
-		console.log("Error: Lobby not found in processGameRequest");
+		// console.log("Error: Lobby not found in processGameRequest");
 		return false;
 	}
 	if (lobbyInfo.format === 'tournament') {
 		const tournament: tournament | undefined = createTournament(lobbyInfo, lobbyID);
 		if (tournament === undefined) {
-			console.log('Error: Could not create tournament');
+			// console.log('Error: Could not create tournament');
 			return false;
 		}
 		lobbyInfo.joinable = false;
@@ -24,10 +23,11 @@ export function processGameRequest(serv: FastifyInstance, lobbyInfo: lobbyInfo):
 	} else if (lobbyInfo.format === 'quickmatch') {
 		const quickmatch: game | undefined = createGameObj(lobbyInfo, lobbyID);
 		if (quickmatch === undefined) {
-			console.log('Error: Could not create game!');
+			// console.log('Error: Could not create game!');
 			return false;
 		}
 		lobbyInfo.joinable = false;
+		lobbyMap.get(lobbyID)!.start = true;
 		startGame(serv, quickmatch);
 	}
 	return true;

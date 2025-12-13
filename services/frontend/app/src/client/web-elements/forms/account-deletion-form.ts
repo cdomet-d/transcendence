@@ -28,7 +28,7 @@ export class DeleteAccountForm extends BaseForm {
 			await this.fetchAndRedirect(this.details.action, req);
 
 		} catch (error) {
-			console.log('Account deletion flow stopped:', error);
+			createVisualFeedback(currentDictionary.error.something_wrong);
 		}
 	}
 
