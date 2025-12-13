@@ -48,7 +48,7 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
-            - PORT=3939
+            - PORT=${AUTH_PORT}
             - JWT_SECRET=${JWT_SECRET}
             - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
         volumes:
@@ -69,7 +69,7 @@ services:
         environment:
             - JWT_SECRET=${JWT_SECRET}
             - NGINXIP=nginx
-            - PORT=1515
+            - PORT=${DASHBOARD_PORT}
         volumes:
             - ./services/dashboards/app:/usr/app
             - ./services/dashboards/data:/usr/data
@@ -85,7 +85,7 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
-            - PORT=1616
+            - PORT=${FRIENDS_PORT}
             - JWT_SECRET=${JWT_SECRET}
         volumes:
             - ./services/friends/app:/usr/app
@@ -102,7 +102,7 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
-            - PORT=1818
+            - PORT=${BFF_PORT}
             - JWT_SECRET=${JWT_SECRET}
             - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
         volumes:
@@ -116,9 +116,12 @@ services:
             dockerfile: Dockerfile
         container_name: game-manager
         image: gamemanager:0.0.1
-        env_file: ./services/game-manager/game-manager.env
         environment:
-            - PORT=2121
+            - NGINXIP=nginx
+            - PORT=${HOST}
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+            - PORT=${GM_PORT}
+            - JWT_SECRET=${JWT_SECRET}
         networks:
             - transcendence
         restart: unless-stopped
@@ -133,7 +136,7 @@ services:
         container_name: pong
         environment:
             - NGINXIP=nginx
-            - PORT=2020
+            - PORT=${PONG_PORT}
             - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
         image: pong:0.0.1
         networks:
@@ -155,7 +158,7 @@ services:
         restart: unless-stopped
         environment:
             - NGINXIP=nginx
-            - PORT=2626
+            - PORT=${USERS_PORT}
             - JWT_SECRET=${JWT_SECRET}
         volumes:
             - ./services/users/app:/usr/app
@@ -170,11 +173,10 @@ services:
         networks:
             - transcendence
         restart: unless-stopped
-        env_file: ./services/frontend/frontend.env
-        # environment:
-        #     - NGINXIP=nginx
-        #     - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
-        #     - HOST="localhost"
+        environment:
+            - NGINXIP=nginx
+            - HOST=${HOST}
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
         volumes:
             - ./services/frontend/app:/app
         depends_on:
@@ -186,7 +188,8 @@ services:
             context: ./services/nginx/
             dockerfile: Dockerfile
         container_name: nginx
-        env_file: ./services/nginx/nginx.env
+        environment:
+            - PUBLIC_IP=${HOST}
         image: nginx:0.0.1
         networks:
             - transcendence
