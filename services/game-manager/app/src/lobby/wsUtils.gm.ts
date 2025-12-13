@@ -1,6 +1,5 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
-import { wsClientsMap, removeUserFromLobby, findLobbyIDFromUserID } from './lobby.gm.js';
 import type { JWTPayload } from './lobby.interface.js';
 import { wsSend } from './wsHandler.gm.js';
 
