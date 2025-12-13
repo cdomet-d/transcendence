@@ -9,6 +9,13 @@ export class UIFeedback extends HTMLSpanElement {
 		super();
 	}
 
+	#vanish() {
+		console.log(this);
+		setTimeout(() => {
+			this.remove();
+		}, 10000);
+	}
+
 	set content(str: string) {
 		this.innerText = str;
 		this.render();
@@ -19,6 +26,7 @@ export class UIFeedback extends HTMLSpanElement {
 	}
 
 	connectedCallback() {
+		this.#vanish();
 		this.className = 'absolute bottom-0 w-full h-m pad-xs brdr';
 		this.render();
 	}
