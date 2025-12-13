@@ -20,8 +20,8 @@ const lobbyRequestPayloadSchema = {
 		action: { type: 'string' },
 		format: { type: 'string' },
 		userID: { type: 'string' },
-		username: { type: 'string'},
-		lobbyID: { type: 'string' }
+		username: { type: 'string' },
+		lobbyID: { type: 'string' },
 	},
 	required: ['action', 'format', 'userID', 'username'],
 };
@@ -31,16 +31,16 @@ const lobbyInvitePayloadSchema = {
 	properties: {
 		action: { type: 'string' },
 		format: { type: 'string' },
-		invitee: { 
+		invitee: {
 			type: 'object',
 			properties: {
-				userID: { type: 'string'},
-				username: { type: 'string'}
+				userID: { type: 'string' },
+				username: { type: 'string' },
 			},
 			required: ['userID'],
 			additionalProperties: false,
 		},
-		hostID: { type: 'string' }
+		hostID: { type: 'string' },
 	},
 	required: ['action', 'invitee', 'format', 'hostID'],
 };
@@ -50,11 +50,11 @@ const lobbyJoinPayloadSchema = {
 	properties: {
 		action: { type: 'string' },
 		format: { type: 'string' },
-		invitee: { 
+		invitee: {
 			type: 'object',
 			properties: {
-				userID: { type: 'string'},
-				username: { type: 'string'}
+				userID: { type: 'string' },
+				username: { type: 'string' },
 			},
 			required: ['userID', 'username'],
 			additionalProperties: false,
@@ -62,17 +62,17 @@ const lobbyJoinPayloadSchema = {
 		lobbyID: { type: 'string' },
 	},
 	required: ['action', 'invitee', 'format', 'lobbyID'],
-}
+};
 
 const lobbyDeclinePayloadSchema = {
 	type: 'object',
 	properties: {
 		action: { type: 'string' },
-		invitee: { 
+		invitee: {
 			type: 'object',
 			properties: {
-				userID: { type: 'string'},
-				username: { type: 'string'}
+				userID: { type: 'string' },
+				username: { type: 'string' },
 			},
 			required: ['userID'],
 			additionalProperties: false,
@@ -80,28 +80,28 @@ const lobbyDeclinePayloadSchema = {
 		lobbyID: { type: 'string' },
 	},
 	required: ['action', 'invitee', 'lobbyID'],
-}
+};
 
 const gameRequestPayloadSchema = {
 	type: 'object',
 	properties: {
-		lobbyID: {type: 'string' },
-		hostID: {type: 'string'},
+		lobbyID: { type: 'string' },
+		hostID: { type: 'string' },
 		remote: { type: 'boolean' },
 		format: { type: 'string' },
 		nbPlayers: { type: 'number' },
 		gameSettings: {
 			type: 'object',
 			properties: {
-				background: { type: 'string'},
-				ballspeed: { type: 'string'},
-				horizontal: { type: 'string'},
-				paddlesize: { type: 'string'},
-				paddlespeed: { type: 'string'},
-				opponent: { type: 'string'},
+				background: { type: 'string' },
+				ballspeed: { type: 'string' },
+				horizontal: { type: 'string' },
+				paddlesize: { type: 'string' },
+				paddlespeed: { type: 'string' },
+				opponent: { type: 'string' },
 			},
 			required: ['ballspeed', 'paddlesize', 'paddlespeed'],
-		}
+		},
 	},
 	required: ['lobbyID', 'hostID', 'remote', 'format', 'nbPlayers', 'gameSettings'],
 };
@@ -112,7 +112,7 @@ const pingPongPaylodSchema = {
 		notif: { type: 'string' },
 	},
 	required: ['notif'],
-}
+};
 
 const inviteeSignalPaylodSchema = {
 	type: 'object',
@@ -120,7 +120,7 @@ const inviteeSignalPaylodSchema = {
 		signal: { type: 'string' },
 	},
 	required: ['signal'],
-}
+};
 
 const validateBaseMessage = ajv.compile(baseMessageSchema);
 const validateLobbyRequestPayload = ajv.compile(lobbyRequestPayloadSchema);
@@ -153,9 +153,9 @@ export function validateData(data: any, serv: FastifyInstance, socket: WebSocket
 export function validatePayload(data: any, payload: any, serv: FastifyInstance, socket: WebSocket): boolean {
 	type EventType = keyof typeof validators;
 	const event = data.event;
-		if (typeof event === 'string' && event in validators) {
-			const validate = validators[event as EventType];
-			if (!validate(payload)) {
+	if (typeof event === 'string' && event in validators) {
+		const validate = validators[event as EventType];
+		if (!validate(payload)) {
 			serv.log.error(`Invalid payload for event ${event}: ${ajv.errorsText(validate.errors)}`);
 			wsSend(socket, JSON.stringify({ error: 'Invalid message payload' }));
 			return false;

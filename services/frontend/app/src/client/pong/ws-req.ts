@@ -43,8 +43,8 @@ export function wsRequest(court: PongCourt ,game: Game, ids: { gameID: string; u
 async function setUpGame(game: Game, ws: WebSocket, ballDir: number) {
 	game.ball.dx *= ballDir;
 	addMessEvent(game, ws);
-	window.addEventListener('keydown', createKeyEvent(game.req.keys, game.horizontal, true));
-	window.addEventListener('keyup', createKeyEvent(game.req.keys, game.horizontal, false));
+	window.addEventListener('keydown', createKeyEvent(game.req.keys, game.local, game.horizontal, true));
+	window.addEventListener('keyup', createKeyEvent(game.req.keys, game.local, game.horizontal, false));
 
 	await new Promise((res) => setTimeout(res, START_DELAY));
 	startGame(game, ws);

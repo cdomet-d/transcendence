@@ -170,7 +170,7 @@ function waitForResultDisplay(serv: FastifyInstance, socket: WebSocket, tourname
 			if (!validatePayload(data, data.payload, serv, socket)) throw new Error("invalid input");
 			if (data.payload.signal === "got result") {
 				tournamentObj.gotEndGame += 1;
-				if (tournamentObj.gotEndGame === lobby.userList.size)
+				if (tournamentObj.gotEndGame === lobby.userList.size && tournamentObj.end === false)
 					showBrackets(tournamentObj.bracket, lobby.lobbyID!, tournamentObj, serv, nextGame);
 				stopHandler(resultDisplayHandler, socket);
 			}

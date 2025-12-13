@@ -60,6 +60,7 @@ interface tournament {
 	gotEndGame: number,
 	nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }>,
 	nextGame: game | undefined;
+	end: boolean;
 }
 
 // NATS

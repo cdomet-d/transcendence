@@ -230,34 +230,17 @@ if (!customElements.get('user-card-social')) {
  * @remark You should use {@link createUserInline} which encapsulates creation logic.
  */
 export class UserInline extends UserProfile {
-	#clickHandler: (ev: Event) => void;
+	// #clickHandler: (ev: Event) => void;
 
 	constructor() {
 		super();
-		this.#clickHandler = this.#clickImplementation.bind(this);
-	}
-
-	#clickImplementation(ev: Event) {
-		const target = ev.target;
-		if (!target || !(target instanceof UserInline)) return;
-		console.log('clicked on user inline')
-		if (ev instanceof KeyboardEvent && ev.key === 'Enter') {
-			router.loadRoute(`/user/${target.getUsername.link.title}`, true)
-		}
-		else if (ev instanceof MouseEvent) router.loadRoute(`/user/${target.getUsername.link.title}`, true)
 	}
 
 	override connectedCallback() {
 		super.connectedCallback();
-		this.addEventListener('click', this.#clickHandler)
-		this.addEventListener('keydown', this.#clickHandler)
 		this.render();
 	}
 
-	disconnectedCallback() {
-		this.removeEventListener('click', this.#clickHandler)
-		this.removeEventListener('keydown', this.#clickHandler)
-	}
 	override render() {
 		this.append(super.getAvatar, super.getUsername, super.getWinstreak);
 		super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);

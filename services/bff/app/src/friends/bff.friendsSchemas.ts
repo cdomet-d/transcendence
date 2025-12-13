@@ -11,7 +11,7 @@ export const relationPost = {
 		type: 'object',
 		required: ['username'],
 		properties: {
-			username: { type: 'string' },
+			username: { type: 'string', minLength: 4, maxLength: 18, pattern: '^[a-zA-Z0-9_-]+$' },
 		},
 	},
 	response: {
@@ -33,7 +33,7 @@ export const relationPatch = {
 		type: 'object',
 		required: ['username'],
 		properties: {
-			username: { type: 'string' },
+			username: { type: 'string', minLength: 4, maxLength: 18, pattern: '^[a-zA-Z0-9_-]+$' },
 		},
 	},
 	response: {
@@ -55,7 +55,7 @@ export const relationDelete = {
 		type: 'object',
 		required: ['username'],
 		properties: {
-			username: { type: 'string' },
+			username: { type: 'string', minLength: 4, maxLength: 18, pattern: '^[a-zA-Z0-9_-]+$' },
 		},
 	},
 	response: {

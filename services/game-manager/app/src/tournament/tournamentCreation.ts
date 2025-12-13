@@ -71,6 +71,7 @@ export function makeTournamentObj(tournamentID: string, games: game[], nbPlayers
 		gotEndGame: 0,
 		nextPlayersMap: new Map(),
 		nextGame: undefined,
+		end: false,
 	}
 	return tournament;
 }

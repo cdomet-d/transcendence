@@ -26,6 +26,7 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 	tournamentObj.nextGame = getNextGameInBracket(tournamentObj, game);
 	if (tournamentObj.nextGame === undefined) {
 		tournamentObj.winnerID = game.winnerID;
+		tournamentObj.end = true
 		gameOver(game, serv, true, tournamentObj, undefined);
 		tournamentOver(tournamentObj);
 		return;

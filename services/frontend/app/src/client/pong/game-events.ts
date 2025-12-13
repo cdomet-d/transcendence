@@ -9,16 +9,16 @@ export function addMessEvent(game: Game, ws: WebSocket) {
 	};
 }
 
-export function createKeyEvent(keys: keysObj, horizontal: boolean, isKeyDown: boolean) {
+export function createKeyEvent(keys: keysObj, local: boolean, horizontal: boolean, isKeyDown: boolean) {
 	const keyMap = {
 		w: ['w', 'W'],
 		s: ['s', 'S'],
 		a: horizontal ? ['a', 'A'] : [],
 		d: horizontal ? ['d', 'D'] : [],
-		ArrowUp: ['ArrowUp'],
-		ArrowDown: ['ArrowDown'],
-		ArrowLeft: horizontal ? ['ArrowLeft'] : [],
-		ArrowRight: horizontal ? ['ArrowRight'] : [],
+		ArrowUp: local ? ['ArrowUp'] : [],
+		ArrowDown: local ? ['ArrowDown'] : [],
+		ArrowLeft: horizontal && local ? ['ArrowLeft'] : [],
+		ArrowRight: horizontal && local ? ['ArrowRight'] : [],
 	};
 
 	return function keyEvent(event: KeyboardEvent): void {
