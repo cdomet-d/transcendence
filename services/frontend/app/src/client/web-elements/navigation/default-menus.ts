@@ -1,6 +1,9 @@
 import { currentDictionary } from '../forms/language.js';
 import type { ButtonData, MenuData, TabData, NavigationLinksData } from '../types-interfaces.js';
-// import '../../assets/images/add-user.png';
+import adduser from '../../assets/images/add-user.png'
+import removeuser from '../../assets/images/remove-user.png'
+import defaultav from '../../assets/images/default-avatar.png'
+
 export function main(): MenuData {
 	return {
 		id: 'mainNav',
@@ -46,7 +49,7 @@ export function homeLink(): MenuData {
 				img: {
 					alt: 'A cute pixel art blob',
 					size: 'imedium',
-					src: '../../assets/images/default-avatar.png',
+					src: defaultav,
 					id: 'homelink',
 				},
 			},
@@ -89,7 +92,7 @@ export function social(): MenuData {
 					alt: 'a small pixel art blue blob with a green plus sign',
 					id: '',
 					size: 'ismall',
-					src: '../../assets/images/add-user.png',
+					src: adduser,
 				},
 			},
 			{
@@ -101,7 +104,7 @@ export function social(): MenuData {
 					alt: 'a small pixel art blue blob with a red minus sign',
 					id: '',
 					size: 'ismall',
-					src: '../../assets/images/remove-user.png',
+					src: removeuser,
 				},
 			},
 		],
@@ -135,7 +138,7 @@ export function backgroundMenu(): ButtonData[] {
 			type: 'button',
 		},
 		{
-			id: 'underwater',
+			id: 'ocean',
 			ariaLabel: 'Ocean pong theme',
 			content: currentDictionary.gameCustom.under_water,
 			img: null,

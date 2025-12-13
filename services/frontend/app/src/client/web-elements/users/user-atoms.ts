@@ -2,6 +2,7 @@ import { NavigationLinks } from '../navigation/links.js';
 import type { FontWeight, FontSize, FontColor, ImgData, NavigationLinksData } from '../types-interfaces.js';
 import { createIcon } from '../typography/helpers.js';
 import type { Icon } from '../typography/images.js';
+import winstreak from '../../assets/images/winstreak.png'
 
 /**
  * Custom element for displaying a username with status.
@@ -111,7 +112,7 @@ export class Winstreak extends HTMLSpanElement {
 	constructor() {
 		super();
 		const iconData: ImgData = {
-			src: '../../assets/images/winstreak.png',
+			src: winstreak,
 			id: '',
 			alt: 'Winstreak',
 			size: 'iicon',

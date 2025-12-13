@@ -10,7 +10,6 @@ export class UIFeedback extends HTMLSpanElement {
 	}
 
 	#vanish() {
-		console.log(this);
 		setTimeout(() => {
 			this.remove();
 		}, 10000);

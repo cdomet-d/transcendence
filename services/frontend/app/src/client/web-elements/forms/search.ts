@@ -9,6 +9,7 @@ import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
 import type { Listbox } from '../navigation/listbox.js';
 import { currentDictionary } from './language.js';
+import searchicon from '../../assets/images/search-icon.png'
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -76,7 +77,7 @@ export class Searchbar extends BaseForm {
 	createSearchIcon(): HTMLImageElement {
 		const img = document.createElement('img');
 		img.className = 'w-s h-s absolute top-[6px] left-[6px]';
-		img.src = '../../assets/images/search-icon.png';
+		img.src = searchicon;
 		img.alt = 'A pixel art magnifier';
 		return img;
 	}

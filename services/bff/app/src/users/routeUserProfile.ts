@@ -265,12 +265,14 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			const accountUpdates: any = {};
 
 			if (body.avatar) {
-				const avatarBuffer = Buffer.from(body.avatar, 'base64');
+				const base64Data = body.avatar.replace(/^data:image\/\w+;base64,/, '');
+				const avatarBuffer = Buffer.from(base64Data, 'base64');
 				const uintArr = new Uint8Array(avatarBuffer);
-				if (!fileTypeChecker.validateFileType(uintArr, ['png', 'gif', 'jpeg'])) {
+				if (!fileTypeChecker.validateFileType(uintArr, ['.png', '.gif', '.jpeg'])) {
+					serv.log.error('Bad image format. Only PNG, GIF and JPEG/JPG are allowed.')
 					return reply.code(400).send({
 						success: false,
-						message: 'z image format. Only PNG, GIF and JPEG/JPG are allowed.',
+						message: 'Bad image format. Only PNG, GIF and JPEG/JPG are allowed.',
 					});
 				}
 				profileUpdates.avatar = cleanInput(body.avatar);
@@ -280,7 +282,7 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			if (body.language) profileUpdates.lang = cleanInput(body.language);
 
 			const updateTasks: Promise<void>[] = [];
-
+			
 			if (body.username || body.password) {
 				if (!validateBearerToken(serv, request.headers.authorization)) return reply.code(401).send({ message: 'Unauthorized' });
 

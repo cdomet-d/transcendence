@@ -20,31 +20,26 @@ function openWsConnection() {
 }
 
 async function wsConnect(action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string, invitee?: inviteeObj, form?: RemotePongSettings | LocalPongSettings) {
-	if (wsInstance && wsInstance.readyState === WebSocket.OPEN)
-		executeAction(wsInstance, action, format, formInstance, lobbyID, gameSettings, invitee);
+	if (wsInstance && wsInstance.readyState === WebSocket.OPEN) executeAction(wsInstance, action, format, formInstance, lobbyID, gameSettings, invitee);
 	let ws: WebSocket;
 	if (wsInstance === null) {
 		ws = openWsConnection();
 		setMessEvent(ws, form);
-	}
-	else
-		ws = wsInstance;
-	if (form)
-		form.socket = ws;
+	} else ws = wsInstance;
+	if (form) form.socket = ws;
 	ws.onopen = async () => {
-
 		const interval = setInterval(() => {
 			if (ws.readyState === ws.OPEN) {
-				wsSafeSend(ws, JSON.stringify({ event: "NOTIF", payload: { notif: "ping" } }));
+				wsSafeSend(ws, JSON.stringify({ event: 'NOTIF', payload: { notif: 'ping' } }));
 			} else clearInterval(interval);
 		}, 30000);
 
 		executeAction(ws, action, format, formInstance, lobbyID, gameSettings, invitee);
-	}
+	};
 
 	if (action === 'invitee' && ws.readyState === WebSocket.OPEN) {
 		setMessEvent(ws, form);
-		wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "in lobby" } })));
+		wsSend(ws, JSON.stringify({ event: 'SIGNAL', payload: { signal: 'in lobby' } }));
 	}
 
 	ws.onerror = (err: any) => {
@@ -55,8 +50,7 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 		wsInstance = null;
 		if (event.code === 4001) {
 			const currentRoute = window.location.pathname;
-			if (currentRoute.includes("-lobby") || currentRoute === "/game")
-				router.loadRoute('/lobby-menu', true);
+			if (currentRoute.includes('-lobby') || currentRoute === '/game') router.loadRoute('/lobby-menu', true);
 		}
 	};
 }
@@ -83,28 +77,25 @@ async function setMessEvent(ws: WebSocket, form?: RemotePongSettings | LocalPong
 				return;
 			}
 
-			if (data === "start") {
+			if (data === 'start') {
 				form?.enableStartButton();
 				return;
 			}
 
-			if (data.event === "END GAME") {
-				if (data.result === "winner")
-					endGame(winImage, "winScreen", `${data.username} won !`, data.endLobby);
-				else
-					endGame(looseImage, "looseScreen", `${data.username} lost...`, data.endLobby);
-				if (data.endGame === true)
-					wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
+			if (data.event === 'END GAME') {
+				if (data.result === 'winner') endGame(winImage, 'winScreen', `${data.username} won !`, data.endLobby);
+				else endGame(looseImage, 'looseScreen', `${data.username} lost...`, data.endLobby);
+				if (data.endGame === true) wsSend(ws, JSON.stringify({ event: 'SIGNAL', payload: { signal: 'got result' } }));
 				else
 					setTimeout(() => {
-						wsSend(ws, (JSON.stringify({ event: "SIGNAL", payload: { signal: "got result" } })));
+						wsSend(ws, JSON.stringify({ event: 'SIGNAL', payload: { signal: 'got result' } }));
 					}, 5000);
 			}
 		} catch (error) {
-			console.error("Error: Failed to parse WS message", error);
+			console.error('Error: Failed to parse WS message', error);
 			createVisualFeedback('Connection error. Please refresh the page.', 'error');
 		}
-	}
+	};
 }
 
 export { wsConnect };

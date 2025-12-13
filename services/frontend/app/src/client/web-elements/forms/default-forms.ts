@@ -283,7 +283,7 @@ export function remotePong(): FormDetails {
 
 export function pongTournament(): FormDetails {
 	return {
-		action: `https://${API_URL}:8443/api/game/tournament-lobby/`,
+		action: ``,
 		heading: currentDictionary.titles.pong_tournament,
 		gameFormat: 'tournament',
 		ariaLabel: 'Pong tournament settings',
@@ -399,21 +399,3 @@ export function criticalChange(): FormDetails {
 		button: { id: 'submit', type: 'submit', content: 'submit', img: null, ariaLabel: '' },
 	}
 };
-
-// export function privacyButton(): FormDetails {
-// 	return {
-// 		action: '/privacy',
-// 		heading: '',
-// 		ariaLabel: 'Privacy Policy',
-// 		id: 'privacy-button-form',
-// 		method: 'get',
-// 		fields: [],
-// 		button: {
-// 			id: 'submit',
-// 			type: 'submit',
-// 			content: currentDictionary.buttons.privacy,
-// 			img: null,
-// 			ariaLabel: 'Go to privacy policy',
-// 		},
-// 	};
-// }

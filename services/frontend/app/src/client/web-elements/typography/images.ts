@@ -1,6 +1,8 @@
 import type { ImgData, Size, ColorTheme } from '../types-interfaces.js';
 import { createIcon } from './helpers.js';
 import { currentDictionary } from '../forms/language.js';
+import defaultav from '../../assets/images/default-avatar.png'
+import noresult from '../../assets/images/no-result.png'
 
 /**
  * Custom image element representing an icon.
@@ -51,7 +53,7 @@ export class Avatar extends HTMLDivElement {
 	constructor() {
 		super();
 		this.#data = {
-			src: '/../../assets/images/default-avatar.png',
+			src: defaultav,
 			id: 'default-avatar',
 			alt: "A pixel art blue blob with a neutral expression, the site's default avatar",
 			size: 'iicon',
@@ -93,7 +95,7 @@ export class NoResults extends HTMLDivElement {
 			alt: 'A crying blue pixel art blob',
 			id: 'no-results',
 			size: 'ixl',
-			src: '/../../assets/images/no-result.png',
+			src: noresult,
 		};
 		this.id = 'NoResults';
 		this.#theme = 'dark';

@@ -4,7 +4,7 @@ export const auth = {
 		required: ['username', 'password'],
 		properties: {
 			username: { type: 'string', minLength: 4, maxLength: 18, pattern: '^[a-zA-Z0-9_-]+$' },
-			password: { type: 'string', minLength: 12, maxLength: 64 }
+			password: { type: 'string', minLength: 12, maxLength: 64, pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[a-zA-Z0-9@$!%*?&]{12,64}$' },
 		},
 	},
 };
@@ -14,7 +14,7 @@ export const verify = {
 		type: 'object',
 		required: ['password'],
 		properties: {
-			password: { type: 'string', maxLength: 64 }
+			password: { type: 'string', minLength: 12, maxLength: 64, pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[a-zA-Z0-9@$!%*?&]{12,64}$' },
 		},
 	},
 };
@@ -32,7 +32,6 @@ export const regen = {
 		required: ['username', 'userID'],
 		properties: {
 			username: { type: 'string', minLength: 4, maxLength: 18, pattern: '^[a-zA-Z0-9_-]+$' },
-			password: { type: 'string', minLength: 12, maxLength: 64 }
 		},
 	},
 };

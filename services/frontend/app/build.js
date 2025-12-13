@@ -13,13 +13,15 @@ async function make() {
 		outfile: 'dist/client/bundle.js',
 		minify: true,
 		platform: 'browser',
+		assetNames: 'assets/[name]-[hash]',
 		target: ['esnext'],
 		loader: {
-			'.png': 'file',
-			'.gif': 'file',
+			'.png': 'dataurl',
+			'.gif': 'dataurl',
 			'.woff': 'file',
 		},
-		plugins: [tailwindPlugin()],
+		plugins: [
+			tailwindPlugin()],
 		define: {
 			'API_URL': JSON.stringify(process.env.HOST),
 		}

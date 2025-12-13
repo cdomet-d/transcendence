@@ -1,6 +1,8 @@
 import { currentDictionary } from '../forms/language';
 import { NotifContent } from './notification-content';
 import { Listbox } from '../navigation/listbox';
+import notifbell from '../../assets/images/notification.png'
+import notifarrow from '../../assets/images/notification-bubble.png'
 
 /**
  * Represents a clickable notification icon toggle.
@@ -33,7 +35,7 @@ export class NotifToggle extends HTMLDivElement {
 	/** Creates and assembles the toggle icon and the alert indicator. */
 	#render() {
 		const notifIcon = document.createElement('img');
-		notifIcon.src = '../../assets/images/notification.png';
+		notifIcon.src = notifbell;
 
 		notifIcon.className = 'imedium isize z-1';
 		notifIcon.id = 'notifToggle';
@@ -82,7 +84,7 @@ export class NotifPanel extends Listbox {
 	/** Creates panel structure with background and decorative elements. */
 	#createPopupContent() {
 		const notifDecor = document.createElement('img');
-		notifDecor.src = '/../assets/images/notification-bubble.png';
+		notifDecor.src = notifarrow;
 		this.append(notifDecor);
 		notifDecor.className = 'h-[32px] w-[16px] absolute right-[-20px] top-[4px]';
 	}

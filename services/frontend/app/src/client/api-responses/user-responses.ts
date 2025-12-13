@@ -4,6 +4,7 @@ import { createFriendsPanel, createMatchHistoryPanel } from '../web-elements/use
 import { exceptionFromResponse, redirectOnError } from '../error';
 import { router } from '../main';
 import { MatchOutcomeArrayFromAPIRes } from './matches';
+import pinkav from '../assets/images/pink-avatar.png'
 
 function UTCtoDays(since: string): string {
 	const today = new Date();
@@ -22,7 +23,7 @@ function setStatus(n: number): boolean {
 
 function setAvatar(a: string): ImgData {
 	if (!a) {
-		const defaultAvatar: ImgData = { alt: 'The user\'s profile picture', id: 'user-avatar', size: 'ixl', src: '../assets/images/pink-avatar.png' };
+		const defaultAvatar: ImgData = { alt: 'The user\'s profile picture', id: 'user-avatar', size: 'ixl', src: pinkav };
 		return defaultAvatar;
 	} else {
 		const userSetProfilePicture: ImgData = { id: 'user-pp', alt: 'User-set profile picture', src: a, size: 'ixl' };

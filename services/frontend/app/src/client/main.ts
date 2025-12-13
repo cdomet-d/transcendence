@@ -32,6 +32,7 @@ export async function userStatus(): Promise<userStatusInfo> {
 	try {
 		const isLogged: Response = await fetch(`https://${API_URL}:8443/api/auth/status`, { credentials: 'include' });
 		const data = await isLogged.json();
+		console.log(data);
 		if (isLogged.ok) return { auth: true, username: data.username, userID: data.userID };
 		else {
 			return { auth: false };

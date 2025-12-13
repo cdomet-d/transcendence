@@ -2,13 +2,14 @@ import { createUserMasonery } from '../navigation/tabs-helpers.js';
 import { createMatchHistory } from '../statistics/matches.js';
 import type { ImgData, MatchOutcome, Size, TabData, UserData } from '../types-interfaces.js';
 import { UserProfile, UserCardSocial, UserInline } from './profile.js';
+import pinkav from '../../assets/images/pink-avatar.png'
 
 export function setAvatar(
 	size: Size,
 	el: UserProfile | UserCardSocial | UserInline,
 	av?: ImgData | null,
 ) {
-	if (!av) av ={ alt: 'A pink pixel art little blob', id: 'user-avatar', size: 'ixl', src: '../../assets/images/pink-avatar.png' };
+	if (!av) av ={ alt: 'A pink pixel art little blob', id: 'user-avatar', size: 'ixl', src: pinkav };
 	const avatar = { ...av };
 	avatar.size = size;
 	el.avatar = avatar;
