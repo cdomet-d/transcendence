@@ -51,7 +51,7 @@ export class PongCourt extends HTMLDivElement {
         if (this.#pongWS !== null)
             this.#pongWS.close();
 		const newRoute: string = window.location.pathname;
-        if (this.#lobbyWS !== null && newRoute !== "/game" && !newRoute.includes("-lobby"))
+        if (this.#lobbyWS !== null && newRoute !== "/game")
             this.#lobbyWS.close();
     }
 

@@ -98,7 +98,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 		if (authenticatedUserID !== null) {
 			let lobbyID: string | undefined = findLobbyIDFromUserID(authenticatedUserID, socket);
 			if (lobbyID !== undefined)
-				removeUserFromLobby(authenticatedUserID, lobbyID, ev.code);
+				removeUserFromLobby(authenticatedUserID, lobbyID, ev.code, this);
 			wsClientsMap.delete(authenticatedUserID);
 		}
 	};

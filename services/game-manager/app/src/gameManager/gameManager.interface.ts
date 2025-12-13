@@ -25,7 +25,8 @@ interface lobbyInfo {
 	format: 'quickmatch' | 'tournament' | string,
 	nbPlayers: number,
 	gameSettings?: PongOptions,
-	start: boolean
+	start: boolean,
+	tournamentID: string,
 }
 
 interface whitelist {

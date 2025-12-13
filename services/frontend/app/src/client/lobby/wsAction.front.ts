@@ -37,6 +37,6 @@ export function wsSend(ws: WebSocket, message: string): void {
     if (ws && ws.readyState === ws.OPEN) {
         ws.send(message);
     } else {
-        createVisualFeedback(defaultDictionary.error.something_wrong, "error");
+        createVisualFeedback(defaultDictionary.error.ws_closed, "error");
     }
 }

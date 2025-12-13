@@ -54,7 +54,7 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 		tournamentObj.bracket[index] = game; // update local tournamentObj
 		tournamentObj.nextGame.users = [nextPlayers.player1, nextPlayers.player2];
 		gameOver(game, serv, false, tournamentObj, tournamentObj.nextGame);
-		// tournamentObj.nextPlayersMap.delete(nextGameID);
+		tournamentObj.nextPlayersMap.delete(nextGameID);
 	}
 }
 

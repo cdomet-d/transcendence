@@ -15,7 +15,7 @@ function handleLobbyRequest(lobbyPayload: lobbyRequestForm, authenticatedUserID:
     if (lobbyPayload.action === 'create') {
         let existingLobbyID: string | undefined = findLobbyIDFromUserID(authenticatedUserID, socket);
         if (existingLobbyID !== undefined)
-            removeUserFromLobby(authenticatedUserID, existingLobbyID, 0);
+            removeUserFromLobby(authenticatedUserID, existingLobbyID, 0, req.server);
         const newLobby: lobbyInfo = createLobby(
             {userID: authenticatedUserID, username: authenticatedUsername, userSocket: socket }, 
             lobbyPayload.format!

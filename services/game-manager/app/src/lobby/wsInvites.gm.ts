@@ -83,7 +83,7 @@ function handleJoinAction(invitePayload: lobbyJoinForm, authenticatedUserID: str
     }
     let oldLobby: string | undefined = findLobbyIDFromUserID(authenticatedUserID, socket);
     if (oldLobby !== undefined && oldLobby !== invitePayload.lobbyID!)
-        removeUserFromLobby(authenticatedUserID, oldLobby, 0);
+        removeUserFromLobby(authenticatedUserID, oldLobby, 0, fastify);
     removeNotifFromDB(fastify, invitePayload.lobbyID!, authenticatedUserID);
     addUserToLobby(authenticatedUserID!, authenticatedUsername, socket, invitePayload.lobbyID!);
     const whiteListUsernames: string[] = getWhiteListUsernames(invitePayload.lobbyID!)
