@@ -104,11 +104,11 @@ export function removeUserFromLobby(userID: string, lobbyID: string, code: numbe
 	sendUpdatedWhiteList(lobbyID);
 }
 
-export function findLobbyIDFromUserID(userID: string): string | undefined {
+export function findLobbyIDFromUserID(userID: string, socket: WebSocket): string | undefined {
 	let lobbyID: string | undefined = undefined; 
 	
 	for (const [_, lobbyInfo] of lobbyMap.entries()) {
-		if (lobbyInfo.userList.has(userID!)) {
+		if (lobbyInfo.userList.has(userID!) && lobbyInfo.userList.get(userID)?.userSocket === socket) {
 			lobbyID = lobbyInfo.lobbyID!;
 			break;
 		}

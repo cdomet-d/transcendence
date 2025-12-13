@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocket } from '@fastify/websocket';
-import { wsClientsMap, lobbyMap, removeUserFromLobby, findLobbyIDFromUserID } from './lobby.gm.js';
+import { lobbyMap, removeUserFromLobby, findLobbyIDFromUserID } from './lobby.gm.js';
 import { validateData, validatePayload } from '../gameManager/inputValidation.gm.js';
 import type { lobbyInfo } from '../gameManager/gameManager.interface.js';
 import type { lobbyRequestForm, lobbyInviteForm } from './lobby.interface.js';
@@ -8,6 +8,7 @@ import { stopHandler } from '../tournament/tournamentStart.js';
 import { handleGameRequest, handleLobbyInvite, handleLobbyRequest } from './wsRequests.gm.js';
 import { authenticateConnection } from './wsUtils.gm.js';
 
+const wsClientsMap: Map<string, WebSocket> = new Map();
 const RATE_LIMIT_WINDOW = 1000;
 const MAX_MESSAGES_PER_WINDOW = 10;
 const MAX_MESSAGE_SIZE = 10 * 1024;
@@ -18,6 +19,8 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 	const authResult = authenticateConnection(this, req, socket);
 	if (!authResult) return;
 	const { userID: authenticatedUserID, username: authenticatedUsername } = authResult;
+	if (wsClientsMap.has(authenticatedUserID))
+		socket.close(4003, "Already in a lobby!");
 	wsClientsMap.set(authenticatedUserID, socket);
     rateLimitMap.set(authenticatedUserID, { count: 0, resetTime: Date.now() + RATE_LIMIT_WINDOW });
 
@@ -86,7 +89,7 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 
 	socket.onclose = (ev: any) => {
 		if (authenticatedUserID !== null) {
-			let lobbyID: string | undefined = findLobbyIDFromUserID(authenticatedUserID);
+			let lobbyID: string | undefined = findLobbyIDFromUserID(authenticatedUserID, socket);
 			if (lobbyID !== undefined)
 				removeUserFromLobby(authenticatedUserID, lobbyID, ev.code);
 			wsClientsMap.delete(authenticatedUserID);

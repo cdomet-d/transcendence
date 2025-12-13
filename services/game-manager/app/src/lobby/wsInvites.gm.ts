@@ -6,7 +6,7 @@ import { addNotifToDB, removeNotifFromDB } from "../inviteNotifs/invite-notifs.j
 import { natsPublish } from "../nats/publisher.gm.js";
 
 function handleInviteAction(fastify: FastifyInstance, invitePayload: lobbyInviteForm, authenticatedUserID: string, socket: WebSocket, req: FastifyRequest): void {
-    const lobbyID = findLobbyIDFromUserID(authenticatedUserID);
+    const lobbyID = findLobbyIDFromUserID(authenticatedUserID, socket);
     if (lobbyID === null) {
         wsSend(socket, JSON.stringify({ error: 'user not in lobby' }));
         return;
@@ -23,9 +23,15 @@ function handleInviteAction(fastify: FastifyInstance, invitePayload: lobbyInvite
         wsSend(socket, JSON.stringify({ error: 'not lobby host' }));
         return;
     }
-
+    
     if (!invitePayload.invitee?.userID) {
         wsSend(socket, JSON.stringify({ error: 'invalid invitee' }));
+        return;
+    }
+
+    if (invitePayload.invitee.userID === authenticatedUserID) {
+        req.server.log.warn(`Host ${authenticatedUserID} tried to invite themselves`);
+        wsSend(socket, JSON.stringify({ error: 'cannot invite yourself' }));
         return;
     }
 
@@ -58,7 +64,7 @@ function handleDeclineAction(fastify: FastifyInstance, invitePayload: lobbyInvit
     }
     removeNotifFromDB(fastify, invitePayload.lobbyID!, inviteeID);
     removeUserFromWhitelist(inviteeID, invitePayload.lobbyID!);
-    if (findLobbyIDFromUserID(inviteeID) === null)
+    if (findLobbyIDFromUserID(inviteeID, socket) === null)
         socket.close();
 }
 
@@ -72,10 +78,10 @@ function handleJoinAction(invitePayload: lobbyInviteForm, authenticatedUserID: s
     if (!lobbyMap.has(invitePayload.lobbyID!)) {
         wsSend(socket, JSON.stringify({ error: 'lobby does not exist' }));
         removeNotifFromDB(fastify, invitePayload.lobbyID!, invitePayload.invitee.userID);
-        if (findLobbyIDFromUserID(invitePayload.invitee.userID) === null)
+        if (findLobbyIDFromUserID(invitePayload.invitee.userID, socket) === null)
             socket.close();
     }
-    let oldLobby: string | undefined = findLobbyIDFromUserID(authenticatedUserID);
+    let oldLobby: string | undefined = findLobbyIDFromUserID(authenticatedUserID, socket);
     if (oldLobby !== undefined && oldLobby !== invitePayload.lobbyID!)
         removeUserFromLobby(authenticatedUserID, oldLobby, 0);
     removeNotifFromDB(fastify, invitePayload.lobbyID!, authenticatedUserID);

@@ -68,6 +68,7 @@ interface user {
 }
 
 interface gameReply {
+	lobbyID: string,
 	gameID: string,
 	users: [user, user],
 	remote: boolean,

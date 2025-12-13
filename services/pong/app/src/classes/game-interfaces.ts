@@ -29,6 +29,7 @@ export interface gameInfo {
 }
 
 export interface gameReply {
+    lobbyID: string,
 	gameID: string,
 	users: [user, user],
 	remote: boolean,

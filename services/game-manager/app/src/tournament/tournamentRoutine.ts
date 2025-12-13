@@ -1,10 +1,9 @@
-import { showBrackets, tournamentMap } from './tournamentStart.js';
-import type { game, lobbyInfo, tournament, userInfo } from '../gameManager/gameManager.interface.js';
-import { startGame } from '../quickmatch/createGame.js';
+import { tournamentMap } from './tournamentStart.js';
+import type { game, lobbyInfo, tournament } from '../gameManager/gameManager.interface.js';
 import { gameOver } from '../quickmatch/gameOver.js';
 import { tournamentOver } from './tournamentOver.js';
 import type { FastifyInstance } from 'fastify';
-import { findLobbyIDFromUserID, lobbyMap } from '../lobby/lobby.gm.js';
+import { lobbyMap } from '../lobby/lobby.gm.js';
 
 // const nextPlayersMap: Map<string, { player1?: userInfo, player2?: userInfo }> = new Map();
 
