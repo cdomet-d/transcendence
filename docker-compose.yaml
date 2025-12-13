@@ -171,7 +171,8 @@ services:
             - transcendence
         restart: unless-stopped
         env_file: ./services/frontend/frontend.env
-        # environment:
+        environment:
+            - JWT_SECRET=${JWT_SECRET}
         #     - NGINXIP=nginx
         #     - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
         #     - HOST="localhost"
