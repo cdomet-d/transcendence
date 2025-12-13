@@ -196,7 +196,6 @@ export class UserSettingsForm extends BaseForm {
 	 * Sets the user data for the form.
 	 * @param details - The user data object.
 	 */
-	//TODO change the setter to get the actual username
 	set user(details: UserData) {
 		this.#user = details;
 		this.#avatar.metadata = details.avatar;

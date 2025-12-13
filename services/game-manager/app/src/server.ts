@@ -59,7 +59,6 @@ function addPlugins(serv: FastifyInstance) {
             req: FastifyRequest,
             reply: FastifyReply
         ) {
-            //TODO: send html error page ?
             serv.log.error(error);
             socket.close();
         },

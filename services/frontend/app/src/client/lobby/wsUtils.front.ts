@@ -10,7 +10,6 @@ import { wsSend } from "./wsAction.front";
 export function handleLobbyEvent(data: any, ws: WebSocket, form?: RemotePongSettings | LocalPongSettings): void {
     switch (data.lobby) {
         case 'created':
-            console.log('Lobby created with ID:', data.lobbyID);
             if (form) {
                 form.lobbyID = data.lobbyID;
             }
@@ -101,7 +100,7 @@ async function displayBrackets(brackets: [string, string][], ws: WebSocket) {
 		player1 = await fetchTinyProfile(bracket[0]);
 		player2 = await fetchTinyProfile(bracket[1]);
 		if (!player1 || !player2)
-			return;//TODO
+			return;
 		tournament.push({player1, player2});
 	}
 	createBracket(tournament);

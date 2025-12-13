@@ -1,14 +1,19 @@
-import { loadHistoryLocation } from './event-listeners.js';
+import './css/tailwind.css';
+import { createLink } from './web-elements/navigation/buttons-helpers.js';
+import { currentDictionary, initLanguage } from './web-elements/forms/language.js';
+import { errorMessageFromException, redirectOnError } from './error.js';
 import { Layout } from './web-elements/layouts/layout.js';
+import { loadHistoryLocation } from './event-listeners.js';
 import { PageHeader } from './web-elements/navigation/header.js';
 import { Router, routes } from './router.js';
-import { errorMessageFromException, redirectOnError } from './error.js';
-import { currentDictionary, initLanguage } from './web-elements/forms/language.js';
+import defaultav from '../client/assets/images/default-avatar.png';
 import type { NavigationLinks } from './web-elements/navigation/links.js';
 import type { NavigationLinksData } from './web-elements/types-interfaces.js';
-import { createLink } from './web-elements/navigation/buttons-helpers.js';
-import './css/tailwind.css';
+
 export const router = new Router(routes);
+
+const icon = document.getElementById('favicon');
+if (icon) icon.setAttribute('href', defaultav);
 
 declare global {
 	interface HTMLElement {

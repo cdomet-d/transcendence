@@ -31,7 +31,7 @@ export function wsRequest(court: PongCourt ,game: Game, ids: { gameID: string; u
 
 	ws.onclose = (event) => {
 		if (event.code === 1003 || event.code === 1011) {
-			createVisualFeedback(`${event.code}: ${event.reason}`); //TODO: fix
+			createVisualFeedback(`${event.code}: ${event.reason}`); 
 			return;
 		}
 		game.ctx.clearRect(0, 0, WIDTH, HEIGHT);

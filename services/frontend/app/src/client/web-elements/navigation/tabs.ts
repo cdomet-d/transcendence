@@ -88,146 +88,118 @@ if (!customElements.get('tab-panel')) {
  * @extends {HTMLDivElement}
  */
 export class TabContainer extends HTMLDivElement {
-	#tabList: TabData[];
-	#tabPanels: { [key: string]: TabPanel };
-	#tabHeaders: { [key: string]: TabButton };
+    #tabList: TabData[];
+    #tabPanels: { [key: string]: TabPanel };
+    #tabHeaders: { [key: string]: TabButton };
+    #clickHandler: (e: MouseEvent) => void;
 
-	constructor() {
-		super();
-		this.id = 'tab-wrapper';
-		this.#tabList = [{ id: 'default', content: 'default', default: true, panelContent: null }];
-		this.#tabPanels = {};
-		this.#tabHeaders = {};
-	}
+    constructor() {
+        super();
+        this.id = 'tab-wrapper';
+        this.#tabList = [{ id: 'default', content: 'default', default: true, panelContent: null }];
+        this.#tabPanels = {};
+        this.#tabHeaders = {};
 
-	/**
-	 * Sets the list of tab metadata.
-	 * Throws if duplicate IDs are found.
-	 *
-	 * @param {TabData[]} tabList
-	 */
-	set tabList(tabList: TabData[]) {
-		this.#tabList = tabList;
-		if (!this.#isValidTabList(this.#tabList))
-			throw new Error(
-				'Duplicate Tab.data will lead to UI confusion. Check your TabInfo array.',
-			);
-	}
+        this.#clickHandler = this.#handleClick.bind(this);
+    }
 
-	/**
-	 * Attaches click event listener to handle tab selection.
-	 */
-	//TODO: add disconnected callback
-	attachEvent() {
-		this.addEventListener('click', (event: MouseEvent) => {
-			const target = event.target as Element | null;
+    set tabList(tabList: TabData[]) {
+        this.#tabList = tabList;
+        if (!this.#isValidTabList(this.#tabList))
+            throw new Error(
+                'Duplicate Tab.data will lead to UI confusion. Check your TabInfo array.',
+            );
+    }
 
-			if (target) {
-				const tab: Element | null = target.closest('.tab');
-				if (tab && this.contains(tab)) this.#animateTab(tab);
-			}
-		});
-	}
+    #handleClick(event: MouseEvent) {
+        const target = event.target as Element | null;
+        if (!target) return;
 
-	/**
-	 * Handles activating the clicked tab and corresponding panel.
-	 *
-	 * @param {Element} tab - The tab element clicked.
-	 */
-	#animateTab(tab: Element) {
-		for (const key in this.#tabHeaders) {
-			this.#tabHeaders[key]!.removeAttribute('selected');
-		}
-		for (const key in this.#tabPanels) {
-			this.#tabPanels[key]!.removeAttribute('selected');
-		}
+        const tab = target.closest('.tab');
+        if (tab && this.contains(tab)) this.#animateTab(tab);
+    }
 
-		tab.setAttribute('selected', '');
-		const clickedTab = tab.getAttribute('data-tab');
-		if (clickedTab) this.#tabPanels[clickedTab]!.setAttribute('selected', '');
-	}
+    /** Handles activating the clicked tab and corresponding panel. */
+    #animateTab(tab: Element) {
+        for (const key in this.#tabHeaders) {
+            this.#tabHeaders[key]!.removeAttribute('selected');
+        }
+        for (const key in this.#tabPanels) {
+            this.#tabPanels[key]!.removeAttribute('selected');
+        }
 
-	/**
-	 * Called on element insertion into DOM.
-	 * Renders and attaches events.
-	 */
-	connectedCallback() {
-		this.render();
-		this.attachEvent();
-	}
+        tab.setAttribute('selected', '');
+        const clickedTab = tab.getAttribute('data-tab');
+        if (clickedTab) this.#tabPanels[clickedTab]!.setAttribute('selected', '');
+    }
 
-	/**
-	 * Validates uniqueness of tab IDs.
-	 *
-	 * @param {TabData[]} tabList
-	 * @returns {boolean} True if no duplicates exist.
-	 */
-	#isValidTabList(tabList: TabData[]): boolean {
-		return tabList.every((item, i, self) => i === self.findIndex((t) => t.id === item.id));
-	}
-	/**
-	 * Creates the tab buttons container element.
-	 *
-	 * @returns {HTMLDivElement} The container for tab buttons.
-	 */
-	#createTabButtons(): TabButtonWrapper {
-		let isSet: boolean = false;
-		const tabHeader = document.createElement('div', {
-			is: 'tab-button-wrapper',
-		}) as TabButtonWrapper;
+    /** Called when the element is connected to the DOM. */
+    connectedCallback() {
+        this.render();
+        this.addEventListener('click', this.#clickHandler);
+    }
 
-		this.#tabList.forEach((tab) => {
-			const el = document.createElement('button', { is: 'tab-button' }) as TabButton;
-			this.#tabHeaders[tab.id] = el;
-			el.setAttribute('data-tab', tab.id);
-			el.textContent = tab.content;
-			if (tab.default && !isSet) {
-				isSet = true;
-				el.setAttribute('selected', '');
-			}
-			tabHeader.append(el);
-		});
-		return tabHeader;
-	}
+    /** Called when the element is disconnected from the DOM. */
+    disconnectedCallback() {
+        this.removeEventListener('click', this.#clickHandler);
+    }
 
-	/**
-	 * Creates content panels matching tabs.
-	 */
-	#createPanels() {
-		let isSet: boolean = false;
-		this.#tabList.forEach((tab) => {
-			const el = document.createElement('div', { is: 'tab-panel' }) as TabPanel;
-			this.#tabPanels[tab.id] = el;
-			el.setAttribute('data-content', tab.id);
-			if (tab.default && !isSet) {
-				isSet = true;
-				el.setAttribute('selected', '');
-			}
-			this.append(el);
-			this.populatePanels(tab);
-		});
-	}
-	populatePanels(tab: TabData) {
-		if (tab && tab.panelContent) {
-			this.#tabPanels[tab.id]?.appendContent(tab.panelContent);
-		} else {
-			if (tab && !tab.panelContent) {
-				this.#tabPanels[tab.id]?.appendContent(createNoResult('light', 'i2xl'));
-			} else {}
-		}
-	}
+    #isValidTabList(tabList: TabData[]): boolean {
+        return tabList.every((item, i, self) => i === self.findIndex((t) => t.id === item.id));
+    }
 
-	/**
-	 * Renders tab wrapper structure and adds tab buttons and panels.
-	 */
-	render() {
-		this.className =
-			'w-full h-full overflow-hidden grid items-stretch grid-flow-row grid-cols-1 grid-rows-[var(--m)_1fr]';
-		this.append(this.#createTabButtons());
-		this.#createPanels();
-	}
+    #createTabButtons(): TabButtonWrapper {
+        let isSet = false;
+        const tabHeader = document.createElement('div', {
+            is: 'tab-button-wrapper',
+        }) as TabButtonWrapper;
+
+        this.#tabList.forEach((tab) => {
+            const el = document.createElement('button', { is: 'tab-button' }) as TabButton;
+            this.#tabHeaders[tab.id] = el;
+            el.setAttribute('data-tab', tab.id);
+            el.textContent = tab.content;
+            if (tab.default && !isSet) {
+                isSet = true;
+                el.setAttribute('selected', '');
+            }
+            tabHeader.append(el);
+        });
+        return tabHeader;
+    }
+
+    #createPanels() {
+        let isSet = false;
+        this.#tabList.forEach((tab) => {
+            const el = document.createElement('div', { is: 'tab-panel' }) as TabPanel;
+            this.#tabPanels[tab.id] = el;
+            el.setAttribute('data-content', tab.id);
+            if (tab.default && !isSet) {
+                isSet = true;
+                el.setAttribute('selected', '');
+            }
+            this.append(el);
+            this.populatePanels(tab);
+        });
+    }
+
+    populatePanels(tab: TabData) {
+        if (tab && tab.panelContent) {
+            this.#tabPanels[tab.id]?.appendContent(tab.panelContent);
+        } else {
+            this.#tabPanels[tab.id]?.appendContent(createNoResult('light', 'i2xl'));
+        }
+    }
+
+    /** Renders tab wrapper structure and adds tab buttons and panels. */
+    render() {
+        this.className =
+            'w-full h-full overflow-hidden grid items-stretch grid-flow-row grid-cols-1 grid-rows-[var(--m)_1fr]';
+        this.append(this.#createTabButtons());
+        this.#createPanels();
+    }
 }
 
 if (!customElements.get('tab-container')) {
-	customElements.define('tab-container', TabContainer, { extends: 'div' });
+    customElements.define('tab-container', TabContainer, { extends: 'div' });
 }

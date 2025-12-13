@@ -46,7 +46,6 @@ export class CustomInput extends HTMLInputElement {
 	 * @param event - The input event.
 	 */
 
-	//TODO language switch not working here
 	#typePassword(el: HTMLInputElement): string[] {
 		const val = el.value;
 		let feedback: string[] = [];
@@ -72,7 +71,6 @@ export class CustomInput extends HTMLInputElement {
 		return feedback;
 	}
 
-	// TODO: test large file
 	async #typeFile(el: HTMLInputElement): Promise<string[]> {
 		let feedback: string[] = [];
 		const file = el.files;
@@ -330,7 +328,6 @@ export class InputGroup extends HTMLDivElement {
 	#renderFeedbackImplementation(event: Event) {
 		announcer.announce('Error box opened - focus with down arrow for details');
 		const ev = event as CustomEvent;
-		console.log('rendering feedback implementaiton', ev.detail.feedback);
 
 		if (ev.detail.feedback.length > 0) {
 			this.#feedback.classList.remove('hidden');

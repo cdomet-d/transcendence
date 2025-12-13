@@ -231,7 +231,6 @@ export class DropdownMenu extends HTMLDivElement {
 		this.append(this.#listbox);
 		this.className = 'h-m w-thxl relative z-5';
 
-		//TODO: add aria-controls on #toggle ?
 		this.#toggle.ariaExpanded = 'false';
 		this.#toggle.ariaHasPopup = 'listbox';
 		this.#toggle.id = 'toggle';

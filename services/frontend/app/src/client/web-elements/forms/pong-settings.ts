@@ -59,7 +59,6 @@ export class LocalPongSettings extends BaseForm {
 		super.disconnectedCallback();
 		const newRoute: string = window.location.pathname;
 		if (this.#ws && newRoute !== '/game' && !newRoute.includes('-lobby'))
-			//TODO: if brackets or winner/loser screen have routes, add them here
 			this.#ws.close();
 	}
 
