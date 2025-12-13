@@ -188,7 +188,8 @@ services:
             context: ./services/nginx/
             dockerfile: Dockerfile
         container_name: nginx
-        env_file: ./services/nginx/nginx.env
+        environment:
+            - PUBLIC_IP=${HOST}
         image: nginx:0.0.1
         networks:
             - transcendence
