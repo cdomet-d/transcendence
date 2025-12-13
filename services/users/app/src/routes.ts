@@ -556,10 +556,9 @@ export async function userRoutes(serv: FastifyInstance) {
 				message: 'User profile updated successfully!',
 			});
 		} catch (error) {
+			serv.log.error(`Error fetching user profile: ${error}`);
 			if (error && typeof error === 'object' && 'code' in error && (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE')
 				return (reply.code(409).send({ success: false, message: 'This username is already taken.' }));
-			serv.log.error(`Error fetching user profile: ${error}`);
-			throw error;
 		}
 	});
 

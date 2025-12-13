@@ -63,7 +63,7 @@ export class NotifPanel extends Listbox {
 	constructor() {
 		super();
 		this.id = 'notifPopup';
-		this.className = 'fixed z-1 notif-panel-pos w-lg box-border bg brdr pad-xs grid';
+		this.className = 'fixed z-1 notif-panel-pos w-lg h-l box-border bg brdr pad-xs grid';
 	}
 
 	/** Builds the popup layout and attaches the default message. */

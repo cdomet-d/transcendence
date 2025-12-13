@@ -1,7 +1,7 @@
 CREATE TABLE userProfile (
   ID INTEGER PRIMARY KEY NOT NULL UNIQUE,
   userID TEXT UNIQUE,
-  username TEXT,
+  username TEXT UNIQUE,
   avatar TEXT,
   biography TEXT,
   profileColor TEXT,

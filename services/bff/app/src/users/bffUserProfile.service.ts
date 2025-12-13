@@ -755,6 +755,7 @@ export async function updateUserProfile(log: any, userID: string, updates: UserP
 		throw new Error('User service is unreachable.');
 	}
 
+	console.warn(`When attempting to change username ${response.status}`)
 	if (response.status === 409) {
 		log.warn(`[BFF] Username taken in user service change for user: ${userID}`);
 		const errorBody = (await response.json()) as { message: string };

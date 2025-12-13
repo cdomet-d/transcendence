@@ -290,7 +290,6 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 				if (body.username) accountUpdates.username = cleanInput(body.username);
 				if (isPasswordSafe(body.password)) throw { code: 400, message: '[BFF] Could not change settings.' };
 				if (body.password) accountUpdates.password = body.password;
-
 				serv.log.warn(profileUpdatesUsername, accountUpdates);
 				if (Object.keys(accountUpdates).length > 0) updateTasks.push(updateAuthSettings(serv.log, userID, accountUpdates, token));
 				if (Object.keys(profileUpdatesUsername).length > 0) updateTasks.push(updateUserProfileUsername(serv.log, userID, profileUpdatesUsername, token));
@@ -362,15 +361,15 @@ export async function bffUsersRoutes(serv: FastifyInstance) {
 			});
 
 			if (response.status === 401) {
-				console.log('[BFF] Unauthaurized');
+				serv.log.warn('[BFF] Unauthaurized');
 				reply.code(401).send({ code: response.status, message: '[BFF] Unauthaurized' });
 			}
 			if (response.status === 404) {
-				console.log('[BFF] User not found');
+				serv.log.warn('[BFF] User not found');
 				reply.code(404).send({ code: response.status, message: '[BFF] User not found' });
 			}
 			if (response.status === 400) {
-				console.log('[BFF] Invalid query');
+				serv.log.warn('[BFF] Invalid query');
 				reply.code(400).send({ code: response.status, message: '[BFF] Invalid query' });
 			}
 

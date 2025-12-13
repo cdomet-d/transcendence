@@ -111,8 +111,7 @@ export class NotifContent extends HTMLLIElement {
 		try {
 			const raw = await fetch(url, req);
 			if (!raw.ok) throw await exceptionFromResponse(raw);
-			this.remove();
-			// this.#disableButtons()
+			this.#disableButtons();
 		} catch (error) {
 			console.error('[ACCEPT RELATION]', errorMessageFromException(error));
 			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
@@ -132,8 +131,6 @@ export class NotifContent extends HTMLLIElement {
 		try {
 			const raw = await fetch(url, req);
 			if (!raw.ok) throw await exceptionFromResponse(raw);
-			// this.#disableButtons()
-			this.remove();
 		} catch (error) {
 			console.error('[DECLINE RELATION]', errorMessageFromException(error));
 			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
@@ -147,21 +144,20 @@ export class NotifContent extends HTMLLIElement {
 			return;
 		}
 		wsConnect('join', '', '', this.#lobbyInfo?.lobbyID, '', { userID: this.#lobbyInfo!.inviteeID, username: user.username });
-		this.remove();
 	}
 
 	#declineGame() {
 		wsConnect('decline', '', '', this.#lobbyInfo?.lobbyID, '', { userID: this.#lobbyInfo!.inviteeID });
-		this.remove();
-		// this.#disableButtons()
 	}
 
 	#acceptImplementation(e: Event) {
 		this.id === 'relation' ? this.#acceptRelation() : this.#joinGame();
+		this.remove();
 	}
 
 	#declineImplementation(e: Event) {
 		this.id === 'relation' ? this.#declineRelation() : this.#declineGame();
+		this.remove();
 	}
 
 	/** Called when the element is connected; renders text and buttons within the container. */

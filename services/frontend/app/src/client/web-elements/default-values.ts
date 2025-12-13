@@ -9,14 +9,14 @@ export const usernamePattern: string = '^[A-Za-z0-9]{4,18}$';
 export const searchbarPattern: string = '^[A-Za-z0-9]{0,18}$';
 
 export const looseImage: types.ImgData = {
-	src: winscreen,
+	src: loosescreen,
 	id: 'looseGif',
 	size: 'i3xl',
 	alt: ' An image of small blob getting rained on in pixel-art style',
 };
 
 export const winImage: types.ImgData = {
-	src: loosescreen,
+	src: winscreen,
 	id: 'winGif',
 	size: 'i3xl',
 	alt: ' An image of small blob dancing in stars in pixel-art style',
