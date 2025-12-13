@@ -135,7 +135,7 @@ export function backgroundMenu(): ButtonData[] {
 			type: 'button'
 		},
 		{
-			id: 'underwater',
+			id: 'ocean',
 			ariaLabel: 'Ocean pong theme',
 			content: currentDictionary.gameCustom.under_water,
 			img: null,

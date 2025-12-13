@@ -27,6 +27,7 @@ export async function natsSubscription(serv: FastifyInstance) {
 
 			if (msg.reply) {
 				const gameReply: gameReply = {
+					lobbyID: gameInfo.lobbyID,
 					gameID: gameInfo.gameID,
 					users: gameInfo.users,
 					remote: gameInfo.remote,

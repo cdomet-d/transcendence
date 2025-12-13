@@ -427,7 +427,9 @@ export interface Dictionary {
 		invite_lobby: string;
 		deleted_lobby: string;
 		broke_lobby: string;
-		nbplayers_lobby: string,
+		nbplayers_lobby: string;
+		already_in_lobby: string;
+		ws_closed: string;
 		account_deleted: string;
 		bad_request: string;
 		unauthorized: string;

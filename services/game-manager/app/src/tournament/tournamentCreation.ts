@@ -3,7 +3,7 @@ import { lobbyMap } from '../lobby/lobby.gm.js';
 
 export function createTournament(payload: lobbyInfo, lobbyID: string): tournament | undefined {
 	const tournamentID = crypto.randomUUID().toString();
-
+	lobbyMap.get(lobbyID)!.tournamentID = tournamentID;
 	const games: game[] | undefined = createBracket(payload, tournamentID, lobbyID);
 	if (games === undefined) {
 		// console.log('Error: Could not create tournament bracket!')

@@ -13,9 +13,9 @@ function handleLobbyRequest(lobbyPayload: lobbyRequestForm, authenticatedUserID:
     }
 
     if (lobbyPayload.action === 'create') {
-        let existingLobbyID: string | undefined = findLobbyIDFromUserID(authenticatedUserID);
+        let existingLobbyID: string | undefined = findLobbyIDFromUserID(authenticatedUserID, socket);
         if (existingLobbyID !== undefined)
-            removeUserFromLobby(authenticatedUserID, existingLobbyID, 0);
+            removeUserFromLobby(authenticatedUserID, existingLobbyID, 0, req.server);
         const newLobby: lobbyInfo = createLobby(
             {userID: authenticatedUserID, username: authenticatedUsername, userSocket: socket }, 
             lobbyPayload.format!
@@ -53,19 +53,4 @@ function handleGameRequest(fastify: FastifyInstance, gamePayload: lobbyInfo, aut
     }
 }
 
-function handleLobbyInvite(fastify: FastifyInstance, invitePayload: lobbyInviteForm, authenticatedUserID: string, authenticatedUsername: string, socket: WebSocket, req: FastifyRequest): void {
-    switch (invitePayload.action) {
-        case 'invite':
-            handleInviteAction(fastify, invitePayload, authenticatedUserID, socket, req);
-            break;
-        case 'decline':
-            handleDeclineAction(fastify, invitePayload, authenticatedUserID, socket, req);
-            break;
-        case 'join':
-            handleJoinAction(invitePayload, authenticatedUserID, authenticatedUsername, socket, req, fastify);
-            break;
-    }
-}
-
-
-export { handleGameRequest, handleLobbyRequest, handleLobbyInvite };
+export { handleGameRequest, handleLobbyRequest };

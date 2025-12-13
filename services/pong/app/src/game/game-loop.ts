@@ -7,7 +7,7 @@ import { coordinates } from '../classes/game-interfaces.js';
 import { getBallStartingSpeed } from '../classes/game-settings.js';
 const MAX_TIME: number = 180000; // 3min
 
-const SERVER_TICK: number = 1000 / 60;
+const SERVER_TICK: number = 1000 / 50;
 const TIME_STEP: number = 1000 / 60;
 
 export async function gameLoop(game: Game, player1: Player, player2: Player) {

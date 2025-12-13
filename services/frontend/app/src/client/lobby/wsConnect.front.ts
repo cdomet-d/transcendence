@@ -1,4 +1,4 @@
-import { createVisualFeedback } from '../error.js';
+import { createVisualFeedback, redirectOnError } from '../error.js';
 import { router } from '../main.js';
 import type { LocalPongSettings, RemotePongSettings } from '../web-elements/forms/pong-settings.js';
 import type { inviteeObj } from './gm.interface.front.js';
@@ -8,6 +8,7 @@ import { looseImage, winImage } from '../web-elements/default-values.js';
 import { handleGameStart, handleLobbyEvent } from './wsUtils.front.js';
 import { handleError } from './wsError.front.js';
 import { wsSafeSend } from './wsSend.front.js';
+import { currentDictionary } from '../web-elements/forms/language.js';
 
 export let wsInstance: WebSocket | null = null;
 
@@ -57,6 +58,9 @@ async function wsConnect(action: string, format: string, formInstance: string, l
 			const currentRoute = window.location.pathname;
 			if (currentRoute.includes("-lobby") || currentRoute === "/game")
 				router.loadRoute('/lobby-menu', true);
+		}
+		if (event.code === 4003) {
+			redirectOnError("/", currentDictionary.error.already_in_lobby);
 		}
 	};
 }

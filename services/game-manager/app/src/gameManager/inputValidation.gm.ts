@@ -10,7 +10,6 @@ const baseMessageSchema = {
 	properties: {
 		event: { type: 'string' },
 		payload: { type: 'object' },
-		formInstance: { type: 'string' }
 	},
 	required: ['event', 'payload'],
 };
@@ -41,29 +40,53 @@ const lobbyInvitePayloadSchema = {
 			required: ['userID'],
 			additionalProperties: false,
 		},
-		lobbyID: { type: 'string' },
 		hostID: { type: 'string' }
 	},
-	required: ['action', 'invitee'],
+	required: ['action', 'invitee', 'format', 'hostID'],
 };
+
+const lobbyJoinPayloadSchema = {
+	type: 'object',
+	properties: {
+		action: { type: 'string' },
+		format: { type: 'string' },
+		invitee: { 
+			type: 'object',
+			properties: {
+				userID: { type: 'string'},
+				username: { type: 'string'}
+			},
+			required: ['userID', 'username'],
+			additionalProperties: false,
+		},
+		lobbyID: { type: 'string' },
+	},
+	required: ['action', 'invitee', 'format', 'lobbyID'],
+}
+
+const lobbyDeclinePayloadSchema = {
+	type: 'object',
+	properties: {
+		action: { type: 'string' },
+		invitee: { 
+			type: 'object',
+			properties: {
+				userID: { type: 'string'},
+				username: { type: 'string'}
+			},
+			required: ['userID'],
+			additionalProperties: false,
+		},
+		lobbyID: { type: 'string' },
+	},
+	required: ['action', 'invitee', 'lobbyID'],
+}
 
 const gameRequestPayloadSchema = {
 	type: 'object',
 	properties: {
 		lobbyID: {type: 'string' },
 		hostID: {type: 'string'},
-		userList: {
-			type: 'array',
-			items: {
-				type: 'object',
-				properties: {
-					userID: { type: 'string' },
-					username: { type: 'string' },
-					userSocket: { type: 'object' }
-				},
-				additionalProperties: false
-			}
-		},
 		remote: { type: 'boolean' },
 		format: { type: 'string' },
 		nbPlayers: { type: 'number' },
@@ -77,6 +100,7 @@ const gameRequestPayloadSchema = {
 				paddlespeed: { type: 'string'},
 				opponent: { type: 'string'},
 			},
+			required: ['ballspeed', 'paddlesize', 'paddlespeed'],
 		}
 	},
 	required: ['lobbyID', 'hostID', 'remote', 'format', 'nbPlayers', 'gameSettings'],
@@ -101,6 +125,8 @@ const inviteeSignalPaylodSchema = {
 const validateBaseMessage = ajv.compile(baseMessageSchema);
 const validateLobbyRequestPayload = ajv.compile(lobbyRequestPayloadSchema);
 const validateLobbyInvitePayload = ajv.compile(lobbyInvitePayloadSchema);
+const validateLobbyJoinPayload = ajv.compile(lobbyJoinPayloadSchema);
+const validateLobbyDeclinePayload = ajv.compile(lobbyDeclinePayloadSchema);
 const validateGameRequestPayload = ajv.compile(gameRequestPayloadSchema);
 const validatePingPongNotif = ajv.compile(pingPongPaylodSchema);
 const validateInviteeSignal = ajv.compile(inviteeSignalPaylodSchema);
@@ -109,6 +135,8 @@ const validators = {
 	LOBBY_REQUEST: validateLobbyRequestPayload,
 	GAME_REQUEST: validateGameRequestPayload,
 	LOBBY_INVITE: validateLobbyInvitePayload,
+	LOBBY_JOIN: validateLobbyJoinPayload,
+	LOBBY_DECLINE: validateLobbyDeclinePayload,
 	NOTIF: validatePingPongNotif,
 	SIGNAL: validateInviteeSignal,
 };

@@ -6,7 +6,7 @@ import { deadReckoning } from './ball.js';
 import { createVisualFeedback } from '../error.js';
 import { currentDictionary } from '../web-elements/forms/language.js';
 
-const SERVER_TICK: number = 1000 / 60;
+const SERVER_TICK: number = 1000 / 50;
 const TIME_STEP: number = 1000 / 60;
 const MAX_UPDATES_PER_FRAME = 8;
 

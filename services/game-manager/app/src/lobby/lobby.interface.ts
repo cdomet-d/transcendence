@@ -22,8 +22,20 @@ export interface gameNotif {
 
 export interface lobbyInviteForm {
 	action: string,
-	format?: string,
+	format: string,
 	invitee: {userID: string, username?: string},
-	lobbyID?: string,
-	hostID?: string,
+	hostID: string,
+}
+
+export interface lobbyJoinForm {
+	action: string,
+	format: string,
+	invitee: {userID: string, username: string},
+	lobbyID: string,
+}
+
+export interface lobbyDeclineForm {
+	action: string,
+	invitee: {userID: string, username?: string},
+	lobbyID: string,
 }
