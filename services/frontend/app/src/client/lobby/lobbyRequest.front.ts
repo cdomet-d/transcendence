@@ -1,8 +1,8 @@
 import { redirectOnError } from "../error";
 import { userStatus, type userStatusInfo } from "../main";
-import type { inviteeObj, lobbyInviteForm, lobbyRequestForm } from "./gm.interface.front";
+import type { inviteeObj, lobbyDeclineForm, lobbyInviteForm, lobbyJoinForm, lobbyRequestForm } from "./gm.interface.front";
 
-async function createLobbyRequest(action: string, format: string, formInstance?: string): Promise<string> {
+async function createLobbyRequest(action: string, format: string): Promise<string> {
 	const host: userStatusInfo = await userStatus();
 	if (!host.auth) {
 		redirectOnError('/auth', 'You must be registered to see this page');
@@ -12,7 +12,6 @@ async function createLobbyRequest(action: string, format: string, formInstance?:
 	const createLobbyForm: lobbyRequestForm = {
 		event: 'LOBBY_REQUEST',
 		payload: { action: action, format: format, userID: host.userID!, username: host.username! },
-		formInstance: formInstance,
 	};
 	
 	return JSON.stringify(createLobbyForm);
@@ -37,23 +36,22 @@ async function inviteToLobbyRequest(action: string, invitee: inviteeObj, format:
 	return JSON.stringify(inviteToLobbyForm);
 }
 
-function joinLobbyRequest(action: string, format: string, invitee: { userID: string, username?: string }, lobbyID: string, formInstance: string) {
-	const joinLobbyForm: lobbyInviteForm = {
-		event: 'LOBBY_INVITE',
+function joinLobbyRequest(action: string, format: string, invitee: { userID: string, username?: string }, lobbyID: string) {
+	const joinLobbyForm: lobbyJoinForm = {
+		event: 'LOBBY_JOIN',
 		payload: {
 			action: action,
 			format: format,
 			invitee: invitee,
 			lobbyID: lobbyID,
 		},
-		formInstance: formInstance
 	};
 	return JSON.stringify(joinLobbyForm);
 }
 
 function declineLobbyRequest(action: string, invitee: inviteeObj, lobbyID: string) {
-	const declineLobbyForm: lobbyInviteForm = {
-		event: 'LOBBY_INVITE',
+	const declineLobbyForm: lobbyDeclineForm = {
+		event: 'LOBBY_DECLINE',
 		payload: {
 			action: action,
 			invitee: invitee,

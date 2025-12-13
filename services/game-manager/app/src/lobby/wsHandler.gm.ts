@@ -3,10 +3,11 @@ import type { WebSocket } from '@fastify/websocket';
 import { lobbyMap, removeUserFromLobby, findLobbyIDFromUserID } from './lobby.gm.js';
 import { validateData, validatePayload } from '../gameManager/inputValidation.gm.js';
 import type { lobbyInfo } from '../gameManager/gameManager.interface.js';
-import type { lobbyRequestForm, lobbyInviteForm } from './lobby.interface.js';
+import type { lobbyRequestForm, lobbyInviteForm, lobbyJoinForm, lobbyDeclineForm } from './lobby.interface.js';
 import { stopHandler } from '../tournament/tournamentStart.js';
-import { handleGameRequest, handleLobbyInvite, handleLobbyRequest } from './wsRequests.gm.js';
+import { handleGameRequest, handleLobbyRequest } from './wsRequests.gm.js';
 import { authenticateConnection } from './wsUtils.gm.js';
+import { handleDeclineAction, handleInviteAction, handleJoinAction } from './wsInvites.gm.js';
 
 const wsClientsMap: Map<string, WebSocket> = new Map();
 const RATE_LIMIT_WINDOW = 1000;
@@ -78,8 +79,14 @@ export function wsHandler(this: FastifyInstance, socket: WebSocket, req: Fastify
 					handleGameRequest(this, payload as lobbyInfo, authenticatedUserID, socket, req);
 					break;
 				case 'LOBBY_INVITE':
-					handleLobbyInvite(this, payload as lobbyInviteForm, authenticatedUserID, authenticatedUsername, socket, req);
+					handleInviteAction(this, payload as lobbyInviteForm, authenticatedUserID, socket, req);
 					break;
+				case 'LOBBY_JOIN':
+					handleJoinAction(payload as lobbyJoinForm, authenticatedUserID, authenticatedUsername, socket, req, this);
+            		break;
+				case 'LOBBY_DECLINE':
+					handleDeclineAction(this, payload as lobbyDeclineForm, authenticatedUserID, socket, req);
+            		break;
 			}
 		} catch (error) {
 			socket.close(1003, `Malformed WS message`);

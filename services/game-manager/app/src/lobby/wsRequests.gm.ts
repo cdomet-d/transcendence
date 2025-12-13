@@ -53,19 +53,4 @@ function handleGameRequest(fastify: FastifyInstance, gamePayload: lobbyInfo, aut
     }
 }
 
-function handleLobbyInvite(fastify: FastifyInstance, invitePayload: lobbyInviteForm, authenticatedUserID: string, authenticatedUsername: string, socket: WebSocket, req: FastifyRequest): void {
-    switch (invitePayload.action) {
-        case 'invite':
-            handleInviteAction(fastify, invitePayload, authenticatedUserID, socket, req);
-            break;
-        case 'decline':
-            handleDeclineAction(fastify, invitePayload, authenticatedUserID, socket, req);
-            break;
-        case 'join':
-            handleJoinAction(invitePayload, authenticatedUserID, authenticatedUsername, socket, req, fastify);
-            break;
-    }
-}
-
-
-export { handleGameRequest, handleLobbyRequest, handleLobbyInvite };
+export { handleGameRequest, handleLobbyRequest };

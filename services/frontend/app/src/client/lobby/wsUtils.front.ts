@@ -43,7 +43,7 @@ export function handleLobbyJoined(data: any): void {
         router.loadRoute("/tournament-lobby", true, undefined, "invitee", data.whiteListUsernames);
     }
     else {
-        console.error('Invalid formInstance received:', data.formInstance);
+        console.error('Invalid format received:', data.format);
         createVisualFeedback('Invalid lobby type received. Please try again.', 'error');
     }
 }

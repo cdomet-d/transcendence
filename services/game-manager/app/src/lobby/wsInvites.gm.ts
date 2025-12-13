@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyRequest } from "fastify";
-import type { gameNotif, lobbyInviteForm } from "./lobby.interface.js";
+import type { gameNotif, lobbyDeclineForm, lobbyInviteForm, lobbyJoinForm } from "./lobby.interface.js";
 import { informHostToStart, wsSend } from "./wsHandler.gm.js";
 import { addUserToLobby, addUserToWhitelist, findLobbyIDFromUserID, getWhiteListUsernames, lobbyMap, removeUserFromLobby, removeUserFromWhitelist } from "./lobby.gm.js";
 import { addNotifToDB, removeNotifFromDB } from "../inviteNotifs/invite-notifs.js";
@@ -55,7 +55,7 @@ function handleInviteAction(fastify: FastifyInstance, invitePayload: lobbyInvite
     natsPublish(fastify, 'post.notif', JSON.stringify(notif));
 }
 
-function handleDeclineAction(fastify: FastifyInstance, invitePayload: lobbyInviteForm, authenticatedUserID: string, socket: WebSocket, req: FastifyRequest): void {
+function handleDeclineAction(fastify: FastifyInstance, invitePayload: lobbyDeclineForm, authenticatedUserID: string, socket: WebSocket, req: FastifyRequest): void {
     const inviteeID = invitePayload.invitee.userID!;
     if (inviteeID !== authenticatedUserID) {
         req.server.log.warn(`User ${authenticatedUserID} tried to decline invite for ${inviteeID}`);
@@ -68,7 +68,7 @@ function handleDeclineAction(fastify: FastifyInstance, invitePayload: lobbyInvit
         socket.close();
 }
 
-function handleJoinAction(invitePayload: lobbyInviteForm, authenticatedUserID: string, authenticatedUsername: string, socket: WebSocket, req: FastifyRequest, fastify: FastifyInstance): void {
+function handleJoinAction(invitePayload: lobbyJoinForm, authenticatedUserID: string, authenticatedUsername: string, socket: WebSocket, req: FastifyRequest, fastify: FastifyInstance): void {
     if (invitePayload.invitee.userID !== authenticatedUserID) {
         req.server.log.warn(`User ${authenticatedUserID} tried to join as ${invitePayload.invitee.userID}`);
         wsSend(socket, JSON.stringify({ error: 'Unauthorized' }));

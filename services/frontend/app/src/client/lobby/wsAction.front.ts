@@ -1,3 +1,5 @@
+import { createVisualFeedback } from "../error";
+import { defaultDictionary } from "../web-elements/forms/language";
 import { createGameRequest } from "./gameRequest.front";
 import type { inviteeObj } from "./gm.interface.front";
 import { createLobbyRequest, declineLobbyRequest, inviteToLobbyRequest, joinLobbyRequest } from "./lobbyRequest.front";
@@ -5,7 +7,7 @@ import { createLobbyRequest, declineLobbyRequest, inviteToLobbyRequest, joinLobb
 export async function executeAction(ws: WebSocket, action: string, format: string, formInstance: string, lobbyID?: string, gameSettings?: string, invitee?: inviteeObj) {
     // send Lobby Request
     if (action === 'create') {
-        wsSend(ws, await createLobbyRequest(action, format, formInstance));
+        wsSend(ws, await createLobbyRequest(action, format));
         return;
     }
 
@@ -16,7 +18,7 @@ export async function executeAction(ws: WebSocket, action: string, format: strin
 
     // reply Lobby Invite
     if (action === 'join') {
-        wsSend(ws, joinLobbyRequest(action, format, invitee!, lobbyID!, formInstance));
+        wsSend(ws, joinLobbyRequest(action, format, invitee!, lobbyID!));
         return;
     }
 
@@ -35,6 +37,6 @@ export function wsSend(ws: WebSocket, message: string): void {
     if (ws && ws.readyState === ws.OPEN) {
         ws.send(message);
     } else {
-        const payload = JSON.parse(message);
+        createVisualFeedback(defaultDictionary.error.something_wrong, "error");
     }
 }
