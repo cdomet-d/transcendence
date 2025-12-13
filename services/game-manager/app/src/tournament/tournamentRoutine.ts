@@ -11,8 +11,8 @@ import { findLobbyIDFromUserID, lobbyMap } from '../lobby/lobby.gm.js';
 export async function tournamentState(serv: FastifyInstance, game: game) {
 	const tournamentObj: tournament | undefined = tournamentMap.get(game.tournamentID!);
 	if (!tournamentObj) {
-		console.log(`${tournamentObj}`)
-		console.log('Error: Could not make tournamentObj!');
+		// console.log(`${tournamentObj}`)
+		// console.log('Error: Could not make tournamentObj!');
 		return;
 	}
 	const lobby: lobbyInfo | undefined = lobbyMap.get(tournamentObj.lobbyID);
@@ -20,7 +20,7 @@ export async function tournamentState(serv: FastifyInstance, game: game) {
 
 	const index = tournamentObj.bracket.findIndex((obj) => obj.gameID === game.gameID);
 	if (index === -1) {
-		console.log('Error: game not found in tournament bracket!');
+		// console.log('Error: game not found in tournament bracket!');
 		return;
 	}
 

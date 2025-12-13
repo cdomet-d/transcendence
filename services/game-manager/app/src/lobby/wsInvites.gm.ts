@@ -39,7 +39,7 @@ function handleInviteAction(fastify: FastifyInstance, invitePayload: lobbyInvite
     const inviteeID = invitePayload.invitee.userID!;
     const notif: gameNotif = {
         type: 'GAME_INVITE',
-        senderUsername: hostUsername,//TODO
+        senderUsername: hostUsername,
         receiverID: inviteeID,
         lobbyID: lobbyID!,
         gameType: invitePayload.format! === 'quickmatch' ? '1 vs 1' : 'tournament'

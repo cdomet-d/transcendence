@@ -27,6 +27,7 @@ export class LocalPongSettings extends BaseForm {
 	#formInstance: string;
 	_guestLimit: number;
 	#ws: WebSocket | null;
+	#lobbyID: string;
 
 	/* -------------------------------------------------------------------------- */
 	/*                                   Default                                  */
@@ -39,6 +40,7 @@ export class LocalPongSettings extends BaseForm {
 		this.#formInstance = "";
 		this.#ws = null;
 		this._guestLimit = 0;
+		this.#lobbyID = '';
 	}
 
 	/**
@@ -90,6 +92,10 @@ export class LocalPongSettings extends BaseForm {
 		if (this.#ws === null) this.#ws = ws;
 	}
 
+	set lobbyID(l: string) {
+		this.#lobbyID = l;
+	}
+
 	/* -------------------------------------------------------------------------- */
 	/*                               Event listeners                              */
 	/* -------------------------------------------------------------------------- */
@@ -106,7 +112,7 @@ export class LocalPongSettings extends BaseForm {
 		req.body = await this.createReqBody(f);
 		// await this.fetchAndRedirect(this.details.action, req);
 
-		wsConnect('game', this._format, this.#formInstance, '', req.body);
+		wsConnect('game', this._format, this.#formInstance, this.#lobbyID, req.body);
 	}
 }
 

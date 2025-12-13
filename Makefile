@@ -30,6 +30,7 @@ log:
 env: 
 	bash .scripts/frontend-env.sh
 	bash .scripts/nginx-env.sh
+	bash .scripts/game-manager-env.sh
 	bash .scripts/sec-gen.sh
 watchlog: 
 	@docker compose logs -f

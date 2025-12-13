@@ -10,6 +10,10 @@ import { wsSend } from "./wsAction.front";
 export function handleLobbyEvent(data: any, ws: WebSocket, form?: RemotePongSettings | LocalPongSettings): void {
     switch (data.lobby) {
         case 'created':
+            console.log('Lobby created with ID:', data.lobbyID);
+            if (form) {
+                form.lobbyID = data.lobbyID;
+            }
             break;
         case 'joined':
             handleLobbyJoined(data);

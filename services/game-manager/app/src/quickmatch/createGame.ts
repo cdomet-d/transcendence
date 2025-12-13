@@ -5,7 +5,7 @@ import { lobbyMap } from '../lobby/lobby.gm.js';
 
 export function createGameObj(lobbyInfo: lobbyInfo, lobbyID: string): game | undefined {
 	if (!lobbyInfo) {
-		console.log('Error: lobbyInfo is empty!');
+		// console.log('Error: lobbyInfo is empty!');
 		return undefined;
 	}
 

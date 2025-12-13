@@ -10,8 +10,6 @@ export async function executeAction(ws: WebSocket, action: string, format: strin
     }
 
     if (action === 'invite') {
-        // TODO prevent non-host from inviting people
-        // get lobby from ID, check if host, allow invite if yes, else wsSend some error code
         wsSend(ws, await inviteToLobbyRequest(action, invitee!, format));
         return;
     }
@@ -28,7 +26,7 @@ export async function executeAction(ws: WebSocket, action: string, format: strin
     }
 
     if (action === 'game') {
-        wsSend(ws, await createGameRequest(format, formInstance, gameSettings!));
+        wsSend(ws, await createGameRequest(format, formInstance, gameSettings!, lobbyID!));
         return;
     }
 }

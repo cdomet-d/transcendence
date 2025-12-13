@@ -6,7 +6,7 @@ export function createTournament(payload: lobbyInfo, lobbyID: string): tournamen
 
 	const games: game[] | undefined = createBracket(payload, tournamentID, lobbyID);
 	if (games === undefined) {
-		console.log('Error: Could not create tournament bracket!')
+		// console.log('Error: Could not create tournament bracket!')
 		return undefined;
 	}
 

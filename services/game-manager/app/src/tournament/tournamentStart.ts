@@ -35,7 +35,7 @@ async function postTournamentToDashboard(tournament: tournament) {
 		});
 
 		if (response.status === 400) {
-			console.log(`[DASHBOARD] Bad request`);
+			// console.log(`[DASHBOARD] Bad request`);
 			const errorBody = (await response.json()) as { message: string };
 			throw { code: 400, message: errorBody.message || '[DASHBOARD] Bad request.' };
 		}
