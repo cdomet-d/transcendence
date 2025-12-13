@@ -498,6 +498,10 @@
 		grid-auto-rows: var(--xl);
 	}
 
+	.auth-cols {
+		grid-auto-columns: var(--image-xxl);
+	}
+
 	.content-h {
 		min-height: 700px;
 		height: 45vh;

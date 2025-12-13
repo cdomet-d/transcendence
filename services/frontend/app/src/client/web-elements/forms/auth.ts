@@ -9,6 +9,7 @@ import { currentDictionary } from './language';
 export class RegistrationForm extends BaseForm {
 	constructor() {
 		super();
+		this.classList.add('auth-cols');
 	}
 
 	override async fetchAndRedirect(url: string, req: RequestInit) {
@@ -33,6 +34,7 @@ if (!customElements.get('registration-form')) {
 export class LoginForm extends BaseForm {
 	constructor() {
 		super();
+		this.classList.add('auth-cols');
 	}
 
 	override async fetchAndRedirect(url: string, req: RequestInit) {

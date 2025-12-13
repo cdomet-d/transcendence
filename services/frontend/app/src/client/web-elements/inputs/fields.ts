@@ -56,7 +56,8 @@ export class CustomInput extends HTMLInputElement {
 		if (!/[a-z]/.test(val)) feedback.push(currentDictionary.error.lowercase);
 		if (!/[0-9]/.test(val)) feedback.push(currentDictionary.error.number);
 		if (!/[@$!%*?&]/.test(val)) feedback.push(currentDictionary.error.special_char);
-		if (val.length < 12 || val.length > 64) feedback.push(currentDictionary.error.pass_lenght +`${val.length}`);
+		if (val.length < 12 || val.length > 64) feedback.push(currentDictionary.error.pass_lenght +` ${val.length}`);
+		console.log(feedback)
 		return feedback;
 	}
 
@@ -108,7 +109,7 @@ export class CustomInput extends HTMLInputElement {
 				feedback = this.#typeText(target);
 				break;
 			case 'password':
-				this.#typePassword(target);
+				feedback = this.#typePassword(target);
 				break;
 			default:
 				break;
@@ -328,8 +329,8 @@ export class InputGroup extends HTMLDivElement {
 	 */
 	#renderFeedbackImplementation(event: Event) {
 		announcer.announce('Error box opened - focus with down arrow for details');
-
 		const ev = event as CustomEvent;
+		console.log('rendering feedback implementaiton', ev.detail.feedback);
 
 		if (ev.detail.feedback.length > 0) {
 			this.#feedback.classList.remove('hidden');
@@ -339,6 +340,7 @@ export class InputGroup extends HTMLDivElement {
 			this.classList.remove('z-5');
 			return;
 		}
+		console.log('nofeedback')
 		if (this.#feedback.firstChild) this.#feedback.removeChild(this.#feedback.firstChild);
 
 		const list = document.createElement('ul');

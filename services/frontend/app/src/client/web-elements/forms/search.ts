@@ -9,7 +9,7 @@ import { userArrayFromAPIRes } from '../../api-responses/user-responses.js';
 import { createNoResult } from '../typography/helpers.js';
 import type { Listbox } from '../navigation/listbox.js';
 import { currentDictionary } from './language.js';
-import searchicon from '../../assets/images/search-icon.png'
+import searchicon from '../../assets/images/search-icon.png';
 
 /**
  * Custom HTML form element representing a search bar UI component.
@@ -26,12 +26,12 @@ export class Searchbar extends BaseForm {
 	#blurHandler: (ev: FocusEvent) => void;
 	#navHandler: (ev: KeyboardEvent) => void;
 
-    /* -------------- constructors and associated default functions ------------- */
-    constructor() {
-        super();
-        super.details = search();
-        this.#results = document.createElement('ul', {is: 'list-box'}) as Listbox;
-        this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
+	/* -------------- constructors and associated default functions ------------- */
+	constructor() {
+		super();
+		super.details = search();
+		this.#results = document.createElement('ul', { is: 'list-box' }) as Listbox;
+		this.#searchInput = document.createElement('div', { is: 'input-and-label' }) as InputGroup;
 
 		this.submitHandler = this.submitHandlerImplementation.bind(this);
 		this.#blurHandler = this.#focusOutImplementation.bind(this);
@@ -65,8 +65,7 @@ export class Searchbar extends BaseForm {
 		this.append(this.#results);
 
 		this.classList.add('search-cols', 'search-gap');
-		this.#results.className =
-			'hidden absolute top-[64px] brdr bg min-h-fit w-full overflow-y-auto box-border';
+		this.#results.className = 'hidden absolute top-[64px] brdr bg min-h-fit w-full overflow-y-auto box-border';
 	}
 
 	/**
@@ -93,8 +92,7 @@ export class Searchbar extends BaseForm {
 		const response = await fetch(url, req);
 		const data = await response.json();
 		if (!data.ok) {
-			if (data.message === 'Unauthorized')
-				redirectOnError('/auth', 'You must be registered to access this page!');
+			if (data.message === 'Unauthorized') redirectOnError('/auth', 'You must be registered to access this page!');
 		}
 
 		this.displayResults(userArrayFromAPIRes(data));
@@ -161,7 +159,7 @@ export class Searchbar extends BaseForm {
 	addUser(user: UserData) {
 		const li = document.createElement('li');
 		li.classList.add('pad-xs');
-		li.append(createUserInline(user))
+		li.append(createUserInline(user));
 		this.#results.append(li);
 	}
 
@@ -177,7 +175,8 @@ export class Searchbar extends BaseForm {
 		res.forEach((user) => this.addUser(user));
 		this.#results.arrayFromChildren();
 		this.#results.expand();
-		this.classList.add('z-1')
+		this.#results.focus();
+		this.classList.add('z-1');
 	}
 }
 

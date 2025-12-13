@@ -111,7 +111,7 @@ export function loginForm(): FormDetails {
 				pattern: passwordPattern,
 				placeholder: currentDictionary.placeholders.enter_password,
 				type: 'password',
-				required: false,
+				required: true,
 			},
 		],
 		button: {

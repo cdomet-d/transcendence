@@ -71,7 +71,6 @@ export async function buildUserProfile(response: Response): Promise<ProfilePage>
 
 	const rawProfile = await response.json();
 	const userProfileElem = document.createElement('div', { is: 'profile-page' }) as ProfilePage;
-	userProfileElem.tabIndex = 1;
 	document.body.layoutInstance?.appendAndCache(userProfileElem);
 	userProfileElem.profile = userDataFromAPIRes(rawProfile.userData);
 	userProfileElem.panelContent = createFriendsPanel(userArrayFromAPIRes(rawProfile.friends));
