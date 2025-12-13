@@ -9,12 +9,10 @@
 	"license": "ISC",
 	"scripts": {
 		"copy:html": "mkdir -p dist/client && cp -r src/client/index.html dist/client",
-		"copy:assets": "mkdir -p dist/client/ && cp -r src/client/assets dist/client && npm run copy:html",
-		"build:css": "postcss ./src/client/css/tailwind.css -o ./dist/client/css/output.css",
-		"build": "node build.js && npm run build:css && npm run copy:assets",
 		"watch": "node build.js --watch && npm run build:css",
 		"dev": "concurrently \"npm run watch\" \"nodemon -q\"",
 		"format": "npx prettier --write \"./src/**/*.ts\"",
+		"build": "node build.js && npm run copy:html",
 		"lint": "eslint ."
 	},
 	"keywords": [],
@@ -24,6 +22,8 @@
 		"@tailwindcss/cli": "^4.1.13",
 		"@tailwindcss/postcss": "^4.1.13",
 		"@types/ws": "^8.18.1",
+		"aria-announcer-js": "^1.0.28",
+		"esbuild-plugin-tailwindcss": "^2.1.0",
 		"fastify": "^5.5.0",
 		"file-type-checker": "^1.1.6",
 		"mime": "^4.1.0",

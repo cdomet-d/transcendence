@@ -1,4 +1,6 @@
 import esbuild from 'esbuild'
+import tailwindPlugin from 'esbuild-plugin-tailwindcss';
+
 const { context } = esbuild;
 
 const args = process.argv.slice(2)
@@ -11,7 +13,15 @@ async function make() {
 		outfile: 'dist/client/bundle.js',
 		minify: true,
 		platform: 'browser',
+		assetNames: 'assets/[name]-[hash]',
 		target: ['esnext'],
+		loader: {
+			'.png': 'dataurl',
+			'.gif': 'dataurl',
+			'.woff': 'file',
+		},
+		plugins: [
+			tailwindPlugin()],
 		define: {
 			'API_URL': JSON.stringify(process.env.HOST),
 		}
@@ -25,7 +35,7 @@ async function make() {
 		platform: 'node',
 		target: ['node20'],
 		packages: 'external',
-		format: 'esm', 
+		format: 'esm',
 		define: {
 			'API_URL': JSON.stringify(process.env.HOST),
 		}

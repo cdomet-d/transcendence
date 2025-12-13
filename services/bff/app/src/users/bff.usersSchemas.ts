@@ -2,16 +2,16 @@ const messageResponse = {
 	type: 'object',
 	properties: {
 		message: { type: 'string' },
-		code: { type: ['string', 'number'], nullable: true }
-	}
+		code: { type: ['string', 'number'], nullable: true },
+	},
 };
 
 const usernameParams = {
 	type: 'object',
 	required: ['username'],
 	properties: {
-		username: { type: 'string' }
-	}
+		username: { type: 'string' },
+	},
 };
 
 export const profileGet = {
@@ -24,13 +24,13 @@ export const profileGet = {
 				userStats: { type: 'object', additionalProperties: true },
 				friends: { type: 'array', items: { type: 'object', additionalProperties: true } },
 				pending: { type: 'array', items: { type: 'object', additionalProperties: true } },
-				matches: { type: 'array', items: { type: 'object', additionalProperties: true } }
-			}
+				matches: { type: 'array', items: { type: 'object', additionalProperties: true } },
+			},
 		},
 		400: messageResponse,
 		401: messageResponse,
-		404: messageResponse
-	}
+		404: messageResponse,
+	},
 };
 
 export const tinyProfileGet = {
@@ -38,32 +38,32 @@ export const tinyProfileGet = {
 	response: {
 		200: {
 			type: 'object',
-			additionalProperties: true
+			additionalProperties: true,
 		},
 		400: messageResponse,
 		401: messageResponse,
-		404: messageResponse
-	}
+		404: messageResponse,
+	},
 };
 
 export const searchGet = {
 	querystring: {
 		type: 'object',
 		properties: {
-			name: { type: 'string' }
-		}
+			name: { type: 'string', pattern: '^[a-zA-Z0-9]+$' },
+		},
 	},
 	response: {
 		200: {
 			type: 'array',
 			items: {
 				type: 'object',
-				additionalProperties: true
-			}
+				additionalProperties: true,
+			},
 		},
 		400: messageResponse,
-		401: messageResponse
-	}
+		401: messageResponse,
+	},
 };
 
 export const leaderboardGet = {
@@ -72,12 +72,12 @@ export const leaderboardGet = {
 			type: 'array',
 			items: {
 				type: 'object',
-				additionalProperties: true
-			}
+				additionalProperties: true,
+			},
 		},
 		400: messageResponse,
-		401: messageResponse
-	}
+		401: messageResponse,
+	},
 };
 
 export const settingsPatchSchema = {
@@ -89,31 +89,32 @@ export const settingsPatchSchema = {
 					{ type: 'string', maxLength: 0 },
 					{
 						type: 'string',
-						minLength: 3,
+						minLength: 4,
 						maxLength: 18,
-						pattern: '^[a-zA-Z0-9]+$'
-					}
-				]
+						pattern: '^[a-zA-Z0-9]+$',
+					},
+				],
 			},
 			password: {
 				anyOf: [
 					{ type: 'string', maxLength: 0 },
-					{ type: 'string', minLength: 12, maxLength: 64 }
-				]
+					{ type: 'string', minLength: 12, maxLength: 64 },
+				],
 			},
 			biography: { type: 'string', maxLength: 500 },
 			avatar: { type: 'string' },
 			color: { type: 'string' },
-			defaultLang: { type: 'string', enum: ['en', 'fr', 'es'] }
-		}
+			defaultLang: { type: 'string', enum: ['en', 'fr', 'es'] },
+		},
+		required: [],
 	},
 	response: {
 		200: messageResponse,
 		400: messageResponse,
 		401: messageResponse,
 		404: messageResponse,
-		409: messageResponse
-	}
+		409: messageResponse,
+	},
 };
 
 export const usernameGet = {
@@ -122,11 +123,11 @@ export const usernameGet = {
 		200: {
 			type: 'object',
 			properties: {
-				response: { type: 'object', additionalProperties: true }
-			}
+				response: { type: 'object', additionalProperties: true },
+			},
 		},
 		400: messageResponse,
 		401: messageResponse,
-		404: messageResponse
-	}
+		404: messageResponse,
+	},
 };

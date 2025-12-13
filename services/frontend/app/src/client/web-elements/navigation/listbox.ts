@@ -1,3 +1,6 @@
+import { UserInline } from '../users/profile';
+import { router } from '../../main';
+
 export class Listbox extends HTMLUListElement {
 	#options: HTMLLIElement[];
 	#currentFocus: number;
@@ -78,7 +81,10 @@ export class Listbox extends HTMLUListElement {
 	 * @param {HTMLElement} [target] - optionnal. Allows `#updateSelection()` to be called both by the `'click'` handler, which passes a target, and by the `'keydown'` handler, that updates the internal property `this.#currentFocus`
 	 */
 	updateSelection(target: HTMLElement) {
-		if (target.tagName === 'LI') {
+		const innerElement = target.firstElementChild;
+		if (innerElement && innerElement instanceof UserInline) {
+			router.loadRoute(`/user/${innerElement.getUsername.link.title}`, true);
+		} else if (target.tagName === 'LI') {
 			this.#options.forEach((li) => this.#clearSelection(li));
 			this.#selectOption(target);
 			this.collapse();

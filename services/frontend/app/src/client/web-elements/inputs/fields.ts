@@ -3,6 +3,7 @@ import { Checkbox } from './buttons.js';
 import { createCheckbox } from './helpers.js';
 import fileTypeChecker from 'file-type-checker';
 import { currentDictionary } from '../forms/language.js';
+import { announcer } from '../../render-pages.js';
 
 const MAX_SIZE = 1024 * 1024; // 1MB
 
@@ -55,13 +56,14 @@ export class CustomInput extends HTMLInputElement {
 		if (!/[a-z]/.test(val)) feedback.push(currentDictionary.error.lowercase);
 		if (!/[0-9]/.test(val)) feedback.push(currentDictionary.error.number);
 		if (!/[@$!%*?&]/.test(val)) feedback.push(currentDictionary.error.special_char);
-		if (val.length < 12 || val.length > 64) feedback.push(currentDictionary.error.pass_lenght, `${val.length}`);
+		if (val.length < 12 || val.length > 64) feedback.push(currentDictionary.error.pass_lenght +` ${val.length}`);
+		console.log(feedback)
 		return feedback;
 	}
 
 	#typeText(el: HTMLInputElement): string[] {
 		let min: number;
-		const forbiddenRegex = /[^a-zA-Z]/;
+		const forbiddenRegex = /[^a-zA-Z0-9]/;
 		el.id === 'searchbar' ? (min = 0) : (min = 4);
 		const val = el.value;
 		let feedback: string[] = [];
@@ -79,10 +81,10 @@ export class CustomInput extends HTMLInputElement {
 
 		const buf = await file[0].arrayBuffer();
 		if (!fileTypeChecker.validateFileType(buf, ['png', 'gif', 'jpeg'])) {
-			el.setCustomValidity('bad extension');
+			el.setCustomValidity('Invalid extension');
 			feedback.push(currentDictionary.error.file_extension);
 		} else if (file[0].size >= MAX_SIZE) {
-			el.setCustomValidity('too heavy');
+			el.setCustomValidity('File is too heavy');
 			feedback.push(currentDictionary.error.file_heavy);
 		} else {
 			el.setCustomValidity('');
@@ -107,7 +109,7 @@ export class CustomInput extends HTMLInputElement {
 				feedback = this.#typeText(target);
 				break;
 			case 'password':
-				this.#typePassword(target);
+				feedback = this.#typePassword(target);
 				break;
 			default:
 				break;
@@ -326,7 +328,9 @@ export class InputGroup extends HTMLDivElement {
 	 * @param event - The validation event.
 	 */
 	#renderFeedbackImplementation(event: Event) {
+		announcer.announce('Error box opened - focus with down arrow for details');
 		const ev = event as CustomEvent;
+		console.log('rendering feedback implementaiton', ev.detail.feedback);
 
 		if (ev.detail.feedback.length > 0) {
 			this.#feedback.classList.remove('hidden');
@@ -336,6 +340,7 @@ export class InputGroup extends HTMLDivElement {
 			this.classList.remove('z-5');
 			return;
 		}
+		console.log('nofeedback')
 		if (this.#feedback.firstChild) this.#feedback.removeChild(this.#feedback.firstChild);
 
 		const list = document.createElement('ul');
@@ -391,6 +396,7 @@ export class TextAreaGroup extends HTMLDivElement {
 	 * @param event - The validation event.
 	 */
 	#renderFeedbackImplementation(event: Event) {
+		announcer.announce('Error box opened - focus with down arrow for details');
 		const ev = event as CustomEvent;
 		if (ev.detail.feedback.length > 0) this.#feedback.classList.remove('hidden');
 		else this.#feedback.classList.add('hidden');

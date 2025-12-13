@@ -1,24 +1,41 @@
 import type { ImgData } from '../types-interfaces';
 
+import algae from '../../assets/images/ocean-scene/algae.png';
+import algae1 from '../../assets/images/ocean-scene/algae1.png';
+import algae2 from '../../assets/images/ocean-scene/algae2.png';
+import coral from '../../assets/images/ocean-scene/coral.png';
+import moutains from '../../assets/images/ocean-scene/moutains.png';
+import ocean from '../../assets/images/ocean-scene/ocean-bg.png';
+import sand from '../../assets/images/ocean-scene/sand.png';
+import sunray from '../../assets/images/ocean-scene/sunrays.png';
+import tuna from '../../assets/images/ocean-scene/tuna.png';
+
+import cloudl from '../../assets/images/farm-scene/cloud-l.png';
+import cloudr from '../../assets/images/farm-scene/cloud-r.png';
+import cow from '../../assets/images/farm-scene/cow.gif';
+import fence from '../../assets/images/farm-scene/fence.png';
+import fgrass from '../../assets/images/farm-scene/fgrass.png';
+import sky from '../../assets/images/farm-scene/sky.png';
+
 export const farmAssets: ImgData[] = [
-	{ id: 'fence', src: '/public/assets/images/farm-scene/fence.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'cow', src: '/public/assets/images/farm-scene/cow.gif', alt: 'ahah', size: 'iicon' },
-	{ id: 'fgrass', src: '/public/assets/images/farm-scene/fgrass.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'cloud_r', src: '/public/assets/images/farm-scene/cloud-r.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'cloud_l', src: '/public/assets/images/farm-scene/cloud-l.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'sky', src: '/public/assets/images/farm-scene/sky.png', alt: 'ahah', size: 'iicon' },
+	{ id: 'fence', src: fence, alt: 'ahah', size: 'iicon' },
+	{ id: 'cow', src: cow, alt: 'ahah', size: 'iicon' },
+	{ id: 'fgrass', src: fgrass, alt: 'ahah', size: 'iicon' },
+	{ id: 'cloud_r', src: cloudr, alt: 'ahah', size: 'iicon' },
+	{ id: 'cloud_l', src: cloudl, alt: 'ahah', size: 'iicon' },
+	{ id: 'sky', src: sky, alt: 'ahah', size: 'iicon' },
 ];
 
 export const oceanAssets: ImgData[] = [
-	{ id: 'tuna', src: '/public/assets/images/ocean-scene/tuna.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'coral', src: '/public/assets/images/ocean-scene/coral.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'algae', src: '/public/assets/images/ocean-scene/algae.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'algae1', src: '/public/assets/images/ocean-scene/algae1.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'algae2', src: '/public/assets/images/ocean-scene/algae2.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'sand', src: '/public/assets/images/ocean-scene/sand.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'moutains', src: '/public/assets/images/ocean-scene/moutains.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'ocean-bg', src: '/public/assets/images/ocean-scene/ocean-bg.png', alt: 'ahah', size: 'iicon' },
-	{ id: 'sunrays', src: '/public/assets/images/ocean-scene/sunrays.png', alt: 'ahah', size: 'iicon' },
+	{ id: 'tuna', src: tuna, alt: 'ahah', size: 'iicon' },
+	{ id: 'coral', src: coral, alt: 'ahah', size: 'iicon' },
+	{ id: 'algae', src: algae, alt: 'ahah', size: 'iicon' },
+	{ id: 'algae2', src: algae1, alt: 'ahah', size: 'iicon' },
+	{ id: 'algae2', src: algae2, alt: 'ahah', size: 'iicon' },
+	{ id: 'sand', src: sand, alt: 'ahah', size: 'iicon' },
+	{ id: 'moutains', src: moutains, alt: 'ahah', size: 'iicon' },
+	{ id: 'ocean-bg', src: ocean, alt: 'ahah', size: 'iicon' },
+	{ id: 'sunrays', src: sunray, alt: 'ahah', size: 'iicon' },
 ];
 
 export class Layout extends HTMLElement {

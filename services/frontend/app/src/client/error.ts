@@ -2,10 +2,17 @@ import type { Feedback } from './web-elements/types-interfaces';
 import { router } from './main';
 import { DOMReady } from './router';
 import { currentDictionary } from './web-elements/forms/language';
+import { announcer } from './render-pages';
 
 export class UIFeedback extends HTMLSpanElement {
 	constructor() {
 		super();
+	}
+
+	#vanish() {
+		setTimeout(() => {
+			this.remove();
+		}, 10000);
 	}
 
 	set content(str: string) {
@@ -18,11 +25,12 @@ export class UIFeedback extends HTMLSpanElement {
 	}
 
 	connectedCallback() {
+		this.#vanish();
 		this.className = 'absolute bottom-0 w-full h-m pad-xs brdr';
 		this.render();
 	}
 
-	render() { }
+	render() {}
 }
 
 if (!customElements.get('ui-feedback')) {
@@ -57,6 +65,7 @@ export function createVisualFeedback(message: string, type?: Feedback) {
 	document.body.layoutInstance?.appendAndCache(err);
 	err.content = message;
 	!type ? (err.type = 'error') : (err.type = type);
+	announcer.announce(`Error: ${message}`, 'assertive');
 }
 
 export async function redirectOnError(route: string, message: string) {
@@ -69,10 +78,10 @@ export function getStatusTranslation(status: number): string | undefined {
 	const errDict = currentDictionary.error as any;
 
 	const map: Record<number, string | undefined> = {
-		400: errDict.bad_request || "Bad Request",
-		401: errDict.unauthorized || "Unauthorized",
-		404: currentDictionary.error.page404 || "Not Found",
-		409: errDict.conflict || "Conflict: Resource already exists"
+		400: errDict.bad_request || 'Bad Request',
+		401: errDict.unauthorized || 'Unauthorized',
+		404: currentDictionary.error.page404 || 'Not Found',
+		409: errDict.conflict || 'Conflict: Resource already exists',
 	};
 
 	return map[status];

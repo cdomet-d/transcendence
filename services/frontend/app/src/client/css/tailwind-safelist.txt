@@ -30,17 +30,6 @@ col-start-6 	row-start-6 	row-span-6
 col-start-7 	row-start-7 	row-span-7
 col-start-8 	row-start-8 	row-span-8
 col-start-9 	row-start-9 	row-span-9
-col-start-10	row-start-10	row-span-10
-col-start-11	row-start-11	row-span-11
-col-start-12	row-start-12	row-span-12
-col-start-13	row-start-13	row-span-13
-col-start-14	row-start-14	row-span-14
-col-start-15	row-start-15	row-span-15
-col-start-16	row-start-16	row-span-16
-col-start-17	row-start-17	row-span-17
-col-start-18	row-start-18	row-span-18
-col-start-19	row-start-19	row-span-19
-col-start-20	row-start-20	row-span-20
 
 w-xl
 

@@ -6,7 +6,6 @@ import type { NavigationLinksData } from '../types-interfaces.js';
 import { createVisualFeedback, errorMessageFromException, exceptionFromResponse } from '../../error.js';
 import { wsConnect } from '../../lobby/wsConnect.front.js';
 import { userStatus, type userStatusInfo } from '../../main.js';
-import { origin } from '../../main.js';
 import { currentDictionary } from '../forms/language.js';
 
 interface GameInvite {
@@ -24,7 +23,7 @@ const notificationBtns: MenuData = {
 			img: null,
 			ariaLabel: 'Decline invitation',
 			style: 'red',
-			action: 'decline'
+			action: 'decline',
 		},
 		{
 			id: 'accept',
@@ -78,8 +77,8 @@ export class NotifContent extends HTMLLIElement {
 	}
 
 	#disableButtons() {
-		this.#menu.cache.get('accept')?.setAttribute('disabled', '')
-		this.#menu.cache.get('decline')?.setAttribute('disabled', '')
+		this.#menu.cache.get('accept')?.setAttribute('disabled', '');
+		this.#menu.cache.get('decline')?.setAttribute('disabled', '');
 	}
 
 	createNotifMessage(profile: string, mess: string) {
@@ -112,7 +111,7 @@ export class NotifContent extends HTMLLIElement {
 		try {
 			const raw = await fetch(url, req);
 			if (!raw.ok) throw await exceptionFromResponse(raw);
-			this.#disableButtons()
+			this.#disableButtons();
 		} catch (error) {
 			console.error('[ACCEPT RELATION]', errorMessageFromException(error));
 			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
@@ -132,7 +131,6 @@ export class NotifContent extends HTMLLIElement {
 		try {
 			const raw = await fetch(url, req);
 			if (!raw.ok) throw await exceptionFromResponse(raw);
-			this.#disableButtons()
 		} catch (error) {
 			console.error('[DECLINE RELATION]', errorMessageFromException(error));
 			createVisualFeedback(errorMessageFromException(currentDictionary.error.something_wrong));
@@ -145,19 +143,21 @@ export class NotifContent extends HTMLLIElement {
 			createVisualFeedback(currentDictionary.error.login_lobby, 'error');
 			return;
 		}
-		wsConnect("join", "", "", this.#lobbyInfo?.lobbyID, "", {userID: this.#lobbyInfo!.inviteeID, username: user.username});
+		wsConnect('join', '', '', this.#lobbyInfo?.lobbyID, '', { userID: this.#lobbyInfo!.inviteeID, username: user.username });
 	}
 
 	#declineGame() {
-		wsConnect("decline", "", "", this.#lobbyInfo?.lobbyID, "", {userID: this.#lobbyInfo!.inviteeID});
+		wsConnect('decline', '', '', this.#lobbyInfo?.lobbyID, '', { userID: this.#lobbyInfo!.inviteeID });
 	}
 
 	#acceptImplementation(e: Event) {
 		this.id === 'relation' ? this.#acceptRelation() : this.#joinGame();
+		this.remove();
 	}
 
 	#declineImplementation(e: Event) {
 		this.id === 'relation' ? this.#declineRelation() : this.#declineGame();
+		this.remove();
 	}
 
 	/** Called when the element is connected; renders text and buttons within the container. */

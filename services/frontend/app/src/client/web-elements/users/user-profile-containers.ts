@@ -5,26 +5,6 @@ import { TabContainer } from '../navigation/tabs.js';
 import { createTabs } from '../navigation/tabs-helpers.js';
 import { profileTabs } from '../navigation/default-menus.js';
 
-export const user: UserData = {
-	avatar: {
-		alt: 'pp',
-		id: 'user-avatar',
-		size: 'ixl',
-		src: '/public/assets/images/magenta-avatar.png',
-	},
-	biography: '',
-	id: '',
-	relation: 'self',
-	profileColor: '',
-	language: '',
-	status: true,
-	username: '',
-	winstreak: '',
-	since: '',
-	totalLosses: '',
-	totalWins: '',
-};
-
 /**
  * Custom element for displaying a masonry grid of user cards.
  * Each card is a UserCardSocial element.

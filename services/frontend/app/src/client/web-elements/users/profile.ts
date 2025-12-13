@@ -4,8 +4,7 @@ import { createSocialMenu } from '../navigation/menu-helpers.js';
 import { social } from '../navigation/default-menus.js';
 import { SocialMenu } from '../navigation/menus.js';
 import type { UserData, ImgData, ProfileView } from '../types-interfaces.js';
-import { currentDictionary } from '../forms/language.js';
-
+import { router } from '../../main.js';
 /**
  * Custom element representing a user profile.
  * Displays avatar, username, status, winstreak, biography, profile age, and action menu.
@@ -30,7 +29,7 @@ export class UserProfile extends HTMLDivElement {
 		this.#joinedSince = document.createElement('span') as HTMLSpanElement;
 		this.#username = document.createElement('div', { is: 'username-container' }) as Username;
 		this.#winstreak = document.createElement('span', { is: 'winstreak-block' }) as Winstreak;
-		this.#actionButtons = createSocialMenu(social(currentDictionary), 'horizontal');
+		this.#actionButtons = createSocialMenu(social(), 'horizontal');
 		this.#color = 'bg-4F9FFF';
 		this.className = `pad-s box-border brdr ${this.#color}`;
 	}
@@ -231,15 +230,34 @@ if (!customElements.get('user-card-social')) {
  * @remark You should use {@link createUserInline} which encapsulates creation logic.
  */
 export class UserInline extends UserProfile {
+	#clickHandler: (ev: Event) => void;
+
 	constructor() {
 		super();
+		this.#clickHandler = this.#clickImplementation.bind(this);
+	}
+
+	#clickImplementation(ev: Event) {
+		const target = ev.target;
+		if (!target || !(target instanceof UserInline)) return;
+		console.log('clicked on user inline')
+		if (ev instanceof KeyboardEvent && ev.key === 'Enter') {
+			router.loadRoute(`/user/${target.getUsername.link.title}`, true)
+		}
+		else if (ev instanceof MouseEvent) router.loadRoute(`/user/${target.getUsername.link.title}`, true)
 	}
 
 	override connectedCallback() {
 		super.connectedCallback();
+		this.addEventListener('click', this.#clickHandler)
+		this.addEventListener('keydown', this.#clickHandler)
 		this.render();
 	}
 
+	disconnectedCallback() {
+		this.removeEventListener('click', this.#clickHandler)
+		this.removeEventListener('keydown', this.#clickHandler)
+	}
 	override render() {
 		this.append(super.getAvatar, super.getUsername, super.getWinstreak);
 		super.getUsername.customizeStyle('f-yellow', 'f-s', 'f-bold', true);

@@ -34,7 +34,8 @@
 		"src/server/**/*",
 		"src/client/**/*",
 		"src/client/web-elements",
-		"fastify.d.ts" 
+		"fastify.d.ts",
+		"declarations.d.ts" 
 	],
 	"exclude": [
 		"node_modules",
