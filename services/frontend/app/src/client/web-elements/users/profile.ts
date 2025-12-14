@@ -229,8 +229,6 @@ if (!customElements.get('user-card-social')) {
  * @remark You should use {@link createUserInline} which encapsulates creation logic.
  */
 export class UserInline extends UserProfile {
-	// #clickHandler: (ev: Event) => void;
-
 	constructor() {
 		super();
 	}
