@@ -1,4 +1,0 @@
-{
-  "entryPoints": ["./src/client/main.ts"],
-  "out": "./docs"
-}
