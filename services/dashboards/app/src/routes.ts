@@ -43,6 +43,11 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				body.duration = Math.trunc(Number(body.duration));
 			}
 
+
+			if (!body.startTime) {
+				body.duration = "";
+			}
+
 			const validKeys = [
 				'gameID',
 				'tournamentID',
@@ -123,7 +128,7 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 			const safeUserID = cleanInput(userID);
 			if (!safeUserID)
 				return (reply.code(400).send({ message: '[DASHBOARD] userID query parameter is required.' }));
-			
+
 			const games = await getGameHistory(serv.dbStats, safeUserID);
 			return (reply.code(200).send(games));
 
