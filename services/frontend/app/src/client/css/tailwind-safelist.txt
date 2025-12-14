@@ -1,0 +1,69 @@
+/!\ INFO /!\
+
+Tailwind CSS only compiles classes that are present in the source code at build 
+time. Those are dynamic classes that Tailwind doesn't recognize because 
+they look like that: 
+
+> el.classList.add(`bg-[option.content}]`)
+or
+> grid-rows-this.#players.length}
+
+Declaring them here forces Tailwind to include them in the compiled styles file, 
+avoiding issues.
+
+/** User profile backgrounds **/
+bg-4F9FFF
+bg-5200FF
+bg-000080
+bg-98A869
+bg-BE5103
+bg-CE4257
+
+
+/** Grid Formatting for tournament brackets **/
+col-start-1 	row-start-1 	row-span-1
+col-start-2 	row-start-2 	row-span-2
+col-start-3 	row-start-3 	row-span-3
+col-start-4 	row-start-4 	row-span-4
+col-start-5 	row-start-5 	row-span-5
+col-start-6 	row-start-6 	row-span-6
+col-start-7 	row-start-7 	row-span-7
+col-start-8 	row-start-8 	row-span-8
+col-start-9 	row-start-9 	row-span-9
+
+w-xl
+
+t0
+t1
+t2
+t3
+
+iicon
+ismall
+imedium
+ilarge
+ifs
+
+light
+dark
+
+fence
+cow1
+cow2
+cow3
+fgrass
+cloud_r
+cloud_l
+sky
+
+bush_top_right
+bush_top_left
+bush_mid_right
+bush_mid_left
+bushes_base
+tree_top_right
+tree_mid_right
+tree_top_left
+tree_mid_left
+tree_base
+forest-bg

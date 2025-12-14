@@ -1,0 +1,212 @@
+networks:
+    transcendence:
+        driver: bridge
+        name: transcendence
+
+secrets:
+    key.pem:
+        file: ${TSECRETS}/key.pem
+    cert.pem:
+        file: ${TSECRETS}/cert.pem
+
+services:
+    nats-server:
+        build:
+            context: ./services/nats-server
+            dockerfile: Dockerfile
+        container_name: nats-server
+        image: nats:0.0.1
+        environment:
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+        networks:
+            - transcendence
+        restart: unless-stopped
+
+    accessibility:
+        build:
+            context: ./services/accessibility
+            dockerfile: Dockerfile
+        container_name: accessibility
+        image: accessibility:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - NGINXIP=nginx
+        volumes:
+            - ./services/accessibility/app:/usr/app
+            - ./services/accessibility/data:/usr/data
+
+    auth:
+        build:
+            context: ./services/auth
+            dockerfile: Dockerfile
+        container_name: auth
+        image: auth:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - NGINXIP=nginx
+            - PORT=${AUTH_PORT}
+            - JWT_SECRET=${JWT_SECRET}
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+        volumes:
+            - ./services/auth/app:/usr/app
+            - ./services/auth/data:/usr/data
+        depends_on:
+            - nats-server
+
+    dashboard:
+        build:
+            context: ./services/dashboards
+            dockerfile: Dockerfile
+        container_name: dashboard
+        image: dashboard:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - JWT_SECRET=${JWT_SECRET}
+            - NGINXIP=nginx
+            - PORT=${DASHBOARD_PORT}
+        volumes:
+            - ./services/dashboards/app:/usr/app
+            - ./services/dashboards/data:/usr/data
+
+    friends:
+        build:
+            context: ./services/friends
+            dockerfile: Dockerfile
+        container_name: friends
+        image: friends:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - NGINXIP=nginx
+            - PORT=${FRIENDS_PORT}
+            - JWT_SECRET=${JWT_SECRET}
+        volumes:
+            - ./services/friends/app:/usr/app
+            - ./services/friends/data:/usr/data
+
+    bff:
+        build:
+            context: ./services/bff
+            dockerfile: Dockerfile
+        container_name: bff
+        image: bff:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - NGINXIP=nginx
+            - PORT=${BFF_PORT}
+            - JWT_SECRET=${JWT_SECRET}
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+        volumes:
+            - ./services/bff/app:/usr/app
+        depends_on:
+            - nats-server
+
+    game-manager:
+        build:
+            context: ./services/game-manager
+            dockerfile: Dockerfile
+        container_name: game-manager
+        image: gamemanager:0.0.1
+        environment:
+            - NGINXIP=nginx
+            - PORT=${HOST}
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+            - PORT=${GM_PORT}
+            - JWT_SECRET=${JWT_SECRET}
+        networks:
+            - transcendence
+        restart: unless-stopped
+        volumes:
+            - ./services/game-manager/app:/usr/app
+            - ./services/game-manager/data:/usr/data
+
+    pong:
+        build:
+            context: ./services/pong
+            dockerfile: Dockerfile
+        container_name: pong
+        environment:
+            - NGINXIP=nginx
+            - PORT=${PONG_PORT}
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+        image: pong:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        volumes:
+            - ./services/pong/app:/usr/app
+        depends_on:
+            - nats-server
+
+    users:
+        build:
+            context: ./services/users
+            dockerfile: Dockerfile
+        container_name: users
+        image: users:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - NGINXIP=nginx
+            - PORT=${USERS_PORT}
+            - JWT_SECRET=${JWT_SECRET}
+        volumes:
+            - ./services/users/app:/usr/app
+            - ./services/users/data:/usr/data
+
+    frontend:
+        build:
+            context: ./services/frontend
+            dockerfile: Dockerfile
+        container_name: frontend
+        image: frontend:0.0.1
+        networks:
+            - transcendence
+        restart: unless-stopped
+        environment:
+            - JWT_SECRET=${JWT_SECRET}
+            - NGINXIP=nginx
+            - HOST=${HOST}
+            - NATS_SERVER_TOKEN=${NATS_SERVER_TOKEN}
+        volumes:
+            - ./services/frontend/app:/app
+        depends_on:
+            - nats-server
+            - bff
+
+    nginx:
+        build:
+            context: ./services/nginx/
+            dockerfile: Dockerfile
+        container_name: nginx
+        environment:
+            - PUBLIC_IP=${HOST}
+        image: nginx:0.0.1
+        networks:
+            - transcendence
+        ports:
+            - '8443:443'
+        restart: unless-stopped
+        secrets:
+            - cert.pem
+            - key.pem
+        depends_on:
+            - accessibility
+            - auth
+            - dashboard
+            - friends
+            - bff
+            - game-manager
+            - pong
+            - users
+            - frontend
