@@ -170,9 +170,12 @@ export class Game {
 
 	/*                              METHODS                                  */
 	public addPlayer(userID: string, socket: WebSocket, clientSide: string) {
+		if (userID !== this.#gameInfo.users[0].userID && userID !== this.#gameInfo.users[1].userID) return;
 		let serverSide: string = "left";
-		if (this.#players.length === 1)
+		if (this.#players.length === 1) {
+			if (userID === this.#players[0]!.userID) return;
 			serverSide = "right";
+		}
 		const player: Player = new Player(userID, socket, serverSide, clientSide, this.#paddleSpec, this.#ball);
 		this.#players.push(player);
 	}
