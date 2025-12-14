@@ -646,10 +646,10 @@ export async function processMatches(log: any, userID: string, token: string): P
 
 			let tournamentFront = ""; 
 			if (rawMatch.tournamentID === '-1') {
-				tournamentFront = "yes";
+				tournamentFront = "no";
 			}
 			else {
-				tournamentFront = "no";
+				tournamentFront = "yes";
 			}
 			const match: Matches = {
 				date: formatMatchDate(rawMatch.startTime),

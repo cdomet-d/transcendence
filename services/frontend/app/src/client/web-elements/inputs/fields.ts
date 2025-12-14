@@ -56,7 +56,6 @@ export class CustomInput extends HTMLInputElement {
 		if (!/[0-9]/.test(val)) feedback.push(currentDictionary.error.number);
 		if (!/[@$!%*?&]/.test(val)) feedback.push(currentDictionary.error.special_char);
 		if (val.length < 12 || val.length > 64) feedback.push(currentDictionary.error.pass_lenght +` ${val.length}`);
-		console.log(feedback)
 		return feedback;
 	}
 
@@ -337,7 +336,6 @@ export class InputGroup extends HTMLDivElement {
 			this.classList.remove('z-5');
 			return;
 		}
-		console.log('nofeedback')
 		if (this.#feedback.firstChild) this.#feedback.removeChild(this.#feedback.firstChild);
 
 		const list = document.createElement('ul');
