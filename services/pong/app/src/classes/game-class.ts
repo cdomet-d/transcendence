@@ -240,7 +240,7 @@ export class Game {
 		}
 		if (!this.#players[1] && this.#players[0]) {
 			this.#gameInfo.winnerID = this.#players[0].userID;
-			this.#gameInfo.loserID = this.#players[0].userID === user1 ? user2 : user1;;
+			this.#gameInfo.loserID = this.#players[0].userID === user1 ? user2 : user1;
 			this.#gameInfo.score = [this.#players[0].score, -1];
 			return
 		}
