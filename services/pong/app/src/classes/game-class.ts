@@ -233,14 +233,14 @@ export class Game {
 			return;
 		}
 		if (!this.#players[0] && this.#players[1]) {
-			this.#gameInfo.winnerID = user2;
-			this.#gameInfo.loserID = user1;
+			this.#gameInfo.winnerID = this.#players[1].userID;
+			this.#gameInfo.loserID = this.#players[1].userID === user1 ? user2 : user1;
 			this.#gameInfo.score = [this.#players[1].score, -1];
 			return
 		}
 		if (!this.#players[1] && this.#players[0]) {
-			this.#gameInfo.winnerID = user1;
-			this.#gameInfo.loserID = user2;
+			this.#gameInfo.winnerID = this.#players[0].userID;
+			this.#gameInfo.loserID = this.#players[0].userID === user1 ? user2 : user1;;
 			this.#gameInfo.score = [this.#players[0].score, -1];
 			return
 		}
