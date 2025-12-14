@@ -11,6 +11,7 @@ export async function getGameHistory(db: Database, userID: string): Promise<Matc
 			player2,
 			player1Score,
 			player2Score,
+			tournamentID,
 			CASE
 				WHEN player1 = ? THEN player2
 				ELSE player1
