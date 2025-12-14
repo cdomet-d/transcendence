@@ -170,9 +170,12 @@ export class Game {
 
 	/*                              METHODS                                  */
 	public addPlayer(userID: string, socket: WebSocket, clientSide: string) {
+		if (userID !== this.#gameInfo.users[0].userID && userID !== this.#gameInfo.users[1].userID) return;
 		let serverSide: string = "left";
-		if (this.#players.length === 1)
+		if (this.#players.length === 1) {
+			if (userID === this.#players[0]!.userID) return;
 			serverSide = "right";
+		}
 		const player: Player = new Player(userID, socket, serverSide, clientSide, this.#paddleSpec, this.#ball);
 		this.#players.push(player);
 	}
@@ -218,25 +221,29 @@ export class Game {
 				score2 = this.#players[0].score;
 			}
 			if (score1 > score2) {
-			this.#gameInfo.winnerID = user1;
-			this.#gameInfo.loserID = user2;
-			this.#gameInfo.score = [score1, score2];
+				this.#gameInfo.winnerID = user1;
+				this.#gameInfo.loserID = user2;
+				this.#gameInfo.score = [score1, score2];
 			}
 			else {
 				this.#gameInfo.winnerID = user2;
 				this.#gameInfo.loserID = user1;
 				this.#gameInfo.score = [score2, score1];
 			}
+			return;
 		}
 		if (!this.#players[0] && this.#players[1]) {
-			this.#gameInfo.winnerID = user2;
-			this.#gameInfo.loserID = user1;
+			this.#gameInfo.winnerID = this.#players[1].userID;
+			this.#gameInfo.loserID = this.#players[1].userID === user1 ? user2 : user1;
 			this.#gameInfo.score = [this.#players[1].score, -1];
+			return
 		}
 		if (!this.#players[1] && this.#players[0]) {
-			this.#gameInfo.winnerID = user1;
-			this.#gameInfo.loserID = user2;
+			this.#gameInfo.winnerID = this.#players[0].userID;
+			this.#gameInfo.loserID = this.#players[0].userID === user1 ? user2 : user1;;
 			this.#gameInfo.score = [this.#players[0].score, -1];
+			return
 		}
+		this.#gameInfo.score = [-1, -1];
 	}
 }
