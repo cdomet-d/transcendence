@@ -30,6 +30,7 @@ log:
 env: 
 	bash .scripts/host-env.sh
 	bash .scripts/sec-gen.sh
+
 watchlog: 
 	@docker compose logs -f
 
