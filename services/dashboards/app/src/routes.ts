@@ -43,6 +43,11 @@ export async function dashboardRoutes(serv: FastifyInstance) {
 				body.duration = Math.trunc(Number(body.duration));
 			}
 
+
+			if (!body.startTime) {
+				body.duration = "";
+			}
+
 			const validKeys = [
 				'gameID',
 				'tournamentID',

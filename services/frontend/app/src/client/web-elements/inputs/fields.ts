@@ -46,7 +46,6 @@ export class CustomInput extends HTMLInputElement {
 	 * @param event - The input event.
 	 */
 
-	//TODO language switch not working here
 	#typePassword(el: HTMLInputElement): string[] {
 		const val = el.value;
 		let feedback: string[] = [];
@@ -57,7 +56,6 @@ export class CustomInput extends HTMLInputElement {
 		if (!/[0-9]/.test(val)) feedback.push(currentDictionary.error.number);
 		if (!/[@$!%*?&]/.test(val)) feedback.push(currentDictionary.error.special_char);
 		if (val.length < 12 || val.length > 64) feedback.push(currentDictionary.error.pass_lenght +` ${val.length}`);
-		console.log(feedback)
 		return feedback;
 	}
 
@@ -72,7 +70,6 @@ export class CustomInput extends HTMLInputElement {
 		return feedback;
 	}
 
-	// TODO: test large file
 	async #typeFile(el: HTMLInputElement): Promise<string[]> {
 		let feedback: string[] = [];
 		const file = el.files;
@@ -330,7 +327,6 @@ export class InputGroup extends HTMLDivElement {
 	#renderFeedbackImplementation(event: Event) {
 		announcer.announce('Error box opened - focus with down arrow for details');
 		const ev = event as CustomEvent;
-		console.log('rendering feedback implementaiton', ev.detail.feedback);
 
 		if (ev.detail.feedback.length > 0) {
 			this.#feedback.classList.remove('hidden');
@@ -340,7 +336,6 @@ export class InputGroup extends HTMLDivElement {
 			this.classList.remove('z-5');
 			return;
 		}
-		console.log('nofeedback')
 		if (this.#feedback.firstChild) this.#feedback.removeChild(this.#feedback.firstChild);
 
 		const list = document.createElement('ul');

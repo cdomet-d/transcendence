@@ -102,7 +102,6 @@ export abstract class BaseForm extends HTMLFormElement {
 		return this.#formContent;
 	}
 
-	// TODO: add getter for single element
 	/* -------------------------------------------------------------------------- */
 	/*                            Event listeners                                 */
 	/* -------------------------------------------------------------------------- */

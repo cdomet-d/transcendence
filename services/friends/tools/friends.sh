@@ -1,8 +1,6 @@
 #!/bin/sh
 
-> /usr/app/server.log
-
 npm install -s
 
-npm run dev
-#npm start
+# npm run dev
+npm run start

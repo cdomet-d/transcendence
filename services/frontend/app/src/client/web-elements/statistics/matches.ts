@@ -84,7 +84,6 @@ export class InlineMatch extends HTMLDivElement {
 		return this;
 	}
 
-	//TODO: probably should add link to opponent profile
 	/**
 	 * Creates and appends spans for each match property value.
 	 * @returns {InlineMatch} The InlineMatch element with value spans.
@@ -108,7 +107,8 @@ export class InlineMatch extends HTMLDivElement {
 			this.append(el);
 			el.id = key;
 			if (key === 'tournament') {
-				el.textContent = this.#data[key as keyof MatchOutcome] ? 'Tournament' : '1vs1';
+				if (this.#data[key as keyof MatchOutcome] === 'no') el.textContent = '1vs1';
+				else el.textContent = 'Tournament';
 			} else el.textContent = this.#data[key as keyof MatchOutcome].toString();
 		}
 		this.id = 'match';

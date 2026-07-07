@@ -94,7 +94,7 @@ export interface RawMatches {
 	player1Score: number;
 	player2Score: number;
 	opponentID: string;
-	tournamentID: number
+	tournamentID: string;
 }
 
 export interface Matches {

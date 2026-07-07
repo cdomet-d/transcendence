@@ -1,8 +1,8 @@
 import type { ImgData, Size, ColorTheme } from '../types-interfaces.js';
 import { createIcon } from './helpers.js';
 import { currentDictionary } from '../forms/language.js';
-import defaultav from '../../assets/images/default-avatar.png'
-import noresult from '../../assets/images/no-result.png'
+import defaultav from '../../assets/images/default-avatar.png';
+import noresult from '../../assets/images/no-result.png';
 
 /**
  * Custom image element representing an icon.
@@ -74,8 +74,7 @@ export class Avatar extends HTMLDivElement {
 
 	render() {
 		this.id = 'avatar';
-		this.className = `${this.#data.size
-			} avatar-wrapper flex justify-center overflow-hidden pad-s box-border brdr bg`;
+		this.className = `${this.#data.size} avatar-wrapper flex justify-center overflow-hidden pad-s box-border brdr bg`;
 		this.#img.metadata = this.#data;
 	}
 }
@@ -109,12 +108,11 @@ export class NoResults extends HTMLDivElement {
 	set size(size: Size) {
 		this.#noResultsImg.size = size;
 	}
-	
+
 	set theme(theme: ColorTheme) {
 		this.#theme = theme;
 	}
-	
-	//TODO 404 for language
+
 	connectedCallback() {
 		const img = createIcon(this.#noResultsImg);
 		const p = document.createElement('p');

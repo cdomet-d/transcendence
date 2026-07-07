@@ -644,14 +644,13 @@ export async function processMatches(log: any, userID: string, token: string): P
 
 			const opponentName = opponentMap.get(opponentID) || 'John Doe';
 
-			const isTournament = rawMatch.tournamentID > 0;
 			let tournamentFront = ""; 
-			if (isTournament === false)
+			if (rawMatch.tournamentID === '-1') {
 				tournamentFront = "no";
-			else
-				tournamentFront === JSON.stringify(rawMatch.tournamentID);
-
-
+			}
+			else {
+				tournamentFront = "yes";
+			}
 			const match: Matches = {
 				date: formatMatchDate(rawMatch.startTime),
 				opponent: opponentName,

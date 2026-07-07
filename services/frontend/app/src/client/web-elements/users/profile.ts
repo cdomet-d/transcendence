@@ -103,7 +103,6 @@ export class UserProfile extends HTMLDivElement {
 	/**
 	 * Sets the user's profile age (days since joined).
 	 */
-	//TODO joined for language
 	set profileAge(val: string) {
 		if (this.#joinedSince.textContent !== `Joined ${val} days ago`) {
 			this.#joinedSince.textContent = `Joined ${val} days ago`;
@@ -230,8 +229,6 @@ if (!customElements.get('user-card-social')) {
  * @remark You should use {@link createUserInline} which encapsulates creation logic.
  */
 export class UserInline extends UserProfile {
-	// #clickHandler: (ev: Event) => void;
-
 	constructor() {
 		super();
 	}

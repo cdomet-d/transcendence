@@ -81,10 +81,6 @@ export class Listbox extends HTMLUListElement {
 	 * @param {HTMLElement} [target] - optionnal. Allows `#updateSelection()` to be called both by the `'click'` handler, which passes a target, and by the `'keydown'` handler, that updates the internal property `this.#currentFocus`
 	 */
 	updateSelection(target: HTMLElement) {
-		// const innerElement = target.firstElementChild;
-		// if (innerElement && innerElement instanceof UserInline) {
-		// 	router.loadRoute(`/user/${innerElement.getUsername.link.title}`, true);
-		// } else 
 		if (target.tagName === 'LI') {
 			this.#options.forEach((li) => this.#clearSelection(li));
 			this.#selectOption(target);

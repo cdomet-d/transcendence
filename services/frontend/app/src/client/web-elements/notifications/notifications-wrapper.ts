@@ -6,12 +6,6 @@ import { NotifContent } from './notification-content.js';
 import { NotifToggle, NotifPanel } from './notif-panel-toggle.js';
 import { currentDictionary } from '../forms/language.js';
 
-//TODO: Make notifications tab-focusable
-//TODO: Buttons are actually a form
-//TODO: determine if we want to keep notifications forever or delete them as the users "validates" them.
-// - if we keep them: set a timeout on the menu to avoid the user attempting to reach a lobby that was closed
-// - if we don't keep them: how do we decide that the user processed the notification ?
-
 /**
  * Defines the 'notif-container' custom element, which displays user notifications.
  *
@@ -237,9 +231,7 @@ export class NotifBox extends HTMLDivElement {
 			});
 		};
 
-		ws.onclose = (event) => {
-			//TODO: redirect on error ?
-		};
+		ws.onclose = (event) => { };
 	}
 
 	get ws(): WebSocket | null {
