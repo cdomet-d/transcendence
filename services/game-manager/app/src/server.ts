@@ -6,30 +6,30 @@ import type { WebSocket } from '@fastify/websocket';
 import cookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
 import { routes } from './routes/routes.js';
-import dbConnector from "./db.js";
+import dbConnector from './db.js';
 import { options } from './serv.conf.js';
 import { natsConnect } from './nats/publisher.gm.js';
 import { natsSubscribe } from './nats/subscriber.gm.js';
 import type { NatsConnection } from 'nats';
 
 (async () => {
-    try {
-        const serv: FastifyInstance = await init();
-        await serv.ready();
-        runServ(serv);
-    } catch (err) {
-        console.error('server error:', err);
-        process.exit(1);
-    }
+	try {
+		const serv: FastifyInstance = await init();
+		await serv.ready();
+		runServ(serv);
+	} catch (err) {
+		console.error('server error:', err);
+		process.exit(1);
+	}
 })();
 
 export async function init(): Promise<FastifyInstance> {
 	const serv: FastifyInstance = Fastify(options);
-	
+
 	//plugins
 	addPlugins(serv);
 
-    // decorations
+	// decorations
 	const nc: NatsConnection = await natsConnect();
 	serv.decorate('nc', nc);
 	await natsSubscribe(serv);
@@ -38,50 +38,39 @@ export async function init(): Promise<FastifyInstance> {
 	addHooks(serv);
 
 	await serv.ready();
-    return serv;
+	return serv;
 }
 
 function addHooks(serv: FastifyInstance) {
 	serv.addHook('onClose', (instance, done) => {
-        instance.nc.close();
-        done()
-	})
+		instance.nc.close();
+		done();
+	});
 }
 
 function addPlugins(serv: FastifyInstance) {
-    serv.register(fastifyJwt, { secret: process.env.JWT_SECRET! });
-    serv.register(cookie);
+	serv.register(fastifyJwt, { secret: process.env.JWT_SECRET! });
+	serv.register(cookie);
 	serv.register(dbConnector);
-    serv.register(websocket, {
-        errorHandler: function (
-            error,
-            socket: WebSocket,
-            req: FastifyRequest,
-            reply: FastifyReply
-        ) {
-            serv.log.error(error);
-            socket.close();
-        },
-        preClose: (done) => {
-            const serverWS = serv.websocketServer;
-            for (const socket of serverWS.clients)
-                socket.close(1001, 'WS server is going offline');
-            serverWS.close(done);
-        },
-        options: {},
-    });
-    serv.register(routes);
+	serv.register(websocket, {
+		errorHandler: function (error, socket: WebSocket, req: FastifyRequest, reply: FastifyReply) {
+			serv.log.error(error);
+			socket.close();
+		},
+		preClose: (done) => {
+			const serverWS = serv.websocketServer;
+			for (const socket of serverWS.clients) socket.close(1001, 'WS server is going offline');
+			serverWS.close(done);
+		},
+		options: {},
+	});
+	serv.register(routes);
 }
 
 function runServ(serv: FastifyInstance): void {
-    const port: number = Number(process.env.PORT);
-    if (Number.isNaN(port)) {
-        throw new Error('Invalid port');
-    }
-
-    serv.listen({ port: port, host: '0.0.0.0' })
-        .then(() => {})
-        .catch((err) => {
-            throw err;
-        });
+	serv.listen({ port: 2121, host: '0.0.0.0' })
+		.then(() => {})
+		.catch((err) => {
+			throw err;
+		});
 }

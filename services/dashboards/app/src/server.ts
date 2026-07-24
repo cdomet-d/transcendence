@@ -38,9 +38,8 @@ function addPlugins(serv: FastifyInstance) {
 
 //run server
 async function runServ(serv: FastifyInstance): Promise<void> {
-	const port: number = getPort();
-	const address: string = await serv.listen({ port: port, host: '0.0.0.0' });
-	serv.log.info(`Dashboard Microservice listening on ${port} at ${address}`);
+	const address: string = await serv.listen({ port: 1515, host: '0.0.0.0' });
+	serv.log.info(`Dashboard Microservice listening on 1515 at ${address}`);
 }
 
 function getPort(): number {

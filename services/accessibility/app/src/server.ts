@@ -1,7 +1,7 @@
-import Fastify from 'fastify'
+import Fastify from 'fastify';
 import type { FastifyInstance } from 'fastify';
 import { options } from './serv.conf.js';
-import dbConnector from "./db.js"
+import dbConnector from './db.js';
 import { languageRoutes } from './routes.js';
 
 const serv: FastifyInstance = Fastify(options);
@@ -13,8 +13,8 @@ serv.get('/ping', async (request, reply) => ({ pong: 'it works!' }));
 
 const start = async () => {
 	try {
-		serv.listen({ port: 1313, host: '0.0.0.0' });
-		 
+		const address: string = await serv.listen({ port: 1212, host: '0.0.0.0' });
+		serv.log.info(`Accessibility Microservice listening on 1212 at ${address}`);
 	} catch (err) {
 		serv.log.error(err);
 		process.exit(1);

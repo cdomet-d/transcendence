@@ -14,12 +14,15 @@ import fastifyJwt from '@fastify/jwt';
 (async () => {
 	try {
 		const serv = await init();
-		await serv.listen({ port: 1212, host: '0.0.0.0' });
+		const address = await serv.listen({ port: 1212, host: '0.0.0.0' });
+		serv.log.info(`Frontend microservice listening on 1212 at ${address}`);
+
 	} catch (err) {
 		console.error(err);
 		process.exit(1);
 	}
 })();
+
 
 export async function init(): Promise<FastifyInstance> {
 	const serv: FastifyInstance = Fastify(options);

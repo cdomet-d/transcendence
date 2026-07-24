@@ -74,14 +74,5 @@ function addPlugins(serv: FastifyInstance) {
 
 //run server
 async function runServ(serv: FastifyInstance): Promise<void> {
-    const port: number = getPort();
-    await serv.listen({ port: port, host: '0.0.0.0' });
-}
-
-function getPort(): number {
-    const port: number = Number(process.env.PORT);
-    if (Number.isNaN(port)) {
-        throw new Error('Invalid port');
-    }
-    return port;
+    await serv.listen({ port: 2020, host: '0.0.0.0' });
 }

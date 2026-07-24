@@ -69,15 +69,6 @@ async function addPlugins(serv: FastifyInstance) {
 
 //run server
 async function runServ(serv: FastifyInstance): Promise<void> {
-	const port: number = getPort();
-	const address: string = await serv.listen({ port: port, host: '0.0.0.0' });
-	serv.log.info(`Auth Microservice listening on ${port} at ${address}`);
-}
-
-function getPort(): number {
-	const port: number = Number(process.env.PORT);
-	if (Number.isNaN(port)) {
-		throw new Error('Invalid port');
-	}
-	return port;
+	const address: string = await serv.listen({ port: 3939, host: '0.0.0.0' });
+	serv.log.info(`Auth Microservice listening on 3939 at ${address}`);
 }
